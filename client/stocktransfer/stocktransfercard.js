@@ -161,7 +161,7 @@ Template.stocktransfercard.onRendered(function() {
 
            }
 
-            $('.shippingHeader').html('New Stock Transfer #' + newTransferID + '<a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px; margin-left: 16px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px; margin-left: 8px;"></i></a> ');
+            $('.shippingHeader').html('New Stock Transfer #' + newTransferID + '<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> ');
 
         });
     }
@@ -600,7 +600,6 @@ Template.stocktransfercard.onRendered(function() {
                                 added = true;
                                 $('.fullScreenSpin').css('display', 'none');
                                 let lineItems = [];
-                                let lineItemObj = {};
                                 let lineItemsTable = [];
                                 let lineItemTableObj = {};
                                 let initialTransferData = 0;
@@ -609,19 +608,37 @@ Template.stocktransfercard.onRendered(function() {
                                 if (useData[d].fields.Lines.length) {
                                     for (let i = 0; i < useData[d].fields.Lines.length; i++) {
                                         if (previuosProductName !== useData[d].fields.Lines[i].fields.ProductName) {
-                                            const filterProducts = useData[d].fields.Lines.filter(product => product.fields.ProductId === useData[d].fields.Lines[i].fields.ProductId);
-                                            const serialNumbers = filterProducts.map(product => product.fields.SerialNumber).join(',');
-                                            const transferSerialNumbers = filterProducts.map(product => product.fields.TransferSerialnos).join(',');
-                                            const lotNumbers = filterProducts.map(product => product.fields.BatchNoFrom).join(',');
-                                            const transferLotNumbers = filterProducts.map(product => product.fields.BatchNoTo).join(',');
+                                            const filterProducts = useData[d].fields.Lines.filter(product => product.fields.ProductID === useData[d].fields.Lines[i].fields.ProductID);
+                                            let serialNumbers = filterProducts.map(product => product.fields.SerialNumber);
+                                            let transferSerialNumbers = filterProducts.map(product => product.fields.TransferSerialnos);
+                                            let lotNumbers = filterProducts.map(product => product.fields.BatchNoTo);
+                                            let transferLotNumbers = filterProducts.map(product => product.fields.BatchNoFrom);
+                                            let expiryDates = filterProducts.map(product => {
+                                                if (product.fields.ExpiryDateTo) {
+                                                    let expiryDate = product.fields.ExpiryDateTo.split(' ')[0].split('-');
+                                                    return `${expiryDate[2]}/${expiryDate[1]}/${expiryDate[0]}`;
+                                                } else return '';
+                                            });
+                                            let transferExpiryDates = filterProducts.map(product => {
+                                                if (product.fields.ExpiryDateFrom) {
+                                                    let expiryDate = product.fields.ExpiryDateFrom.split(' ')[0].split('-');
+                                                    return `${expiryDate[2]}/${expiryDate[1]}/${expiryDate[0]}`;
+                                                } else return '';
+                                            });
+                                            if (serialNumbers[0] === '') serialNumbers = '';
+                                            if (lotNumbers[0] === '') lotNumbers = '';
+                                            if (transferSerialNumbers[0] === '') transferSerialNumbers = '';
+                                            if (transferLotNumbers[0] === '') transferLotNumbers = '';
                                             lineItemObj = {
                                                 lineID: Random.id(),
                                                 id: useData[d].fields.Lines[i].fields.ID || '',
                                                 pqa: useData[d].fields.Lines[i].fields.TransferSerialnos || '',
-                                                serialnumbers: serialNumbers || '',
-                                                transferserialnumbers: transferSerialNumbers || '',
-                                                lotnumbers: lotNumbers || '',
-                                                transferlotnumbers: transferLotNumbers || '',
+                                                serialnumbers: serialNumbers !== '' ? serialNumbers.join(',') : '',
+                                                transferserialnumbers: transferSerialNumbers !== '' ? transferSerialNumbers.join(',') : '',
+                                                lotnumbers: lotNumbers !== '' ? lotNumbers.join(',') : '',
+                                                transferlotnumbers: transferLotNumbers !== '' ? transferLotNumbers.join(',') : '',
+                                                expirydates: lotNumbers !== '' ? expiryDates.join(',') : '',
+                                                transferexpirydates: lotNumbers !== '' ? transferExpiryDates.join(',') : '',
                                                 productname: useData[d].fields.Lines[i].fields.ProductName || '',
                                                 item: useData[d].fields.Lines[i].fields.ProductName || '',
                                                 productid: useData[d].fields.Lines[i].fields.ProductID || '',
@@ -631,8 +648,7 @@ Template.stocktransfercard.onRendered(function() {
                                                 qtyordered: useData[d].fields.Lines[i + filterProducts.length - 1].fields.AvailableQty || 0,
                                                 qtyshipped: filterProducts.length || 0,
                                                 initaltransfer: useData[d].fields.Lines[i].fields.TransferQty || 0,
-                                                qtybo: useData[d].fields.Lines[i].fields.BOQty || 0
-
+                                                qtybo: useData[d].fields.Lines[i].fields.BOQty || 0,
                                             };
 
                                             lineItems.push(lineItemObj);
@@ -656,17 +672,16 @@ Template.stocktransfercard.onRendered(function() {
                                             qtyordered: useData[d].fields.Lines[i].fields.AvailableQty || 0,
                                             qtyshipped: useData[d].fields.Lines[i].fields.TransferQty || 0,
                                             initaltransfer: initialTransferData || 0,
-                                            qtybo: useData[d].fields.Lines[i].fields.BOQty || 0
+                                            qtybo: useData[d].fields.Lines[i].fields.BOQty || 0,
+                                            batchnofrom: useData[d].fields.Lines[i].fields.BatchNoFrom,
+                                            batchnoto: useData[d].fields.Lines[i].fields.BatchNoTo,
+                                            expirydatefrom: useData[d].fields.Lines[i].fields.ExpiryDateFrom,
+                                            expirydateto: useData[d].fields.Lines[i].fields.ExpiryDateTo,
                                         }
                                         lineItemsTable.push(lineItemTableObj);
                                         previuosProductName = useData[d].fields.Lines[i].fields.ProductName;
                                     }
                                 } else {
-                                  if(useData[d].fields.Lines.fields.TransferSerialnos){
-
-                                  }else{
-                                    initialTransferData = useData[d].fields.Lines.fields.TransferQty || 0;
-                                  }
                                     lineItemObj = {
                                         lineID: Random.id(),
                                         id: useData[d].fields.Lines.fields.ID || '',
@@ -684,11 +699,15 @@ Template.stocktransfercard.onRendered(function() {
                                         qtyordered: useData[d].fields.Lines.fields.AvailableQty || 0,
                                         qtyshipped: useData[d].fields.Lines.fields.TransferQty || 0,
                                         initaltransfer: initialTransferData || 0,
-                                        qtybo: useData[d].fields.Lines.fields.BOQty || 0
-
+                                        qtybo: useData[d].fields.Lines.fields.BOQty || 0,
+                                        batchnofrom: useData[d].fields.Lines[i].fields.BatchNoFrom,
+                                        batchnoto: useData[d].fields.Lines[i].fields.BatchNoTo,
+                                        expirydatefrom: useData[d].fields.Lines[i].fields.ExpiryDateFrom,
+                                        expirydateto: useData[d].fields.Lines[i].fields.ExpiryDateTo,
                                     };
                                     lineItems.push(lineItemObj);
                                 }
+
 
                                 let record = {
                                     id: useData[d].fields.ID,
@@ -713,7 +732,7 @@ Template.stocktransfercard.onRendered(function() {
                                 });
 
                                 let getDepartmentVal = useData[d].fields.Lines[0].fields.TransferFromClassName || defaultDept;
-                                $('.shippingHeader').html('Edit Stock Transfer #' + useData[d].fields.ID + ' <a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;"> Help<i class="fa fa-question-circle-o" style="font-size: 20px; margin-left: 5px;"></i></a> ');
+                                $('.shippingHeader').html('Edit Stock Transfer #' + useData[d].fields.ID + '<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
                                 setTimeout(function() {
                                     $('#sltDepartment').val(record.department);
                                     $('#edtCustomerName').val(useData[d].fields.Lines[0].fields.CustomerName);
@@ -861,8 +880,11 @@ Template.stocktransfercard.onRendered(function() {
                                             qtyordered: data.fields.Lines[i].fields.AvailableQty || 0,
                                             qtyshipped: data.fields.Lines[i].fields.TransferQty || 0,
                                             initaltransfer: initialTransferData || 0,
-                                            qtybo: data.fields.Lines[i].fields.BOQty || 0
-
+                                            qtybo: data.fields.Lines[i].fields.BOQty || 0,
+                                            batchnofrom: useData[d].fields.Lines[i].fields.BatchNoFrom,
+                                            batchnoto: useData[d].fields.Lines[i].fields.BatchNoTo,
+                                            expirydatefrom: useData[d].fields.Lines[i].fields.ExpiryDateFrom,
+                                            expirydateto: useData[d].fields.Lines[i].fields.ExpiryDateTo,
                                         };
 
                                         lineItems.push(lineItemObj);
@@ -1014,36 +1036,36 @@ Template.stocktransfercard.onRendered(function() {
                         let lineItemsTable = [];
                         let lineItemTableObj = {};
                         let initialTransferData = 0;
-                      if(data.fields.Lines != null){
-                        if (data.fields.Lines.length) {
-                            for (let i = 0; i < data.fields.Lines.length; i++) {
-                              if(data.fields.Lines[i].fields.TransferSerialnos){
+                        if(data.fields.Lines != null){
+                            if (data.fields.Lines.length) {
+                                for (let i = 0; i < data.fields.Lines.length; i++) {
+                                if(data.fields.Lines[i].fields.TransferSerialnos){
 
-                              }else{
-                                initialTransferData = data.fields.Lines[i].fields.TransferQty || 0;
-                              }
-                                lineItemObj = {
-                                    lineID: Random.id(),
-                                    id: data.fields.Lines[i].fields.ID || '',
-                                    pqa: data.fields.Lines[i].fields.TransferSerialnos || '',
-                                    serialnumber: data.fields.Lines[i].fields.TransferSerialnos || '',
-                                    productname: data.fields.Lines[i].fields.ProductName || '',
-                                    item: data.fields.Lines[i].fields.ProductName || '',
-                                    productid: data.fields.Lines[i].fields.ProductID || '',
-                                    productbarcode: data.fields.Lines[i].fields.PartBarcode || '',
-                                    description: data.fields.Lines[i].fields.ProductDesc || '',
-                                    department: data.fields.Lines[0].fields.ClassNameTo || defaultDept,
-                                    qtyordered: data.fields.Lines[i].fields.AvailableQty || 0,
-                                    qtyshipped: data.fields.Lines[i].fields.TransferQty || 0,
-                                    initaltransfer: initialTransferData || 0,
-                                    qtybo: data.fields.Lines[i].fields.BOQty || 0
+                                }else{
+                                    initialTransferData = data.fields.Lines[i].fields.TransferQty || 0;
+                                }
+                                    lineItemObj = {
+                                        lineID: Random.id(),
+                                        id: data.fields.Lines[i].fields.ID || '',
+                                        pqa: data.fields.Lines[i].fields.TransferSerialnos || '',
+                                        serialnumber: data.fields.Lines[i].fields.TransferSerialnos || '',
+                                        productname: data.fields.Lines[i].fields.ProductName || '',
+                                        item: data.fields.Lines[i].fields.ProductName || '',
+                                        productid: data.fields.Lines[i].fields.ProductID || '',
+                                        productbarcode: data.fields.Lines[i].fields.PartBarcode || '',
+                                        description: data.fields.Lines[i].fields.ProductDesc || '',
+                                        department: data.fields.Lines[0].fields.ClassNameTo || defaultDept,
+                                        qtyordered: data.fields.Lines[i].fields.AvailableQty || 0,
+                                        qtyshipped: data.fields.Lines[i].fields.TransferQty || 0,
+                                        initaltransfer: initialTransferData || 0,
+                                        qtybo: data.fields.Lines[i].fields.BOQty || 0
 
-                                };
+                                    };
 
-                                lineItems.push(lineItemObj);
+                                    lineItems.push(lineItemObj);
+                                }
                             }
                         }
-                      }
                         let record = {
                             id: data.fields.ID,
                             lid: 'Edit Stock Transfer' + ' ' + data.fields.ID,
@@ -3212,30 +3234,70 @@ Template.stocktransfercard.events({
             let tdtransferqty = $('#' + lineID + " .lineUOMQtyShipped").val();
             let transferSerialNos = $('#' + lineID + ' .colSerialFrom').attr('data-serialnumbers');
             let newSerialNos = $('#' + lineID + ' .colSerialTo').attr('data-serialnumbers');
+            let transferLotNos = $('#' + lineID + " .colSerialFrom").attr('data-lotnumbers');
+            let newLotNos = $('#' + lineID + " .colSerialTo").attr('data-lotnumbers');
+            let transferExpiryDates = $('#' + lineID + " .colSerialFrom").attr('data-expirydates');
+            let newExpiryDates = $('#' + lineID + " .colSerialTo").attr('data-expirydates');
 
             if (tdproduct != "") {
-                lineItemObjForm = {
-                    type: "TSTELinesFlat",
-                    fields: {
-                        ProductName: tdproduct || '',
-                        AccountName: 'Inventory Asset',
-                        TransferQty: parseInt(tdtransferqty) || 0,
-                        ClassNameTo: tdDepartment || defaultDept,
-                        PartBarcode: tdbarcode || '',
-                        OrderQty: parseInt(tdtransferqty) || 0,
-                    }
-                };
-
                 if (newSerialNos) {
                     newSerialNos = newSerialNos.split(',');
                     for (let i = 0; i < newSerialNos.length; i++) {
+                        lineItemObjForm = {
+                            type: "TSTELinesFlat",
+                            fields: {
+                                ProductName: tdproduct || '',
+                                AccountName: 'Inventory Asset',
+                                TransferQty: parseInt(tdtransferqty) || 0,
+                                ClassNameTo: tdDepartment || defaultDept,
+                                PartBarcode: tdbarcode || '',
+                                OrderQty: parseInt(tdtransferqty) || 0,
+                            }
+                        };
                         lineItemObjForm.fields.SerialNumber = newSerialNos[i];
                         if (transferSerialNos) {
                             lineItemObjForm.fields.TransferSerialnos = transferSerialNos.split(',')[i] || '';
                         }
                         splashLineArray.push(lineItemObjForm);
                     }
+                } else if (newLotNos || transferLotNos) {
+                    newLotNos = newLotNos.split(',');
+                    newExpiryDates = newExpiryDates.split(',');
+                    transferExpiryDates = transferExpiryDates.split(',');
+                    for (let i = 0; i< newLotNos.length; i++) {
+                        lineItemObjForm = {
+                            type: "TSTELinesFlat",
+                            fields: {
+                                ProductName: tdproduct || '',
+                                AccountName: 'Inventory Asset',
+                                TransferQty: parseInt(tdtransferqty) || 0,
+                                ClassNameTo: tdDepartment || defaultDept,
+                                PartBarcode: tdbarcode || '',
+                                OrderQty: parseInt(tdtransferqty) || 0,
+                            }
+                        };
+                        let newExpiryDate = newExpiryDates[i].split('/');
+                        let transferExpiryDate = transferExpiryDates[i].split('/');
+                        lineItemObjForm.fields.BatchNoTo = newLotNos[i] || '';
+                        lineItemObjForm.fields.ExpiryDateTo = new Date(`${newExpiryDate[2]}-${newExpiryDate[1]}-${newExpiryDate[0]}`).toISOString() || '';
+                        if (transferLotNos) {
+                            lineItemObjForm.fields.BatchNoFrom = transferLotNos.split(',')[i] || '';
+                            lineItemObjForm.fields.ExpiryDateFrom = new Date(`${transferExpiryDate[2]}-${transferExpiryDate[1]}-${transferExpiryDate[0]}`).toISOString() || '';
+                        }
+                        splashLineArray.push(lineItemObjForm);
+                    }
                 } else {
+                    lineItemObjForm = {
+                        type: "TSTELinesFlat",
+                        fields: {
+                            ProductName: tdproduct || '',
+                            AccountName: 'Inventory Asset',
+                            TransferQty: parseInt(tdtransferqty) || 0,
+                            ClassNameTo: tdDepartment || defaultDept,
+                            PartBarcode: tdbarcode || '',
+                            OrderQty: parseInt(tdtransferqty) || 0,
+                        }
+                    };
                     splashLineArray.push(lineItemObjForm);
                 }
 
@@ -3535,21 +3597,20 @@ Template.stocktransfercard.events({
         let newSerialNos = $('#' + lineID + ' .colSerialTo').attr('data-serialnumbers');
 
         if (tdproduct != "") {
-            lineItemObjForm = {
-                type: "TSTELinesFlat",
-                fields: {
-                    ProductName: tdproduct || '',
-                    AccountName: 'Inventory Asset',
-                    TransferQty: parseInt(tdtransferqty) || 0,
-                    ClassNameTo: tdDepartment || defaultDept,
-                    PartBarcode: tdbarcode || '',
-                    OrderQty: parseInt(tdtransferqty) || 0,
-                }
-            };
-
             if (newSerialNos) {
                 newSerialNos = newSerialNos.split(',');
                 for (let i = 0; i < newSerialNos.length; i++) {
+                    lineItemObjForm = {
+                        type: "TSTELinesFlat",
+                        fields: {
+                            ProductName: tdproduct || '',
+                            AccountName: 'Inventory Asset',
+                            TransferQty: parseInt(tdtransferqty) || 0,
+                            ClassNameTo: tdDepartment || defaultDept,
+                            PartBarcode: tdbarcode || '',
+                            OrderQty: parseInt(tdtransferqty) || 0,
+                        }
+                    };
                     lineItemObjForm.fields.SerialNumber = newSerialNos[i];
                     if (transferSerialNos) {
                         lineItemObjForm.fields.TransferSerialnos = transferSerialNos.split(',')[i] || '';
@@ -3557,6 +3618,17 @@ Template.stocktransfercard.events({
                     splashLineArray.push(lineItemObjForm);
                 }
             } else {
+                lineItemObjForm = {
+                    type: "TSTELinesFlat",
+                    fields: {
+                        ProductName: tdproduct || '',
+                        AccountName: 'Inventory Asset',
+                        TransferQty: parseInt(tdtransferqty) || 0,
+                        ClassNameTo: tdDepartment || defaultDept,
+                        PartBarcode: tdbarcode || '',
+                        OrderQty: parseInt(tdtransferqty) || 0,
+                    }
+                };
                 splashLineArray.push(lineItemObjForm);
             }
 
@@ -3872,21 +3944,20 @@ Template.stocktransfercard.events({
             let newSerialNos = $('#' + lineID + ' .colSerialTo').attr('data-serialnumbers');
 
             if (tdproduct != "") {
-                lineItemObjForm = {
-                    type: "TSTELinesFlat",
-                    fields: {
-                        ProductName: tdproduct || '',
-                        AccountName: 'Inventory Asset',
-                        TransferQty: parseInt(tdtransferqty) || 0,
-                        ClassNameTo: tdDepartment || defaultDept,
-                        PartBarcode: tdbarcode || '',
-                        OrderQty: parseInt(tdtransferqty) || 0,
-                    }
-                };
-
                 if (newSerialNos) {
                     newSerialNos = newSerialNos.split(',');
                     for (let i = 0; i < newSerialNos.length; i++) {
+                        lineItemObjForm = {
+                            type: "TSTELinesFlat",
+                            fields: {
+                                ProductName: tdproduct || '',
+                                AccountName: 'Inventory Asset',
+                                TransferQty: parseInt(tdtransferqty) || 0,
+                                ClassNameTo: tdDepartment || defaultDept,
+                                PartBarcode: tdbarcode || '',
+                                OrderQty: parseInt(tdtransferqty) || 0,
+                            }
+                        };
                         lineItemObjForm.fields.SerialNumber = newSerialNos[i];
                         if (transferSerialNos) {
                             lineItemObjForm.fields.TransferSerialnos = transferSerialNos.split(',')[i] || '';
@@ -3894,6 +3965,17 @@ Template.stocktransfercard.events({
                         splashLineArray.push(lineItemObjForm);
                     }
                 } else {
+                    lineItemObjForm = {
+                        type: "TSTELinesFlat",
+                        fields: {
+                            ProductName: tdproduct || '',
+                            AccountName: 'Inventory Asset',
+                            TransferQty: parseInt(tdtransferqty) || 0,
+                            ClassNameTo: tdDepartment || defaultDept,
+                            PartBarcode: tdbarcode || '',
+                            OrderQty: parseInt(tdtransferqty) || 0,
+                        }
+                    };
                     splashLineArray.push(lineItemObjForm);
                 }
 
@@ -4344,6 +4426,8 @@ Template.stocktransfercard.events({
         localStorage.setItem('selectedProductName', selectedProductName);
         let productService = new ProductService();
         const serialNumbers = $(event.target).closest('td').attr('data-serialnumbers');
+        const lotNumbers = $(event.target).closest('td').attr('data-lotnumbers');
+        const expiryDates = $(event.target).closest('td').attr('data-expirydates');
         if (selectedProductName == '') {
             $('.fullScreenSpin').css('display', 'none');
             swal('You have to select Product.', '', 'info');
@@ -4359,7 +4443,82 @@ Template.stocktransfercard.events({
                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
                     var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
                     $('#lotNumberModal').attr('data-row', row + 1);
-                    $('#serialNumberModal').attr('data-type', snLotType);
+                    $('#lotNumberModal').attr('data-type', snLotType);
+                    if (lotNumbers) {
+                        lotNumbers = lotNumbers.split(',');
+                        expiryDates = expiryDates.split(',');
+                        let shtml = '';
+                        shtml += `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
+                        <tr><td class="text-start">#</td><td class="text-start">Lot number</td><td class="text-start">Expiry Date</td></tr>
+                        `;
+                        for (let k = 0; k < lotNumbers.length; k++) {
+                            if (k === 0) {
+                                shtml += `
+                                <tr>
+                                    <td></td>
+                                    <td>${k + 1}</td><td contenteditable="true" class="lineLotnumbers" id="first-lot-number">${lotNumbers[k]}</td>
+                                    <td class="lotExpiryDate" id="first-lot-expiry-date">
+                                        <div class="form-group m-0">
+                                            <div class="input-group date" style="cursor: pointer;">
+                                                <input type="text" class="form-control" style="height: 25px;" value="${expiryDates[k]}">
+                                                <div class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                `;
+                            } else {
+                                shtml += `
+                                <tr>
+                                    <td></td>
+                                    <td>${k + 1}</td><td contenteditable="true" class="lineLotnumbers">${lotNumbers[k]}</td>
+                                    <td class="lotExpiryDate">
+                                        <div class="form-group m-0">
+                                            <div class="input-group date" style="cursor: pointer;">
+                                                <input type="text" class="form-control" style="height: 25px;" value="${expiryDates[k]}">
+                                                <div class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                `;
+                            }
+                        }
+                        $('#tblLotlist tbody').html(shtml);
+                    } else {
+                        let shtml = `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
+                        <tr><td class="text-start">#</td><td class="text-start">Lot number</td><td class="text-start">Expiry Date</td></tr>
+                        <tr>
+                            <td></td>
+                            <td>*</td><td contenteditable="true" class="lineLotnumbers" id="first-lot-number"></td>
+                            <td class="lotExpiryDate" id="first-lot-expiry-date">
+                                <div class="form-group m-0">
+                                    <div class="input-group date" style="cursor: pointer;">
+                                        <input type="text" class="form-control" style="height: 25px;">
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        `;
+                        $('#tblLotlist tbody').html(shtml);
+                    }
+                    $('.lotExpiryDate input').datepicker({
+                        showOn: 'focus',
+                        buttonImageOnly: false,
+                        dateFormat: 'dd/mm/yy',
+                        showOtherMonths: true,
+                        selectOtherMonths: true,
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: "-90:+10",
+                    });
                     $('#lotNumberModal').modal('show');
                 } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
                     var row = $(target).parent().parent().parent().children().index($(target).parent().parent());

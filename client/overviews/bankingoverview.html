@@ -8,12 +8,9 @@
                 display: none;
             }
         </style> -->
-        <header class="pt-2 pb-2 d-flex align-items-center" style="padding-top: 0px !important; padding-bottom: 0px !important;">
-            <h2 class="mr-1">Banking Overview</h2>
+        <header class="pt-2 pb-2 d-flex align-items-center">
+            <h2 class="mr-1">Banking Overview {{> helpbutton}}</h2>
                 <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
-                <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help
-                    <i class="fa fa-question-circle-o" style="font-size: 20px;"></i>
-                </a>
 
                 <!-- Start Help View Modal -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -24,8 +21,8 @@
                             <div class="modal-body">
                                 <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                                 <p class="text-center text-muted"><a href="https://vs1forum.com/viewforum.php?f=6" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                {{> helpadvisor}}
+                                {{> helpgotoforum}}
                             </div>
                             <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                         </div>
@@ -186,6 +183,16 @@
                         <a class="dropdown-item btnReconcile pointer" id="btnReconcile">Bank Reconcilation</a>
                         <a class="dropdown-item btnReconList pointer" id="">Reconcilation List</a>
                         <a class="dropdown-item btnBankRecon pointer" id="btnBankRecon">New Bank Recon</a>
+                    </div>
+                </div>
+
+                <div class="btn-group" style="margin: 12px;">
+                    <button type="button" class="btn btn-primary btnBankRule" id="btnBankRule"><i class="fas fa-ruler-combined" style="margin-right: 5px;"></i>Bank Rules</button>
+                    <!-- <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button> -->
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-caret-down"></i></button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item btnBankRule pointer" id="">Bank Rule List</a>
+                        <a class="dropdown-item btnNewBankRule pointer" id="btnNewBankRule">+ New Bank Rule</a>
                     </div>
                 </div>
 

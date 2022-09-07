@@ -420,7 +420,9 @@ Template.stockadjustmentcard.onRendered(() => {
                                         qtyinstock: useData[d].fields.Lines[i].fields.InStockQty || 0,
                                         finalqty: useData[d].fields.Lines[i].fields.FinalUOMQty || 0,
                                         adjustqty: useData[d].fields.Lines[i].fields.AdjustQty || 0,
+                                        availableqty: useData[d].fields.Lines[i].fields.AvailableQty || 0,
                                         batchnumber: useData[d].fields.Lines[i].fields.BatchNo || '',
+                                        expirydate: useData[d].fields.Lines[i].fields.ExpiryDate || '',
                                         serialnumber: useData[d].fields.Lines[i].fields.SerialNumber || '',
                                     };
                                     lineItemsOrigin.push(lineItemOriginObj);
@@ -442,7 +444,9 @@ Template.stockadjustmentcard.onRendered(() => {
                                             qtyinstock: useData[d].fields.Lines[i].fields.InStockQty || 0,
                                             finalqty: useData[d].fields.Lines[i].fields.FinalUOMQty || 0,
                                             adjustqty: useData[d].fields.Lines[i].fields.AdjustQty || 0,
+                                            availableqty: useData[d].fields.Lines[i].fields.AvailableQty || 0,
                                             batchnumber: useData[d].fields.Lines[i].fields.BatchNo || '',
+                                            expirydate: useData[d].fields.Lines[i].fields.ExpiryDate || '',
                                             serialnumber: useData[d].fields.Lines[i].fields.SerialNumber || '',
 
                                         };
@@ -463,7 +467,9 @@ Template.stockadjustmentcard.onRendered(() => {
                                     qtyinstock: useData[d].fields.Lines.fields.InStockQty || 0,
                                     finalqty: useData[d].fields.Lines.fields.FinalUOMQty || 0,
                                     adjustqty: useData[d].fields.Lines.fields.AdjustQty || 0,
+                                    availableqty: useData[d].fields.Lines[i].fields.AvailableQty || 0,
                                     batchnumber: useData[d].fields.Lines[i].fields.BatchNo || '',
+                                    expirydate: useData[d].fields.Lines[i].fields.ExpiryDate || '',
                                     serialnumber: useData[d].fields.Lines[i].fields.SerialNumber || '',
                                 };
 
@@ -591,7 +597,9 @@ Template.stockadjustmentcard.onRendered(() => {
                                 qtyinstock: data.fields.Lines[i].fields.InStockQty || 0,
                                 finalqty: data.fields.Lines[i].fields.FinalUOMQty || 0,
                                 adjustqty: data.fields.Lines[i].fields.AdjustQty || 0,
+                                availableqty: useData[d].fields.Lines[i].fields.AvailableQty || 0,
                                 batchnumber: useData[d].fields.Lines[i].fields.BatchNo || '',
+                                expirydate: useData[d].fields.Lines[i].fields.ExpiryDate || '',
                                 serialnumber: useData[d].fields.Lines[i].fields.SerialNumber || '',
                             };
 
@@ -713,7 +721,9 @@ Template.stockadjustmentcard.onRendered(() => {
             qtyinstock: 0,
             finalqty: 0,
             adjustqty: 0,
+            availableqty: 0,
             batchnumber: '',
+            expirydate: '',
             serialnumber: '',
        };
 
@@ -2300,8 +2310,8 @@ Template.stockadjustmentcard.events({
                 let tdadjustqty = $('#' + lineID + " .lineAdjustQty").val();
                 let tdDepartment = $('#' + lineID + " .lineDepartment").val();
                 let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
-                let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumber');
-                let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-lotexpirydate');
+                let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumbers');
+                let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-expirydates');
 
                 if (tdproduct != "") {
                     // Feature/ser-lot number tracking: Save Serial Numbers
@@ -2333,7 +2343,9 @@ Template.stockadjustmentcard.events({
                         }
                     } else if (tdLotNumber) {
                         const lotNumbers = tdLotNumber.split(',');
+                        const expiryDates = tdLotExpiryDate.split(',');
                         for (let i = 0; i < lotNumbers.length; i++) {
+                            const expiryDate = expiryDates[i].split('/');
                             lineItemObjForm = {
                                 type: "TSAELinesFlat",
                                 fields: {
@@ -2353,6 +2365,7 @@ Template.stockadjustmentcard.events({
                                     PartBarcode: tdbarcode || '',
                                     Description: tddescription || '',
                                     BatchNo: lotNumbers[i],
+                                    ExpiryDate: new Date(parseInt(expiryDate[2]), parseInt(expiryDate[1]) - 1, parseInt(expiryDate[0])).toISOString(),
                                }
                             };
                             splashLineArray.push(lineItemObjForm);
@@ -2659,6 +2672,9 @@ Template.stockadjustmentcard.events({
                 let tdfinalqty = $('#' + lineID + " .lineFinalQty").val();
                 let tdadjustqty = $('#' + lineID + " .lineAdjustQty").val();
                 let tdDepartment = $('#' + lineID + " .lineDepartment").val();
+                let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
+                let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumbers');
+                let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-expirydates');
                 if (tdproduct != "") {
                     // Feature/ser-lot number tracking: Save Serial Numbers
                     if (tdSerialNumber) {
@@ -2689,7 +2705,9 @@ Template.stockadjustmentcard.events({
                         }
                     } else if (tdLotNumber) {
                         const lotNumbers = tdLotNumber.split(',');
+                        const expiryDates = tdLotExpiryDate.split(',');
                         for (let i = 0; i < lotNumbers.length; i++) {
+                            const expiryDate = expiryDates[i].split('/');
                             lineItemObjForm = {
                                 type: "TSAELinesFlat",
                                 fields: {
@@ -2709,7 +2727,8 @@ Template.stockadjustmentcard.events({
                                     PartBarcode: tdbarcode || '',
                                     Description: tddescription || '',
                                     BatchNo: lotNumbers[i],
-                                }
+                                    ExpiryDate: new Date(parseInt(expiryDate[2]), parseInt(expiryDate[1]) - 1, parseInt(expiryDate[0])).toISOString(),
+                               }
                             };
                             splashLineArray.push(lineItemObjForm);
                         }
@@ -3508,11 +3527,15 @@ Template.stockadjustmentcard.events({
         let StockAdjustmentRecord = templateObject.originrecord.get();
         let existingSerialNumbers = [];
         let existingLotNumbers = [];
+        let existingExpiryDates = [];
         if (StockAdjustmentRecord && StockAdjustmentRecord.LineItems) {
             StockAdjustmentRecord.LineItems.forEach(element => {
                 if (element.productname == selectedProductName) {
                     if (element.serialnumber) existingSerialNumbers.push(element.serialnumber);
-                    else if (element.batchnumber) existingLotNumbers.push(element.batchnumber);
+                    else if (element.batchnumber) {
+                        existingLotNumbers.push(element.batchnumber);
+                        existingExpiryDates.push(element.expirydate.split(' ')[0].split('-') || '');
+                    }
                 }
             });
         }
@@ -3530,16 +3553,38 @@ Template.stockadjustmentcard.events({
                 if (existingLotNumbers.length === 0) {
                 } else {
                     let shtml = '';
-                    shtml += `
-                    <tr><td colspan="5">Allocate Lot Number</td><td rowspan="2">CUSTFLD</td></tr>
-                    <tr><td>Lot No</td><td>Expiry Date</td><td>Qty</td><td>BO Qty</td><td>Length</td></tr>
+                    shtml += `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
+                    <tr><td class="text-start">#</td><td class="text-start">Lot number</td><td class="text-start">Expiry Date</td></tr>
                     `;
                     for (let k = 0; k < existingLotNumbers.length; k++) {
                         shtml += `
-                        <tr><td>${existingLotNumbers[k]}</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr>
+                            <td></td>
+                            <td>${k + 1}</td><td contenteditable="true" class="lineLotnumbers">${existingLotNumbers[k]}</td>
+                            <td class="lotExpiryDate">
+                                <div class="form-group m-0">
+                                    <div class="input-group date" style="cursor: pointer;">
+                                        <input type="text" class="form-control" style="height: 25px;" value="${existingExpiryDates[k][2]}/${existingExpiryDates[k][1]}/${existingExpiryDates[k][0]}">
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                         `;
                     }
-                    $('#tblSeriallist tbody').html(shtml);
+                    $('#tblLotlist tbody').html(shtml);
+                    $('.lotExpiryDate input').datepicker({
+                        showOn: 'focus',
+                        buttonImageOnly: false,
+                        dateFormat: 'dd/mm/yy',
+                        showOtherMonths: true,
+                        selectOtherMonths: true,
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: "-90:+10",
+                    });
                 }
             } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
                 var row = $(target).parent().parent().parent().children().index($(target).parent().parent());

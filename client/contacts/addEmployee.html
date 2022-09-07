@@ -112,7 +112,7 @@
                 </style>
 
                 <div class="d-sm-flex justify-content-between align-items-center mb-4" style="margin-left: 8px;">
-                    <h2 class="text-dark mb-0">Employee Overview Dashboard <a role="button" data-toggle="modal" href="#helpViewModal" class="">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a></h2>
+                    <h2 class="text-dark mb-0">Employee Overview Dashboard {{> helpbutton}}</h2>
                 </div>
 
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -124,8 +124,8 @@
                             <div class="modal-body">
                                 <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                                 <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=38" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                {{> helpadvisor}}
+                                {{> helpgotoforum}}
                             </div>
                             <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                         </div>
@@ -193,7 +193,12 @@
 
                         <div class="card shadow mb-4 cardSizing" style="margin: 8px;">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="text-primary font-weight-bold m-0">{{record.company}} - {{record.phone}}</h6>
+                                <h6 class="text-primary font-weight-bold m-0">
+                                  {{#if notEquals record.id ''}}
+                                    EMP-{{record.id}} -
+                                  {{/if}}
+                                  {{record.company}} - {{record.phone}}
+                                </h6>
 
                                 <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"><i class="fas fa-ellipsis-v text-gray-400"></i></a>
                             </div>
@@ -295,13 +300,13 @@
 
                             <div class="card-body text-nowrap">
                                 <div>
-                                    <ul class="nav nav-tabs nav-fill">
+                                    <ul class="nav nav-tabs nav-fill" id="mainTabs">
 
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link employeeTab active" role="tab" data-toggle="tab" data-target="#tab-2">Employee Details</a></li>
+                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link employeeTab active" data-tabname="employeetab" role="tab" data-toggle="tab" data-target="#tab-2">Employee Details</a></li>
                                         {{#if includePayroll}}
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link payrollTab" role="tab" data-toggle="tab" data-target="#tab-3">Payroll</a></li>
+                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link payrollTab" data-tabname="payrolltab" role="tab" data-toggle="tab" data-target="#tab-3">Payroll</a></li>
                                         {{/if}}
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link transTab" role="tab" data-toggle="tab" data-target="#tab-1">Transaction List</a></li>
+                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link transTab" data-tabname="transtab" role="tab" data-toggle="tab" data-target="#tab-1">Transaction List</a></li>
                                         <!-- <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-3">Jobs / Projects</a></li> -->
                                     </ul>
                                     <div class="tab-content">
@@ -483,7 +488,7 @@
                                                         <div class="col-12 col-md-3" style="padding: 0px;">
                                                             <div class="form-group flex-grow-0" style="margin: 4px;">
                                                                 <label class="text-nowrap">Employee ID</label>
-                                                                <input type="text" class="form-control" id="edtSkype" name="edtEmployeeID" value="emp_{{record.id}}" readonly>
+                                                                <input type="text" class="form-control" id="edtEmployeeID" name="edtEmployeeID" value="emp_{{record.id}}" readonly>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1477,7 +1482,7 @@
                                                                             <select type="search" class="form-control customEditableSelect" id="edtResidencyStatus" name="edtResidencyStatus" style="cursor: pointer;">
                                                                                 <option value="true">Australian Resident</option>
                                                                                 <option value="false">Foreign Resident</option>
-                                                                                <option value="Working Holiday Maker">Working Holiday Maker</option> 
+                                                                                <option value="Working Holiday Maker">Working Holiday Maker</option>
                                                                             </select>
 
                                                                         </div>
@@ -1954,7 +1959,7 @@
                                                                         <h4>Leave Requests</h4>
                                                                     </div>
                                                                     <div class="col-12 col-md-6">
-                                                                        <button type="button" class="btn btn-primary float-right" id="newLeaveRequestbtn" data-toggle="modal" data-target="#newLeaveRequestModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Leave
+                                                                        <button type="button" class="btn btn-primary float-right btnLeaveRequestBtn" id="newLeaveRequestbtn" data-toggle="modal" data-target="#newLeaveRequestModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Leave
                                                                             Request</button>
                                                                     </div>
                                                                 </div>
@@ -1962,7 +1967,7 @@
                                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                                         <div class="modal-content">
                                                                             <div class="modal-header">
-                                                                                <h5 class="modal-title" id="newPayCalendarLabel">New Leave Request</h5>
+                                                                                <h5 class="modal-title" id="newLeaveRequestLabel">New Leave Request</h5>
                                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                                     <span aria-hidden="true">&times;</span>
                                                                                 </button>
@@ -1972,6 +1977,7 @@
                                                                                     <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Type of Request</label>
+                                                                                            <input type="hidden" id="edtLeaveRequestID" value="0">
                                                                                             <input type="hidden" id="edtLeaveTypeofRequestID" value="0">
                                                                                             <select type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;">
                                                                                             </select>
@@ -2020,7 +2026,7 @@
                                                                                 </form>
                                                                             </div>
                                                                             <div class="modal-footer" style="justify-content: space-between;">
-                                                                                <div class="col-6 pl-0">
+                                                                                <div class="col-4 pl-0">
                                                                                     <div class="dropdown float-left">
                                                                                         <div class="form-group">
                                                                                             <label>Status</label>
@@ -2036,8 +2042,9 @@
                                                                                         </div> -->
                                                                                     </div>
                                                                                 </div>
-                                                                                <button type="button" id="btnSaveLeaveRequest" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                                <button type="button" id="removeLeaveRequestBtn" data-id="0" style="display: none;" class="btn btn-danger removeLeaveRequest mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
+                                                                                <button type="button" id="btnSaveLeaveRequest" class="btn btn-success mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                                <button type="button" class="btn btn-secondary mt-3" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -2064,6 +2071,7 @@
                                                                                         <th class="th colLRLeavePeriod">Leave Period</th>
                                                                                         <th class="th colLRLeaveType">Leave Type</th>
                                                                                         <th class="th colLRStatus">Status</th>
+                                                                                        <th class="th colLRAction">Action</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
@@ -2435,7 +2443,7 @@
                                                                         <h4>Payslip</h4>
                                                                     </div>
                                                                     <div class="col-12 col-md-6">
-                                                                        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#paySlipModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Payslip </button>
+                                                                        <button type="button" class="btn btn-primary float-right addNewSlip" data-toggle="modal" data-target="#paySlipModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Payslip </button>
                                                                     </div>
                                                                 </div>
 
@@ -2443,20 +2451,21 @@
                                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                                         <div class="modal-content">
                                                                             <div class="modal-header">
-                                                                                <h5 class="modal-title">New payslip</h5>
+                                                                                <h5 class="modal-title" id="newPaySlipLabel">New payslip</h5>
                                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                                     <span aria-hidden="true">&times;</span>
                                                                                 </button>
                                                                             </div>
                                                                             <div class="modal-body">
-                                                                                <div class="row">
-                                                                                    <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
+                                                                                <form class="row" id="paySlipForm">
+                                                                                    <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Period</label>
+                                                                                            <input type="hidden" id="periodID" value="0">
                                                                                             <select type="search" class="form-control" id="period" name="period" style="cursor: pointer;"></select>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
+                                                                                    <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Payment Date</label>
                                                                                             <div class="input-group date" style="cursor: pointer;">
@@ -2467,17 +2476,18 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
+                                                                                    <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Total pay</label>
-                                                                                            <input type="number" class="form-control" id="totalPay" name="totalPay">
+                                                                                            <input type="text" class="form-control edtPriceFormatting" id="totalPay" name="totalPay">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="modal-footer">
+                                                                                        <button type="button" id="btnDeletePayslipBtn" data-id="0" style="display: none;" class="btn btn-danger btnDeletePayslip"><i class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
                                                                                         <button type="button" id="btnPayslip" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                                                                                     </div>
-                                                                                </div>
+                                                                                </form>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -2494,6 +2504,17 @@
                                                                                     display: table-cell;
                                                                                     padding: .75rem;
                                                                                     vertical-align: top;
+                                                                                }
+                                                                                .smallFontSizeBtn i {
+                                                                                    font-size: 12px;
+                                                                                }
+                                                                                .smallFontSizeBtn {
+                                                                                    padding: 0;
+                                                                                    width: 25px;
+                                                                                    height: 25px;
+                                                                                    display: inline-flex;
+                                                                                    justify-content: center;
+                                                                                    align-items: center;
                                                                                 }
                                                                             </style>
                                                                             <table id="tblPayslipHistory" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayslipHistory">
@@ -2547,6 +2568,9 @@
                                                                     }
                                                                     .ordanryHoursDiv a {
                                                                         color: #00a3d3 !important;
+                                                                    }
+                                                                    #tblPayslipHistory .btn-sm {
+                                                                        margin: 0px !important;
                                                                     }
                                                                 </style>
                                                                 <div class="row mb-3">
@@ -3024,7 +3048,7 @@
                                                                                             <div class="col-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control obCalculateEarningTotalAmount edtPriceFormatting" value="{{ formatPrice item.fields.Amount }}" id="obEarningAmount{{ item.fields.ID }}">
+                                                                                                    <input type="text" class="form-control obCalculateTotalAmount edtPriceFormatting" value="{{ formatPrice item.fields.Amount }}" data-id="{{ item.fields.ID }}" id="obEarningAmount{{ item.fields.ID }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-1" style="padding-left: 0px;">
@@ -3069,7 +3093,7 @@
                                                                                 {{#if obEarningLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obEarningTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateEarningTotalAmount' }}
+                                                                                            {{ calculateOpeningBalanceTotal obEarningLines }}
                                                                                         </p>
                                                                                     </div>
                                                                                 {{/if}}
@@ -3094,7 +3118,7 @@
                                                                                             <div class="col-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting obCalculateDeductionTotalAmount" value="{{ formatPrice item.fields.Amount }}" id="obDeductionAmount{{ item.fields.ID }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting obCalculateTotalAmount" data-id="{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}" id="obDeductionAmount{{ item.fields.ID }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-1" style="padding-left: 0px;">
@@ -3138,7 +3162,7 @@
                                                                                 {{#if obDeductionLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obDeductionTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateDeductionTotalAmount' }}
+                                                                                            {{ calculateOpeningBalanceTotal obDeductionLines }}
                                                                                         </p>
                                                                                     </div>
                                                                                 {{/if}}
@@ -3186,7 +3210,7 @@
                                                                                             <div class="col-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting obCalculateSuperannuationTotalAmount" value="{{ formatPrice item.fields.Amount }}" id="obSuperannuationAmount{{ item.fields.ID }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting obCalculateTotalAmount" data-id="{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}" id="obSuperannuationAmount{{ item.fields.ID }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-1" style="padding-left: 0px;">
@@ -3237,7 +3261,7 @@
                                                                                 {{#if obSuperannuationLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obSuperannuationTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateSuperannuationTotalAmount' }}
+                                                                                            {{ calculateOpeningBalanceTotal obSuperannuationLines }}
                                                                                         </p>
                                                                                     </div>
                                                                                 {{/if}}
@@ -3261,7 +3285,7 @@
                                                                                             <div class="col-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting obCalculateReimbursementTotalAmount" value="{{ formatPrice item.fields.Amount }}"  id="obReimbursementAmount{{ item.fields.ID }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting obCalculateTotalAmount" data-id="{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}"  id="obReimbursementAmount{{ item.fields.ID }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-1" style="padding-left: 0px;">
@@ -3306,7 +3330,7 @@
                                                                                 {{#if obReimbursementLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obReimbursementTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateReimbursementTotalAmount'}}
+                                                                                            {{ calculateOpeningBalanceTotal obReimbursementLines}}
                                                                                         </p>
                                                                                     </div>
                                                                                 {{/if}}
@@ -3327,13 +3351,13 @@
                                                                         <h4>Notes</h4>
                                                                     </div>
                                                                     <div class="col-12 col-md-6">
-                                                                        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#newNoteModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add New
+                                                                        <button type="button" class="btn btn-primary float-right btnAddNewNotes" data-toggle="modal" data-target="#newNoteModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add New
                                                                             Note</button>
                                                                         <div class="modal fade" id="newNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
                                                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                                                 <div class="modal-content">
                                                                                     <div class="modal-header">
-                                                                                        <h5 class="modal-title" id="newPayCalendarLabel">Add a New Note</h5>
+                                                                                        <h5 class="modal-title" id="newPayNotesLabel">Add New Note</h5>
                                                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                                             <span aria-hidden="true">&times;</span>
                                                                                         </button>

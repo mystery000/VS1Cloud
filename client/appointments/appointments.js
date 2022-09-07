@@ -1639,6 +1639,28 @@ Template.appointments.onRendered(function () {
         return time;
     };
 
+    templateObject.getLeaveRequests = async function () {
+      let result = false;
+      const dataObject = await getVS1Data("TLeavRequest");
+      if (dataObject.length != 0) {
+        const data = JSON.parse(dataObject[0].data);
+        if (data.tleavrequest.length > 0) {
+          data.tleavrequest.forEach((item) => {
+            const fields = item.fields;
+            const parsedDate = utilityService.getStartDateWithSpecificFormat(
+              fields.StartDate
+            );
+            const appointmentDate = document.getElementById("dtSODate").value;
+  
+            if (parsedDate === appointmentDate) {
+              result = true;
+            }
+          });
+        }
+      }
+      return result;
+    };
+
     templateObject.getEmployeesList = function () {
         getVS1Data('TEmployee').then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -9477,6 +9499,11 @@ Template.appointments.events({
     },
     'click #btnSaveAppointment': async function() {
         const templateObject = Template.instance();
+        const isLeaveBooked = await templateObject.getLeaveRequests();
+        if (isLeaveBooked === true) {
+          swal("Appointments can't be booked against this Employee", "", "error");
+          return;
+        }
         templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');

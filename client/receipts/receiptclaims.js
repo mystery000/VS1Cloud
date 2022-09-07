@@ -100,6 +100,7 @@ Template.receiptsoverview.onRendered(function() {
         getVS1Data('TReceiptCategory').then(function(dataObject) {
             if (dataObject.length === 0) {
                 sideBarService.getReceiptCategory().then(function(data) {
+                    addVS1Data('TReceiptCategory', JSON.stringify(data));
                     setReceiptCategory(data);
                 });
             } else {
@@ -108,6 +109,7 @@ Template.receiptsoverview.onRendered(function() {
             }
         }).catch(function(err) {
             sideBarService.getReceiptCategory().then(function(data) {
+                addVS1Data('TReceiptCategory', JSON.stringify(data));
                 setReceiptCategory(data);
             });
         });
@@ -314,6 +316,7 @@ Template.receiptsoverview.onRendered(function() {
         getVS1Data('TTripGroup').then(function(dataObject) {
             if (dataObject.length === 0) {
                 sideBarService.getTripGroup().then(function(data) {
+                    addVS1Data('TTripGroup', JSON.stringify(data));
                     setTripGroup(data);
                 });
             } else {
@@ -322,6 +325,7 @@ Template.receiptsoverview.onRendered(function() {
             }
         }).catch(function(err) {
             sideBarService.getTripGroup().then(function(data) {
+                addVS1Data('TTripGroup', JSON.stringify(data));
                 setTripGroup(data);
             });
         });
@@ -433,11 +437,11 @@ Template.receiptsoverview.onRendered(function() {
         }
     };
     function showEditTripGroupView(data) {
-      $('.fullScreenSpin').css('display', 'none');
+        $('.fullScreenSpin').css('display', 'none');
         $("#add-tripgroup-title").text("Edit Trip-Group");
-        $('#edtTripGroupID').val(data.Id);
-        $('#edtTripGroupName').val(data.TripName);
-        $('#edtTripGroupDesc').val(data.Description);
+        $('#edtTripGroupID').val(data.fields.Id);
+        $('#edtTripGroupName').val(data.fields.TripName);
+        $('#edtTripGroupDesc').val(data.fields.Description);
         setTimeout(function() {
             $('#addTripGroupModal').modal('show');
         }, 200);
@@ -466,9 +470,7 @@ Template.receiptsoverview.onRendered(function() {
         } else {
             if (employeeName.replace(/\s/g, '') != '') { // edit employee
                 let editId = $('#viewReceiptModal .employees').attr('data-id');
-
                 getVS1Data('TEmployee').then(function(dataObject) {
-
                     if (dataObject.length == 0) {
                         sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function(data) {
                             addVS1Data('TEmployee', JSON.stringify(data));
@@ -717,6 +719,7 @@ Template.receiptsoverview.onRendered(function() {
                     if (dataObject.length == 0) {
                         $('.fullScreenSpin').css('display', 'inline-block');
                         sideBarService.getCurrencies().then(function(data) {
+                            addVS1Data('TCurrency', JSON.stringify(data));
                             for (let i in data.tcurrency) {
                                 if (data.tcurrency.hasOwnProperty(i)) {
                                     if (data.tcurrency[i].fields.Code === currencyDataName) {
@@ -746,6 +749,7 @@ Template.receiptsoverview.onRendered(function() {
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'inline-block');
                     sideBarService.getCurrencies().then(function(data) {
+                        addVS1Data('TCurrency', JSON.stringify(data));
                         for (let i in data.tcurrency) {
                             if (data.tcurrency.hasOwnProperty(i)) {
                                 if (data.tcurrency[i].fields.Code === currencyDataName) {
@@ -766,7 +770,7 @@ Template.receiptsoverview.onRendered(function() {
                     $('#tblCurrencyPopList_filter .form-control-sm').focus();
                     $('#tblCurrencyPopList_filter .form-control-sm').val('');
                     $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
-                    var datatable = $('#tblCurrencyPopList').DataTable();
+                    const datatable = $('#tblCurrencyPopList').DataTable();
                     datatable.draw();
                     $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
                 }, 500);
@@ -1610,16 +1614,24 @@ Template.receiptsoverview.onRendered(function() {
                                 }
                             };
                             contactService.saveSupplier(objDetails).then(function (supplier) {
-                                $('.fullScreenSpin').css('display','none');
-                                //  Meteor._reload.reload();
-                                $(parentElement + ' .merchants').val(supplier_name);
-                                $(parentElement + ' .merchants').attr('data-id', supplier.fields.ID);
-                                const suppliers = templateObject.suppliers.get();
-                                suppliers.push({
-                                    supplierid: supplier.fields.ID,
-                                    suppliername: supplier_name,
-                                });
-                                templateObject.suppliers.set(suppliers);
+                                let supplierSaveID = supplier.fields.ID;
+                                if(supplierSaveID){
+                                    sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad,0).then(function(dataReload) {
+                                        addVS1Data('TSupplierVS1',JSON.stringify(dataReload));
+                                        $('.fullScreenSpin').css('display','none');
+                                        //  Meteor._reload.reload();
+                                        $(parentElement + ' .merchants').val(supplier_name);
+                                        $(parentElement + ' .merchants').attr('data-id', supplier.fields.ID);
+                                        const suppliers = templateObject.suppliers.get();
+                                        suppliers.push({
+                                            supplierid: supplier.fields.ID,
+                                            suppliername: supplier_name,
+                                        });
+                                        templateObject.suppliers.set(suppliers);
+                                    }).catch(function(err) {
+                                        $('.fullScreenSpin').css('display','none');
+                                    });
+                                }
                             }).catch(function (err) {
                                 swal({
                                     title: 'Oooops...',
@@ -3061,7 +3073,7 @@ Template.receiptsoverview.events({
         let splitDataTable = $('#tblSplitExpense').DataTable();
         const lineItems = splitDataTable.rows().data();
         let totalAmount = 0;
-        for (i = 0; i < lineItems.length; i++) {
+        for (let i = 0; i < lineItems.length; i++) {
             let amount = lineItems[i].AmountInc;
             totalAmount += amount;
         }
@@ -3074,6 +3086,7 @@ Template.receiptsoverview.events({
         for (let i = 0; i < lineItems.length; i++) {
             let lineItem = lineItems[i];
             lineItem.DateTime = moment(lineItem.DateTime, 'DD/MM/YYYY').format('YYYY-MM-DD');
+            let expenseClaim;
             if (i > 0) {
                 let expenseClaimLine = {
                     type: "TExpenseClaimLineEx",
@@ -3096,7 +3109,7 @@ Template.receiptsoverview.events({
                         // CurrencyName: currencyName,
                     }
                 };
-                let expenseClaim = {
+                expenseClaim = {
                     type: "TExpenseClaimEx",
                     fields: {
                         EmployeeID: receipt.EmployeeID,
@@ -3106,6 +3119,7 @@ Template.receiptsoverview.events({
                         Lines: [expenseClaimLine],
                         RequestToEmployeeID: receipt.EmployeeID,
                         RequestToEmployeeName: receipt.EmployeeName,
+                        TripGroup: receipt.TripGroup
                     }
                 }
             } else {
@@ -3132,12 +3146,13 @@ Template.receiptsoverview.events({
                         // CurrencyName: currencyName,
                     }
                 };
-                let expenseClaim = {
+                expenseClaim = {
                     type: "TExpenseClaimEx",
                     fields: {
                         ID: receipt.ExpenseClaimID,
                         DateTime: lineItem.DateTime,
                         Lines: [expenseClaimLine],
+                        TripGroup: receipt.TripGroup
                     }
                 }
             }
@@ -3170,6 +3185,7 @@ Template.receiptsoverview.events({
         let splitDataTable = $('#tblSplitExpense').DataTable();
         let rowData = splitDataTable.row(index).data();
         rowData.AmountInc = newValue ? parseFloat(newValue) : 0;
+        setCurrencyFormatForInput(e.target);
     },
     'click input[id^="splitAccount-"]': function(e) {
         $('#employeeListModal').attr('data-from', e.target.id);
@@ -3382,6 +3398,10 @@ Template.receiptsoverview.events({
                 mergedExpense.Paymethod = selectedPaymethod;
                 let selectedReiumbursable = $('#swtMergedReiumbursable').prop('checked');
                 mergedExpense.Reimbursement = selectedReiumbursable;
+                let tripGroup = mergedExpense.TripGroup;
+                delete mergedExpense.MetaID;
+                delete mergedExpense.LineID;
+                delete mergedExpense.TripGroup;
                 let expenseClaimLine = {
                     type: "TExpenseClaimLineEx",
                     fields: mergedExpense
@@ -3395,6 +3415,7 @@ Template.receiptsoverview.events({
                         DateTime: mergedExpense.DateTime,
                         Description: mergedExpense.Description,
                         Lines: [expenseClaimLine],
+                        TripGroup: tripGroup,
                         RequestToEmployeeID: mergedExpense.EmployeeID,
                         RequestToEmployeeName: mergedExpense.EmployeeName,
                     }
@@ -3457,7 +3478,8 @@ Template.receiptsoverview.events({
                         Lines: [expenseClaimLine],
                         RequestToEmployeeID: receipt.EmployeeID,
                         RequestToEmployeeName: receipt.EmployeeName,
-                        Active: false
+                        Active: false,
+                        TripGroup: receipt.TripGroup
                     }
                 };
 
@@ -3742,3 +3764,14 @@ Template.receiptsoverview.helpers({
         return Session.get('CloudUseForeignLicence');
     }
 });
+
+function setCurrencyFormatForInput(target) {
+    let input = 0;
+    if (!isNaN($(target).val())) {
+        input = parseFloat($(target).val()) || 0;
+        $(target).val(utilityService.modifynegativeCurrencyFormat(input));
+    } else {
+        input = Number($(target).val().replace(/[^0-9.-]+/g, "")) || 0;
+        $(target).val(utilityService.modifynegativeCurrencyFormat(input));
+    }
+}

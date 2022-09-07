@@ -244,7 +244,7 @@ Template.billcard.onRendered(() => {
                 if (FlowRouter.current().queryParams.id) {
 
                 }else{
-                // $(".heading").html("New Bill " +newBillId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a><a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
+                // $(".heading").html("New Bill " +newBillId +'<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
                 };
             }, 50);
         }).catch(function(err) {
@@ -2137,7 +2137,7 @@ Template.billcard.onRendered(() => {
           $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
 
 
-          $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
+          //$("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
           $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " "+ " Template"
           );
@@ -2295,9 +2295,8 @@ Template.billcard.onRendered(() => {
         }
 
         if (object_invoce[0]["taxItems"]) {
-                
+
             let taxItems = object_invoce[0]["taxItems"];
-            console.log(taxItems);
             $("#templatePreviewModal #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
                 let html = `
@@ -2321,9 +2320,9 @@ Template.billcard.onRendered(() => {
        var tbl_content = $("#templatePreviewModal .tbl_content")
        tbl_content.empty()
        const data = object_invoce[0]["data"]
-     
+
        for(item of data){
-          
+
            var html = '';
            html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
            for(item_temp of item){
@@ -2332,7 +2331,7 @@ Template.billcard.onRendered(() => {
 
            html +="</tr>";
            tbl_content.append(html);
-         
+
        }
 
         // total amount
@@ -2423,7 +2422,7 @@ Template.billcard.onRendered(() => {
         $("#html-2-pdfwrapper_new .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
 
 
-        $("#html-2-pdfwrapper_new .print-header").text(object_invoce[0]["title"]);
+       // $("#html-2-pdfwrapper_new .print-header").text(object_invoce[0]["title"]);
 
         $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
@@ -2581,10 +2580,10 @@ Template.billcard.onRendered(() => {
         tbl_header.empty()
         var count = 0;
         for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-           
+
             if(count == 0)
             {
-                tbl_header.append("<th style='width: 200px;background:white;color: rgb(0 0 0);width:" + value + "%';>" + key + "</th>") 
+                tbl_header.append("<th style='width: 200px;background:white;color: rgb(0 0 0);width:" + value + "%';>" + key + "</th>")
             }
             else if(count == 1)
             {
@@ -2598,7 +2597,7 @@ Template.billcard.onRendered(() => {
             {
                 tbl_header.append("<th style='text-align: right; width: 100px;background:white;color: rgb(0 0 0);width:" + value + "%';>" + key + "</th>")
             }
-          
+
            count++;
         }
 
@@ -2627,9 +2626,9 @@ Template.billcard.onRendered(() => {
         var tbl_content = $("#html-2-pdfwrapper_new .tbl_content")
        tbl_content.empty()
        const data = object_invoce[0]["data"]
-     
+
        for(item of data){
-          
+
            var html = '';
            html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
            var count = 0;
@@ -2651,13 +2650,13 @@ Template.billcard.onRendered(() => {
                     else
                     {
                         html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-                    }            
+                    }
                     count++;
            }
 
            html +="</tr>";
            tbl_content.append(html);
-         
+
        }
         // total amount
 
@@ -4178,27 +4177,27 @@ Template.billcard.onRendered(() => {
             {
                  await showBillData(template_title,number);
             }
-    
+
             let margins = {
                 top: 0,
                 bottom: 0,
                 left: 0,
                 width: 100
             };
-    
+
             let invoice_data_info = templateObject.billrecord.get();
             document.getElementById('html-2-pdfwrapper_new').style.display="block";
             var source = document.getElementById('html-2-pdfwrapper_new');
-    
+
             let file = "Bills.pdf";
             if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
                 if(template_title == 'Bills')
                 {
                     file = 'Bills -' + invoice_data_info.id + '.pdf';
                 }
-    
+
             }
-    
+
             var opt = {
                 margin: 0,
                 filename: file,
@@ -4215,8 +4214,8 @@ Template.billcard.onRendered(() => {
                     orientation: 'portrait'
                 }
             };
-    
-    
+
+
             html2pdf().set(opt).from(source).save().then(function (dataObject) {
                 if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                    // $(".btnSave").trigger("click");
@@ -4229,37 +4228,50 @@ Template.billcard.onRendered(() => {
                     $('.fullScreenSpin').css('display', 'none');
                 }
             });
-    
-    
+
+
             return true;
 
 
         }
-      
+
 
 
     };
 
     exportSalesToPdf1 = function() {
+        
         let margins = {
             top: 0,
             bottom: 0,
             left: 0,
             width: 100
         };
+
         let id = $('.printID').attr("id");
+
+        let subtotal = $('#subtotal_total').text();
+        let net = $('#subtotal_nett').text();
+        let subtotal_discount = $('#subtotal_discount').text();
+        let grandTotal = $('#grandTotal').text();
+        let totalPaidAmt = $('#totalPaidAmt').text();
+        let totalBalanceDue = $('#totalBalanceDue').text();
+        let total_new_tax = $('#subtotal_tax').text();
+
+
+
         document.getElementById('html-2-pdfwrapper').style.display="block";
 
         let taxItems = {};
         $('#tblBillLine > tbody > tr').each(function () {
-            var lineID = this.id;    
+            var lineID = this.id;
             let targetRow = $('#' + lineID);
             let targetTaxCode = targetRow.find('.lineTaxCode').val();
             let qty = targetRow.find(".lineQty").val() || 0
             let price = targetRow.find('.colUnitPriceExChange').val() || '';
             let colAmount = $('#' + lineID + " .colAmount").val();
             const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
-    
+
             if (taxDetail) {
                 let priceTotal = utilityService.convertSubstringParseFloat(colAmount);
                 let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
@@ -4278,7 +4290,7 @@ Template.billcard.onRendered(() => {
                 else {
                     taxItems[targetTaxCode] = taxTotal;
                 }
-            }    
+            }
         });
         $("#html-2-pdfwrapper #tax_list_print").html("");
         Object.keys(taxItems).map((code) => {
@@ -4296,6 +4308,13 @@ Template.billcard.onRendered(() => {
             `;
             $("#html-2-pdfwrapper #tax_list_print").append(html);
         });
+
+        
+        $("#html-2-pdfwrapper #subtotal_totalPrint").html(subtotal);
+        $("#html-2-pdfwrapper #grandTotalPrint").html(grandTotal);
+        $("#html-2-pdfwrapper #totalpaidamount").html(totalPaidAmt);
+        $("#html-2-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
+        $("#html-2-pdfwrapper #total_tax_new").html(total_new_tax);
 
         var source = document.getElementById('html-2-pdfwrapper');
         let file = "Bill.pdf";
@@ -4900,7 +4919,7 @@ Template.billcard.onRendered(function() {
 
     tempObj.getSubTaxCodes = function () {
         let subTaxTableList = [];
-  
+
         getVS1Data("TSubTaxVS1")
             .then(function (dataObject) {
                 if (dataObject.length == 0) {
@@ -6809,7 +6828,7 @@ Template.billcard.events({
 
         if($('#choosetemplate').is(':checked'))
         {
-          
+
             $('#templateselection').modal('show');
         }
         else
@@ -7495,7 +7514,7 @@ Template.billcard.events({
                         values.forEach(value => {
                             let reportData = JSON.parse(value);
                             let temp = {... reportData};
-                            
+
                             temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                             temp.attachments = attachment;
@@ -7677,7 +7696,7 @@ Template.billcard.events({
                                         Meteor.call('sendNormalEmail', reportData);
                                 }
                             }
-                        }); 
+                        });
                       if(FlowRouter.current().queryParams.trans){
                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                       }else{

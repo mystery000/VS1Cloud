@@ -113,17 +113,21 @@ class="d-xl-flex flex-column flex-grow-1 align-items-xl-start"><label>Organizati
                                     <div class="col-12 col-md-4">
                                         <div class="form-group">
                                             <label>Accountant</label>
-                                            <select class="form-control" id="sltAccountant">
+                                            <select type="search" class="form-control" id="sltAccountant" name="sltAccountant" suppid=" " style="background-color:rgb(255, 255, 255); cursor: pointer;" autofocus>
+                                            </select>
+                                            <!-- <select class="form-control" id="sltAccountant">
+                                                <option value="0"></option>
                                                 {{#each item in suppliersData}}
                                                 <option value="{{item.id}}">{{item.company}}</option>
                                                 {{/each}}
-                                            </select>
+                                            </select> -->
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <div class="form-group">
                                             <label>Organization Type</label>
                                             <select class="form-control" id="sltCompanyType">
+                                                <option selected="selected"></option>
                                                 <option>Company</option>
                                                 <option>Individual</option>
                                                 <option>Not for Profit</option>
@@ -139,12 +143,13 @@ class="d-xl-flex flex-column flex-grow-1 align-items-xl-start"><label>Organizati
                                         <div class="form-group">
                                             <label>Year End</label>
                                             <select class="form-control" id="sltYearEnd">
+                                                <option value="0" selected="selected"></option>
                                                 <option value="1">January</option>
                                                 <option value="2">February</option>
                                                 <option value="3">March</option>
                                                 <option value="4">April</option>
                                                 <option value="5">May</option>
-                                                <option value="6" selected="selected">June</option>
+                                                <option value="6">June</option>
                                                 <option value="7">July</option>
                                                 <option value="8">August</option>
                                                 <option value="9">September</option>
@@ -385,6 +390,7 @@ class="d-xl-flex flex-column flex-grow-1 align-items-xl-start"><label>Organizati
                                     <div class="form-group">
                                         <label>Country</label>
                                         <select class="form-control" id="edtCountry" name="edtCountry">
+                                            <option value="" selected="selected"></option>
                                             {{#each item in countryList}}
                                             <option value="{{item}}">{{item}}</option>
                                             {{/each}}
@@ -497,6 +503,7 @@ class="d-xl-flex flex-column flex-grow-1 align-items-xl-start"><label>Organizati
                                 <div class="col-12 col-md-6">
                                     <div class="form-group"><label>Country</label>
                                         <select class="form-control" id="edtPostalCountry" name="edtPostalCountry">
+                                            <option value="" selected="selected"></option>
                                             {{#each item in countryList}}
                                             <option value="{{item}}">{{item}}</option>
                                             {{/each}}
@@ -694,7 +701,6 @@ class="d-xl-flex flex-column flex-grow-1 align-items-xl-start"><label>Organizati
             </div>
         </div>
     </div>
-
     <!-- End Help Video Modal -->
     <!-- Start Modal Product -->
     <div class="modal fade" role="dialog" tabindex="-1" id="employeeListModal">
@@ -717,8 +723,25 @@ class="d-xl-flex flex-column flex-grow-1 align-items-xl-start"><label>Organizati
             </div>
         </div>
     </div>
-
     <!-- End Modal Product -->
+    <!-- ModalSupplier -->
+    <div class="modal fade supplierListModal" role="dialog" tabindex="-1" id="supplierListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable supplierListModalInner" role="document" style="max-width: 90vw;">
+            <div class="modal-content supplierListContent">
+                <div class="modal-header">
+                    <h4>Supplier List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainSupplierModalBody" style="padding: 0px; overflow-x: hidden;">
+                    <input type="hidden" style="width: 100%; display:none;" id="supplierSelectLineID" name="supplierSelectLineID" readonly>
+                    {{> supplierlistpop}}
+
+                </div>
+                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Supplier -->
     <script>
         modalDraggable();
     </script>

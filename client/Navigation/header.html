@@ -194,13 +194,13 @@
                 <li class="nav-item dropdown d-sm-none no-arrow">
                     <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><i class="fas fa-plus"></i></a>
                     <div class="dropdown-menu dropdown-menu-right p-3 animated--grow-in" role="menu" aria-labelledby="searchDropdown">
-                        {{#if isCloudTrueERP}}
+                        <!-- {{#if isCloudTrueERP}}
                         {{#if isCloudAdminUser}}
                             <a class="nav-link" href="linktrueerp" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid; width: 47%; float: left;">
                                 <i class="fas fa-link" style="margin-right: 5px;"></i> TrueERP
                             </a>
                           {{/if}}
-                        {{/if}}
+                        {{/if}} -->
 
                         {{#if isGreenTrack}}
                         {{else}}
@@ -213,15 +213,34 @@
                         </button>
                     </div>
                 </li>
-                {{#if isCloudTrueERP}}
-                {{#if isCloudAdminUser}}
+                <!-- {{#if isSetupWizardComplete }} -->
+                    <!-- {{#if isCloudTrueERP}}
+                        {{#if isCloudAdminUser}}
+                            <li class="nav-item no-arrow mx-1 trueERPConnection" id="" role="presentation" style="padding-right: 10px;">
+                                <a class="nav-link" href="linktrueerp" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">
+                                    <i class="fas fa-link" style="margin-right: 5px;"></i> TrueERP
+                                </a>
+                            </li>
+                        {{/if}}
+                    {{/if}} -->
+                <!-- {{else}}
                     <li class="nav-item no-arrow mx-1 trueERPConnection" id="" role="presentation" style="padding-right: 10px;">
-                        <a class="nav-link" href="linktrueerp" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">
-                            <i class="fas fa-link" style="margin-right: 5px;"></i> TrueERP
+                        <a class="nav-link" href="setup" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">
+                            <i class="fas fa-link" style="margin-right: 5px;"></i> Setup Wizard
                         </a>
                     </li>
-                  {{/if}}
-                {{/if}}
+                {{/if}} -->
+
+                <!-- {{#if isSetupWizardComplete }}
+
+                    {{else}} -->
+                    <li class="nav-item no-arrow mx-1 trueERPConnection" id="" role="presentation" style="padding-right: 10px;">
+                        <a class="nav-link" href="setup" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">
+                            <i class="fas fa-link" style="margin-right: 5px;"></i> Setup Wizard
+                        </a>
+                    </li>
+                <!-- {{/if}} -->
+
                 {{#if isGreenTrack}}
                     <li class="nav-item no-arrow mx-1 upgradeToVS1" id="upgrade" role="presentation">
                         <a class="nav-link"
@@ -241,9 +260,9 @@
                         <a class="nav-link pointer" data-toggle="modal" data-target="#supportModal" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">Get <img class="img-support" src="images/phone-support.png" style="width: 25px!important;padding: 2px;"> Support</a>
                     </li>
 
-                    <div class="modal fade" role="dialog" tabindex="-1" id="supportModal">
+                    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="supportModal"> -->
                         {{> supportmodalpop}}
-                    </div>
+                    <!-- </div> -->
                 {{/if}}
 
                 <div class="d-none d-sm-block topbar-divider"></div>
@@ -558,6 +577,7 @@
                                 <li class="shorthandSearchli">Employee</li>
                                 <li class="shorthandSearchli">Invoice</li>
                                 <li class="shorthandSearchli">Journal</li>
+                                <li class="shorthandSearchli">Lead</li>
                                 <li class="shorthandSearchli">Payment</li>
                                 <li class="shorthandSearchli">Product</li>
                                 <li class="shorthandSearchli">Purchase Order</li>
@@ -581,6 +601,7 @@
                                 <li class="shorthandSearchli shorthandCode">EMP-123</li>
                                 <li class="shorthandSearchli shorthandCode">IN-123</li>
                                 <li class="shorthandSearchli shorthandCode">JO-123</li>
+                                <li class="shorthandSearchli shorthandCode">LED-123</li>
                                 <li class="shorthandSearchli shorthandCode">PA-123</li>
                                 <li class="shorthandSearchli shorthandCode">PRO-123</li>
                                 <li class="shorthandSearchli shorthandCode">PO-123</li>
@@ -775,8 +796,8 @@
                 <div class="modal-body">
                     <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpVideoModal" class="btn btn-primary">View Help Video</a></p>
                     <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                    <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                    <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                    {{> helpadvisor}}
+                    {{> helpgotoforum}}
                 </div>
                 <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
             </div>
@@ -803,5 +824,7 @@
         </div>
     </div>
 
-
+    <script>
+        modalDraggable();
+    </script>
 </template>

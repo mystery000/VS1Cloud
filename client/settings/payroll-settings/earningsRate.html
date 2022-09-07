@@ -40,7 +40,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ordinaryTimeEarningsLabel">Add Earnings</h5>
+                    <h5 class="modal-title" id="heaederEarningLabel">Add Earnings</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -77,7 +77,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="edtRateType">Rate Type</label>
-                                <input type="search" class="form-control" id="edtRateType" name="edtRateType">
+                                <input type="search" class="form-control edtRateTypeDropDown" id="edtRateType" name="edtRateType">
                             </div>
                         </div>
                         <div class="col-12">
@@ -110,11 +110,18 @@
         </div>
     </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="rateTypeListModel">
+    <div class="modal fade" role="dialog" tabindex="-1" id="rateTypeListModel" style="z-index: 999999;">
         {{> ratetypelistpop}}
     </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="addRateModel">
+    <div class="modal fade" role="dialog" tabindex="-1" id="addRateModel" style="z-index: 9999999;">
         {{> addratetypepop}}
     </div> 
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal" style="z-index: 999999999 !important;">
+        {{> taxratelistpop}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal" style="z-index: 9999999999 !important;">
+        {{> newtaxratepop}}
+    </div>
 </template>

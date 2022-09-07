@@ -10,9 +10,9 @@
         </style> -->
         <div style="margin-top: -24px;">
             <header style="padding: 16px;background-color: #ededed;">
-                <h1 class="headingMobile" style="margin: 16px; margin-bottom: 0px;">Journal Entries
+                <h1 class="headingMobile" style="margin: 16px; margin-bottom: 0px;">Journal Entries List
 
-                    <a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                    {{> helpbutton}}
 
                     <!-- Start Help View Modal -->
                     <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -23,8 +23,8 @@
                                 <div class="modal-body">
                                     <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                                     <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                    <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                    <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                    {{> helpadvisor}}
+                                    {{> helpgotoforum}}
                                 </div>
                                 <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                             </div>
@@ -213,10 +213,10 @@
                                             display: none;
                                         }
                                     </style>
-                                    
+
                                     <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
                                     {{> daterangedropdownoption}}
-                                    
+
                                 </div>
                                 <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
                                     <label style="margin-top: 8px; margin-right: 16px;">From</label>
@@ -262,10 +262,10 @@
                                         <th></th>
                                         <th></th>
                                         <th></th>
-                                        
-                                        
 
-                                    
+
+
+
                                         {{#if currencyList}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
@@ -292,7 +292,7 @@
                                         <th></th>
                                         <th></th>
 
-                                        
+
                                     </tr>
                                 {{/if}}
                             </thead>
@@ -312,7 +312,7 @@
                                                 {{# if c.active}}
                                                     <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="colDebitAmount text-right {{#if isNegativeAmount item.debitamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.debitamount c}}</td>
 
-        
+
                                                 {{/if}}
                                             {{/each}}
                                             {{#each c in currencyList }}
@@ -326,8 +326,8 @@
                                                      <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="colTaxAmount text-right {{#if isNegativeAmount item.taxamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.taxamount c}}</td>
                                                 {{/if}}
                                             {{/each}}
-                                            
-                                            
+
+
                                         {{/if}}
                                     {{else}}
                                         <td contenteditable="false" class="colDebitAmount" style="text-align: right!important;">{{item.debitamount}}</td>
@@ -338,7 +338,7 @@
                                     {{/if}}
 
 
-                                   
+
 
 
                                     <td contenteditable="false" class="colStatus">{{item.orderstatus}}</td>

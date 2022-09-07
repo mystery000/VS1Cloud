@@ -1138,6 +1138,7 @@ Template.balancesheetreport.events({
         var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
         let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
         templateObject.getBalanceSheetReports(getDateFrom);
+        $(".fullScreenSpin").css("display", "none");
     },
     "click #last12Months": function() {
         let templateObject = Template.instance();
@@ -1174,6 +1175,7 @@ Template.balancesheetreport.events({
             "-" +
             currentDate2.getDate();
         templateObject.getBalanceSheetReports(getDateFrom);
+        $(".fullScreenSpin").css("display", "none");
     },
     "click #ignoreDate": function() {
         let templateObject = Template.instance();
@@ -1182,6 +1184,7 @@ Template.balancesheetreport.events({
         $("#balancedate").attr("readonly", true);
         templateObject.dateAsAt.set("Current Date");
         templateObject.getBalanceSheetReports("", "", true);
+        $(".fullScreenSpin").css("display", "none");
     },
     "click .sales-tab-item": function(event) {
         let tempInstance = Template.instance();
@@ -1249,6 +1252,7 @@ Template.balancesheetreport.events({
         $(".fullScreenSpin").css("display", "inline-block");
         localStorage.setItem("VS1BalanceSheet_Report", "");
         Meteor._reload.reload();
+        $(".fullScreenSpin").css("display", "none");
     },
     "click .btnPrintReport": function(event) {
         $("a").attr("href", "/");
@@ -1292,6 +1296,7 @@ Template.balancesheetreport.events({
         //     }
         //
         // });
+        $(".fullScreenSpin").css("display", "none");
     },
     "keyup #myInputSearch": function(event) {
         $(".table tbody tr").show();

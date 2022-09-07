@@ -38,6 +38,7 @@ Template.purchasesaleschart.onRendered(()=>{
         let data = [];
         if( !localStorage.getItem('VS1AgedReceivableSummary_Report') ){
             data = await reportService.getAgedReceivableDetailsSummaryData(dateFrom, dateTo, ignoreDate,contactID);
+            localStorage.setItem('VS1AgedReceivableSummary_Report', JSON.stringify(data) || '');
         }else{
             data = JSON.parse(localStorage.getItem('VS1AgedReceivableSummary_Report'));
         }

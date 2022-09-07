@@ -76,11 +76,11 @@ templateObject.getSuperannuationData = async function(){
                 data.tsuperannuation[i].fields.Superfund || '',
                 data.tsuperannuation[i].fields.Supertypeid || '',
                 data.tsuperannuation[i].fields.Employeeid || '',
-                'Key Missing',
-                'Key Missing',
-                'Key Missing',
+                data.tsuperannuation[i].fields.ABN || '',
+                data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                data.tsuperannuation[i].fields.BSB || '',
                 data.tsuperannuation[i].fields.Accountno || '',
-                'Key Missing',
+                data.tsuperannuation[i].fields.AccountName || ''
             ];
 
             splashArraySuperannuationList.push(dataListAllowance);
@@ -181,11 +181,11 @@ templateObject.getSuperannuationData = async function(){
                                         data.tsuperannuation[i].fields.Superfund || '',
                                         data.tsuperannuation[i].fields.Supertypeid || '',
                                         data.tsuperannuation[i].fields.Employeeid || '',
-                                        'Key Missing',
-                                        'Key Missing',
-                                        'Key Missing',
+                                        data.tsuperannuation[i].fields.ABN || '',
+                                        data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                                        data.tsuperannuation[i].fields.BSB || '',
                                         data.tsuperannuation[i].fields.Accountno || '',
-                                        'Key Missing',
+                                        data.tsuperannuation[i].fields.AccountName || ''
                                     ];
 
                                     splashArraySuperannuationList.push(dataListAllowance);
@@ -283,10 +283,13 @@ $('.superannuationDropDown').editableSelect()
             }
             if( data.tsuperannuation.length > 0 ){
                 let tSuperannuation = data.tsuperannuation.filter((item) => {
-                    if( item.fields.Description == searchName ){
+                    if( item.fields.Superfund == searchName ){
                         return item;
                     }
                 });
+                $('#superannuationRateForm')[0].reset();
+                $('#newSuperannuationFundLabel').text('Edit Superannuation Fund')
+                $('#superannuationSettingsModal').modal('hide');  
 
                 if( tSuperannuation.length > 0 ){
                     if( tsuperannuation[0].fields.Supertypeid == 'Self-Managed Superannuation Fund')
@@ -301,7 +304,7 @@ $('.superannuationDropDown').editableSelect()
                     }
 
                     $('#newSuperannuationFundId').val(tSuperannuation[0].fields.ID);
-                    $('#edtFundType').val(tSuperannuation[0].fields.area);
+                    $('#edtFundType').val(tSuperannuation[0].fields.Supertypeid);
                     $('#edtFundName').val(tSuperannuation[0].fields.Superfund);
                     $('#edtelectronicsalias').val(tSuperannuation[0].fields.ElectronicsServiceAddressAlias);
                     $('#edtEmployerNumber').val(tSuperannuation[0].fields.Employeeid);
@@ -345,6 +348,7 @@ Template.superannuationSettings.events({
     },
     'click .btnAddordinaryTimeSuperannuation':function(event){
         $('#superannuationRateForm')[0].reset();
+        $('#newSuperannuationFundLabel').text('Add New Superannuation Fund')
         $('#newSuperannuationFundModal').modal('hide');
     },
     'click .btnRefreshSuperannuation':function(event){
@@ -364,11 +368,11 @@ Template.superannuationSettings.events({
                             data.tsuperannuation[i].fields.Superfund || '',
                             data.tsuperannuation[i].fields.Supertypeid || '',
                             data.tsuperannuation[i].fields.Employeeid || '',
-                            'Key Missing',
-                            'Key Missing',
-                            'Key Missing',
+                            data.tsuperannuation[i].fields.ABN || '',
+                            data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                            data.tsuperannuation[i].fields.BSB || '',
                             data.tsuperannuation[i].fields.Accountno || '',
-                            'Key Missing',
+                            data.tsuperannuation[i].fields.AccountName || ''
                         ];
                         splashArraySuperannuationList.push(dataListAllowance);
                     }
@@ -451,8 +455,7 @@ Template.superannuationSettings.events({
                 ID: parseInt(id),
                 Superfund:fundName,
                 Employeeid:parseInt(employeNumber),
-                area:fundType,
-                Supertypeid:fundtypeid,
+                Supertypeid:fundType,
                 ABN:abn,
                 AccountName:edtaccountname,
                 Accountno:edtaccountnumber,

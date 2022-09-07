@@ -6,7 +6,7 @@
         <div class="d-sm-flex justify-content-between align-items-center mb-4" style="padding: 1.5rem;">
             <h3 class="text-dark mb-0">Reports
                 <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
-                <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                {{> helpbutton}}
 
                 <!-- Start Help View Modal -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -18,8 +18,8 @@
                             <div class="modal-body">
                                 <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                                 <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=49" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                {{> helpadvisor}}
+                                {{> helpgotoforum}}
                             </div>
                             <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                         </div>
@@ -874,7 +874,7 @@
                                     </div>
                                     <div class="card-body" style="overflow-x: auto;">
                                         <div class="row">
-                                            <div class="col flex-grow-1"><a href="/accountant_company">Company</a></div>
+                                            <div class="col flex-grow-1"><a href="/accountant_company" class="reportpage">Company</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input favCheckBox" type="checkbox" id="formCheck-Company">
@@ -895,7 +895,7 @@
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row">
-                                            <div class="col flex-grow-1"><a href="/accountant_companyastrustee">Company as Trustee</a></div>
+                                            <div class="col flex-grow-1"><a href="/accountant_companyastrustee" class="reportpage">Company as Trustee</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input favCheckBox chkCompanyTrustee" type="checkbox" id="formCheck-CompanyTrustee">
@@ -916,7 +916,7 @@
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row">
-                                            <div class="col flex-grow-1"><a href="/accountant_financialstatement">Financial Statement</a></div>
+                                            <div class="col flex-grow-1"><a href="/accountant_financialstatement" class="reportpage">Financial Statement</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input favCheckBox chkFinancialStatement" type="checkbox" id="formCheck-FinancialStatement">
@@ -937,7 +937,7 @@
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row ">
-                                            <div class="col flex-grow-1"><a href="/accountant_individual">Individual</a></div>
+                                            <div class="col flex-grow-1"><a href="/accountant_individual" class="reportpage">Individual</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input favCheckBox chkIndividual" type="checkbox" id="formCheck-Individual">
@@ -958,7 +958,7 @@
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row">
-                                            <div class="col flex-grow-1"><a href="/accountant_partnershipnontrading">Partnership Non Trading</a></div>
+                                            <div class="col flex-grow-1"><a href="/accountant_partnershipnontrading" class="reportpage">Partnership Non Trading</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input favCheckBox chkPartnership" type="checkbox" id="formCheck-Partnership">
@@ -979,7 +979,7 @@
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row">
-                                            <div class="col flex-grow-1"><a href="/accountant_trustnontrading">Trust Non Trading</a></div>
+                                            <div class="col flex-grow-1"><a href="/accountant_trustnontrading" class="reportpage">Trust Non Trading</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input favCheckBox chkTrustNon" type="checkbox" id="formCheck-TrustNon">
@@ -1000,7 +1000,7 @@
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row">
-                                            <div class="col flex-grow-1"><a href="/accountant_selfmanagedsuperfund">Self Managed Superfund</a></div>
+                                            <div class="col flex-grow-1"><a href="/accountant_selfmanagedsuperfund" class="reportpage">Self Managed Superfund</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input favCheckBox chkSuperfund" type="checkbox" id="formCheck-Superfund">
@@ -1021,7 +1021,7 @@
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row">
-                                            <div class="col flex-grow-1"><a href="/accountant_singledirector">Single Director</a></div>
+                                            <div class="col flex-grow-1"><a href="/accountant_singledirector" class="reportpage">Single Director</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input favCheckBox chkSingleDirector" type="checkbox" id="formCheck-SingleDirector">
@@ -1042,7 +1042,7 @@
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row">
-                                            <div class="col flex-grow-1"><a href="/accountant_soletradernontrading">Sole Trader Non Trading</a></div>
+                                            <div class="col flex-grow-1"><a href="/accountant_soletradernontrading" class="reportpage">Sole Trader Non Trading</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input favCheckBox chkSoleTrader" type="checkbox" id="formCheck-SoleTrader">
@@ -1063,7 +1063,7 @@
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row">
-                                            <div class="col flex-grow-1"><a href="/accountant_trust">Trust</a></div>
+                                            <div class="col flex-grow-1"><a href="/accountant_trust" class="reportpage">Trust</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input favCheckBox chkTrust" type="checkbox" id="formCheck-Trust">

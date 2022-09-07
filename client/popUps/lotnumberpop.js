@@ -25,7 +25,18 @@ Template.lotnumberpop.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.serialnumberlist = new ReactiveVar();
 });
-Template.lotnumberpop.onRendered(() => {});
+Template.lotnumberpop.onRendered(() => {
+    $(".lotExpiryDate input").datepicker({
+        showOn: 'focus',
+        buttonImageOnly: false,
+        dateFormat: 'dd/mm/yy',
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-90:+10",
+    });
+});
 Template.lotnumberpop.helpers({});
 Template.lotnumberpop.events({
     'keyup #first-lot-number': function(event) {
@@ -33,21 +44,29 @@ Template.lotnumberpop.events({
     },
     'click .btnSNSave': async function(event) {
         const numbers = $('#tblLotlist tbody tr td:nth-child(3)');
+        const expiryDates = $('#tblLotlist tbody tr td:nth-child(4) input');
         let newNumberList = [];
+        let newExpiryDateList = [];
         numbers.each((key, lotEl) => {
             if (key === 0) return;
             const lotNumber = $(lotEl).text();
             newNumberList.push(lotNumber);
         });
+        expiryDates.each((key, lotExpiryEl) => {
+            const lotExpiryDate = $(lotExpiryEl).val();
+            newExpiryDateList.push(lotExpiryDate);
+        });
 
         let lotNumberCreationType = $('#tblInvoiceLine').length;
-        if ($('.tblRefundLine').length) lotNumberCreationType = 0;
         const productName = localStorage.getItem('selectedProductName');
         if (newNumberList.length) {
+            $('.btnSNSave').prop('disabled', true);
+            $('.btnSNSave .fa-save').addClass('d-none');
+            $('.btnSNSave .spinner-border').removeClass('d-none');
             const lotList = await sideBarService.getAllSerialNumber();
             const availableList = lotList.tserialnumberlistcurrentreport.filter(serial => serial.ProductName === productName && serial.AllocType === 'In-Stock');
             const lotNumberList = availableList.map(lot => lot.BatchNumber);
-            if (!lotNumberCreationType) {
+            // if (!lotNumberCreationType) {
                 let existSameNumber = false;
                 for (let i = 0; i < newNumberList.length; i++) {
                     if (lotNumberList.includes((newNumberList[i]).toString())) {
@@ -62,29 +81,36 @@ Template.lotnumberpop.events({
                     const modalType = $('#lotNumberModal').attr('data-type');
                     if (modalType === 'from') {
                         $(`table tbody tr:nth-child(${rowNumber}) td.colSerialFrom`).attr('data-lotnumbers', newNumberList.join(','));
+                        $(`table tbody tr:nth-child(${rowNumber}) td.colSerialFrom`).attr('data-expirydates', newExpiryDateList.join(','));
                     } else if (modalType === 'to') {
                         $(`table tbody tr:nth-child(${rowNumber}) td.colSerialTo`).attr('data-lotnumbers', newNumberList.join(','));
+                        $(`table tbody tr:nth-child(${rowNumber}) td.colSerialTo`).attr('data-expirydates', newExpiryDateList.join(','));
                     } else {
                         $(`table tbody tr:nth-child(${rowNumber}) td.colSerialNo`).attr('data-lotnumbers', newNumberList.join(','));
+                        $(`table tbody tr:nth-child(${rowNumber}) td.colSerialNo`).attr('data-expirydates', newExpiryDateList.join(','));
                     }
                     $('#lotNumberModal').modal('hide');
                 }
-            } else {
-                let existDifferentNumber = false;
-                for (let i = 0; i < newNumberList.length; i++) {
-                    if (!serialNumberList.includes((newNumberList[i]).toString())) {
-                        existDifferentNumber = true;
-                        break;
-                    }
-                }
-                if (existDifferentNumber) {
-                    swal('', 'One or more than lot numbers not existed or nonavailable! Please try to change lot numbers.', 'error');
-                } else {
-                    const rowNumber = $('#lotNumberModal').attr('data-row');
-                    $(`table tbody tr:nth-child(${rowNumber}) td.colSerialNo`).attr('data-lotnumbers', newNumberList.join(','));
-                    $('#lotNumberModal').modal('hide');
-                }
-            }
+            // } else {
+            //     let existDifferentNumber = false;
+            //     for (let i = 0; i < newNumberList.length; i++) {
+            //         if (!lotNumberList.includes((newNumberList[i]).toString())) {
+            //             existDifferentNumber = true;
+            //             break;
+            //         }
+            //     }
+            //     if (existDifferentNumber) {
+            //         swal('', 'One or more than lot numbers not existed or nonavailable! Please try to change lot numbers.', 'error');
+            //     } else {
+            //         const rowNumber = $('#lotNumberModal').attr('data-row');
+            //         $(`table tbody tr:nth-child(${rowNumber}) td.colSerialNo`).attr('data-lotnumbers', newNumberList.join(','));
+            //         $(`table tbody tr:nth-child(${rowNumber}) td.colSerialNo`).attr('data-expirydates', newExpiryDateList.join(','));
+            //         $('#lotNumberModal').modal('hide');
+            //     }
+            // }
+            $('.btnSNSave').prop('disabled', false);
+            $('.btnSNSave .fa-save').removeClass('d-none');
+            $('.btnSNSave .spinner-border').addClass('d-none');
         } else {
             swal('', 'You should input more than one lot numbers.', 'info');
         }
@@ -121,22 +147,41 @@ Template.lotnumberpop.events({
         autofilled = false;
         const rowNumber = $('#lotNumberModal').attr('data-row');
         $(`table tbody tr:nth-child(${rowNumber}) td.colSerialNo`).attr('data-lotnumbers', '');
-        const defaultRow = '<tr>' +
-        '    <td rowspan="2"></td>' +
-        '    <td colspan="3" class="text-center">Allocate Lot Numbers</td>' +
-        '</tr>' +
-        '<tr>' +
-        '    <td class="text-start">#</td>' +
-        '    <td class="text-start">Lot number</td>' +
-        '    <td class="text-start">Expiry Date</td>' +
-        '</tr>' +
-        '<tr>' +
-        '    <td></td>' +
-        '    <td class="lotNo">*</td>' +
-        '    <td contenteditable="true" class="linelotnumbers" id="first-lot-number"></td>' +
-        '    <td class="lotExpiryDate" id="first-lot-expiry-date"><div class="form-group mb-0"><input class="form-control" type="datetime-local" style="font-size: 11px;"/></div></td>' +
-        '</tr>';
+        const defaultRow = `<tr>
+            <td rowspan="2"></td>
+            <td colspan="3" class="text-center">Allocate Lot Numbers</td>
+        </tr>
+        <tr>
+            <td class="text-start">#</td>
+            <td class="text-start">Lot number</td>
+            <td class="text-start">Expiry Date</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="lotNo">*</td>
+            <td contenteditable="true" class="linelotnumbers" id="first-lot-number"></td>
+            <td class="lotExpiryDate" id="first-lot-expiry-date">
+                <div class="form-group m-0">
+                    <div class="input-group date" style="cursor: pointer;">
+                        <input type="text" class="form-control" style="height: 25px;">
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>`;
         $('#tblLotlist tbody').html(defaultRow);
+        $('.lotExpiryDate input').datepicker({
+            showOn: 'focus',
+            buttonImageOnly: false,
+            dateFormat: 'dd/mm/yy',
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-90:+10",
+        });
     },
     'click .btnAutoFill': async function(event) {
         let startLotnum = Number($('#first-lot-number').text());
@@ -155,6 +200,8 @@ Template.lotnumberpop.events({
                 event.preventDefault();
                 return false;
             } else {
+                $('.btnAutoFill').prop('disabled', true);
+                $('.btnAutoFill .spinner-border').removeClass('d-none');
                 const lotList = await sideBarService.getAllSerialNumber();
                 const lotNumberList = lotList.tserialnumberlistcurrentreport.map(batch => batch.BatchNumber);
                 let existSameNumber = false;
@@ -177,7 +224,16 @@ Template.lotnumberpop.events({
                             <tr>
                                 <td></td>
                                 <td>${Number(i)+1}</td><td contenteditable="true" class="lineLotnumbers" id="first-serial-number">${Number(startLotnum)+i}</td>
-                                <td class="lotExpiryDate" id="first-lot-expiry-date"><div class="form-group mb-0"><input class="form-control" value="${startLotExpiryDate}" type="datetime-local" style="font-size: 11px;"/></div></td>
+                                <td class="lotExpiryDate" id="first-lot-expiry-date">
+                                    <div class="form-group m-0">
+                                        <div class="input-group date" style="cursor: pointer;">
+                                            <input type="text" class="form-control" style="height: 25px;" value="${startLotExpiryDate}">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                             `;
                         } else {
@@ -185,13 +241,35 @@ Template.lotnumberpop.events({
                             <tr>
                                 <td></td>
                                 <td>${Number(i)+1}</td><td contenteditable="true" class="lineLotnumbers">${Number(startLotnum)+i}</td>
-                                <td class="lotExpiryDate"><div class="form-group mb-0"><input class="form-control" value="${startLotExpiryDate}" type="datetime-local" style="font-size: 11px;"/></div></td>
+                                <td class="lotExpiryDate">
+                                    <div class="form-group m-0">
+                                        <div class="input-group date" style="cursor: pointer;">
+                                            <input type="text" class="form-control" style="height: 25px;" value="${startLotExpiryDate}">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                             `;
                         }
                     }
                     $('#tblLotlist').html(shtml);
                 }
+
+                $(".lotExpiryDate input").datepicker({
+                    showOn: 'focus',
+                    buttonImageOnly: false,
+                    dateFormat: 'dd/mm/yy',
+                    showOtherMonths: true,
+                    selectOtherMonths: true,
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-90:+10",
+                });
+                $('.btnAutoFill').prop('disabled', false);
+                $('.btnAutoFill .spinner-border').addClass('d-none');
             }
         }
     }

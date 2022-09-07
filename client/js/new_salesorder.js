@@ -381,7 +381,7 @@ Template.new_salesorder.onRendered(() => {
                if (FlowRouter.current().queryParams.id) {
 
                }else{
-               // $(".heading").html("New Sales Order " +newSOId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
+               // $(".heading").html("New Sales Order " +newSOId +'<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
                };
            }, 50);
        }).catch(function(err) {
@@ -1602,9 +1602,8 @@ Template.new_salesorder.onRendered(() => {
         }
 
         if (object_invoce[0]["taxItems"]) {
-                
+
             let taxItems = object_invoce[0]["taxItems"];
-            console.log(taxItems);
             $("#templatePreviewModal #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
                 let html = `
@@ -1616,7 +1615,7 @@ Template.new_salesorder.onRendered(() => {
                         <div style="padding-left: 16px; width: 50%;">
                             <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
                                 $${taxItems[code].toFixed(2)}</p>
-                        </div> 
+                        </div>
                     </div>
                 `;
                 $("#templatePreviewModal #tax_list_print").append(html);
@@ -6371,12 +6370,14 @@ Template.new_salesorder.onRendered(() => {
 
 
         exportSalesToPdf1 = function() {
+          
             let margins = {
                 top: 0,
                 bottom: 0,
                 left: 0,
                 width: 100
             };
+
             let invoiceData = templateObject.salesorderrecord.get();
             let stripe_id = templateObject.accountID.get() || '';
             let stripe_fee_method = templateObject.stripe_fee_method.get();
@@ -6389,6 +6390,14 @@ Template.new_salesorder.onRendered(() => {
             let surname = $('#lastname').val();
             let dept = $('#sltDept').val();
             var erpGet = erpDb();
+
+            let subtotal = $('#subtotal_total').text();
+            let net = $('#subtotal_nett').text();
+            let subtotal_discount = $('#subtotal_discount').text();
+            let grandTotal = $('#grandTotal').text();
+            let totalPaidAmt = $('#totalPaidAmt').text();
+            let totalBalanceDue = $('#totalBalanceDue').text();
+
             $('#tblSalesOrderLine > tbody > tr').each(function() {
                 var lineID = this.id;
                 let tdproduct = $('#' + lineID + " .lineProductName").val();
@@ -6435,6 +6444,13 @@ Template.new_salesorder.onRendered(() => {
 
                 lineItems.push(lineItemObj);
             });
+         
+            $("#html-2-pdfwrapper #subtotal_totalPrint").html(subtotal);
+            $("#html-2-pdfwrapper #grandTotalPrint").html(grandTotal);
+            $("#html-2-pdfwrapper #totalpaidamount").html(totalPaidAmt);
+            $("#html-2-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
+
+
             let company = Session.get('vs1companyName');
             let vs1User = localStorage.getItem('mySession');
             let customerEmail = $('#edtCustomerEmail').val();
@@ -6450,7 +6466,7 @@ Template.new_salesorder.onRendered(() => {
             // pdf.setFontSize(18);
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
             $('#html-2-pdfwrapper').css('display', 'block');
-            
+
             $("#html-2-pdfwrapper #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
                 let html = `
@@ -6467,8 +6483,9 @@ Template.new_salesorder.onRendered(() => {
                 `;
                 $("#html-2-pdfwrapper #tax_list_print").append(html);
             });
-            
+
             var source = document.getElementById('html-2-pdfwrapper');
+         
             let file = "Sales Order.pdf";
             if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
                 file = 'Sales Order-' + id + '.pdf';
@@ -6491,13 +6508,16 @@ Template.new_salesorder.onRendered(() => {
                 }
             };
             html2pdf().set(opt).from(source).save().then(function(dataObject) {
+
                 if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                    $('#html-2-pdfwrapper').css('display', 'none');
                     $(".btnSave").trigger("click");
                 } else {
                     $('#html-2-pdfwrapper').css('display', 'none');
                     $('.fullScreenSpin').css('display', 'none');
                 }
             });
+         
             // pdf.addHTML(source, function () {
 
             //     pdf.setFontSize(10);
@@ -7270,8 +7290,7 @@ Template.new_salesorder.onRendered(function() {
     // custom field displaysettings
     function initCustomFieldDisplaySettings(data, listType) {
       let custFields = [];
-      let customData = {};
-      let customFieldCount = 14;
+      let customData = {}; 
 
       let reset_data = [
         { label: 'Product Name', class: 'colProductName', active: true },
@@ -7289,6 +7308,7 @@ Template.new_salesorder.onRendered(function() {
         { label: 'Disc %', class: 'colDiscount', active: true },
         { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
       ];
+      let customFieldCount = reset_data.length; 
 
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
@@ -8614,9 +8634,7 @@ Template.new_salesorder.events({
           $('.fullScreenSpin').css('display', 'inline-block');
           var sales_orders = $('input[name="Sales Order"]:checked').val();
           let emid = Session.get('mySessionEmployeeLoggedID');
-
           var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
-
           sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
             var id = templateid[0].fields.ID;
@@ -9437,8 +9455,8 @@ Template.new_salesorder.events({
                 let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
                 let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
-                let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumber');
-                let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-lotexpirydate');
+                let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumbers');
+                let tdExpiryDates = $('#' + lineID + " .colSerialNo").attr('data-expirydates');
 
                 if (tdproduct != "") {
 
@@ -9484,14 +9502,18 @@ Template.new_salesorder.events({
 
                     // Feature/ser-lot number tracking: Save Lot Number
                     if (tdLotNumber) {
+                        const lotNumbers = tdLotNumber.split(',');
+                        const expiryDates = tdExpiryDates.split(',');
                         let tpqaList = [];
-                        for (let i = 0; i < serialNumbers.length; i++) {
+                        for (let i = 0; i < lotNumbers.length; i++) {
+                            const dates = expiryDates[i].split('/');
                             const tpqaObject = {
                                 type: "PQABatch",
                                 fields: {
                                     Active: true,
+                                    BatchExpiryDate: new Date(parseInt(dates[2]), parseInt(dates[1]) - 1, parseInt(dates[0])).toISOString(),
                                     Qty: 1,
-                                    SerialNumber: serialNumbers[i],
+                                    BatchNo: lotNumbers[i],
                                 }
                             };
                             tpqaList.push(tpqaObject);
@@ -9501,7 +9523,7 @@ Template.new_salesorder.events({
                             fields: {
                                 Active: true,
                                 PQABatch: tpqaList,
-                                Qty: serialNumbers.length,
+                                Qty: lotNumbers.length,
                             }
                         }
                         lineItemObjForm.fields.PQA = pqaObject;
@@ -11994,20 +12016,43 @@ Template.new_salesorder.events({
                                 } else {
                                     let shtml = '';
                                     let i = 0;
-                                    shtml += `
-                                    <tr><td colspan="5">Allocate Lot Number</td><td rowspan="2">CUSTFLD</td></tr>
-                                    <tr><td>Lot No</td><td>Expiry Date</td><td>Qty</td><td>BO Qty</td><td>Length</td></tr>
+                                    shtml += `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
+                                    <tr><td class="text-start">#</td><td class="text-start">Lot number</td><td class="text-start">Expiry Date</td></tr>
                                     `;
                                     for (let k = 0; k < element.pqaseriallotdata.fields.PQABatch.length; k++) {
+                                        const dates = element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate.split(' ')[0].split('-') || '';
                                         if (element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo == "null") {
                                         } else {
                                             i++;
                                             shtml += `
-                                            <tr><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.UOMQty}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BOUOMQty}</td><td></td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>${Number(i)}</td><td contenteditable="true" class="lineLotnumbers">${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo}</td>
+                                                <td class="lotExpiryDate">
+                                                    <div class="form-group m-0">
+                                                        <div class="input-group date" style="cursor: pointer;">
+                                                            <input type="text" class="form-control" style="height: 25px;" value="${dates[2]}/${dates[1]}/${dates[0]}">
+                                                            <div class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             `;
                                         }
                                     }
-                                    $('#tblSeriallist tbody').html(shtml);
+                                    $('#tblLotlist tbody').html(shtml);
+                                    $('.lotExpiryDate input').datepicker({
+                                        showOn: 'focus',
+                                        buttonImageOnly: false,
+                                        dateFormat: 'dd/mm/yy',
+                                        showOtherMonths: true,
+                                        selectOtherMonths: true,
+                                        changeMonth: true,
+                                        changeYear: true,
+                                        yearRange: "-90:+10",
+                                    });
                                 }
                             }
                         }

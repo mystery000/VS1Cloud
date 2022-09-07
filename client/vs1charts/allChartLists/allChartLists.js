@@ -358,6 +358,19 @@ Template.allChartLists.onRendered(function () {
           $(`[key='${item}']`).addClass("chart-visibility");
         }
       }
+    } else {
+      // Set default chart list
+      $('.card-visibility').each(function () {
+        $(this).find('.cardShowBtn .far').removeClass('fa-eye');
+        let position = $(this).data('default-position');
+        $(this).attr('position', position);
+        $(this).find('.cardShowBtn .far').addClass('fa-eye-slash');
+        $(this).attr("card-active", 'false');
+      })
+      $(`[chart-group='${_chartGroup}']`).attr("card-active", 'true');
+      $(`[chart-group='${_chartGroup}']`).removeClass('hideelement');
+      $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
+      $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
     }
     await ChartHandler.buildPositions();
     // Handle sorting

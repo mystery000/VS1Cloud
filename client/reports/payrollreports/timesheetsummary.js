@@ -97,17 +97,31 @@ Template.timesheetsummary.onRendered(() => {
         ignoreDate: true
       };
     }
-    $("#dateFrom").val(defaultOptions.fromDate);
-    $("#dateTo").val(defaultOptions.toDate);
+    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $('.edtReportDates').attr('disabled', false)
+    if( ignoreDate == true ){
+      $('.edtReportDates').attr('disabled', true);
+      templateObject.dateAsAt.set("Current Date");
+    }
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getTimeSheetEntry();
   };
   templateObject.getTimeSheetEntry = async function () {
-    const options = await templateObject.reportOptions.get();
-    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let ignoreDate = options.ignoreDate || false;
-    let data = await reportService.getTimeSheetEntry( dateFrom, dateTo, ignoreDate, '1 month');
+    let data = [];
+    if (!localStorage.getItem('VS1TimesheetSummary_Report')) {
+      const options = await templateObject.reportOptions.get();
+      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let ignoreDate = options.ignoreDate || false;
+      let data = await reportService.getTimeSheetEntry( dateFrom, dateTo, ignoreDate, '1 month');
+      if( data.ttimesheetentry.length > 0 ){
+        localStorage.setItem('VS1TimesheetSummary_Report', JSON.stringify(data)||'');
+      }
+    }else{
+      data = JSON.parse(localStorage.getItem('VS1TimesheetSummary_Report'));
+    }
     const result = new Array();
     if(data){
       data.ttimesheetentry.map((subitem) => {
@@ -122,7 +136,9 @@ Template.timesheetsummary.onRendered(() => {
           });
         }
       });
+      
     }
+    $(".fullScreenSpin").css("display", "none");
     templateObject.records.set(result);    
   };
   templateObject.getTimeSheetEntry();
@@ -249,7 +265,8 @@ Template.timesheetsummary.events({
     }
   },
   "change .edtReportDates": async function () {
-    $(".fullScreenSpin").css("display", "block");
+    $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem('VS1TimesheetSummary_Report', '');
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
@@ -257,7 +274,8 @@ Template.timesheetsummary.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click #lastMonth": async function () {
-    $(".fullScreenSpin").css("display", "block");
+    $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem('VS1TimesheetSummary_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
@@ -265,7 +283,8 @@ Template.timesheetsummary.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click #lastQuarter": async function () {
-    $(".fullScreenSpin").css("display", "block");
+    $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem('VS1TimesheetSummary_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
@@ -273,9 +292,9 @@ Template.timesheetsummary.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click #last12Months": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem('VS1TimesheetSummary_Report', '');
+    let templateObject = Template.instance();
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
     var currentDate = new Date();
@@ -302,8 +321,9 @@ Template.timesheetsummary.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click #ignoreDate": async function () {
-    let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem('VS1TimesheetSummary_Report', '');
+    let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
     await templateObject.setReportOptions(true);
     $(".fullScreenSpin").css("display", "none");

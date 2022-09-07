@@ -28,7 +28,7 @@ Template.addaccountpop.onRendered(function () {
     //     $(this).val(item.id);
     //     $(this).text(item.name);
     // });
-    $('.fullScreenSpin').css('display', 'inline-block');
+    // $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let accountService = new AccountService();
     let organisationService = new OrganisationService();
@@ -177,6 +177,8 @@ Template.addaccountpop.onRendered(function () {
             templateObject.accounttyperecords.set(accountTypeList);
 
         });
+        $(".fullScreenSpin").css("display", "none");
+
     });
 
     templateObject.getAllTaxCodes = function () {
@@ -454,6 +456,10 @@ Template.addaccountpop.events({
                            localStorage.setItem('vs1companyBankRoutingNo', routingNo);
                         sideBarService.getAccountListVS1().then(function (dataReload) {
                             addVS1Data('TAccountVS1', JSON.stringify(dataReload)).then(function (datareturn) {
+                                if( url.includes("/employeescard") ){
+                                    Meteor._reload.reload();
+                                    return false;
+                                }
                                 if(url.includes("/productview")) {
                                     if (accSelected == "cogs") {
                                         $('#sltcogsaccount').val(accountname);
@@ -465,9 +471,13 @@ Template.addaccountpop.events({
                                      $('#addAccountModal').modal('toggle');
                                      $('.fullScreenSpin').css('display', 'none');
                                     return false;
-                                }
+                                }    
                                 window.open('/accountsoverview', '_self');
                             }).catch(function (err) {
+                                if( url.includes("/employeescard") ){
+                                    Meteor._reload.reload();
+                                    return false;
+                                }
                               if(url.includes("/productview")) {
                                     if (accSelected == "cogs") {
                                         $('#sltcogsaccount').val(accountname);
@@ -483,6 +493,10 @@ Template.addaccountpop.events({
                                 window.open('/accountsoverview', '_self');
                             });
                         }).catch(function (err) {
+                            if( url.includes("/employeescard") ){
+                                Meteor._reload.reload();
+                                return false;
+                            }
                             if(url.includes("/productview")) {
                                     if (accSelected == "cogs") {
                                         $('#sltcogsaccount').val(accountname);
@@ -500,6 +514,10 @@ Template.addaccountpop.events({
                     }).catch(function (err) {
                       sideBarService.getAccountListVS1().then(function (dataReload) {
                           addVS1Data('TAccountVS1', JSON.stringify(dataReload)).then(function (datareturn) {
+                            if( url.includes("/employeescard") ){
+                                Meteor._reload.reload();
+                                return false;
+                            }
                           if(url.includes("/productview")) {
                                     if (accSelected == "cogs") {
                                         $('#sltcogsaccount').val(accountname);
@@ -514,6 +532,10 @@ Template.addaccountpop.events({
                                 }
                               window.open('/accountsoverview', '_self');
                           }).catch(function (err) {
+                            if( url.includes("/employeescard") ){
+                                Meteor._reload.reload();
+                                return false;
+                            }
                             if(url.includes("/productview")) {
                                     if (accSelected == "cogs") {
                                         $('#sltcogsaccount').val(accountname);
@@ -529,6 +551,10 @@ Template.addaccountpop.events({
                               window.open('/accountsoverview', '_self');
                           });
                       }).catch(function (err) {
+                            if( url.includes("/employeescard") ){
+                                Meteor._reload.reload();
+                                return false;
+                            }
                                 if(url.includes("/productview")) {
                                     if (accSelected == "cogs") {
                                         $('#sltcogsaccount').val(accountname);
@@ -548,6 +574,10 @@ Template.addaccountpop.events({
                     } else {
                         sideBarService.getAccountListVS1().then(function (dataReload) {
                             addVS1Data('TAccountVS1', JSON.stringify(dataReload)).then(function (datareturn) {
+                                if( url.includes("/employeescard") ){
+                                    Meteor._reload.reload();
+                                    return false;
+                                }
                                if(url.includes("/productview")) {
                                     if (accSelected == "cogs") {
                                         $('#sltcogsaccount').val(accountname);
@@ -562,6 +592,10 @@ Template.addaccountpop.events({
                                 }
                                 window.open('/accountsoverview', '_self');
                             }).catch(function (err) {
+                                if( url.includes("/employeescard") ){
+                                    Meteor._reload.reload();
+                                    return false;
+                                }
                                if(url.includes("/productview")) {
                                     if (accSelected == "cogs") {
                                         $('#sltcogsaccount').val(accountname);
@@ -577,6 +611,10 @@ Template.addaccountpop.events({
                                 window.open('/accountsoverview', '_self');
                             });
                         }).catch(function (err) {
+                            if( url.includes("/employeescard") ){
+                                Meteor._reload.reload();
+                                return false;
+                            }
                            if(url.includes("/productview")) {
                                     if (accSelected == "cogs") {
                                         $('#sltcogsaccount').val(accountname);

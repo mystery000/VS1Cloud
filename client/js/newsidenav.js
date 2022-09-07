@@ -129,6 +129,9 @@ Template.newsidenav.onCreated(function() {
     templateObject.isAppointmentSMS = new ReactiveVar();
     templateObject.isAppointmentSMS.set(false);
 
+    templateObject.isSerialNumberList = new ReactiveVar();
+    templateObject.isSerialNumberList.set(false);
+
     $(document).ready(function() {
         var erpGet = erpDb();
         var LoggedDB = erpGet.ERPDatabase;
@@ -194,6 +197,8 @@ Template.newsidenav.onRendered(function() {
     let isImportProduct = Session.get('CloudImportProd');
     let isStockonHandDemandChart = Session.get('CloudStockOnHand');
     let isAppointmentSMS = Session.get('CloudApptSMS');
+
+    let isSerialNumberList = Session.get('CloudShowSerial') || false;
 
     var erpGet = erpDb();
     var LoggedDB = erpGet.ERPDatabase;
@@ -671,7 +676,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavreceipt').removeClass('active');
                 $('.collapse').collapse('hide');
                 $('#sidenavshipping').addClass('active');
-            }else if ((currentLoc == "/processlist")) {
+            }else if ((currentLoc == "/processlist")|| (currentLoc == '/workordercard')) {
               $('#sidenavaccounts').removeClass('active');
                 $('#sidenavbanking').removeClass('active');
                 $('#sidenavdashbaord').removeClass('active');
@@ -840,6 +845,9 @@ Template.newsidenav.onRendered(function() {
         }
         if (isAppointmentSMS) {
             templateObject.isAppointmentSMS.set(true);
+        }
+        if (isSerialNumberList) {
+            templateObject.isSerialNumberList.set(true);
         }
     }
 
@@ -1176,6 +1184,43 @@ Template.newsidenav.onRendered(function() {
             //localStorage.setItem('VS1AccountList', JSON.stringify(data) || '');
             addVS1Data('TAccountVS1', JSON.stringify(data));
             $("<span class='process'>Accounts Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+
+        }).catch(function(err) {
+
+        });
+
+
+        sideBarService.getReceiptCategory().then(function(data) {
+          countObjectTimes++;
+          progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+          $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+          $(".progressBarInner").text(Math.round(progressPercentage)+"%");
+          $(".progressName").text("Receipt Category ");
+
+          if((progressPercentage > 0) && (Math.round(progressPercentage) != 100)){
+            if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }else{
+              $('.headerprogressbar').addClass('headerprogressbarShow');
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }
+
+          }else if(Math.round(progressPercentage) >= 100){
+              $('.checkmarkwrapper').removeClass("hide");
+            setTimeout(function() {
+              if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }else{
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }
+
+            }, 1000);
+          }
+
+            addVS1Data('TReceiptCategory', JSON.stringify(data));
+            $("<span class='process'>Receipt Category Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
 
         }).catch(function(err) {
 
@@ -6696,6 +6741,18 @@ Template.newsidenav.events({
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
+    'click #sidenavbasreturnlist': function(event) {
+        event.preventDefault();
+        FlowRouter.go('/basreturnlist');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
+    'click #sidenavbasreturn': function(event) {
+        event.preventDefault();
+        FlowRouter.go('/basreturn');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
     'click #sidenavjournalentry': function(event) {
 
         event.preventDefault();
@@ -7194,6 +7251,11 @@ Template.newsidenav.events({
       event.preventDefault();
       FlowRouter.go('/processlist');
       let templateObject = Template.instance();
+      templateObject.getSetSideNavFocus();
+    },'click #sidenavnewworkorder': function(event) {
+      event.preventDefault();
+      FlowRouter.go('/workordercard');
+      let templatObject = Template.instance();
       templateObject.getSetSideNavFocus();
     },
     'click .sidenavpayments': function(event) {

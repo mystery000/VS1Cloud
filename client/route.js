@@ -652,11 +652,29 @@ authenticatedRoutes.route('/serialnumberlist', {
     }
 });
 
+authenticatedRoutes.route('/serialnumberview', {
+    name: 'serialnumberview',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'serialnumberview'
+        });
+    }
+});
+
 authenticatedRoutes.route('/lotnumberlist', {
     name: 'lotnumberlist',
     action() {
         BlazeLayout.render('layout', {
             yield: 'lotnumberlist'
+        });
+    }
+});
+
+authenticatedRoutes.route('/lotnumberview', {
+    name: 'lotnumberview',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'lotnumberview'
         });
     }
 });
@@ -1263,6 +1281,24 @@ authenticatedRoutes.route('/journalentrylist', {
         });
     }
 });
+
+authenticatedRoutes.route('/basreturn', {
+  name: 'basreturn',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'basreturn'
+      });
+  }
+});
+authenticatedRoutes.route('/basreturnlist', {
+  name: 'basreturnlist',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'basreturnlist'
+      });
+  }
+});
+
 authenticatedRoutes.route('/timesheet', {
     name: 'timesheet',
     action() {
@@ -1601,6 +1637,24 @@ authenticatedRoutes.route('/newbankrecon', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'newbankrecon'
+        });
+    }
+});
+
+authenticatedRoutes.route('/newbankrule', {
+    name: 'newbankrule',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'newbankrule'
+        });
+    }
+});
+
+authenticatedRoutes.route('/bankrulelist', {
+    name: 'bankrulelist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'bankrulelist'
         });
     }
 });
@@ -2052,4 +2106,13 @@ authenticatedRoutes.route('/eft', {
           yield: 'eft_export'
       })
   }
+})
+
+authenticatedRoutes.route('/workordercard', {
+    name: 'new_workorder',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'new_workorder'
+        })
+    }
 })

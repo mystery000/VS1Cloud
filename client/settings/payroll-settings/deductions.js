@@ -294,6 +294,7 @@ Template.deductionSettings.onRendered(function() {
                         }
                     });
                     $('#deductionRateForm')[0].reset();
+                    $('#headerDeductionLabel').text('Edit Deduction');
                     $('#deductionSettingsModal').modal('hide');  
                     if( tDeduction.length > 0 ){
                         let deductionType = 'None';
@@ -308,9 +309,9 @@ Template.deductionSettings.onRendered(function() {
                             }
                         }
                         $('#edtDeductionID').val(tDeduction[0].fields.ID)
-                        $('#edtDeductionName').val(tDeduction[0].fields.Description)
                         $('#edtDeductionType').val(deductionType)
                         $('#edtDeductionAccount').val(tDeduction[0].fields.Accountname)
+                        $('#edtDeductionAmount').val(tDeduction[0].fields.Amount)
                         $('#edtDeductionAccountID').val(tDeduction[0].fields.Accountid)
                         $('#edtDeductionDesctiption').val(tDeduction[0].fields.Description)
                         $('#formCheck-ReducesPAYGDeduction').prop('checked', tDeduction[0].fields.Payrolltaxexempt || false)
@@ -353,6 +354,7 @@ Template.deductionSettings.events({
     },
     'click .btnAddordinaryTimeDeductions':function(event){
         $('#deductionRateForm')[0].reset();
+        $('#headerDeductionLabel').text('Add New Deduction');
         $('#noneModal').modal('show');
     },
     'click .btnRefreshDeductions':function(event){      

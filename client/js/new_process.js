@@ -80,87 +80,7 @@ Template.new_process.onRendered(() => {
 
 
 
-   $(document).on('click', '#edtCOGS', function(e) {
-        $('#accountListModal').modal();
-        templateObject.selectedAccount.set('cogs');
-    })
-    $(document).on('click', '#edtExpenseAccount', function (e) {
-        $('#expenseAccountListModal').modal();
-        templateObject.selectedAccount.set('expenseAccount');
-    })
-    $(document).on('click', '#edtOverheadCOGS', function(e) {
-        $('#accountListModal').modal();
-        templateObject.selectedAccount.set('overheadCOGS');
-    })
-    $(document).on('click', '#edtOverheadExpenseAccount', function (e) {
-        $('#expenseAccountListModal').modal();
-        templateObject.selectedAccount.set('overheadExpenseAccount');
-    })
-
-    $(document).on('click', '#edtWastage', function(e){
-        $('#assetAccountListModal').modal();
-    })
-    $(document).on('click', '#accountListModal table tr', function(e) {
-        let columnDataValue = $(e.target).closest('tr').find('.productName').text();
-        switch(templateObject.selectedAccount.get()) {
-            case 'cogs':
-                $('#edtCOGS').val(columnDataValue);
-                break;
-           
-            case 'overheadCOGS':
-                $('#edtOverheadCOGS').val(columnDataValue);
-                break;
-           
-            default:
-                break;
-        }
-        $('#accountListModal').modal('toggle');
-    })
-    $(document).on('click', '#expenseAccountListModal table tr', function(e){
-        let columnDataValue = $(e.target).closest('tr').find('.productName').text();
-        switch(templateObject.selectedAccount.get()) {
-            case 'expenseAccount':
-                $('#edtExpenseAccount').val(columnDataValue);
-                break;
-            case 'overheadExpenseAccount':
-                $('#edtOverheadExpenseAccount').val(columnDataValue);
-                break;
-            default:
-                break;
-        }
-        $('#expenseAccountListModal').modal('toggle');
-    }) 
-
-    $(document).on('click', '#assetAccountListModal table tr', function(e) {
-        let columnDataValue = $(e.target).closest('tr').find('.productName').text();
-        $('#edtWastage').val(columnDataValue);
-        $('#assetAccountListModal').modal('toggle');
-    })
-    $(document).on('blur', '.edtHourlyCost', function(e) {
-        if($('#edtHourlyCost').val() != '' &&  $('#edtHourlyOverheadCost').val() == '') {
-            $('#edtTotalHourlyCosts').val($('#edtHourlyCost').val())
-        } else if ($('#edtHourlyCost').val() == '' &&  $('#edtHourlyOverheadCost').val() != '') {
-            $('#edtTotalHourlyCosts').val($('#edtHourlyOverheadCost').val())
-        } else if ($('#edtHourlyCost').val() != '' &&  $('#edtHourlyOverheadCost').val() != '') {
-            $('#edtTotalHourlyCosts').val(Currency + (parseFloat($('#edtHourlyCost').val().replace('$', '')) + parseFloat($('#edtHourlyOverheadCost').val().replace('$', ''))).toFixed(2))
-        }
-    })
-
-    $(document).on('blur', '#edtHourlyCost', function(e){
-        $('#edtHourlyCost').val(Currency +parseFloat( $('#edtHourlyCost').val()).toFixed(2)) 
-    })
-
-    $(document).on('focus', '#edtHourlyCost', function(e){
-        $('#edtHourlyCost').val($('#edtHourlyCost').val().replace('$', ''));
-    })
-
-    $(document).on('blur', '#edtHourlyOverheadCost', function(e){
-        $('#edtHourlyOverheadCost').val(Currency +parseFloat( $('#edtHourlyOverheadCost').val()).toFixed(2)) 
-    })
-
-    $(document).on('focus', '#edtHourlyOverheadCost', function(e){
-        $('#edtHourlyOverheadCost').val($('#edtHourlyOverheadCost').val().replace('$', ''));
-    })
+  
 });
 
 
@@ -314,6 +234,102 @@ Template.new_process.events({
         $('#edtWastage').editableSelect();
     },
 
+
+    'click #edtCOGS': function(e) {
+        let templateObject = Template.instance();
+        $('#accountListModal').modal();
+        templateObject.selectedAccount.set('cogs');
+    },
+    'click #edtExpenseAccount': function (e) {
+        let templateObject = Template.instance();
+        $('#expenseAccountListModal').modal();
+        templateObject.selectedAccount.set('expenseAccount');
+    },
+    'click #edtOverheadCOGS': function(e) {
+        let templateObject = Template.instance();
+        $('#accountListModal').modal();
+        templateObject.selectedAccount.set('overheadCOGS');
+    },
+    'click #edtOverheadExpenseAccount': function (e) {
+        let templateObject = Template.instance();
+        $('#expenseAccountListModal').modal();
+        templateObject.selectedAccount.set('overheadExpenseAccount');
+    },
+
+    'click #edtWastage': function(e){
+        $('#assetAccountListModal').modal();
+    },
+    'click #accountListModal table tr': function(e) {
+        let templateObject = Template.instance();
+        let columnDataValue = $(e.target).closest('tr').find('.productName').text();
+        switch(templateObject.selectedAccount.get()) {
+            case 'cogs':
+                $('#edtCOGS').val(columnDataValue);
+                break;
+           
+            case 'overheadCOGS':
+                $('#edtOverheadCOGS').val(columnDataValue);
+                break;
+           
+            default:
+                break;
+        }
+        $('#accountListModal').modal('toggle');
+    },
+    'click #expenseAccountListModal table tr': function(e){
+        let templateObject = Template.instance();
+        let columnDataValue = $(e.target).closest('tr').find('.productName').text();
+        switch(templateObject.selectedAccount.get()) {
+            case 'expenseAccount':
+                $('#edtExpenseAccount').val(columnDataValue);
+                break;
+            case 'overheadExpenseAccount':
+                $('#edtOverheadExpenseAccount').val(columnDataValue);
+                break;
+            default:
+                break;
+        }
+        $('#expenseAccountListModal').modal('toggle');
+    }, 
+
+    'click #assetAccountListModal table tr': function(e) {
+        let columnDataValue = $(e.target).closest('tr').find('.productName').text();
+        $('#edtWastage').val(columnDataValue);
+        $('#assetAccountListModal').modal('toggle');
+    },
+    'blur .edtHourlyCost': function(e) {
+        if($('#edtHourlyCost').val() != '' &&  $('#edtHourlyOverheadCost').val() == '') {
+            $('#edtTotalHourlyCosts').val($('#edtHourlyCost').val())
+        } else if ($('#edtHourlyCost').val() == '' &&  $('#edtHourlyOverheadCost').val() != '') {
+            $('#edtTotalHourlyCosts').val($('#edtHourlyOverheadCost').val())
+        } else if ($('#edtHourlyCost').val() != '' &&  $('#edtHourlyOverheadCost').val() != '') {
+            $('#edtTotalHourlyCosts').val(Currency + (parseFloat($('#edtHourlyCost').val().replace('$', '')) + parseFloat($('#edtHourlyOverheadCost').val().replace('$', ''))).toFixed(2))
+        }
+    },
+
+    'blur #edtHourlyCost': function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        $('#edtHourlyCost').val(Currency +parseFloat( $('#edtHourlyCost').val()).toFixed(2)) 
+    },
+
+    'focus #edtHourlyCost': function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        $('#edtHourlyCost').val($('#edtHourlyCost').val().replace('$', ''));
+    },
+
+    'blur #edtHourlyOverheadCost': function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        $('#edtHourlyOverheadCost').val(Currency +parseFloat( $('#edtHourlyOverheadCost').val()).toFixed(2)) 
+    },
+
+    'focus #edtHourlyOverheadCost': function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        $('#edtHourlyOverheadCost').val($('#edtHourlyOverheadCost').val().replace('$', ''));
+    },
     // 'click #edtCOGS': function (e) {
       
     // }

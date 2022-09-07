@@ -70,8 +70,7 @@
         <div>
             <header class="pt-2 pb-3 d-flex align-items-center">
                 <h2 class="mr-1">Payroll Overview</h2>
-                    <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i
-                            class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                  {{> helpbutton}}
 
                     <!-- Start Help View Modal -->
                     <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -87,11 +86,8 @@
                                     <p class="text-center text-muted"><a
                                             href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" target="_blank"
                                             class="btn btn-primary">Download Help File</a></p>
-                                    <p class="text-center text-muted"><button class="btn btn-primary"
-                                            type="button">Employ Advisor</button></p>
-                                    <p class="text-center text-muted" style="margin: 0px;"><a
-                                            href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}"
-                                            target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                            {{> helpadvisor}}
+                                            {{> helpgotoforum}}
                                 </div>
                                 <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
                                         data-dismiss="modal" type="button">Close</button></div>
@@ -505,7 +501,7 @@
                     {{#if equals showTimesheet true}}
                     <button class="btn btnNav btn-primary" id="btnTimesheet" name="btnTimesheet" type="button"
                         style="margin: 12px;"><i class="fas fa-clock"
-                            style="padding-right: 5px;"></i>Timesheets</button>
+                            style="padding-right: 5px;"></i>Timesheet List</button>
                     {{/if}}
 
                     {{#if equals clockOnOff true}}
@@ -821,11 +817,8 @@
                                     <p class="text-center text-muted"><a
                                             href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" target="_blank"
                                             class="btn btn-primary">Download Help File</a></p>
-                                    <p class="text-center text-muted"><button class="btn btn-primary"
-                                            type="button">Employ Advisor</button></p>
-                                    <p class="text-center text-muted" style="margin: 0px;"><a
-                                            href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}"
-                                            target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                            {{> helpadvisor}}
+                                            {{> helpgotoforum}}
                                 </div>
                                 <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
                                         data-dismiss="modal" type="button">Close</button></div>

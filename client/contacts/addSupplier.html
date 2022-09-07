@@ -92,7 +92,7 @@
                 </style>
 
                 <div class="d-sm-flex justify-content-between align-items-center mb-4" style="margin-left: 8px;">
-                    <h3 class="text-dark mb-0">Supplier Overview Dashboard <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a></h3>
+                    <h3 class="text-dark mb-0">Supplier Overview Dashboard {{> helpbutton}}</h3>
                 </div>
 
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -104,8 +104,8 @@
                             <div class="modal-body">
                                 <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                                 <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=53" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                {{> helpadvisor}}
+                                {{> helpgotoforum}}
                             </div>
                             <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                         </div>
@@ -164,7 +164,12 @@
 
                         <div class="card shadow mb-4 cardSizing">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="text-primary font-weight-bold m-0">{{record.company}} - {{record.firstname}} {{record.lastname}} - {{record.phone}}</h6>
+                                <h6 class="text-primary font-weight-bold m-0">
+                                  {{#if notEquals record.id ''}}
+                                    SUP-{{record.id}} -
+                                  {{/if}}
+                                  {{record.company}} - {{record.firstname}} {{record.lastname}} - {{record.phone}}
+                                </h6>
                                 <div>
                                     <button type="button" class="btn btn-success btnMakeSupplierPayment" id="btnMakeSupplierPayment"><i class="fas fa-hand-holding-usd" style="margin-right: 5px;"></i>Make Payment</button>
 
@@ -629,31 +634,31 @@
                                                                     <div class="col-6 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Bank Name</label>
-                                                                            <input type="text" class="form-control" id="" name="">
+                                                                            <input type="text" class="form-control" id="edtBankName" name="edtBankName">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-6 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Branch Name</label>
-                                                                            <input type="text" class="form-control" id="" name="">
+                                                                            <input type="text" class="form-control" id="edtBranchName" name="edtBranchName">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-6 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Branch Code</label>
-                                                                            <input type="text" class="form-control" id="" name="">
+                                                                            <input type="text" class="form-control" id="edtBranchCode" name="edtBranchCode">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-6 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Bank Account Number</label>
-                                                                            <input type="text" class="form-control" id="" name="">
+                                                                            <input type="text" class="form-control" id="edtBankAccountNumber" name="edtBankAccountNumber">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-6 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Account Name</label>
-                                                                            <input type="text" class="form-control" id="" name="">
+                                                                            <input type="text" class="form-control" id="edtAccountName" name="edtAccountName">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-6 col-md-3">
@@ -666,13 +671,13 @@
                                                                     <div class="col-6 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>VAT Number</label>
-                                                                            <input type="text" class="form-control" id="" name="">
+                                                                            <input type="text" class="form-control" id="edtVatNumber" name="edtVatNumber">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-6 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>SWIFT Code</label>
-                                                                            <input type="text" class="form-control" id="" name="">
+                                                                            <input type="text" class="form-control" id="edtSwiftCode" name="edtSwiftCode">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1395,7 +1400,7 @@
                                                             th {
                                                                 background-color: #ededed;
                                                             }
-/* 
+/*
                                                             th.colDate {
                                                                 width: 15%;
                                                             }

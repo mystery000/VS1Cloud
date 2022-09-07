@@ -1,8 +1,10 @@
 import { ContactService } from "../../contacts/contact-service";
 import { ReportService } from "../report-service";
-import 'jQuery.print/jQuery.print.js';
-import { UtilityService } from "../../utility-service";
 
+import { UtilityService } from "../../utility-service";
+import 'jquery-ui-dist/external/jquery/jquery';
+import 'jquery-ui-dist/jquery-ui';
+import 'jQuery.print/jQuery.print.js';
 import { CountryService } from "../../js/country-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { AccountService } from "../../accounts/account-service";
@@ -23,10 +25,12 @@ Template.accountant_company.onCreated(() => {
     templateObject.accountPanList = new ReactiveVar([]);
     templateObject.accountPanList1 = new ReactiveVar([]);
     templateObject.dateAsAt = new ReactiveVar();
+    templateObject.fiscalYearEnding = new ReactiveVar();
     templateObject.currentYear = new ReactiveVar();
     templateObject.currentMonth = new ReactiveVar();
     templateObject.currentDate = new ReactiveVar();
     templateObject.endMonth = new ReactiveVar();
+    templateObject.fromDate = new ReactiveVar();
     templateObject.endDate = new ReactiveVar();
 
     templateObject.balancesheetList = new ReactiveVar([]);
@@ -40,6 +44,140 @@ Template.accountant_company.onCreated(() => {
 });
 
 Template.accountant_company.onRendered(() => {
+
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    tinymce.init({
+        selector: 'textarea#editor',
+    });
+
+    $("#date-input,#dateTo,#dateFrom").datepicker({
+        showOn: "button",
+        buttonText: "Show Date",
+        buttonImageOnly: true,
+        buttonImage: "/img/imgCal2.png",
+        dateFormat: "dd/mm/yy",
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-90:+10",
+    });
+
+    let currMonth = moment().format("MMM") + " " + moment().format("YYYY");
+    $("#dispCurrMonth").append(currMonth);
+
+    // get 'this month' to appear in date range selector dropdown end
+
+    // get 'last quarter' to appear in date range selector dropdown
+    let lastQStartDispaly = moment()
+        .subtract(1, "Q")
+        .startOf("Q")
+        .format("D" + " " + "MMM" + " " + "YYYY");
+    let lastQEndDispaly = moment()
+        .subtract(1, "Q")
+        .endOf("Q")
+        .format("D" + " " + "MMM" + " " + "YYYY");
+    $("#dispLastQuarter").append(lastQStartDispaly + " - " + lastQEndDispaly);
+
+    // get 'last quarter' to appear in date range selector dropdown end
+
+    // get 'this quarter' to appear in date range selector dropdown
+
+    let thisQStartDispaly = moment()
+        .startOf("Q")
+        .format("D" + " " + "MMM" + " " + "YYYY");
+    let thisQEndDispaly = moment()
+        .endOf("Q")
+        .format("D" + " " + "MMM" + " " + "YYYY");
+    $("#dispCurrQuarter").append(thisQStartDispaly + " - " + thisQEndDispaly);
+
+    // get 'this quarter' to appear in date range selector dropdown end
+
+    // get 'last month' to appear in date range selector dropdown
+
+    let prevMonth = moment()
+        .subtract(1, "M")
+        .format("MMM" + " " + "YYYY");
+    $("#dispPrevMonth").append(prevMonth);
+
+    // get 'last month' to appear in date range selector dropdown end
+
+    // get 'month to date' to appear in date range selector dropdown
+
+    let monthStart = moment()
+        .startOf("M")
+        .format("D" + " " + "MMM");
+    let monthCurr = moment().format("D" + " " + "MMM" + " " + "YYYY");
+    $("#monthStartDisp").append(monthStart + " - " + monthCurr);
+
+    // get 'month to date' to appear in date range selector dropdown end
+
+    // get 'quarter to date' to appear in date range selector dropdown
+
+    let currQStartDispaly = moment()
+        .startOf("Q")
+        .format("D" + " " + "MMM");
+    $("#quarterToDateDisp").append(currQStartDispaly + " - " + monthCurr);
+
+    // get 'quarter to date' to appear in date range selector dropdown
+    // get 'financial year' to appear
+    if (moment().quarter() == 4) {
+        var current_fiscal_year_start = moment()
+            .month("July")
+            .startOf("month")
+            .format("D" + " " + "MMM" + " " + "YYYY");
+        var current_fiscal_year_end = moment()
+            .add(1, "year")
+            .month("June")
+            .endOf("month")
+            .format("D" + " " + "MMM" + " " + "YYYY");
+        var last_fiscal_year_start = moment()
+            .subtract(1, "year")
+            .month("July")
+            .startOf("month")
+            .format("D" + " " + "MMM" + " " + "YYYY");
+        var last_fiscal_year_end = moment()
+            .month("June")
+            .endOf("month")
+            .format("D" + " " + "MMM" + " " + "YYYY");
+    } else {
+        var current_fiscal_year_start = moment()
+            .subtract(1, "year")
+            .month("July")
+            .startOf("month")
+            .format("D" + " " + "MMM" + " " + "YYYY");
+        var current_fiscal_year_end = moment()
+            .month("June")
+            .endOf("month")
+            .format("D" + " " + "MMM" + " " + "YYYY");
+
+        var last_fiscal_year_start = moment()
+            .subtract(2, "year")
+            .month("July")
+            .startOf("month")
+            .format("D" + " " + "MMM" + " " + "YYYY");
+        var last_fiscal_year_end = moment()
+            .subtract(1, "year")
+            .month("June")
+            .endOf("month")
+            .format("D" + " " + "MMM" + " " + "YYYY");
+    }
+    //display current financial year
+    $("#dispCurrFiscYear").append(
+        current_fiscal_year_start + " - " + current_fiscal_year_end
+    );
+    //display last financial year
+    $("#dispPrevFiscYear").append(
+        last_fiscal_year_start + " - " + last_fiscal_year_end
+    );
+    //display current financial year to current date;
+    let yeartodate = moment()
+        .month("january")
+        .startOf("month")
+        .format("D" + " " + "MMM" + " " + "YYYY");
+    $("#dispCurrFiscYearToDate").append(yeartodate + " - " + monthCurr);
+    // get 'financial year' to appear end
 
     const templateObject = Template.instance();
     let accountService = new AccountService();
@@ -313,7 +451,7 @@ Template.accountant_company.onRendered(() => {
 
         $(".fullScreenSpin").css("display", "none");
         setTimeout(function() {
-            if (categoryAccountList.length > 0) {
+            if (categoryAccountList.length > 0 && !$.fn.DataTable.isDataTable('#tblCategory')) {
                 $('#tblCategory').dataTable({
                     data: categoryAccountList,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -477,21 +615,21 @@ Template.accountant_company.onRendered(() => {
         templateObject.dateAsAt.set(begunDate);
         let supplierID = localStorage.getItem('VS1Accountant');
 
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        let endMonth = "06";
+        let endMonth = localStorage.getItem("yearEnd") || 6;
         templateObject.endMonth.set(endMonth);
         templateObject.currentYear.set(new Date().getFullYear());
         templateObject.currentMonth.set(new Date().getMonth());
         templateObject.currentDate.set(new Date().getDate() + " " + months[new Date().getMonth()] + " " + new Date().getFullYear());
 
         var currentDate2 = new Date(new Date().getFullYear(), (parseInt(endMonth)), 0);
-        templateObject.endDate.set(currentDate2.getDate() + " " + months[parseInt(endMonth) - 1] + " " + new Date().getFullYear());
+        templateObject.fiscalYearEnding.set(currentDate2.getDate() + " " + months[parseInt(endMonth) - 1] + " " + new Date().getFullYear());
         var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
 
         getVS1Data('TSupplierVS1').then(function(dataObject) {
+
             if (dataObject.length === 0) {
-                contactService.getOneSupplierDataEx(supplierID).then(function(data) {
-                    setOneSupplierDataEx(data);
+                contactService.getOneSupplierDataExByName(supplierID).then(function(data) {
+                    setOneSupplierDataEx(data.tsupplier[0]);
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -499,20 +637,20 @@ Template.accountant_company.onRendered(() => {
                 let useData = data.tsuppliervs1;
                 let added = false;
                 for (let i = 0; i < useData.length; i++) {
-                    if (parseInt(useData[i].fields.ID) === parseInt(supplierID)) {
+                    if (useData[i].fields.ClientName === supplierID) {
                         added = true;
                         setOneSupplierDataEx(useData[i]);
                     }
                 }
                 if (!added) {
-                    contactService.getOneSupplierDataEx(supplierID).then(function(data) {
-                        setOneSupplierDataEx(data);
+                    contactService.getOneSupplierDataExByName(supplierID).then(function(data) {
+                        setOneSupplierDataEx(data.tsupplier[0]);
                     });
                 }
             }
         }).catch(function(err) {
-            contactService.getOneSupplierDataEx(supplierID).then(function(data) {
-                setOneSupplierDataEx(data);
+            contactService.getOneSupplierDataExByName(supplierID).then(function(data) {
+                setOneSupplierDataEx(data.tsupplier[0]);
             });
         });
 
@@ -573,8 +711,12 @@ Template.accountant_company.onRendered(() => {
                 address += lineItemObj.scountry + ", ";
             }
 
+            let endDate = $("#dateTo").val().split("/");
+            endDate = endDate[0] + " " + months[parseInt(endDate[1] - 1)] + " " + endDate[2];
+            templateObject.endDate.set(endDate);
+
             headerHtml += "<span style='float:left; padding-bottom:20px; clear:both'>" + lineItemObj.shippingaddress + "<br/>" + address.slice(0, -2) + "</span>";
-            headerHtml += "<span style='float:left; clear:both'>Dated: " + templateObject.currentDate.get() + "</span>";
+            headerHtml += "<span style='float:left; clear:both' id='dispEndDate'>Dated: " + templateObject.endDate.get() + "</span>";
 
             $("#reportsAccountantHeader, #reportsAccountantHeaderPrt").html(headerHtml);
         }
@@ -1069,13 +1211,13 @@ Template.accountant_company.onRendered(() => {
         LoadingOverlay.hide();
     };
 
-    templateObject.getBalanceSheetReports(getLoadDate);
+    // templateObject.getBalanceSheetReports(getLoadDate);
 
-    templateObject.setReportOptions = async function(
+    templateObject.setReportOptions = async(
         compPeriod = 0,
         formatDateFrom = new Date(),
         formatDateTo = new Date()
-    ) {
+    ) => {
         // New Code Start here
         let dateRange = [];
         dateRange.push(
@@ -1200,6 +1342,8 @@ Template.accountant_company.onRendered(() => {
                     // Set Table Data
                     templateObject.reportOptions.set(options);
                     templateObject.profitList.set(records);
+
+                    $(".fullScreenSpin").css("display", "none");
                 }
             } catch (err) {
                 $(".fullScreenSpin").css("display", "none");
@@ -1318,6 +1462,8 @@ Template.accountant_company.onRendered(() => {
 
                     templateObject.reportOptions.set(options);
                     templateObject.profitList.set(records);
+
+                    $(".fullScreenSpin").css("display", "none");
                 }
             } catch (error) {
                 $(".fullScreenSpin").css("display", "none");
@@ -1325,12 +1471,293 @@ Template.accountant_company.onRendered(() => {
         }
     };
 
-    var getDateFrom = "2020-01-01";
-    var getLoadDate = getLoadDate;
+
+    // var getDateFrom = "2020-01-01";
+    // var getLoadDate = getLoadDate;
+    var getDateFrom = $("#dateFrom").val().split('/');
+    var getLoadDate = $("#dateTo").val().split('/');
+    getDateFrom = getDateFrom[2] + "-" + getDateFrom[1] + "-" + getDateFrom[0];
+    getLoadDate = getLoadDate[2] + "-" + getLoadDate[1] + "-" + getLoadDate[0];
     templateObject.setReportOptions(0, getDateFrom, getLoadDate);
+    templateObject.getBalanceSheetReports(getLoadDate);
 });
 
 Template.accountant_company.events({
+
+    "change #dateTo, change #dateFrom": function() {
+        $(".fullScreenSpin").css("display", "inline-block");
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let templateObject = Template.instance();
+
+        let fromDate = $("#dateFrom").val().split("/");
+        let endDate = $("#dateTo").val().split("/");
+
+        templateObject.setReportOptions(0, (fromDate[2] + "-" + fromDate[1] + "-" + fromDate[0]), (endDate[2] + "-" + endDate[1] + "-" + endDate[0]));
+        templateObject.getBalanceSheetReports((endDate[2] + "-" + endDate[1] + "-" + endDate[0]));
+
+        fromDate = fromDate[2] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[0];
+        endDate = endDate[2] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[0];
+
+        Template.instance().fromDate.set(fromDate);
+        Template.instance().endDate.set(endDate);
+
+        $("#dispEndDate").html("Dated: " + templateObject.endDate.get());
+    },
+
+    "click #dropdownDateRang": function(e) {
+        let dateRangeID = e.target.id;
+        $("#btnSltDateRange").addClass("selectedDateRangeBtnMod");
+        $("#selectedDateRange").show();
+        if (dateRangeID == "thisMonth") {
+            document.getElementById("selectedDateRange").value = "This Month";
+        } else if (dateRangeID == "thisQuarter") {
+            document.getElementById("selectedDateRange").value = "This Quarter";
+        } else if (dateRangeID == "thisFinYear") {
+            document.getElementById("selectedDateRange").value =
+                "This Financial Year";
+        } else if (dateRangeID == "lastMonth") {
+            document.getElementById("selectedDateRange").value = "Last Month";
+        } else if (dateRangeID == "lastQuarter") {
+            document.getElementById("selectedDateRange").value = "Last Quarter";
+        } else if (dateRangeID == "lastFinYear") {
+            document.getElementById("selectedDateRange").value =
+                "Last Financial Year";
+        } else if (dateRangeID == "monthToDate") {
+            document.getElementById("selectedDateRange").value = "Month to Date";
+        } else if (dateRangeID == "quarterToDate") {
+            document.getElementById("selectedDateRange").value = "Quarter to Date";
+        } else if (dateRangeID == "finYearToDate") {
+            document.getElementById("selectedDateRange").value = "Year to Date";
+        }
+    },
+
+    "click #thisMonth": function() {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let templateObject = Template.instance();
+        let fromDate = moment().startOf("month").format("YYYY-MM-DD");
+        let endDate = moment().endOf("month").format("YYYY-MM-DD");
+
+        templateObject.setReportOptions(0, fromDate, endDate);
+        templateObject.getBalanceSheetReports(endDate);
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        fromDate = fromDate.split("/");
+        endDate = endDate.split("/");
+        fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
+        endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
+
+        Template.instance().fromDate.set(fromDate);
+        Template.instance().endDate.set(endDate);
+    },
+
+    "click #thisQuarter": function() {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let templateObject = Template.instance();
+        let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
+        let endDate = moment().endOf("Q").format("YYYY-MM-DD");
+        templateObject.setReportOptions(0, fromDate, endDate);
+        templateObject.getBalanceSheetReports(endDate);
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        fromDate = fromDate.split("/");
+        endDate = endDate.split("/");
+        fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
+        endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
+
+        Template.instance().fromDate.set(fromDate);
+        Template.instance().endDate.set(endDate);
+    },
+
+    "click #thisFinYear": function() {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let templateObject = Template.instance();
+        let fromDate = null;
+        let endDate = null;
+        if (moment().quarter() == 4) {
+            fromDate = moment().month("July").startOf("month").format("YYYY-MM-DD");
+            endDate = moment()
+                .add(1, "year")
+                .month("June")
+                .endOf("month")
+                .format("YYYY-MM-DD");
+        } else {
+            fromDate = moment()
+                .subtract(1, "year")
+                .month("July")
+                .startOf("month")
+                .format("YYYY-MM-DD");
+            endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
+        }
+        templateObject.setReportOptions(0, fromDate, endDate);
+        templateObject.getBalanceSheetReports(endDate);
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        fromDate = fromDate.split("/");
+        endDate = endDate.split("/");
+        fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
+        endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
+
+        Template.instance().fromDate.set(fromDate);
+        Template.instance().endDate.set(endDate);
+    },
+
+    "click #lastMonth": function() {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let templateObject = Template.instance();
+        let fromDate = moment()
+            .subtract(1, "months")
+            .startOf("month")
+            .format("YYYY-MM-DD");
+        let endDate = moment()
+            .subtract(1, "months")
+            .endOf("month")
+            .format("YYYY-MM-DD");
+        templateObject.setReportOptions(0, fromDate, endDate);
+        templateObject.getBalanceSheetReports(endDate);
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        fromDate = fromDate.split("/");
+        endDate = endDate.split("/");
+        fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
+        endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
+
+        Template.instance().fromDate.set(fromDate);
+        Template.instance().endDate.set(endDate);
+    },
+
+    "click #lastQuarter": function() {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let templateObject = Template.instance();
+        let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+        let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
+        templateObject.setReportOptions(0, fromDate, endDate);
+        templateObject.getBalanceSheetReports(endDate);
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        fromDate = fromDate.split("/");
+        endDate = endDate.split("/");
+        fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
+        endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
+
+        Template.instance().fromDate.set(fromDate);
+        Template.instance().endDate.set(endDate);
+    },
+
+    "click #lastFinYear": function() {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let templateObject = Template.instance();
+        let fromDate = null;
+        let endDate = null;
+        if (moment().quarter() == 4) {
+            fromDate = moment()
+                .subtract(1, "year")
+                .month("July")
+                .startOf("month")
+                .format("YYYY-MM-DD");
+            endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
+        } else {
+            fromDate = moment()
+                .subtract(2, "year")
+                .month("July")
+                .startOf("month")
+                .format("YYYY-MM-DD");
+            endDate = moment()
+                .subtract(1, "year")
+                .month("June")
+                .endOf("month")
+                .format("YYYY-MM-DD");
+        }
+        templateObject.setReportOptions(0, fromDate, endDate);
+        templateObject.getBalanceSheetReports(endDate);
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        fromDate = fromDate.split("/");
+        endDate = endDate.split("/");
+        fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
+        endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
+
+        Template.instance().fromDate.set(fromDate);
+        Template.instance().endDate.set(endDate);
+    },
+
+    "click #monthToDate": function() {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let templateObject = Template.instance();
+        let fromDate = moment().startOf("M").format("YYYY-MM-DD");
+        let endDate = moment().format("YYYY-MM-DD");
+        templateObject.setReportOptions(0, fromDate, endDate);
+        templateObject.getBalanceSheetReports(endDate);
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        fromDate = fromDate.split("/");
+        endDate = endDate.split("/");
+        fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
+        endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
+
+        Template.instance().fromDate.set(fromDate);
+        Template.instance().endDate.set(endDate);
+    },
+
+    "click #quarterToDate": function() {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let templateObject = Template.instance();
+        let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
+        let endDate = moment().format("YYYY-MM-DD");
+        templateObject.setReportOptions(0, fromDate, endDate);
+        templateObject.getBalanceSheetReports(endDate);
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        fromDate = fromDate.split("/");
+        endDate = endDate.split("/");
+        fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
+        endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
+
+        Template.instance().fromDate.set(fromDate);
+        Template.instance().endDate.set(endDate);
+    },
+
+    "click #finYearToDate": function() {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let templateObject = Template.instance();
+        let fromDate = moment()
+            .month("january")
+            .startOf("month")
+            .format("YYYY-MM-DD");
+        let endDate = moment().format("YYYY-MM-DD");
+        templateObject.setReportOptions(0, fromDate, endDate);
+        templateObject.getBalanceSheetReports(endDate);
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        fromDate = fromDate.split("/");
+        endDate = endDate.split("/");
+        fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
+        endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
+
+        Template.instance().fromDate.set(fromDate);
+        Template.instance().endDate.set(endDate);
+    },
+
+    "click .accountingBasisDropdown": function(e) {
+        e.stopPropagation();
+    },
+
+    // "change .edtReportDates": function() {
+    //     $(".fullScreenSpin").css("display", "inline-block");
+    //     let templateObject = Template.instance();
+    //     var fromDate = new Date($("#dateFrom").datepicker("getDate"));
+    //     var endDate = new Date($("#dateTo").datepicker("getDate"));
+    //     templateObject.setReportOptions(0, fromDate, endDate);
+
+    //     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    //     fromDate = fromDate.split("/");
+    //     endDate = endDate.split("/");
+    //     fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
+    //     endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
+
+    //     Template.instance().fromDate.set(fromDate);
+    //     Template.instance().endDate.set(endDate);
+    // },
+
     "click #btnaddAccountant": function() {
         FlowRouter.go("/reportsAccountantSettings");
     },
@@ -1615,7 +2042,7 @@ Template.accountant_company.events({
                                                         window.open("/accountant_company", "_self");
                                                     })
                                                     .catch(function(err) {
-                                                        window.open("/accountant_company", "_self");
+                                                        window.open("//company", "_self");
                                                     });
                                             })
                                             .catch(function(err) {
@@ -1628,7 +2055,7 @@ Template.accountant_company.events({
                                             .then(function(dataReload) {
                                                 addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                                     .then(function(datareturn) {
-                                                        //window.open('/accountsoverview', '_self');
+                                                        //window.open('/accountant_company', '_self');
                                                     })
                                                     .catch(function(err) {
                                                         window.open("/accountant_company", "_self");
@@ -1859,28 +2286,38 @@ Template.accountant_company.events({
             $(".printReport").hide();
         }, 100);
     },
+
     "click .btnExportReport": function() {
-        var specialElementHandlers = {
-            '#bypassme': function(element, renderer) {
-                return true;
+        $(".printReport").show();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        var opt = {
+            margin: 0.8,
+            filename: 'accountant-company.pdf',
+            image: {
+                type: 'jpeg',
+                quality: 0.98
+            },
+            html2canvas: {
+                scale: 2
+            },
+            jsPDF: {
+                unit: 'in',
+                format: 'a4',
+                orientation: 'portrait'
+            },
+            pagebreak: {
+                after: [".pagebreak"]
             }
         };
+        var element = document.getElementById('printReport');
 
-        Blaze.saveAsPDF(Template.test, {
-            filename: "test.pdf", // optional, default is "document.pdf"
-            x: 0, // optional, left starting position on resulting PDF, default is 4 units
-            y: 0, // optional, top starting position on resulting PDF, default is 4 units
-            unit: "in", // optional, unit for coordinates, one of "pt", "mm" (default), "cm", or "in"
-            format: "letter", // optional, see Page Formats, default is "a4"
-            elementHandlers: specialElementHandlers
-        });
-        // $(".fullScreenSpin").css("display", "inline-block");
-        // // let utilityService = new UtilityService();
-
-        // const filename = loggedCompany + "-Company" + ".csv";
-        // var element = $('#printReport');
         // html2pdf(element);
-        // utilityService.exportToPdf("printReport", filename);
+
+        html2pdf().set(opt).from(element).save()
+            .then(dataObject => {
+                $(".printReport").hide();
+                $('.fullScreenSpin').css('display', 'none');
+            })
     },
 
     'click #tblCategory tbody tr': function(e) {
@@ -1894,9 +2331,108 @@ Template.accountant_company.events({
 
         $('#categoryListModal').modal('toggle');
     },
+
+    "click #editTitle": function(event) {
+
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-1-content").html());
+        $("#editorType").val("title");
+    },
+
+    "click #editOrder": function(event) {
+
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-2-content").html());
+        $("#editorType").val("order");
+    },
+
+    "click #editSummary": function(event) {
+
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-3-content").html());
+        $("#editorType").val("summary");
+    },
+
+    "click #editDeclaration": function(event) {
+
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-4-content").html());
+        $("#editorType").val("declaration");
+    },
+
+    "click #editDescription-1": function(event) {
+
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-9-content").html());
+        $("#editorType").val("description-1");
+    },
+
+    "click #editDescription-2": function(event) {
+
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-10-content").html());
+        $("#editorType").val("description-2");
+    },
+
+    "click #btnSaveEditor": function(event) {
+
+        // $('#editor').wysiwyg();
+        let iframe = document.getElementById("editor_ifr");
+        var elmnt = $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html();
+
+        if ($("#editorType").val() == "title") {
+            $("#page-1-content").html(elmnt);
+            $("#page-1-content-prt").html(elmnt);
+        } else if ($("#editorType").val() == "order") {
+            $("#page-2-content").html(elmnt);
+            $("#page-2-content-prt").html(elmnt);
+        } else if ($("#editorType").val() == "summary") {
+            $("#page-3-content").html(elmnt);
+            $("#page-3-content-prt").html(elmnt);
+        } else if ($("#editorType").val() == "declaration") {
+            $("#page-4-content").html(elmnt);
+            $("#page-4-content-prt").html(elmnt);
+        } else if ($("#editorType").val() == "description-1") {
+            $("#page-9-content").html(elmnt);
+            $("#page-9-content-prt").html(elmnt + $("#page-10-content").html());
+        } else {
+            $("#page-10-content").html(elmnt);
+            $("#page-9-content-prt").html($("#page-9-content").html() + elmnt);
+        }
+        $('#editReportModal').modal('toggle');
+    },
+
+    // "change #sltYear": function(event) {
+    //     const templateObject = Template.instance();
+
+    //     $(".fullScreenSpin").css("display", "inline-block");
+    //     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    //     templateObject.currentYear.set($("#sltYear").val());
+    //     templateObject.currentMonth.set(new Date().getMonth());
+
+    //     var selDate = new Date($("#sltYear").val(), (parseInt(templateObject.endMonth.get())), 0);
+    //     templateObject.endDate.set(selDate.getDate() + " " + months[parseInt(templateObject.endMonth.get()) - 1] + " " + $("#sltYear").val());
+    //     var getLoadDate = moment(selDate).format("YYYY-MM-DD");
+    //     templateObject.getBalanceSheetReports(getLoadDate);
+    // },
 });
 
 Template.accountant_company.helpers({
+
+    reportOptions: () => {
+        return Template.instance().reportOptions.get();
+    },
+
+    formatDate(currentDate) {
+        return moment(currentDate).format("DD/MM/YYYY");
+    },
+
+    tradingname: () => {
+        let tradingname = (localStorage.getItem("tradingName"));
+        return tradingname;
+    },
+
+
     countryList: () => {
         return Template.instance().countryData.get();
     },
@@ -1925,11 +2461,12 @@ Template.accountant_company.helpers({
     },
 
     companyname: () => {
-        return loggedCompany;
+        let tradingname = localStorage.getItem("tradingName") || "";
+        return tradingname + " " + loggedCompany;
     },
 
     fiscalYearEnding: () => {
-        return Template.instance().currentYear.get();
+        return Template.instance().fiscalYearEnding.get();
     },
 
     dateAsAt: () => {
@@ -1947,15 +2484,30 @@ Template.accountant_company.helpers({
     currentYear: () => {
         return Template.instance().currentYear.get();
     },
+
     currentMonth: () => {
         return Template.instance().currentMonth.get();
     },
+
     currentDate: () => {
         return Template.instance().currentDate.get();
+    },
+
+    fromDate: () => {
+        return Template.instance().fromDate.get();
     },
     endDate: () => {
         return Template.instance().endDate.get();
     },
+    // yearsData: () => {
+    //     let yearsData = [];
+    //     let currentYear = Template.instance().currentYear.get();
+    //     for (var i = currentYear; i >= 2021; i--) {
+    //         yearsData.push(i);
+    //     }
+
+    //     return yearsData;
+    // },
     convertAmount: (amount, currencyData) => {
         let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 

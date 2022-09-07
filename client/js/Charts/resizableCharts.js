@@ -1,9 +1,8 @@
-import DashboardApi from "../Api/DashboardApi";
-import Tvs1ChartDashboardPreference from "../Api/Model/Tvs1ChartDashboardPreference";
-import Tvs1ChartDashboardPreferenceField from "../Api/Model/Tvs1ChartDashboardPreferenceField";
-import ApiService from "../Api/Module/ApiService";
+import _ from "lodash";
 import ChartHandler from "./ChartHandler";
-
+const highCharts = require('highcharts');
+require('highcharts/modules/exporting')(highCharts);
+require('highcharts/highcharts-more')(highCharts);
 export default class resizableCharts {
   static enable(timeOut = 200) {
     setTimeout(() => {
@@ -47,6 +46,21 @@ export default class resizableCharts {
             if ( ChartHandler.calculateHeight(ui.element[0]) >= 100) {
                 $(this).resizable("option", "maxHeight", ui.size.height);
             }
+
+            // resize all highcharts
+            try {
+              const allHighCharts = $('.ds-highcharts');
+              _.each(allHighCharts, chartElement => {
+                const index = $(chartElement).data('highcharts-chart');
+                let highChart = highCharts.charts[index];
+                if(highChart) {
+                  highChart.reflow();
+                }
+              });
+            }catch(e) {
+
+            }
+
             // will not apply on Expenses breakdown
             $(ui.element[0]).parents(".sortable-chart-widget-js").css("width", chartWidth);
             $(ui.element[0]).parents(".sortable-chart-widget-js").css("height", chartHeight);

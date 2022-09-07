@@ -1658,9 +1658,6 @@ Template.bankingoverview.events({
     'click .QuoteList': function(event) {
         FlowRouter.go('/quoteslist');
     },
-    'click .btnNewDepositEnrty' : function(event){
-        FlowRouter.go('/depositcard');
-    },
     'click #btnNewCheck': function(event) {
         FlowRouter.go('/chequecard');
     },
@@ -1874,7 +1871,13 @@ Template.bankingoverview.events({
     },
     'click .btnReconList': function() {
         FlowRouter.go('/reconciliationlist');
-    }
+    },
+    'click .btnBankRule': function() {
+        FlowRouter.go('/bankrulelist');
+    },
+    'click #btnNewBankRule': function(event) {
+        FlowRouter.go('/newbankrule');
+    },
 });
 Template.bankingoverview.helpers({
     datatablerecords: () => {

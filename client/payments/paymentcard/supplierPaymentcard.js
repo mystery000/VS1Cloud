@@ -958,7 +958,7 @@ Template.supplierpaymentcard.onRendered(() => {
       var length = data.length;
       var i = 0;
       for(item of data){
-           
+
        var html = '';
        if(i == length-1)
        {
@@ -968,7 +968,7 @@ Template.supplierpaymentcard.onRendered(() => {
        {
            html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
        }
-      
+
        var count = 0;
        for(item_temp of item){
 
@@ -979,14 +979,14 @@ Template.supplierpaymentcard.onRendered(() => {
           {
               html = html + "<td>" + item_temp + "</td>";
           }
-         
+
 
           count++;
        }
       html +="</tr>";
       tbl_content.append(html);
       i++;
-     
+
      }
 
 
@@ -1259,15 +1259,15 @@ Template.supplierpaymentcard.onRendered(() => {
            var length = data.length;
            var i = 0;
            for(item of data){
-                
+
             var html = '';
-       
+
             html += "<tr style=''>";
-            
-           
+
+
             var count = 0;
             for(item_temp of item){
-              
+
                if(count < 3){
                    if(count == 1)
                    {
@@ -1278,20 +1278,20 @@ Template.supplierpaymentcard.onRendered(() => {
                         html = html + "<td class='text-nowrap' >" + item_temp + "</td>";
 
                    }
-                  
+
                }
                else
                {
                    html = html + "<td class='text-right text-nowrap' >" + item_temp + "</td>";
                }
-              
+
 
                count++;
             }
             html +="</tr>";
             tbl_content.append(html);
             i++;
-          
+
         }
 
 
@@ -1364,7 +1364,7 @@ Template.supplierpaymentcard.onRendered(() => {
         setTimeout(function () {
           if (FlowRouter.current().queryParams.id) {
           } else {
-            $(".heading").html("New Supplier Payment " +''+'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
+            $(".heading").html("New Supplier Payment " +''+'<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
           }
           $("#edtSelectBankAccountName").val(lastBankAccount);
           $("#sltDepartment").val(lastDepartment);
@@ -4441,7 +4441,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   amountdue: amountDue || 0,
                   paymentamount: paymentAmt || 0,
                   ouststandingamount: outstandingAmt,
-                  orginalamount: originalAmt                  
+                  orginalamount: originalAmt
                 };
                 lineItems.push(lineItemObj);
 
@@ -7528,18 +7528,18 @@ Template.supplierpaymentcard.onRendered(() => {
       if (template_title == "Supplier Payments") {
         await showSuppliers(template_title, number);
       }
-  
+
       let margins = {
         top: 0,
         bottom: 0,
         left: 0,
         width: 100,
       };
-  
+
       let invoice_data_info = templateObject.record.get();
       document.getElementById("html-2-pdfwrapper_new").style.display = "block";
       var source = document.getElementById("html-2-pdfwrapper_new");
-  
+
       let file = "Supplier_payment.pdf";
       if (
         $(".printID").attr("id") != undefined ||
@@ -7549,7 +7549,7 @@ Template.supplierpaymentcard.onRendered(() => {
           file = "Supplier payment-" + invoice_data_info.lid + ".pdf";
         }
       }
-  
+
       var opt = {
         margin: 0,
         filename: file,
@@ -7566,7 +7566,7 @@ Template.supplierpaymentcard.onRendered(() => {
           orientation: "portrait",
         },
       };
-  
+
       html2pdf()
         .set(opt)
         .from(source)
@@ -7590,11 +7590,11 @@ Template.supplierpaymentcard.onRendered(() => {
             LoadingOverlay.hide();
           }
         });
-  
+
       return true;
 
     }
-   
+
   };
 
   $("#tblSupplierPaymentcard tbody").on(

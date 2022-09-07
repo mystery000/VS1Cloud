@@ -4,6 +4,7 @@ import { UtilityService } from "../../utility-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import GlobalFunctions from "../../GlobalFunctions";
+import moment from "moment";
 
 
 let reportService = new ReportService();
@@ -100,19 +101,32 @@ Template.stockmovementreport.onRendered(() => {
         ignoreDate: true
       };
     }
-    $("#dateFrom").val(defaultOptions.fromDate);
-    $("#dateTo").val(defaultOptions.toDate);
+    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $('.edtReportDates').attr('disabled', false)
+    if( ignoreDate == true ){
+      $('.edtReportDates').attr('disabled', true);
+      templateObject.dateAsAt.set("Current Date");
+    }
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getStockMovementReportData();
   };
   templateObject.getStockMovementReportData = async function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    const options = await templateObject.reportOptions.get();
-    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let ignoreDate = options.ignoreDate || false;
-    let data = await reportService.getStockMovementReport( dateFrom, dateTo, ignoreDate);
-
+    let data = [];
+    if (!localStorage.getItem('VS1StockMovement_Report')) {
+      const options = await templateObject.reportOptions.get();
+      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let ignoreDate = options.ignoreDate || false;
+      data = await reportService.getStockMovementReport( dateFrom, dateTo, ignoreDate);
+      if( data.t_vs1_report_productmovement.length > 0 ){
+        localStorage.setItem('VS1StockMovement_Report', JSON.stringify(data)||'');
+      }
+    }else{
+      data = JSON.parse(localStorage.getItem('VS1StockMovement_Report'));
+    }
     let movementReport = [];
     if( data.t_vs1_report_productmovement.length > 0 ){
         let reportGroups = [];
@@ -147,14 +161,16 @@ Template.stockmovementreport.onRendered(() => {
               TotalCurrentQty += subitem.fields.Qty;
               TotalUnitCost += subitem.fields.Cost;
             });
+            item.SubAccounts.sort(function(a,b){
+              return new Date(b.fields.TransactionDate) - new Date(a.fields.TransactionDate);
+            });
             item.TotalRunningQty = TotalRunningQty;
             item.TotalCurrentQty = TotalCurrentQty;
             item.TotalUnitCost = TotalUnitCost;
             return item;
         });
     }
-
-    templateObject.records.set(movementReport);
+    templateObject.records.set(movementReport);       
     setTimeout(function() {
         MakeNegative();
     }, 1000);
@@ -314,24 +330,24 @@ Template.stockmovementreport.events({
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    localStorage.setItem('VS1StockMovement_Report', '');
     await templateObject.setReportOptions(false, dateFrom, dateTo);
-    $(".fullScreenSpin").css("display", "none");
   },
   "click #lastMonth": async function () {
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
+    localStorage.setItem('VS1StockMovement_Report', '');
     await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
   },
   "click #lastQuarter": async function () {
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
+    localStorage.setItem('VS1StockMovement_Report', '');
     await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
   },
   "click #last12Months": async function () {
     $(".fullScreenSpin").css("display", "block");
@@ -359,15 +375,15 @@ Template.stockmovementreport.events({
     var currentDate2 = new Date();
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
+    localStorage.setItem('VS1StockMovement_Report', '');
     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-    $(".fullScreenSpin").css("display", "none");
   },
   "click #ignoreDate": async function () {
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
     templateObject.dateAsAt.set("Current Date");
+    localStorage.setItem('VS1StockMovement_Report', '');
     await templateObject.setReportOptions(true);
-    $(".fullScreenSpin").css("display", "none");
   },
   // CURRENCY MODULE //
   "click .fx-rate-btn": async (e) => {
@@ -445,7 +461,7 @@ Template.stockmovementreport.helpers({
      return ( value == 0 )? '': value;
   },
   formatDate: ( date ) => {
-      return ( date )? moment(date).format("DD/MM/YYYY") : '';
+    return ( date )? moment(date).format("YYYY/MM/DD") : '';
   },
 
   // FX Module //

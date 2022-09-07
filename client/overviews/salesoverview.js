@@ -1328,8 +1328,7 @@ Template.salesoverview.onRendered(function () {
   function initCustomFieldDisplaySettings(data, listType) {
     let custFields = [];
     let dispFields = [];
-    let customData = {};
-    let customFieldCount = 12;
+    let customData = {}; 
 
     let reset_data = [
       { label: 'Sale Date', class: 'colSaleDate', active: true },
@@ -1345,6 +1344,7 @@ Template.salesoverview.onRendered(function () {
       { label: 'Employee', class: 'colEmployee', active: false },
       { label: 'Comments', class: 'colComments', active: true },
     ];
+    let customFieldCount = reset_data.length; 
 
     for (let x = 0; x < data.tcustomfieldlist.length; x++) {
       if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {

@@ -570,6 +570,7 @@ Template.salessummaryreport.events({
             templateObject.dateAsAt.set(formatDate);
         }
         },500);
+        $('.fullScreenSpin').css('display', 'none');
     },
     'change #dateFrom': function() {
         let templateObject = Template.instance();
@@ -596,12 +597,14 @@ Template.salessummaryreport.events({
             templateObject.dateAsAt.set(formatDate);
         }
         },500);
+        $('.fullScreenSpin').css('display', 'none');
 
     },
     'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         localStorage.setItem('VS1SalesSummary_Report', '');
         Meteor._reload.reload();
+        $('.fullScreenSpin').css('display', 'none');
     },
     'click td a': function(event) {
         let redirectid = $(event.target).closest('tr').attr('id');
@@ -666,6 +669,7 @@ Template.salessummaryreport.events({
         // }
 
         //  });
+        $('.fullScreenSpin').css('display', 'none');
     },
     'click #lastMonth': function() {
         let templateObject = Template.instance();
@@ -699,6 +703,7 @@ Template.salessummaryreport.events({
         var getLoadDate = formatDateERP(prevMonthLastDate);
         let getDateFrom = formatDateERP(prevMonthFirstDate);
         templateObject.getSalesReports(getDateFrom, getLoadDate, false);
+        $('.fullScreenSpin').css('display', 'none');
 
     },
     'click #lastQuarter': function() {
@@ -740,6 +745,7 @@ Template.salessummaryreport.events({
         var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
         let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
         templateObject.getSalesReports(getDateFrom, getLoadDate, false);
+        $('.fullScreenSpin').css('display', 'none');
 
     },
     'click #last12Months': function() {
@@ -768,6 +774,7 @@ Template.salessummaryreport.events({
         var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
         let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
         templateObject.getSalesReports(getDateFrom, getLoadDate, false);
+        $('.fullScreenSpin').css('display', 'none');
 
 
     },
@@ -778,6 +785,7 @@ Template.salessummaryreport.events({
         $('#dateTo').attr('readonly', true);
         templateObject.dateAsAt.set('Current Date');
         templateObject.getSalesReports('', '', true);
+        $('.fullScreenSpin').css('display', 'none');
 
     },
     'keyup #myInputSearch': function(event) {

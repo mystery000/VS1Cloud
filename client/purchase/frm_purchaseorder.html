@@ -5,7 +5,7 @@
         </div>
 
         <style>
-         
+
             .templateItem {
                 display: inline-flex !important;
 
@@ -27,7 +27,7 @@
                 <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
                     <h1 style="margin: 12px;margin-bottom: 0px;" class="heading">{{purchaseorderrecord.lid}}
 
-                        <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                        {{> helpbutton}}
 
                         <!-- Start Help View Modal -->
                         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -39,8 +39,8 @@
                                     <div class="modal-body">
                                         <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                                         <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                        <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                        <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                        {{> helpadvisor}}
+                                        {{> helpgotoforum}}
                                     </div>
                                     <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                                 </div>
@@ -63,8 +63,8 @@
                             <div class="modal-body">
                                 <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                                 <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=62" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                {{> helpadvisor}}
+                                {{> helpgotoforum}}
                             </div>
                             <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                         </div>
@@ -183,9 +183,9 @@
                                                     <div class="custom-control custom-switch">
                                                         <input class="custom-control-input chkGlobalSettings" name="print_purchase_order" checked type="checkbox" id="print_purchase_order" autocomplete="off">
                                                         <label style="cursor: pointer;" class="custom-control-label" for="print_purchase_order">Print Purchase Order</label>
-                                                    </div>    
+                                                    </div>
                                                 </div>
-                                               
+
                                             </div>
                                         {{/each}}
                                     </div>
@@ -241,8 +241,8 @@
                                         </div>
                                         <div class="col-5 col-md-5 col-sm-12" style="margin: 0px; padding: 16px; border: none !important; ">
                                             <h4 style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Purchase Order&nbsp;&nbsp;<span class="print-header"></span></h4>
-        
-        
+
+
                                             <div style="display: flex; width: 100%;">
                                                 <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                                                     <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
@@ -250,18 +250,18 @@
                                                     <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p>
                                                     <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No :</p>
                                                     <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</p>
-        
+
                                                     <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX Currency:</p>
-        
+
                                                     <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
-        
+
                                                     <div class="mt-4" id="customfieldlable">
                                                         <p class="customfield1" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 1</p>
                                                         <p class="customfield2" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
                                                         <p class="customfield3" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                                     </div>
-        
-        
+
+
                                                 </div>
                                                 <div style="width: 50%; padding-left: 16px;">
                                                     <p class="date" style="margin-bottom: 4px; color: rgb(0 0 0);"></p>
@@ -276,18 +276,18 @@
                                                         <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px; text-align: center;">Pay
                                                             Now</a>
                                                     </p>
-        
+
                                                     <div class="mt-4" id="customfieldlabledata">
                                                         <p class="customfield1data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 1</p>
                                                         <p class="customfield2data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
                                                         <p class="customfield3data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                                     </div>
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
                                                 </div>
                                             </div>
                                         </div>
@@ -308,11 +308,11 @@
                                     <hr>
                                     <div style="display: flex;">
                                         <div style="margin: 8px; width: 100%">
-                    
+
                                             <div class="row">
-                                              
+
                                                 <div class="col-6">
-                    
+
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <p style="font-weight: bold; color: rgb(0 0 0);">Comments</p>
@@ -327,39 +327,39 @@
                                                                     <p style="font-weight: 600; color: rgb(0 0 0);">Payment Details</p>
                                                                 </div>
                                                                 <!-- <div class="bankDetails" style="margin: 16px;">
-                            
+
                                                         </div> -->
                                                                 <div class="col-12">
                                                                     <p style="font-weight: 600; color: rgb(0 0 0);"></p>
                                                                 </div>
-                            
+
                                                                 <div class="col-12">
-                            
+
                                                                     <p class="bsb" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                         BSB (Branch Number) :
                                                                         <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                                     </p>
-                            
+
                                                                     <p class="account_number" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                         Account Number: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                                     </p>
-                            
+
                                                                     <p class="swift" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                         Swift Code: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                                     </p>
-                            
-                            
+
+
                                                                 </div>
-                            
+
                                                             </div>
                                                         </div>
-                                                      
+
                                                     </div>
-                    
+
                                                 </div>
-                    
+
                                                 <div class="col-6">
-                    
+
                                                     <div class="row">
                                                         <div class="col-12 field_amount">
                                                             <div style="margin: 8px; border: none !important;">
@@ -407,42 +407,42 @@
                                                                         </p>
                                                                         <p id="totalBalanceDuePrint" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                         </p>
-                            
+
                                                                     </div>
-                            
-                            
+
+
                                                                 </div>
                                                             </div>
                                                         </div>
-                    
+
                                                     </div>
-                    
+
                                                 </div>
-                    
-                    
+
+
                                             </div>
-                                         
+
                                         </div>
-                    
-                    
+
+
                                     </div>
-        
+
                                     <div style="font-size: 10px; margin-right: 8px; float: right;">
                                         <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
-                                       
+
                                     </div>
                                     <p class="bottome-text-fix" style="font-size: 10px;margin-right: 18px; position: absolute;bottom: 0;z-index: 1111; right: 0;  ">Page 1 of 1</p>
-        
+
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times" style="margin-right: 5px;"></i>Close</button>
                             </div>
                         </div>
-        
+
                     </div>
                 </div>
-        
+
                 <div style="width: 210mm; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; display: none; color: #000000; overflow-x: visible;" id="html-2-pdfwrapper_new"
                 name="html-2-pdfwrapper_new">
                 <div style="display: flex; height: fit-content; min-height: 30mm;">
@@ -473,8 +473,8 @@
                     </div>
                     <div class="col-5 col-md-5 col-sm-12" style="margin: 0px; padding: 16px; border: none !important; ">
                         <h4 style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Purchase Order&nbsp;&nbsp; <span class="print-header"></span></h4>
-                     
-        
+
+
                         <div style="display: flex; width: 100%;">
                             <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                                 <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
@@ -535,7 +535,7 @@
                     <div style="margin: 8px; width: 100%">
 
                         <div class="row">
-                          
+
                             <div class="col-6">
 
                                 <div class="row">
@@ -556,28 +556,28 @@
                                             <div class="col-12">
                                                 <p style="font-weight: 600; color: rgb(0 0 0);"></p>
                                             </div>
-        
+
                                             <div class="col-12">
-        
+
                                                 <p class="bsb" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                     BSB (Branch Number) :
                                                     <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                 </p>
-        
+
                                                 <p class="account_number" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                     Account Number: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                 </p>
-        
+
                                                 <p class="swift" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                     Swift Code: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                 </p>
-        
-        
+
+
                                             </div>
-        
+
                                         </div>
                                     </div>
-                                  
+
                                 </div>
 
                             </div>
@@ -618,7 +618,7 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                           
+
                                             <!--  <hr><div style="width: 100%; display: flex;">
                                                 <div style="padding-right: 16px; width: 50%;">
                                                     <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
@@ -631,10 +631,10 @@
                                                     </p>
                                                     <p id="totalBalanceDuePrint" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                     </p>
-        
+
                                                 </div>
-        
-        
+
+
                                             </div> -->
                                         </div>
                                     </div>
@@ -645,7 +645,7 @@
 
 
                         </div>
-                     
+
                     </div>
 
 

@@ -233,10 +233,7 @@ Template.leadbarchart.onRendered(() => {
       }
 
       addVS1Data("TCRMLeadBarChart", JSON.stringify(bar_records));
-      addVS1Data("TCRMLeadPieChart", JSON.stringify(pie_records));
-
-      drawPieChart(pie_records)
-      drawBarChart(bar_records)
+      addVS1Data("TCRMLeadPieChart", JSON.stringify(pie_records)); 
 
     }).catch(function (err) {
 

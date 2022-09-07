@@ -4,10 +4,8 @@
       <div class="spinner"></div>
     </div>
     <header style="padding: 16px;">
-      <h2 style="margin: 16px;">Purchase Summary Report
-        <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help
-          <i class="fa fa-question-circle-o" style="font-size: 20px;"></i>
-        </a>
+      <h2 style="margin: 16px;">Purchase Summary
+        {{> helpbutton}}
       </h2>
     </header>
 
@@ -26,12 +24,8 @@
             <p class="text-center text-muted">
               <a href="https://vs1forum.com/viewtopic.php?f=6&t=75" target="_blank" class="btn btn-primary">Download Help File</a>
             </p>
-            <p class="text-center text-muted">
-              <button class="btn btn-primary" type="button">Employ Advisor</button>
-            </p>
-            <p class="text-center text-muted" style="margin: 0px;">
-              <a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a>
-            </p>
+            {{> helpadvisor}}
+            {{> helpgotoforum}}
           </div>
           <div class="modal-footer" style="padding: 6px;">
             <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
@@ -65,7 +59,7 @@
         <div class="card shadow mb-3">
           <div class="card-header py-3" style="background-color: rgb(248,249,252);">
             <div class="row no-gutters justify-content-between">
-              <p class="text-primary m-0 font-weight-bold">Purchase Summary Report</p>
+              <p class="text-primary m-0 font-weight-bold">Purchase Summary</p>
               <button type="button" class="btn btn-primary" id="btnDetails">
                 <i class="fas fa-repeat" style="margin-right: 5px;"></i>
                 Details</button>
@@ -185,24 +179,47 @@
                     border-top: 2px #858999 solid;
                     border-bottom: 2px #858999 solid;
                   }
+                  .table th,
+                  .table td {
+                      text-align: right;
+                      min-width: 150px;
+                  }
+                  .table th:first-child,
+                  .table td:first-child {
+                      text-align: left;
+                  }
+                  table tr .text-danger,
+                  table tr .text-danger a {
+                      color: #e74a3b !important;
+                  }
+                  .customDoubleTableHeading + tr th {
+                      border-right: 1px solid #cbcbcb !important;
+                  }
+                  .customDoubleTableHeading + tr th:last-child {
+                      border-right: none !important;
+                  }
+                  .text-center1,
+                  .text-center0 {
+                      text-align: right !important;
+                  }
                 </style>
                 <div class="table-responsive">
                   <table class="table table-sm tblPurchaseSummary" id="tableExport" name="tableExport">
                     <thead>
-                      <tr class="table-active">
+                      <tr class="table-active customDoubleTableHeading">
                         <th>Company</th>
                         <th style="width: 130px;">Type</th>
                         <th>Order No.</th>
                         <th>Order Date</th>
                         <th>Phone</th>
 
-                        <th class="text-center" colspan="{{countActive currencyList}}">Total Amount (Ex)</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">Total Tax</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">Total Amount (Inc)</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">Balance</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Total Amount (Ex)</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Total Tax</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Total Amount (Inc)</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Balance</th>
                       </tr>
                       {{#if isOnlyDefaultActive equal "false" }}
-                        <tr class="table-active tblAvoid customDoubleTableHeading">
+                        <tr class="table-active tblAvoid">
                           <th></th>
                           <th></th>
                           <th></th>
@@ -212,25 +229,25 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{#if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th  active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
 
                             {{#each c in currencyList }}
                               {{#if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th  active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
 
                             {{#each c in currencyList }}
                               {{#if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th  active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
 
                             {{#each c in currencyList }}
                               {{#if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th  active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -244,29 +261,29 @@
                           <tr>
                             <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                               <span class="table-cells">
-                                <strong>
+                                
                                   <a href="/purchasesreport?contact={{items.contact}}" style="text-decoration:none!important;">{{items.contact}}</a>
-                                </strong></span></td>
+                                </span></td>
                             <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                               <span class="table-cells">
-                                <strong>
+                                
                                   <a href="#" style="text-decoration:none!important;">{{items.type}}</a>
-                                </strong></span></td>
+                                </span></td>
                             <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                               <span class="table-cells">
-                                <strong>
+                                
                                   <a href="#" style="text-decoration:none!important;">{{items.orderno}}</a>
-                                </strong></span></td>
+                                </span></td>
                             <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                               <span class="table-cells">
-                                <strong>
+                                
                                   <a href="#" style="text-decoration:none!important;">{{ formatDate items.OrderDate}}</a>
-                                </strong></span></td>
+                                </span></td>
                             <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                               <span class="table-cells">
-                                <strong>
+                                
                                   <a href="#" style="text-decoration:none!important;">{{items.phone}}</a>
-                                </strong></span></td>
+                                </span></td>
 
                             {{#if isOnlyDefaultActive}}
                               {{#if currencyList}}
@@ -276,11 +293,11 @@
 
                                     <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                                       <span class="table-cells">
-                                        <strong>
+                                        
                                           <a href="/purchasesreport?contact={{items.contact}}" style="text-decoration:none!important;">
                                             {{ convertAmount items.totalamountex c}}
                                           </a>
-                                        </strong>
+                                        
                                       </span>
                                     </td>
                                   {{/if}}
@@ -291,11 +308,11 @@
 
                                     <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                                       <span class="table-cells">
-                                        <strong>
+                                        
                                           <a href="/purchasesreport?contact={{items.contact}}" style="text-decoration:none!important;">
                                             {{ convertAmount items.totaltax c}}
                                           </a>
-                                        </strong>
+                                        
                                       </span>
                                     </td>
                                   {{/if}}
@@ -306,11 +323,11 @@
 
                                     <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                                       <span class="table-cells">
-                                        <strong>
+                                        
                                           <a href="/purchasesreport?contact={{items.contact}}" style="text-decoration:none!important;">
                                             {{ convertAmount items.totalamount c}}
                                           </a>
-                                        </strong>
+                                        
                                       </span>
                                     </td>
                                   {{/if}}
@@ -321,11 +338,11 @@
 
                                     <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                                       <span class="table-cells">
-                                        <strong>
+                                        
                                           <a href="/purchasesreport?contact={{items.contact}}" style="text-decoration:none!important;">
                                             {{ convertAmount items.balance c}}
                                           </a>
-                                        </strong>
+                                        
                                       </span>
                                     </td>
                                   {{/if}}
@@ -336,28 +353,28 @@
 
                               <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                                 <span class="table-cells">
-                                  <strong>
+                                  
                                     <a href="/purchasesreport?contact={{items.contact}}" style="text-decoration:none!important;">
                                       {{ formatPrice items.totalamountex}}
                                     </a>
-                                  </strong>
+                                  
                                 </span>
                               </td>
                               <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                                 <span class="table-cells">
-                                  <strong>
+                                  
                                     <a href="/purchasesreport?contact={{items.contact}}" style="text-decoration:none!important;">{{ formatPrice items.totaltax}}</a>
-                                  </strong></span></td>
+                                  </span></td>
                               <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                                 <span class="table-cells">
-                                  <strong>
+                                  
                                     <a href="/purchasesreport?contact={{items.contact}}" style="text-decoration:none!important;">{{ formatPrice items.totalamount}}</a>
-                                  </strong></span></td>
+                                  </span></td>
                               <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                                 <span class="table-cells">
-                                  <strong>
+                                  
                                     <a href="/purchasesreport?contact={{items.contact}}" style="text-decoration:none!important;">{{ formatPrice items.balance}}</a>
-                                  </strong></span></td>
+                                  </span></td>
 
                             {{/if}}
 

@@ -26,6 +26,7 @@ const templateObject = Template.instance();
    templateObject.currencyList = new ReactiveVar([]);
    templateObject.activeCurrencyList = new ReactiveVar([]);
    templateObject.tcurrencyratehistory = new ReactiveVar([]);
+   templateObject.reportOptions = new ReactiveVar([]);
 });
 
 Template.report1099.onRendered(()=>{
@@ -82,11 +83,39 @@ Template.report1099.onRendered(()=>{
 
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
+    
+
+    templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+    let defaultOptions = templateObject.reportOptions.get();
+    if (defaultOptions) {
+      defaultOptions.fromDate = formatDateFrom;
+      defaultOptions.toDate = formatDateTo;
+      defaultOptions.ignoreDate = ignoreDate;
+    } else {
+      defaultOptions = {
+        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
+        toDate: moment().format("YYYY-MM-DD"),
+        ignoreDate: true
+      };
+    }
+    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $('.edtReportDates').attr('disabled', false)
+    if( ignoreDate == true ){
+      $('.edtReportDates').attr('disabled', true);
+      templateObject.dateAsAt.set("Current Date");
+    }
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
+
+    await templateObject.reportOptions.set(defaultOptions);
+    await templateObject.ContractorPaymentSummaryReports(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
+  };
     templateObject.ContractorPaymentSummaryReports = (dateFrom, dateTo, ignoreDate) => {
       LoadingOverlay.show();
-  
+      if (!localStorage.getItem('VS11099Contractor_Report')) {
       reportService.getContractorPaymentSummaryData(dateFrom, dateTo, ignoreDate).then(function (data) {
         if (data.tcontractorpaymentsummary.length) {
+          localStorage.setItem('VS11099Contractor_Report', JSON.stringify(data) || '');
           let records = [];
           let allRecords = [];
           let current = [];
@@ -105,7 +134,6 @@ Template.report1099.onRendered(()=>{
           accountData.forEach(account => {
             records.push({Id: account.PaymentID, type: account.PaymentType, Company: account.SupplierPrintName, entries: account});
           });
-           
          
 
           //   for (let i = 0; i < accountData.length; i++) {
@@ -288,6 +316,209 @@ Template.report1099.onRendered(()=>{
         //Bert.alert('<strong>' + err + '</strong>!', 'danger');
         LoadingOverlay.hide();
       });
+    } else {
+      data = JSON.parse(localStorage.getItem('VS11099Contractor_Report'));
+      // localStorage.setItem('VS11099Contractor_Report', JSON.stringify(data) || '');
+      if (data.tcontractorpaymentsummary.length) {
+        // localStorage.setItem('VS11099Contractor_Report', JSON.stringify(data) || '');
+        let records = [];
+        let allRecords = [];
+        let current = [];
+
+        let totalNetAssets = 0;
+        let GrandTotalLiability = 0;
+        let GrandTotalAsset = 0;
+        let incArr = [];
+        let cogsArr = [];
+        let expArr = [];
+        let accountData = data.tcontractorpaymentsummary;
+        let accountType = "";
+        let purchaseID = "";
+
+
+        accountData.forEach(account => {
+          records.push({Id: account.PaymentID, type: account.PaymentType, Company: account.SupplierPrintName, entries: account});
+        });
+       
+
+        //   for (let i = 0; i < accountData.length; i++) {
+
+        //     let recordObj = {};
+        //       recordObj.Id = data.tcontractorpaymentsummary[i].PaymentID;
+        //       recordObj.type = data.tcontractorpaymentsummary[i].PaymentType;
+        //       recordObj.Company = data.tcontractorpaymentsummary[i].SupplierPrintName;
+        //       recordObj.dataArr = [
+        //           '',
+        //           data.tcontractorpaymentsummary[i].PaymentType,
+        //           data.tcontractorpaymentsummary[i].PaymentID,
+        //            moment(data.tcontractorpaymentsummary[i].InvoiceDate).format("DD MMM YYYY") || '-',
+        //           data.tcontractorpaymentsummary[i].PaymentDate !=''? moment(data.tcontractorpaymentsummary[i].PaymentDate).format("DD/MM/YYYY"): data.tcontractorpaymentsummary[i].PaymentDate,
+        //           data.tcontractorpaymentsummary[i].PaymentMethod || '-',
+        //           data.tcontractorpaymentsummary[i].BillStreet || '',
+        //           data.tcontractorpaymentsummary[i].BillPlace || '',
+        //           utilityService.modifynegativeCurrencyFormat(data.tcontractorpaymentsummary[i].CardAmount) || '0.00',
+        //           utilityService.modifynegativeCurrencyFormat(data.tcontractorpaymentsummary[i].NonCardAmount) || '0.00'
+
+        //
+        //       ];
+
+        //    if((data.tcontractorpaymentsummary[i].AmountDue != 0) || (data.tcontractorpaymentsummary[i].Current != 0)
+        //    || (data.tcontractorpaymentsummary[i]["30Days"] != 0) || (data.tcontractorpaymentsummary[i]["60Days"] != 0)
+        //  || (data.tcontractorpaymentsummary[i]["90Days"] != 0) || (data.tcontractorpaymentsummary[i]["120Days"] != 0)){
+        //
+        //    }
+
+        //   records.push(recordObj);
+
+        // }
+
+        records = _.sortBy(records, "Company");
+        records = _.groupBy(records, "Company");
+
+        for (let key in records) {
+          // let obj = [{key: key}, {data: records[key]}];
+
+          let obj = {
+            title: key,
+            entries: records[key],
+            total: {}
+          };
+          allRecords.push(obj);
+        }
+
+        allRecords.forEach(record => {
+          let totalAmountEx = 0;
+          let totalTax = 0;
+          let amountInc = 0;
+          let balance = 0;
+          let twoMonth = 0;
+          let threeMonth = 0;
+          let Older = 0;
+
+          record.entries.forEach(entry => {
+            // totalAmountEx = totalAmountEx + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
+            // totalTax = totalTax + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
+            amountInc = amountInc + parseFloat(entry.CardAmount);
+            balance = balance + parseFloat(entry.NonCardAmount);
+          });
+
+          record.total = {
+            // new
+            Title: "Total " + record.title,
+            AmountInc: amountInc,
+            Balance: balance
+          };
+
+          current.push(record.total);
+        });
+
+        //   let iterator = 0;
+        // for (let i = 0; i < allRecords.length; i++) {
+        //     let totalAmountEx = 0;
+        //     let totalTax = 0;
+        //     let amountInc = 0;
+        //     let balance = 0;
+        //     let twoMonth = 0;
+        //     let threeMonth = 0;
+        //     let Older = 0;
+        //     const currencyLength = Currency.length;
+        //     for (let k = 0; k < allRecords[i][1].data.length; k++) {
+        //          totalAmountEx = totalAmountEx + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
+        //          totalTax = totalTax + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
+        //         amountInc = amountInc + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
+        //         balance = balance + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
+
+        //     }
+        //     let val = ['Total ' + allRecords[i][0].key+'', '', '', '','',
+        //         '', '', utilityService.modifynegativeCurrencyFormat(amountInc), utilityService.modifynegativeCurrencyFormat(balance)];
+        //     current.push(val);
+
+        // }
+
+        //grandtotalRecord
+        let grandamountduetotal = 0;
+        let grandtotalAmountEx = 0;
+        let grandtotalTax = 0;
+        let grandamountInc = 0;
+        let grandbalance = 0;
+
+        current.forEach(entry => {
+          // grandtotalAmountEx = grandtotalAmountEx + utilityService.convertSubstringParseFloat(current[n][5]);
+          // grandtotalTax = grandtotalTax + utilityService.convertSubstringParseFloat(current[n][6]);
+          grandamountInc = grandamountInc + parseFloat(entry.CardAmount);
+          grandbalance = grandbalance + parseFloat(entry.NonCardAmount);
+        });
+
+        // for (let n = 0; n < current.length; n++) {
+
+        //     const grandcurrencyLength = Currency.length;
+
+        //           grandtotalAmountEx = grandtotalAmountEx + utilityService.convertSubstringParseFloat(current[n][5]);
+        //           grandtotalTax = grandtotalTax + utilityService.convertSubstringParseFloat(current[n][6]);
+        //          grandamountInc = grandamountInc + utilityService.convertSubstringParseFloat(current[n][7]);
+        //          grandbalance = grandbalance + utilityService.convertSubstringParseFloat(current[n][8]);
+
+        // }
+
+        // let grandval = ['Grand Total ' +  '', '', '','','',
+        // '',
+        //   '',
+        //     utilityService.modifynegativeCurrencyFormat(grandamountInc),
+        //     utilityService.modifynegativeCurrencyFormat(grandbalance)];
+
+        let grandValObj = {
+          Title: "Grand Total ",
+          AmountInc: grandamountInc,
+          Balance: grandbalance
+        };
+
+        // for (let key in records) {
+        //     let dataArr = current[iterator]
+        //     let obj = [{key: key}, {data: records[key]},{total:[{dataArr:dataArr}]}];
+        //     totalRecord.push(obj);
+        //     iterator += 1;
+        // }
+
+        // templateObject.records.set(totalRecord);
+        // templateObject.grandrecords.set(grandval);
+
+        templateObject.records.set(allRecords);
+        templateObject.grandrecords.set(grandValObj);
+
+        if (templateObject.records.get()) {
+          setTimeout(function () {
+            $("td a").each(function () {
+              if ($(this).text().indexOf("-" + Currency) >= 0) 
+                $(this).addClass("text-danger");
+              }
+            );
+            $("td").each(function () {
+              if ($(this).text().indexOf("-" + Currency) >= 0) 
+                $(this).addClass("text-danger");
+              }
+            );
+
+            $("td").each(function () {
+              let lineValue = $(this).first().text()[0];
+              if (lineValue != undefined) {
+                if (lineValue.indexOf(Currency) >= 0) 
+                  $(this).addClass("text-right");
+                }
+              });
+
+            $("td").each(function () {
+              if ($(this).first().text().indexOf("-" + Currency) >= 0) 
+                $(this).addClass("text-right");
+              }
+            );
+
+            $(".fullScreenSpin").css("display", "none");
+          }, 100);
+        }
+      } 
+      LoadingOverlay.hide();
+    }
+      $(".fullScreenSpin").css("display", "none");
       
     };
 
@@ -454,119 +685,65 @@ Template.report1099.onRendered(()=>{
         //
         // });
     },
-    'click #lastMonth':function(){
-        let templateObject = Template.instance();
-        localStorage.setItem('VS11099Contractor_Report', '');
-        $('.fullScreenSpin').css('display','inline-block');
-        $('#dateFrom').attr('readonly', false);
-        $('#dateTo').attr('readonly', false);
-        var currentDate = new Date();
-
-        var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-        var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
-
-        var formatDateComponent = function(dateComponent) {
-          return (dateComponent < 10 ? '0' : '') + dateComponent;
-        };
-
-        var formatDate = function(date) {
-          return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
-        };
-
-        var formatDateERP = function(date) {
-          return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
-        };
-
-
-        var fromDate = formatDate(prevMonthFirstDate);
-        var toDate = formatDate(prevMonthLastDate);
-
-        $("#dateFrom").val(fromDate);
-        $("#dateTo").val(toDate);
-
-        var getLoadDate = formatDateERP(prevMonthLastDate);
-        let getDateFrom = formatDateERP(prevMonthFirstDate);
-        templateObject.ContractorPaymentSummaryReports(getDateFrom,getLoadDate,false);
-
-    },
-    'click #lastQuarter':function(){
-      localStorage.setItem('VS11099Contractor_Report', '');
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
-        $('#dateFrom').attr('readonly', false);
-        $('#dateTo').attr('readonly', false);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-        function getQuarter(d) {
-          d = d || new Date();
-          var m = Math.floor(d.getMonth()/3) + 2;
-          return m > 4? m - 4 : m;
-        }
-
-        var quarterAdjustment= (moment().month() % 3) + 1;
-        var lastQuarterEndDate = moment().subtract({ months: quarterAdjustment }).endOf('month');
-        var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({ months: 2 }).startOf('month');
-
-        var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
-        var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
-
-        templateObject.dateAsAt.set(lastQuarterStartDateFormat);
-        $("#dateFrom").val(lastQuarterStartDateFormat);
-        $("#dateTo").val(lastQuarterEndDateFormat);
-
-
-        let fromDateMonth = getQuarter(currentDate);
-        var quarterMonth = getQuarter(currentDate);
-        let fromDateDay = currentDate.getDate();
-
-        var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
-        let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
-        templateObject.ContractorPaymentSummaryReports(getDateFrom,getLoadDate,false);
-
-    },
-    'click #last12Months':function(){
+    "change .edtReportDates": async function () {
+      $(".fullScreenSpin").css("display", "inline-block");
       localStorage.setItem('VS11099Contractor_Report', '');
       let templateObject = Template.instance();
-      $('.fullScreenSpin').css('display','inline-block');
-      $('#dateFrom').attr('readonly', false);
-      $('#dateTo').attr('readonly', false);
+      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+      var dateTo = new Date($("#dateTo").datepicker("getDate"));
+      await templateObject.setReportOptions(false, dateFrom, dateTo);
+  },
+  "click #lastMonth": async function () {
+      $(".fullScreenSpin").css("display", "inline-block");
+      localStorage.setItem('VS11099Contractor_Report', '');
+      let templateObject = Template.instance();
+      let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
+      let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
+      await templateObject.setReportOptions(false, fromDate, endDate);
+  },
+  "click #lastQuarter": async function () {
+      $(".fullScreenSpin").css("display", "inline-block");
+      localStorage.setItem('VS11099Contractor_Report', '');
+      let templateObject = Template.instance();
+      let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+      let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
+      await templateObject.setReportOptions(false, fromDate, endDate);
+  },
+  "click #last12Months": async function () {
+      $(".fullScreenSpin").css("display", "inline-block");
+      localStorage.setItem('VS11099Contractor_Report', '');
+      let templateObject = Template.instance();
+      $("#dateFrom").attr("readonly", false);
+      $("#dateTo").attr("readonly", false);
       var currentDate = new Date();
       var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-      let fromDateMonth = Math.floor(currentDate.getMonth()+1);
+  
+      let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
       let fromDateDay = currentDate.getDate();
-      if((currentDate.getMonth()+1) < 10){
-        fromDateMonth = "0" + (currentDate.getMonth()+1);
+      if (currentDate.getMonth() + 1 < 10) {
+        fromDateMonth = "0" + (currentDate.getMonth() + 1);
       }
-      if(currentDate.getDate() < 10){
-      fromDateDay = "0" + currentDate.getDate();
+      if (currentDate.getDate() < 10) {
+        fromDateDay = "0" + currentDate.getDate();
       }
-
-      var fromDate =fromDateDay + "/" +(fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() -1);
+  
+      var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
       templateObject.dateAsAt.set(begunDate);
       $("#dateFrom").val(fromDate);
       $("#dateTo").val(begunDate);
-
+  
       var currentDate2 = new Date();
       var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-      let getDateFrom = Math.floor(currentDate2.getFullYear()-1) + "-" + Math.floor(currentDate2.getMonth() +1) + "-" + currentDate2.getDate() ;
-      templateObject.ContractorPaymentSummaryReports(getDateFrom,getLoadDate,false);
-
-
-    },
-    'click #ignoreDate':function(){
+      let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
+      await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
+  },
+  "click #ignoreDate": async function () {
+      $(".fullScreenSpin").css("display", "inline-block");
       localStorage.setItem('VS11099Contractor_Report', '');
       let templateObject = Template.instance();
-      $('.fullScreenSpin').css('display','inline-block');
-      $('#dateFrom').attr('readonly', true);
-      $('#dateTo').attr('readonly', true);
-      templateObject.dateAsAt.set('Current Date');
-      templateObject.isIgnoreDate.set(true);
-      templateObject.ContractorPaymentSummaryReports('','',true);
-
-    },
+      templateObject.dateAsAt.set("Current Date");
+      await templateObject.setReportOptions(true);
+  },
     'keyup #myInputSearch':function(event){
       $('.table tbody tr').show();
       let searchItem = $(event.target).val();

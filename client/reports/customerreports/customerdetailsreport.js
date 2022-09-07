@@ -100,19 +100,32 @@ Template.customerdetailsreport.onRendered(() => {
         ignoreDate: true
       };
     }
-    $("#dateFrom").val(defaultOptions.fromDate);
-    $("#dateTo").val(defaultOptions.toDate);
+    $('.edtReportDates').attr('disabled', false)
+    if( ignoreDate == true ){
+      $('.edtReportDates').attr('disabled', true)
+    }
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getCustomerDetailReportData();
   };
 
   templateObject.getCustomerDetailReportData = async function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    const options = await templateObject.reportOptions.get();
+    let data = [];
+    if (!localStorage.getItem('VS1CustomerDetails_Report')) {
+      const options = await templateObject.reportOptions.get();
     let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
     let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
     let ignoreDate = options.ignoreDate || false;
-    let data = await reportService.getCustomerDetailReport( dateFrom, dateTo, ignoreDate);
+    data = await reportService.getCustomerDetailReport( dateFrom, dateTo, ignoreDate);
+      if( data.tcustomersummaryreport.length > 0 ){
+        localStorage.setItem('VS1CustomerDetails_Report', JSON.stringify(data)||'');
+      }
+    }else{
+      data = JSON.parse(localStorage.getItem('VS1CustomerDetails_Report'));
+    }
+    
     let reportData = [];
     if( data.tcustomersummaryreport.length > 0 ){
         let reportGroups = []; 
@@ -223,65 +236,125 @@ Template.customerdetailsreport.onRendered(() => {
 });
 
 Template.customerdetailsreport.events({
-  "change .edtReportDates": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    await templateObject.setReportOptions(false, dateFrom, dateTo);
-    $(".fullScreenSpin").css("display", "none");
-  },
-  "click #lastMonth": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
-  },
-  "click #lastQuarter": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
-  },
-  "click #last12Months": async function () {
-    $(".fullScreenSpin").css("display", "block");
+  "change .balancedate": function() {
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-
-    var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
-    templateObject.dateAsAt.set(begunDate);
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
-    await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-    $(".fullScreenSpin").css("display", "none");
+    let balanceDate = templateObject.$("#balancedate").val();
+    let formatBalDate = moment(balanceDate).format("YYYY-MM-DD");
+    localStorage.setItem("VS1CustomerDetails_Report", "");
+    templateObject.getBalanceSheetReports(formatBalDate);
+    var formatDate = moment(balanceDate).format("DD MMM YYYY");
+    templateObject.dateAsAt.set(formatDate);
   },
-  "click #ignoreDate": async function () {
-    let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    templateObject.dateAsAt.set("Current Date");
-    await templateObject.setReportOptions(true);
-    $(".fullScreenSpin").css("display", "none");
+  "click .lastMonth": function() {
+      let templateObject = Template.instance();
+      $(".fullScreenSpin").css("display", "inline-block");
+      var dateTo = new Date($("#balancedate").datepicker("getDate"));
+      //if(dateTo.getMonth()+1)
+      localStorage.setItem("VS1CustomerDetails_Report", "");
+      let formatDateTo =
+          dateTo.getFullYear() + "-" + dateTo.getMonth() + "-" + dateTo.getDate();
+      templateObject.getBalanceSheetReports(formatDateTo);
+
+      let fromDateMonth = dateTo.getMonth();
+      let fromDateDay = dateTo.getDate();
+
+      if (dateTo.getMonth() + 1 < 10) {
+          fromDateMonth = "0" + dateTo.getMonth();
+      }
+
+      if (dateTo.getDate() < 10) {
+          fromDateDay = "0" + dateTo.getDate();
+      }
+      var formatDate =
+          fromDateDay + "/" + fromDateMonth + "/" + dateTo.getFullYear();
+      templateObject.dateAsAt.set(formatDate);
+      $("#balancedate").val(formatDate);
+  },
+  "click #lastQuarter": function() {
+      let templateObject = Template.instance();
+      $(".fullScreenSpin").css("display", "inline-block");
+      localStorage.setItem("VS1CustomerDetails_Report", "");
+      $("#balancedate").attr("readonly", false);
+      var currentDate = new Date();
+      var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+      var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+      function getQuarter(d) {
+          d = d || new Date();
+          var m = Math.floor(d.getMonth() / 3) + 2;
+          return m > 4 ? m - 4 : m;
+      }
+
+      var quarterAdjustment = (moment().month() % 3) + 1;
+      var lastQuarterEndDate = moment()
+          .subtract({ months: quarterAdjustment })
+          .endOf("month");
+      var lastQuarterStartDate = lastQuarterEndDate
+          .clone()
+          .subtract({ months: 2 })
+          .startOf("month");
+
+      var lastQuarterStartDateFormat =
+          moment(lastQuarterStartDate).format("DD/MM/YYYY");
+      var lastQuarterEndDateFormat =
+          moment(lastQuarterEndDate).format("DD/MM/YYYY");
+
+      templateObject.dateAsAt.set(lastQuarterStartDateFormat);
+      $("#balancedate").val(lastQuarterStartDateFormat);
+
+      let fromDateMonth = getQuarter(currentDate);
+      var quarterMonth = getQuarter(currentDate);
+      let fromDateDay = currentDate.getDate();
+
+      var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
+      let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
+      templateObject.getBalanceSheetReports(getDateFrom);
+  },
+  "click #last12Months": function() {
+      let templateObject = Template.instance();
+      $(".fullScreenSpin").css("display", "inline-block");
+      localStorage.setItem("VS1CustomerDetails_Report", "");
+      $("#balancedate").attr("readonly", false);
+      var currentDate = new Date();
+      var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+      let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+      let fromDateDay = currentDate.getDate();
+      if (currentDate.getMonth() + 1 < 10) {
+          fromDateMonth = "0" + (currentDate.getMonth() + 1);
+      }
+      if (currentDate.getDate() < 10) {
+          fromDateDay = "0" + currentDate.getDate();
+      }
+
+      var fromDate =
+          fromDateDay +
+          "/" +
+          fromDateMonth +
+          "/" +
+          Math.floor(currentDate.getFullYear() - 1);
+      templateObject.dateAsAt.set(begunDate);
+      $("#balancedate").val(lastQuarterStartDateFormat);
+
+      var currentDate2 = new Date();
+      var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+      let getDateFrom =
+          Math.floor(currentDate2.getFullYear() - 1) +
+          "-" +
+          Math.floor(currentDate2.getMonth() + 1) +
+          "-" +
+          currentDate2.getDate();
+      templateObject.getBalanceSheetReports(getDateFrom);
+  },
+  "click #ignoreDate": function() {
+      let templateObject = Template.instance();
+      $(".fullScreenSpin").css("display", "inline-block");
+      localStorage.setItem("VS1CustomerDetails_Report", "");
+      $("#balancedate").attr("readonly", true);
+      templateObject.dateAsAt.set("Current Date");
+      templateObject.getBalanceSheetReports("", "", true);
   },
   "click #btnSummary": function () {
     FlowRouter.go("/customersummaryreport");

@@ -1,5 +1,7 @@
 import { ReactiveVar } from "meteor/reactive-var";
-import { isNumber } from "underscore";
+// import { isNumber } from "underscore";
+import { Random } from "meteor/random";
+import { AccountService } from "../../accounts/account-service";
 
 
 Template.eftExportModal.onCreated(function () {
@@ -8,10 +10,15 @@ Template.eftExportModal.onCreated(function () {
   templateObject.accountTypes = new ReactiveVar([]);
   templateObject.transactionDescriptions = new ReactiveVar([]);
   templateObject.bankNames = new ReactiveVar([]);
+  templateObject.eftRowId = new ReactiveVar(null);
 });
 
 Template.eftExportModal.onRendered(function () {
   let templateObject = Template.instance();
+  let accountService = new AccountService();
+
+  // tempcode
+  templateObject.eftRowId.set(Random.id());
 
   templateObject.transactionDescriptions.set([
     {
@@ -96,6 +103,118 @@ Template.eftExportModal.onRendered(function () {
   };
   templateObject.loadAccountTypes();
 
+  $("#sltBankAccountName").editableSelect();
+
+  $("#sltBankAccountName")
+    .editableSelect()
+    .on("click.editable-select", function (e, li) {
+      var $earch = $(this);
+      var offset = $earch.offset();
+      let accountService = new AccountService();
+      const accountTypeList = [];
+      var accountDataName = e.target.value || "";
+
+      if (e.pageX > offset.left + $earch.width() - 8) {
+        $("#accountListModal").modal();
+        $(".fullScreenSpin").css("display", "none");
+
+      } else {
+        if (accountDataName.replace(/\s/g, "") != "") {
+          getVS1Data("TAccountVS1")
+            .then(function (dataObject) {
+              if (dataObject.length == 0) {
+                accountService
+                  .getOneAccountByName(accountDataName)
+                  .then(function (data) {
+                    setTimeout(function () {
+                      $("#addNewAccount").modal("show");
+                    }, 500);
+                  })
+                  .catch(function (err) {
+                    $(".fullScreenSpin").css("display", "none");
+                  });
+              } else {
+                let data = JSON.parse(dataObject[0].data);
+                var added = false;
+                let fullAccountTypeName = "";
+
+                for (let a = 0; a < data.taccountvs1.length; a++) {
+                  if (
+                    data.taccountvs1[a].fields.AccountName === accountDataName
+                  ) {
+                    setTimeout(function () {
+                      $("#addNewAccount").modal("show");
+                    }, 500);
+                  }
+                }
+                if (!added) {
+                  accountService
+                    .getOneAccountByName(accountDataName)
+                    .then(function (data) {
+                      setTimeout(function () {
+                        $("#addNewAccount").modal("show");
+                      }, 500);
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                }
+              }
+            })
+            .catch(function (err) {
+              accountService
+                .getOneAccountByName(accountDataName)
+                .then(function (data) {
+                  setTimeout(function () {
+                    $("#addNewAccount").modal("show");
+                  }, 500);
+                })
+                .catch(function (err) {
+                  $(".fullScreenSpin").css("display", "none");
+                });
+            });
+          $("#addAccountModal").modal("toggle");
+        } else {
+          $("#accountListModal").modal();
+        }
+      }
+    });
+
+
+  $(document).on("click", "#tblAccount tbody tr", function(e) {
+    $(".colAccount").removeClass('boldtablealertsborder');
+      let selectLineID = $('#selectLineID').val();
+      // let taxcodeList = templateObject.taxraterecords.get();
+      // var table = $(this);
+      // let utilityService = new UtilityService();
+      // let $tblrows = $("#tblDepositEntryLine tbody tr");
+
+      // if(selectLineID){
+      //     let lineProductName = table.find(".productName").text();
+      //     let lineProductDesc = table.find(".productDesc").text();
+      //     let lineAccoutNo = table.find(".accountnumber").text();
+
+
+      //     $('#'+selectLineID+" .lineAccountName").val(lineProductName);
+      //     $('#accountListModal').modal('toggle');
+
+      //       $(".colAccount").removeClass('boldtablealertsborder');
+      // }else{
+      //   let accountname = table.find(".productName").text();
+      //   $('#accountListModal').modal('toggle');
+      //   $('#sltAccountName').val(accountname);
+      //   if($tblrows.find(".lineAccountName").val() === ''){
+      //       $tblrows.find(".colAccount").addClass('boldtablealertsborder');
+      //   }
+      // }
+
+      // $('#tblAccount_filter .form-control-sm').val('');
+      // setTimeout(function () {
+      //     $('.btnRefreshAccount').trigger('click');
+      //     $('.fullScreenSpin').css('display', 'none');
+      //       // $(".colAccount").removeClass('boldtablealertsborder');
+      // }, 1000);
+  });
 });
 
 Template.eftExportModal.events({
@@ -112,19 +231,19 @@ Template.eftExportModal.events({
     $('#eftExportModal').modal('hide');
   },
 
-  "click .addNewRow": (e) => {
+  "click .addNewEftRow": (e) => {
     e.preventDefault();
+    let tokenid = Random.id();
+
     let transactionCodes = `
       <select class="form-control pointer sltTranslactionCode">
-        <option value=""></option> 
-        <option value="">Debit Items</option> 
-        <option value="">Credit Items</option> 
+        <option value=""></option>
+        <option value="">Debit Items</option>
+        <option value="">Credit Items</option>
       </select>
     `;
     $('#eftExportTableBody').append(`
-      <tr>
-        <td class="colIdx" style="width: 2%;">
-        </td>
+      <tr id="${tokenid}">
         <td class="colApply">
           <input type="checkbox" class="isApply" />
         </td>
@@ -152,60 +271,29 @@ Template.eftExportModal.events({
         <td class="colFromAccountNo">
           <input type="text" class="form-control eftInput eftInputFromAccountNo" />
         </td>
-      </tr> 
-    `)
+        <td class="colIdx addNewRow" style="width: 25px">
+          <span class="table-remove btnEftRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
+        </td>
+      </tr>
+    `);
   },
 
-  "click .btnRemoveAll": (e) => {
-    e.preventDefault();
-    let transactionCodes = `
-      <select class="form-control pointer sltTranslactionCode">
-        <option value=""></option> 
-        <option value="">Debit Items</option> 
-        <option value="">Credit Items</option> 
-      </select>
-    `;
-    $('#eftExportTableBody').empty();
 
-    $('#eftExportTableBody').append(`
-      <tr>
-        <td class="colIdx addNewRow" style="width: 2%;">
-          <i class="fa fa-plus" aria-hidden="true"></i>
-        </td>
-        <td class="colApply">
-          <input type="checkbox" class="isApply" />
-        </td>
-        <td class="colAccountName">
-          <input type="text" class="form-control eftInput eftInputAccountName" />
-        </td>
-        <td class="colBsb">
-          <input type="text" class="form-control eftInput eftInputBsb" placeholder="___-___" />
-        </td>
-        <td class="colAccountNo">
-          <input type="text" class="form-control eftInput eftInputAccountNo" />
-        </td>
-        <td class="colTransactionCode">
-          ${transactionCodes}
-        </td>
-        <td class="colLodgement">
-          <input type="text" class="form-control eftInput eftInputTransactionCode" />
-        </td>
-        <td class="colAmount">
-          <input type="text" class="form-control eftInput eftInputAmount text-right" />
-        </td>
-        <td class="colFromBsb">
-          <input type="text" class="form-control eftInput eftInputFromBsb" placeholder="___-___" />
-        </td>
-        <td class="colFromAccountNo">
-          <input type="text" class="form-control eftInput eftInputFromAccountNo" />
-        </td>
-      </tr> 
-    `)
+  "click .btnEftRemove": function (event) {
+
+    try {
+
+      var targetID = $(event.target).closest("tr").attr("id");
+      $(event.target).closest("tr").remove();
+      $("#eftExportTable #" + targetID).remove();
+    } catch (error) {
+
+    }
+
   },
 
   "keypress .eftInputAmount": (e) => {
     if (e.which === 13) {
-      console.log('enter pressed', e.target.value)
     }
   },
 
@@ -229,7 +317,6 @@ Template.eftExportModal.events({
     let eftUserName = $('#eftUserName').val();
     let eftNumberUser = $('#eftNumberUser').val();
     let sltTransactionDescription = $('#sltTransactionDescription').val();
-    console.log(sltAccountType, sltBankName, eftProcessingDate, eftUserName, eftNumberUser, sltTransactionDescription)
 
     if (!sltAccountType) {
       swal("Please input Account Name", "", "error");
@@ -237,15 +324,14 @@ Template.eftExportModal.events({
     } else if (!sltBankName) {
       swal("Please input Bank Name", "", "error");
       return false;
-    } else if(!eftProcessingDate) {
+    } else if (!eftProcessingDate) {
       swal("Please input Processing Date", "", "error");
       return false;
     }
 
     return true;
+  },
 
-    return;
-  }
 });
 
 Template.eftExportModal.helpers({
@@ -258,13 +344,16 @@ Template.eftExportModal.helpers({
         } else if (b.description === "NA") {
           return -1;
         }
-        return a.description.toUpperCase() > b.description.toUpperCase()
-          ? 1
-          : -1;
+        return a.description.toUpperCase() > b.description.toUpperCase() ? 1 : -1;
       });
   },
 
   transactionDescriptions: () => {
     return Template.instance().transactionDescriptions.get();
-  }
+  },
+
+  eftRowId: () => {
+    return Template.instance().eftRowId.get();
+  },
+
 });

@@ -249,7 +249,7 @@ Template.supplierscard.onRendered(function () {
         for (let i = 0; i < data.tcountries.length; i++) {
             countries.push(data.tcountries[i].Country)
         }
-        countries = _.sortBy(countries);
+        countries.sort((a, b) => a.localeCompare(b));
         templateObject.countryData.set(countries);
     }
     templateObject.getCountryData();
@@ -614,6 +614,7 @@ Template.supplierscard.onRendered(function () {
         });
     };
     function setOneSupplierDataEx(data) {
+        console.log('data', data)
         let lineItemObj = {
             id : data.fields.ID,
             lid : 'Edit Supplier',
@@ -1745,11 +1746,24 @@ Template.supplierscard.events({
             bpostalcode =  $('#edtSupplierBillingZIP').val()||'';
             bcountry =  $('#bcountry').val()||'';
         }
+        // Billing tab fields
         let sltPaymentMethodName =  $('#sltPreferredPayment').val()||'';
         let sltTermsName =  $('#sltTerms').val()||'';
         let sltShippingMethodName =  '';
         let notes =  $('#txaNotes').val()||'';
         let suppaccountno =  $('#suppAccountNo').val()||'';
+        // let bankName = $('#edtBankName').val();
+        // let branchName = $('#edtBranchName').val();
+        // let branchCode = $('#edtBranchCode').val();
+        // let bankAccountNumber = $('#edtBankAccountNumber').val();
+        // let accountName = $('#edtAccountName').val();
+        // let bankAccountType = $('#sltBankAccountType').val();
+        // let vatNumber = $('#edtVatNumber').val();
+        // let swiftCode = $('#edtSwiftCode').val();
+
+        // BankAccountName: BankAccountName,
+        // BankCode: branchCode,
+        // BankAccountNo: bankAccountNumber,
 
 // add to custom field
         let custField1 = $('#edtSaleCustField1').val()||'';

@@ -100,17 +100,32 @@ Template.payrollhistoryreport.onRendered(() => {
         ignoreDate: true
       };
     }
-    $("#dateFrom").val(defaultOptions.fromDate);
-    $("#dateTo").val(defaultOptions.toDate);
+    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $('.edtReportDates').attr('disabled', false)
+    if( ignoreDate == true ){
+      $('.edtReportDates').attr('disabled', true);
+      templateObject.dateAsAt.set("Current Date");
+    }
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getPayHistory();
   };
   templateObject.getPayHistory = async function () {
-    const options = await templateObject.reportOptions.get();
-    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let ignoreDate = options.ignoreDate || false;
-    let data = await reportService.getPayHistory( dateFrom, dateTo, ignoreDate);
+    
+    let data = [];
+    if (!localStorage.getItem('VS1PayrollHistory_Report')) {
+      const options = await templateObject.reportOptions.get();
+      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let ignoreDate = options.ignoreDate || false;
+      data = await reportService.getPayHistory( dateFrom, dateTo, ignoreDate);
+      if( data.tpayhistory.length > 0 ){
+        localStorage.setItem('VS1PayrollHistory_Report', JSON.stringify(data)||'');
+      }
+    }else{
+      data = JSON.parse(localStorage.getItem('VS1PayrollHistory_Report'));
+    }
     let paySlipReport = [];
     if( data.tpayhistory.length > 0 ){
         let employeeGroups = [];
@@ -136,8 +151,7 @@ Template.payrollhistoryreport.onRendered(() => {
                   TotalNet: item.fields.Net,
                   SubAccounts: [item]
                 });
-
-            }
+              }
         }
 
         paySlipReport = employeeGroups.filter((item) => {
@@ -162,6 +176,7 @@ Template.payrollhistoryreport.onRendered(() => {
         });
         
     }
+    $(".fullScreenSpin").css("display", "inline-block");
     templateObject.records.set(paySlipReport);    
   };
   templateObject.getPayHistory();
@@ -304,7 +319,8 @@ Template.payrollhistoryreport.events({
     }
   },
   "change .edtReportDates": async function () {
-    $(".fullScreenSpin").css("display", "block");
+    $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem('VS1PayrollHistory_Report', '');
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
@@ -312,7 +328,8 @@ Template.payrollhistoryreport.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click #lastMonth": async function () {
-    $(".fullScreenSpin").css("display", "block");
+    $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem('VS1PayrollHistory_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
@@ -320,7 +337,8 @@ Template.payrollhistoryreport.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click #lastQuarter": async function () {
-    $(".fullScreenSpin").css("display", "block");
+    $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem('VS1PayrollHistory_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
@@ -328,9 +346,9 @@ Template.payrollhistoryreport.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click #last12Months": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem('VS1PayrollHistory_Report', '');
+    let templateObject = Template.instance();
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
     var currentDate = new Date();
@@ -357,67 +375,12 @@ Template.payrollhistoryreport.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click #ignoreDate": async function () {
-    let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem('VS1PayrollHistory_Report', '');
+    let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
     await templateObject.setReportOptions(true);
     $(".fullScreenSpin").css("display", "none");
-  },
-
-  // CURRENCY MODULE //
-  "click .fx-rate-btn": async (e) => {
-    await loadCurrency();
-    //loadCurrencyHistory();
-  },
-  "click .currency-modal-save": (e) => {
-    //$(e.currentTarget).parentsUntil(".modal").modal("hide");
-    LoadingOverlay.show();
-
-    let templateObject = Template.instance();
-
-    // Get all currency list
-    let _currencyList = templateObject.currencyList.get();
-
-    // Get all selected currencies
-    const currencySelected = $(".currency-selector-js:checked");
-    let _currencySelectedList = [];
-    if (currencySelected.length > 0) {
-      $.each(currencySelected, (index, e) => {
-        const sellRate = $(e).attr("sell-rate");
-        const buyRate = $(e).attr("buy-rate");
-        const currencyCode = $(e).attr("currency");
-        const currencyId = $(e).attr("currency-id");
-        let _currency = _currencyList.find((c) => c.id == currencyId);
-        _currency.active = true;
-        _currencySelectedList.push(_currency);
-      });
-    } else {
-      let _currency = _currencyList.find((c) => c.code == defaultCurrencyCode);
-      _currency.active = true;
-      _currencySelectedList.push(_currency);
-    }
-
-    _currencyList.forEach((value, index) => {
-      if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
-        _currencyList[index].active = _currencySelectedList.find(
-          (c) => c.id == _currencyList[index].id
-        ).active;
-      } else {
-        _currencyList[index].active = false;
-      }
-    });
-
-    _currencyList = _currencyList.sort((a, b) => {
-      if (a.code == defaultCurrencyCode) {
-        return -1;
-      }
-      return 1;
-    });
-
-    // templateObject.activeCurrencyList.set(_activeCurrencyList);
-    templateObject.currencyList.set(_currencyList);
-
-    LoadingOverlay.hide();
   },
 });
 

@@ -732,7 +732,7 @@ Template.currenciessettings.onRendered(function () {
           for (let i = 0; i < data.tcountries.length; i++) {
             countries.push(data.tcountries[i].Country);
           }
-          countries = _.sortBy(countries);
+          countries.sort((a, b) => a.localeCompare(b));
           templateObject.countryData.set(countries);
         });
       } else {
@@ -741,7 +741,7 @@ Template.currenciessettings.onRendered(function () {
         for (let i = 0; i < useData.length; i++) {
           countries.push(useData[i].Country);
         }
-        countries = _.sortBy(countries);
+        countries.sort((a, b) => a.localeCompare(b));
         templateObject.countryData.set(countries);
       }
     }).catch(function (err) {
@@ -749,7 +749,7 @@ Template.currenciessettings.onRendered(function () {
         for (let i = 0; i < data.tcountries.length; i++) {
           countries.push(data.tcountries[i].Country);
         }
-        countries = _.sortBy(countries);
+        countries.sort((a, b) => a.localeCompare(b));
         templateObject.countryData.set(countries);
       });
     });

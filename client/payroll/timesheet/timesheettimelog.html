@@ -6,7 +6,7 @@
         <header style="padding: 16px; background-color: #ededed;">
             <h1 style="margin: 16px;">Timesheet Time Log
                 <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
-                <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                {{> helpbutton}}
 
                 <!-- Start Help View Modal -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -18,8 +18,8 @@
                             <div class="modal-body">
                                 <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                                 <p class="text-center text-muted"><a href="https://vs1forum.com/viewforum.php?f=6" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                {{> helpadvisor}}
+                                {{> helpgotoforum}}
                             </div>
                             <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                         </div>
@@ -50,7 +50,7 @@
         <div class="row" style="background-color: #ededed; padding: 0px 24px 24px 24px;">
             <div class="col-6">
                 <button class="btn btn-primary btnNav btnRefreshTimeLog" id="btnRefreshTimeLog" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                <button class="btn btn-primary btnNav btnNewTimeSheetOne" id="btnNewTimeSheetOne" name="btnNewTimeSheetOne" type="button" style="margin: 16px;"><i class="fas fa-clock" style="padding-right: 5px;"></i>Timesheets</button>
+                <button class="btn btn-primary btnNav btnNewTimeSheetOne" id="btnNewTimeSheetOne" name="btnNewTimeSheetOne" type="button" style="margin: 16px;"><i class="fas fa-clock" style="padding-right: 5px;"></i>Timesheet List</button>
             </div>
             <div class="col-6">
                 <a class="btn btnOpenSettings float-right" style="margin: 16px;" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>

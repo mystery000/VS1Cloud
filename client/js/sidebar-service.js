@@ -632,7 +632,7 @@ export class SideBarService extends BaseService {
           IgnoreDates: true,
           IsDetailReport: true,
           OrderBy: "PaymentDate desc",
-          Search: "Deleted != true",
+          // Search: "Deleted != true",
           LimitCount: '"' + limitcount + '"',
           LimitFrom: '"' + limitfrom + '"',
         };
@@ -833,7 +833,9 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       //ListType: "Detail",
-      select: '[name] = "' + dataSearchName + '"',
+      Company:dataSearchName,
+      Employeename:dataSearchName,
+      // select: '[name] = "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TERPCombinedContactsVS1, options);
   }
@@ -1008,12 +1010,12 @@ export class SideBarService extends BaseService {
     if (limitcount === "All") {
       options = {
         ListType: "Detail",
-        select: "[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true",
+        select: "[Active]=true"
       };
     } else {
       options = {
         ListType: "Detail",
-        select: "[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true",
+        select: "[Active]=true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -1861,18 +1863,18 @@ export class SideBarService extends BaseService {
     if(isDeleted == "" || isDeleted == false || isDeleted == null || isDeleted == undefined){
     if (ignoreDate == true) {
       options = {
-        OrderBy: "TransactionDate desc",
+        //OrderBy: "TransactionDate desc",
         IgnoreDates: true,
-        Search: "Deleted != true",
+        //Search: "Deleted != true",
         IsDetailReport: true,
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        OrderBy: "TransactionDate desc",
+        //OrderBy: "TransactionDate desc",
         IgnoreDates: false,
-        Search: "Deleted != true",
+        //Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -1882,7 +1884,7 @@ export class SideBarService extends BaseService {
     }else{
       if (ignoreDate == true) {
         options = {
-          OrderBy: "TransactionDate desc",
+          //OrderBy: "TransactionDate desc",
           IgnoreDates: true,
           IsDetailReport: true,
           LimitCount: '"' + limitcount + '"',
@@ -1890,7 +1892,7 @@ export class SideBarService extends BaseService {
         };
       } else {
         options = {
-          OrderBy: "TransactionDate desc",
+          //OrderBy: "TransactionDate desc",
           IgnoreDates: false,
           DateFrom: '"' + dateFrom + '"',
           DateTo: '"' + dateTo + '"',
@@ -2900,6 +2902,14 @@ export class SideBarService extends BaseService {
     };
     return this.getList(this.ERPObjects.TReconciliationList, options);
   }
+  getAllBankRuleList() {
+    let options = {
+      IgnoreDates: true,
+      OrderBy: "ID desc",
+      Search: "Active != false",
+    };
+    return this.getList(this.ERPObjects.TBankRuleList, options);
+  }
 
   getProductStocknSaleReportData(dateFrom, dateTo) {
     let options = {
@@ -3212,7 +3222,7 @@ export class SideBarService extends BaseService {
       };
     }
 
-    return this.getList(this.ERPObjects.TVS1Superannuation, options);
+    return this.getList(this.ERPObjects.Tsuperannuation, options);
   }
 
   getSuperType() {
@@ -3380,6 +3390,13 @@ export class SideBarService extends BaseService {
      select: "[Active]=true"
    };
   return this.getList(this.ERPObjects.TCorrespondence, options);
+  }
+
+  getScheduleSettings() {
+      let options = {
+          ListType: "Detail",
+      };
+      return this.getList(this.ERPObjects.TReportSchedules,options);
   }
 
   saveCorrespondence(data)

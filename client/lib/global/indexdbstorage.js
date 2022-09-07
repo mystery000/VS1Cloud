@@ -188,7 +188,7 @@ openDb = function (dbName) {
       db.createObjectStore("TPayRate", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TEmployeepaysettings", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TBankAccounts", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TSuperannuation", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("Tsuperannuation", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTerminationSimple", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TDeduction", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TLeavRequest", { keyPath: "EmployeeEmail" });
@@ -223,6 +223,7 @@ openDb = function (dbName) {
       db.createObjectStore("TOpeningBalances", { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCurrencyFrequencySettings', { keyPath: "EmployeeEmail" });
 
+      db.createObjectStore('TSerialNumberListCurrentReport', { keyPath: "EmployeeEmail" });
 
       db.createObjectStore('TPayrollCalendars', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TPayrollHolidays', { keyPath: "EmployeeEmail" });
@@ -563,7 +564,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion =  new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open('TDatabaseVersion', 76);
+    let dbReqVersion = indexedDB.open('TDatabaseVersion', 81);
     dbReqVersion.onsuccess = function () {
      resolve(versionExists);
     };

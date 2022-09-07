@@ -10,7 +10,7 @@
         </style> -->
         <div style="margin-top: -24px;">
             <header style="padding: 16px;background-color: #ededed;">
-                <h2 style="margin: 16px; margin-bottom: 0px;">Sales Order List <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="far fa-play-circle"  style="font-size: 20px;"></i></a>
+                <h2 style="margin: 16px; margin-bottom: 0px;">Sales Order List {{> helpbutton}}
 
                     <style>
                         @media screen and (max-width: 376px) {
@@ -83,7 +83,7 @@
                                             </div>
                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width: </label>
-                                                <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> 
+                                                <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
                                             </div>
                                         </div>
 
@@ -121,8 +121,8 @@
                         <div class="modal-body">
                             <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                             <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=55" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                            <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                            <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                            {{> helpadvisor}}
+                            {{> helpgotoforum}}
                         </div>
                         <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                     </div>

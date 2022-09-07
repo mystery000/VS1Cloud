@@ -4729,6 +4729,14 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
         let invoice_data = templateObject.invoicerecord.get();
         document.getElementById('html-2-pdfwrapper').style.display = 'block';
 
+        let subtotal = $('#subtotal_total').text();
+        let net = $('#subtotal_nett').text();
+        let subtotal_discount = $('#subtotal_discount').text();
+        let grandTotal = $('#grandTotal').text();
+        let totalPaidAmt = $('#totalPaidAmt').text();
+        let totalBalanceDue = $('#totalBalanceDue').text();
+
+
         let taxItems = {};
         $('#tblInvoiceLine > tbody > tr').each(function () {
             var lineID = this.id;
@@ -4758,6 +4766,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                 }
             }
         });
+
         $("#html-2-pdfwrapper #tax_list_print").html("");
         Object.keys(taxItems).map((code) => {
             let html = `
@@ -4774,6 +4783,11 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
             `;
             $("#html-2-pdfwrapper #tax_list_print").append(html);
         });
+
+        $("#html-2-pdfwrapper #subtotal_totalPrint").html(subtotal);
+        $("#html-2-pdfwrapper #grandTotalPrint").html(grandTotal);
+        $("#html-2-pdfwrapper #totalpaidamount").html(totalPaidAmt);
+        $("#html-2-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
 
         var source = document.getElementById('html-2-pdfwrapper');
         let id = invoice_data.id;
@@ -5540,56 +5554,10 @@ Template.refundcard.onRendered(function() {
     };
 
     tempObj.getSubTaxCodes();
-
-    // custom field displaysettings
-    // tempObj.getAllCustomFieldDisplaySettings = function () {
-    //   let custFields = [];
-    //   let customData = {};
-    //   let customFieldCount = 10;
-    //   let ListType = 'ltSaleslines';  // tempcode until InvoiceLines is added on backend
-
-    //   sideBarService.getAllCustomFieldsWithQuery(ListType).then(function (data) {
-    //       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-    //         if (data.tcustomfieldlist[x].fields.ListType == ListType) {
-    //           customData = {
-    //             active: data.tcustomfieldlist[x].fields.Active || false,
-    //             id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-    //             custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-    //             datatype: data.tcustomfieldlist[x].fields.DataType || "",
-    //             isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-    //             iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-    //             dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-    //           };
-    //           custFields.push(customData);
-    //         }
-    //       }
-
-    //       if (custFields.length < customFieldCount) {
-    //         let remainder = customFieldCount - custFields.length;
-    //         let getRemCustomFields = parseInt(custFields.length);
-    //         // count = count + remainder;
-    //         for (let r = 0; r < remainder; r++) {
-    //           getRemCustomFields++;
-    //           customData = {
-    //             active: false,
-    //             id: "",
-    //             custfieldlabel: "",
-    //             datatype: "",
-    //             isempty: true,
-    //             iscombo: false,
-    //           };
-    //           // count++;
-    //           custFields.push(customData);
-    //         }
-    //       }
-    //       tempObj.displayfields.set(custFields);
-
-    //     })
-    // }
+ 
     function initCustomFieldDisplaySettings(data, listType) {
       let custFields = [];
-      let customData = {};
-      let customFieldCount = 14;
+      let customData = {}; 
 
       let reset_data = [
         { label: 'Product Name', class: 'colProductName', active: true },
@@ -5607,6 +5575,7 @@ Template.refundcard.onRendered(function() {
         { label: 'Disc %', class: 'colDiscount', active: true },
         { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
       ];
+      let customFieldCount = reset_data.length; 
 
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
@@ -5703,6 +5672,10 @@ Template.refundcard.helpers({
         getTemplateNumber: function () {
             let template_numbers = ["1", "2", "3"];
             return template_numbers;
+        },
+
+        bsbRegionName: () => {
+            return bsbCodeName;
         },
 
 
@@ -7445,8 +7418,8 @@ Template.refundcard.events({
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
-                let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumber');
-                let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-lotexpirydate');
+                let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumbers');
+                let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-expirydates');
 
                 if (tdproduct != "") {
 
@@ -7493,14 +7466,18 @@ Template.refundcard.events({
 
                     // Feature/ser-lot number tracking: Save Lot Number
                     if (tdLotNumber) {
+                        const lotNumbers = tdLotNumber.split(',');
+                        const expiryDates = tdLotExpiryDate.split(',');
                         let tpqaList = [];
-                        for (let i = 0; i < serialNumbers.length; i++) {
+                        for (let i = 0; i < lotNumbers.length; i++) {
+                            const dates = expiryDates[i].split('/');
                             const tpqaObject = {
                                 type: "PQABatch",
                                 fields: {
-                                    Active: true,
+                                    Active: true,   
+                                    BatchExpiryDate: new Date(parseInt(dates[2]), parseInt(dates[1]) - 1, parseInt(dates[0])).toISOString(),
                                     Qty: 1,
-                                    SerialNumber: serialNumbers[i],
+                                    BatchNo: lotNumbers[i],
                                 }
                             };
                             tpqaList.push(tpqaObject);
@@ -7510,7 +7487,7 @@ Template.refundcard.events({
                             fields: {
                                 Active: true,
                                 PQABatch: tpqaList,
-                                Qty: serialNumbers.length,
+                                Qty: lotNumbers.length,
                             }
                         }
                         lineItemObjForm.fields.PQA = pqaObject;
@@ -8910,20 +8887,43 @@ Template.refundcard.events({
                                 } else {
                                     let shtml = '';
                                     let i = 0;
-                                    shtml += `
-                                    <tr><td colspan="5">Allocate Lot Number</td><td rowspan="2">CUSTFLD</td></tr>
-                                    <tr><td>Lot No</td><td>Expiry Date</td><td>Qty</td><td>BO Qty</td><td>Length</td></tr>
+                                    shtml += `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
+                                    <tr><td class="text-start">#</td><td class="text-start">Lot number</td><td class="text-start">Expiry Date</td></tr>
                                     `;
                                     for (let k = 0; k < element.pqaseriallotdata.fields.PQABatch.length; k++) {
+                                        const dates = element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate.split(' ')[0].split('-') || '';
                                         if (element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo == "null") {
                                         } else {
                                             i++;
                                             shtml += `
-                                            <tr><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.UOMQty}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BOUOMQty}</td><td></td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>${Number(i)}</td><td contenteditable="true" class="lineLotnumbers">${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo}</td>
+                                                <td class="lotExpiryDate">
+                                                    <div class="form-group m-0">
+                                                        <div class="input-group date" style="cursor: pointer;">
+                                                            <input type="text" class="form-control" style="height: 25px;" value="${dates[2]}/${dates[1]}/${dates[0]}">
+                                                            <div class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             `;
                                         }
                                     }
-                                    $('#tblSeriallist tbody').html(shtml);
+                                    $('#tblLotlist tbody').html(shtml);
+                                    $('.lotExpiryDate input').datepicker({
+                                        showOn: 'focus',
+                                        buttonImageOnly: false,
+                                        dateFormat: 'dd/mm/yy',
+                                        showOtherMonths: true,
+                                        selectOtherMonths: true,
+                                        changeMonth: true,
+                                        changeYear: true,
+                                        yearRange: "-90:+10",
+                                    });
                                 }
                             }
                         }

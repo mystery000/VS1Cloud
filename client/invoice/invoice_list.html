@@ -5,7 +5,7 @@
         </div>
         <div style="margin-top: -24px;">
             <header style="padding: 16px; padding-bottom: 1px; background-color: #ededed;">
-                <h2 style="margin: 16px;">Invoice List <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o"  style="font-size: 20px;"></i></a>
+                <h2 style="margin: 16px;">Invoice List {{> helpbutton}}
 
 
                 </h2>
@@ -129,8 +129,8 @@
                         <div class="modal-body">
                             <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                             <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=40" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                            <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                            <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                            {{> helpadvisor}}
+                            {{> helpgotoforum}}
                         </div>
                         <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                     </div>
@@ -299,6 +299,12 @@
                             .colStatus{
                               width:5%!important;
                             }
+                            .colPONumber{
+                              width:5%!important;
+                            }
+                            .colReference{
+                              width:5%!important;
+                            }
                         </style>
                         <div class="row no-gutters d-xl-flex align-items-xl-end">
                             <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
@@ -358,18 +364,22 @@
                                       displayfields}}{{displayfields.[8].custfieldlabel}}{{else}}Outstanding {{/if}}</th>
                                     <th class="th colStatus {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[9].id}}" style="width: 5% !important;">{{#if
                                       displayfields}}{{displayfields.[9].custfieldlabel}}{{else}}Status {{/if}}</th>
+                                    <th class="th colPONumber {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[9].id}}" style="width: 5% !important;">{{#if
+                                        displayfields}}{{displayfields.[10].custfieldlabel}}{{else}}P.O. Number {{/if}}</th>
+                                    <th class="th colReference {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[9].id}}" style="width: 5% !important;">{{#if
+                                        displayfields}}{{displayfields.[11].custfieldlabel}}{{else}}Reference {{/if}}</th>
 
-                                    <th class="th colEmployee {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[10].id}}">{{#if
-                                      displayfields}}{{displayfields.[10].custfieldlabel}}{{else}}Employee {{/if}}</th>
-                                    <th class="th colComments {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[11].id}}">{{#if
-                                      displayfields}}{{displayfields.[11].custfieldlabel}}{{else}}Comments {{/if}}</th>
+                                    <th class="th colEmployee {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[10].id}}">{{#if
+                                      displayfields}}{{displayfields.[12].custfieldlabel}}{{else}}Employee {{/if}}</th>
+                                    <th class="th colComments {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[11].id}}">{{#if
+                                      displayfields}}{{displayfields.[13].custfieldlabel}}{{else}}Comments {{/if}}</th>
 
-                                    <th class="th colSaleCustField1 colCustFieldHeader1 customFieldColumn {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[12].id}}">{{#if
-                                      displayfields}}{{displayfields.[12].custfieldlabel}}{{else}}Custom Field 1 {{/if}}</th>
-                                    <th class="th colSaleCustField2 colCustFieldHeader2 customFieldColumn {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[13].id}}">{{#if
-                                      displayfields}}{{displayfields.[13].custfieldlabel}}{{else}}Custom Field 2 {{/if}}</th>
-                                    <th class="th colSaleCustField3 colCustFieldHeader3 customFieldColumn {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[14].id}}">{{#if
-                                      displayfields}}{{displayfields.[14].custfieldlabel}}{{else}}Custom Field 3 {{/if}}</th>
+                                    <th class="th colSaleCustField1 colCustFieldHeader1 customFieldColumn {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[12].id}}">{{#if
+                                      displayfields}}{{displayfields.[14].custfieldlabel}}{{else}}Custom Field 1 {{/if}}</th>
+                                    <th class="th colSaleCustField2 colCustFieldHeader2 customFieldColumn {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[13].id}}">{{#if
+                                      displayfields}}{{displayfields.[15].custfieldlabel}}{{else}}Custom Field 2 {{/if}}</th>
+                                    <th class="th colSaleCustField3 colCustFieldHeader3 customFieldColumn {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[14].id}}">{{#if
+                                      displayfields}}{{displayfields.[16].custfieldlabel}}{{else}}Custom Field 3 {{/if}}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -387,12 +397,14 @@
                                     <td contenteditable="false" class="colPaid {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totalpaid}}</td>
                                     <td contenteditable="false" class="colBalanceOutstanding {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totaloustanding}}</td>
                                     <td contenteditable="false" class="colStatus {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.salestatus}}</td>
-                                    <td contenteditable="false" class="colEmployee {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">{{item.employee}}</td>
-                                    <td contenteditable="false" class="colComments {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}" >{{item.comments}}</td>
+                                    <td contenteditable="false" class="colPONumber {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">{{item.ponumber}}</td>
+                                    <td contenteditable="false" class="colReference {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">{{item.referenceno}}</td>
+                                    <td contenteditable="false" class="colEmployee {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">{{item.employee}}</td>
+                                    <td contenteditable="false" class="colComments {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}" >{{item.comments}}</td>
 
-                                    <td contenteditable="false" class="colSaleCustField1 customFieldColumn {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield1}}</td>
-                                    <td contenteditable="false" class="colSaleCustField2 customFieldColumn {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield2}}</td>
-                                    <td contenteditable="false" class="colSaleCustField3 customFieldColumn {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield3}}</td>
+                                    <td contenteditable="false" class="colSaleCustField1 customFieldColumn {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield1}}</td>
+                                    <td contenteditable="false" class="colSaleCustField2 customFieldColumn {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield2}}</td>
+                                    <td contenteditable="false" class="colSaleCustField3 customFieldColumn {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield3}}</td>
                                 </tr>
                                 {{/each}}
                                 {{/if}}

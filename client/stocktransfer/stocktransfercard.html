@@ -12,7 +12,7 @@
         </style>
         <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
             <h2 class="shippingHeader" style="margin: 16px;margin-bottom: 0px;">Stock Transfer
-                <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px; margin-left: 16px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                {{> helpbutton}}
                 <!-- <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a> -->
             </h2>
             <input type="text" id="SalesId" name="SalesId" style="display: none;" readonly>
@@ -321,24 +321,28 @@
                     <table id="tblStocktransfer" style="width:100%" class="table table-bordered tblStocktransfer">
                         <thead>
                             <tr class="dnd-moved">
-                                <th style="display:none "></th>
-                                <th class="th colProduct" style="width: 25%; border-right: 0px;">Product</th>
-                                <th class="th colBarcodeScanner" style="width: 3%; border-left: 0px;"></th>
-                                <th class="th colProductBarCode" style="width: 200px;">Product Barcode</th>
-                                <th class="th colDescription">Description</th>
-                                <th class="th colDepartment" style="width: 200px;">Transfer To</th>
-                                <th class="th linedeptid hiddenColumn">DepartmentD</th>
-                                <th class="th colOrdered" style="width: 1%;">Available</th>
-                                <th class="th colUOMQtyShipped" style="width: 1%;">Transfer</th>
-                                <th class="th colID hiddenColumn" style="display:none">ID</th>
-                                <th class="th colPQA hiddenColumn" style="display:none">PQA</th>
-                                <th class="th colUOMQtyBackOrder hiddenColumn" style="display:none">UOMQtyBackOrder</th>
-                                <th class="th colInitTransfer hiddenColumn" style="display:none">InitTransfer</th>
-                                <th class="th colProductID hiddenColumn">ProductID</th>
+                                <th rowspan="2" style="display:none "></th>
+                                <th rowspan="2" class="th colProduct" style="width: 25%; border-right: 0px;">Product</th>
+                                <th rowspan="2" class="th colBarcodeScanner" style="width: 3%; border-left: 0px;"></th>
+                                <th rowspan="2" class="th colProductBarCode" style="width: 200px;">Product Barcode</th>
+                                <th rowspan="2" class="th colDescription">Description</th>
+                                <th rowspan="2" class="th colDepartment" style="width: 200px;">Transfer To</th>
+                                <th rowspan="2" class="th linedeptid hiddenColumn">DepartmentD</th>
+                                <th rowspan="2" class="th colOrdered" style="width: 1%;">Available</th>
+                                <th rowspan="2" class="th colUOMQtyShipped" style="width: 1%;">Transfer</th>
+                                <th rowspan="2" class="th colID hiddenColumn" style="display:none">ID</th>
+                                <th rowspan="2" class="th colPQA hiddenColumn" style="display:none">PQA</th>
+                                <th rowspan="2" class="th colUOMQtyBackOrder hiddenColumn" style="display:none">UOMQtyBackOrder</th>
+                                <th rowspan="2" class="th colInitTransfer hiddenColumn" style="display:none">InitTransfer</th>
+                                <th rowspan="2" class="th colProductID hiddenColumn">ProductID</th>
+                                <th colspan="2" class="th text-center">Serial/Lot</th>
+                                <th rowspan="2" class="th" style="width: 1%;"></th>
+                            </tr>
+                            <tr class="dnd-moved">
                                 {{#if isBatchSerialNoTracking 'true'}}
-                                    <th class="th colSerialNo" style="width: 124px;">Serial/Lot No</th>
+                                    <th class="th colSerialFrom text-center" style="width: 124px;">From</th>
+                                    <th class="th colSerialTo text-center" style="width: 124px;">To</th>
                                 {{/if}}
-                                <th class="th" style="width: 1%;"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -360,11 +364,12 @@
                                     <td><input class="lineUOMQtyShipped UOMQtyShipped highlightInput" id="UOMQtyShipped" type="number" value="{{item.qtyshipped}}"></td>
                                     <td class="hiddenColumn ID" id="ID">{{item.id}}</td>
                                     <td class="hiddenColumn pqa" id="pqa">{{item.pqa}}</td>
-                                    <td class="hiddenColumn UOMQtyBackOrder" id="UOMQtyBackOrder">{{item.qtybo}}</td>
-                                    <td class="hiddenColumn InitTransfer" id="InitTransfer">{{item.initaltransfer}}</td>
+                                    <td class="hiddenColumn UOMQtyBackOrder" id="UOMQtyBackOrder">{{item.qtyordered}}</td>
+                                    <td class="hiddenColumn InitTransfer" id="InitTransfer">{{item.qtyshipped}}</td>
                                     <td class="hiddenColumn ProductID" id="ProductID">{{item.productid}}</td>
                                     {{#if isBatchSerialNoTracking 'true'}}
-                                        <td class="th colSerialNo"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
+                                        <td class="th colSerialFrom" data-serialnumbers="{{item.transferserialnumbers}}" data-lotnumbers="{{item.transferlotnumbers}}" data-expirydates="{{item.transferexpirydates}}"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
+                                        <td class="th colSerialTo" data-serialnumbers="{{item.serialnumbers}}" data-lotnumbers="{{item.lotnumbers}}" data-expirydates="{{item.expirydates}}"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
                                     {{/if}}
                                     <td style="width: 1%;"><span class="removebutton"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
                                 </tr>

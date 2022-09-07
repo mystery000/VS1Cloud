@@ -36,7 +36,7 @@
         <form>
             <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
                 <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">{{quoterecord.lid}}
-                    <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o"  style="font-size: 20px;"></i></a>
+                    {{> helpbutton}}
                     <a class="btn btnSettings" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
                 </h2>
             </header>
@@ -49,8 +49,8 @@
                         <div class="modal-body">
                             <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                             <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=63" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                            <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                            <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                            {{> helpadvisor}}
+                            {{> helpgotoforum}}
                         </div>
                         <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                     </div>
@@ -1966,7 +1966,9 @@
                     </div>
                 </div>
                 <div style="margin: 0px; padding: 16px; border: none !important; width: 60mm; max-width: 60mm;">
-                    <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Quote&nbsp;&nbsp;&nbsp; {{quoterecord.id}}</h4>
+                 
+                    <h4 style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Quote &nbsp;&nbsp;&nbsp; <span class="print-header">{{quoterecord.id}}</span></h4>
+                  
                     <div style="display: flex; width: 100%;">
                         <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                             <label style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</label>
@@ -2032,6 +2034,7 @@
                                 <!-- <div class="bankDetails" style="margin: 16px;">
 
 </div> -->
+
                                 <div class="col-12">
                                     {{#if vs1companyBankAccountName}}
                                     <p style="font-weight: 600; color: rgb(0 0 0);">{{vs1companyBankName}}</p>
@@ -2068,10 +2071,12 @@
                         <div class="col-6">
                             <div style="margin: 8px; border: none !important;">
                                 <div style="width: 100%; display: flex;">
+                                   
                                     <div style="padding-right: 16px; width: 50%;">
                                         <p id="subtotal_totalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Sub Total</p>
                                         <p id="grandTotalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Total GST</p>
                                     </div>
+
                                     <div style="padding-left: 16px; width: 50%;">
                                         <p id="subtotal_totalPrint" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">{{quoterecord.SubTotal}}</p>
                                         <p id="totalTax" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">{{quoterecord.TotalTax}}</p>
@@ -2098,7 +2103,7 @@
                                         <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Balance Due</p>
                                     </div>
                                     <div style="padding-left: 16px; width: 50%;">
-                                        <p style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">{{quoterecord.totalPaid}}</p>
+                                        <p id="totalpaidamount" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">{{quoterecord.totalPaid}}</p>
                                         <p id="totalBalanceDuePrint" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">{{quoterecord.balanceDue}}</p>
                                     </div>
                                 </div>

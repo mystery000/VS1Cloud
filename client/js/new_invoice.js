@@ -83,8 +83,8 @@ Template.new_invoice.onCreated(() => {
 
 Template.new_invoice.onRendered(() => {
 
-    $('#lotNumberModal .btnSelect').removeClass('d-none');
-    $('#lotNumberModal .btnAutoFill').addClass('d-none');
+    // $('#lotNumberModal .btnSelect').removeClass('d-none');
+    // $('#lotNumberModal .btnAutoFill').addClass('d-none');
     $('#serialNumberModal .btnSelect').removeClass('d-none');
     $('#serialNumberModal .btnAutoFill').addClass('d-none');
         $('#choosetemplate').attr('checked', true);
@@ -472,7 +472,7 @@ Template.new_invoice.onRendered(() => {
                     if (FlowRouter.current().queryParams.id) {
 
                     }else{
-                    // $(".heading").html("New Invoice " +newInvoiceId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
+                    // $(".heading").html("New Invoice " +newInvoiceId +'<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
                     };
                 }, 50);
             }).catch(function(err) {
@@ -8468,6 +8468,12 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                                 width: 100
                           };
 
+            let subtotal = $('#subtotal_total').text();
+            let net = $('#subtotal_nett').text();
+            let subtotal_discount = $('#subtotal_discount').text();
+            let grandTotal = $('#grandTotal').text();
+            let totalPaidAmt = $('#totalPaidAmt').text();
+            let totalBalanceDue = $('#totalBalanceDue').text();
 
 
 
@@ -8527,6 +8533,12 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                 `;
                 $("#html-Invoice-pdfwrapper #tax_list_print").append(html);
             });
+
+
+            $("#html-Invoice-pdfwrapper #subtotal_totalPrint").html(subtotal);
+            $("#html-Invoice-pdfwrapper #grandTotalPrint").html(grandTotal);
+            $("#html-Invoice-pdfwrapper #totalpaidamount").html(totalPaidAmt);
+            $("#html-Invoice-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
 
             var source = document.getElementById('html-Invoice-pdfwrapper');
             let file = '';
@@ -8795,7 +8807,7 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
         }
 
         if (object_invoce[0]["taxItems"]) {
-                
+
             let taxItems = object_invoce[0]["taxItems"];
             $("#templatePreviewModal #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
@@ -9736,8 +9748,7 @@ Template.new_invoice.onRendered(function () {
     tempObj.getSubTaxCodes = function () {
         let subTaxTableList = [];
 
-        getVS1Data("TSubTaxVS1")
-          .then(function (dataObject) {
+        getVS1Data("TSubTaxVS1").then(function (dataObject) {
             if (dataObject.length == 0) {
               taxRateService.getSubTaxCode().then(function (data) {
                 for (let i = 0; i < data.tsubtaxcode.length; i++) {
@@ -9769,8 +9780,7 @@ Template.new_invoice.onRendered(function () {
 
               tempObj.subtaxcodes.set(subTaxTableList);
             }
-          })
-          .catch(function (err) {
+          }).catch(function (err) {
             taxRateService.getSubTaxCode().then(function (data) {
               for (let i = 0; i < data.tsubtaxcode.length; i++) {
                 var dataList = {
@@ -9795,7 +9805,6 @@ Template.new_invoice.onRendered(function () {
 
       let custFields = [];
       let customData = {};
-      let customFieldCount = 15;
       let reset_data = [];
 
       if(Session.get('CloudSalesQtyOnly')) {
@@ -9803,42 +9812,58 @@ Template.new_invoice.onRendered(function () {
           { label: 'Product Name', class: 'colProductName', active: true },
           { label: 'Description', class: 'colDescription', active: true },
           { label: 'Qty', class: 'colQty', active: true },
+          { label: 'Ordered', class: 'colOrdered', active: false },
+          { label: 'Shipped', class: 'colShipped', active: false },
+          { label: 'BO', class: 'colBO', active: false },
           { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+          { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+          { label: 'Disc %', class: 'colDiscount', active: true },
           { label: 'Cost Price', class: 'colCostPrice', active: false },
           { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
           { label: 'Tax Rate', class: 'colTaxRate', active: false },
           { label: 'Tax Code', class: 'colTaxCode', active: true },
-          { label: 'Amount (Ex)', class: 'colAmount', active: true },
-          { label: 'Tax Amount', class: 'colTaxAmount', active: true },
-          { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
-          { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
-          { label: 'Disc %', class: 'colDiscount', active: true },
+          { label: 'Tax Amt', class: 'colTaxAmount', active: true },
           { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+          { label: 'Amount (Ex)', class: 'colAmount', active: true },
+          { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
           { label: 'Units', class: 'colUOM', active: false }
         ];
       } else{
-        customFieldCount = 18;
         reset_data = [
           { label: 'Product Name', class: 'colProductName', active: true },
           { label: 'Description', class: 'colDescription', active: true },
+          { label: 'Qty', class: 'colQty', active: false },
           { label: 'Ordered', class: 'colOrdered', active: true },
           { label: 'Shipped', class: 'colShipped', active: true },
           { label: 'BO', class: 'colBO', active: true },
           { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+          { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+          { label: 'Disc %', class: 'colDiscount', active: true },
           { label: 'Cost Price', class: 'colCostPrice', active: false },
           { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
           { label: 'Tax Rate', class: 'colTaxRate', active: false },
           { label: 'Tax Code', class: 'colTaxCode', active: true },
-          { label: 'Amount (Ex)', class: 'colAmount', active: true },
-          { label: 'Tax Amount', class: 'colTaxAmount', active: true },
-          { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
-          { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
-          { label: 'Disc %', class: 'colDiscount', active: true },
+          { label: 'Tax Amt', class: 'colTaxAmount', active: true },
           { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+          { label: 'Amount (Ex)', class: 'colAmount', active: true },
+          { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
           { label: 'Units', class: 'colUOM', active: false }
         ];
       }
-
+      let customFieldCount = reset_data.length;
+      for (let r = 0; r < reset_data.length; r++) {
+        customData = {
+          active: reset_data[r].active,
+          id: 0,
+          custfieldlabel: reset_data[r].label,
+          datatype: "",
+          isempty: false,
+          iscombo: false,
+          dropdown: null,
+        };
+        custFields.push(customData);
+      }
+      /*
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
           customData = {
@@ -9882,10 +9907,10 @@ Template.new_invoice.onRendered(function () {
           custFields.push(customData);
         }
       }
-
+      */
       tempObj.displayfields.set(custFields);
     }
-
+    initCustomFieldDisplaySettings('', 'ltSaleslines');
     tempObj.getAllCustomFieldDisplaySettings = function () {
 
       let listType = 'ltSaleslines';   // tempcode until InvoiceLines is added on backend
@@ -9916,7 +9941,7 @@ Template.new_invoice.onRendered(function () {
       }
     }
 
-    tempObj.getAllCustomFieldDisplaySettings();
+    //tempObj.getAllCustomFieldDisplaySettings();
 });
 
 Template.new_invoice.helpers({
@@ -13356,14 +13381,18 @@ Template.new_invoice.events({
 
                     // Feature/ser-lot number tracking: Save Lot Number
                     if (tdLotNumber) {
+                        const lotNumbers = tdLotNumber.split(',');
+                        const expiryDates = tdLotExpiryDate.split(',');
                         let tpqaList = [];
-                        for (let i = 0; i < serialNumbers.length; i++) {
+                        for (let i = 0; i < lotNumbers.length; i++) {
+                            const dates = expiryDates[i].split('/');
                             const tpqaObject = {
                                 type: "PQABatch",
                                 fields: {
                                     Active: true,
+                                    BatchExpiryDate: new Date(parseInt(dates[2]), parseInt(dates[1]) - 1, parseInt(dates[0])).toISOString(),
                                     Qty: 1,
-                                    SerialNumber: serialNumbers[i],
+                                    BatchNo: lotNumbers[i],
                                 }
                             };
                             tpqaList.push(tpqaObject);
@@ -13373,7 +13402,7 @@ Template.new_invoice.events({
                             fields: {
                                 Active: true,
                                 PQABatch: tpqaList,
-                                Qty: serialNumbers.length,
+                                Qty: lotNumbers.length,
                             }
                         }
                         lineItemObjForm.fields.PQA = pqaObject;
@@ -14107,13 +14136,13 @@ Template.new_invoice.events({
             $('.colQty').css('display', 'none');
         }
     },
-    'click .chkBO': function (event) {
+    'click .chkBackOrder': function (event) {
         if ($(event.target).is(':checked')) {
-            $('.colBo').css('display', 'table-cell');
-            $('.colBo').css('padding', '.75rem');
-            $('.colBo').css('vertical-align', 'top');
+            $('.colBO').css('display', 'table-cell');
+            $('.colBO').css('padding', '.75rem');
+            $('.colBO').css('vertical-align', 'top');
         } else {
-            $('.colBo').css('display', 'none');
+            $('.colBO').css('display', 'none');
         }
     },
     'click .chkShipped': function (event) {
@@ -14338,6 +14367,13 @@ Template.new_invoice.events({
         $('.colSalesLinesCustField1').css('width', range + '%');
 
     },
+    'change .rngRangeUnits': function (event) {
+
+        let range = $(event.target).val();
+        // $(".spWidthAmount").html(range + '%');
+        $('.colUOM').css('width', range + '%');
+
+    },
     'blur .divcolumn': function (event) {
         let columData = $(event.target).html();
         let columHeaderUpdate = $(event.target).attr("valueupdate");
@@ -14398,21 +14434,7 @@ Template.new_invoice.events({
         organisationService.saveCustomField(objDetails1).then(function (objDetails) {
           $(".fullScreenSpin").css("display", "none");
           $('#myModal2').modal('hide');
-        })
-        .catch(function (err) {
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-              $(".fullScreenSpin").css("display", "none");
-            } else if (result.dismiss === "cancel") {
-            }
-            $('#myModal2').modal('hide');
-          });
+        }).catch(function (err) {
           $(".fullScreenSpin").css("display", "none");
           $('#myModal2').modal('hide');
         });
@@ -14432,47 +14454,65 @@ Template.new_invoice.events({
     'click .btnResetGridSettings': function(event) {
       let templateObject = Template.instance();
       let checkBackOrder = templateObject.includeBOnShippedQty.get();
-
-      let reset_data = [
-        { label: 'Product Name', class: 'colProductName', active: true },
-        { label: 'Description', class: 'colDescription', active: true },
-        { label: 'Qty', class: 'colQty', active: true },
-        { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
-        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
-        { label: 'Disc %', class: 'colDiscount', active: true },
-        { label: 'Cost Price', class: 'colCostPrice', active: false },
-        { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
-        { label: 'Tax Rate', class: 'colTaxRate', active: false },
-        { label: 'Tax Code', class: 'colTaxCode', active: true },
-        { label: 'Tax Amount', class: 'colTaxAmount', active: true },
-        { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
-        { label: 'Amount (Ex)', class: 'colAmount', active: true },
-        { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
-        { label: 'Units', class: 'colUOM', active: false }
-      ];
-      if(checkBackOrder) {
-        reset_data = [
-          { label: 'Product Name', class: 'colProductName', active: true },
-          { label: 'Description', class: 'colDescription', active: true },
-          { label: 'Ordered', class: 'colOrdered', active: true },
-          { label: 'Shipped', class: 'colQty', active: true },
-          { label: 'BO', class: 'colBO', active: true },
-          { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
-          { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
-          { label: 'Disc %', class: 'colDiscount', active: true },
-          { label: 'Cost Price', class: 'colCostPrice', active: false },
-          { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
-          { label: 'Tax Rate', class: 'colTaxRate', active: false },
-          { label: 'Tax Code', class: 'colTaxCode', active: true },
-          { label: 'Tax Amount', class: 'colTaxAmount', active: true },
-          { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
-          { label: 'Amount (Ex)', class: 'colAmount', active: true },
-          { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
-          { label: 'Units', class: 'colUOM', active: false }
-        ];
-      }
+      let reset_data = [];
+      if(Session.get('CloudSalesQtyOnly')) {
+          reset_data = [
+            { label: 'Product Name', class: 'colProductName', active: true },
+            { label: 'Description', class: 'colDescription', active: true },
+            { label: 'Qty', class: 'colQty', active: true },
+            // { label: 'Ordered', class: 'colOrdered', active: false },
+            // { label: 'Shipped', class: 'colShipped', active: false },
+            // { label: 'BO', class: 'colBO', active: false },
+            { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+            { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+            { label: 'Disc %', class: 'colDiscount', active: true },
+            { label: 'Cost Price', class: 'colCostPrice', active: false },
+            { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
+            { label: 'Tax Rate', class: 'colTaxRate', active: false },
+            { label: 'Tax Code', class: 'colTaxCode', active: true },
+            { label: 'Tax Amt', class: 'colTaxAmount', active: true },
+            { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+            { label: 'Amount (Ex)', class: 'colAmount', active: true },
+            { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
+            { label: 'Units', class: 'colUOM', active: false }
+          ];
+      } else{
+          reset_data = [
+            { label: 'Product Name', class: 'colProductName', active: true },
+            { label: 'Description', class: 'colDescription', active: true },
+            // { label: 'Qty', class: 'colQty', active: false },
+            { label: 'Ordered', class: 'colOrdered', active: true },
+            { label: 'Shipped', class: 'colShipped', active: true },
+            { label: 'BO', class: 'colBO', active: true },
+            { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+            { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+            { label: 'Disc %', class: 'colDiscount', active: true },
+            { label: 'Cost Price', class: 'colCostPrice', active: false },
+            { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
+            { label: 'Tax Rate', class: 'colTaxRate', active: false },
+            { label: 'Tax Code', class: 'colTaxCode', active: true },
+            { label: 'Tax Amt', class: 'colTaxAmount', active: true },
+            { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+            { label: 'Amount (Ex)', class: 'colAmount', active: true },
+            { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
+            { label: 'Units', class: 'colUOM', active: false }
+          ];
+        }
       // var datable = $('#tblInvoiceLine');
       // var datable = $('#tblInvoiceLine').DataTable();
+
+      // for (let r = 0; r < reset_data.length; r++) {
+      //   customData = {
+      //     active: reset_data[r].active,
+      //     id: 0,
+      //     custfieldlabel: reset_data[r].label,
+      //     datatype: "",
+      //     isempty: false,
+      //     iscombo: false,
+      //     dropdown: null,
+      //   };
+      //   custFields.push(customData);
+      // }
 
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);
@@ -14493,6 +14533,7 @@ Template.new_invoice.events({
 
       });
 
+      //tempObj.displayfields.set(custFields);
     },
 
     'click .btnResetSettings': function (event) {
@@ -15621,20 +15662,43 @@ Template.new_invoice.events({
                                 } else {
                                     let shtml = '';
                                     let i = 0;
-                                    shtml += `
-                                    <tr><td colspan="5">Allocate Lot Number</td><td rowspan="2">CUSTFLD</td></tr>
-                                    <tr><td>Lot No</td><td>Expiry Date</td><td>Qty</td><td>BO Qty</td><td>Length</td></tr>
+                                    shtml += `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
+                                    <tr><td class="text-start">#</td><td class="text-start">Lot number</td><td class="text-start">Expiry Date</td></tr>
                                     `;
                                     for (let k = 0; k < element.pqaseriallotdata.fields.PQABatch.length; k++) {
+                                        const dates = element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate.split(' ')[0].split('-') || '';
                                         if (element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo == "null") {
                                         } else {
                                             i++;
                                             shtml += `
-                                            <tr><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.UOMQty}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BOUOMQty}</td><td></td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>${Number(i)}</td><td contenteditable="true" class="lineLotnumbers">${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo}</td>
+                                                <td class="lotExpiryDate">
+                                                    <div class="form-group m-0">
+                                                        <div class="input-group date" style="cursor: pointer;">
+                                                            <input type="text" class="form-control" style="height: 25px;" value="${dates[2]}/${dates[1]}/${dates[0]}">
+                                                            <div class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             `;
                                         }
                                     }
-                                    $('#tblSeriallist tbody').html(shtml);
+                                    $('#tblLotlist tbody').html(shtml);
+                                    $('.lotExpiryDate input').datepicker({
+                                        showOn: 'focus',
+                                        buttonImageOnly: false,
+                                        dateFormat: 'dd/mm/yy',
+                                        showOtherMonths: true,
+                                        selectOtherMonths: true,
+                                        changeMonth: true,
+                                        changeYear: true,
+                                        yearRange: "-90:+10",
+                                    });
                                 }
                             }
                         }

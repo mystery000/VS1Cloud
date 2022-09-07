@@ -127,18 +127,40 @@ Template.customersummaryreport.onRendered(() => {
         ignoreDate: true
       };
     }
-    $("#dateFrom").val(moment(defaultOptions.fromDate).format("YYYY-MM-DD"));
-    $("#dateTo").val(moment(defaultOptions.toDate).format("YYYY-MM-DD"));
+    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $('.edtReportDates').attr('disabled', false)
+    if( ignoreDate == true ){
+      $('.edtReportDates').attr('disabled', true);
+      templateObject.dateAsAt.set("Current Date");
+    }
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getCustomerDetailsHistory();
   };
   templateObject.getCustomerDetailsHistory = async function () {
+    // if (!localStorage.getItem('VS1CustomerSummary_Report')) {
+      
+    //   if( data.t_vs1_report_productmovement.length > 0 ){
+    //     localStorage.setItem('VS1CustomerSummary_Report', JSON.stringify(data)||'');
+    //   }
+    // }else{
+    //   data = JSON.parse(localStorage.getItem('VS1CustomerSummary_Report'));
+    // }
 
-    const options = await templateObject.reportOptions.get();
-    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let ignoreDate = options.ignoreDate || false;
-    let data = await reportService.getCustomerDetailReport( dateFrom, dateTo, ignoreDate);
+    let data = [];
+    if (!localStorage.getItem('VS1CustomerSummary_Report')) {
+      const options = await templateObject.reportOptions.get();
+      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let ignoreDate = options.ignoreDate || false;
+      data = await reportService.getCustomerDetailReport( dateFrom, dateTo, ignoreDate);
+      if( data.tcustomersummaryreport.length > 0 ){
+        localStorage.setItem('VS1CustomerSummary_Report', JSON.stringify(data)||'');
+      }
+    }else{
+      data = JSON.parse(localStorage.getItem('VS1CustomerSummary_Report'));
+    }
 
     let reportData = [];
     if( data.tcustomersummaryreport.length > 0 ){
@@ -166,6 +188,8 @@ Template.customersummaryreport.onRendered(() => {
               ...item
           });
         }
+      $(".fullScreenSpin").css("display", "none");
+
       }
       
     }
@@ -295,30 +319,34 @@ Template.customersummaryreport.events({
   },
   "change .edtReportDates": async function () {
     $(".fullScreenSpin").css("display", "block");
+    localStorage.setItem('VS1CustomerSummary_Report', '');
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
     await templateObject.setReportOptions(false, dateFrom, dateTo);
-    $(".fullScreenSpin").css("display", "none");
+    // $(".fullScreenSpin").css("display", "none");
   },
   "click #lastMonth": async function () {
     $(".fullScreenSpin").css("display", "block");
+    localStorage.setItem('VS1CustomerSummary_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
+    // $(".fullScreenSpin").css("display", "none");
   },
   "click #lastQuarter": async function () {
     $(".fullScreenSpin").css("display", "block");
+    localStorage.setItem('VS1CustomerSummary_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
+    // $(".fullScreenSpin").css("display", "none");
   },
   "click #last12Months": async function () {
     $(".fullScreenSpin").css("display", "block");
+    localStorage.setItem('VS1CustomerSummary_Report', '');
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
     $("#dateFrom").attr("readonly", false);
@@ -344,14 +372,15 @@ Template.customersummaryreport.events({
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-    $(".fullScreenSpin").css("display", "none");
+    // $(".fullScreenSpin").css("display", "none");
   },
   "click #ignoreDate": async function () {
-    let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem('VS1CustomerSummary_Report', '');
+    let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
     await templateObject.setReportOptions(true);
-    $(".fullScreenSpin").css("display", "none");
+    // $(".fullScreenSpin").css("display", "none");
   },
 
   // CURRENCY MODULE //

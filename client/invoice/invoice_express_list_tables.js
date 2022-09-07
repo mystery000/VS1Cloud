@@ -200,10 +200,12 @@ Template.invoicelist.onRendered(function () {
                             totalpaid: totalPaid || 0.00,
                             totaloustanding: totalOutstanding || 0.00,
                             salestatus: salestatus || '',
+                            ponumber: data.tinvoicelist[i].PONumber || '',
+                            referenceno: data.tinvoicelist[i].ReferenceNo || '',
                             custfield1: data.tinvoicelist[i].SaleCustField1 || '',
                             custfield2: data.tinvoicelist[i].SaleCustField2 || '',
                             custfield3: data.tinvoicelist[i].SaleCustField3 || '',
-                            comments: data.tinvoicelist[i].Comments || '',
+                            comments: data.tinvoicelist[i].Comments || '',                            
                             // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
 
                         };
@@ -531,11 +533,13 @@ Template.invoicelist.onRendered(function () {
                         totalpaid: totalPaid || 0.00,
                         totaloustanding: totalOutstanding || 0.00,
                         salestatus: salestatus || '',
+                        ponumber: data.tinvoicelist[i].PONumber || '',
+                        referenceno: data.tinvoicelist[i].ReferenceNo || '',
                         custfield1: data.tinvoicelist[i].SaleCustField1 || '',
                         custfield2: data.tinvoicelist[i].SaleCustField2 || '',
                         custfield3: data.tinvoicelist[i].SaleCustField3 || '',
                         custfield: data.tinvoicelist[i].SaleCustField || '',
-                        comments: data.tinvoicelist[i].Comments || '',
+                        comments: data.tinvoicelist[i].Comments || '',                        
                         // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
 
                     };
@@ -858,6 +862,8 @@ Template.invoicelist.onRendered(function () {
                       totalpaid: totalPaid || 0.00,
                       totaloustanding: totalOutstanding || 0.00,
                       salestatus: salestatus || '',
+                      ponumber: data.tinvoicelist[i].PONumber || '',
+                      referenceno: data.tinvoicelist[i].ReferenceNo || '',
                       custfield1: data.tinvoicelist[i].SaleCustField1 || '',
                       custfield2: data.tinvoicelist[i].SaleCustField2 || '',
                       custfield3: data.tinvoicelist[i].SaleCustField3 || '',
@@ -1161,6 +1167,8 @@ Template.invoicelist.onRendered(function () {
         { label: 'Paid', class: 'colPaid', active: true },
         { label: 'Outstanding', class: 'colBalanceOutstanding', active: false },
         { label: 'Status', class: 'colStatus', active: true },
+        { label: 'P.O. Number', class: 'colPONumber', active: false },
+        { label: 'Reference', class: 'colReference', active: false },
         { label: 'Employee', class: 'colEmployee', active: true },
         { label: 'Comments', class: 'colComments', active: false }
       ];
@@ -1321,6 +1329,8 @@ Template.invoicelist.events({
                             totalpaid: totalPaid || 0.00,
                             totaloustanding: totalOutstanding || 0.00,
                             salestatus: salestatus || '',
+                            ponumber: data.tinvoicelist[i].PONumber || '',
+                            referenceno: data.tinvoicelist[i].ReferenceNo || '',
                             custfield1: data.tinvoiceex[i].fields.SaleCustField1 || '',
                             custfield2: data.tinvoiceex[i].fields.SaleCustField2 || '',
                             custfield3: data.tinvoiceex[i].fields.SaleCustField3 || '',
@@ -1358,6 +1368,8 @@ Template.invoicelist.events({
                                 '<td contenteditable="false" class="colPaid" style="text-align: right!important;">' + item[x].totalpaid + '</td>' +
                                 '<td contenteditable="false" class="colBalanceOutstanding" style="text-align: right!important;">' + item[x].totaloustanding + '</td>' +
                                 '<td contenteditable="false" class="colStatus">' + item[x].salestatus + '</td>' +
+                                '<td contenteditable="false" class="colPONumber">' + item[x].ponumber + '</td>' +
+                                '<td contenteditable="false" class="colReference">' + item[x].referenceno + '</td>' +
                                 '<td contenteditable="false" class="colSaleCustField1 customFieldColumn hiddenColumn">' + item[x].custfield1 + '</td>' +
                                 '<td contenteditable="false" class="colSaleCustField2 customFieldColumn hiddenColumn">' + item[x].custfield2 + '</td>' +
                                 '<td contenteditable="false" class="colSaleCustField3 customFieldColumn hiddenColumn">' + item[x].custfield3 + '</td>' +
@@ -1439,6 +1451,8 @@ Template.invoicelist.events({
         { label: 'Paid', class: 'colPaid', active: true },
         { label: 'Outstanding', class: 'colBalanceOutstanding', active: false },
         { label: 'Status', class: 'colStatus', active: true },
+        { label: 'P.O. Number', class: 'colPONumber', active: false },
+        { label: 'Reference', class: 'colReference', active: false },
         { label: 'Employee', class: 'colEmployee', active: true },
         { label: 'Comments', class: 'colComments', active: false },
         { label: custFields[0].custfieldlabel, class: 'colSaleCustField1', active: custFields[0].active },

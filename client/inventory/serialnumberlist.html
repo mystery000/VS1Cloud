@@ -6,7 +6,7 @@
         <header style="padding: 16px;padding-bottom: 0px; background-color: #ededed;">
             <h2 style="margin: 16px; margin-bottom: 0px">Serial Number List
 
-                <a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                {{> helpbutton}}
 
                 <!-- Start Help View Modal -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -55,7 +55,7 @@
                         </thead>
                         <tbody>
                             {{#each item in datatablerecords}}
-                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                            <tr class="dnd-moved" data-serialnumber="{{item.serialnumber}}" style="cursor: pointer;">
                                 <td contenteditable="false" class="colProductName text-start">{{item.productname}}</td>
                                 <td contenteditable="false" class="colDepartment text-start">{{item.department}}</td>
                                 <td contenteditable="false" class="colDepartment text-start">{{item.salsedes}}</td>
