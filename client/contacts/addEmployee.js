@@ -10467,41 +10467,41 @@ Template.employeescard.events({
         }
     },
 
-    'change #leaveCalcMethodSelect': function(e){
-        let leaveCalcMethod = $('#leaveCalcMethodSelect').val();
-        switch(leaveCalcMethod){
-            case 'Manually Recorded Rate':
-                $('#hoursLeave').val('');
-                $('.handleLeaveTypeOption').addClass('hideelement')
-                $('.manuallyRecordedRate').removeClass('hideelement')
-            break;
-            case 'No Calculation Required':
-                $('.handleLeaveTypeOption').addClass('hideelement')
-            break;
-            case 'Based on Ordinary Earnings':
-                $('#hoursAccruedAnnuallyFullTimeEmp').val('');
-                $('#hoursFullTimeEmpFortnightlyPay').val('');
-                $('.handleLeaveTypeOption').addClass('hideelement')
-                $('.basedonOrdinaryEarnings').removeClass('hideelement')
-            break;
-            default:
-                $('#hoursAccruedAnnually').val('');
-                $('.handleLeaveTypeOption').addClass('hideelement')
-                $('.fixedAmountEachPeriodOption').removeClass('hideelement')
-            break;
-        }
-    },
+    // 'change #leaveCalcMethodSelect': function(e){
+    //     let leaveCalcMethod = $(e.target).val();
+    //     switch(leaveCalcMethod){
+    //         case 'Manually Recorded Rate':
+    //             $('#hoursLeave').val('');
+    //             $('.handleLeaveTypeOption').addClass('hideelement')
+    //             $('.manuallyRecordedRate').removeClass('hideelement')
+    //         break;
+    //         case 'No Calculation Required':
+    //             $('.handleLeaveTypeOption').addClass('hideelement')
+    //         break;
+    //         case 'Based on Ordinary Earnings':
+    //             $('#hoursAccruedAnnuallyFullTimeEmp').val('');
+    //             $('#hoursFullTimeEmpFortnightlyPay').val('');
+    //             $('.handleLeaveTypeOption').addClass('hideelement')
+    //             $('.basedonOrdinaryEarnings').removeClass('hideelement')
+    //         break;
+    //         default:
+    //             $('#hoursAccruedAnnually').val('');
+    //             $('.handleLeaveTypeOption').addClass('hideelement')
+    //             $('.fixedAmountEachPeriodOption').removeClass('hideelement')
+    //         break;
+    //     }
+    // },
 
-    'change #onTerminationUnusedBalance': function(e){
-        let onTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
-        if( onTerminationUnusedBalance == '1' || onTerminationUnusedBalance == 'Paid Out'){
-            $('.eftLeaveTypeCont').removeClass('hideelement')
-            $("#eftLeaveType").attr('checked', false)
-        }else{
-            $('.eftLeaveTypeCont').addClass('hideelement')
-            $('.superannuationGuaranteeCont').addClass('hideelement')
-        }
-    },
+    // 'change #onTerminationUnusedBalance': function(e){
+    //     let onTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
+    //     if( onTerminationUnusedBalance == '1' || onTerminationUnusedBalance == 'Paid Out'){
+    //         $('.eftLeaveTypeCont').removeClass('hideelement')
+    //         $("#eftLeaveType").attr('checked', false)
+    //     }else{
+    //         $('.eftLeaveTypeCont').addClass('hideelement')
+    //         $('.superannuationGuaranteeCont').addClass('hideelement')
+    //     }
+    // },
 
     'click #eftLeaveType': function(){
         if( $('#eftLeaveType').is(':checked') ){

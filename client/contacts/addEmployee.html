@@ -1608,16 +1608,10 @@
                                                                         $(".bankAccountsRemaining").text(text);
                                                                     }
 
-
-
                                                                     $("#edtTaxFileNumber").change(function(e){
-
                                                                         if($(this).val().trim() != "") {
                                                                             $("#edtTfnExemption").val("");
                                                                         }
-                                                                    });
-                                                                    $("#edtTfnExemption").change(function(){
-                                                                        $("#edtTaxFileNumber").val("");
                                                                     });
 
                                                                     $("#btnAddBankAcc").click(function(){
@@ -1857,7 +1851,7 @@
                                                                                     <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Leave Calculation Method</label>
-                                                                                            <!-- <input type="text" class="form-control" id=""> -->
+                                                                                            <!-- <input type="search" class="form-control" id="leaveCalcMethodSelect" name="leaveCalcMethodSelect" value=""> -->
                                                                                             <select  type="search" class="form-control customEditableSelect" id="leaveCalcMethodSelect" name="leaveCalcMethodSelect">
                                                                                                 <option value="Fixed Amount Each Period">Fixed Amount Each Period</option>
                                                                                                 <option value="Manually Recorded Rate">Manually Recorded Rate</option>
