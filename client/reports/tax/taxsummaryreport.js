@@ -716,7 +716,7 @@ Template.taxsummaryreport.onRendered(() => {
               taxratetotal = taxratetotal + Number(record.taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
               taxtotal1 = taxtotal1 + parseFloat(record.totaltax1);
 
-              record.total = {
+              let val = {
                 InputsExPurchases: inputsexpurchasestotal,
                 InputsIncPurchases: inputsincpurchasestotal,
                 OutputExSales: outputexsalestotal,
@@ -727,7 +727,7 @@ Template.taxsummaryreport.onRendered(() => {
                 TaxRate: taxratetotal
               }
 
-              current.push(record.total);
+              current.push(val);
 
               
 
@@ -1721,6 +1721,16 @@ Template.taxsummaryreport.helpers({
   },
   currency: () => {
     return Currency;
+  },
+
+  formatPrice( amount){
+
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
   },
 });
 Template.registerHelper('equals', function (a, b) {
