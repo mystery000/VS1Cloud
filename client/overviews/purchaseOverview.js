@@ -1420,6 +1420,22 @@ Template.purchasesoverview.onRendered(function () {
     ];
     let customFieldCount = reset_data.length; 
 
+      // tempcode
+      for (let r = 0; r < customFieldCount; r++) {
+        customData = {
+          active: reset_data[r].active,
+          id: "",
+          custfieldlabel: reset_data[r].label,
+          datatype: "",
+          isempty: true,
+          iscombo: false,
+        };
+        custFields.push(customData);
+      }
+      tempObj.displayfields.set(custFields);
+      return;
+      // tempcode
+
     for (let x = 0; x < data.tcustomfieldlist.length; x++) {
       if (data.tcustomfieldlist[x].fields.ListType == 'ltOrder') {
         customData = {
