@@ -228,6 +228,45 @@
                         <!-- <th>Total Taxt1</th> -->
                         <!-- <th>ID</th> -->
                       </tr>
+                      
+                      {{#if isOnlyDefaultActive equal "false" }}
+                          <tr class="table-active tblAvoid customDoubleTableHeading">
+                              <th></th>
+
+                              {{#if currencyList}}
+                                  {{#each c in currencyList }}
+                                      {{# if c.active}}
+                                          <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                      {{/if}}
+                                  {{/each}}
+                              {{/if}}
+
+                              {{#if currencyList}}
+                                  {{#each c in currencyList }}
+                                      {{# if c.active}}
+                                          <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                      {{/if}}
+                                  {{/each}}
+                              {{/if}}
+
+                              {{#if currencyList}}
+                                  {{#each c in currencyList }}
+                                      {{# if c.active}}
+                                          <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                      {{/if}}
+                                  {{/each}}
+                              {{/if}}
+                              <th></th>
+                              {{#if currencyList}}
+                                  {{#each c in currencyList }}
+                                      {{# if c.active}}
+                                          <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                      {{/if}}
+                                  {{/each}}
+                              {{/if}}
+                          
+                          </tr>
+                      {{/if}}
                     </thead>
                     <tbody>
                       {{#if reportRecords}}
