@@ -180,6 +180,41 @@ Template.eftExportModal.onRendered(function () {
       }
     });
 
+
+  $(document).on("click", "#tblAccount tbody tr", function(e) {
+    $(".colAccount").removeClass('boldtablealertsborder');
+      let selectLineID = $('#selectLineID').val();
+      // let taxcodeList = templateObject.taxraterecords.get();
+      // var table = $(this);
+      // let utilityService = new UtilityService();
+      // let $tblrows = $("#tblDepositEntryLine tbody tr");
+
+      // if(selectLineID){
+      //     let lineProductName = table.find(".productName").text();
+      //     let lineProductDesc = table.find(".productDesc").text();
+      //     let lineAccoutNo = table.find(".accountnumber").text();
+
+
+      //     $('#'+selectLineID+" .lineAccountName").val(lineProductName);
+      //     $('#accountListModal').modal('toggle');
+
+      //       $(".colAccount").removeClass('boldtablealertsborder');
+      // }else{
+      //   let accountname = table.find(".productName").text();
+      //   $('#accountListModal').modal('toggle');
+      //   $('#sltAccountName').val(accountname);
+      //   if($tblrows.find(".lineAccountName").val() === ''){
+      //       $tblrows.find(".colAccount").addClass('boldtablealertsborder');
+      //   }
+      // }
+
+      // $('#tblAccount_filter .form-control-sm').val('');
+      // setTimeout(function () {
+      //     $('.btnRefreshAccount').trigger('click');
+      //     $('.fullScreenSpin').css('display', 'none');
+      //       // $(".colAccount").removeClass('boldtablealertsborder');
+      // }, 1000);
+  });
 });
 
 Template.eftExportModal.events({
@@ -295,7 +330,8 @@ Template.eftExportModal.events({
     }
 
     return true;
-  }
+  },
+
 });
 
 Template.eftExportModal.helpers({

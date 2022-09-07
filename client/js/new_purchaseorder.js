@@ -4533,8 +4533,17 @@ templateObject.getLastPOData = async function() {
 
 
     exportSalesToPdf1 = function() {
+     
         let id = $('.printID').attr("id");
         document.getElementById('html-2-pdfwrapper').style.display = "block";
+
+        let subtotal = $('#subtotal_total').text();
+        let net = $('#subtotal_nett').text();
+        let subtotal_discount = $('#subtotal_discount').text();
+        let grandTotal = $('#grandTotal').text();
+        let totalPaidAmt = $('#totalPaidAmt').text();
+        let totalBalanceDue = $('#totalBalanceDue').text();
+
 
         let taxItems = {};
         $('#tblPurchaseOrderLine > tbody > tr').each(function () {
@@ -4565,6 +4574,8 @@ templateObject.getLastPOData = async function() {
                 }
             }
         });
+
+
         $("#html-2-pdfwrapper #tax_list_print").html("");
         Object.keys(taxItems).map((code) => {
             let html = `
@@ -4581,6 +4592,12 @@ templateObject.getLastPOData = async function() {
             `;
             $("#html-2-pdfwrapper #tax_list_print").append(html);
         });
+
+        $("#html-2-pdfwrapper #subtotal_totalPrint").html(subtotal);
+        $("#html-2-pdfwrapper #grandTotalPrint").html(grandTotal);
+        $("#html-2-pdfwrapper #totalpaidamount").html(totalPaidAmt);
+        $("#html-2-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
+
 
         var source = document.getElementById('html-2-pdfwrapper');
         let file = "Purchase Order.pdf";

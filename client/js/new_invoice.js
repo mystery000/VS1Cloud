@@ -8468,6 +8468,12 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                                 width: 100
                           };
 
+            let subtotal = $('#subtotal_total').text();
+            let net = $('#subtotal_nett').text();
+            let subtotal_discount = $('#subtotal_discount').text();
+            let grandTotal = $('#grandTotal').text();
+            let totalPaidAmt = $('#totalPaidAmt').text();
+            let totalBalanceDue = $('#totalBalanceDue').text();
 
 
 
@@ -8527,6 +8533,12 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                 `;
                 $("#html-Invoice-pdfwrapper #tax_list_print").append(html);
             });
+
+
+            $("#html-Invoice-pdfwrapper #subtotal_totalPrint").html(subtotal);
+            $("#html-Invoice-pdfwrapper #grandTotalPrint").html(grandTotal);
+            $("#html-Invoice-pdfwrapper #totalpaidamount").html(totalPaidAmt);
+            $("#html-Invoice-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
 
             var source = document.getElementById('html-Invoice-pdfwrapper');
             let file = '';
@@ -9736,8 +9748,7 @@ Template.new_invoice.onRendered(function () {
     tempObj.getSubTaxCodes = function () {
         let subTaxTableList = [];
 
-        getVS1Data("TSubTaxVS1")
-          .then(function (dataObject) {
+        getVS1Data("TSubTaxVS1").then(function (dataObject) {
             if (dataObject.length == 0) {
               taxRateService.getSubTaxCode().then(function (data) {
                 for (let i = 0; i < data.tsubtaxcode.length; i++) {
@@ -9769,8 +9780,7 @@ Template.new_invoice.onRendered(function () {
 
               tempObj.subtaxcodes.set(subTaxTableList);
             }
-          })
-          .catch(function (err) {
+          }).catch(function (err) {
             taxRateService.getSubTaxCode().then(function (data) {
               for (let i = 0; i < data.tsubtaxcode.length; i++) {
                 var dataList = {
@@ -9795,7 +9805,6 @@ Template.new_invoice.onRendered(function () {
 
       let custFields = [];
       let customData = {};
-      let customFieldCount = 15;
       let reset_data = [];
 
       if(Session.get('CloudSalesQtyOnly')) {
@@ -9803,42 +9812,58 @@ Template.new_invoice.onRendered(function () {
           { label: 'Product Name', class: 'colProductName', active: true },
           { label: 'Description', class: 'colDescription', active: true },
           { label: 'Qty', class: 'colQty', active: true },
+          { label: 'Ordered', class: 'colOrdered', active: false },
+          { label: 'Shipped', class: 'colShipped', active: false },
+          { label: 'BO', class: 'colBO', active: false },
           { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+          { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+          { label: 'Disc %', class: 'colDiscount', active: true },
           { label: 'Cost Price', class: 'colCostPrice', active: false },
           { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
           { label: 'Tax Rate', class: 'colTaxRate', active: false },
           { label: 'Tax Code', class: 'colTaxCode', active: true },
-          { label: 'Amount (Ex)', class: 'colAmount', active: true },
-          { label: 'Tax Amount', class: 'colTaxAmount', active: true },
-          { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
-          { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
-          { label: 'Disc %', class: 'colDiscount', active: true },
+          { label: 'Tax Amt', class: 'colTaxAmount', active: true },
           { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+          { label: 'Amount (Ex)', class: 'colAmount', active: true },
+          { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
           { label: 'Units', class: 'colUOM', active: false }
         ];
       } else{
-        customFieldCount = 18;
         reset_data = [
           { label: 'Product Name', class: 'colProductName', active: true },
           { label: 'Description', class: 'colDescription', active: true },
+          { label: 'Qty', class: 'colQty', active: false },
           { label: 'Ordered', class: 'colOrdered', active: true },
           { label: 'Shipped', class: 'colShipped', active: true },
           { label: 'BO', class: 'colBO', active: true },
           { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+          { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+          { label: 'Disc %', class: 'colDiscount', active: true },
           { label: 'Cost Price', class: 'colCostPrice', active: false },
           { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
           { label: 'Tax Rate', class: 'colTaxRate', active: false },
           { label: 'Tax Code', class: 'colTaxCode', active: true },
-          { label: 'Amount (Ex)', class: 'colAmount', active: true },
-          { label: 'Tax Amount', class: 'colTaxAmount', active: true },
-          { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
-          { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
-          { label: 'Disc %', class: 'colDiscount', active: true },
+          { label: 'Tax Amt', class: 'colTaxAmount', active: true },
           { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+          { label: 'Amount (Ex)', class: 'colAmount', active: true },
+          { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
           { label: 'Units', class: 'colUOM', active: false }
         ];
       }
-
+      let customFieldCount = reset_data.length;
+      for (let r = 0; r < reset_data.length; r++) {
+        customData = {
+          active: reset_data[r].active,
+          id: 0,
+          custfieldlabel: reset_data[r].label,
+          datatype: "",
+          isempty: false,
+          iscombo: false,
+          dropdown: null,
+        };
+        custFields.push(customData);
+      }
+      /*
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
           customData = {
@@ -9882,10 +9907,10 @@ Template.new_invoice.onRendered(function () {
           custFields.push(customData);
         }
       }
-
+      */
       tempObj.displayfields.set(custFields);
     }
-
+    initCustomFieldDisplaySettings('', 'ltSaleslines');
     tempObj.getAllCustomFieldDisplaySettings = function () {
 
       let listType = 'ltSaleslines';   // tempcode until InvoiceLines is added on backend
@@ -9916,7 +9941,7 @@ Template.new_invoice.onRendered(function () {
       }
     }
 
-    tempObj.getAllCustomFieldDisplaySettings();
+    //tempObj.getAllCustomFieldDisplaySettings();
 });
 
 Template.new_invoice.helpers({
@@ -14111,13 +14136,13 @@ Template.new_invoice.events({
             $('.colQty').css('display', 'none');
         }
     },
-    'click .chkBO': function (event) {
+    'click .chkBackOrder': function (event) {
         if ($(event.target).is(':checked')) {
-            $('.colBo').css('display', 'table-cell');
-            $('.colBo').css('padding', '.75rem');
-            $('.colBo').css('vertical-align', 'top');
+            $('.colBO').css('display', 'table-cell');
+            $('.colBO').css('padding', '.75rem');
+            $('.colBO').css('vertical-align', 'top');
         } else {
-            $('.colBo').css('display', 'none');
+            $('.colBO').css('display', 'none');
         }
     },
     'click .chkShipped': function (event) {
@@ -14342,6 +14367,13 @@ Template.new_invoice.events({
         $('.colSalesLinesCustField1').css('width', range + '%');
 
     },
+    'change .rngRangeUnits': function (event) {
+
+        let range = $(event.target).val();
+        // $(".spWidthAmount").html(range + '%');
+        $('.colUOM').css('width', range + '%');
+
+    },
     'blur .divcolumn': function (event) {
         let columData = $(event.target).html();
         let columHeaderUpdate = $(event.target).attr("valueupdate");
@@ -14436,47 +14468,65 @@ Template.new_invoice.events({
     'click .btnResetGridSettings': function(event) {
       let templateObject = Template.instance();
       let checkBackOrder = templateObject.includeBOnShippedQty.get();
-
-      let reset_data = [
-        { label: 'Product Name', class: 'colProductName', active: true },
-        { label: 'Description', class: 'colDescription', active: true },
-        { label: 'Qty', class: 'colQty', active: true },
-        { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
-        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
-        { label: 'Disc %', class: 'colDiscount', active: true },
-        { label: 'Cost Price', class: 'colCostPrice', active: false },
-        { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
-        { label: 'Tax Rate', class: 'colTaxRate', active: false },
-        { label: 'Tax Code', class: 'colTaxCode', active: true },
-        { label: 'Tax Amount', class: 'colTaxAmount', active: true },
-        { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
-        { label: 'Amount (Ex)', class: 'colAmount', active: true },
-        { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
-        { label: 'Units', class: 'colUOM', active: false }
-      ];
-      if(checkBackOrder) {
-        reset_data = [
-          { label: 'Product Name', class: 'colProductName', active: true },
-          { label: 'Description', class: 'colDescription', active: true },
-          { label: 'Ordered', class: 'colOrdered', active: true },
-          { label: 'Shipped', class: 'colQty', active: true },
-          { label: 'BO', class: 'colBO', active: true },
-          { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
-          { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
-          { label: 'Disc %', class: 'colDiscount', active: true },
-          { label: 'Cost Price', class: 'colCostPrice', active: false },
-          { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
-          { label: 'Tax Rate', class: 'colTaxRate', active: false },
-          { label: 'Tax Code', class: 'colTaxCode', active: true },
-          { label: 'Tax Amount', class: 'colTaxAmount', active: true },
-          { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
-          { label: 'Amount (Ex)', class: 'colAmount', active: true },
-          { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
-          { label: 'Units', class: 'colUOM', active: false }
-        ];
-      }
+      let reset_data = [];
+      if(Session.get('CloudSalesQtyOnly')) {
+          reset_data = [
+            { label: 'Product Name', class: 'colProductName', active: true },
+            { label: 'Description', class: 'colDescription', active: true },
+            { label: 'Qty', class: 'colQty', active: true },
+            // { label: 'Ordered', class: 'colOrdered', active: false },
+            // { label: 'Shipped', class: 'colShipped', active: false },
+            // { label: 'BO', class: 'colBO', active: false },
+            { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+            { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+            { label: 'Disc %', class: 'colDiscount', active: true },
+            { label: 'Cost Price', class: 'colCostPrice', active: false },
+            { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
+            { label: 'Tax Rate', class: 'colTaxRate', active: false },
+            { label: 'Tax Code', class: 'colTaxCode', active: true },
+            { label: 'Tax Amt', class: 'colTaxAmount', active: true },
+            { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+            { label: 'Amount (Ex)', class: 'colAmount', active: true },
+            { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
+            { label: 'Units', class: 'colUOM', active: false }
+          ];
+      } else{
+          reset_data = [
+            { label: 'Product Name', class: 'colProductName', active: true },
+            { label: 'Description', class: 'colDescription', active: true },
+            // { label: 'Qty', class: 'colQty', active: false },
+            { label: 'Ordered', class: 'colOrdered', active: true },
+            { label: 'Shipped', class: 'colShipped', active: true },
+            { label: 'BO', class: 'colBO', active: true },
+            { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+            { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+            { label: 'Disc %', class: 'colDiscount', active: true },
+            { label: 'Cost Price', class: 'colCostPrice', active: false },
+            { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
+            { label: 'Tax Rate', class: 'colTaxRate', active: false },
+            { label: 'Tax Code', class: 'colTaxCode', active: true },
+            { label: 'Tax Amt', class: 'colTaxAmount', active: true },
+            { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+            { label: 'Amount (Ex)', class: 'colAmount', active: true },
+            { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
+            { label: 'Units', class: 'colUOM', active: false }
+          ];
+        }
       // var datable = $('#tblInvoiceLine');
       // var datable = $('#tblInvoiceLine').DataTable();
+
+      // for (let r = 0; r < reset_data.length; r++) {
+      //   customData = {
+      //     active: reset_data[r].active,
+      //     id: 0,
+      //     custfieldlabel: reset_data[r].label,
+      //     datatype: "",
+      //     isempty: false,
+      //     iscombo: false,
+      //     dropdown: null,
+      //   };
+      //   custFields.push(customData);
+      // }
 
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);
@@ -14497,6 +14547,7 @@ Template.new_invoice.events({
 
       });
 
+      //tempObj.displayfields.set(custFields);
     },
 
     'click .btnResetSettings': function (event) {

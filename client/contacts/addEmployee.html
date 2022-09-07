@@ -2026,7 +2026,7 @@
                                                                                 </form>
                                                                             </div>
                                                                             <div class="modal-footer" style="justify-content: space-between;">
-                                                                                <div class="col-6 pl-0">
+                                                                                <div class="col-4 pl-0">
                                                                                     <div class="dropdown float-left">
                                                                                         <div class="form-group">
                                                                                             <label>Status</label>
@@ -2042,9 +2042,9 @@
                                                                                         </div> -->
                                                                                     </div>
                                                                                 </div>
-                                                                                <button type="button" id="removeLeaveRequestBtn" data-id="0" style="display: none;" class="btn btn-danger removeLeaveRequest"><i class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
-                                                                                <button type="button" id="btnSaveLeaveRequest" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                                <button type="button" id="removeLeaveRequestBtn" data-id="0" style="display: none;" class="btn btn-danger removeLeaveRequest mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
+                                                                                <button type="button" id="btnSaveLeaveRequest" class="btn btn-success mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                                <button type="button" class="btn btn-secondary mt-3" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -2505,6 +2505,17 @@
                                                                                     padding: .75rem;
                                                                                     vertical-align: top;
                                                                                 }
+                                                                                .smallFontSizeBtn i {
+                                                                                    font-size: 12px;
+                                                                                }
+                                                                                .smallFontSizeBtn {
+                                                                                    padding: 0;
+                                                                                    width: 25px;
+                                                                                    height: 25px;
+                                                                                    display: inline-flex;
+                                                                                    justify-content: center;
+                                                                                    align-items: center;
+                                                                                }
                                                                             </style>
                                                                             <table id="tblPayslipHistory" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayslipHistory">
                                                                                 <thead>
@@ -2557,6 +2568,9 @@
                                                                     }
                                                                     .ordanryHoursDiv a {
                                                                         color: #00a3d3 !important;
+                                                                    }
+                                                                    #tblPayslipHistory .btn-sm {
+                                                                        margin: 0px !important;
                                                                     }
                                                                 </style>
                                                                 <div class="row mb-3">
@@ -3034,7 +3048,7 @@
                                                                                             <div class="col-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control obCalculateEarningTotalAmount edtPriceFormatting" value="{{ formatPrice item.fields.Amount }}" id="obEarningAmount{{ item.fields.ID }}">
+                                                                                                    <input type="text" class="form-control obCalculateTotalAmount edtPriceFormatting" value="{{ formatPrice item.fields.Amount }}" data-id="{{ item.fields.ID }}" id="obEarningAmount{{ item.fields.ID }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-1" style="padding-left: 0px;">
@@ -3079,7 +3093,7 @@
                                                                                 {{#if obEarningLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obEarningTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateEarningTotalAmount' }}
+                                                                                            {{ calculateOpeningBalanceTotal obEarningLines }}
                                                                                         </p>
                                                                                     </div>
                                                                                 {{/if}}
@@ -3104,7 +3118,7 @@
                                                                                             <div class="col-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting obCalculateDeductionTotalAmount" value="{{ formatPrice item.fields.Amount }}" id="obDeductionAmount{{ item.fields.ID }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting obCalculateTotalAmount" data-id="{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}" id="obDeductionAmount{{ item.fields.ID }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-1" style="padding-left: 0px;">
@@ -3148,7 +3162,7 @@
                                                                                 {{#if obDeductionLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obDeductionTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateDeductionTotalAmount' }}
+                                                                                            {{ calculateOpeningBalanceTotal obDeductionLines }}
                                                                                         </p>
                                                                                     </div>
                                                                                 {{/if}}
@@ -3196,7 +3210,7 @@
                                                                                             <div class="col-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting obCalculateSuperannuationTotalAmount" value="{{ formatPrice item.fields.Amount }}" id="obSuperannuationAmount{{ item.fields.ID }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting obCalculateTotalAmount" data-id="{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}" id="obSuperannuationAmount{{ item.fields.ID }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-1" style="padding-left: 0px;">
@@ -3247,7 +3261,7 @@
                                                                                 {{#if obSuperannuationLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obSuperannuationTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateSuperannuationTotalAmount' }}
+                                                                                            {{ calculateOpeningBalanceTotal obSuperannuationLines }}
                                                                                         </p>
                                                                                     </div>
                                                                                 {{/if}}
@@ -3271,7 +3285,7 @@
                                                                                             <div class="col-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting obCalculateReimbursementTotalAmount" value="{{ formatPrice item.fields.Amount }}"  id="obReimbursementAmount{{ item.fields.ID }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting obCalculateTotalAmount" data-id="{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}"  id="obReimbursementAmount{{ item.fields.ID }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-1" style="padding-left: 0px;">
@@ -3316,7 +3330,7 @@
                                                                                 {{#if obReimbursementLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obReimbursementTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateReimbursementTotalAmount'}}
+                                                                                            {{ calculateOpeningBalanceTotal obReimbursementLines}}
                                                                                         </p>
                                                                                     </div>
                                                                                 {{/if}}

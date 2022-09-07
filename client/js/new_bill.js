@@ -2137,7 +2137,7 @@ Template.billcard.onRendered(() => {
           $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
 
 
-          $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
+          //$("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
           $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " "+ " Template"
           );
@@ -2422,7 +2422,7 @@ Template.billcard.onRendered(() => {
         $("#html-2-pdfwrapper_new .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
 
 
-        $("#html-2-pdfwrapper_new .print-header").text(object_invoce[0]["title"]);
+       // $("#html-2-pdfwrapper_new .print-header").text(object_invoce[0]["title"]);
 
         $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
@@ -4240,13 +4240,26 @@ Template.billcard.onRendered(() => {
     };
 
     exportSalesToPdf1 = function() {
+        
         let margins = {
             top: 0,
             bottom: 0,
             left: 0,
             width: 100
         };
+
         let id = $('.printID').attr("id");
+
+        let subtotal = $('#subtotal_total').text();
+        let net = $('#subtotal_nett').text();
+        let subtotal_discount = $('#subtotal_discount').text();
+        let grandTotal = $('#grandTotal').text();
+        let totalPaidAmt = $('#totalPaidAmt').text();
+        let totalBalanceDue = $('#totalBalanceDue').text();
+        let total_new_tax = $('#subtotal_tax').text();
+
+
+
         document.getElementById('html-2-pdfwrapper').style.display="block";
 
         let taxItems = {};
@@ -4295,6 +4308,13 @@ Template.billcard.onRendered(() => {
             `;
             $("#html-2-pdfwrapper #tax_list_print").append(html);
         });
+
+        
+        $("#html-2-pdfwrapper #subtotal_totalPrint").html(subtotal);
+        $("#html-2-pdfwrapper #grandTotalPrint").html(grandTotal);
+        $("#html-2-pdfwrapper #totalpaidamount").html(totalPaidAmt);
+        $("#html-2-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
+        $("#html-2-pdfwrapper #total_tax_new").html(total_new_tax);
 
         var source = document.getElementById('html-2-pdfwrapper');
         let file = "Bill.pdf";

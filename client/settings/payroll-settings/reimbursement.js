@@ -241,10 +241,14 @@ $('.reimbursementDropDown').editableSelect()
             }
             if( data.treimbursement.length > 0 ){
                 let tReimbursement = data.treimbursement.filter((item) => {
-                    if( item.fields.Description == searchName ){
+                    if( item.fields.ReimbursementName == searchName ){
                         return item;
                     }
                 });
+
+                $('#reimbursementRateForm')[0].reset();
+                $('#newReimbursementLabel').text('Edit Reiumbursement');
+                $('#reimbursementSettingsModal').modal('hide');
                 
                 if( tReimbursement.length > 0 ){
                     $('#res_id').val(tReimbursement[0].fields.ID) || 0 ;
@@ -286,6 +290,7 @@ Template.reimbursementSettings.events({
     },
     'click .btnAddordinaryTimeReimbursement':function(event){
         $('#reimbursementRateForm')[0].reset();
+        $('#newReimbursementLabel').text('Add New Reiumbursement Fund');
         $('#newReimbursementModal').modal('hide');
     },
     'click .btnRefreshReimbursement':function(event){      
@@ -403,12 +408,12 @@ Template.reimbursementSettings.events({
             const jsonResponse = await ApiResponse.json();
             $('#reimbursementRateForm')[0].reset();
             await templateObject.saveDataLocalDB();
-            await templateObject.getReimbursement();
+            // await templateObject.getReimbursement();
             $('#newReimbursementModal').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
             swal({
                 title: "Success",
-                text: "Superannuation has been saved",
+                text: "Reimbursement has been saved",
                 type: 'success',   
                 showCancelButton: false,
                 confirmButtonText: 'Done'             
