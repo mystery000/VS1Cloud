@@ -45,6 +45,8 @@ Template.accountant_selfmanagedsuperfund.onCreated(() => {
 
 Template.accountant_selfmanagedsuperfund.onRendered(() => {
 
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
     const templateObject = Template.instance();
     let accountService = new AccountService();
     let contactService = new ContactService();
@@ -448,7 +450,7 @@ Template.accountant_selfmanagedsuperfund.onRendered(() => {
 
         $(".fullScreenSpin").css("display", "none");
         setTimeout(function() {
-            if (categoryAccountList.length > 0) {
+            if (categoryAccountList.length > 0 && !$.fn.DataTable.isDataTable('#tblCategory')) {
                 $('#tblCategory').dataTable({
                     data: categoryAccountList,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -612,7 +614,6 @@ Template.accountant_selfmanagedsuperfund.onRendered(() => {
         templateObject.dateAsAt.set(begunDate);
         let supplierID = localStorage.getItem('VS1Accountant');
 
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         let endMonth = localStorage.getItem("yearEnd") || 6;
         templateObject.endMonth.set(endMonth);
         templateObject.currentYear.set(new Date().getFullYear());
@@ -709,8 +710,12 @@ Template.accountant_selfmanagedsuperfund.onRendered(() => {
                 address += lineItemObj.scountry + ", ";
             }
 
+            let endDate = $("#dateTo").val().split("/");
+            endDate = endDate[0] + " " + months[parseInt(endDate[1] - 1)] + " " + endDate[2];
+            templateObject.endDate.set(endDate);
+
             headerHtml += "<span style='float:left; padding-bottom:20px; clear:both'>" + lineItemObj.shippingaddress + "<br/>" + address.slice(0, -2) + "</span>";
-            headerHtml += "<span style='float:left; clear:both'>Dated: " + templateObject.fiscalYearEnding.get() + "</span>";
+            headerHtml += "<span style='float:left; clear:both' id='dispEndDate'>Dated: " + templateObject.endDate.get() + "</span>";
 
             $("#reportsAccountantHeader, #reportsAccountantHeaderPrt").html(headerHtml);
         }
@@ -1491,6 +1496,8 @@ Template.accountant_selfmanagedsuperfund.events({
 
         Template.instance().fromDate.set(fromDate);
         Template.instance().endDate.set(endDate);
+
+        $("#dispEndDate").html("Dated: " + templateObject.endDate.get());
     },
 
     "click #dropdownDateRang": function(e) {

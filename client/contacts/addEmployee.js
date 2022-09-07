@@ -8424,7 +8424,7 @@ Template.employeescard.events({
             if( EdtPayPeriod == "" ){
                 swal({
                     title: 'Validation Error',
-                    text: 'Please select pay period in taxes tab',
+                    text: 'Please select Pay Period in Taxes tab',
                     type: 'error',
                     showCancelButton: false,
                 });
@@ -8433,7 +8433,7 @@ Template.employeescard.events({
             if( bankAccountStatement == "" ){
                 swal({
                     title: 'Validation Error',
-                    text: 'Please enter statement text',
+                    text: 'Please enter Statement Text',
                     type: 'error',
                     showCancelButton: false,
                 });
@@ -8442,7 +8442,7 @@ Template.employeescard.events({
             if( bankAccountName == "" ){
                 swal({
                     title: 'Validation Error',
-                    text: 'Please enter account name',
+                    text: 'Please enter Account Name',
                     type: 'error',
                     showCancelButton: false,
                 });
@@ -8451,7 +8451,7 @@ Template.employeescard.events({
             if( bankAccountNo == "" ){
                 swal({
                     title: 'Validation Error',
-                    text: 'Please enter account number',
+                    text: 'Please enter Account Number',
                     type: 'error',
                     showCancelButton: false,
                 });
@@ -8460,7 +8460,7 @@ Template.employeescard.events({
             if( bankAccountBSB == "" ){
                 swal({
                     title: 'Validation Error',
-                    text: 'Please enter account BSB',
+                    text: 'Please enter Account BSB',
                     type: 'error',
                     showCancelButton: false,
                 });

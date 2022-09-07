@@ -194,9 +194,10 @@ export class TaxRateService extends BaseService {
         let options = {
             select: "[Superfund]='" + Superannuation + "'"
         };
-        return this.getList(this.ERPObjects.TVS1Superannuation, options);
+        return this.getList(this.ERPObjects.Tsuperannuation, options);
     }
 
+    
     checkfundTypeByName(description)
     {
         let options = {
@@ -493,7 +494,7 @@ export class TaxRateService extends BaseService {
         return this.POST(this.ERPObjects.TPayrollCalendars, data);
     }
     saveSuperannuation(data) {
-        return this.POST(this.ERPObjects.TVS1Superannuation, data);
+        return this.POST(this.ERPObjects.Tsuperannuation, data);
     }
 
     saveReimbursement(data)
