@@ -8,7 +8,7 @@ class CachedHttp {
   constructor(options = {
     limit: 1,
     endpointPrefix: "cached_http/",
-    debug: true
+    debug: false
   }) {
     this.limit = options.limit;
     this.endpointPrefix = options.endpointPrefix;

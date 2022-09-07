@@ -119,8 +119,6 @@ Template.jobsalessummary.onRendered(() => {
       const array = data.response.tjobsalessummary;
       let customers = _.groupBy(array, 'Customer');
     
-      console.log(customers, array);
-
       for(let key in customers) {
         records.push({
           title: key || "Other",
@@ -128,8 +126,6 @@ Template.jobsalessummary.onRendered(() => {
           total: {}
         });
       }
-
-      console.log(records);
 
 
       templateObject.reportRecords.set(records);

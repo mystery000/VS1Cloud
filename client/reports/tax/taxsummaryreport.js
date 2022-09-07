@@ -359,7 +359,6 @@ Template.taxsummaryreport.onRendered(() => {
         templateObject.mainReportRecords.set(mainReportRecords);
         templateObject.reportRecords.set(mainReportRecords); // this one will be used
 
-        console.log(templateObject.reportRecords.get());
 
         // for (let i = 0; i < mainReportRecords.length; i++) {
 
@@ -505,8 +504,6 @@ Template.taxsummaryreport.onRendered(() => {
       reportService.getTaxSummaryData(dateFrom, dateTo, ignoreDate).then(function (data) {
         let totalRecord = [];
         let grandtotalRecord = [];
-
-        console.log(data);
 
         if (data.ttaxsummaryreport) {
           const taxSummaryReport = data.ttaxsummaryreport;
