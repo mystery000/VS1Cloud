@@ -3,6 +3,9 @@ import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
+import JobSalesApi from "../../js/Api/JobSaleApi";
+import CachedHttp from "../../lib/global/CachedHttp";
+import GlobalFunctions from "../../GlobalFunctions";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -13,6 +16,8 @@ let defaultCurrencyCode = CountryAbbr;
 Template.jobsalessummary.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
+
+  templateObject.reportRecords = new ReactiveVar([]);
 
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
@@ -84,6 +89,57 @@ Template.jobsalessummary.onRendered(() => {
     }
   };
 
+  templateObject.loadReport = async (dateFrom, dateTo, ignoreDate = false) => {
+    LoadingOverlay.show();
+
+    let data = await CachedHttp.get(JobSalesApi.collectionNames.TJobSalesSummary, async () => {
+      let endPoint = JobSalesApi.collection.findByName(JobSalesApi.collectionNames.TJobSalesSummary);
+
+      endPoint.url.searchParams.set('IgnoreDates', ignoreDate);
+      endPoint.url.searchParams.set('ListType', "'Summary'");
+      endPoint.url.searchParams.set('DateFrom', '"' + dateFrom + '"');
+      endPoint.url.searchParams.set('DateTo', '"' + dateTo + '"');
+
+      const response = await endPoint.fetch();
+
+      if(response.ok) {
+        let data = await response.json();
+
+        return data;
+      }
+
+    }, {
+      validate: (cachedResponse) => {
+        return false;
+      }
+    });
+
+    if(data.response.tjobsalessummary) {
+      let records = [];
+      const array = data.response.tjobsalessummary;
+      let customers = _.groupBy(array, 'Customer');
+    
+      console.log(customers, array);
+
+      for(let key in customers) {
+        records.push({
+          title: key || "Other",
+          entries: customers[key],
+          total: {}
+        });
+      }
+
+      console.log(records);
+
+
+      templateObject.reportRecords.set(records);
+    }
+   
+   
+ 
+  }
+ 
+
   templateObject.loadCurrency = async () => {
     await loadCurrency();
   };
@@ -93,6 +149,10 @@ Template.jobsalessummary.onRendered(() => {
 
   templateObject.initDate();
   templateObject.initUploadedImage();
+
+
+  templateObject.loadReport(convertYearMonthDay($('#dateFrom').val()), convertYearMonthDay($('#dateTo').val()));
+
   LoadingOverlay.hide();
 });
 
@@ -414,53 +474,58 @@ Template.jobsalessummary.events({
 });
 
 Template.jobsalessummary.helpers({
+  reportRecords: () => {
+    return Template.instance().reportRecords.get();
+  },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },
-  convertAmount: (amount, currencyData) => {
+   // FX Module //
+   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-    if (!amount || amount.trim() == "") {
-      return "";
+    if(isNaN(amount)) {
+      if (!amount || amount.trim() == "") {
+        return "";
+      }
+      amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
     }
-    if (currencyData.code == defaultCurrencyCode) {
-      // default currency
-      return amount;
-    }
+    // if (currencyData.code == defaultCurrencyCode) {
+    //   // default currency
+    //   return amount;
+    // }
 
-    amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
 
     // Lets remove the minus character
     const isMinus = amount < 0;
-    if (isMinus == true) amount = amount * -1; // Make it positive
+    if (isMinus == true) amount = amount * -1; // make it positive for now
 
-    // get default currency symbol
+    // // get default currency symbol
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode
     // )[0];
 
-    //amount = amount.replace(_defaultCurrency.symbol, "");
+    // amount = amount.replace(_defaultCurrency.symbol, "");
+
 
     // amount =
     //   isNaN(amount) == true
     //     ? parseFloat(amount.substring(1))
     //     : parseFloat(amount);
 
+
+
     // Get the selected date
-    let dateTo = $("#balancedate").val();
+    let dateTo = $("#dateTo").val();
     const day = dateTo.split("/")[0];
     const m = dateTo.split("/")[1];
     const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
 
+
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-
-    // if(currencyList.length == 0) {
-    //   currencyList = Template.instance().currencyList.get();
-    //   currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-    // }
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -489,20 +554,24 @@ Template.jobsalessummary.helpers({
 
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
 
+
+
     let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
-    //amount = amount + 0.36;
+
+
+
+
     amount = parseFloat(amount * rate); // Multiply by the rate
     amount = Number(amount).toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }); // Add commas
 
-    // amount = amount.toLocaleString();
-
     let convertedAmount =
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
+
 
     return convertedAmount;
   },
@@ -553,6 +622,28 @@ Template.jobsalessummary.helpers({
   },
   currency: () => {
     return Currency;
+  },
+
+
+  formatPrice( amount){
+
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
+
+
+  formatTax( amount){
+
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return amount + "%" || "0.00 %";
   },
 });
 
@@ -625,4 +716,12 @@ async function loadCurrencyHistory(templateObject) {
   const data = result.tcurrencyratehistory;
   templateObject.tcurrencyratehistory.set(data);
   LoadingOverlay.hide();
+}
+
+
+function convertYearMonthDay(date, split = "/", replace = "-") {
+  const _date = date.split(split);
+
+  let newDate = _date[2] + replace + _date[1] +  replace + _date[0];
+  return newDate;
 }

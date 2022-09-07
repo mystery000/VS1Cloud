@@ -11,15 +11,19 @@
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="padding-bottom: 8px;">
-                        <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
-                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=39" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
+                                class="btn btn-primary helpModal">View Help Video</a></p>
+                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=39"
+                                target="_blank" class="btn btn-primary">Download Help File</a></p>
                         {{> helpadvisor}}
                         {{> helpgotoforum}}
                     </div>
-                    <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                    <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal"
+                            type="button">Close</button></div>
                 </div>
             </div>
         </div>
@@ -29,10 +33,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="title-header">Job Sales Summary</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
-                        <video id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <video id="myVideo" width="640" height="360" controls="" name="media"
+                            style="border: solid 5px #999999f0; height: auto; outline: none;">
                             <source src="https://erphelpes.com/vs1videos/comingsoon.mp4" type="video/mp4">
                         </video>
                     </div>
@@ -66,30 +72,42 @@
                                 <div class="row no-gutters">
                                     <div class="form-group" style="margin: 8px;">
                                         <label>Search:</label>
-                                        <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
+                                        <input type="search" class="form-control form-control-sm" placeholder=""
+                                            aria-controls="Search" autocomplete="off" id="myInputSearch"
+                                            name="myInputSearch">
                                     </div>
                                     <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
                                         <div class="modal-dialog modal-sm" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h4>Deparment</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                    <h4>Deparment</h4><button type="button" class="close"
+                                                        data-dismiss="modal" aria-label="Close"><span
+                                                            aria-hidden="true">×</span></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     {{#each item in deptrecords}}
-                                                        <div class="custom-control custom-switch" style="margin: 8px;">
-                                                            <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}">
-                                                            <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
-                                                        </div>
+                                                    <div class="custom-control custom-switch" style="margin: 8px;">
+                                                        <input class="custom-control-input chkDepartment"
+                                                            type="checkbox" id="formCheck-{{item.id}}"
+                                                            name="chkDepartment" value="{{item.department}}">
+                                                        <label class="custom-control-label"
+                                                            for="formCheck-{{item.id}}">{{item.department}}</label>
+                                                    </div>
                                                     {{/each}}
                                                 </div>
-                                                <div class="modal-footer"><button class="btn btn-primary" type="button" data-dismiss="modal"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button><button class="btn btn-light"
-                                                        data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button></div>
+                                                <div class="modal-footer"><button class="btn btn-primary" type="button"
+                                                        data-dismiss="modal"><i class="fa fa-save"
+                                                            style="margin-right: 5px;"></i>Save</button><button
+                                                        class="btn btn-light" data-dismiss="modal" type="button"><i
+                                                            class="fa fa-close"
+                                                            style="margin-right: 5px;"></i>Close</button></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row no-gutters">
-                                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px;"><i
+                                            class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
                                     {{>FxRatesButton}}
                                 </div>
                             </div>
@@ -110,13 +128,19 @@
                                                 display: none;
                                             }
                                         </style>
-                                        <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" style="margin-top: 32px;"><i class="fas fa-ellipsis-v"></i></button>
+                                        <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true"
+                                            type="button" style="margin-top: 32px;"><i
+                                                class="fas fa-ellipsis-v"></i></button>
                                         <div class="dropdown-menu" role="menu">
                                             <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                            <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last Month</a>
-                                            <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last Quarter</a>
-                                            <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="#">Last 12 Months</a>
-                                            <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore Date</a>
+                                            <a class="dropdown-item lastMonth" id="lastMonth" role="presentation"
+                                                href="#">Last Month</a>
+                                            <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation"
+                                                href="#">Last Quarter</a>
+                                            <a class="dropdown-item last12Months" id="last12Months" role="presentation"
+                                                href="#">Last 12 Months</a>
+                                            <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation"
+                                                href="#">Ignore Date</a>
                                         </div>
                                     </div>
                                     <div class="form-group" style="margin: 8px;">
@@ -139,15 +163,19 @@
                                     </div>
                                 </div>
                                 <div class="row no-gutters justify-content-end">
-                                    <button class="btn btn-primary btnExportReport" type="button" style="margin: 8px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                                    <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                                    <button class="btn btn-primary btnExportReport" type="button"
+                                        style="margin: 8px;"><i class="fas fa-file-export"
+                                            style="margin-right: 5px;"></i>Export</button>
+                                    <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i
+                                            class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
                                 </div>
                             </div>
                         </div>
                         <div class="printReport">
                             <div class="row">
                                 <div class="col">
-                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Job Sales Summary</p>
+                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Job Sales
+                                        Summary</p>
                                     <p class="text-center" style="margin-bottom: 0px;">{{companyname}}&nbsp;</p>
                                     <p class="text-center" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
                                 </div>
@@ -170,24 +198,28 @@
                                     .text-right {
                                         text-align: right !important;
                                     }
-                                    
+
                                     .table th,
                                     .table td {
                                         text-align: right;
                                         min-width: 150px;
                                     }
+
                                     .table th:first-child,
                                     .table td:first-child {
                                         text-align: left;
                                     }
+
                                     table tr .text-danger,
                                     table tr .text-danger a {
                                         color: #e74a3b !important;
                                     }
-                                    .customDoubleTableHeading + tr th {
+
+                                    .customDoubleTableHeading+tr th {
                                         border-right: 1px solid #cbcbcb !important;
                                     }
-                                    .customDoubleTableHeading + tr th:last-child {
+
+                                    .customDoubleTableHeading+tr th:last-child {
                                         border-right: none !important;
                                     }
                                 </style>
@@ -201,14 +233,121 @@
                                                 <th>Job Name</th>
                                                 <th>Product Name</th>
                                                 <th class="text-right">Qty Shipped</th>
-                                                <th class="text-right">Discount</th>
+                                                <th class="text-center" colspan="{{countActive currencyList}}">Discount</th>
                                                 <th class="text-right">Tax</th>
-                                                <th class="text-right">Amount (ex)</th>
-                                                <th class="text-right">Amount (inc)</th>
+                                                <th class="text-center" colspan="{{countActive currencyList}}">Amount (ex)</th>
+                                                <th class="text-center" colspan="{{countActive currencyList}}">Amount (inc)</th>
                                             </tr>
+
+                                            {{#if isOnlyDefaultActive equal "false" }}
+                                                <tr class="table-active tblAvoid customDoubleTableHeading">
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                    
+                    
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+                    
+                                        
+                                                    <th></th>
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+                                                
+                                                </tr>
+                                            {{/if}}
                                         </thead>
                                         <tbody>
-                                            <tr>
+                                            {{#if reportRecords}}
+                                                {{#each item in reportRecords}}
+                                                    <tr class="departmentHeader">
+                                                        <td colspan="10" style="font-weight: 800;">{{item.title}}</td>
+                                                    </tr>
+                                                    <!-- <tr>
+                                                        <td colspan="10" style="font-weight: 800;">{{item.title}}</td>
+                                                    </tr> -->
+
+                                                    {{#each entry in item.entries}}
+                                                        <tr>  
+                                                            <td></td>
+                                                            <td>{{entry.Customer}}</td>
+                                                            <td class="text-right">{{entry.CustomerJobNumber}}</td>
+                                                            <td>{{entry.JobName}}</td>
+                                                            <td>{{entry.ProductName}}</td>
+                                                            <td>{{entry.QtyShipped}}</td>
+
+                                                            {{#if isOnlyDefaultActive}}
+                                                                {{#if currencyList}}
+                                                                    {{#each c in currencyList }}
+                                                                        {{# if c.active}}
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount entry.TotalDiscount}} text-danger {{else}} text-success {{/if}}">
+                                                                                {{ convertAmount entry.TotalDiscount c}}
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+                                                                     <td class="text-right text-danger">{{ formatTax entry.TotalTax }}</td>
+
+                                                                    {{#each c in currencyList }}
+                                                                        {{# if c.active}}
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount entry.TotalAmountEx}} text-danger {{else}} text-success {{/if}}">
+                                                                                {{ convertAmount entry.TotalAmountEx c}}
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+
+                                                                    {{#each c in currencyList }}
+                                                                        {{# if c.active}}
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount entry.TotalAmountInc}} text-danger {{else}} text-success {{/if}}">
+                                                                                {{ convertAmount entry.TotalAmountInc c}}
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+
+                                                                {{/if}}
+
+                                                            {{else}}
+                                                                <td class="text-right text-success">{{ formatPrice entry.TotalDiscount }}</td>
+                                                                <td class="text-right text-danger">{{ formatTax entry.TotalTax }}</td>
+                                                                <td class="text-right text-success">{{ formatPrice entry.TotalAmountEx }}</td>
+                                                                <td class="text-right text-success">{{ formatPrice entry.TotalAmountInc }}</td>
+                                                                
+                                                            {{/if}}
+                                                            
+                                                        </tr>
+                                                    {{/each}}
+
+                                                    
+
+                                                    
+                                                {{/each}}
+
+                                            {{else}}
+                                                <tr class="odd" style="text-align: center;">
+                                                    <td valign="top" colspan="12" class="dataTables_empty">No data available in table</td>
+                                                </tr>
+                                            {{/if}}
+                                            <!-- <tr>
                                                 <td colspan="10" style="font-weight: 800;">4x4 World</td>
                                             </tr>
                                             <tr>
@@ -237,7 +376,9 @@
                                                 <td class="text-right text-danger">13.13 %</td>
                                                 <td class="text-right text-success">$ 1,000.00</td>
                                                 <td class="text-right text-success">$ 1,136.11</td>
-                                            </tr>
+                                            </tr> -->
+
+                                            
                                             <!-- {{#if records}}
                                                 <tr>
                                                     <td></td>
@@ -269,5 +410,5 @@
 
     <!-- Start Currency Modal -->
     {{> FxRateModal currencies=currencyList}}
-     <!-- End Currency Modal -->
+    <!-- End Currency Modal -->
 </template>
