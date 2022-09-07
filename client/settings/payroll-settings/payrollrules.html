@@ -594,7 +594,8 @@
                                                                                 <div class="col-12">
                                                                                     <div class="form-group">
                                                                                         <label for="edtRateName">Add existing holidays from group</label>
-                                                                                        <input type="text" class="form-control" id="">
+                                                                                     
+                                                                                        <input type="text" style="cursor: pointer;" class="form-control" id="addexistgroup">
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -2008,14 +2009,17 @@
                                                         <tr class="dnd-moved">
                                                             <th class="th colSuperannuationID hiddenColumn" >ID</th>
                                                             <th class="th colSuperannuationName" >Name</th>
-                                                            <th class="th colSuperannuationType" >Type</th>
+                                                            <th class="th colSuperannuationType" >Type</th>        
+                                                                                                 
                                                             <th class="th colEmployerNum">Employer Number</th>
                                                             <th class="th colabn">ABN</th>
                                                             <th class="th colservicealias">Electronics Service Address Alias</th>
                                                             <th class="th colbsb">BSB</th>
                                                             <th class="th colaccountnumber">Account Number</th>
                                                             <th class="th colaccountname">Account Name</th>
+                                                            <th class="th colSuperannuationTypeid hiddenColumn" >fundid</th>  
                                                             <th class="th colDeletesup" style="width: 3% !important;"></th>
+                                                     
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -2029,6 +2033,7 @@
                                                             <td contenteditable="false" class="colbsb"></td>
                                                             <td contenteditable="false" class="colaccountnumber"></td>
                                                             <td contenteditable="false" class="colaccountname"></td>
+                                                            <td class="th colSuperannuationTypeid hiddenColumn" >fundid</td>
                                                             <td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
                                                             </td>
                                                         </tr>

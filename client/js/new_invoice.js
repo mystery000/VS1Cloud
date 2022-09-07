@@ -9851,18 +9851,23 @@ Template.new_invoice.onRendered(function () {
         ];
       }
       let customFieldCount = reset_data.length;
-      for (let r = 0; r < reset_data.length; r++) {
+      
+      // tempcode
+      for (let r = 0; r < customFieldCount; r++) {
         customData = {
           active: reset_data[r].active,
-          id: 0,
+          id: "",
           custfieldlabel: reset_data[r].label,
           datatype: "",
-          isempty: false,
+          isempty: true,
           iscombo: false,
-          dropdown: null,
         };
         custFields.push(customData);
       }
+      tempObj.displayfields.set(custFields);
+      return;
+      // tempcode
+      
       /*
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
@@ -14434,21 +14439,7 @@ Template.new_invoice.events({
         organisationService.saveCustomField(objDetails1).then(function (objDetails) {
           $(".fullScreenSpin").css("display", "none");
           $('#myModal2').modal('hide');
-        })
-        .catch(function (err) {
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-              $(".fullScreenSpin").css("display", "none");
-            } else if (result.dismiss === "cancel") {
-            }
-            $('#myModal2').modal('hide');
-          });
+        }).catch(function (err) {
           $(".fullScreenSpin").css("display", "none");
           $('#myModal2').modal('hide');
         });

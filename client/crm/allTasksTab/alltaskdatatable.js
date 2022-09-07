@@ -53,9 +53,12 @@ Template.alltaskdatatable.onRendered(function () {
 
   templateObject.updateTaskSchedule = function (id, date) {
     let due_date = "";
+    let due_date_display = "No Date";
     if (date) {
       due_date = moment(date).format("YYYY-MM-DD hh:mm:ss");
+      due_date_display = moment(due_date).format("D MMM");
     }
+    $('#edit_task_modal_due_date').html(due_date_display)
 
     var objDetails = {
       type: "Tprojecttasks",
@@ -70,6 +73,7 @@ Template.alltaskdatatable.onRendered(function () {
       crmService.saveNewTask(objDetails).then(function (data) {
         templateObject.getAllTaskList();
         $(".fullScreenSpin").css("display", "none");
+        $(".btnRefresh").addClass('btnSearchAlert');
       });
     }
   };
@@ -263,6 +267,7 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colTaskProjects openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[8]);
+            $(td).css('background', rowData[12])
           },
         },
         {
@@ -887,10 +892,12 @@ Template.alltaskdatatable.onRendered(function () {
     let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
 
     let chk_complete = (completed = "");
+    let completed_style = "";
     task_array.forEach((item) => {
       if (item.fields.Completed) {
         completed = "disabled checked";
         chk_complete = "";
+        completed_style = "display:none;"
       } else {
         completed = "";
         chk_complete = "chk_complete";
@@ -924,7 +931,7 @@ Template.alltaskdatatable.onRendered(function () {
 
         td0 = `
         <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${color_num}"
-          style="width:15px;margin-right: -6px;">
+          style="width:15px;margin-right: -6px;${completed_style}">
           <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
             id="formCheck-${item.fields.ID}" ${completed}>
           <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
@@ -951,13 +958,19 @@ Template.alltaskdatatable.onRendered(function () {
         td4 = "";
       }
 
-      if (
-        item.fields.ProjectName == "" ||
-        item.fields.ProjectName == "Default"
-      ) {
-        projectName = "All Tasks";
-      }
       projectName = item.fields.ProjectName;
+      if (item.fields.ProjectName == "" || item.fields.ProjectName == "Default") {
+        projectName = "";
+      }
+
+      let all_projects = templateObject.all_projects.get();
+      let projectColor = 'transparent';
+      if(item.fields.ProjectID != 0) {
+        let projects = all_projects.filter(project => project.fields.ID == item.fields.ProjectID);
+        if(projects.length && projects[0].fields.ProjectColour) {
+          projectColor = projects[0].fields.ProjectColour;
+        } 
+      } 
 
       td5 = `
         <div class="dropdown btnTaskTableAction">
@@ -1068,6 +1081,7 @@ Template.alltaskdatatable.onRendered(function () {
               Task</a>
           </div>
         </div>`;
+
       taskRows.push([
         td0,
         tflag,
@@ -1081,6 +1095,7 @@ Template.alltaskdatatable.onRendered(function () {
         color_num,
         labelsForExcel,
         item.fields.Completed,
+        projectColor
       ]);
     });
     return taskRows;
@@ -2207,6 +2222,8 @@ Template.alltaskdatatable.events({
 
     let currentDate = new Date();
     let due_date = moment(currentDate).format("YYYY-MM-DD hh:mm:ss");
+    let due_date_display = moment(currentDate).format("D MMM");
+    $('#edit_task_modal_due_date').html(due_date_display)
 
     var objDetails = {
       type: "Tprojecttasks",
@@ -2222,6 +2239,9 @@ Template.alltaskdatatable.events({
       crmService.saveNewTask(objDetails).then(function (data) {
         templateObject.getAllTaskList();
         $(".fullScreenSpin").css("display", "none");
+        $(".btnRefresh").addClass('btnSearchAlert');
+      }).catch(function (err) {
+        $(".fullScreenSpin").css("display", "none");
       });
     }
   },
@@ -2230,6 +2250,8 @@ Template.alltaskdatatable.events({
   "click .setScheduleTomorrow": function (e) {
     let id = e.target.dataset.id;
     let tomorrow = moment().add(1, "day").format("YYYY-MM-DD hh:mm:ss");
+    let due_date_display = moment(tomorrow).format("D MMM");
+    $('#edit_task_modal_due_date').html(due_date_display)
 
     var objDetails = {
       type: "Tprojecttasks",
@@ -2245,6 +2267,9 @@ Template.alltaskdatatable.events({
       crmService.saveNewTask(objDetails).then(function (data) {
         templateObject.getAllTaskList();
         $(".fullScreenSpin").css("display", "none");
+        $(".btnRefresh").addClass('btnSearchAlert');
+      }).catch(function (err) {
+        $(".fullScreenSpin").css("display", "none");
       });
     }
   },
@@ -2253,6 +2278,8 @@ Template.alltaskdatatable.events({
   "click .setScheduleWeekend": function (e) {
     let id = e.target.dataset.id;
     let weekend = moment().endOf("week").format("YYYY-MM-DD hh:mm:ss");
+    let due_date_display = moment(weekend).format("D MMM");
+    $('#edit_task_modal_due_date').html(due_date_display)
 
     var objDetails = {
       type: "Tprojecttasks",
@@ -2268,6 +2295,9 @@ Template.alltaskdatatable.events({
       crmService.saveNewTask(objDetails).then(function (data) {
         templateObject.getAllTaskList();
         $(".fullScreenSpin").css("display", "none");
+        $(".btnRefresh").addClass('btnSearchAlert');
+      }).catch(function (err) {
+        $(".fullScreenSpin").css("display", "none");
       });
     }
   },
@@ -2278,6 +2308,8 @@ Template.alltaskdatatable.events({
 
     var startDate = moment();
     let next_monday = moment(startDate).day(1 + 7).format("YYYY-MM-DD hh:mm:ss");
+    let due_date_display = moment(next_monday).format("D MMM");
+    $('#edit_task_modal_due_date').html(due_date_display)
 
     var objDetails = {
       type: "Tprojecttasks",
@@ -2293,6 +2325,9 @@ Template.alltaskdatatable.events({
       crmService.saveNewTask(objDetails).then(function (data) {
         templateObject.getAllTaskList();
         $(".fullScreenSpin").css("display", "none");
+        $(".btnRefresh").addClass('btnSearchAlert');
+      }).catch(function (err) {
+        $(".fullScreenSpin").css("display", "none");
       });
     }
   },
@@ -2300,6 +2335,7 @@ Template.alltaskdatatable.events({
   // submit set schedule as no-date
   "click .setScheduleNodate": function (e) {
     let id = e.target.dataset.id;
+    $('#edit_task_modal_due_date').html('No Date')
 
     var objDetails = {
       type: "Tprojecttasks",
@@ -2314,6 +2350,9 @@ Template.alltaskdatatable.events({
       let templateObject = Template.instance();
       crmService.saveNewTask(objDetails).then(function (data) {
         templateObject.getAllTaskList();
+        $(".fullScreenSpin").css("display", "none");
+        $(".btnRefresh").addClass('btnSearchAlert');
+      }).catch(function (err) {
         $(".fullScreenSpin").css("display", "none");
       });
     }
@@ -3429,20 +3468,29 @@ function openEditTaskModal(id, type) {
 
       let projectName = selected_record.ProjectName == "Default" ? "All Tasks" : selected_record.ProjectName;
 
+      let all_projects = templateObject.all_projects.get();
+      let projectColorStyle = '';
+      if(selected_record.ProjectID != 0) {
+        let projects = all_projects.filter(project => project.fields.ID == selected_record.ProjectID);
+        if(projects.length && projects[0].fields.ProjectColour) {
+          projectColorStyle = 'color: ' + projects[0].fields.ProjectColour + ' !important';
+        } 
+      } 
+
       let catg = "";
       let today = moment().format("YYYY-MM-DD");
       if (selected_record.due_date) {
         if (selected_record.due_date.substring(0, 10) == today) {
           catg =
-            `<i class="fas fa-calendar-day text-primary" style="margin-right: 5px;"></i>` +
-            "<span class='text-primary'>" +
+            `<i class="fas fa-calendar-day text-primary" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+            "<span class='text-primary' style='" + projectColorStyle + "'>" +
             projectName +
             "</span>";
           $(".taskDueDate").css("color", "#00a3d3");
         } else if (selected_record.due_date.substring(0, 10) > today) {
           catg =
-            `<i class="fas fa-calendar-alt text-danger" style="margin-right: 5px;"></i>` +
-            "<span class='text-danger'>" +
+            `<i class="fas fa-calendar-alt text-danger" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+            "<span class='text-danger' style='" + projectColorStyle + "'>" +
             projectName +
             "</span>";
           $(".taskDueDate").css("color", "#1cc88a");
@@ -3452,23 +3500,23 @@ function openEditTaskModal(id, type) {
           //   "<span class='text-warning'>Overdue</span>";
           // $(".taskDueDate").css("color", "#e74a3b");
           catg =
-            `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
-            "<span class='text-success'>" +
+            `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+            "<span class='text-success' style='" + projectColorStyle + "'>" +
             projectName +
             "</span>";
           $(".taskDueDate").css("color", "#1cc88a");
         } else {
           catg =
-            `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
-            "<span class='text-success'>" +
+            `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+            "<span class='text-success' style='" + projectColorStyle + "'>" +
             projectName +
             "</span>";
           $(".taskDueDate").css("color", "#1cc88a");
         }
       } else {
         catg =
-          `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
-          "<span class='text-success'>" +
+          `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+          "<span class='text-success' style='" + projectColorStyle + "'>" +
           projectName +
           "</span>";
         $(".taskDueDate").css("color", "#1cc88a");
@@ -3483,7 +3531,63 @@ function openEditTaskModal(id, type) {
       $("#taskmodalNameLabel").html(selected_record.TaskName);
       $(".activityAdded").html("Added on " + moment(selected_record.MsTimeStamp).format("MMM D h:mm A"));
       let due_date = selected_record.due_date ? moment(selected_record.due_date).format("D MMM") : "No Date";
-      $("#taskmodalDuedate").html(due_date);
+
+
+      let todayDate = moment().format("ddd");
+      let tomorrowDay = moment().add(1, "day").format("ddd");
+      let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
+      let date_component = ` <div class="dropdown btnTaskTableAction">
+        <div data-toggle="dropdown" title="Reschedule Task" style="cursor:pointer;">
+          <i class="far fa-calendar-plus" style="margin-right: 5px;"></i> 
+          <span id="edit_task_modal_due_date">${due_date}</span>
+        </div>
+        <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
+          aria-labelledby="dropdownMenuButton" style="width: 275px;">
+          <a class="dropdown-item no-modal setScheduleToday" href="#" data-id="${selected_record.ID}">
+            <i class="fas fa-calendar-day text-success no-modal"
+              style="margin-right: 8px;"></i>Today
+            <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+              ${todayDate}</div>
+          </a>
+          <a class="dropdown-item no-modal setScheduleTomorrow" href="#"
+            data-id="${selected_record.ID}">
+            <i class="fas fa-sun text-warning no-modal" style="margin-right: 8px;"></i>Tomorrow
+            <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+              ${tomorrowDay}</div>
+          </a>
+          <a class="dropdown-item no-modal setScheduleWeekend" href="#"
+            data-id="${selected_record.ID}">
+            <i class="fas fa-couch text-primary no-modal" style="margin-right: 8px;"></i>This Weekend
+            <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+              Sat</div>
+          </a>
+          <a class="dropdown-item no-modal setScheduleNexweek" href="#"
+            data-id="${selected_record.ID}">
+            <i class="fas fa-calendar-alt text-danger no-modal" style="margin-right: 8px;"></i>Next Week
+            <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+              ${nextMonday}
+            </div>
+          </a>
+          <a class="dropdown-item no-modal setScheduleNodate" href="#" data-id="${selected_record.ID}">
+            <i class="fas fa-ban text-secondary no-modal" style="margin-right: 8px;"></i>
+            No Date</a>
+          <div class="dropdown-divider no-modal"></div>
+          <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
+            title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+            <div class="input-group date no-modal" style="cursor: pointer;">
+              <input type="text" id="${selected_record.ID}" class="form-control crmDatepicker no-modal"
+                autocomplete="off">
+              <div class="input-group-addon no-modal">
+                <span class="glyphicon glyphicon-th no-modal" style="cursor: pointer;"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+      
+      console.log('openeditmosal from alltask.....')
+      // $("#taskmodalDuedate").html(due_date);
+      $("#taskmodalDuedate").html(date_component);
       $("#taskmodalDescription").html(selected_record.TaskDescription);
 
       $("#chkComplete_taskEditLabel").removeClass("task_priority_0");
@@ -3717,6 +3821,25 @@ function openEditTaskModal(id, type) {
       );
 
       $("#taskDetailModal").modal("toggle");
+
+      $(".crmDatepicker").datepicker({
+        showOn: "button",
+        buttonText: "Show Date",
+        buttonImageOnly: true,
+        buttonImage: "/img/imgCal2.png",
+        constrainInput: false,
+        dateFormat: "yy/mm/dd",
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-90:+10",
+        onSelect: function (dateText, inst) {
+          let task_id = inst.id;
+          templateObject.updateTaskSchedule(task_id, dateText);
+        },
+      });
+
     } else {
       swal("Cannot edit this task", "", "warning");
       return;

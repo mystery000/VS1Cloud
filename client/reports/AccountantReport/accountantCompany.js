@@ -12,9 +12,6 @@ import { SideBarService } from "../../js/sidebar-service";
 import { OrganisationService } from '../../js/organisation-service';
 import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
-import { first } from "underscore";
-
-
 
 let sideBarService = new SideBarService();
 let reportService = new ReportService();
@@ -44,12 +41,11 @@ Template.accountant_company.onCreated(() => {
     templateObject.isBankAccount = new ReactiveVar();
     templateObject.totalEquity = new ReactiveVar();
     templateObject.isBankAccount.set(false);
-
-    templateObject.setReportOptions = new ReactiveVar();
-
 });
 
 Template.accountant_company.onRendered(() => {
+
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     tinymce.init({
         selector: 'textarea#editor',
@@ -455,7 +451,7 @@ Template.accountant_company.onRendered(() => {
 
         $(".fullScreenSpin").css("display", "none");
         setTimeout(function() {
-            if (categoryAccountList.length > 0) {
+            if (categoryAccountList.length > 0 && !$.fn.DataTable.isDataTable('#tblCategory')) {
                 $('#tblCategory').dataTable({
                     data: categoryAccountList,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -619,7 +615,6 @@ Template.accountant_company.onRendered(() => {
         templateObject.dateAsAt.set(begunDate);
         let supplierID = localStorage.getItem('VS1Accountant');
 
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         let endMonth = localStorage.getItem("yearEnd") || 6;
         templateObject.endMonth.set(endMonth);
         templateObject.currentYear.set(new Date().getFullYear());
@@ -627,9 +622,7 @@ Template.accountant_company.onRendered(() => {
         templateObject.currentDate.set(new Date().getDate() + " " + months[new Date().getMonth()] + " " + new Date().getFullYear());
 
         var currentDate2 = new Date(new Date().getFullYear(), (parseInt(endMonth)), 0);
-
         templateObject.fiscalYearEnding.set(currentDate2.getDate() + " " + months[parseInt(endMonth) - 1] + " " + new Date().getFullYear());
-
         var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
 
         getVS1Data('TSupplierVS1').then(function(dataObject) {
@@ -718,8 +711,12 @@ Template.accountant_company.onRendered(() => {
                 address += lineItemObj.scountry + ", ";
             }
 
+            let endDate = $("#dateTo").val().split("/");
+            endDate = endDate[0] + " " + months[parseInt(endDate[1] - 1)] + " " + endDate[2];
+            templateObject.endDate.set(endDate);
+
             headerHtml += "<span style='float:left; padding-bottom:20px; clear:both'>" + lineItemObj.shippingaddress + "<br/>" + address.slice(0, -2) + "</span>";
-            headerHtml += "<span style='float:left; clear:both'>Dated: " + templateObject.fiscalYearEnding.get() + "</span>";
+            headerHtml += "<span style='float:left; clear:both' id='dispEndDate'>Dated: " + templateObject.endDate.get() + "</span>";
 
             $("#reportsAccountantHeader, #reportsAccountantHeaderPrt").html(headerHtml);
         }
@@ -1503,6 +1500,8 @@ Template.accountant_company.events({
 
         Template.instance().fromDate.set(fromDate);
         Template.instance().endDate.set(endDate);
+
+        $("#dispEndDate").html("Dated: " + templateObject.endDate.get());
     },
 
     "click #dropdownDateRang": function(e) {
