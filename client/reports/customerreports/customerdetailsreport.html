@@ -50,7 +50,9 @@
                 a[href]:after {
                     content: none !important;
                 }
+                
             }
+            
         </style>
         <div class="row no-gutters justify-content-center mb-3" style="padding: 32px;">
             <div class="col-12 col-md-8">
@@ -175,13 +177,10 @@
                                     }
                                     .table th,
                                     .table td {
-                                        text-align: right;
+                                        /* text-align: right; */
                                         min-width: 150px;
                                     }
-                                    .table th:first-child,
-                                    .table td:first-child {
-                                        text-align: left;
-                                    }
+                                    
                                     table tr .text-danger,
                                     table tr .text-danger a {
                                         color: #e74a3b !important;
@@ -207,7 +206,7 @@
                                                 <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total (Ex)</th>
                                                 <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total (Inc)</th>
                                                 <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Gross Profit</th>
-                                                <th class="text-right text-center{{countActive currencyList}}">Margin</th>
+                                                <th class="text-center{{countActive currencyList}}">Margin</th>
                                                 <th>Address</th>
                                                 <th>City</th>
                                                 <th>ZIP</th>
@@ -224,7 +223,7 @@
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th active="{{ c.active }}">{{ c.code }}</th>
+                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
@@ -232,7 +231,7 @@
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th active="{{ c.active }}">{{ c.code }}</th>
+                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
@@ -240,7 +239,7 @@
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th active="{{ c.active }}">{{ c.code }}</th>
+                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
