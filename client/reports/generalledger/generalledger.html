@@ -146,22 +146,28 @@
                                         white-space: nowrap;
                                         padding: 5px 15px;
                                     }
-                                    .tableExportDetailDiv th {
+                                    /* .tableExportDetailDiv th {
                                         text-align: center;
-                                    }
-                                    .tableExportDetailDiv th.rightAlignMent1,
-                                    .tableExportDetailDiv th.rightAlignMent0 {
+                                    } */
+                                    .tableExportDetailDiv th.rightAlignMent,
+                                    .tableExportDetailDiv td.rightAlignMent {
                                         text-align: right !important;
                                     }
 
                                     .tableExportDetailDiv td {
-                                        text-align: right !important;
+                                        text-align: left !important;
                                     }
                                     .tableExportDetailDiv th:first-child,
                                     .tableExportDetailDiv td:first-child {
                                         text-align: left !important;
                                     }
-
+                                    .tableExportDetailDiv .text-center {
+                                        text-align: center !important;
+                                    }
+                                    .tableExportDetailDiv .text-center1,
+                                    .tableExportDetailDiv .text-center0 {
+                                        text-align: right !important;
+                                    }
                                     table tr .text-danger,
                                     table tr .text-danger a {
                                         color: #e74a3b !important;
@@ -182,29 +188,29 @@
                                         <thead>
                                             <tr class="table-active customDoubleTableHeading">
                                                 <th>Account Name</th>
-                                                <th class="text-right" style="width: 130px;">Type</th>
-                                                <th class="text-right">No.</th>
-                                                <th class="text-right">Client Name</th>
-                                                <th class="text-right">Memo</th>
-                                                <th class="text-right">Date</th>
+                                                <th style="width: 130px;">Type</th>
+                                                <th>No.</th>
+                                                <th>Client Name</th>
+                                                <th>Memo</th>
+                                                <th>Date</th>
                                                 <!-- <th>Department</th> -->
-                                                <th class="rightAlignMent{{countActive currencyList}}" colspan="{{countActive currencyList}}">Amount</th>
-                                                <th class="rightAlignMent{{countActive currencyList}}" colspan="{{countActive currencyList}}">Debits</th>
-                                                <th class="rightAlignMent{{countActive currencyList}}" colspan="{{countActive currencyList}}">Credit</th>
+                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Amount</th>
+                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Debits</th>
+                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Credit</th>
                                             </tr>
 
                                             {{#if isOnlyDefaultActive equal "false" }}
                                                 <tr class="table-active tblAvoid customDoubleTableHeading">
-                                                    <th class="text-right"></th>
-                                                    <th class="text-right"></th>
-                                                    <th class="text-right"></th>
-                                                    <th class="text-right"></th>
-                                                    <th class="text-right"></th>
-                                                    <th class="text-right"></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                                                <th class="rightAlignMent" active="{{ c.active }}">{{ c.code }}</th>
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
@@ -212,7 +218,7 @@
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                                                <th class="rightAlignMent" active="{{ c.active }}">{{ c.code }}</th>
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
@@ -220,7 +226,7 @@
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                                                <th class="rightAlignMent" active="{{ c.active }}">{{ c.code }}</th>
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
@@ -258,7 +264,7 @@
                                                                                 {{#each c in currencyList }}
                                                                                     {{# if c.active}}
 
-                                                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
+                                                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
                                                                                                     <a href="#" style="text-decoration:none!important;">{{convertAmount subItem.value c}}</a>
                                                                                                 </td>
 
@@ -274,7 +280,7 @@
 
                                                                     {{else}}
                                                                         {{#if isObject subItem}}
-                                                                            <td class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem.amount}} text-danger {{/if}} ">
+                                                                            <td class="Total1Indented MenuLeft text-nowrap Indent1 rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}} ">
                                                                                 <a href="#" style="text-decoration:none!important;">{{subItem.value}}</a>
                                                                             </td>
                                                                         {{else}}
@@ -304,7 +310,7 @@
                                                                                         {{# if c.active}}
 
                                                                                 
-                                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
+                                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
                                                                                                 <span class="table-cells">
                                                                                                     <strong>{{convertAmount subItem.value c}}</strong>
                                                                                                 </span>
@@ -325,7 +331,7 @@
                                                                     {{else}}
                                                                         {{#if isObject subItem}}
                                                                            
-                                                                            <td class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
+                                                                            <td class="Total1Indented MenuLeft TotalField rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
                                                                                 <span class="table-cells">
                                                                                     <strong>{{subItem.value}}</strong>
                                                                                 </span>
@@ -357,7 +363,7 @@
                                                                         {{#if currencyList}}
                                                                             {{#each c in currencyList }}
                                                                                 {{# if c.active}}
-                                                                                    <td class="{{#if isNegativeAmount subItem.amount}} text-danger {{/if}}" currency="{{c.code}}" currency-id="{{c.id}}">{{convertAmount subItem.value c}}</td>
+                                                                                    <td class="rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}" currency="{{c.code}}" currency-id="{{c.id}}">{{convertAmount subItem.value c}}</td>
                                                                         
                                                                                 {{/if}}
                                                                             {{/each}}
@@ -370,7 +376,7 @@
 
                                                             {{else}}
                                                                 {{#if isObject subItem}}
-                                                                    <td class="{{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">{{subItem.value}}</td>
+                                                                    <td class="rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">{{subItem.value}}</td>
                                                                     
                                                                 {{else}}
                                                                     <td class="{{#if isNegativeAmount subItem}} text-danger {{/if}}" >{{subItem}}</td>
