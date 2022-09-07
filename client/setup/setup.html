@@ -75,9 +75,29 @@
             overflow: visible; */
             pointer-events: none;
         }
-        .giveEccess {
+        .giveAccess {
             pointer-events: none;
             opacity: 0 !important;
+        }
+        .centerPopupDiv .modal-dialog {
+            pointer-events: auto !important;
+            max-width: unset !important;
+            min-width: 300px !important;
+            min-height: 300px !important;
+        }
+        .centerPopupDiv iframe,
+        .centerPopupDiv video {
+            width: 100% !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            aspect-ratio: 2/1.06 !important;
+            height: 100% !important;
+        }
+        .centerPopupDiv .modal-content {
+            height: 100% !important;
+        }
+        .centerPopupDiv .modal-content .modal-body {
+            height: calc(100% - 70px) !important;
         }
     </style>
     <div class="setup-wizard">
@@ -154,7 +174,7 @@
                                                 </div>
                                                 <!-- Start Help Video Modal -->
                                                     <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="OrganizationSettingsVideo" data-backdrop="static">
-                                                        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                                        <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <h4 class="title-header">Organization Settings</h4>
@@ -516,7 +536,7 @@
                                                  <!-- Start Help Video Modal -->
 
                                                 <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="activeTaxRatesVideo" data-backdrop="static" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                                    <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                             
@@ -733,7 +753,7 @@
                                                  <!-- Start Help Video Modal -->
 
                                                 <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="paymentMethodSettingsVideo" data-backdrop="static">
-                                                    <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                                    <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
                                                         <div class="modal-content" >
                                                             <div class="modal-header" >
                                                                 <h4 class="title-header" >Payment Methods</h4>
@@ -1019,7 +1039,7 @@
                                     </div>
                                     <!-- Start Help Video Modal -->
                                     <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="termsSettingsVideo" data-backdrop="static">
-                                        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                        <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
                                             <div class="modal-content" >
                                                 <div class="modal-header" >
                                                     <h4 class="title-header" >Term Settings</h4>
@@ -1240,7 +1260,7 @@
                                            
                                             <!-- Start Help Video Modal -->
                                                 <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalEmployee" data-backdrop="static">
-                                                    <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                                    <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
                                                         <div class="modal-content" >
                                                             <div class="modal-header" >
 
@@ -1464,7 +1484,7 @@
 
                                                  <!-- Start Help Video Modal -->
                                                     <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalAccount" data-backdrop="static">
-                                                        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                                        <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
 
@@ -1790,7 +1810,7 @@
 
                                          <!-- Start Help Video Modal -->
                                             <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalCustomers" data-backdrop="static">
-                                                <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                                <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
                                                     <div class="modal-content" >
                                                         <div class="modal-header" >
 
@@ -2035,7 +2055,7 @@
 
                                         <!-- Start Help Video Modal -->
                                             <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalSuppliers" data-backdrop="static">
-                                                <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                                <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
                                                     <div class="modal-content" >
                                                         <div class="modal-header" >
 
@@ -2259,7 +2279,7 @@
 
                                         <!-- Start Help Video Modal -->
                                             <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalInventory" data-backdrop="static">
-                                                <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                                <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
 
@@ -2617,7 +2637,7 @@
         </div>
     </div>
     <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="downloadHelpFileModal" data-backdrop="static" aria-hidden="true">
-        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+        <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">Download Help</h4>
