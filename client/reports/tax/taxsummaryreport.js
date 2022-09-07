@@ -309,6 +309,7 @@ Template.taxsummaryreport.onRendered(() => {
         //   records = _.sortBy(records, 'SupplierName');
         // records = _.groupBy(records, 'SupplierName');
 
+
         // for (let key in records) {
         //   allRecords.push({
         //       title: key,
@@ -356,7 +357,9 @@ Template.taxsummaryreport.onRendered(() => {
         });
 
         templateObject.mainReportRecords.set(mainReportRecords);
-        templateObject.reportRecords.set(mainReportRecords);
+        templateObject.reportRecords.set(mainReportRecords); // this one will be used
+
+        console.log(templateObject.reportRecords.get());
 
         // for (let i = 0; i < mainReportRecords.length; i++) {
 
@@ -419,8 +422,6 @@ Template.taxsummaryreport.onRendered(() => {
 
         //templateObject.records.set(totalRecord);
 
-        console.log(mainReportRecords, subReportRecords);
-        console.log(mainGrandval, subGrandval);
 
         templateObject.mainGrandRecords.set(mainGrandval);
         templateObject.subGrandRecords.set(subGrandval);
