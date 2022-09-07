@@ -1120,6 +1120,25 @@ Template.taxsummaryreport.onRendered(() => {
   }
   // templateObject.getAllProductData();
   templateObject.getDepartments();
+
+
+
+    /**
+     * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
+     * So we have a showable list of currencies to toggle
+     */
+
+     templateObject.loadCurrency = async () => {
+      await loadCurrency();
+    };
+
+    //templateObject.loadCurrency();
+
+    templateObject.loadCurrencyHistory = async () => {
+      await loadCurrencyHistory();
+    };
+
+    //templateObject.loadCurrencyHistory();
 });
 
 Template.taxsummaryreport.events({
