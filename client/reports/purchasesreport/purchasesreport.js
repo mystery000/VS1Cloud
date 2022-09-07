@@ -356,7 +356,7 @@ Template.purchasesreport.onRendered(() => {
             LoadingOverlay.hide();
         });
     } else {
-        data = JSON.parse(localStorage.getItem('VS11099Contractor_Report'));
+        data = JSON.parse(localStorage.getItem('VS1Purchase_Report'));
         if (data.tbillreport.length) {
             // localStorage.setItem("VS1Purchase_Report", JSON.stringify(data) || "");
             let records = [];

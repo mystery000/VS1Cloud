@@ -186,9 +186,9 @@
                                     <table class="table table-sm" id="tableExport" name="tableExport">
                                         <thead>
                                             <tr class="table-active customDoubleTableHeading">
+                                                <th>Employee</th>
                                                 <th>Accrued Date</th>
                                                 <th>Leave Type</th>
-                                                <th>Employee</th>
                                                 <th>Pay No</th>
                                                 <th>Accrued Type</th>
                                                 <th>Hours</th>
@@ -217,11 +217,15 @@
                                         </thead>
                                         <tbody>
                                             {{#if records}}
-                                                {{#each item in records}}
+                                                {{#each value in records}}
                                                     <tr>
+                                                        <td style="font-weight: 800;" colspan="7">{{ value.EmployeeName }}</td>
+                                                    </tr>
+                                                    {{#each item in value.records}}
+                                                    <tr>
+                                                        <td></td>
                                                         <td>{{ formatDate item.fields.Date }}</td>
                                                         <td>{{ item.fields.LeaveType }}</td>
-                                                        <td>{{ item.fields.EmployeeName }}</td>
                                                         <td>{{ item.fields.PayID }}</td>
                                                         <td>{{ item.fields.AccrualType }}</td>
                                                         <td class="{{#if isNegativeAmount item.fields.AccruedHours}} text-danger {{/if}}">{{ floatValue item.fields.AccruedHours }}</td>
@@ -239,7 +243,9 @@
                                                         {{/if}}
                                                     
                                                     </tr>
+                                                    {{/each}}
                                                 {{/each}}
+                                                
                                             {{else}}
                                                 <tr class="odd" style="text-align: center;">
                                                     <td valign="top" colspan="10" class="dataTables_empty">No data available in table</td>

@@ -580,9 +580,7 @@ Template.newprofitandloss.onRendered(function () {
     templateObject.setReportOptions(0, getDateFrom, getLoadDate);
   } else if (url.indexOf("?daterange") > 0) {
     let currentDate2 = new Date();
-    let fromDate = moment(currentDate2)
-      .subtract(3, "months")
-      .format("YYYY-MM-DD");
+    let fromDate = moment(currentDate2).subtract(3, "months").format("YYYY-MM-DD");
     let endDate = moment(currentDate2).format("YYYY-MM-DD");
     if (url.indexOf("?daterange=monthly")) {
       fromDate = moment().startOf("month").format("YYYY-MM-DD");
