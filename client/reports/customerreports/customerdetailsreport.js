@@ -5,9 +5,9 @@ import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import GlobalFunctions from "../../GlobalFunctions";
 
-let reportService = new ReportService();
-let utilityService = new UtilityService();
-let taxRateService = new TaxRateService();
+const reportService = new ReportService();
+const utilityService = new UtilityService();
+const taxRateService = new TaxRateService();
 let defaultCurrencyCode = CountryAbbr;
 
 const currentDate = new Date();
@@ -111,7 +111,7 @@ Template.customerdetailsreport.onRendered(() => {
   };
 
   templateObject.getCustomerDetailReportData = async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     let data = [];
     if (!localStorage.getItem('VS1CustomerDetails_Report')) {
       const options = await templateObject.reportOptions.get();
@@ -175,7 +175,7 @@ Template.customerdetailsreport.onRendered(() => {
     }
 
     templateObject.records.set(reportData);
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
     setTimeout(function() {
         MakeNegative();
     }, 1000);
@@ -598,10 +598,10 @@ Template.customerdetailsreport.helpers({
 
 
     // Get the selected date
-    let dateTo = $("#dateTo").val();
-    const day = dateTo.split("/")[0];
-    const m = dateTo.split("/")[1];
-    const y = dateTo.split("/")[2];
+    let dateTo = $("#dateTo") ? $("#dateTo").val() : null;
+    const day = dateTo != null ? dateTo.split("/")[0] : (new Date()).getDate();
+    const m = dateTo != null ? dateTo.split("/")[1] : (new Date()).getMonth();
+    const y = dateTo != null ? dateTo.split("/")[2] : (new Date()).getFullYear();
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
 

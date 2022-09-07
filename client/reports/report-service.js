@@ -485,7 +485,7 @@ export class ReportService extends BaseService {
     return this.getList(this.ERPObjects.TProductSalesDetailsReport, options);
   }
 
-  getTaxSummaryData(dateFrom, dateTo, ignoreDate) {
+  getTaxSummaryData(dateFrom, dateTo, ignoreDate = false) {
     let options = "";
     if (ignoreDate == true) {
       options = {
@@ -494,7 +494,7 @@ export class ReportService extends BaseService {
       };
     } else {
       options = {
-        IgnoreDates: false,
+        IgnoreDates: ignoreDate,
         ReportType: "Summary",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',

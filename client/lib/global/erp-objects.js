@@ -151,6 +151,7 @@ const erpObject = {
     TProspectVS1:"TProspectVS1",
     TSupplierVS1:"TSupplierVS1",
     TProductVS1:"TProductVS1",
+    TSuperannuation: "TSuperannuation",
     TERPCombinedContactsVS1:"TERPCombinedContactsVS1",
     TpurchaseOrderBackOrder:"TpurchaseOrderBackOrder",
     TpurchaseOrderNonBackOrder:"TpurchaseOrderNonBackOrder",
@@ -197,7 +198,6 @@ const erpObject = {
     TPayscommission: "TPayscommission",
     TDeduction: "TDeduction",
     TPaysleave: "TPaysleave",
-    TSuperannuation: "TSuperannuation",
     TLeavetypes: "TLeavetypes",
     TEmployeepaysettings: "TEmployeepaysettings",
     TPayRun: "TPayRun",
@@ -265,7 +265,9 @@ const erpObject = {
     TStockQuantityLocation: "TStockQuantityLocation",
     TSupplierProduct: "TSupplierProduct",
     TStockValue: "TStockValue",
-    TLeaveTaken: "TLeaveTaken"
+    TLeaveTaken: "TLeaveTaken",
+    TLeave:"TLeave",
+    Tsuperannuation:"Tsuperannuation",
 
 };
 

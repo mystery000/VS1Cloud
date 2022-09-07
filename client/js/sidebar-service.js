@@ -3222,7 +3222,7 @@ export class SideBarService extends BaseService {
       };
     }
 
-    return this.getList(this.ERPObjects.TVS1Superannuation, options);
+    return this.getList(this.ERPObjects.Tsuperannuation, options);
   }
 
   getSuperType() {

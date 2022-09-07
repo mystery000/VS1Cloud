@@ -1632,7 +1632,7 @@ Template.employeescard.onRendered(function () {
                                             PasswordHash: useData[i].fields.User.fields.LogonPassword || ''
                                         };
                                         emplineItems.push(emplineItemObj);
-                                        templateObject.empuserrecord.set(emplineItems);
+                                        // templateObject.empuserrecord.set(emplineItems);
                                     } else {
                                         let emplineItems = [];
                                         let emplineItemObj = {};
@@ -5734,10 +5734,10 @@ Template.employeescard.events({
                 var enteredEmail = $("#cloudEmpEmailAddress").val();
                 var checkifupdate = $("#cloudCheckEmpEmailAddress").val();
                 var enteredPassword = $("#cloudEmpUserPassword").val();
-                let cloudpassword = $("#cloudEmpUserPassword").val().replace(/;/g, ",");
+                let cloudpassword = $("#cloudEmpUserPassword").val() && $("#cloudEmpUserPassword").val().replace(/;/g, ",");
                 let cloudcheckpassword = $("#cloudCheckEmpUserPassword").val();
                 if (($.trim(enteredEmail).length != 0) && ($.trim(enteredPassword).length != 0)) {
-                    if (cloudpassword.toUpperCase() != cloudcheckpassword.toUpperCase()) {
+                    if (cloudpassword && cloudcheckpassword && cloudpassword.toUpperCase() != cloudcheckpassword.toUpperCase()) {
                         var cloudHashPassword = CryptoJS.MD5(enteredPassword).toString().toUpperCase();
                         if ($.trim(checkifupdate).length != 0) {
 

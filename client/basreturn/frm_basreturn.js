@@ -202,7 +202,6 @@ Template.basreturn.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
 
         }).catch(function(err) {
-            //Bert.alert('<strong>' + err + '</strong>!', 'danger');
             $('.fullScreenSpin').css('display', 'none');
         });
     };
@@ -214,11 +213,6 @@ Template.basreturn.onRendered(function() {
                 let accountsReportRecords = [];
 
                 for (let i = 0; i < accountsSummaryReport.length; i++) {
-                    let debitAmount = utilityService.modifynegativeCurrencyFormat(accountsSummaryReport[i].TotalDebitEx) || 0;
-                    let creditAmount = utilityService.modifynegativeCurrencyFormat(accountsSummaryReport[i].TotalCreditEx) || 0;
-                    let balaneAmount = utilityService.modifynegativeCurrencyFormat(accountsSummaryReport[i].Balance) || 0;
-                    let openingAmount = utilityService.modifynegativeCurrencyFormat(accountsSummaryReport[i].OpeningBalanceEx) || 0;
-                    let closingAmount = utilityService.modifynegativeCurrencyFormat(accountsSummaryReport[i].ClosingBalanceEx) || 0;
                     const mainReportData = {
                         AccountID: accountsSummaryReport[i].AccountID || '',
                         AccountName: accountsSummaryReport[i].AccountName || '',
@@ -226,11 +220,11 @@ Template.basreturn.onRendered(function() {
                         AccountType: accountsSummaryReport[i].AccountType || '',
                         clientname: accountsSummaryReport[i].clientname || '',
                         Type: accountsSummaryReport[i].Type || '',
-                        debit: debitAmount || 0.00,
-                        credit: creditAmount || 0.00,
-                        balance: balaneAmount || 0.00,
-                        openingbalance: openingAmount || 0.00,
-                        closingbalance: closingAmount || 0.00
+                        debit: accountsSummaryReport[i].TotalDebitEx || 0.00,
+                        credit: accountsSummaryReport[i].TotalCreditEx || 0.00,
+                        balance: accountsSummaryReport[i].Balance || 0.00,
+                        openingbalance: accountsSummaryReport[i].OpeningBalanceEx || 0.00,
+                        closingbalance: accountsSummaryReport[i].ClosingBalanceEx || 0.00
                     };
 
                     accountsReportRecords.push(mainReportData);
@@ -239,7 +233,6 @@ Template.basreturn.onRendered(function() {
                 accountsReportRecords = _.sortBy(accountsReportRecords, 'AccountName');
 
                 templateObject.accountsSummaryList.set(accountsReportRecords);
-
             }
 
             $('.fullScreenSpin').css('display', 'none');
@@ -696,6 +689,10 @@ Template.basreturn.helpers({
         let accountsArray = [1, 2, 3, 4, 5];
         return accountsArray;
     },
+    accountsPanListT3: () => {
+        let accountsArray = [1, 2, 3, 4, 5, 6];
+        return accountsArray;
+    },
 
     accountsList: () => {
         return Template.instance()
@@ -854,6 +851,14 @@ Template.basreturn.events({
         $("#beginquarterlydate-t2-2").css("display", "none");
         $("#beginmonthlydate-t2-2").css("display", "block");
     },
+    "click #datemethod1-t3": (e) => {
+        $("#beginquarterlydate-t3").css("display", "block");
+        $("#beginmonthlydate-t3").css("display", "none");
+    },
+    "click #datemethod2-t3": (e) => {
+        $("#beginquarterlydate-t3").css("display", "none");
+        $("#beginmonthlydate-t3").css("display", "block");
+    },
     'change #beginquarterlydate, change #beginmonthlydate, change #currentyear': function(event) {
         let fromDate = "0000-00-00";
         let toDate = new Date();
@@ -897,6 +902,28 @@ Template.basreturn.events({
             }
         }
     },
+    'change #beginquarterlydate-t3, change #beginmonthlydate-t3, change #currentyear-t3': function(event) {
+        let fromDate = "0000-00-00";
+        let toDate = new Date();
+        toDate = moment(toDate).format("YYYY-MM-DD");
+
+        if ($("#datemethod1-t3").prop('checked') == true) {
+            if ($("#beginquarterlydate-t3").val() != "" && $("#currentyear-t3").val() != "") {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                fromDate = new Date($("#currentyear-t3").val() + "-" + $("#beginquarterlydate-t3").val());
+                fromDate = moment(fromDate).format("YYYY-MM-DD");
+                Template.instance().getAccountsSummaryReports(fromDate, toDate);
+
+            }
+        } else {
+            if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "") {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                fromDate = new Date($("#currentyear-t3").val() + "-" + $("#beginmonthlydate-t3").val());
+                fromDate = moment(fromDate).format("YYYY-MM-DD");
+                Template.instance().getAccountsSummaryReports(fromDate, toDate);
+            }
+        }
+    },
     'click .btnselTaxList': function(event) {
         const templateObject = Template.instance();
         let taxRateList = templateObject.taxRateList.get();
@@ -916,31 +943,50 @@ Template.basreturn.events({
         }
 
         $("#gst" + gstPanID + "cost").val(total_tax);
+        var gst5cost = parseFloat($("#gst3cost").val()) + parseFloat($("#gst3cost").val());
+        $("#gst5cost").val(gst5cost);
+        var gst6cost = parseFloat($("#gst1cost").val()) + parseFloat($("#gst2cost").val()) + gst5cost;
+        $("#gst6cost").val(gst6cost);
+        var gst8cost = parseFloat($("#gst7cost").val()) + gst6cost;
+        $("#gst8cost").val(gst8cost);
+        var gst9cost = gst8cost / 11;
+        $("#gst9cost").val(gst9cost.toFixed(2));
+        var gst12cost = parseFloat($("#gst10cost").val()) + parseFloat($("#gst11cost").val());
+        $("#gst12cost").val(gst12cost);
+        var gst16cost = parseFloat($("#gst13cost").val()) + parseFloat($("#gst14cost").val()) + parseFloat($("#gst15cost").val());
+        $("#gst16cost").val(gst16cost);
+        var gst17cost = gst12cost + gst16cost;
+        $("#gst17cost").val(gst17cost);
+        var gst19cost = parseFloat($("#gst18cost").val()) + gst17cost;
+        $("#gst19cost").val(gst19cost);
+        var gst20cost = gst19cost / 11;
+        $("#gst20cost").val(gst20cost.toFixed(2));
+
         $("#gst" + gstPanID + "option").modal("toggle");
     },
     'click .btnselAccountant': function(event) {
-        // reportService.getBalanceSheetRedirectRangeData(dateFrom, dateTo, ignoreDate).then(function(data) {
+        const templateObject = Template.instance();
+        let accountsList = templateObject.accountsList.get();
+        let accountsSummaryList = templateObject.accountsSummaryList.get();
 
-        // })
-        // const templateObject = Template.instance();
-        // let taxRateList = templateObject.taxRateList.get();
-        // let taxSummaryList = templateObject.taxSummaryList.get();
+        console.log("accountsList", accountsList);
+        console.log("accountsSummaryList", accountsSummaryList);
 
-        // let gstPanID = $(event.target).attr('id').split("-")[1];
+        let accountsPanID = $(event.target).attr('id').split("-")[1];
 
-        // var total_tax = 0;
-        // for (var i = 0; i < taxRateList.length; i++) {
-        //     // if ($("#t-" + gstPanID + "-" + taxRateList[i].Id).prop('checked') == true) {
-        //     //     for (var j = 0; j < taxSummaryList.length; j++) {
-        //     //         if (taxRateList[i].CodeName == taxSummaryList[j].taxcode) {
-        //     //             total_tax += parseFloat(taxSummaryList[j].totaltaxdigit);
-        //     //         }
-        //     //     }
-        //     // }
-        // }
+        var total_amounts = 0;
+        for (var i = 0; i < accountsList.length; i++) {
+            if ($("#f-" + accountsPanID + "-" + accountsList[i].id).prop('checked') == true) {
+                for (var j = 0; j < accountsSummaryList.length; j++) {
+                    if (accountsList[i].accountname == accountsSummaryList[j].AccountName) {
+                        total_amounts += parseFloat(accountsSummaryList[j].balance);
+                    }
+                }
+            }
+        }
 
-        // $("#gst" + gstPanID + "cost").val(total_tax);
-        $("#accounts" + gstPanID + "option").modal("toggle");
+        $("#accounts" + accountsPanID + "cost").val(total_amounts);
+        $("#accounts" + accountsPanID + "option").modal("toggle");
     },
 
 
