@@ -5402,6 +5402,7 @@ Template.payrollrules.onRendered(function() {
       $('#edtFundType').editableSelect();
       $('#holidaygroup').editableSelect();
       $('#holidaygroup2').editableSelect();
+      $('#addexistgroup').editableSelect();
 
     });
 
@@ -12104,6 +12105,192 @@ Template.payrollrules.onRendered(function() {
 
     });
 
+    $('#addexistgroup').editableSelect().on('click.editable-select', function (e, li) {
+
+        var $earch = $(this);
+        var offset = $earch.offset();
+        let ratetypeService = new RateTypeService();
+        const ratetypelist = [];
+         var  Description = e.target.value ||'';
+
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+          $('#selectGroupLineID').val('edtGroupType');
+          $('#groupTypeListModel').modal();
+          $('#tblgrouptypelist_filter .form-control-sm').focus();
+          $('#tblgrouptypelist_filter .form-control-sm').val();
+          $('#tblgrouptypelist_filter .form-control-sm').trigger("input");
+          setTimeout(function () {
+             var datatable = $('#tblgrouptypelist').DataTable();
+             datatable.draw();
+             $('#tblgrouptypelist_filter .form-control-sm').trigger("input");
+          }, 500);
+         }else{
+           if(Description.replace(/\s/g, '') != ''){
+             getVS1Data('TPayrollHolidayGroup').then(function (dataObject) {
+              if (dataObject.length == 0) {
+                     ratetypeService.getOneGroupTypeByName(Description).then(function (data) {
+                     let lineItems = [];
+                     let lineItemObj = {};
+                     let fullDescriptionname = '';
+                      $('#add-grouptype-title').text('Edit Group Type Details');
+
+                     if (ratetypelist) {
+                         for (var h = 0; h < ratetypelist.length; h++) {
+
+                             if (data.tpayrollholidaygroup[0].fields.Groupdesc === ratetypelist[h].Groupdesc) {
+
+                                fullDescriptionname = ratetypelist[h].Groupdesc || '';
+
+                             }
+                         }
+
+                     }
+
+                      var ratetypeid = data.tpayrollholidaygroup[0].fields.ID || '';
+                      var description = fullDescriptionname || data.tpayrollholidaygroup[0].fields.Groupdesc;
+
+
+                      $('#edtgroupID').val(ratetypeid);
+                      $('#edtGroupDescription').val(description);
+
+
+                      setTimeout(function () {
+                          $('#addGroupModel').modal('show');
+                      }, 500);
+
+                   }).catch(function (err) {
+                       $('.fullScreenSpin').css('display','none');
+                   });
+                 } else {
+                     let data = JSON.parse(dataObject[0].data);
+                     let useData = data.tpayrollholidaygroup;
+                     var added=false;
+                     let lineItems = [];
+                     let lineItemObj = {};
+                     let fullDescriptionname = '';
+
+                     $('#add-grouptype-title').text('Edit Group Type Details');
+                     $('#edtgroupID').attr('readonly', true);
+                   
+
+                     for (let a = 0; a < data.tpayrollholidaygroup.length; a++) {
+
+                       if((data.tpayrollholidaygroup[a].fields.Groupdesc) === Description){
+                         added = true;
+                         if (ratetypelist) {
+                             for (var h = 0; h < ratetypelist.length; h++) {
+
+                                 if (data.tpayrollholidaygroup[a].fields.Groupdesc === ratetypelist[h].Groupdesc) {
+
+                                    fullDescriptionname = ratetypelist[h].Groupdesc || '';
+
+                                 }
+                             }
+
+                         }
+
+
+
+                  var ratetypeid = data.tpayrollholidaygroup[a].fields.ID || '';
+                  var ratetypedescription = fullDescriptionname || data.tpayrollholidaygroup[a].fields.Groupdesc;
+
+                  $('#edtgroupID').val(ratetypeid);
+                  $('#edtGroupDescription').val(ratetypedescription);
+
+                  setTimeout(function () {
+                      $('#addGroupModel').modal('show');
+                       }, 500); } }
+
+                     if(!added) {
+                        ratetypeService.getOneGroupTypeByName(Description).then(function (data) {
+                         let lineItems = [];
+                         let lineItemObj = {};
+                         let fullAccountTypeName = '';
+
+                         $('#add-grouptype-title').text('Edit Group Type Details');
+                         $('#edtgroupID').attr('readonly', true);
+                       
+                         if (ratetypelist) {
+                             for (var h = 0; h < ratetypelist.length; h++) {
+
+                                 if (data.tpayrollholidaygroup[0].fields.Groupdesc === ratetypelist[h].Groupdesc) {
+
+                                     fullAccountTypeName = ratetypelist[h].Groupdesc || '';
+
+                                 }
+                             }
+
+                         }
+
+                          var ratetypeid = data.tpayrollholidaygroup[0].fields.ID || '';
+                          var ratetypedescription = fullAccountTypeName || data.tpayrollholidaygroup[0].fields.Groupdesc;
+
+                          $('#edtgroupID').val(ratetypeid);
+                          $('#edtGroupDescription').val(ratetypedescription);
+
+                          setTimeout(function () {
+                              $('#addGroupModel').modal('show');
+                          }, 500);
+
+                       }).catch(function (err) {
+                           $('.fullScreenSpin').css('display','none');
+                       });
+                     }
+
+                 }
+             }).catch(function (err) {
+                ratetypeService.getOneGroupTypeByName(Description).then(function (data) {
+                 let lineItems = [];
+                 let lineItemObj = {};
+                 let fullAccountTypeName = '';
+
+                 $('#add-grouptype-title').text('Edit Group Type Details');
+                 $('#edtgroupID').attr('readonly', true);
+               
+
+                 if (ratetypelist) {
+                    for (var h = 0; h < ratetypelist.length; h++) {
+
+                        if (data.tpayrollholidaygroup[0].fields.Groupdesc === ratetypelist[h].Groupdesc) {
+
+                            fullAccountTypeName = ratetypelist[h].Groupdesc || '';
+
+                        }
+                    }
+
+                }
+                var ratetypeid = data.tpayrollholidaygroup[0].fields.ID || '';
+                var ratetypedescription = fullAccountTypeName || data.tpayrollholidaygroup[0].fields.Groupdesc;
+
+
+                $('#edtgroupID').val(ratetypeid);
+                $('#edtGroupDescription').val(ratetypedescription);
+
+
+                setTimeout(function () {
+                              $('#addGroupModel').modal('show');
+                 }, 500);
+
+
+               }).catch(function (err) {
+                   $('.fullScreenSpin').css('display','none');
+               });
+
+               });
+               $('#addGroupModel').modal('toggle');
+           }else{
+             $('#selectGroupLineID').val('edtGroupType');
+             $('#groupTypeListModel').modal();
+             setTimeout(function () {
+                  var datatable = $('#tblgrouptypelist').DataTable();
+                  datatable.draw();
+
+             }, 500);
+           }
+         }
+
+    });
+
     $('#holidaygroup2').editableSelect().on('click.editable-select', function (e, li) {
 
         var $earch = $(this);
@@ -13488,6 +13675,7 @@ Template.payrollrules.onRendered(function() {
            $('#edtGroupID').val(ratetypeid);
            $('#holidaygroup').val(description);
            $('#holidaygroup2').val(description);
+           $('#addexistgroup').val(description);
            $('#add-grouptype-title').text('Edit Group Type Details');
 
           }
@@ -14909,7 +15097,6 @@ Template.payrollrules.events({
             e.preventDefault();
         }
         else {
-
 
             $('.fullScreenSpin').css('display','inline-block');
             if(rateTypeId == ""){
