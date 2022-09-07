@@ -108,8 +108,7 @@ Template.balancesheetreport.onRendered(() => {
             let date = new Date(dateAsOf);
             let previousYear = date.getFullYear() - 1;
             let Balancedatedisplay = moment(dateAsOf).format("DD/MM/YYYY");
-            let lastdatemonthdisplay =
-                moment(dateAsOf).format("DD MMM") + " " + previousYear;
+            let lastdatemonthdisplay = moment(dateAsOf).format("DD MMM") + " " + previousYear;
             templateObject.dateAsAtAYear.set(lastdatemonthdisplay);
             templateObject.dateAsAt.set(Balancedatedisplay);
             setTimeout(function() {

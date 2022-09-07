@@ -1,3 +1,4 @@
+import moment from "moment";
 import { BaseService } from "../js/base-service.js";
 
 export class ReportService extends BaseService {
@@ -14,7 +15,8 @@ export class ReportService extends BaseService {
     let options = {
       //select: "[Active]=true",
       //ListType:"Detail",
-      DateTo: '"' + dateAsOf + '"',
+      DateFrom: '"' + dateAsOf + '"',
+      DateTo: '"' + moment().format('YYYY-MM-DD') + '"',
     };
     return this.getList(this.ERPObjects.BalanceSheetReport, options);
   }
@@ -590,6 +592,54 @@ export class ReportService extends BaseService {
       };
     }
     return this.getList(this.ERPObjects.TStockQuantityLocation, options);
+  }
+
+  getStockValueReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TStockValue, options);
+  }
+  
+  getLeaveTakenReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TLeaveTaken, options);
+  }  
+
+  getSupplierProductReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TSupplierProduct, options);
   }
 
   getStockMovementReport(dateFrom, dateTo, ignoreDate = false) {

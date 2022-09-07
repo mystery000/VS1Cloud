@@ -185,66 +185,28 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td colspan="6" style="font-weight: 800;">Rasheed</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>25/05/2022</td>
-                                                <td>28/05/2022</td>
-                                                <td class="text-right">Days</td>
-                                                <td class="text-right">2.00</td>
-                                                <td class="text-right text-success">32.50</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>05/03/2022</td>
-                                                <td>06/03/2022</td>
-                                                <td class="text-right">Days</td>
-                                                <td class="text-right">1.00</td>
-                                                <td class="text-right text-success">34.50</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" style="font-weight: 800;">Rasheed Totals</td>
-                                                <td class="text-right" style="font-weight: 800;"></td>
-                                                <td class="text-right" style="font-weight: 800;"></td>
-                                                <td class="text-right" style="font-weight: 800;">3.00</td>
-                                                <td class="text-right text-success" style="font-weight: 800;">35.00</td>
-                                            </tr>
-                                            <tr class="departmentHeader">
-                                                <td colspan="7" style="font-weight: 800;">Bruno</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>05/03/2022</td>
-                                                <td>06/03/2022</td>
-                                                <td class="text-right">Days</td>
-                                                <td class="text-right">7.00</td>
-                                                <td class="text-right text-danger">-3.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" style="font-weight: 800;">Bruno Totals</td>
-                                                <td class="text-right" style="font-weight: 800;"></td>
-                                                <td class="text-right" style="font-weight: 800;"></td>
-                                                <td class="text-right" style="font-weight: 800;">3.00</td>
-                                                <td class="text-right text-danger" style="font-weight: 800;">-3.00</td>
-                                            </tr>
-                                            <!-- {{#if records}}
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                            {{else}}
-                                                <tr class="odd" style="text-align: center;">
-                                                    <td valign="top" colspan="12" class="dataTables_empty">No data available in table</td>
-                                                </tr>
-                                            {{/if}} -->
+                                            {{#if records}}
+                                                {{#each arrayify records}}
+                                                    <tr>
+                                                        <td colspan="6" style="font-weight: 800;">{{ value.EmployeeName }}</td>
+                                                    </tr>
+                                                    {{#each item in value.SubAccounts}}
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ formatDate item.PayDate }}</td>
+                                                        <td>{{ formatDate item.DateTaken }}</td>
+                                                        <td class="text-right"></td>
+                                                        <td class="text-right"></td>
+                                                        <td class="text-right text-success"></td>
+                                                    </tr>
+                                                    {{/each}}
+                                                    <tr>
+                                                        <td style="font-weight: 800;" colspan="3">{{ value.EmployeeName }} Total</td>
+                                                        <td style="font-weight: 800;"></td>
+                                                        <td style="font-weight: 800;"></td>
+                                                    </tr>
+                                                {{/each}}
+                                            {{/if}}
                                         </tbody>
                                     </table>
                                 </div>

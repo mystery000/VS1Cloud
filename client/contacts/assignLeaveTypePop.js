@@ -96,7 +96,6 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#leaveCalcMethodSelect').editableSelect();
         $('#leaveCalcMethodSelect').editableSelect().on('blur.editable-select', async function (e, li) {
             let leaveCalcMethod = e.target.value || '';
-            console.log('leaveCalcMethod', leaveCalcMethod)
             switch(leaveCalcMethod){
                 case 'Manually Recorded Rate':
                     $('#hoursLeave').val('');

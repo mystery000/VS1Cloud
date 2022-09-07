@@ -262,7 +262,10 @@ const erpObject = {
     TReceiptCategory:"TReceiptCategory",
     TBankRule: "TBankRule",
     TBankRuleList: "TBankRuleList",
-    TStockQuantityLocation: "TStockQuantityLocation"
+    TStockQuantityLocation: "TStockQuantityLocation",
+    TSupplierProduct: "TSupplierProduct",
+    TStockValue: "TStockValue",
+    TLeaveTaken: "TLeaveTaken"
 
 };
 
