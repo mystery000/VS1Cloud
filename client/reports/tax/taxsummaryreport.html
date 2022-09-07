@@ -235,6 +235,9 @@
                       {{#if isOnlyDefaultActive equal "false" }}
                           <tr class="table-active tblAvoid customDoubleTableHeading">
                               <th></th>
+                              {{#if isSub}}
+                                <th></th>
+                              {{/if}}
 
                               {{#if currencyList}}
                                   {{#each c in currencyList }}
@@ -420,4 +423,9 @@
 
   <!-- End Help Video Modal -->
 
+
+
+     <!-- Start Currency Modal -->
+     {{> FxRateModal currencies=currencyList}}
+     <!-- End Currency Modal -->
 </template>
