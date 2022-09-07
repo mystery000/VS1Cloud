@@ -66,6 +66,19 @@
             border: 1px solid #e3e6f0 !important;
             border-collapse: collapse !important;
         }
+        .centerPopupDiv {
+            /* width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            left: 50%;
+            top: 50%;
+            overflow: visible; */
+            pointer-events: none;
+        }
+        .giveEccess {
+            pointer-events: none;
+            opacity: 0 !important;
+        }
     </style>
     <div class="setup-wizard">
         <!-- First page -->
@@ -129,16 +142,10 @@
                                                                     aria-label="Close"><span aria-hidden="true">×</span></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <p class="text-center text-muted"><a role="button" data-toggle="modal"
-                                                                        href="#OrganizationSettingsVideo" class="btn btn-primary">View Help
-                                                                        Video</a></p>
-                                                                <p class="text-center text-muted"><a href="https://vs1forum.com/"
-                                                                        target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                                                <p class="text-center text-muted"><button class="btn btn-primary"
-                                                                        type="button">Employ Advisor</button></p>
-                                                                <p class="text-center text-muted" style="margin: 0px;"><a
-                                                                        href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}"
-                                                                        target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#OrganizationSettingsVideo" class="btn btn-primary visiblePopupDiv">View Help Video</a></p>
+                                                                <p class="text-center text-muted"><a href="javascript:void(0);" data-href="https://vs1forum.com/" class="btn btn-primary downloadHelpFile">Download Help File</a></p>
+                                                                <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
+                                                                <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
                                                             </div>
                                                             <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
                                                                     data-dismiss="modal" type="button">Close</button></div>
@@ -146,7 +153,7 @@
                                                     </div>
                                                 </div>
                                                 <!-- Start Help Video Modal -->
-                                                    <div class="modal fade" role="dialog" tabindex="-1" id="OrganizationSettingsVideo">
+                                                    <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="OrganizationSettingsVideo" data-backdrop="static">
                                                         <div class="modal-dialog" role="document" style="max-width: 670px!important;">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
@@ -497,8 +504,8 @@
                                                             <div class="modal-header" style="padding-bottom: 8px;">
                                                                 <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                             <div class="modal-body">
-                                                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#activeTaxRatesVideo" class="btn btn-primary helpModal">View Help Video</a></p>
-                                                                <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#activeTaxRatesVideo" class="btn btn-primary helpModal visiblePopupDiv">View Help Video</a></p>
+                                                                <p class="text-center text-muted"><a href="javascript:void(0);" data-href="https://vs1forum.com/" class="btn btn-primary downloadHelpFile">Download Help File</a></p>
                                                                 <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
                                                                 <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
                                                             </div>
@@ -508,7 +515,7 @@
                                                 </div>
                                                  <!-- Start Help Video Modal -->
 
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="activeTaxRatesVideo">
+                                                <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="activeTaxRatesVideo" data-backdrop="static" aria-hidden="true">
                                                     <div class="modal-dialog" role="document" style="max-width: 670px!important;">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -559,8 +566,8 @@
                                                                 <a class="btn btn-primary btnAddTaxRate alerts-border" role="button" data-toggle="modal" href="#addTaxRateModal" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Tax Rate<br></a>
                                                                 
                                                                 {{> AddTaxRateModal}}
-                                                            <a role="button" data-toggle="modal" href="#activeTaxRatesVideo" class="btn btn-primary helpModal" style="margin: 16px 16px 0 16px">View Help Video</a>
-                                                            <a href="https://vs1forum.com/" target="_blank" class="btn btn-primary" style="margin-top: 16px;">Download Help File</a>
+                                                            <a role="button" data-toggle="modal" href="#activeTaxRatesVideo" class="btn btn-primary helpModal visiblePopupDiv" style="margin: 16px 16px 0 16px">View Help Video</a>
+                                                            <a href="javascript:void(0)" data-href="https://vs1forum.com/" class="btn btn-primary downloadHelpFile" style="margin-top: 16px;">Download Help File</a>
                                                         </div>
                                                     </div>
                                                     <style>
@@ -714,8 +721,8 @@
                                                             <div class="modal-header" style="padding-bottom: 8px;">
                                                                 <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                             <div class="modal-body">
-                                                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#paymentMethodSettingsVideo" class="btn btn-primary helpModal">View Help Video</a></p>
-                                                                <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=71" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#paymentMethodSettingsVideo" class="btn btn-primary helpModal visiblePopupDiv">View Help Video</a></p>
+                                                                <p class="text-center text-muted"><a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=71" class="btn btn-primary downloadHelpFile">Download Help File</a></p>
                                                                 <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
                                                                 <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
                                                             </div>
@@ -725,7 +732,7 @@
                                                 </div>
                                                  <!-- Start Help Video Modal -->
 
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="paymentMethodSettingsVideo">
+                                                <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="paymentMethodSettingsVideo" data-backdrop="static">
                                                     <div class="modal-dialog" role="document" style="max-width: 670px!important;">
                                                         <div class="modal-content" >
                                                             <div class="modal-header" >
@@ -804,8 +811,8 @@
                                                                     </div>
                                                                 </div>
                                                             </div>                                                            
-                                                            <a role="button" data-toggle="modal" href="#paymentMethodSettingsVideo" style="margin: 16px 16px 0 16px" class="btn btn-primary helpModal">View Help Video</a>
-                                                            <a href="https://vs1forum.com/viewtopic.php?f=6&t=71" target="_blank" style="margin-top: 16px;" class="btn btn-primary">Download Help File</a>
+                                                            <a role="button" data-toggle="modal" href="#paymentMethodSettingsVideo" style="margin: 16px 16px 0 16px" class="btn btn-primary visiblePopupDiv helpModal">View Help Video</a>
+                                                            <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=71" style="margin-top: 16px;" class="btn btn-primary downloadHelpFile">Download Help File</a>
                                                         </div>
                                                     </div>
                                                     <div class="row no-gutters" style="display: none;">
@@ -1000,8 +1007,8 @@
                                                     <div class="modal-header" style="padding-bottom: 8px;">
                                                         <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                     <div class="modal-body">
-                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#termsSettingsVideo" class="btn btn-primary helpModal">View Help Video</a></p>
-                                                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=23" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#termsSettingsVideo" class="btn btn-primary helpModal visiblePopupDiv">View Help Video</a></p>
+                                                        <p class="text-center text-muted"><a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=23" class="btn btn-primary downloadHelpFile">Download Help File</a></p>
                                                         <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
                                                         <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
                                                     </div>
@@ -1011,7 +1018,7 @@
                                         </div>
                                     </div>
                                     <!-- Start Help Video Modal -->
-                                    <div class="modal fade" role="dialog" tabindex="-1" id="termsSettingsVideo">
+                                    <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="termsSettingsVideo" data-backdrop="static">
                                         <div class="modal-dialog" role="document" style="max-width: 670px!important;">
                                             <div class="modal-content" >
                                                 <div class="modal-header" >
@@ -1056,8 +1063,8 @@
                                                     <button class="btn btn-primary btnRefreshTerm float-left" type="button" style="margin: 16px 0px; margin-right: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                     <a class="btn btn-primary btnAddTerms alerts-border" role="button" data-toggle="modal" href="#addTermModal" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Term<br></a>
                                                     {{> AddTermModal}}
-                                                    <a role="button" data-toggle="modal" href="#termsSettingsVideo" style="margin: 16px 16px 0 16px" class="btn btn-primary helpModal">View Help Video</a>
-                                                    <a href="https://vs1forum.com/viewtopic.php?f=6&t=23" target="_blank" style="margin-top: 16px;" class="btn btn-primary">Download Help File</a>
+                                                    <a role="button" data-toggle="modal" href="#termsSettingsVideo" style="margin: 16px 16px 0 16px" class="btn btn-primary visiblePopupDiv helpModal">View Help Video</a>
+                                                    <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=23" style="margin-top: 16px;" class="btn btn-primary downloadHelpFile">Download Help File</a>
                                                 </div>
                                             </div>
                                             <div class="row no-gutters" style="display: none;">
@@ -1221,8 +1228,8 @@
                                                         <div class="modal-header" style="padding-bottom: 8px;">
                                                             <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                         <div class="modal-body">
-                                                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalEmployee" class="btn btn-primary helpModal">View Help Video</a></p>
-                                                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalEmployee" class="btn btn-primary helpModal visiblePopupDiv">View Help Video</a></p>
+                                                            <p class="text-center text-muted"><a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" class="btn btn-primary downloadHelpFile">Download Help File</a></p>
                                                             <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
                                                             <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
                                                         </div>
@@ -1232,7 +1239,7 @@
                                             </div>
                                            
                                             <!-- Start Help Video Modal -->
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="helpModalEmployee">
+                                                <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalEmployee" data-backdrop="static">
                                                     <div class="modal-dialog" role="document" style="max-width: 670px!important;">
                                                         <div class="modal-content" >
                                                             <div class="modal-header" >
@@ -1444,8 +1451,8 @@
                                                             <div class="modal-header" style="padding-bottom: 8px;">
                                                                 <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                             <div class="modal-body">
-                                                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAccount" class="btn btn-primary helpModal">View Help Video</a></p>
-                                                                <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=30" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAccount" class="btn btn-primary helpModal visiblePopupDiv">View Help Video</a></p>
+                                                                <p class="text-center text-muted"><a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=30" class="btn btn-primary downloadHelpFile">Download Help File</a></p>
                                                                 <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
                                                                 <p class="text-center text-muted" style="margin: 0;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{lastBatchUpdate}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
                                                             </div>
@@ -1456,7 +1463,7 @@
                                                 <!-- End Help View Modal -->
 
                                                  <!-- Start Help Video Modal -->
-                                                    <div class="modal fade" role="dialog" tabindex="-1" id="helpModalAccount">
+                                                    <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalAccount" data-backdrop="static">
                                                         <div class="modal-dialog" role="document" style="max-width: 670px!important;">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
@@ -1532,8 +1539,8 @@
                                                             </div>
                         
                                                         </div>
-                                                        <a role="button" data-toggle="modal" href="#helpModalAccount" style="margin: 8px 8px 0 8px" class="btn btn-primary helpModal">View Help Video</a>
-                                                        <a href="https://vs1forum.com/viewtopic.php?f=6&t=30" target="_blank" style="margin-top: 8px; margin-left: 8px;" class="btn btn-primary">Download Help File</a>
+                                                        <a role="button" data-toggle="modal" href="#helpModalAccount" style="margin: 8px 8px 0 8px" class="btn btn-primary helpModal visiblePopupDiv">View Help Video</a>
+                                                        <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=30" style="margin-top: 8px; margin-left: 8px;" class="downloadHelpFile btn btn-primary">Download Help File</a>
                                                         <!-- <button class="btn btn-primary btnJournalEntries" id="btnJournalEntries" type="button" style="margin: 8px;"><i class="fa fa-book" style="padding-right: 5px;"></i>Journal Entries</button> -->
                                                     </div>
                                                     <div class="col-5 d-xl-flex justify-content-xl-end align-items-end pr-0">
@@ -1770,8 +1777,8 @@
                                                     <div class="modal-header" style="padding-bottom: 8px;">
                                                         <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                     <div class="modal-body">
-                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalCustomers" class="btn btn-primary helpModal">View Help Video</a></p>
-                                                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewforum.php?f=6" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalCustomers" class="btn btn-primary helpModal visiblePopupDiv">View Help Video</a></p>
+                                                        <p class="text-center text-muted"><a href="javascript:void(0);" data-href="https://vs1forum.com/viewforum.php?f=6" class="btn btn-primary downloadHelpFile">Download Help File</a></p>
                                                         <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
                                                         <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
                                                     </div>
@@ -1782,7 +1789,7 @@
                                         <!-- End Help View Modal -->
 
                                          <!-- Start Help Video Modal -->
-                                            <div class="modal fade" role="dialog" tabindex="-1" id="helpModalCustomers">
+                                            <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalCustomers" data-backdrop="static">
                                                 <div class="modal-dialog" role="document" style="max-width: 670px!important;">
                                                     <div class="modal-content" >
                                                         <div class="modal-header" >
@@ -1826,8 +1833,8 @@
                                                             <div class="col-8 float-left flex-grow-1 pl-0">
                                                                 <button class="btn btn-primary btnRefresh refresh-customer-table" type="button" style="margin: 16px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                                 <button id="btnNewCustomer" data-toggle="#addCustomerModal" name="btnNewCustomer" class="btn btn-primary alerts-border" type="button" style="margin: 16px 0; "><i class="icon ion-plus" style="padding-right: 5px;"></i>New Customer</button>
-                                                                <a role="button" data-toggle="modal" href="#helpModalCustomers" class="btn btn-primary helpModal" style="margin: 16px 16px">View Help Video</a>
-                                                                <a href="https://vs1forum.com/viewforum.php?f=6" target="_blank" class="btn btn-primary" style="margin: 16px 0">Download Help File</a>
+                                                                <a role="button" data-toggle="modal" href="#helpModalCustomers" class="btn btn-primary helpModal visiblePopupDiv" style="margin: 16px 16px">View Help Video</a>
+                                                                <a href="javascript:void(0);" data-href="https://vs1forum.com/viewforum.php?f=6" class="btn btn-primary downloadHelpFile" style="margin: 16px 0">Download Help File</a>
                                                                 
                                                             </div>
 
@@ -2015,8 +2022,8 @@
                                                     <div class="modal-header" style="padding-bottom: 8px;">
                                                         <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                     <div class="modal-body">
-                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalSuppliers" class="btn btn-primary helpModal">View Help Video</a></p>
-                                                        <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalSuppliers" class="btn btn-primary helpModal visiblePopupDiv">View Help Video</a></p>
+                                                        <p class="text-center text-muted"><a href="javascript:void(0);" data-href="https://vs1forum.com/" class="btn btn-primary downloadHelpFile">Download Help File</a></p>
                                                         <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
                                                         <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
                                                     </div>
@@ -2027,7 +2034,7 @@
                                         <!-- End Help View Modal -->
 
                                         <!-- Start Help Video Modal -->
-                                            <div class="modal fade" role="dialog" tabindex="-1" id="helpModalSuppliers">
+                                            <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalSuppliers" data-backdrop="static">
                                                 <div class="modal-dialog" role="document" style="max-width: 670px!important;">
                                                     <div class="modal-content" >
                                                         <div class="modal-header" >
@@ -2063,8 +2070,8 @@
                                                 <div class="col-8 float-left flex-grow-1 pl-0">
                                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                     <button data-toggle="#addSupplierModal" id="btnNewSupplier" name="btnNewSupplier" class="btn btn-primary alerts-border" type="button" style="margin: 16px; margin-left: 0;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Supplier</button>
-                                                    <a role="button" data-toggle="modal" href="#helpModalSuppliers" class="btn btn-primary helpModal" style="margin: 16px 16px 16px 0" >View Help Video</a>
-                                                    <a href="https://vs1forum.com/" target="_blank" class="btn btn-primary" style="margin: 16px 0" >Download Help File</a>
+                                                    <a role="button" data-toggle="modal" href="#helpModalSuppliers" class="btn btn-primary helpModal visiblePopupDiv" style="margin: 16px 16px 16px 0" >View Help Video</a>
+                                                    <a href="javascript:void(0);" data-href="https://vs1forum.com/" class="btn btn-primary downloadHelpFile" style="margin: 16px 0" >Download Help File</a>
                                                 </div>
                                                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start pr-0">
                                                     <div>
@@ -2239,8 +2246,8 @@
                                                     <div class="modal-header" style="padding-bottom: 8px;">
                                                         <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                     <div class="modal-body">
-                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalInventory" class="btn btn-primary helpModal">View Help Video</a></p>
-                                                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewforum.php?f=6" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalInventory" class="btn btn-primary helpModal visiblePopupDiv">View Help Video</a></p>
+                                                        <p class="text-center text-muted"><a href="javascript:void(0);" data-href="https://vs1forum.com/viewforum.php?f=6" class="btn btn-primary downloadHelpFile">Download Help File</a></p>
                                                         <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ  Advisor</button></p>
                                                         <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
                                                     </div>
@@ -2251,7 +2258,7 @@
                                         <!-- End Help View Modal -->
 
                                         <!-- Start Help Video Modal -->
-                                            <div class="modal fade" role="dialog" tabindex="-1" id="helpModalInventory">
+                                            <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalInventory" data-backdrop="static">
                                                 <div class="modal-dialog" role="document" style="max-width: 670px!important;">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -2287,8 +2294,8 @@
                                                 <div class="col-8 float-left flex-grow-1 pl-0">
                                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                     <button data-toggle="#addProductModal" id="btnNewProduct" name="btnNewProduct" class="btn btn-primary alerts-border" type="button" style="margin: 16px; margin-left: 0;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Product</button>
-                                                    <a role="button" data-toggle="modal" href="#helpModalInventory" class="btn btn-primary helpModal" style="margin: 16px 16px 16px 0">View Help Video</a>
-                                                    <a href="https://vs1forum.com/viewforum.php?f=6" target="_blank" class="btn btn-primary" style="margin: 16px 0">Download Help File</a>
+                                                    <a role="button" data-toggle="modal" href="#helpModalInventory" class="btn btn-primary helpModal visiblePopupDiv" style="margin: 16px 16px 16px 0">View Help Video</a>
+                                                    <a href="javascript:void(0);" data-href="https://vs1forum.com/viewforum.php?f=6" class="btn btn-primary downloadHelpFile" style="margin: 16px 0">Download Help File</a>
                                                 </div>
                                                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start pr-0">
                                                     <div>
@@ -2609,7 +2616,20 @@
             </div>
         </div>
     </div>
-
+    <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="downloadHelpFileModal" data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="title-header">Download Help</h4>
+                    <button type="button" class="close closeAdd" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <iframe class="customDownloadHelpIframe" width="640" height="360" src="" frameborder="0" allowfullscreen=""></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- End Modal Product -->
     <script>
         modalDraggable();

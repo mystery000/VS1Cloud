@@ -4635,6 +4635,21 @@ Template.setup.events({
 
   // TODO: Step 2
   // Active Tax Rates
+  
+  "click .visiblePopupDiv": function () {
+    setTimeout(() => {
+      $('.modal-backdrop').addClass('giveEccess');
+    }, 100);
+  },
+  "click .downloadHelpFile": function (event) {
+    // event.preventDefault();
+    $('#downloadHelpFileModal').modal('show');
+    let iframeLink = $(event.target).attr('data-href');
+    $('.customDownloadHelpIframe').attr('src', iframeLink);
+    setTimeout(() => {
+      $('.modal-backdrop').addClass('giveEccess');
+    }, 100);
+  },
   "click .chkDatatableTaxRate": function (event) {
     var columns = $("#taxRatesTable th");
     let columnDataValue = $(event.target)
