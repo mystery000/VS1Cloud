@@ -1540,7 +1540,7 @@ Template.header.onRendered(function() {
 
         organizationService.getCheckTcompLogoData().then(function(dataLogo) {
 
-           
+
             if (dataLogo.tcomplogo.length) {
               let logoImagePicture = dataLogo.tcomplogo[0].MIMEEncodedPicture || '';
               let logoPictureType = dataLogo.tcomplogo[0].Pictype || '';
@@ -1721,7 +1721,6 @@ Template.header.events({
         // }
     },
     'click .btnLoad': function() {
-        //alert("CLICKED");
 
         setTimeout(function() {
             $("#process1").removeClass("hideProcess");

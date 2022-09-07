@@ -185,32 +185,46 @@
                   }
                   .table th,
                   .table td {
-                    text-align: right;
-                    min-width: 100px;
+                      text-align: right;
+                      min-width: 150px;
                   }
                   .table th:first-child,
                   .table td:first-child {
-                    text-align: left;
+                      text-align: left;
+                  }
+                  table tr .text-danger,
+                  table tr .text-danger a {
+                      color: #e74a3b !important;
+                  }
+                  .customDoubleTableHeading + tr th {
+                      border-right: 1px solid #cbcbcb !important;
+                  }
+                  .customDoubleTableHeading + tr th:last-child {
+                      border-right: none !important;
+                  }
+                  .text-center1,
+                  .text-center0 {
+                      text-align: right !important;
                   }
                 </style>
                 <div class="table-responsive">
                   <table class="table table-sm" id="tableExport" name="tableExport">
                     <thead>
-                      <tr class="table-active">
+                      <tr class="table-active customDoubleTableHeading">
                         <th>Contact</th>
                         <th style="width: 130px;">Type</th>
                         <th class="text-right">Invoice No.</th>
                         <th>Due Date</th>
 
-                        <th class="text-right" colspan="{{countActive currencyList}}">Amount Due</th>
-                        <th class="text-right" colspan="{{countActive currencyList}}">Current</th>
-                        <th class="text-right" colspan="{{countActive currencyList}}">1 - 30 Days</th>
-                        <th class="text-right" colspan="{{countActive currencyList}}">30 - 60 Days</th>
-                        <th class="text-right" colspan="{{countActive currencyList}}">60 - 90 Days</th>
-                        <th class="text-right" colspan="{{countActive currencyList}}">&gt; 90 Days</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Amount Due</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Current</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">1 - 30 Days</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">30 - 60 Days</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">60 - 90 Days</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">&gt; 90 Days</th>
                       </tr>
                       {{#if isOnlyDefaultActive equal "false" }}
-                        <tr class="table-active tblAvoid customDoubleTableHeading">
+                        <tr class="table-active tblAvoid">
                           <th></th>
                           <th></th>
                           <th></th>

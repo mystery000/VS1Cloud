@@ -117,8 +117,19 @@ Template.leaveaccruedreport.onRendered(() => {
     }else{
       data = JSON.parse(localStorage.getItem('VS1LeaveAccrued_Report'));
     }
+    const result = new Array();
+    if(data){
+      data.tleaveaccruals.map((y) => {
+        let index = result.findIndex(x => x.EmployeeName == y.fields.EmployeeName)
+        if(index == -1) {
+          result.push({ EmployeeName:y.fields.EmployeeName, records: [y]})
+        } else {
+          result[index].records.push(y)
+        }
+      });
+    }
 
-    templateObject.records.set(data.tleaveaccruals);
+    templateObject.records.set(result);
     setTimeout(function() {
         MakeNegative();
     }, 1000);
@@ -280,7 +291,6 @@ Template.leaveaccruedreport.events({
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
     await templateObject.setReportOptions(false, dateFrom, dateTo);
-    $(".fullScreenSpin").css("display", "none");
   },
   "click #lastMonth": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -289,7 +299,6 @@ Template.leaveaccruedreport.events({
     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
   },
   "click #lastQuarter": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -298,7 +307,6 @@ Template.leaveaccruedreport.events({
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
   },
   "click #last12Months": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -327,7 +335,6 @@ Template.leaveaccruedreport.events({
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-    $(".fullScreenSpin").css("display", "none");
   },
   "click #ignoreDate": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -335,7 +342,6 @@ Template.leaveaccruedreport.events({
     let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
     await templateObject.setReportOptions(true);
-    $(".fullScreenSpin").css("display", "none");
   },
 
   // CURRENCY MODULE //

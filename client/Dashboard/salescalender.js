@@ -54,10 +54,9 @@ Template.calendar.onRendered(() => {
           color: '#e67e22'
       }],
       dayClick: function(date) {
-          alert("Clicked on " + date.format());
+
       },
       eventClick: function(event) {
-          alert("Event title: " + event.title + "\nEvent description: " + event.description + "\nEvent time: " + moment(event.start).format("hh:mm A"));
       },
       eventMouseover: function(calEvent) {
           $(this).css('background-color', 'black');

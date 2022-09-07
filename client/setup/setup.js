@@ -3315,7 +3315,6 @@ Template.setup.onRendered(function () {
 
     let _customerList = [];
     let _customerListHeaders = [];
-
     for (let i = 0; i < data.tcustomervs1.length; i++) {
       let arBalance =
         utilityService.modifynegativeCurrencyFormat(
@@ -3354,6 +3353,15 @@ Template.setup.onRendered(function () {
         jobtitle: data.tcustomervs1[i].fields.JobTitle || "",
         notes: data.tcustomervs1[i].fields.Notes || "",
         country: data.tcustomervs1[i].fields.Country || "",
+        firstname: data.tcustomervs1[i].fields.FirstName || "",
+        lastname: data.tcustomervs1[i].fields.LastName || "",
+        mobile: data.tcustomervs1[i].fields.Mobile || "",
+        skype: data.tcustomervs1[i].fields.SkypeName || "",
+        street: data.tcustomervs1[i].fields.Street || "",
+        city: data.tcustomervs1[i].fields.Suburb || "",
+        state: data.tcustomervs1[i].fields.State || "",
+        postcode: data.tcustomervs1[i].fields.Postcode || "",
+        taxcode: data.tcustomervs1[i].fields.TaxCodeName || "",
       };
 
       _customerList.push(dataList);
@@ -4406,7 +4414,6 @@ Template.setup.events({
     if ($(event.target).is(":checked")) {
       templateObj.iscompanyemail.set(true);
     } else {
-      //alert("not checked");
       templateObj.iscompanyemail.set(false);
     }
   },
@@ -9038,27 +9045,34 @@ Template.setup.events({
 
     rows.push([
       "Company",
-      "Job",
-      "AR Balance",
-      "Credit balance",
-      "Balance",
-      "Credit limit",
-      "Order balance",
+      "First Name",
+      "Last Name",
+      "Phone",
+      "Mobile",
+      "Email",
+      "Skype",
+      "Street",
+      "City/Suburb",
+      "State",
+      "Post Code",
       "Country",
-      "Notes",
+      "Tax Code"
     ]);
 
     customers.forEach((customer) => {
       rows.push([
         customer.company,
-        customer.job,
-        customer.arbalance,
-        customer.creditbalance,
-        customer.balance,
-        customer.creditlimit,
-        customer.salesorderbalance,
+        customer.firstname,
+        customer.lastname,
+        customer.phone,
+        customer.mobile,
+        customer.skype,
+        customer.street,
+        customer.city,
+        customer.state,
+        customer.postcode,
         customer.country,
-        customer.notes
+        customer.taxcode,
       ]);
     });
     utilityService.exportToCsv(rows, filename, "csv");
@@ -9072,27 +9086,34 @@ Template.setup.events({
     const customers = templateObject.customerList.get();
     rows.push([
       "Company",
-      "Job",
-      "AR Balance",
-      "Credit balance",
-      "Balance",
-      "Credit limit",
-      "Order balance",
+      "First Name",
+      "Last Name",
+      "Phone",
+      "Mobile",
+      "Email",
+      "Skype",
+      "Street",
+      "City/Suburb",
+      "State",
+      "Post Code",
       "Country",
-      "Notes",
+      "Tax Code"
     ]);
 
     customers.forEach((customer) => {
       rows.push([
         customer.company,
-        customer.job,
-        customer.arbalance,
-        customer.creditbalance,
-        customer.balance,
-        customer.creditlimit,
-        customer.salesorderbalance,
+        customer.firstname,
+        customer.lastname,
+        customer.phone,
+        customer.mobile,
+        customer.skype,
+        customer.street,
+        customer.city,
+        customer.state,
+        customer.postcode,
         customer.country,
-        customer.notes
+        customer.taxcode,
       ]);
     });
     utilityService.exportToCsv(rows, filename, "xls");

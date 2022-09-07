@@ -113,7 +113,6 @@ Template.eftExportModal.onRendered(function () {
       let accountService = new AccountService();
       const accountTypeList = [];
       var accountDataName = e.target.value || "";
-      console.log('accountDataName....',accountDataName)
 
       if (e.pageX > offset.left + $earch.width() - 8) {
         $("#accountListModal").modal();
@@ -185,7 +184,6 @@ Template.eftExportModal.onRendered(function () {
   $(document).on("click", "#tblAccount tbody tr", function(e) {
     $(".colAccount").removeClass('boldtablealertsborder');
       let selectLineID = $('#selectLineID').val();
-      console.log('selectLineID-----', selectLineID)
       // let taxcodeList = templateObject.taxraterecords.get();
       // var table = $(this);
       // let utilityService = new UtilityService();
