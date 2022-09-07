@@ -14,11 +14,13 @@ import "jquery-editable-select";
 import { ContactService } from "../contacts/contact-service";
 import { BaseService } from "../js/base-service";
 import ApiService from "../js/Api/Module/ApiService";
+import XLSX from 'xlsx';
 
 const employeeId = User.getCurrentLoggedUserId();
 let organisationService = new OrganisationService();
 let sideBarService = new SideBarService();
 const contactService = new ContactService();
+const utilityService = new UtilityService();
 // let purchaseService = new PurchaseBoardService();
 
 const refreshTableTimout = 300;
@@ -372,18 +374,31 @@ Template.setup.onRendered(function () {
   const currentStep = getCurrentStep();
   templateObject.loadSteps = () => {
     let _steps = [];
-    for (let i = 1; i <= numberOfSteps; i++) {
+    let remainingSteps = 0;
+    for (let i = 1; i <= numberOfSteps - 1; i++) {
+      let isStepConfirm = isConfirmedStep(i);
+      if( isStepConfirm == false ){
+        remainingSteps++;
+      }
       _steps.push({
         id: i,
         index: i,
         active: getCurrentStep() == i ? true : false,
         clickable: !isClickableStep(i),
-        isConfirmed: isConfirmedStep(i),
+        isConfirmed: isStepConfirm,
         skippedSteps: isStepSkipped(i),
       });
 
       setAlreadyLoaded(i, false);
     }
+    _steps.push({
+      id: 10,
+      index: 10,
+      active: ( getCurrentStep() == 10 ) ? true : false,
+      clickable: !isClickableStep(10),
+      isConfirmed: ( remainingSteps == 0 ) ? true : false,
+      skippedSteps: isStepSkipped(10),
+    });
     templateObject.steps.set(_steps);
   };
 
@@ -2460,7 +2475,6 @@ Template.setup.onRendered(function () {
 
   // Step 6 Render functionalities
   let sideBarService = new SideBarService();
-  let utilityService = new UtilityService();
   let accountService = new AccountService();
   var splashArrayAccountList = new Array();
   var currentLoc = FlowRouter.current().route.path;
@@ -2513,14 +2527,14 @@ Template.setup.onRendered(function () {
     LoadingOverlay.show();
     let _accountList = [];
 
-    let dataObject = await sideBarService.getAccountListVS1();
-    await addVS1Data("TAccountVS1", JSON.stringify(dataObject));
-    // if (dataObject.length === 0) {
-    //   dataObject = await sideBarService.getAccountListVS1();
-    //   await addVS1Data("TAccountVS1", JSON.stringify(dataObject));
-    // } else {
-    //   dataObject = JSON.parse(dataObject[0].data);
-    // }
+    // let dataObject = await sideBarService.getAccountListVS1();
+    let dataObject = await getVS1Data("TAccountVS1");
+    if (dataObject.length === 0) {
+      dataObject = await sideBarService.getAccountListVS1();
+      await addVS1Data("TAccountVS1", JSON.stringify(dataObject));
+    } else {
+      dataObject = JSON.parse(dataObject[0].data);
+    }
     if (dataObject.taccountvs1) {
       data = dataObject;
 
@@ -2562,7 +2576,6 @@ Template.setup.onRendered(function () {
           _accountList.push(dataList);
         }
       });
-
       templateObject.accountList.set(_accountList);
     }
 
@@ -6971,7 +6984,7 @@ Template.setup.events({
   "click .templateDownloadXLSX-employee": (e, templateObject) => {
     let utilityService = new UtilityService();
     let rows = [];
-    const filename = "SampleEmployee" + ".xlsx";
+    const filename = "SampleEmployee" + ".xls";
 
     const employees = templateObject.currentEmployees.get();
     rows.push([
@@ -7009,6 +7022,11 @@ Template.setup.events({
 
     utilityService.exportToCsv(rows, filename, "xls");
   },
+  // "click .btnUploadFile": function (event) {
+  //   $("#attachment-upload").val("");
+  //   $(".file-name").text("");
+  //   $("#attachment-upload").trigger("click");
+  // },
   "click .btnUploadFile-employee": function (event) {
     $("#attachment-upload-employee").val("");
     $(".file-name").text("");
@@ -7018,7 +7036,7 @@ Template.setup.events({
     let templateObj = Template.instance();
     var filename = $("#attachment-upload-employee")[0].files[0]["name"];
     var fileExtension = filename.split(".").pop().toLowerCase();
-    var validExtensions = ["csv", "txt", "xlsx"];
+    var validExtensions = ["csv", "txt", "xlsx", "xls"];
     var validCSVExtensions = ["csv", "txt"];
     var validExcelExtensions = ["xlsx", "xls"];
 
@@ -7039,7 +7057,7 @@ Template.setup.events({
       } else {
         $(".btnImportEmployee").Attr("disabled");
       }
-    } else if (fileExtension == "xlsx") {
+    } else if (fileExtension == "xls") {
       $(".file-name").text(filename);
       let selectedFile = event.target.files[0];
       var oFileIn;
@@ -8453,16 +8471,16 @@ Template.setup.events({
     }
   },
   "click .new_attachment_btn_account": function (event) {
-    $("#attachment-upload").trigger("click");
+    $("#attachment-upload-account").trigger("click");
   },
-  "change #attachment-upload-account": function (e) {
+  "change #attachment-upload-account": async function (e) {
     let templateObj = Template.instance();
     let saveToTAttachment = false;
     let lineIDForAttachment = false;
-    let uploadedFilesArray = templateObj.uploadedFiles.get();
+    let uploadedFilesArray = await templateObj.uploadedFiles.get();
 
     let myFiles = $("#attachment-upload-account")[0].files;
-    let uploadData = utilityService.attachmentUpload(
+    let uploadData = await utilityService.attachmentUpload(
       uploadedFilesArray,
       myFiles,
       saveToTAttachment,
@@ -8946,7 +8964,7 @@ Template.setup.events({
 
     let utilityService = new UtilityService();
     let rows = [];
-    const filename = "SampleAccounts" + ".xlsx";
+    const filename = "SampleAccounts" + ".xls";
 
     const customers = templateObject.accountList.get();
     rows.push([
@@ -9032,7 +9050,7 @@ Template.setup.events({
 
     let utilityService = new UtilityService();
     let rows = [];
-    const filename = "SampleCustomers" + ".xlsx";
+    const filename = "SampleCustomers" + ".xls";
 
     const customers = templateObject.customerList.get();
     rows.push([
@@ -9114,7 +9132,7 @@ Template.setup.events({
 
     let utilityService = new UtilityService();
     let rows = [];
-    const filename = "SampleSupplier" + ".xlsx";
+    const filename = "SampleSupplier" + ".xls";
 
     const customers = templateObject.supplierList.get();
     rows.push([
@@ -9190,7 +9208,7 @@ Template.setup.events({
 
     let utilityService = new UtilityService();
     let rows = [];
-    const filename = "SampleInventory" + ".xlsx";
+    const filename = "SampleInventory" + ".xls";
 
     const customers = templateObject.inventoryList.get();
     rows.push([
