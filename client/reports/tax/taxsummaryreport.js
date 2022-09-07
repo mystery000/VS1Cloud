@@ -133,6 +133,7 @@ Template.taxsummaryreport.onRendered(() => {
 
       reportService.getTaxCodesDetailVS1().then(function (data) {
         const taxCodesDetail = data.ttaxcodevs1;
+      
         localStorage.setItem('VS1TaxSummary_Report', JSON.stringify(data)||'');
         let records = [];
         let mainReportRecords = [];
@@ -150,7 +151,7 @@ Template.taxsummaryreport.onRendered(() => {
         let accountType = '';
         let subTaxSummaryData = [];
 
-        taxSummaryReport.forEach((data) => {
+        accountData.forEach((account) => {
           // let inputsexpurchases = utilityService.modifynegativeCurrencyFormat(data.INPUT_AmountEx) || 0;
           // let inputsincpurchases = utilityService.modifynegativeCurrencyFormat(data.INPUT_AmountInc) || 0;
           // let outputexsales = utilityService.modifynegativeCurrencyFormat(data.OUTPUT_AmountEx) || 0;
@@ -159,18 +160,18 @@ Template.taxsummaryreport.onRendered(() => {
           // let totaltax = utilityService.modifynegativeCurrencyFormat(data.TotalTax) || 0;
           // let totaltax1 = utilityService.modifynegativeCurrencyFormat(data.TotalTax1) || 0;
 
-          let inputsexpurchases = data.INPUT_AmountEx || 0;
-          let inputsincpurchases = data.INPUT_AmountInc || 0;
-          let outputexsales = data.OUTPUT_AmountEx || 0;
-          let outputincsales = data.OUTPUT_AmountInc || 0;
-          let totalnet = data.TotalNet || 0;
-          let totaltax = data.TotalTax || 0;
-          let totaltax1 = data.TotalTax1 || 0;
+          let inputsexpurchases = account.INPUT_AmountEx || 0;
+          let inputsincpurchases = account.INPUT_AmountInc || 0;
+          let outputexsales = account.OUTPUT_AmountEx || 0;
+          let outputincsales = account.OUTPUT_AmountInc || 0;
+          let totalnet = account.TotalNet || 0;
+          let totaltax = account.TotalTax || 0;
+          let totaltax1 = account.TotalTax1 || 0;
 
           const mainReportData = {
-            id: data.ID || '',
-            taxcode: data.TaxCode || '',
-            clientid: data.ClientID || '',
+            id: account.ID || '',
+            taxcode: account.TaxCode || '',
+            clientid: account.ClientID || '',
             inputsexpurchases: inputsexpurchases,
             inputsincpurchases: inputsincpurchases,
             outputexsales: outputexsales,
@@ -178,22 +179,23 @@ Template.taxsummaryreport.onRendered(() => {
             totalnet: totalnet || 0.00,
             totaltax: totaltax || 0.00,
             totaltax1: totaltax1 || 0.00,
-            taxrate: (data.TaxRate * 100).toFixed(2) + '%' || 0,
-            taxrate2: (data.TaxRate * 100).toFixed(2) || 0,
-            entries: data
+            taxrate: (account.TaxRate * 100).toFixed(2) + '%' || 0,
+            taxrate2: (account.TaxRate * 100).toFixed(2) || 0,
+            entries: account
           };
 
           mainReportRecords.push(mainReportData);
 
-          const taxDetail = taxCodesDetail.find((v) => v.CodeName === data.TaxCode);
+          const taxDetail = taxCodesDetail.find((v) => v.CodeName === account.TaxCode);
+        
           if (taxDetail && taxDetail.Lines) {
 
             taxDetail.Lines.forEach((line) => {
               const tax = (utilityService.convertSubstringParseFloat(inputsexpurchases) - utilityService.convertSubstringParseFloat(outputexsales)) * taxDetail.Lines[j].Percentage / 100.0;
 
               const subReportData = {
-                id: data.ID || '',
-                taxcode: data.TaxCode || '',
+                id: account.ID || '',
+                taxcode: account.TaxCode || '',
                 subtaxcode: line.SubTaxCode || '',
                 clientid: '',
                 inputsexpurchases: inputsexpurchases,
@@ -307,13 +309,13 @@ Template.taxsummaryreport.onRendered(() => {
         //   records = _.sortBy(records, 'SupplierName');
         // records = _.groupBy(records, 'SupplierName');
 
-        for (let key in records) {
-          allRecords.push({
-              title: key,
-              entries: records[key],
-              total: {} // will be filled later
-          });
-        }
+        // for (let key in records) {
+        //   allRecords.push({
+        //       title: key,
+        //       entries: records[key],
+        //       total: {} // will be filled later
+        //   });
+        // }
 
         let iterator = 0;
         let inputsexpurchasestotal = 0;
@@ -336,7 +338,7 @@ Template.taxsummaryreport.onRendered(() => {
           taxratetotal = taxratetotal + Number(record.taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
           taxtotal1 = taxtotal1 + parseFloat(record.totaltax1);
 
-          record.total = {
+          let val = {
             InputsExPurchases: inputsexpurchasestotal,
             InputsIncPurchases: inputsincpurchasestotal,
             OutputExSales: outputexsalestotal,
@@ -347,7 +349,7 @@ Template.taxsummaryreport.onRendered(() => {
             TaxRate: taxratetotal
           }
 
-          current.push(record.total);
+          current.push(val);
 
           
 
