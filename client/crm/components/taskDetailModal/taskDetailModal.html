@@ -14,10 +14,10 @@
                 <input class="custom-control-input chkBox chkComplete pointer chk_complete" type="checkbox"
                   id="chkComplete_taskEdit" value="" style="background: transparent !important;" data-dismiss="modal">
                 <label class="custom-control-label chkBox pointer chk_complete" for="chkComplete_taskEdit"
-                  data-dismiss="modal" data-id="edit"></label>
+                  data-dismiss="modal" data-id="edit">Complete</label>
               </div>
               <h5 class="modal-title displayTaskNameDescription" style="padding-top: 5px;" id="taskmodalNameLabel"></h5>
-              <input type="text" class="editTaskNameDescription editTaskDetailName" />
+              <input style="margin-left: 75px;" type="text" class="editTaskNameDescription editTaskDetailName" />
             </div>
           </div>
 
@@ -35,8 +35,9 @@
               <textarea class="editTaskNameDescription editTaskDetailDescription"></textarea>
             </div>
             <div class="col-12" style="display: flex;">
-              <span class="taskDueDate"><i class="far fa-calendar-plus" style="margin-right: 5px;"></i><span
-                  id="taskmodalDuedate"></span></span>
+              <span class="taskDueDate">
+                <span id="taskmodalDuedate"></span>
+              </span>
               <div id="taskmodalLabels" style="margin-top:4px;">
                 <span class="taskTag"><i class="fas fa-tag"></i></span>
               </div>
