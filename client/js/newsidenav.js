@@ -676,7 +676,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavreceipt').removeClass('active');
                 $('.collapse').collapse('hide');
                 $('#sidenavshipping').addClass('active');
-            }else if ((currentLoc == "/processlist")|| (currentLoc == '/workordercard')) {
+            }else if ((currentLoc == "/processlist")|| (currentLoc == '/workordercard') || (currentLoc == '/workorderlist')) {
               $('#sidenavaccounts').removeClass('active');
                 $('#sidenavbanking').removeClass('active');
                 $('#sidenavdashbaord').removeClass('active');
@@ -7256,6 +7256,11 @@ Template.newsidenav.events({
       event.preventDefault();
       FlowRouter.go('/workordercard');
       let templatObject = Template.instance();
+      templateObject.getSetSideNavFocus();
+    }, 'click #sidenavnewworkorderlist': function(event) {
+      event.preventDefault();
+      FlowRouter.go('/workorderlist');
+      let templateObject = Template.instance();
       templateObject.getSetSideNavFocus();
     },
     'click .sidenavpayments': function(event) {

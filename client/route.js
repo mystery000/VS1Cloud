@@ -2116,3 +2116,12 @@ authenticatedRoutes.route('/workordercard', {
         })
     }
 })
+
+authenticatedRoutes.route('/workorderlist', {
+    name: 'workorderlist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'workorderlist'
+        })
+    }
+})

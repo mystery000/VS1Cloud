@@ -1720,12 +1720,13 @@ Template.emailsettings.onRendered(function () {
                                     // Save email settings
                                     await taxRateService.saveScheduleSettings(objDetail).then(dataReturn=>{
                                         taxRateService.getScheduleSettings().then(dataUpdate => {
-                                            addVS1Data('TReportSchedules', JSON.stringify(dataUpdate))
+                                            addVS1Data('TReportSchedules', JSON.stringify(dataUpdate)).then(()=>{})
                                         })
                                     });
                                 } catch (e) {
                                 }
-                                objDetail.fields.attachments = documents;
+                                objDetail.fields.attachments = [];
+
                                 objDetail.fields.Offset = new Date().getTimezoneOffset();
 
                                 const nextDueDate = await new Promise((resolve, reject) => {
@@ -1747,6 +1748,7 @@ Template.emailsettings.onRendered(function () {
                                     BasedOnType: basedOnType,
                                 }));
 
+                                objDetail.fields.attachments = documents;
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                                 Meteor.call('addTask', objDetail.fields);
                             }
