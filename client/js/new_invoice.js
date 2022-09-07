@@ -14434,21 +14434,7 @@ Template.new_invoice.events({
         organisationService.saveCustomField(objDetails1).then(function (objDetails) {
           $(".fullScreenSpin").css("display", "none");
           $('#myModal2').modal('hide');
-        })
-        .catch(function (err) {
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-              $(".fullScreenSpin").css("display", "none");
-            } else if (result.dismiss === "cancel") {
-            }
-            $('#myModal2').modal('hide');
-          });
+        }).catch(function (err) {
           $(".fullScreenSpin").css("display", "none");
           $('#myModal2').modal('hide');
         });
