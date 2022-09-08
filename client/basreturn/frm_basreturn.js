@@ -76,6 +76,7 @@ Template.basreturn.onCreated(() => {
     templateObject.taxSummaryList = new ReactiveVar([]);
     templateObject.accountsList = new ReactiveVar([]);
     templateObject.availableCategories = new ReactiveVar([]);
+    templateObject.pageTitle = new ReactiveVar();
 });
 
 Template.basreturn.onRendered(function() {
@@ -585,6 +586,17 @@ Template.basreturn.onRendered(function() {
 
     templateObject.getAccountLists();
 
+    var url = FlowRouter.current().path;
+    if (url.indexOf('?id=') > 0) {
+        var getid = url.split('?id=');
+
+        if (getid[1]) {
+            templateObject.pageTitle.set("Edit BAS Return");
+        }
+    } else {
+        templateObject.pageTitle.set("New BAS Return");
+    }
+
     $('#sltDepartment').editableSelect();
 
     $('#sltDepartment').editableSelect()
@@ -693,7 +705,6 @@ Template.basreturn.helpers({
         let taxcodesArray = [1, 2, 3, 4, 5];
         return taxcodesArray;
     },
-
     accountsList: () => {
         return Template.instance()
             .accountsList.get()
@@ -708,6 +719,12 @@ Template.basreturn.helpers({
                     -1;
             });
     },
+    pageTitle: () => {
+        return Template.instance().pageTitle.get();
+    },
+
+
+
 
 
 
