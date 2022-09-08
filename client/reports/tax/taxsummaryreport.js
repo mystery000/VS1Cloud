@@ -1453,8 +1453,8 @@ Template.taxsummaryreport.events({
 
 
    // CURRENCY MODULE //
-  "click .fx-rate-btn": async (e) => {
-    await loadCurrency();
+  "click .fx-rate-btn": async (e, ui) => {
+    await loadCurrency(ui);
     //loadCurrencyHistory();
   },
   "click .currency-modal-save": (e) => {
@@ -1747,8 +1747,8 @@ Template.registerHelper('containsequals', function (a, b) {
 /**
  *
  */
- async function loadCurrency() {
-  let templateObject = Template.instance();
+ async function loadCurrency(templateObject) {
+  //let templateObject = Template.instance();
 
   if ((await templateObject.currencyList.get().length) == 0) {
     LoadingOverlay.show();
