@@ -359,8 +359,6 @@ Template.taxsummaryreport.onRendered(() => {
         templateObject.mainReportRecords.set(mainReportRecords);
         templateObject.reportRecords.set(mainReportRecords); // this one will be used
 
-        console.log(mainReportRecords);
-
         // for (let i = 0; i < mainReportRecords.length; i++) {
 
 
