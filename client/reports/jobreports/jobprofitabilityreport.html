@@ -207,48 +207,28 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>4x4 World</td>
-                                                <td>Kitchen Repairs</td>
-                                                <td class="text-right">0</td>
-                                                <td class="text-right text-danger">$ 941.16</td>
-                                                <td class="text-right text-success">$ 1,054.56</td>
-                                                <td class="text-right text-success">$ 741.40</td>
-                                                <td class="text-right text-success">$ 1,000.00</td>
-                                                <td class="text-right">28.00</td>
-                                                <td class="text-right text-danger">-$ 0.45</td>
-                                                <td class="text-right">25.13 %</td>
-                                                <td class="text-right text-success">$ 1,136.11</td>
-                                            </tr>
-                                            <tr>
-                                                <td>ABC</td>
-                                                <td>Kitchen Repairs</td>
-                                                <td class="text-right">0</td>
-                                                <td class="text-right text-danger">$ 8,941.16</td>
-                                                <td class="text-right text-success">$ 38,054.56</td>
-                                                <td class="text-right text-success">$ 541.40</td>
-                                                <td class="text-right text-success">$ 8,000.00</td>
-                                                <td class="text-right">45.00</td>
-                                                <td class="text-right text-warning">$ 0.00</td>
-                                                <td class="text-right">25.13 %</td>
-                                                <td class="text-right text-success">$ 12,136.11</td>
-                                            </tr>
-                                            <!-- {{#if records}}
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                            {{else}}
-                                                <tr class="odd" style="text-align: center;">
-                                                    <td valign="top" colspan="12" class="dataTables_empty">No data available in table</td>
-                                                </tr>
-                                            {{/if}} -->
+                                            {{#if records}}
+                                                {{#each arrayify records}}
+                                                    <tr>
+                                                        <td colspan="8" style="font-weight: 800;">{{ value.CompanyName }}</td>
+                                                    </tr>
+                                                    {{#each item in value.SubAccounts}}
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ item.JobName }}</td>
+                                                            <td>{{ item.JobNumber }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice item.IncomeEx }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice item.CostEx }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice item.Quotedex }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice item.DiffIncome_Cost }}</td>
+                                                            <td>{{ item.Backorders }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice item.CreditEx }}</td>
+                                                            <td>{{ formatPercent item.ProfitPercent }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice item.ProfitDollars }}</td>
+                                                        </tr>
+                                                    {{/each}}
+                                                {{/each}}
+                                            {{/if}}
                                         </tbody>
                                     </table>
                                 </div>
