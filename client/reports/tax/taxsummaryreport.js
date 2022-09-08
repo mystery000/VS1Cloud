@@ -191,7 +191,7 @@ Template.taxsummaryreport.onRendered(() => {
           if (taxDetail && taxDetail.Lines) {
 
             taxDetail.Lines.forEach((line) => {
-              const tax = (utilityService.convertSubstringParseFloat(inputsexpurchases) - utilityService.convertSubstringParseFloat(outputexsales)) * taxDetail.Lines[j].Percentage / 100.0;
+              const tax = (parseFloat(inputsexpurchases) - parseFloat(outputexsales)) * line.Percentage / 100.0;
 
               const subReportData = {
                 id: account.ID || '',
@@ -203,8 +203,8 @@ Template.taxsummaryreport.onRendered(() => {
                 outputexsales: outputexsales,
                 outputincsales: outputincsales,
                 totalnet: totalnet || 0.00,
-                totaltax: utilityService.modifynegativeCurrencyFormat(Math.abs(tax)) || 0.00,
-                totaltax1: utilityService.modifynegativeCurrencyFormat(tax) || 0.00,
+                totaltax: Math.abs(tax) || 0.00,
+                totaltax1: tax || 0.00,
                 taxrate: (line.Percentage).toFixed(2) + '%' || 0,
                 taxrate2: (line.Percentage).toFixed(2) || 0
               };
@@ -359,7 +359,6 @@ Template.taxsummaryreport.onRendered(() => {
         templateObject.mainReportRecords.set(mainReportRecords);
         templateObject.reportRecords.set(mainReportRecords); // this one will be used
 
-
         // for (let i = 0; i < mainReportRecords.length; i++) {
 
 
@@ -439,13 +438,13 @@ Template.taxsummaryreport.onRendered(() => {
                 taxcode: '',
                 subtaxcode: subReportRecords[i - 1].subtaxcode || '',
                 clientid: '',
-                inputsexpurchases: utilityService.modifynegativeCurrencyFormat(inputsexpurchasestotal),
-                inputsincpurchases: utilityService.modifynegativeCurrencyFormat(inputsincpurchasestotal),
-                outputexsales: utilityService.modifynegativeCurrencyFormat(outputexsalestotal),
-                outputincsales: utilityService.modifynegativeCurrencyFormat(outputincsalestotal),
-                totalnet: utilityService.modifynegativeCurrencyFormat(nettotal) || 0.00,
-                totaltax: utilityService.modifynegativeCurrencyFormat(taxtotal) || 0.00,
-                totaltax1: utilityService.modifynegativeCurrencyFormat(taxtotal1) || 0.00,
+                inputsexpurchases: inputsexpurchasestotal,
+                inputsincpurchases: inputsincpurchasestotal,
+                outputexsales: outputexsalestotal,
+                outputincsales: outputincsalestotal,
+                totalnet: nettotal || 0.00,
+                totaltax: taxtotal || 0.00,
+                totaltax1: taxtotal1 || 0.00,
                 taxrate: (taxratetotal).toFixed(2) + '%' || 0,
                 taxrate2: (taxratetotal).toFixed(2) || 0
               };
@@ -473,14 +472,14 @@ Template.taxsummaryreport.onRendered(() => {
             taxtotal1 = 0;
           }
           if (subReportRecords.length > 0) {
-            inputsexpurchasestotal = inputsexpurchasestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].inputsexpurchases);
-            inputsincpurchasestotal = inputsincpurchasestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].inputsincpurchases);
-            outputexsalestotal = outputexsalestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].outputexsales);
-            outputincsalestotal = outputincsalestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].outputincsales);
-            nettotal = nettotal + utilityService.convertSubstringParseFloat(subReportRecords[i].totalnet);
-            taxtotal = taxtotal + utilityService.convertSubstringParseFloat(subReportRecords[i].totaltax);
+            inputsexpurchasestotal = inputsexpurchasestotal + parseFloat(subReportRecords[i].inputsexpurchases);
+            inputsincpurchasestotal = inputsincpurchasestotal + parseFloat(subReportRecords[i].inputsincpurchases);
+            outputexsalestotal = outputexsalestotal + parseFloat(subReportRecords[i].outputexsales);
+            outputincsalestotal = outputincsalestotal + parseFloat(subReportRecords[i].outputincsales);
+            nettotal = nettotal + parseFloat(subReportRecords[i].totalnet);
+            taxtotal = taxtotal + parseFloat(subReportRecords[i].totaltax);
             taxratetotal = taxratetotal + Number(subReportRecords[i].taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
-            taxtotal1 = taxtotal1 + utilityService.convertSubstringParseFloat(subReportRecords[i].totaltax1);
+            taxtotal1 = taxtotal1 + parseFloat(subReportRecords[i].totaltax1);
           }
           i++;
         }

@@ -6,7 +6,7 @@ import ApiEndpoint from "./Module/ApiEndPoint";
 /**
  * @param {ApiCollection} collection
  */
-class JobSalesApi {
+ export default class JobSalesApi {
   constructor() {
     this.name = "jobsales";
 
@@ -23,6 +23,3 @@ class JobSalesApi {
     ]);
   }
 }
-
-
-export default JobSalesApi = new JobSalesApi();
