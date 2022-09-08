@@ -967,8 +967,7 @@ Template.taxRatesSettings.events({
 
     Session.setPersistent("ERPTaxCodePurchaseInc", purchasetaxcode || "");
     Session.setPersistent("ERPTaxCodeSalesInc", salestaxcode || "");
-    getVS1Data("vscloudlogininfo")
-      .then(function (dataObject) {
+    getVS1Data("vscloudlogininfo").then(function (dataObject) {
         if (dataObject.length == 0) {
           swal({
             title: "Default Tax Rate Successfully Changed",
@@ -990,12 +989,9 @@ Template.taxRatesSettings.events({
           ) {
             loginDataArray = dataObject[0].data;
 
-            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc =
-              purchasetaxcode;
-            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc =
-              salestaxcode;
-            addLoginData(loginDataArray)
-              .then(function (datareturnCheck) {
+            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc =purchasetaxcode;
+            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc = salestaxcode;
+            addLoginData(loginDataArray).then(function (datareturnCheck) {
                 swal({
                   title: "Default Tax Rate Successfully Changed",
                   text: "",
@@ -1041,8 +1037,7 @@ Template.taxRatesSettings.events({
             });
           }
         }
-      })
-      .catch(function (err) {
+      }).catch(function (err) {
         swal({
           title: "Default Tax Rate Successfully Changed",
           text: "",
@@ -1148,9 +1143,7 @@ Template.taxRatesSettings.events({
       }
     });
     if (taxtID == "") {
-      taxRateService
-        .checkTaxRateByName(taxName)
-        .then(function (data) {
+      taxRateService.checkTaxRateByName(taxName).then(function (data) {
           taxtID = data.ttaxcode[0].Id;
           let objDetails = {
             type: "TTaxcode",

@@ -630,7 +630,7 @@
                                                           </div>
                                                           <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                               <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                              <input class="custom-range widthElement rngRangeTaxCode" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[12].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                              <input class="custom-range widthElement rngRangeDiscount" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[12].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                           </div>
                                                         </div>
 
@@ -690,7 +690,7 @@
                                                           </div>
                                                           <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                               <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                              <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="" min="0" max="1000">
+                                                              <input class="custom-range widthElement rngRangeTaxAmount" type="number" style="margin: 8px;" value="" min="0" max="1000">
                                                           </div>
                                                         </div>
 
@@ -703,7 +703,7 @@
                                                           </div>
                                                           <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                               <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                              <input class="custom-range widthElement rngRangeTaxCode" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[13].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                              <input class="custom-range widthElement rngRangeSerialLot" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[13].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                           </div>
                                                         </div>
 
@@ -715,7 +715,7 @@
                                                             </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                                <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[8].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                <input class="custom-range widthElement rngRangeAmountEx" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[8].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                             </div>
                                                         </div>
 
@@ -727,7 +727,7 @@
                                                             </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                                <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[11].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                <input class="custom-range widthElement rngRangeAmountInc" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[11].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                             </div>
                                                         </div>
 
@@ -1964,9 +1964,9 @@
                     </div>
                 </div>
                 <div style="margin: 0px; padding: 16px; border: none !important; width: 60mm; max-width: 60mm;">
-                 
+
                     <h4 style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Quote &nbsp;&nbsp;&nbsp; <span class="print-header">{{quoterecord.id}}</span></h4>
-                  
+
                     <div style="display: flex; width: 100%;">
                         <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                             <label style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</label>
@@ -1978,7 +1978,10 @@
                             <p style="margin-bottom: 4px; color: rgb(0 0 0);">{{quoterecord.saledate}}</p>
                             <p class="po" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;">{{quoterecord.custPONumber}}.</p>
                             <p class="due" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;">{{quoterecord.termsName}}.</p>
+                            {{#if equals accountID ''}}
+                            {{else}}
                             <p class="link" style="margin-bottom: 8px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;"><a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px;">Pay Now</a></p>
+                            {{/if}}
                         </div>
                     </div>
                 </div>
@@ -1990,12 +1993,12 @@
                         <thead style="color: rgb(251,251,251);">
                             <tr style="border-bottom: 1px solid rgba(0, 0, 0, 1);">
                                 <th style="width: 200px; background-color: white; color: rgb(0 0 0);">Product Name</th>
-                                <th style="width: 250px; background-color: white; color: rgb(0 0 0);">Description</th>
+                                <th style="width: 220px; background-color: white; color: rgb(0 0 0);">Description</th>
                                 <th style="text-align: right; width: 50px; background-color: white; color: rgb(0 0 0);">Qty</th>
                                 <th style="text-align: right; width: 90px; background-color: white; color: rgb(0 0 0);">Unit Price</th>
-                                <th style="text-align: right; width: 77px; background-color: white; color: rgb(0 0 0);">Tax</th>
+                                <th style="text-align: right; width: 100px; background-color: white; color: rgb(0 0 0);">Tax</th>
                                 <th style="text-align: right; width: 77px; background-color: white; color: rgb(0 0 0);" class="hiddenColumn">Tax</th>
-                                <th style="text-align: right; width: 100px; background-color: white; color: rgb(0 0 0);">Amount</th>
+                                <th style="text-align: right; width: 100px; background-color: white; color: rgb(0 0 0);">Amount (Inc)</th>
                             </tr>
                         </thead>
                         <tbody style="color: rgb(0 0 0);">
@@ -2069,10 +2072,10 @@
                         <div class="col-6">
                             <div style="margin: 8px; border: none !important;">
                                 <div style="width: 100%; display: flex;">
-                                   
+
                                     <div style="padding-right: 16px; width: 50%;">
                                         <p id="subtotal_totalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Sub Total</p>
-                                        <p id="grandTotalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Total GST</p>
+                                        <p id="grandTotalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Total {{loggedInCountryVAT}}</p>
                                     </div>
 
                                     <div style="padding-left: 16px; width: 50%;">

@@ -988,9 +988,6 @@ Template.basreturn.events({
         let accountsList = templateObject.accountsList.get();
         let accountsSummaryList = templateObject.accountsSummaryList.get();
 
-        console.log("accountsList", accountsList);
-        console.log("accountsSummaryList", accountsSummaryList);
-
         let accountsPanID = $(event.target).attr('id').split("-")[1];
 
         var total_amounts = 0;
@@ -1032,9 +1029,6 @@ Template.basreturn.events({
         const templateObject = Template.instance();
         let accountsList = templateObject.accountsList.get();
         let accountsSummaryList = templateObject.accountsSummaryList.get();
-
-        console.log("accountsList", accountsList);
-        console.log("accountsSummaryList", accountsSummaryList);
 
         let accountsPanID = $(event.target).attr('id').split("-")[1];
 
