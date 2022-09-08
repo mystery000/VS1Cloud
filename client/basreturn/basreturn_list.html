@@ -10,7 +10,7 @@
         </style> -->
         <div style="margin-top: -24px;">
             <header style="padding: 16px;background-color: #ededed;">
-                <h1 class="headingMobile" style="margin: 16px; margin-bottom: 0px;">Journal Entries List
+                <h1 class="headingMobile" style="margin: 16px; margin-bottom: 0px;">BAS Return List
 
                     {{> helpbutton}}
 
@@ -154,7 +154,7 @@
                 </style>
                 <div class="col float-left flex-grow-1 mb-4">
                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                    <button id="btnNewJournalEntry" name="btnNewJournalEntry" class="btn btn-primary" type="button" style="margin: 16px;"><i class="fa fa-book" style="padding-right: 5px;"></i>New Journal Entry</button>
+                    <button id="btnNewBasReturn" name="btnNewBasReturn" class="btn btn-primary" type="button" style="margin: 16px;"><i class="fa fa-book" style="padding-right: 5px;"></i>New BAS Return</button>
                     {{>FxRatesButton}}
                 </div>
 
@@ -202,154 +202,47 @@
                               background-color: #e74a3b !important; color:#fff;
                             }
                         </style>
-                        <div class="row no-gutters d-xl-flex align-items-xl-end">
-                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
-
-                            </div>
-                            <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
-                                <div class="dropdown" style="margin: 8px; margin-top: 0px;">
-                                    <style>
-                                        .btn-daterange::after {
-                                            display: none;
-                                        }
-                                    </style>
-
-                                    <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
-                                    {{> daterangedropdownoption}}
-
-                                </div>
-                                <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
-                                    <label style="margin-top: 8px; margin-right: 16px;">From</label>
-                                    <div class="input-group date" style="width: 160px;">
-                                        <input type="text" class="form-control" id="dateFrom" name="dateFrom" >
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
-                                    <label style="margin-top: 8px; margin-right: 16px;">To</label>
-                                    <div class="input-group date" style="width: 160px;">
-                                        <input type="text" class="form-control" id="dateTo" name="dateTo" >
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <table id="tblJournalList" name="tblJournalList" class="dataTable table table-hover table-striped table-bordered tblJournalList">
+                        <table id="tblBasReturnList" name="tblBasReturnList" class="dataTable table table-hover table-striped table-bordered tblBasReturnList">
                             <thead>
                                 <tr class="dnd-moved">
-                                    <th class="th colSortDate hiddenColumn">id</th>
-                                    <th class="th colTransactionDate" style="width:105px;">Transaction Date</th>
-                                    <th class="th colEntryNo" style="width:80px;">Entry No</th>
-                                    <th class="th colAccountName" style="width:200px;">Account Name</th>
-                                    <th class="th colDepartment" style="width:130px;">Department</th>
-                                    <th class="th colDebitAmount text-center" colspan="{{countActive currencyList}}" style="width:80px;">Debit Amount</th>
-                                    <th class="th colCreditAmount text-center" colspan="{{countActive currencyList}}" style="width:80px;">Credit Amount</th>
-                                    <th class="th colTaxAmount text-center" colspan="{{countActive currencyList}}" style="width:80px;">Tax Amount</th>
-                                    <th class="th colStatus" style="width: 5% !important;">Status</th>
-                                    <th class="th colAccountNo hiddenColumn">Account No</th>
-                                    <th class="th colEmployee hiddenColumn">Employee</th>
-                                    <!-- <th class="th colApproved hiddenColumn">Approved?</th> -->
-                                    <th class="th colMemo">Memo</th>
+                                    <th class="th colBasNumber" rowspan="2" style="width:60px; text-align:center">Bas Number</th>
+                                    <th class="th colBasName" style="width:250px !important; text-align:center" rowspan="2">Description</th>
+                                    <th class="th colT1Option" colspan="3" style="text-align:center">Supplies and Acquisitions</th>
+                                    <th class="th colT2Option" colspan="3" style="text-align:center">PAYG Withheld for the period</th>
+                                    <th class="th colT1Option" colspan="3" style="text-align:center">PAYG instalment for the period</th>
+                                    <!-- <th class="th colStatus hiddenColumn" style="width: 5% !important; text-align:center;" rowspan="3">Status</th> -->
                                 </tr>
-
-                                {{#if isOnlyDefaultActive equal "false" }}
-                                    <tr class="table-active tblAvoid customDoubleTableHeading">
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-
-
-
-
-                                        {{#if currencyList}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
-                                                    <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
-                                                {{/if}}
-                                            {{/each}}
-                                        {{/if}}
-
-                                        {{#if currencyList}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
-                                                    <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
-                                                {{/if}}
-                                            {{/each}}
-                                        {{/if}}
-                                        {{#if currencyList}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
-                                                    <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
-                                                {{/if}}
-                                            {{/each}}
-                                        {{/if}}
-
-                                        <th></th>
-                                        <th></th>
-
-
-                                    </tr>
-                                {{/if}}
+                                <tr class="dnd-moved">
+                                    <th style="width:80px; text-align:center">Period</th>
+                                    <th style="width:100px; text-align:center">From</th>
+                                    <th style="width:100px; text-align:center">To</th>
+                                    <th style="width:80px; text-align:center">Period</th>
+                                    <th style="width:100px; text-align:center">From</th>
+                                    <th style="width:100px; text-align:center">To</th>
+                                    <th style="width:80px; text-align:center">Period</th>
+                                    <th style="width:100px; text-align:center">From</th>
+                                    <th style="width:100px; text-align:center">To</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                    <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
-                                    <td contenteditable="false" class="colTransactionDate" ><span style="display:none;">{{item.sortdate}}</span>{{item.transactiondate}}</td>
-                                    <td contenteditable="false" class="colEntryNo" style="text-align: right!important;">{{item.entryno}}</td>
-                                    <td contenteditable="false" class="colAccountName">{{item.accountname}}</td>
-                                    <td contenteditable="false" class="colDepartment">{{item.department}}</td>
-
-                                    {{#if isOnlyDefaultActive }}
-                                        {{#if currencyList}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
-                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="colDebitAmount text-right {{#if isNegativeAmount item.debitamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.debitamount c}}</td>
-
-
-                                                {{/if}}
-                                            {{/each}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
-                                                     <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="colCreditAmount text-right {{#if isNegativeAmount item.creditamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.creditamount c}}</td>
-
-                                                {{/if}}
-                                            {{/each}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
-                                                     <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="colTaxAmount text-right {{#if isNegativeAmount item.taxamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.taxamount c}}</td>
-                                                {{/if}}
-                                            {{/each}}
-
-
-                                        {{/if}}
-                                    {{else}}
-                                        <td contenteditable="false" class="colDebitAmount" style="text-align: right!important;">{{item.debitamount}}</td>
-                                        <td contenteditable="false" class="colCreditAmount" style="text-align: right!important;">{{item.creditamount}}</td>
-                                        <td contenteditable="false" class="colTaxAmount" style="text-align: right!important;">{{item.taxamount}}</td>
-
-
-                                    {{/if}}
-
-
-
-
-
-                                    <td contenteditable="false" class="colStatus">{{item.orderstatus}}</td>
-                                    <td contenteditable="false" class="colAccountNo hiddenColumn">{{item.accountno}}</td>
-                                    <td contenteditable="false" class="colEmployee hiddenColumn">{{item.employeename}}</td>
-
-                                    <td contenteditable="false" class="colMemo" >{{item.memo}}</td>
+                                    <td contenteditable="false" class="colBasNumber">78</td>
+                                    <td contenteditable="false" class="colBasName">{{item.memo}}</td>
+                                    <td contenteditable="false" class="t1Period">Quarterly</td>
+                                    <td contenteditable="false" class="t1From">2000-02-02</td>
+                                    <td contenteditable="false" class="t1To">2020-02-02</td>
+                                    <td contenteditable="false" class="t2Period">Quarterly</td>
+                                    <td contenteditable="false" class="t2From">2000-02-02</td>
+                                    <td contenteditable="false" class="t2To">2020-02-02</td>
+                                    <td contenteditable="false" class="t3Period">Quarterly</td>
+                                    <td contenteditable="false" class="t3From">2000-02-02</td>
+                                    <td contenteditable="false" class="t3To">2020-02-02</td>
+                                    <!-- <td contenteditable="false" class="colStatus hiddenColumn">{{item.orderstatus}}</td> -->
                                 </tr>
                                 {{/each}}
                                 {{/if}}
-
                             </tbody>
                         </table>
                     </div>
@@ -363,7 +256,7 @@
             <div class="modal-content" >
                 <div class="modal-header" >
 
-                    <h4 class="title-header" >Journal Entries</h4>
+                    <h4 class="title-header" >BAS Return</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">

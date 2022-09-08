@@ -31,10 +31,6 @@ Template.basreturnlist.onCreated(function() {
 Template.basreturnlist.onRendered(function() {
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
-    let accountService = new AccountService();
-    const customerList = [];
-    let salesOrderTable;
-    var splashArray = new Array();
     const dataTableList = [];
     const tableHeaderList = [];
     if (FlowRouter.current().queryParams.success) {
@@ -55,30 +51,6 @@ Template.basreturnlist.onRendered(function() {
     }
     var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
 
-    $("#date-input,#dateTo,#dateFrom").datepicker({
-        showOn: 'button',
-        buttonText: 'Show Date',
-        buttonImageOnly: true,
-        buttonImage: '/img/imgCal2.png',
-        dateFormat: 'dd/mm/yy',
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-90:+10",
-        onChangeMonthYear: function(year, month, inst) {
-            // Set date to picker
-            $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
-            // Hide (close) the picker
-            // $(this).datepicker('hide');
-            // // Change ttrigger the on change function
-            // $(this).trigger('change');
-        }
-    });
-
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
     function MakeNegative() {
 
         $('td').each(function() {
@@ -93,10 +65,10 @@ Template.basreturnlist.onRendered(function() {
     };
 
     templateObject.resetData = function(dataVal) {
-        window.open('/journalentrylist?page=last', '_self');
+        window.open('/basreturnlist?page=last', '_self');
     }
 
-    templateObject.getAllJournalEntryData = function() {
+    templateObject.getAllBasReturnData = function() {
 
         var currentBeginDate = new Date();
         var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
@@ -174,7 +146,7 @@ Template.basreturnlist.onRendered(function() {
                     $('.fullScreenSpin').css('display', 'none');
                     setTimeout(function() {
                         //$.fn.dataTable.moment('DD/MM/YY');
-                        $('#tblJournalList').DataTable({
+                        $('#tblBasReturnList').DataTable({
                             // dom: 'lBfrtip',
                             columnDefs: [
                                 { type: 'date', targets: 0 }
@@ -185,7 +157,7 @@ Template.basreturnlist.onRendered(function() {
                                 text: '',
                                 download: 'open',
                                 className: "btntabletocsv hiddenColumn",
-                                filename: "journalentrylist_" + moment().format(),
+                                filename: "basreturnlist_" + moment().format(),
                                 orientation: 'portrait',
                                 exportOptions: {
                                     columns: ':visible'
@@ -195,8 +167,8 @@ Template.basreturnlist.onRendered(function() {
                                 download: 'open',
                                 className: "btntabletopdf hiddenColumn",
                                 text: '',
-                                title: 'Journal Entries',
-                                filename: "journalentrylist_" + moment().format(),
+                                title: 'BAS Return',
+                                filename: "basreturnlist_" + moment().format(),
                                 exportOptions: {
                                     columns: ':visible'
                                 }
@@ -216,13 +188,13 @@ Template.basreturnlist.onRendered(function() {
                             ],
                             // "aaSorting": [[1,'desc']],
                             action: function() {
-                                $('#tblJournalList').DataTable().ajax.reload();
+                                $('#tblBasReturnList').DataTable().ajax.reload();
                             },
                             "fnDrawCallback": function(oSettings) {
                                 let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
 
                                 $('.paginate_button.page-item').removeClass('disabled');
-                                $('#tblJournalList_ellipsis').addClass('disabled');
+                                $('#tblBasReturnList_ellipsis').addClass('disabled');
 
                                 if (oSettings._iDisplayLength == -1) {
                                     if (oSettings.fnRecordsDisplay() > 150) {
@@ -319,7 +291,7 @@ Template.basreturnlist.onRendered(function() {
                                 } else {
                                     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                                 }
-                                $("<button class='btn btn-primary btnRefreshJournalEntry' type='button' id='btnRefreshJournalEntry' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
+                                $("<button class='btn btn-primary btnRefreshBasReturn' type='button' id='btnRefreshBasReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBasReturnList_filter");
                                 $('.myvarFilterForm').appendTo(".colDateFilter");
                             },
                             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -342,12 +314,8 @@ Template.basreturnlist.onRendered(function() {
 
 
                     var columns = $('#tblJournalList th');
-                    let sTible = "";
                     let sWidth = "";
-                    let sIndex = "";
-                    let sVisible = "";
                     let columVisible = false;
-                    let sClass = "";
                     $.each(columns, function(i, v) {
                         if (v.hidden == false) {
                             columVisible = true;
@@ -368,7 +336,7 @@ Template.basreturnlist.onRendered(function() {
                     });
                     templateObject.tableheaderrecords.set(tableHeaderList);
                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                    $('#tblJournalList tbody').on('click', 'tr', function() {
+                    $('#tblBasReturnList tbody').on('click', 'tr', function() {
                         var listData = $(this).closest('tr').attr('id');
                         var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
 
@@ -376,21 +344,16 @@ Template.basreturnlist.onRendered(function() {
                             if (checkDeleted == "Deleted") {
                                 swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
                             } else {
-                                FlowRouter.go('/journalentrycard?id=' + listData);
+                                FlowRouter.go('/basreturn?id=' + listData);
                             }
                         }
                     });
 
                 }).catch(function(err) {
-                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
                     $('.fullScreenSpin').css('display', 'none');
-                    // Meteor._reload.reload();
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.tjournalentrylist;
-                let lineItems = [];
-                let lineItemObj = {};
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
@@ -446,7 +409,7 @@ Template.basreturnlist.onRendered(function() {
                 $('.fullScreenSpin').css('display', 'none');
                 setTimeout(function() {
                     //$.fn.dataTable.moment('DD/MM/YY');
-                    $('#tblJournalList').DataTable({
+                    $('#tblBasReturnList').DataTable({
                         // dom: 'lBfrtip',
                         columnDefs: [
                             { type: 'date', targets: 0 }
@@ -457,7 +420,7 @@ Template.basreturnlist.onRendered(function() {
                             text: '',
                             download: 'open',
                             className: "btntabletocsv hiddenColumn",
-                            filename: "journalentrylist_" + moment().format(),
+                            filename: "basreturnlist_" + moment().format(),
                             orientation: 'portrait',
                             exportOptions: {
                                 columns: ':visible'
@@ -467,8 +430,8 @@ Template.basreturnlist.onRendered(function() {
                             download: 'open',
                             className: "btntabletopdf hiddenColumn",
                             text: '',
-                            title: 'Journal Entries',
-                            filename: "journalentrylist_" + moment().format(),
+                            title: 'BAS Return',
+                            filename: "basreturnlist_" + moment().format(),
                             exportOptions: {
                                 columns: ':visible'
                             }
@@ -488,13 +451,13 @@ Template.basreturnlist.onRendered(function() {
                         ],
                         // "aaSorting": [[1,'desc']],
                         action: function() {
-                            $('#tblJournalList').DataTable().ajax.reload();
+                            $('#tblBasReturnList').DataTable().ajax.reload();
                         },
                         "fnDrawCallback": function(oSettings) {
                             let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
 
                             $('.paginate_button.page-item').removeClass('disabled');
-                            $('#tblJournalList_ellipsis').addClass('disabled');
+                            $('#tblBasReturnList_ellipsis').addClass('disabled');
 
                             if (oSettings._iDisplayLength == -1) {
                                 if (oSettings.fnRecordsDisplay() > 150) {
@@ -591,7 +554,7 @@ Template.basreturnlist.onRendered(function() {
                             } else {
                                 $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                             }
-                            $("<button class='btn btn-primary btnRefreshJournalEntry' type='button' id='btnRefreshJournalEntry' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
+                            $("<button class='btn btn-primary btnRefreshBasReturn' type='button' id='btnRefreshBasReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
                         "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -639,7 +602,7 @@ Template.basreturnlist.onRendered(function() {
                 });
                 templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblJournalList tbody').on('click', 'tr', function() {
+                $('#tblBasReturnList tbody').on('click', 'tr', function() {
                     var listData = $(this).closest('tr').attr('id');
                     var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
 
@@ -647,7 +610,7 @@ Template.basreturnlist.onRendered(function() {
                         if (checkDeleted == "Deleted") {
                             swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
                         } else {
-                            FlowRouter.go('/journalentrycard?id=' + listData);
+                            FlowRouter.go('/basreturn?id=' + listData);
                         }
                     }
                 });
@@ -712,7 +675,7 @@ Template.basreturnlist.onRendered(function() {
                 $('.fullScreenSpin').css('display', 'none');
                 setTimeout(function() {
                     //$.fn.dataTable.moment('DD/MM/YY');
-                    $('#tblJournalList').DataTable({
+                    $('#tblBasReturnList').DataTable({
                         // dom: 'lBfrtip',
                         columnDefs: [
                             { type: 'date', targets: 0 }
@@ -723,7 +686,7 @@ Template.basreturnlist.onRendered(function() {
                             text: '',
                             download: 'open',
                             className: "btntabletocsv hiddenColumn",
-                            filename: "journalentrylist_" + moment().format(),
+                            filename: "basreturnlist_" + moment().format(),
                             orientation: 'portrait',
                             exportOptions: {
                                 columns: ':visible'
@@ -733,8 +696,8 @@ Template.basreturnlist.onRendered(function() {
                             download: 'open',
                             className: "btntabletopdf hiddenColumn",
                             text: '',
-                            title: 'Journal Entries',
-                            filename: "journalentrylist_" + moment().format(),
+                            title: 'BAS Return',
+                            filename: "basreturnlist_" + moment().format(),
                             exportOptions: {
                                 columns: ':visible'
                             }
@@ -754,13 +717,13 @@ Template.basreturnlist.onRendered(function() {
                         ],
                         // "aaSorting": [[1,'desc']],
                         action: function() {
-                            $('#tblJournalList').DataTable().ajax.reload();
+                            $('#tblBasReturnList').DataTable().ajax.reload();
                         },
                         "fnDrawCallback": function(oSettings) {
                             let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
 
                             $('.paginate_button.page-item').removeClass('disabled');
-                            $('#tblJournalList_ellipsis').addClass('disabled');
+                            $('#tblBasReturnList_ellipsis').addClass('disabled');
 
                             if (oSettings._iDisplayLength == -1) {
                                 if (oSettings.fnRecordsDisplay() > 150) {
@@ -857,7 +820,7 @@ Template.basreturnlist.onRendered(function() {
                             } else {
                                 $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                             }
-                            $("<button class='btn btn-primary btnRefreshJournalEntry' type='button' id='btnRefreshJournalEntry' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
+                            $("<button class='btn btn-primary btnRefreshBasReturn' type='button' id='btnRefreshBasReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
                         "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -879,7 +842,7 @@ Template.basreturnlist.onRendered(function() {
                 }, 0);
 
 
-                var columns = $('#tblJournalList th');
+                var columns = $('#tblBasReturnList th');
                 let sTible = "";
                 let sWidth = "";
                 let sIndex = "";
@@ -906,7 +869,7 @@ Template.basreturnlist.onRendered(function() {
                 });
                 templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblJournalList tbody').on('click', 'tr', function() {
+                $('#tblBasReturnList tbody').on('click', 'tr', function() {
                     var listData = $(this).closest('tr').attr('id');
                     var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
 
@@ -914,7 +877,7 @@ Template.basreturnlist.onRendered(function() {
                         if (checkDeleted == "Deleted") {
                             swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
                         } else {
-                            FlowRouter.go('/journalentrycard?id=' + listData);
+                            FlowRouter.go('/basreturn?id=' + listData);
                         }
                     }
                 });
@@ -927,19 +890,7 @@ Template.basreturnlist.onRendered(function() {
         });
     }
 
-    templateObject.getAllJournalEntryData();
-
-    templateObject.getAllFilterJournalEntryData = function(fromDate, toDate, ignoreDate) {
-        sideBarService.getTJournalEntryListData(fromDate, toDate, ignoreDate, initialReportLoad, 0).then(function(data) {
-            addVS1Data('TJournalEntryList', JSON.stringify(data)).then(function(datareturn) {
-                location.reload();
-            }).catch(function(err) {
-                location.reload();
-            });
-        }).catch(function(err) {
-            $('.fullScreenSpin').css('display', 'none');
-        });
-    }
+    templateObject.getAllBasReturnData();
 
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
     let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
@@ -956,7 +907,6 @@ Template.basreturnlist.onRendered(function() {
         }
     }
     tableResize();
-
 
 
     /**
@@ -1008,252 +958,33 @@ Template.basreturnlist.events({
             addVS1Data("TJournalEntryList", JSON.stringify(dataJournal)).then(function(datareturn) {
                 sideBarService.getAllJournalEnrtryLinesList(initialDataLoad, 0).then(function(data) {
                     addVS1Data("TJournalEntryLines", JSON.stringify(data)).then(function(datareturn) {
-                        window.open("/journalentrylist", "_self");
+                        window.open("/basreturnlist", "_self");
                     }).catch(function(err) {
-                        window.open("/journalentrylist", "_self");
+                        window.open("/basreturnlist", "_self");
                     });
                 }).catch(function(err) {
-                    window.open("/journalentrylist", "_self");
+                    window.open("/basreturnlist", "_self");
                 });
             }).catch(function(err) {
                 sideBarService.getAllJournalEnrtryLinesList(initialDataLoad, 0).then(function(data) {
                     addVS1Data("TJournalEntryLines", JSON.stringify(data)).then(function(datareturn) {
-                        window.open("/journalentrylist", "_self");
+                        window.open("/basreturnlist", "_self");
                     }).catch(function(err) {
-                        window.open("/journalentrylist", "_self");
+                        window.open("/basreturnlist", "_self");
                     });
                 }).catch(function(err) {
-                    window.open("/journalentrylist", "_self");
+                    window.open("/basreturnlist", "_self");
                 });
             });
         }).catch(function(err) {
-            window.open("/journalentrylist", "_self");
+            window.open("/basreturnlist", "_self");
         });
     },
-    "change #dateTo": function() {
-        let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        setTimeout(function() {
-            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-            var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-            let formatDateFrom = dateFrom.getFullYear() + "-" + (
-                dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-            let formatDateTo = dateTo.getFullYear() + "-" + (
-                dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-
-            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-            var formatDate = dateTo.getDate() + "/" + (
-                dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-            //templateObject.dateAsAt.set(formatDate);
-            if ($("#dateFrom").val().replace(/\s/g, "") == "" && $("#dateFrom").val().replace(/\s/g, "") == "") {} else {
-                templateObject.getAllFilterJournalEntryData(formatDateFrom, formatDateTo, false);
-            }
-        }, 500);
-    },
-    "change #dateFrom": function() {
-        let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        setTimeout(function() {
-            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-            var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-            let formatDateFrom = dateFrom.getFullYear() + "-" + (
-                dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-            let formatDateTo = dateTo.getFullYear() + "-" + (
-                dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-
-            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-            var formatDate = dateTo.getDate() + "/" + (
-                dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-            //templateObject.dateAsAt.set(formatDate);
-            if ($("#dateFrom").val().replace(/\s/g, "") == "" && $("#dateFrom").val().replace(/\s/g, "") == "") {} else {
-                templateObject.getAllFilterJournalEntryData(formatDateFrom, formatDateTo, false);
-            }
-        }, 500);
-    },
-    "click #today": function() {
-        let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        var currentBeginDate = new Date();
-        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-        let fromDateMonth = currentBeginDate.getMonth() + 1;
-        let fromDateDay = currentBeginDate.getDate();
-        if (currentBeginDate.getMonth() + 1 < 10) {
-            fromDateMonth = "0" + (
-                currentBeginDate.getMonth() + 1);
-        } else {
-            fromDateMonth = currentBeginDate.getMonth() + 1;
-        }
-
-        if (currentBeginDate.getDate() < 10) {
-            fromDateDay = "0" + currentBeginDate.getDate();
-        }
-        var toDateERPFrom = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-        var toDateERPTo = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-
-        var toDateDisplayFrom = fromDateDay + "/" + fromDateMonth + "/" + currentBeginDate.getFullYear();
-        var toDateDisplayTo = fromDateDay + "/" + fromDateMonth + "/" + currentBeginDate.getFullYear();
-
-        $("#dateFrom").val(toDateDisplayFrom);
-        $("#dateTo").val(toDateDisplayTo);
-        templateObject.getAllFilterJournalEntryData(toDateERPFrom, toDateERPTo, false);
-    },
-    "click #lastweek": function() {
-        let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        var currentBeginDate = new Date();
-        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-        let fromDateMonth = currentBeginDate.getMonth() + 1;
-        let fromDateDay = currentBeginDate.getDate();
-        if (currentBeginDate.getMonth() + 1 < 10) {
-            fromDateMonth = "0" + (
-                currentBeginDate.getMonth() + 1);
-        } else {
-            fromDateMonth = currentBeginDate.getMonth() + 1;
-        }
-
-        if (currentBeginDate.getDate() < 10) {
-            fromDateDay = "0" + currentBeginDate.getDate();
-        }
-        var toDateERPFrom = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + (
-            fromDateDay - 7);
-        var toDateERPTo = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-
-        var toDateDisplayFrom = fromDateDay - 7 + "/" + fromDateMonth + "/" + currentBeginDate.getFullYear();
-        var toDateDisplayTo = fromDateDay + "/" + fromDateMonth + "/" + currentBeginDate.getFullYear();
-
-        $("#dateFrom").val(toDateDisplayFrom);
-        $("#dateTo").val(toDateDisplayTo);
-        templateObject.getAllFilterJournalEntryData(toDateERPFrom, toDateERPTo, false);
-    },
-    "click #lastMonth": function() {
-        let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        var currentDate = new Date();
-
-        var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-        var prevMonthFirstDate = new Date(currentDate.getFullYear() - (
-            currentDate.getMonth() > 0 ?
-            0 :
-            1), (currentDate.getMonth() - 1 + 12) % 12, 1);
-
-        var formatDateComponent = function(dateComponent) {
-            return (
-                dateComponent < 10 ?
-                "0" :
-                "") + dateComponent;
-        };
-
-        var formatDate = function(date) {
-            return (formatDateComponent(date.getDate()) + "/" + formatDateComponent(date.getMonth() + 1) + "/" + date.getFullYear());
-        };
-
-        var formatDateERP = function(date) {
-            return (date.getFullYear() + "-" + formatDateComponent(date.getMonth() + 1) + "-" + formatDateComponent(date.getDate()));
-        };
-
-        var fromDate = formatDate(prevMonthFirstDate);
-        var toDate = formatDate(prevMonthLastDate);
-
-        $("#dateFrom").val(fromDate);
-        $("#dateTo").val(toDate);
-
-        var getLoadDate = formatDateERP(prevMonthLastDate);
-        let getDateFrom = formatDateERP(prevMonthFirstDate);
-        templateObject.getAllFilterJournalEntryData(getDateFrom, getLoadDate, false);
-    },
-    "click #lastQuarter": function() {
-        let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-        function getQuarter(d) {
-            d = d || new Date();
-            var m = Math.floor(d.getMonth() / 3) + 2;
-            return m > 4 ?
-                m - 4 :
-                m;
-        }
-
-        var quarterAdjustment = (moment().month() % 3) + 1;
-        var lastQuarterEndDate = moment().subtract({ months: quarterAdjustment }).endOf("month");
-        var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({ months: 2 }).startOf("month");
-
-        var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
-        var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
-
-        $("#dateFrom").val(lastQuarterStartDateFormat);
-        $("#dateTo").val(lastQuarterEndDateFormat);
-
-        let fromDateMonth = getQuarter(currentDate);
-        var quarterMonth = getQuarter(currentDate);
-        let fromDateDay = currentDate.getDate();
-
-        var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
-        let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
-        templateObject.getAllFilterJournalEntryData(getDateFrom, getLoadDate, false);
-    },
-    "click #last12Months": function() {
-        let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-        let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-        let fromDateDay = currentDate.getDate();
-        if (currentDate.getMonth() + 1 < 10) {
-            fromDateMonth = "0" + (
-                currentDate.getMonth() + 1);
-        }
-        if (currentDate.getDate() < 10) {
-            fromDateDay = "0" + currentDate.getDate();
-        }
-
-        var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
-        $("#dateFrom").val(fromDate);
-        $("#dateTo").val(begunDate);
-
-        var currentDate2 = new Date();
-        if (currentDate2.getMonth() + 1 < 10) {
-            fromDateMonth2 = "0" + Math.floor(currentDate2.getMonth() + 1);
-        }
-        if (currentDate2.getDate() < 10) {
-            fromDateDay2 = "0" + currentDate2.getDate();
-        }
-        var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-        let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + fromDateMonth2 + "-" + currentDate2.getDate();
-        templateObject.getAllFilterJournalEntryData(getDateFrom, getLoadDate, false);
-    },
-    "click #ignoreDate": function() {
-        let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
-        $("#dateFrom").attr("readonly", true);
-        $("#dateTo").attr("readonly", true);
-        templateObject.getAllFilterJournalEntryData("", "", true);
-    },
-    "click #btnNewJournalEntry": function(event) {
-        FlowRouter.go("/journalentrycard");
+    "click #btnNewBasReturn": function(event) {
+        FlowRouter.go("/basreturn");
     },
     "click .chkDatatable": function(event) {
-        var columns = $("#tblJournalList th");
+        var columns = $("#tblBasReturnList th");
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
 
         $.each(columns, function(i, v) {
@@ -1271,17 +1002,7 @@ Template.basreturnlist.events({
             }
         });
     },
-    "keyup #tblJournalList_filter input": function(event) {
-        if ($(event.target).val() != "") {
-            $(".btnRefreshJournalEntry").addClass("btnSearchAlert");
-        } else {
-            $(".btnRefreshJournalEntry").removeClass("btnSearchAlert");
-        }
-        if (event.keyCode == 13) {
-            $(".btnRefreshJournalEntry").trigger("click");
-        }
-    },
-    "click .btnRefreshJournalEntry": function(event) {
+    "click .btnRefreshBasReturn": function(event) {
         $(".btnRefresh").trigger("click");
     },
     "click .resetTable": function(event) {
@@ -1385,7 +1106,7 @@ Template.basreturnlist.events({
 
         let columnDatanIndex = $(event.target).closest("div.columnSettings").attr("id");
 
-        var datable = $("#tblJournalList").DataTable();
+        var datable = $("#tblBasReturnList").DataTable();
         var title = datable.column(columnDatanIndex).header();
         $(title).html(columData);
     },
@@ -1406,7 +1127,7 @@ Template.basreturnlist.events({
     },
     "click .btnOpenSettings": function(event) {
         let templateObject = Template.instance();
-        var columns = $("#tblJournalList th");
+        var columns = $("#tblBasReturnList th");
 
         const tableHeaderList = [];
         let sTible = "";
