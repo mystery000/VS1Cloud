@@ -227,18 +227,18 @@
                                                         <td>{{ item.fields.LeaveType }}</td>
                                                         <td>{{ item.fields.PayID }}</td>
                                                         <td>{{ item.fields.AccrualType }}</td>
-                                                        <td class="{{#if isNegativeAmount item.fields.AccruedHours}} text-danger {{/if}}">{{ floatValue item.fields.AccruedHours }}</td>
+                                                        <td >{{ floatValue item.fields.AccruedHours }}</td>
                                                     
                                                         {{#if isOnlyDefaultActive }}
                                                                 {{#if currencyList}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.AccruedHours}} text-danger {{/if}}">{{ convertAmount calculateHourPrice item }}</td>
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right ">{{ calculateHourPriceConvert item c }}</td>
                                                                         {{/if}}
                                                                     {{/each}}
                                                                 {{/if}}
                                                         {{else}}
-                                                            <td class="text-right {{#if isNegativeAmount item.fields.AccruedHours}} text-danger {{/if}}">{{ calculateHourPrice item }}</td>
+                                                            <td class="text-right">{{ calculateHourPrice item }}</td>
                                                         {{/if}}
                                                     
                                                     </tr>
