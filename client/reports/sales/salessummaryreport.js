@@ -21,7 +21,7 @@ let defaultCurrencyCode = CountryAbbr;
 Template.salessummaryreport.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar([]);
-    templateObject.grandrecords = new ReactiveVar();
+    templateObject.grandRecords = new ReactiveVar();
     templateObject.dateAsAt = new ReactiveVar();
     templateObject.deptrecords = new ReactiveVar();
 
@@ -89,236 +89,16 @@ Template.salessummaryreport.onRendered(() => {
     $("#dateTo").val(begunDate);
 
     templateObject.getSalesReports = function(dateFrom, dateTo, ignoreDate) {
-        templateObject.records.set('');
-        templateObject.grandrecords.set('');
-        if (!localStorage.getItem('VS1SalesSummary_Report')) {
-            reportService.getSalesDetailsSummaryData(dateFrom, dateTo, ignoreDate).then(function(data) {
-                let totalRecord = [];
-                let grandtotalRecord = [];
-
-
-                if (data.tsaleslist.length) {
-                    localStorage.setItem('VS1SalesSummary_Report', JSON.stringify(data) || '');
-                    let records = [];
-                    let reportrecords = [];
-                    let allRecords = [];
-                    let current = [];
-
-                    let totalNetAssets = 0;
-                    let GrandTotalLiability = 0;
-                    let GrandTotalAsset = 0;
-                    let incArr = [];
-                    let cogsArr = [];
-                    let expArr = [];
-                    let accountData = data.tsaleslist;
-                    let accountType = '';
-                    let purchaseID = '';
-                    for (let i = 0; i < accountData.length; i++) {
-                        // if(data.tsaleslist[i].Type == "Bill"){
-                        //   purchaseID = data.tsaleslist[i].PurchaseOrderID;
-                        // }
-                        let recordObj = {};
-                        recordObj.Id = data.tsaleslist[i].SaleId;
-                        recordObj.type = data.tsaleslist[i].Type;
-                        recordObj.Company = data.tsaleslist[i].CustomerName;
-                        recordObj.dataArr = [
-                            data.tsaleslist[i].ClientId,
-                            data.tsaleslist[i].Type,
-                            data.tsaleslist[i].SaleId,
-                            // moment(data.tsaleslist[i].InvoiceDate).format("DD MMM YYYY") || '-',
-                            data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
-                            data.tsaleslist[i].employeename || '-',
-                            utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmount) || '0.00',
-                            utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalTax) || '0.00',
-                            utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || '0.00',
-                            utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || '0.00'
-
-
-                            //
-                        ];
-
-
-
-
-
-
-                        if ((data.tsaleslist[i].TotalAmount != 0) || (data.tsaleslist[i].TotalTax != 0) ||
-                            (data.tsaleslist[i].TotalAmountinc != 0) || (data.tsaleslist[i].Balance != 0) && (data.tsaleslist[i].CustomerName != "")) {
-
-
-                            if ((data.tsaleslist[i].Type != "Sales Order") && (data.tsaleslist[i].Type != "Quote")) {
-                                records.push(recordObj);
-                            }
-                        }
-
-
-
-                    }
-
-
-                    records = _.sortBy(records, 'Company');
-                    records = _.groupBy(records, 'Company');
-                    for (let key in records) {
-                        let obj = [{
-                            key: key
-                        }, {
-                            data: records[key]
-                        }];
-                        allRecords.push(obj);
-                    }
-
-                    let iterator = 0;
-                    for (let i = 0; i < allRecords.length; i++) {
-                        let totalAmountEx = 0;
-                        let totalTax = 0;
-                        let amountInc = 0;
-                        let balance = 0;
-                        let twoMonth = 0;
-                        let threeMonth = 0;
-                        let Older = 0;
-                        const currencyLength = Currency.length;
-                        for (let k = 0; k < allRecords[i][1].data.length; k++) {
-                            totalAmountEx = totalAmountEx + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
-                            totalTax = totalTax + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
-                            amountInc = amountInc + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
-                            balance = balance + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
-
-                        }
-
-                        var dataList = {
-                            id: allRecords[i][1].data[0].dataArr[2] || '',
-                            clientid: allRecords[i][1].data[0].dataArr[0] || '',
-                            contact: allRecords[i][0].key || '',
-                            type: '',
-                            orderno: '',
-                            orderdate: '',
-                            phone: '',
-                            totalamountex: utilityService.modifynegativeCurrencyFormat(totalAmountEx) || '0.00',
-                            totaltax: utilityService.modifynegativeCurrencyFormat(totalTax) || '0.00',
-                            totalamount: utilityService.modifynegativeCurrencyFormat(amountInc) || '0.00',
-                            balance: utilityService.modifynegativeCurrencyFormat(balance) || '0.00'
-                        };
-                        if (allRecords[i][1].data[0].dataArr[2] != '') {
-                            reportrecords.push(dataList);
-                        }
-
-
-
-                        let val = ['Total ' + allRecords[i][0].key + '', '', '', '', '',
-                            utilityService.modifynegativeCurrencyFormat(totalAmountEx), utilityService.modifynegativeCurrencyFormat(totalTax), utilityService.modifynegativeCurrencyFormat(amountInc), utilityService.modifynegativeCurrencyFormat(balance)
-                        ];
-                        current.push(val);
-
-                    }
-                    templateObject.reportrecords.set(reportrecords);
-                    //grandtotalRecord
-                    let grandamountduetotal = 0;
-                    let grandtotalAmountEx = 0;
-                    let grandtotalTax = 0;
-                    let grandamountInc = 0;
-                    let grandbalance = 0;
-
-                    for (let n = 0; n < current.length; n++) {
-
-                        const grandcurrencyLength = Currency.length;
-
-                        grandtotalAmountEx = grandtotalAmountEx + utilityService.convertSubstringParseFloat(current[n][5]);
-                        grandtotalTax = grandtotalTax + utilityService.convertSubstringParseFloat(current[n][6]);
-                        grandamountInc = grandamountInc + utilityService.convertSubstringParseFloat(current[n][7]);
-                        grandbalance = grandbalance + utilityService.convertSubstringParseFloat(current[n][8]);
-
-
-                    }
-
-
-                    let grandval = ['Grand Total ' + '', '', '', '', '',
-                        utilityService.modifynegativeCurrencyFormat(grandtotalAmountEx),
-                        utilityService.modifynegativeCurrencyFormat(grandtotalTax),
-                        utilityService.modifynegativeCurrencyFormat(grandamountInc),
-                        utilityService.modifynegativeCurrencyFormat(grandbalance)
-                    ];
-
-
-                    for (let key in records) {
-                        let dataArr = current[iterator]
-                        let obj = [{
-                            key: key
-                        }, {
-                            data: records[key]
-                        }, {
-                            total: [{
-                                dataArr: dataArr
-                            }]
-                        }];
-                        totalRecord.push(obj);
-                        iterator += 1;
-                    }
-
-                    templateObject.records.set(totalRecord);
-                    templateObject.grandrecords.set(grandval);
-
-
-                    if (templateObject.records.get()) {
-                        setTimeout(function() {
-                            $('td a').each(function() {
-                                if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-                            });
-                            $('td').each(function() {
-                                if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-                            });
-
-                            $('td').each(function() {
-
-                                let lineValue = $(this).first().text()[0];
-                                if (lineValue != undefined) {
-                                    if (lineValue.indexOf(Currency) >= 0) $(this).addClass('text-right')
-                                }
-
-                            });
-
-                            $('td').each(function() {
-                                if ($(this).first().text().indexOf('-' + Currency) >= 0) $(this).addClass('text-right')
-                            });
-
-                            $('.fullScreenSpin').css('display', 'none');
-                        }, 100);
-                    }
-
-                } else {
-                    let records = [];
-                    let recordObj = {};
-                    recordObj.Id = '';
-                    recordObj.type = '';
-                    recordObj.SupplierName = ' ';
-                    recordObj.dataArr = [
-                        '-',
-                        '-',
-                        '-',
-                        '-',
-                        '-',
-                        '-',
-                        '-',
-                        '-',
-                        '-',
-                        '-'
-                    ];
-
-                    records.push(recordObj);
-                    templateObject.records.set(records);
-                    templateObject.grandrecords.set('');
-                    $('.fullScreenSpin').css('display', 'none');
-                }
-
-            }).catch(function(err) {
-                //Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-            let data = JSON.parse(localStorage.getItem('VS1SalesSummary_Report'));
+        LoadingOverlay.show();
+        reportService.getSalesDetailsSummaryData(dateFrom, dateTo, ignoreDate).then(function(data) {
             let totalRecord = [];
             let grandtotalRecord = [];
 
-            if (data.tsaleslist.length) {
+            console.log("data: ",data);
+
+
+            if (data.tsaleslist) {
+                localStorage.setItem('VS1SalesSummary_Report', JSON.stringify(data) || '');
                 let records = [];
                 let reportrecords = [];
                 let allRecords = [];
@@ -333,62 +113,90 @@ Template.salessummaryreport.onRendered(() => {
                 let accountData = data.tsaleslist;
                 let accountType = '';
                 let purchaseID = '';
-                for (let i = 0; i < accountData.length; i++) {
-                    // if(data.tsaleslist[i].Type == "Bill"){
-                    //   purchaseID = data.tsaleslist[i].PurchaseOrderID;
-                    // }
-                    let recordObj = {};
-                    recordObj.Id = data.tsaleslist[i].SaleId;
-                    recordObj.type = data.tsaleslist[i].Type;
-                    recordObj.Company = data.tsaleslist[i].CustomerName;
-                    recordObj.dataArr = [
-                        data.tsaleslist[i].ClientId,
-                        data.tsaleslist[i].Type,
-                        data.tsaleslist[i].SaleId,
-                        // moment(data.tsaleslist[i].InvoiceDate).format("DD MMM YYYY") || '-',
-                        data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
-                        data.tsaleslist[i].employeename || '-',
-                        utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmount) || '0.00',
-                        utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalTax) || '0.00',
-                        utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || '0.00',
-                        utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || '0.00'
 
 
-                        //
-                    ];
+                // for (let i = 0; i < accountData.length; i++) {
+                //     // if(data.tsaleslist[i].Type == "Bill"){
+                //     //   purchaseID = data.tsaleslist[i].PurchaseOrderID;
+                //     // }
+                //     let recordObj = {};
+                //     recordObj.Id = data.tsaleslist[i].SaleId;
+                //     recordObj.type = data.tsaleslist[i].Type;
+                //     recordObj.Company = data.tsaleslist[i].CustomerName;
+                //     recordObj.dataArr = [
+                //         data.tsaleslist[i].ClientId,
+                //         data.tsaleslist[i].Type,
+                //         data.tsaleslist[i].SaleId,
+                //         // moment(data.tsaleslist[i].InvoiceDate).format("DD MMM YYYY") || '-',
+                //         data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
+                //         data.tsaleslist[i].employeename || '-',
+                //         utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmount) || '0.00',
+                //         utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalTax) || '0.00',
+                //         utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || '0.00',
+                //         utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || '0.00'
+
+
+                //         //
+                //     ];
 
 
 
 
 
 
-                    if ((data.tsaleslist[i].TotalAmount != 0) || (data.tsaleslist[i].TotalTax != 0) ||
-                        (data.tsaleslist[i].TotalAmountinc != 0) || (data.tsaleslist[i].Balance != 0) && (data.tsaleslist[i].CustomerName != "")) {
+                //     if ((data.tsaleslist[i].TotalAmount != 0) || (data.tsaleslist[i].TotalTax != 0) ||
+                //         (data.tsaleslist[i].TotalAmountinc != 0) || (data.tsaleslist[i].Balance != 0) && (data.tsaleslist[i].CustomerName != "")) {
 
 
-                        if ((data.tsaleslist[i].Type != "Sales Order") && (data.tsaleslist[i].Type != "Quote")) {
-                            records.push(recordObj);
-                        }
+                //         if ((data.tsaleslist[i].Type != "Sales Order") && (data.tsaleslist[i].Type != "Quote")) {
+                //             records.push(recordObj);
+                //         }
+                //     }
+
+
+
+                // }
+
+                accountData.forEach((account) => {
+                    let obj =  {
+                        Id: account.SaleId,
+                        type: account.Type,
+                        Company: account.CustomerName,
+                        entries: account
                     }
 
+                    if ((account.TotalAmount != 0) || (account.TotalTax != 0) ||
+                        (account.TotalAmountinc != 0) || (account.Balance != 0) && (account.CustomerName != "")) {
 
 
-                }
+                        if ((account.Type != "Sales Order") && (account.Type != "Quote")) {
+                            records.push(obj);
+                        }
+                    }
+                })
 
 
                 records = _.sortBy(records, 'Company');
                 records = _.groupBy(records, 'Company');
+
                 for (let key in records) {
-                    let obj = [{
-                        key: key
-                    }, {
-                        data: records[key]
-                    }];
+                    // let obj = [{
+                    //     key: key
+                    // }, {
+                    //     data: records[key]
+                    // }];
+
+                    let obj =  {
+                        title: key,
+                        entries: records[key],
+                        total: {}
+                    }
                     allRecords.push(obj);
                 }
 
-                let iterator = 0;
-                for (let i = 0; i < allRecords.length; i++) {
+                console.log("all records", allRecords);
+
+                allRecords.forEach((record) => {
                     let totalAmountEx = 0;
                     let totalTax = 0;
                     let amountInc = 0;
@@ -397,40 +205,92 @@ Template.salessummaryreport.onRendered(() => {
                     let threeMonth = 0;
                     let Older = 0;
                     const currencyLength = Currency.length;
-                    for (let k = 0; k < allRecords[i][1].data.length; k++) {
-                        totalAmountEx = totalAmountEx + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
-                        totalTax = totalTax + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
-                        amountInc = amountInc + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
-                        balance = balance + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
 
-                    }
+                    record.entries.forEach((entry) => {
+                        totalAmountEx = totalAmountEx + parseFloat(entry.entries.TotalAmount);
+                        totalTax = totalTax + parseFloat(entry.entries.TotalTax);
+                        amountInc = amountInc + parseFloat(entry.entries.TotalAmountinc);
+                        balance = balance + parseFloat(entry.entries.Balance);
+
+                    });
 
                     var dataList = {
-                        id: allRecords[i][1].data[0].dataArr[2] || '',
-                        clientid: allRecords[i][1].data[0].dataArr[0] || '',
-                        contact: allRecords[i][0].key || '',
+                        id: record.entries[0].SaleId || '',
+                        clientid: record.entries[0].ClientId || '',
+                        contact: record.title || '',
                         type: '',
                         orderno: '',
                         orderdate: '',
                         phone: '',
-                        totalamountex: utilityService.modifynegativeCurrencyFormat(totalAmountEx) || '0.00',
-                        totaltax: utilityService.modifynegativeCurrencyFormat(totalTax) || '0.00',
-                        totalamount: utilityService.modifynegativeCurrencyFormat(amountInc) || '0.00',
-                        balance: utilityService.modifynegativeCurrencyFormat(balance) || '0.00'
+                        totalamountex: totalAmountEx || '0.00',
+                        totaltax: totalTax || '0.00',
+                        totalamount: amountInc || '0.00',
+                        balance: balance || '0.00'
                     };
-                    if (allRecords[i][1].data[0].dataArr[2] != '') {
+                    if (record.entries[0].SaleId != '') {
                         reportrecords.push(dataList);
                     }
 
+                    record.total = {
+                        Title: 'Total ' + record.title,
+                        AmountEx: totalAmountEx,
+                        TotalTax: totalTax,
+                        AmountInc: amountInc,
+                        Balance: balance
+                    }
+
+                    current.push(record.total);
+
+                });
+
+                // let iterator = 0;
+                // for (let i = 0; i < allRecords.length; i++) {
+                //     let totalAmountEx = 0;
+                //     let totalTax = 0;
+                //     let amountInc = 0;
+                //     let balance = 0;
+                //     let twoMonth = 0;
+                //     let threeMonth = 0;
+                //     let Older = 0;
+                //     const currencyLength = Currency.length;
+
+                //     for (let k = 0; k < allRecords[i][1].data.length; k++) {
+                //         totalAmountEx = totalAmountEx + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
+                //         totalTax = totalTax + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
+                //         amountInc = amountInc + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
+                //         balance = balance + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
+
+                //     }
+
+                //     var dataList = {
+                //         id: allRecords[i][1].data[0].dataArr[2] || '',
+                //         clientid: allRecords[i][1].data[0].dataArr[0] || '',
+                //         contact: allRecords[i][0].key || '',
+                //         type: '',
+                //         orderno: '',
+                //         orderdate: '',
+                //         phone: '',
+                //         totalamountex: utilityService.modifynegativeCurrencyFormat(totalAmountEx) || '0.00',
+                //         totaltax: utilityService.modifynegativeCurrencyFormat(totalTax) || '0.00',
+                //         totalamount: utilityService.modifynegativeCurrencyFormat(amountInc) || '0.00',
+                //         balance: utilityService.modifynegativeCurrencyFormat(balance) || '0.00'
+                //     };
+                //     if (allRecords[i][1].data[0].dataArr[2] != '') {
+                //         reportrecords.push(dataList);
+                //     }
 
 
-                    let val = ['Total ' + allRecords[i][0].key + '', '', '', '', '',
-                        utilityService.modifynegativeCurrencyFormat(totalAmountEx), utilityService.modifynegativeCurrencyFormat(totalTax), utilityService.modifynegativeCurrencyFormat(amountInc), utilityService.modifynegativeCurrencyFormat(balance)
-                    ];
-                    current.push(val);
 
-                }
+                //     let val = ['Total ' + allRecords[i][0].key + '', '', '', '', '',
+                //         utilityService.modifynegativeCurrencyFormat(totalAmountEx), utilityService.modifynegativeCurrencyFormat(totalTax), utilityService.modifynegativeCurrencyFormat(amountInc), utilityService.modifynegativeCurrencyFormat(balance)
+                //     ];
+                //     current.push(val);
+
+                // }
+
+                console.log("report", reportrecords);
                 templateObject.reportrecords.set(reportrecords);
+                
                 //grandtotalRecord
                 let grandamountduetotal = 0;
                 let grandtotalAmountEx = 0;
@@ -438,44 +298,64 @@ Template.salessummaryreport.onRendered(() => {
                 let grandamountInc = 0;
                 let grandbalance = 0;
 
-                for (let n = 0; n < current.length; n++) {
+                current.forEach((entry) => {
 
                     const grandcurrencyLength = Currency.length;
 
-                    grandtotalAmountEx = grandtotalAmountEx + utilityService.convertSubstringParseFloat(current[n][5]);
-                    grandtotalTax = grandtotalTax + utilityService.convertSubstringParseFloat(current[n][6]);
-                    grandamountInc = grandamountInc + utilityService.convertSubstringParseFloat(current[n][7]);
-                    grandbalance = grandbalance + utilityService.convertSubstringParseFloat(current[n][8]);
+                    grandtotalAmountEx = grandtotalAmountEx + parseFloat(entry.AmountEx);
+                    grandtotalTax = grandtotalTax + parseFloat(entry.TotalTax);
+                    grandamountInc = grandamountInc + parseFloat(entry.AmountInc);
+                    grandbalance = grandbalance + parseFloat(entry.Balance);
+
+                })
+
+                // for (let n = 0; n < current.length; n++) {
+                //     const grandcurrencyLength = Currency.length;
+                //     grandtotalAmountEx = grandtotalAmountEx + utilityService.convertSubstringParseFloat(current[n][5]);
+                //     grandtotalTax = grandtotalTax + utilityService.convertSubstringParseFloat(current[n][6]);
+                //     grandamountInc = grandamountInc + utilityService.convertSubstringParseFloat(current[n][7]);
+                //     grandbalance = grandbalance + utilityService.convertSubstringParseFloat(current[n][8]);
+                // }
 
 
+                // let grandval = ['Grand Total ' + '', '', '', '', '',
+                //     utilityService.modifynegativeCurrencyFormat(grandtotalAmountEx),
+                //     utilityService.modifynegativeCurrencyFormat(grandtotalTax),
+                //     utilityService.modifynegativeCurrencyFormat(grandamountInc),
+                //     utilityService.modifynegativeCurrencyFormat(grandbalance)
+                // ];
+
+                const grandval = {
+                    title: "Grand Total",
+                    total : {
+                        AmountEx: grandtotalAmountEx,
+                        Tax: grandtotalTax,
+                        AmountInc: grandamountInc,
+                        Balance: grandbalance
+                    }
                 }
 
 
-                let grandval = ['Grand Total ' + '', '', '', '', '',
-                    utilityService.modifynegativeCurrencyFormat(grandtotalAmountEx),
-                    utilityService.modifynegativeCurrencyFormat(grandtotalTax),
-                    utilityService.modifynegativeCurrencyFormat(grandamountInc),
-                    utilityService.modifynegativeCurrencyFormat(grandbalance)
-                ];
+                // for (let key in records) {
+                //     let dataArr = current[iterator]
+                //     let obj = [{
+                //         key: key
+                //     }, {
+                //         data: records[key]
+                //     }, {
+                //         total: [{
+                //             dataArr: dataArr
+                //         }]
+                //     }];
+                //     totalRecord.push(obj);
+                //     iterator += 1;
+                // }
 
+                console.log(grandval);
 
-                for (let key in records) {
-                    let dataArr = current[iterator]
-                    let obj = [{
-                        key: key
-                    }, {
-                        data: records[key]
-                    }, {
-                        total: [{
-                            dataArr: dataArr
-                        }]
-                    }];
-                    totalRecord.push(obj);
-                    iterator += 1;
-                }
-
+                console.log(totalRecord);
                 templateObject.records.set(totalRecord);
-                templateObject.grandrecords.set(grandval);
+                templateObject.grandRecords.set(grandval);
 
 
                 if (templateObject.records.get()) {
@@ -500,36 +380,17 @@ Template.salessummaryreport.onRendered(() => {
                             if ($(this).first().text().indexOf('-' + Currency) >= 0) $(this).addClass('text-right')
                         });
 
-                        $('.fullScreenSpin').css('display', 'none');
+                       LoadingOverlay.hide();
                     }, 100);
                 }
 
-            } else {
-                let records = [];
-                let recordObj = {};
-                recordObj.Id = '';
-                recordObj.type = '';
-                recordObj.SupplierName = ' ';
-                recordObj.dataArr = [
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-'
-                ];
+            } 
+            LoadingOverlay.hide();
 
-                records.push(recordObj);
-                templateObject.records.set(records);
-                templateObject.grandrecords.set('');
-                $('.fullScreenSpin').css('display', 'none');
-            }
-
-        }
+        }).catch(function(err) {
+            //Bert.alert('<strong>' + err + '</strong>!', 'danger');
+           LoadingOverlay.hide();
+        });
     };
 
     var currentDate2 = new Date();
@@ -567,7 +428,7 @@ Template.salessummaryreport.events({
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
         templateObject.records.set('');
-        templateObject.grandrecords.set('');
+        templateObject.grandRecords.set('');
         setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
@@ -586,7 +447,7 @@ Template.salessummaryreport.events({
             templateObject.dateAsAt.set(formatDate);
         }
         },500);
-        $('.fullScreenSpin').css('display', 'none');
+       LoadingOverlay.hide();
     },
     'change #dateFrom': function() {
         let templateObject = Template.instance();
@@ -594,7 +455,7 @@ Template.salessummaryreport.events({
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
         templateObject.records.set('');
-        templateObject.grandrecords.set('');
+        templateObject.grandRecords.set('');
         setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
@@ -613,14 +474,14 @@ Template.salessummaryreport.events({
             templateObject.dateAsAt.set(formatDate);
         }
         },500);
-        $('.fullScreenSpin').css('display', 'none');
+       LoadingOverlay.hide();
 
     },
     'click .btnRefresh': function() {
         LoadingOverlay.show();
         localStorage.setItem('VS1SalesSummary_Report', '');
         Meteor._reload.reload();
-        $('.fullScreenSpin').css('display', 'none');
+       LoadingOverlay.hide();
     },
     'click td a': function(event) {
         let redirectid = $(event.target).closest('tr').attr('id');
@@ -685,7 +546,7 @@ Template.salessummaryreport.events({
         // }
 
         //  });
-        $('.fullScreenSpin').css('display', 'none');
+       LoadingOverlay.hide();
     },
     'click #lastMonth': function() {
         let templateObject = Template.instance();
@@ -719,7 +580,7 @@ Template.salessummaryreport.events({
         var getLoadDate = formatDateERP(prevMonthLastDate);
         let getDateFrom = formatDateERP(prevMonthFirstDate);
         templateObject.getSalesReports(getDateFrom, getLoadDate, false);
-        $('.fullScreenSpin').css('display', 'none');
+       LoadingOverlay.hide();
 
     },
     'click #lastQuarter': function() {
@@ -761,7 +622,7 @@ Template.salessummaryreport.events({
         var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
         let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
         templateObject.getSalesReports(getDateFrom, getLoadDate, false);
-        $('.fullScreenSpin').css('display', 'none');
+       LoadingOverlay.hide();
 
     },
     'click #last12Months': function() {
@@ -790,7 +651,7 @@ Template.salessummaryreport.events({
         var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
         let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
         templateObject.getSalesReports(getDateFrom, getLoadDate, false);
-        $('.fullScreenSpin').css('display', 'none');
+       LoadingOverlay.hide();
 
 
     },
@@ -801,7 +662,7 @@ Template.salessummaryreport.events({
         $('#dateTo').attr('readonly', true);
         templateObject.dateAsAt.set('Current Date');
         templateObject.getSalesReports('', '', true);
-        $('.fullScreenSpin').css('display', 'none');
+       LoadingOverlay.hide();
 
     },
     'keyup #myInputSearch': function(event) {
@@ -923,8 +784,8 @@ Template.salessummaryreport.helpers({
         // });
     },
 
-    grandrecords: () => {
-        return Template.instance().grandrecords.get();
+    grandRecords: () => {
+        return Template.instance().grandRecords.get();
     },
     dateAsAt: () => {
         return Template.instance().dateAsAt.get() || '-';
@@ -1100,6 +961,14 @@ Template.salessummaryreport.helpers({
         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
     }
       return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
+  formatTax( amount){
+
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return amount + "%" || "0.00 %";
   },
 });
 Template.registerHelper('equals', function(a, b) {
