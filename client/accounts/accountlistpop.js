@@ -332,6 +332,35 @@ Template.accountlistpop.onRendered(function() {
     };
     tempObj.getAllAccountss();
 
+  // tempcode
+  $("#sltBankCodes").editableSelect();
+  $("#sltBankCodes")
+    .editableSelect()
+    .on("click.editable-select", function (e, li) {
+      var $earch = $(this);
+      var offset = $earch.offset(); 
+      var bankName = e.target.value || "";
+
+      if (e.pageX > offset.left + $earch.width() - 8) {
+        $("#bankCodeModal").modal();
+        $(".fullScreenSpin").css("display", "none");
+
+      } else {
+        if (bankName.replace(/\s/g, "") != "") {
+          $("#bankCodeModal").modal("toggle");
+        } else {
+          $("#bankCodeModal").modal();
+        }
+      }
+    });
+
+  $(document).on("click", "#tblBankCode tbody tr", function (e) {
+    var table = $(this);
+    let bankCode = table.find(".bankCode").text(); 
+    $('#bankCodeModal').modal('toggle');
+    $('#sltBankCodes').val(bankCode);
+  });
+  // tempcode
 });
 Template.accountlistpop.helpers({
     creditrecord: () => {
