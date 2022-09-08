@@ -118,13 +118,11 @@ Template.jobprofitabilityreport.onRendered(() => {
     }else{
       data = JSON.parse(localStorage.getItem('VS1JobProfitability_Report'));
     }
-    console.log('data', data)
-    return false
     let reportData = [];
     if( data.tjobprofitability.length > 0 ){
       for (const item of data.tjobprofitability ) {   
         let isExist = reportData.filter((subitem) => {
-          if( subitem.className == item.className ){
+          if( subitem.CompanyName == item.CompanyName ){
               subitem.SubAccounts.push(item)
               return subitem
           }
@@ -132,8 +130,8 @@ Template.jobprofitabilityreport.onRendered(() => {
 
         if( isExist.length == 0 ){
           reportData.push({
-              TotalOrCost: 0,
-              TotalCrCost: 0,
+              // TotalOrCost: 0,
+              // TotalCrCost: 0,
               SubAccounts: [item],
               ...item
           });
@@ -141,18 +139,18 @@ Template.jobprofitabilityreport.onRendered(() => {
         $(".fullScreenSpin").css("display", "none");
       }     
     }
-    let useData = reportData.filter((item) => {
-      let TotalOrCost = 0;
-      let TotalCrCost = 0;
-      item.SubAccounts.map((subitem) => {
-        TotalOrCost += subitem.Linecost;
-        TotalCrCost += subitem.linecostinc;
-      });
-      item.TotalOrCost = TotalOrCost;
-      item.TotalCrCost = TotalCrCost;
-      return item;
-    });    
-    templateObject.records.set(useData);
+    // let useData = reportData.filter((item) => {
+    //   let TotalOrCost = 0;
+    //   let TotalCrCost = 0;
+    //   item.SubAccounts.map((subitem) => {
+    //     TotalOrCost += subitem.Linecost;
+    //     TotalCrCost += subitem.linecostinc;
+    //   });
+    //   item.TotalOrCost = TotalOrCost;
+    //   item.TotalCrCost = TotalCrCost;
+    //   return item;
+    // });    
+    templateObject.records.set(reportData);
     if (templateObject.records.get()) {
       setTimeout(function () {
         $("td a").each(function () {
@@ -520,6 +518,13 @@ Template.jobprofitabilityreport.helpers({
         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
     }
     return ( amount != 0 )? utilityService.modifynegativeCurrencyFormat(amount): "" || "";
+  },
+  formatPercent( percentVal ){
+      if( isNaN(percentVal) ){
+          percentVal = ( percentVal === undefined || percentVal === null || percentVal.length === 0) ? 0 : percentVal;
+          percentVal = ( percentVal )? Number(percentVal.replace(/[^0-9.-]+/g,"")): 0;
+      }
+      return ( percentVal != 0 )? `${parseFloat(percentVal).toFixed(2)}%` : '';
   },
   checkZero( value ){
     return ( value == 0 )? '': value;
