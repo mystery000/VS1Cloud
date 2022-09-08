@@ -164,12 +164,21 @@
                                     }
                                     .table th,
                                     .table td {
-                                        text-align: right;
-                                        min-width: 100px;
+                                        min-width: 150px;
                                     }
-                                    .table th:first-child,
-                                    .table td:first-child {
-                                        text-align: left;
+                                    table tr .text-danger,
+                                    table tr .text-danger a {
+                                        color: #e74a3b !important;
+                                    }
+                                    .customDoubleTableHeading + tr th {
+                                        border-right: 1px solid #cbcbcb !important;
+                                    }
+                                    .customDoubleTableHeading + tr th:last-child {
+                                        border-right: none !important;
+                                    }
+                                    .text-center1,
+                                    .text-center0 {
+                                        text-align: right !important;
                                     }
                                 </style>
                                 <div class="table-responsive">
@@ -201,9 +210,7 @@
                                                     </tr>
                                                     {{/each}}
                                                     <tr>
-                                                        <td style="font-weight: 800;" colspan="3">{{ value.EmployeeName }} Total</td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
+                                                        <td style="font-weight: 800;" colspan="6">{{ value.EmployeeName }} Total</td>
                                                     </tr>
                                                 {{/each}}
                                             {{/if}}

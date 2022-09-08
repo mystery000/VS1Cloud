@@ -527,7 +527,7 @@ Template.supplierproductreport.helpers({
         amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
     }
-      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+    return ( amount != 0 )? utilityService.modifynegativeCurrencyFormat(amount): "" || "";
   },
   checkZero( value ){
     return ( value == 0 )? '': value;

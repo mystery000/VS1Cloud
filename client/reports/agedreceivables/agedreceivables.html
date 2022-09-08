@@ -177,6 +177,9 @@
                       text-align: right;
                       min-width: 150px;
                   }
+                  .table td.text-left {
+                    text-align: left !important;
+                  }
                   .table th:first-child,
                   .table td:first-child {
                       text-align: left;
@@ -201,9 +204,9 @@
                     <thead>
                       <tr class="table-active customDoubleTableHeading">
                         <th>Contact</th>
-                        <th style="width: 130px;">Type</th>
-                        <th class="text-right">Invoice No.</th>
-                        <th>Due Date</th>
+                        <th class="text-left" style="width: 130px;">Type</th>
+                        <th class="text-left">Invoice No.</th>
+                        <th class="text-left">Due Date</th>
 
                         <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Amount Due</th>
                         <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Current</th>
@@ -276,7 +279,7 @@
                           <!-- {{#each recordItem in record}} -->
                           {{#if record.title}}
                             <tr class="totalhr">
-                              <td style="font-weight: 800;">
+                              <td class="text-left" style="font-weight: 800;">
                                 <div class="SectionTitle2 report-heading-last">{{record.title}}</div>
                               </td>
                               <td></td>
@@ -295,15 +298,15 @@
                             <tr data-type="{{item.type}}" id="{{item.Id}}">
                               <div style="display:none;">{{item.SupplierName}}</div>
                               <td></td>
-                              <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                              <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
                                 <a href="#" style="text-decoration:none!important;">{{item.type}}</a>
                               </td>
                               
-                              <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                              <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
                                 <a href="#" style="text-decoration:none!important;">{{item.entries.InvoiceNumber}}</a>
                               </td>
 
-                              <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                              <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
                                 <a href="#" style="text-decoration:none!important;">{{ formatDate item.entries.DueDate}}</a>
                               </td>
 

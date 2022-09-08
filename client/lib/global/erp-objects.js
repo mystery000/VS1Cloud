@@ -268,6 +268,9 @@ const erpObject = {
     TLeaveTaken: "TLeaveTaken",
     TLeave:"TLeave",
     Tsuperannuation:"Tsuperannuation",
+    TTransactionListReport: "TTransactionListReport",
+    TJobSalesSummary: "TJobSalesSummary",
+    TJobProfitability: "TJobProfitability"
 
 };
 
