@@ -1454,11 +1454,9 @@ Template.accountsoverview.events({
         if ($("#useReceiptClaim").is(":checked")) {
             useReceiptClaim = true;
         }
-
         if ($("#accountIsHeader").is(":checked")) {
             isHeader = true;
         }
-
         let accountID = $("#edtAccountID").val();
         const accounttype = $("#sltAccountType").val();
         const accountname = $("#edtAccountName").val();
@@ -1476,7 +1474,6 @@ Template.accountsoverview.events({
         const expenseCategory = $("#expenseCategory").val();
         const categoryAccountID = $("#categoryAccountID").val();
         const categoryAccountName = $("#categoryAccountName").val();
-
         const expirydateTime = new Date($("#edtExpiryDate").datepicker("getDate"));
         const cardnumber = $("#edtCardNumber").val();
         const cardcvc = $("#edtCvc").val();
@@ -1497,8 +1494,17 @@ Template.accountsoverview.events({
                     ReceiptCategory: ""
                 },
             };
-            accountService.saveAccount(data).then(function(data) {
-
+            accountService.saveAccount(data).then(function(data2) {
+                // sideBarService.getAccountListVS1().then(function(dataReload) {
+                //     addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
+                //         goSaveAccount(accountID);
+                //     }).catch(function(err) {
+                //
+                //     });
+                // }).catch(function(err) {
+                //
+                // });
+                goSaveAccount(accountID);
             }).catch(function(err) {
                 swal({
                     title: "Oooops...",
@@ -1511,19 +1517,20 @@ Template.accountsoverview.events({
                 });
                 return false;
             })
+        } else {
+            goSaveAccount(accountID);
         }
-        if (accountID == "") {
-            accountService
-                .getCheckAccountData(accountname)
-                .then(function(data) {
+        function goSaveAccount(accountID) {
+            if (accountID == "") {
+                accountService.getCheckAccountData(accountname).then(function (data) {
                     accountID = parseInt(data.taccount[0].Id) || 0;
                     doSaveAccount(accountID);
-                })
-                .catch(function(err) {
-                    doSaveAccount(0)
+                }).catch(function (err) {
+                    doSaveAccount(0);
                 });
-        } else {
-            doSaveAccount(accountID);
+            } else {
+                doSaveAccount(accountID);
+            }
         }
 
         function doSaveAccount(accountID) {
@@ -1552,100 +1559,105 @@ Template.accountsoverview.events({
                     ExpiryDate: expiryDate || "",
                 },
             };
+            accountService.saveAccount(data).then(function(data) {
+                if ($("#showOnTransactions").is(":checked")) {
+                    const objDetails = {
+                        type: "TCompanyInfo",
+                        fields: {
+                            Id: companyID,
+                            AccountNo: bankacountno,
+                            BankBranch: swiftCode,
+                            BankAccountName: bankaccountname,
+                            BankName: bankname,
+                            Bsb: bankbsb,
+                            SiteCode: routingNo,
+                            FileReference: accountname,
+                        },
+                    };
+                    organisationService.saveOrganisationSetting(objDetails).then(function(data) {
+                        const accNo = bankacountno || "";
+                        const swiftCode1 = swiftCode || "";
+                        const bankAccName = bankaccountname || "";
+                        const accountName = accountname || "";
+                        const bsb = bankbsb || "";
+                        const routingNo = routingNo || "";
 
-            accountService
-                .saveAccount(data)
-                .then(function(data) {
-                    if ($("#showOnTransactions").is(":checked")) {
-                        const objDetails = {
-                            type: "TCompanyInfo",
-                            fields: {
-                                Id: companyID,
-                                AccountNo: bankacountno,
-                                BankBranch: swiftCode,
-                                BankAccountName: bankaccountname,
-                                BankName: bankname,
-                                Bsb: bankbsb,
-                                SiteCode: routingNo,
-                                FileReference: accountname,
-                            },
-                        };
-                        organisationService
-                            .saveOrganisationSetting(objDetails)
-                            .then(function(data) {
-                                const accNo = bankacountno || "";
-                                const swiftCode1 = swiftCode || "";
-                                const bankAccName = bankaccountname || "";
-                                const accountName = accountname || "";
-                                const bsb = bankbsb || "";
-                                const routingNo = routingNo || "";
-
-                                localStorage.setItem("vs1companyBankName", bankname);
-                                localStorage.setItem(
-                                    "vs1companyBankAccountName",
-                                    bankAccName
-                                );
-                                localStorage.setItem("vs1companyBankAccountNo", accNo);
-                                localStorage.setItem("vs1companyBankBSB", bsb);
-                                localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
-                                localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                                sideBarService.getAccountListVS1().then(function(dataReload) {
-                                    addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
-                                        window.open("/accountsoverview", "_self");
-                                    }).catch(function(err) {
-                                        window.open("/accountsoverview", "_self");
-                                    });
-                                }).catch(function(err) {
-                                    window.open("/accountsoverview", "_self");
-                                });
-                            })
-                            .catch(function(err) {
-                                sideBarService
-                                    .getAccountListVS1()
-                                    .then(function(dataReload) {
-                                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                                            .then(function(datareturn) {
-                                                window.open("/accountsoverview", "_self");
-                                            })
-                                            .catch(function(err) {
-                                                window.open("/accountsoverview", "_self");
-                                            });
-                                    })
-                                    .catch(function(err) {
-                                        window.open("/accountsoverview", "_self");
-                                    });
-                            });
-                    } else {
-                        sideBarService
-                            .getAccountListVS1()
-                            .then(function(dataReload) {
-                                addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                                    .then(function(datareturn) {
-                                        window.open("/accountsoverview", "_self");
-                                    })
-                                    .catch(function(err) {
-                                        window.open("/accountsoverview", "_self");
-                                    });
-                            })
-                            .catch(function(err) {
+                        localStorage.setItem("vs1companyBankName", bankname);
+                        localStorage.setItem(
+                            "vs1companyBankAccountName",
+                            bankAccName
+                        );
+                        localStorage.setItem("vs1companyBankAccountNo", accNo);
+                        localStorage.setItem("vs1companyBankBSB", bsb);
+                        localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
+                        localStorage.setItem("vs1companyBankRoutingNo", routingNo);
+                        sideBarService.getAccountListVS1().then(function(dataReload) {
+                            addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
+                                successSaveEvent(accountID);
+                            }).catch(function(err) {
                                 window.open("/accountsoverview", "_self");
                             });
-                    }
-                })
-                .catch(function(err) {
-                    swal({
-                        title: "Oooops...",
-                        text: err,
-                        type: "error",
-                        showCancelButton: false,
-                        confirmButtonText: "Try Again",
-                    }).then((result) => {
-                        if (result.value) {
-                            Meteor._reload.reload();
-                        } else if (result.dismiss === "cancel") {}
+                        }).catch(function(err) {
+                            window.open("/accountsoverview", "_self");
+                        });
+                    }).catch(function(err) {
+                        sideBarService.getAccountListVS1().then(function(dataReload) {
+                            addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
+                                successSaveEvent(accountID);
+                            }).catch(function(err) {
+                                window.open("/accountsoverview", "_self");
+                            });
+                        }).catch(function(err) {
+                            window.open("/accountsoverview", "_self");
+                        });
                     });
-                    $(".fullScreenSpin").css("display", "none");
+                } else {
+                    sideBarService.getAccountListVS1().then(function(dataReload) {
+                        addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
+                            successSaveEvent(accountID);
+                        }).catch(function(err) {
+                            window.open("/accountsoverview", "_self");
+                        });
+                    }).catch(function(err) {
+                        window.open("/accountsoverview", "_self");
+                    });
+                }
+            }).catch(function(err) {
+                swal({
+                    title: "Oooops...",
+                    text: err,
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonText: "Try Again",
+                }).then((result) => {
+                    if (result.value) {
+                        Meteor._reload.reload();
+                    } else if (result.dismiss === "cancel") {}
                 });
+                $(".fullScreenSpin").css("display", "none");
+            });
+        }
+
+        function successSaveEvent(accountID) {
+            let successTxt = "";
+            if (accountID == "") {
+                successTxt = "Account successfully created";
+            } else {
+                successTxt = "Account successfully updated";
+            }
+            swal({
+                title: "Success",
+                text: successTxt,
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "Try Again",
+            }).then((result) => {
+                if (result.value) {} else if (result.dismiss === "cancel") {}
+            });
+            $(".fullScreenSpin").css("display", "none");
+            setTimeout(function() {
+                window.open("/accountsoverview", "_self");
+            }, 100);
         }
     },
     "click .btnAddNewAccounts": function() {
