@@ -179,7 +179,7 @@
 
                                     .table th,
                                     .table td {
-                                        text-align: right;
+                                        text-align: left;
                                         min-width: 150px;
                                     }
                                     .table th:first-child,
@@ -209,7 +209,7 @@
                                                 <th class="text-right">Cost (ex)</th>
                                                 <th class="text-right">Tax</th>
                                                 <th class="text-right">Cost (inc)</th>
-                                                <th>Tax Code</th>
+                                                <th class="text-right">Tax Code</th>
                                                 <th class="text-right">Qty Ordered</th>
                                                 <th class="text-right">Qty Received</th>
                                                 <th class="text-right">Qty BO</th>
@@ -234,7 +234,7 @@
                                                         <td class="text-right text-success">{{ formatPrice item.Line_Cost_Ex }}</td>
                                                         <td class="text-right text-success">{{ formatPrice item.Line_Tax }}</td>
                                                         <td class="text-right text-success">{{ formatPrice item.Line_Cost_Inc }}</td>
-                                                        <td>{{ item.Tax_Code }}</td>
+                                                        <td class="text-right">{{ item.Tax_Code }}</td>
                                                         <td class="text-right">{{ item.Ordered }}</td>
                                                         <td class="text-right">{{ item.BackOrder }}</td>
                                                         <td class="text-right">{{ item.BackOrder }}</td>
@@ -245,9 +245,9 @@
                                                     {{/each}}
                                                     <tr>
                                                         <td style="font-weight: 800;" colspan="5">{{ value.Supplier_Name }} Total</td>
-                                                        <td style="font-weight: 800;">{{ formatPrice value.TotalCostEx }}</td>
-                                                        <td style="font-weight: 800;">{{ formatPrice value.TotalTax }}</td>
-                                                        <td style="font-weight: 800;">{{ formatPrice value.TotalCostInc }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalCostEx }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalTax }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalCostInc }}</td>
                                                         <td colspan="7"></td>
                                                     </tr>
                                                 {{/each}}

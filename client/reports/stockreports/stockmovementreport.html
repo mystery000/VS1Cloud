@@ -218,7 +218,7 @@
                                                 <th>Product</th>
                                                 <th>Trans Date</th>
                                                 <th class="fgrtotal text-left">Trans Type</th>
-                                                <th>Trans No</th>
+                                                <th class="text-left">Trans No</th>
                                                 <th>Opening Qty</th>
                                                 <th>Trans Qty</th>
                                                 <th>Running Qty</th>
@@ -266,7 +266,7 @@
                                                        <td  class="fgrtotal">{{ value.ProductName }}</td>
                                                         <td  class="fgrtotal"></td>
                                                         <td  class="fgrtotal text-left"></td>
-                                                        <td  class="fgrtotal"></td>
+                                                        <td  class="fgrtotal text-left"></td>
                                                         <!-- <td class="text-right"  class="fgrtotal">{{ value.TotalRunningQty }}</td>
                                                         <td class="text-right"  class="fgrtotal">{{ value.TotalCurrentQty }}</td>
                                                         <td class="text-right"  class="fgrtotal">{{ formatPrice value.TotalUnitCost }}</td> -->
@@ -283,7 +283,7 @@
                                                             <td>{{ formatDate item.fields.TransactionDate }}</td>
                                                             
                                                             <td class="text-left">{{ item.fields.TranstypeDesc }}</td>
-                                                            <td class="text-right">{{ checkZero item.fields.TransactionNo }}</td>
+                                                            <td class="text-left">{{ checkZero item.fields.TransactionNo }}</td>
                                                             <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.Qty }}</td>
                                                             <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.Qty }}</td>
                                                             <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.Qty }}</td>

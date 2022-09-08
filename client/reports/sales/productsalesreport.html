@@ -143,12 +143,11 @@
                                         border-bottom: 2px #858999 solid;
                                     }
 
-                                    .table tbody > tr >:nth-child(6){
+                                    /* .table tbody > tr >:nth-child(6){
                                         text-align: right !important;
-                                    }
+                                    } */
                                     .table th,
                                     .table td {
-                                        text-align: right;
                                         min-width: 150px;
                                     }
                                     .table th:first-child,
@@ -208,14 +207,14 @@
                                             <tr class="{{item.type}}" id="{{item.Id}}">
                                                 <div style="display:none;">{{item.Company}}</div>
                                                 {{#each subItem in item.dataArr}}
-                                                <td class="Total1Indented MenuLeft text-nowrap Indent1"><a href="#" style="text-decoration:none!important;">{{subItem}}</a></td>
+                                                <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left"><a href="#" style="text-decoration:none!important;">{{subItem}}</a></td>
                                                 {{/each}}
                                             </tr>
                                             {{/each}}
                                             {{#each total in recordItem.total}}
                                             <tr class="TotalField">
                                                 {{#each items in total.dataArr}}
-                                                <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong>{{items}}</strong></span></td>
+                                                <td class="Total1Indented MenuLeft TotalField text-right"><span class="table-cells"><strong>{{items}}</strong></span></td>
                                                 {{/each}}
                                             </tr>
                                             {{/each}}

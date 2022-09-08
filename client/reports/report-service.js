@@ -696,6 +696,54 @@ export class ReportService extends BaseService {
     return this.getList(this.ERPObjects.TProductBin, options);
   }
 
+  getTransactionJournalReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TTransactionListReport, options);
+  }
+
+  getJobSalesSummaryReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TJobSalesSummary, options);
+  }
+
+  getJobProfitabilityReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TJobProfitability, options);
+  }
+
   getCustomerDetailReport(dateFrom, dateTo, ignoreDate = false) {
     let options = "";
     if (ignoreDate == true) {
