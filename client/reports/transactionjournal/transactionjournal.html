@@ -180,11 +180,9 @@
                                         font-weight: 700 !important;
                                     }
                                     .table th{
-                                        text-align: right;
                                         font-weight: 800;
                                     }
                                     .table td {
-                                        text-align: right;
                                         color: #00a3d3;
                                     }
                                     .table th:first-child,
@@ -218,19 +216,21 @@
                                                 <th>Date</th>
                                                 <th>Product ID</th>
                                                 <th>Type</th>
-                                                <th>Debit (Ex)</th>
-                                                <th>Credit (Ex)</th>
-                                                <th>Debit (Inc)</th>
-                                                <th>Credit (Inc)</th>
-                                                <th>Global Ref</th>
+                                                <th class="text-right">Debit (Ex)</th>
+                                                <th class="text-right">Credit (Ex)</th>
+                                                <th class="text-right">Debit (Inc)</th>
+                                                <th class="text-right">Credit (Inc)</th>
+                                                <th class="text-right">Global Ref</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {{#if records}}
                                                 {{#each arrayify records}}
-                                                    <tr>
-                                                        <td colspan="8" style="font-weight: 800;">{{ value.ACCOUNTNAME }}</td>
-                                                    </tr>
+                                                    {{#if value.ACCOUNTNAME}}
+                                                        <tr>
+                                                            <td colspan="8" style="font-weight: 800;">{{ value.ACCOUNTNAME }}</td>
+                                                        </tr>
+                                                    {{/if}}
                                                     {{#each item in value.SubAccounts}}
                                                         <tr>
                                                             <td></td>
