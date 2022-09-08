@@ -1034,7 +1034,7 @@ Template.new_quote.onRendered(() => {
                             </div>
                             <div style="padding-left: 16px; width: 50%;">
                                 <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
-                                    $${taxItems[code].toFixed(2)}</p>
+                                    $${taxItems[code].toFixed(3)}</p>
                             </div>
                         </div>
                     `;
@@ -1353,7 +1353,7 @@ Template.new_quote.onRendered(() => {
                                     </div>
                                     <div style="padding-left: 16px; width: 50%;">
                                         <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
-                                                $${taxItems[code].toFixed(2)}</p>
+                                                $${taxItems[code].toFixed(3)}</p>
                                     </div>
                                 </div>
                             `;
@@ -5722,7 +5722,7 @@ Template.new_quote.onRendered(() => {
                         </div>
                         <div style="padding-left: 16px; width: 50%;">
                             <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
-                                $${taxItems[code].toFixed(2)}</p>
+                                $${taxItems[code].toFixed(3)}</p>
                         </div>
                     </div>
                 `;
