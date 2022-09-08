@@ -160,7 +160,6 @@
                                     }
                                     .table th,
                                     .table td {
-                                        text-align: right;
                                         min-width: 150px;
                                     }
                                     .table th:first-child,
@@ -239,7 +238,7 @@
                                                                     {{/each}}
                                                                 {{/if}}
                                                         {{else}}
-                                                            <td class=" {{#if isNegativeAmount item.fields.AccruedHours}} text-danger {{/if}}">{{ calculateHourPrice item }}</td>
+                                                            <td class="text-right {{#if isNegativeAmount item.fields.AccruedHours}} text-danger {{/if}}">{{ calculateHourPrice item }}</td>
                                                         {{/if}}
                                                     
                                                     </tr>

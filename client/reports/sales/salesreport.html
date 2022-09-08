@@ -172,7 +172,7 @@
                                     }
                                     .table th,
                                     .table td {
-                                        text-align: right;
+                                        /* text-align: right; */
                                         min-width: 150px;
                                     }
                                     .table th:first-child,
@@ -231,14 +231,14 @@
                                                         {{#each item in recordItem.data}}
                                                             <tr class="{{item.type}}" id="{{item.Id}}">
                                                                 {{#each subItem in item.dataArr}}
-                                                                    <td class="Total1Indented MenuLeft text-nowrap Indent1"><a href="#" style="text-decoration:none!important;">{{subItem}}</a></td>
+                                                                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left"><a href="#" style="text-decoration:none!important;">{{subItem}}</a></td>
                                                                 {{/each}}
                                                             </tr>
                                                         {{/each}}
                                                         {{#each total in recordItem.total}}
                                                             <tr class="TotalField">
                                                                 {{#each items in total.dataArr}}
-                                                                    <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong>{{items}}</strong></span></td>
+                                                                    <td class="Total1Indented MenuLeft TotalField text-right"><span class="table-cells"><strong>{{items}}</strong></span></td>
                                                                 {{/each}}
                                                             </tr>
                                                         {{/each}}
