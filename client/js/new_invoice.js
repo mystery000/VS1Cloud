@@ -8517,7 +8517,7 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                     }
                 }
             });
-            if(taxItems && taxItems.length>0) {
+            if(taxItems && Object.keys(taxItems).length>0) {
                 $("#html-Invoice-pdfwrapper #tax_list_print").html("");
                 Object.keys(taxItems).map((code) => {
                     let html = `
@@ -8814,7 +8814,7 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
         if (object_invoce[0]["taxItems"]) {
 
             let taxItems = object_invoce[0]["taxItems"];
-            if(taxItems && taxItems.length>0) {
+            if(taxItems && Object.keys(taxItems).length>0) {
                 $("#templatePreviewModal #tax_list_print").html("");
                 Object.keys(taxItems).map((code) => {
                     let html = `
@@ -9140,7 +9140,7 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
 
         if (object_invoce[0]["taxItems"]) {
             let taxItems = object_invoce[0]["taxItems"];
-            if(taxItems && taxItems.length>0) {
+            if(taxItems && Object.keys(taxItems).length>0) {
                 $("#html-2-pdfwrapper_new #tax_list_print").html("");
                 Object.keys(taxItems).map((code) => {
                     let html = `
