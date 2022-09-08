@@ -74,8 +74,8 @@ Template.lotnumberlist.onRendered(function() {
                     salsedes: data.tserialnumberlistcurrentreport[i].PartsDescription,
                     barcode: data.tserialnumberlistcurrentreport[i].barcode,
                     status: data.tserialnumberlistcurrentreport[i].AllocType,
-                    date: sdatet,
-                    expirydate: sdateep,
+                    date: data.tserialnumberlistcurrentreport[i].TransDate !=''? moment(data.tserialnumberlistcurrentreport[i].TransDate).format("YYYY/MM/DD"): data.tserialnumberlistcurrentreport[i].TransDate,
+                    expirydate: data.tserialnumberlistcurrentreport[i].BatchExpiryDate !=''? moment(data.tserialnumberlistcurrentreport[i].BatchExpiryDate).format("YYYY/MM/DD"): data.tserialnumberlistcurrentreport[i].BatchExpiryDate,
                     cssclass: tclass
                 };
                 dataTableList.push(dataList);
@@ -355,8 +355,8 @@ Template.lotnumberlist.onRendered(function() {
                         salsedes: data.tserialnumberlistcurrentreport[i].PartsDescription,
                         barcode: data.tserialnumberlistcurrentreport[i].barcode,
                         status: data.tserialnumberlistcurrentreport[i].AllocType,
-                        date: sdatet,
-                        expirydate: sdateep,
+                        date: data.tserialnumberlistcurrentreport[i].TransDate !=''? moment(data.tserialnumberlistcurrentreport[i].TransDate).format("YYYY/MM/DD"): data.tserialnumberlistcurrentreport[i].TransDate,
+                        expirydate: data.tserialnumberlistcurrentreport[i].BatchExpiryDate !=''? moment(data.tserialnumberlistcurrentreport[i].BatchExpiryDate).format("YYYY/MM/DD"): data.tserialnumberlistcurrentreport[i].BatchExpiryDate,
                         cssclass: tclass
                     };
     
