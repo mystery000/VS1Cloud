@@ -3,6 +3,9 @@ import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
+import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
+import GlobalFunctions from "../../GlobalFunctions";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -96,23 +99,34 @@ Template.payrollleavetaken.onRendered(() => {
     $("#dateFrom").val(defaultOptions.fromDate);
     $("#dateTo").val(defaultOptions.toDate);
     await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getLeaveTakenReportData();
+    await templateObject.getLeaveTakenReportData( 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false);
   };
 
-  templateObject.getLeaveTakenReportData = async function () {
-    let data = [];
-    if (!localStorage.getItem('VS1LeaveTaken_Report')) {
-      const options = await templateObject.reportOptions.get();
-      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let ignoreDate = options.ignoreDate || false;
-      data = await reportService.getLeaveTakenReport( dateFrom, dateTo, ignoreDate);
-      if( data.tleavetaken.length > 0 ){
-        localStorage.setItem('VS1LeaveTaken_Report', JSON.stringify(data)||'');
-      }
-    }else{
-      data = JSON.parse(localStorage.getItem('VS1LeaveTaken_Report'));
-    }
+  templateObject.getLeaveTakenReportData = async (dateFrom, dateTo, ignoreDate = false) => {
+    LoadingOverlay.show();
+
+    let data = await CachedHttp.get(erpObject.TLeaveTaken, async () => {
+      return await reportService.getLeaveTakenReport( dateFrom, dateTo, ignoreDate);
+    });
+
+
+    data = data.response;
+
+    // if (!localStorage.getItem('VS1LeaveTaken_Report')) {
+    //   const options = await templateObject.reportOptions.get();
+    //   let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    //   let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    //   let ignoreDate = options.ignoreDate || false;
+    //   data = await reportService.getLeaveTakenReport( dateFrom, dateTo, ignoreDate);
+    //   if( data.tleavetaken.length > 0 ){
+    //     localStorage.setItem('VS1LeaveTaken_Report', JSON.stringify(data)||'');
+    //   }
+    // }else{
+    //   data = JSON.parse(localStorage.getItem('VS1LeaveTaken_Report'));
+    // }
     let reportData = [];
     if( data.tleavetaken.length > 0 ){
       for (const item of data.tleavetaken ) {   
@@ -131,7 +145,7 @@ Template.payrollleavetaken.onRendered(() => {
               ...item
           });
         }
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
       }     
     }
     // No balance field is available in the api response
@@ -161,9 +175,11 @@ Template.payrollleavetaken.onRendered(() => {
             $(this).removeClass("fgrblue");
           }
         });
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
       }, 1000);
     }  
+
+    LoadingOverlay.hide();
   }
 
   templateObject.setReportOptions();
@@ -307,8 +323,8 @@ Template.payrollleavetaken.events({
   },
   "click #lastMonth": function () {
     let templateObject = Template.instance();
-    LoadingOverlay.show();
-    localStorage.setItem("VS1GeneralLedger_Report", "");
+    // LoadingOverlay.show();
+    // localStorage.setItem("VS1GeneralLedger_Report", "");
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
     var currentDate = new Date();
@@ -359,6 +375,11 @@ Template.payrollleavetaken.events({
     templateObject.dateAsAt.set(fromDate);
 
     // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+
+    templateObject.getLeaveTakenReportData( 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false);
   },
   "click #lastQuarter": function () {
     let templateObject = Template.instance();
@@ -401,6 +422,11 @@ Template.payrollleavetaken.events({
     var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
     let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
     // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+
+    templateObject.getLeaveTakenReportData( 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false);
   },
   "click #last12Months": function () {
     let templateObject = Template.instance();
@@ -439,6 +465,11 @@ Template.payrollleavetaken.events({
       "-" +
       currentDate2.getDate();
     // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+
+    templateObject.getLeaveTakenReportData( 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false);
   },
   "click #ignoreDate": function () {
     let templateObject = Template.instance();
@@ -448,6 +479,8 @@ Template.payrollleavetaken.events({
     $("#dateTo").attr("readonly", true);
     templateObject.dateAsAt.set("Current Date");
     // templateObject.getGeneralLedgerReports("", "", true);
+
+    templateObject.getLeaveTakenReportData(null, null, true);
   },
 
   // // CURRENCY MODULE //
