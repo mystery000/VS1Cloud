@@ -7,6 +7,7 @@ import {EmployeeProfileService} from './profile-service';
 import '../lib/global/indexdbstorage.js';
 import { SMSService } from '../js/sms-settings-service';
 import { handleSetupRedirection } from '../setup/setup';
+import erpObject from '../lib/global/erp-objects';
 
 let smsService = new SMSService();
 
@@ -114,6 +115,7 @@ Template.vs1login.onRendered(function () {
     localStorage.setItem('VS1TpurchaseOrderNonBackOrderList', '[]');
     localStorage.setItem('VS1TpurchaseOrderBackOrderList', '[]');
     localStorage.setItem('VS1TSalesList', '[]');
+    localStorage.setItem(erpObject.TJobSalesSummary, '[]');
 
     localStorage.setItem('isPurchasedTrueERPModule', false);
 

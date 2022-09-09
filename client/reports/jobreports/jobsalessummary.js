@@ -118,6 +118,8 @@ Template.jobsalessummary.onRendered(() => {
         DateTo: dateTo,
         IgnoreDates: ignoreDate
       },
+      useIndexDb: true,
+      useLocalStorage: false,
       validate: (cachedResponse) => {
         if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
         && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
@@ -146,6 +148,7 @@ Template.jobsalessummary.onRendered(() => {
     }
    
    
+    LoadingOverlay.hide();
  
   }
  
@@ -283,8 +286,7 @@ Template.jobsalessummary.events({
   },
   "click #lastMonth": function () {
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1GeneralLedger_Report", "");
+  
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
     var currentDate = new Date();
@@ -335,11 +337,11 @@ Template.jobsalessummary.events({
     templateObject.dateAsAt.set(fromDate);
 
     // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+    templateObject.loadReport(getDateFrom, getLoadDate, false);
   },
   "click #lastQuarter": function () {
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1GeneralLedger_Report", "");
+  
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
     var currentDate = new Date();
@@ -377,11 +379,11 @@ Template.jobsalessummary.events({
     var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
     let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
     // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+    templateObject.loadReport(getDateFrom, getLoadDate, false);
   },
   "click #last12Months": function () {
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1GeneralLedger_Report", "");
+   
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
     var currentDate = new Date();
@@ -415,15 +417,16 @@ Template.jobsalessummary.events({
       "-" +
       currentDate2.getDate();
     // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+
+    templateObject.loadReport(getDateFrom, getLoadDate, false);
+
   },
-  "click #ignoreDate": function () {
-    let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1GeneralLedger_Report", "");
+  "click #ignoreDate":  (e, ui) => {
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
-    templateObject.dateAsAt.set("Current Date");
+     ui.dateAsAt.set("Current Date");
     // templateObject.getGeneralLedgerReports("", "", true);
+    ui.loadReport(null, null, true);
   },
 
   // CURRENCY MODULE //

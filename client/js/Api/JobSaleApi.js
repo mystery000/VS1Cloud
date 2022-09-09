@@ -2,6 +2,7 @@ import ApiService from "./Module/ApiService";
 import ApiCollection from "./Module/ApiCollection";
 import ApiCollectionHelper from "./Module/ApiCollectionHelper";
 import ApiEndpoint from "./Module/ApiEndPoint";
+import erpObject from "../../lib/global/erp-objects";
 
 /**
  * @param {ApiCollection} collection
@@ -11,7 +12,7 @@ import ApiEndpoint from "./Module/ApiEndPoint";
     this.name = "jobsales";
 
     this.collectionNames = {
-        TJobSalesSummary: "TJobSalesSummary"
+        TJobSalesSummary: erpObject.TJobSalesSummary
     };
 
     this.collection = new ApiCollection([
