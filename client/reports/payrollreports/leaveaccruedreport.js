@@ -4,6 +4,8 @@ import { UtilityService } from "../../utility-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import GlobalFunctions from "../../GlobalFunctions";
+import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -25,6 +27,7 @@ Template.leaveaccruedreport.onCreated(() => {
 Template.leaveaccruedreport.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
+
   templateObject.initDate = () => {
     const currentDate = new Date();
 
@@ -78,6 +81,7 @@ Template.leaveaccruedreport.onRendered(() => {
 
     //--------- END OF DATE ---------------//
   };
+
   templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
@@ -100,24 +104,53 @@ Template.leaveaccruedreport.onRendered(() => {
     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getleaveAccrualReport();
+    await templateObject.getleaveAccrualReport(  
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()), false);
   };
 
-  templateObject.getleaveAccrualReport = async () => {
-    $(".fullScreenSpin").css("display", "inline-block");
-    let data = [];
-    if (!localStorage.getItem('VS1LeaveAccrued_Report')) {
-      const options = await templateObject.reportOptions.get();
-      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let ignoreDate = options.ignoreDate || false;
-      data = await reportService.getleaveAccruals( dateFrom, dateTo, ignoreDate);
-      if( data.tleaveaccruals.length > 0 ){
-        localStorage.setItem('VS1LeaveAccrued_Report', JSON.stringify(data)||'');
+  templateObject.getleaveAccrualReport = async ( dateFrom, dateTo, ignoreDate = false) => {
+    LoadingOverlay.show();
+
+    let data = await CachedHttp.get(erpObject.TLeaveAccruals, async () => {
+      return await reportService.getleaveAccruals( dateFrom, dateTo, ignoreDate);
+    },{
+      requestParams: {
+        DateFrom: dateFrom,
+        DateTo: dateTo,
+        IgnoreDates: ignoreDate
+      },
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        if(cachedResponse.response.Params) {
+          if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
+          && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+          && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
+            return true;
+          }
+          return false;
+        }
+        return false;
+      
       }
-    }else{
-      data = JSON.parse(localStorage.getItem('VS1LeaveAccrued_Report'));
-    }
+    });
+
+    data = data.response;
+
+
+    // if (!localStorage.getItem('VS1LeaveAccrued_Report')) {
+    //   const options = await templateObject.reportOptions.get();
+    //   let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    //   let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    //   let ignoreDate = options.ignoreDate || false;
+    //   data = await reportService.getleaveAccruals( dateFrom, dateTo, ignoreDate);
+    //   if( data.tleaveaccruals.length > 0 ){
+    //     localStorage.setItem('VS1LeaveAccrued_Report', JSON.stringify(data)||'');
+    //   }
+    // }else{
+    //   data = JSON.parse(localStorage.getItem('VS1LeaveAccrued_Report'));
+    // }
     const result = new Array();
     if(data){
       data.tleaveaccruals.map((y) => {
@@ -137,10 +170,10 @@ Template.leaveaccruedreport.onRendered(() => {
         MakeNegative();
     }, 1000);
 
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
   }
 
-  templateObject.setReportOptions();
+ 
 
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
@@ -166,9 +199,11 @@ Template.leaveaccruedreport.onRendered(() => {
     };
   
     //templateObject.loadCurrencyHistory();
-
   templateObject.initDate();
   templateObject.initUploadedImage();
+
+  templateObject.setReportOptions();
+
   LoadingOverlay.hide();
 });
 
@@ -288,32 +323,32 @@ Template.leaveaccruedreport.events({
     }
   },
   "change .edtReportDates": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1LeaveAccrued_Report', '');
+    // LoadingOverlay.show();
+    // localStorage.setItem('VS1LeaveAccrued_Report', '');
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
     await templateObject.setReportOptions(false, dateFrom, dateTo);
   },
   "click #lastMonth": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1LeaveAccrued_Report', '');
+    // LoadingOverlay.show();
+    // localStorage.setItem('VS1LeaveAccrued_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
   },
   "click #lastQuarter": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1LeaveAccrued_Report', '');
+    // LoadingOverlay.show();
+    // localStorage.setItem('VS1LeaveAccrued_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
   },
   "click #last12Months": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1LeaveAccrued_Report', '');
+    // LoadingOverlay.show();
+    // localStorage.setItem('VS1LeaveAccrued_Report', '');
     let templateObject = Template.instance();
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
@@ -340,7 +375,7 @@ Template.leaveaccruedreport.events({
     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
   },
   "click #ignoreDate": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+
     localStorage.setItem('VS1LeaveAccrued_Report', '');
     let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
