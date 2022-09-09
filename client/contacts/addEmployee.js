@@ -6567,7 +6567,7 @@ Template.employeescard.events({
                     fields: new LeaveRequestFields({
                         ID: parseInt(ID),
                         EmployeeID: parseInt( employeeID ),
-                        TypeofRequest: parseInt(TypeofRequest),
+                        TypeOfRequest: parseInt(TypeofRequest),
                         LeaveMethod: Leave,
                         Description: Description,
                         StartDate: dbStartDate,
@@ -6657,7 +6657,7 @@ Template.employeescard.events({
                 if(isNaN(HoursLeave)){
                     swal({
                         title: "Confirm",
-                        text: "Hours leave must be a number",
+                        text: "Hours Leave must be a number",
                         type: 'warning',
                     })
                     return false;
@@ -6691,7 +6691,7 @@ Template.employeescard.events({
                 if(isNaN(HoursAccruedAnnually)){
                     swal({
                         title: "Warning",
-                        text: "Hours accrued annually is required",
+                        text: "Hours Accrued Annually is required",
                         type: 'warning',
                     })
                     return false;
@@ -6702,7 +6702,7 @@ Template.employeescard.events({
         if(isNaN(OpeningBalance)){
             swal({
                 title: "Warning",
-                text: "Opening balance is required",
+                text: "Opening Balance is required",
                 type: 'warning',
             })
         }
@@ -6758,7 +6758,7 @@ Template.employeescard.events({
                 $('#assignLeaveTypeForm')[0].reset();
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
-                    title: 'Assign leave type added successfully',
+                    title: 'Assign Leave Type added successfully',
                     text: '',
                     type: 'success',
                     showCancelButton: false,
@@ -6810,7 +6810,7 @@ Template.employeescard.events({
         if(Notes == ''){
             swal({
                 title: "Error",
-                text: "Please enter a note",
+                text: "Please enter a Note",
                 type: 'warning',
             })
             return false;
@@ -6910,7 +6910,7 @@ Template.employeescard.events({
         if( EarningRate == ""){
             swal({
                 title: "Error",
-                text: "Please select earning rate",
+                text: "Please select Earning Rate",
                 type: 'warning',
             });
             return false
@@ -6919,7 +6919,7 @@ Template.employeescard.events({
         if( CalculationType == ""){
             swal({
                 title: "Error",
-                text: "Please select calculation type",
+                text: "Please select Calculation Type",
                 type: 'warning',
             });
             return false
@@ -6928,7 +6928,7 @@ Template.employeescard.events({
         if( ExpenseAccount == ""){
             swal({
                 title: "Error",
-                text: "Please enter expense account",
+                text: "Please enter Expense Account",
                 type: 'warning',
             });
             return false
@@ -6970,7 +6970,7 @@ Template.employeescard.events({
                 $('#addEarningsLineModal').modal('hide');
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
-                    title: 'Earning line added successfully',
+                    title: 'Earning Line added successfully',
                     text: '',
                     type: 'success',
                     showCancelButton: false,
@@ -7018,7 +7018,7 @@ Template.employeescard.events({
         if( DeductionType == "" ){
             swal({
                 title: "Error",
-                text: "Please select deduction type",
+                text: "Please select Deduction Type",
                 type: 'warning',
             });
             return false
@@ -7027,7 +7027,7 @@ Template.employeescard.events({
         if( CalculationType == "" ){
             swal({
                 title: "Error",
-                text: "Please select calculation type",
+                text: "Please select Calculation Type",
                 type: 'warning',
             });
             return false
@@ -7036,7 +7036,7 @@ Template.employeescard.events({
         if( ControlAccount == "" ){
             swal({
                 title: "Error",
-                text: "Please select control account",
+                text: "Please select Control Account",
                 type: 'warning',
             });
             return false
@@ -7078,7 +7078,7 @@ Template.employeescard.events({
                 $('#addDeductionLineModal').modal('hide');
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
-                    title: 'Deduction line added successfully',
+                    title: 'Deduction Line added successfully',
                     text: '',
                     type: 'success',
                     showCancelButton: false,
@@ -7130,7 +7130,7 @@ Template.employeescard.events({
         if(Fund == ''){
             swal({
                 title: "Error",
-                text: "Please select superannuation fund",
+                text: "Please select Superannuation Fund",
                 type: 'error',
             })
             return false
@@ -7138,7 +7138,7 @@ Template.employeescard.events({
         if(ContributionType == ''){
             swal({
                 title: "Error",
-                text: "Please select contribution type",
+                text: "Please select Contribution Type",
                 type: 'error',
             })
             return false
@@ -7146,7 +7146,7 @@ Template.employeescard.events({
         if(CalculationType == ''){
             swal({
                 title: "Error",
-                text: "Please enter calculation type",
+                text: "Please enter Calculation Type",
                 type: 'error',
             })
             return false
@@ -7154,7 +7154,7 @@ Template.employeescard.events({
         if(MinimumMonthlyEarnings == ''){
             swal({
                 title: "Error",
-                text: "Please enter Minimum monthly earnings",
+                text: "Please enter Minimum Monthly Earnings",
                 type: 'error',
             });
             return false;
@@ -7211,7 +7211,7 @@ Template.employeescard.events({
                 $('#addSuperannuationLineModal').modal('hide');
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
-                    title: 'Superannuation line added successfully',
+                    title: 'Superannuation Line added successfully',
                     text: '',
                     type: 'success',
                     showCancelButton: false,
@@ -7258,7 +7258,7 @@ Template.employeescard.events({
         if(ReiumbursementType == ''){
             swal({
                 title: "Error",
-                text: "Please select Reiumbursement Type",
+                text: "Please Select Reiumbursement Type",
                 type: 'error',
             });
             return false;
@@ -7267,7 +7267,7 @@ Template.employeescard.events({
         if(Description == ''){
             swal({
                 title: "Error",
-                text: "Please enter Description",
+                text: "Please Enter Description",
                 type: 'error',
             });
             return false;
@@ -7276,7 +7276,7 @@ Template.employeescard.events({
         if(ControlExpenseAccount == ''){
             swal({
                 title: "Error",
-                text: "Please enter Control Expense Account",
+                text: "Please Enter Control Expense Account",
                 type: 'error',
             });
             return false;
@@ -7319,7 +7319,7 @@ Template.employeescard.events({
                 $('#addReimbursementLineModal').modal('hide');
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
-                    title: 'Reiumbursement line added successfully',
+                    title: 'Reiumbursement Line added successfully',
                     text: '',
                     type: 'success',
                     showCancelButton: false,
@@ -7400,7 +7400,7 @@ Template.employeescard.events({
         let deleteID = $(e.target).data('id');
         swal({
             title: 'Delete Deduction Line',
-            text: "Are you sure you want to Delete this earning line?",
+            text: "Are you sure you want to Delete this Earning Line?",
             type: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes'
@@ -7459,7 +7459,7 @@ Template.employeescard.events({
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.value) {
-                                if (result.value) { window.location.reload(); }
+                                if (result.value) {}
                             } 
                         });
                     }else{
@@ -7549,7 +7549,7 @@ Template.employeescard.events({
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.value) {
-                                if (result.value) { window.location.reload(); }
+                                if (result.value) {}
                             } 
                         });
                     }else{
@@ -7644,7 +7644,7 @@ Template.employeescard.events({
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.value) {
-                                if (result.value) { window.location.reload(); }
+                                if (result.value) {}
                             } 
                         });
                     }else{
@@ -7734,7 +7734,7 @@ Template.employeescard.events({
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.value) {
-                                if (result.value) { window.location.reload(); }
+                                if (result.value) {}
                             } 
                         });
                     }else{
@@ -8256,23 +8256,6 @@ Template.employeescard.events({
         if($('div#notes').attr("class").indexOf("active") >= 0) activeTab = "notes";
         if(activeTab == "taxes") {
             // we are in tax rates tab
-            LoadingOverlay.show();
-
-            let currentId = FlowRouter.current().queryParams;
-            let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
-            let templateObject = Template.instance();
-            /**
-             * Load EmployeePayrollApi API
-             */
-            const employeePayrollApi = new EmployeePayrollApi();
-
-            const apiEndpoint = employeePayrollApi.collection.findByName(
-                employeePayrollApi.collectionNames.TEmployeepaysettings
-            );
-
-            let useData = [];
-            const listEmployeePaySettings = {}
-
             let TaxFileNumber = $("#edtTaxFileNumber").val();
             let TFNExemption = $("#edtTfnExemption").attr('data-value') || $("#edtTfnExemption").val();
             let EmploymentBasis = $("#edtEmploymentBasis").attr('data-value') || $("#edtEmploymentBasis").val();
@@ -8292,6 +8275,71 @@ Template.employeescard.events({
             let UpwardvariationRequested = $("#taxesUpwardVariationRequested").is(':checked') ? true : false;
             let SeniorandPensionersTaxOffsetClaimed = $("#taxesSeniorPensionersTaxOffsetClaimed").is(':checked') ? true : false;
             let HasApprovedWithholdingVariation = $("#taxesHasApprovedWithholdingVariation").is(':checked') ? true : false;
+            if( TaxFileNumber == "" && TFNExemption == "" ){
+                swal({
+                    title: 'Validation Error',
+                    text: 'Please enter Tax File Number or TFN Exemption',
+                    type: 'error',
+                    showCancelButton: false,
+                });
+                return false
+            }
+            if( EmploymentBasis == "" ){
+                swal({
+                    title: 'Validation Error',
+                    text: 'Please select Employment Basis',
+                    type: 'error',
+                    showCancelButton: false,
+                });
+                return false
+            }
+
+            if( ResidencyStatus == "" ){
+                swal({
+                    title: 'Validation Error',
+                    text: 'Please select Residency Status',
+                    type: 'error',
+                    showCancelButton: false,
+                });
+                return false
+            }
+
+            if( EdtPayPeriod == "" ){
+                swal({
+                    title: 'Validation Error',
+                    text: 'Please select Pay Period',
+                    type: 'error',
+                    showCancelButton: false,
+                });
+                return false
+            }
+
+            if( FirstPayDate == "" ){
+                swal({
+                    title: 'Validation Error',
+                    text: 'Please select First Pay Date',
+                    type: 'error',
+                    showCancelButton: false,
+                });
+                return false
+            }
+
+            LoadingOverlay.show();
+
+            let currentId = FlowRouter.current().queryParams;
+            let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+            let templateObject = Template.instance();
+            /**
+             * Load EmployeePayrollApi API
+             */
+            const employeePayrollApi = new EmployeePayrollApi();
+
+            const apiEndpoint = employeePayrollApi.collection.findByName(
+                employeePayrollApi.collectionNames.TEmployeepaysettings
+            );
+
+            let useData = [];
+            const listEmployeePaySettings = {}
             let ePaySettings = templateObject.employeePaySettings.get();
             let employeePaySettings = {
                 type: 'TEmployeepaysettings',
@@ -8338,25 +8386,41 @@ Template.employeescard.events({
                     $('.statusUnsaved').hide();
                     $('.statusSaved').show();
                     $('.fullScreenSpin').css('display', 'none');
-                }else{
+                    swal({
+                        title: 'Taxes saved successfully',
+                        text: '',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {
+                            if (result.value) {}
+                        } 
+                    }); 
+                }else{            
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
-                        text: err,
+                        text: error,
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
-                        if (result.value) {
-                            //Meteor._reload.reload();
-                        } else if (result.dismiss === 'cancel') {}
-                    });
+                        if (result.value) {}
+                    });  
                 }
             } catch (error) {
                 $('.fullScreenSpin').css('display', 'none');
-            }
-
-
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });                
+            }  
             return false
 
             /**
@@ -8497,32 +8561,40 @@ Template.employeescard.events({
                     await templateObject.getEmployeePaySettings();
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Success",
-                        text: "Banking details has been saved",
+                        title: 'Bank Accounts Saved Successfully',
+                        text: '',
                         type: 'success',
-                    })
-                }else{
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {
+                            if (result.value) {}
+                        } 
+                    }); 
+                }else{            
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Error",
-                        text: "Failed to save banking details",
+                        title: 'Oooops...',
+                        text: error,
                         type: 'error',
-                    })
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });  
                 }
             } catch (error) {
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: err,
+                    text: error,
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
-                    if (result.value) {
-                        //Meteor._reload.reload();
-                    } else if (result.dismiss === 'cancel') {}
-                });
-            }
+                    if (result.value) {}
+                });                
+            }            
 
             return false;
             // Old Dev Code
@@ -8919,10 +8991,12 @@ Template.employeescard.events({
             if( deductionLines.length > 0 || earningLines.length > 0 || superannuationLines.length > 0 || reiumbursementLines.length > 0 ){
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
-                    title: "Success",
-                    text: "Pay template has been saved",
+                    title: 'Pay Template Saved Successfully',
+                    text: '',
                     type: 'success',
-                })
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
             }
@@ -9054,25 +9128,39 @@ Template.employeescard.events({
                     $('#addEarningsLineModal2').modal('hide');
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Success",
-                        text: "Opening balances has been saved",
+                        title: 'Opening Balances has been saved',
+                        text: '',
                         type: 'success',
-                    })
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {
+                            if (result.value) {}
+                        } 
+                    }); 
                 }else{
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Error",
-                        text: "Failed to save opening balances",
+                        title: 'Oooops...',
+                        text: error,
                         type: 'error',
-                    })
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });
                 }
             }else{
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
-                    title: "Error",
-                    text: "Please add opening balance",
+                    title: 'Oooops...',
+                    text: error,
                     type: 'error',
-                })
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });
             }
         }else if(activeTab == "notes") {
 
@@ -10583,7 +10671,7 @@ Template.employeescard.events({
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.value) {
-                            if (result.value) { window.location.reload(); }
+                            if (result.value) {}
                         } 
                     }); 
                 }else{            
@@ -10673,7 +10761,7 @@ Template.employeescard.events({
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.value) {
-                            if (result.value) { window.location.reload(); }
+                            if (result.value) {}
                         } 
                     }); 
                 }else{            
@@ -10898,7 +10986,7 @@ Template.employeescard.events({
                 $('#removeLeaveRequestBtn').show();
                 $('#edtLeaveRequestID').val(useData[0].fields.ID);
                 $('#removeLeaveRequestBtn').data('id', useData[0].fields.ID);
-                $('#edtLeaveTypeofRequestID').val(useData[0].fields.TypeofRequest);
+                $('#edtLeaveTypeofRequestID').val(useData[0].fields.TypeOfRequest);
                 $('#edtLeaveTypeofRequest').val(useData[0].fields.LeaveMethod);
                 $('#edtLeaveDescription').val(useData[0].fields.Description);
                 $('#edtLeaveStartDate').val(moment(useData[0].fields.StartDate).format('DD/MM/YYYY'));
