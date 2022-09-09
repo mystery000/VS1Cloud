@@ -90,7 +90,7 @@ Template.payrollhistoryreport.onRendered(() => {
       $("#uploadedImage").attr("width", "50%");
     }
   };
-  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
       defaultOptions.fromDate = formatDateFrom;
@@ -112,11 +112,11 @@ Template.payrollhistoryreport.onRendered(() => {
     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getPayHistory(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
-      false
-    );
+    // await templateObject.getPayHistory(
+    //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+    //   GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    //   ignoreDate
+    // );
   };
   templateObject.getPayHistory = async (dateFrom, dateTo, ignoreDate = false) => {
     LoadingOverlay.show();
@@ -372,6 +372,12 @@ Template.payrollhistoryreport.events({
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
     // $(".fullScreenSpin").css("display", "none");
+
+    templateObject.getPayHistory(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false
+      );
   },
   "click #lastQuarter": async function () {
     // LoadingOverlay.hide();
@@ -381,6 +387,12 @@ Template.payrollhistoryreport.events({
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
     // $(".fullScreenSpin").css("display", "none");
+
+    templateObject.getPayHistory(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false
+      );
   },
   "click #last12Months": async function () {
     // LoadingOverlay.hide();
@@ -410,6 +422,12 @@ Template.payrollhistoryreport.events({
     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
     // $(".fullScreenSpin").css("display", "none");
+
+    templateObject.getPayHistory(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false
+      );
   },
   "click #ignoreDate": async function () {
     // LoadingOverlay.hide();
@@ -418,6 +436,8 @@ Template.payrollhistoryreport.events({
     templateObject.dateAsAt.set("Current Date");
     await templateObject.setReportOptions(true);
     // $(".fullScreenSpin").css("display", "none");
+
+    templateObject.getPayHistory(null, null, false);
   },
 
 

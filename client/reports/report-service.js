@@ -178,17 +178,17 @@ export class ReportService extends BaseService {
     );
   }
 
-  getPayHistory(dateFrom, dateTo, ignoreDate, periodType) {
+  getPayHistory(dateFrom, dateTo, ignoreDate = false, periodType) {
     let options = "";
     if (ignoreDate == true) {
       options = {
-        IgnoreDates: true,
+        IgnoreDates: ignoreDate,
         PeriodType: '"' + periodType + '"',
         ListType: "'Detail'",
       };
     } else {
       options = {
-        IgnoreDates: false,
+        IgnoreDates: ignoreDate,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         PeriodType: '"' + periodType + '"',
