@@ -4,6 +4,8 @@ import { UtilityService } from "../../utility-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import GlobalFunctions from "../../GlobalFunctions";
+import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -110,23 +112,51 @@ Template.payrollhistoryreport.onRendered(() => {
     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getPayHistory();
+    await templateObject.getPayHistory(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false
+    );
   };
-  templateObject.getPayHistory = async function () {
-    
-    let data = [];
-    if (!localStorage.getItem('VS1PayrollHistory_Report')) {
-      const options = await templateObject.reportOptions.get();
-      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let ignoreDate = options.ignoreDate || false;
-      data = await reportService.getPayHistory( dateFrom, dateTo, ignoreDate);
-      if( data.tpayhistory.length > 0 ){
-        localStorage.setItem('VS1PayrollHistory_Report', JSON.stringify(data)||'');
+  templateObject.getPayHistory = async (dateFrom, dateTo, ignoreDate = false) => {
+    LoadingOverlay.show();
+
+    let data = await CachedHttp.get(erpObject.TPayHistory, async () => {
+      return await reportService.getPayHistory( dateFrom, dateTo, ignoreDate);
+    }, {
+      requestParams: {
+        DateFrom: dateFrom,
+        DateTo: dateTo,
+        IgnoreDates: ignoreDate
+      },
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        if(cachedResponse.response.Params) {
+          if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
+          && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+          && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
+            return true;
+          }
+          return false;
+        }
+        return false;
       }
-    }else{
-      data = JSON.parse(localStorage.getItem('VS1PayrollHistory_Report'));
-    }
+    })
+    
+    data = data.response;
+    // if (!localStorage.getItem('VS1PayrollHistory_Report')) {
+    //   const options = await templateObject.reportOptions.get();
+    //   let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    //   let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    //   let ignoreDate = options.ignoreDate || false;
+    //   data = await reportService.getPayHistory( dateFrom, dateTo, ignoreDate);
+    //   if( data.tpayhistory.length > 0 ){
+    //     localStorage.setItem('VS1PayrollHistory_Report', JSON.stringify(data)||'');
+    //   }
+    // }else{
+    //   data = JSON.parse(localStorage.getItem('VS1PayrollHistory_Report'));
+    // }
     let paySlipReport = [];
     if( data.tpayhistory.length > 0 ){
         let employeeGroups = [];
@@ -177,11 +207,11 @@ Template.payrollhistoryreport.onRendered(() => {
         });
         
     }
-    $(".fullScreenSpin").css("display", "inline-block");
+  
     templateObject.records.set(paySlipReport);    
+    LoadingOverlay.hide();
   };
-  templateObject.getPayHistory();
-
+  
   /**
    * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
    * So we have a showable list of currencies to toggle
@@ -201,17 +231,23 @@ Template.payrollhistoryreport.onRendered(() => {
 
   templateObject.initDate();
   templateObject.initUploadedImage();
+  templateObject.getPayHistory(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    false
+    );
+
   LoadingOverlay.hide();
 });
 
 Template.payrollhistoryreport.events({
   "click .btnRefresh": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.hide();
     localStorage.setItem("VS1PayrollHistory_Report", "");
     Meteor._reload.reload();
   },
   "click .btnExportReport": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.hide();
     let utilityService = new UtilityService();
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
@@ -320,7 +356,7 @@ Template.payrollhistoryreport.events({
     }
   },
   "change .edtReportDates": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.hide();
     localStorage.setItem('VS1PayrollHistory_Report', '');
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
@@ -329,26 +365,26 @@ Template.payrollhistoryreport.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click #lastMonth": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1PayrollHistory_Report', '');
+    // LoadingOverlay.hide();
+    // localStorage.setItem('VS1PayrollHistory_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
+    // $(".fullScreenSpin").css("display", "none");
   },
   "click #lastQuarter": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1PayrollHistory_Report', '');
+    // LoadingOverlay.hide();
+    // localStorage.setItem('VS1PayrollHistory_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
+    // $(".fullScreenSpin").css("display", "none");
   },
   "click #last12Months": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1PayrollHistory_Report', '');
+    // LoadingOverlay.hide();
+    // localStorage.setItem('VS1PayrollHistory_Report', '');
     let templateObject = Template.instance();
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
@@ -373,15 +409,15 @@ Template.payrollhistoryreport.events({
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-    $(".fullScreenSpin").css("display", "none");
+    // $(".fullScreenSpin").css("display", "none");
   },
   "click #ignoreDate": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1PayrollHistory_Report', '');
+    // LoadingOverlay.hide();
+    // localStorage.setItem('VS1PayrollHistory_Report', '');
     let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
     await templateObject.setReportOptions(true);
-    $(".fullScreenSpin").css("display", "none");
+    // $(".fullScreenSpin").css("display", "none");
   },
 
 
