@@ -113,7 +113,17 @@ Template.jobsalessummary.onRendered(() => {
       }
 
     }, {
+      requestParams: {
+        DateFrom: dateFrom,
+        DateTo: dateTo,
+        IgnoreDates: ignoreDate
+      },
       validate: (cachedResponse) => {
+        if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
+        && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+        && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
+          return true;
+        }
         return false;
       }
     });

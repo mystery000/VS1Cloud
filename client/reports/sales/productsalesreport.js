@@ -82,12 +82,24 @@ Template.productsalesreport.onRendered(()=>{
   $("#dateFrom").val(fromDate);
    $("#dateTo").val(begunDate);
 
-    templateObject.loadReport = async (dateFrom, dateTo, ignoreDate = false) => {
+    templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate = false) => {
       LoadingOverlay.show();
       const _data = await CachedHttp.get("TProductSalesDetailsReport", async () => {
         return await reportService.getAllProductSalesDetails(dateFrom, dateTo, ignoreDate);
       }, {
+        useIndexDb: true,
+        useLocalStorage: false,
+        requestParams: {
+          DateFrom: dateFrom,
+          DateTo: dateTo,
+          IgnoreDates: ignoreDate
+        },
         validate: cachedResponse => {
+          if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
+          && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+          && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
+            return true;
+          }
           return false;
         }
       });
@@ -910,14 +922,12 @@ let grandtotalqty = 0;
 
 
     },
-    'click #ignoreDate':function(){
-      let templateObject = Template.instance();
-      LoadingOverlay.show();
-      localStorage.setItem('VS1ProductSales_Report', '');
+    'click #ignoreDate': (e, ui) => {
+   
       $('#dateFrom').attr('readonly', true);
       $('#dateTo').attr('readonly', true);
-      templateObject.dateAsAt.set('Current Date');
-      templateObject.loadReport('','',true);
+      ui.dateAsAt.set('Current Date');
+      ui.loadReport(null, null,true);
 
     },
     'keyup #myInputSearch':function(event){

@@ -107,19 +107,31 @@ Template.taxsummaryreport.onRendered(() => {
     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getTaxSummaryReports(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
+   // await templateObject.getTaxSummaryReports(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
+    await templateObject.loadReport(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
+  
+    
   };
 
   
 
-  templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
+  templateObject.loadReport = async (dateFrom, dateTo, ignoreDate = false) => {
     LoadingOverlay.show();
 
     const _data = await CachedHttp.get("TTaxSummaryReport", async () => {
       return await reportService.getTaxSummaryData(dateFrom, dateTo, ignoreDate);
     }, {
+      requestParams: {
+        DateFrom: dateFrom,
+        DateTo: dateTo,
+        IgnoreDates: ignoreDate
+      },
+      useIndexDb: true,
+      useLocalStorage: false,
       validate: cachedResponse => {
-        if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
+        if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
+        && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+        && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
           return true;
         }
         return false;
