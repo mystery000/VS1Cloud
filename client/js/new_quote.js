@@ -539,7 +539,7 @@ Template.new_quote.onRendered(() => {
 
         item_quote.taxItems = taxItems;
         if(stripe_id == ""){
-        item_invoices.paylink = '';
+        item_quote.paylink = '';
         };
         object_invoce.push(item_quote);
         $("#templatePreviewModal .field_payment").show();
@@ -804,7 +804,7 @@ Template.new_quote.onRendered(() => {
 
             item_quote.taxItems = taxItems;
             if(stripe_id == ""){
-            item_invoices.paylink = '';
+            item_quote.paylink = '';
             };
             object_invoce.push(item_quote);
             $("#templatePreviewModal .field_payment").show();
