@@ -110,6 +110,22 @@ Template.payrollleavetaken.onRendered(() => {
 
     let data = await CachedHttp.get(erpObject.TLeaveTaken, async () => {
       return await reportService.getLeaveTakenReport( dateFrom, dateTo, ignoreDate);
+    }, {
+      requestParams: {
+        DateFrom: dateFrom,
+        DateTo: dateTo,
+        IgnoreDates: ignoreDate
+      },
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
+        && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+        && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
+          return true;
+        }
+        return false;
+      }
     });
 
 
