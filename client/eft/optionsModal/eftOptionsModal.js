@@ -95,7 +95,7 @@ Template.eftOptionsModal.events({
   },
 
   "click .chkEftOption": (e) => {
-    // console.log('chkEftOption')
+
   }
 });
 

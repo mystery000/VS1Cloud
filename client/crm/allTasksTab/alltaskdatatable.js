@@ -969,8 +969,8 @@ Template.alltaskdatatable.onRendered(function () {
         let projects = all_projects.filter(project => project.fields.ID == item.fields.ProjectID);
         if(projects.length && projects[0].fields.ProjectColour) {
           projectColor = projects[0].fields.ProjectColour;
-        } 
-      } 
+        }
+      }
 
       td5 = `
         <div class="dropdown btnTaskTableAction">
@@ -3474,8 +3474,8 @@ function openEditTaskModal(id, type) {
         let projects = all_projects.filter(project => project.fields.ID == selected_record.ProjectID);
         if(projects.length && projects[0].fields.ProjectColour) {
           projectColorStyle = 'color: ' + projects[0].fields.ProjectColour + ' !important';
-        } 
-      } 
+        }
+      }
 
       let catg = "";
       let today = moment().format("YYYY-MM-DD");
@@ -3538,7 +3538,7 @@ function openEditTaskModal(id, type) {
       let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
       let date_component = ` <div class="dropdown btnTaskTableAction">
         <div data-toggle="dropdown" title="Reschedule Task" style="cursor:pointer;">
-          <i class="far fa-calendar-plus" style="margin-right: 5px;"></i> 
+          <i class="far fa-calendar-plus" style="margin-right: 5px;"></i>
           <span id="edit_task_modal_due_date">${due_date}</span>
         </div>
         <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
@@ -3584,8 +3584,7 @@ function openEditTaskModal(id, type) {
           </div>
         </div>
       </div>`;
-      
-      console.log('openeditmosal from alltask.....')
+
       // $("#taskmodalDuedate").html(due_date);
       $("#taskmodalDuedate").html(date_component);
       $("#taskmodalDescription").html(selected_record.TaskDescription);
