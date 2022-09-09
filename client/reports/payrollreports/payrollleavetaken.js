@@ -14,7 +14,8 @@ const currentDate = new Date();
 Template.payrollleavetaken.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
-
+  templateObject.records = new ReactiveVar([]);
+  templateObject.reportOptions = new ReactiveVar([]);
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
@@ -77,6 +78,94 @@ Template.payrollleavetaken.onRendered(() => {
 
     //--------- END OF DATE ---------------//
   };
+
+  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+    let defaultOptions = templateObject.reportOptions.get();
+    if (defaultOptions) {
+      defaultOptions.fromDate = formatDateFrom;
+      defaultOptions.toDate = formatDateTo;
+      defaultOptions.ignoreDate = ignoreDate;
+    } else {
+      defaultOptions = {
+        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
+        toDate: moment().format("YYYY-MM-DD"),
+        ignoreDate: true
+      };
+    }
+    $("#dateFrom").val(defaultOptions.fromDate);
+    $("#dateTo").val(defaultOptions.toDate);
+    await templateObject.reportOptions.set(defaultOptions);
+    await templateObject.getLeaveTakenReportData();
+  };
+
+  templateObject.getLeaveTakenReportData = async function () {
+    let data = [];
+    if (!localStorage.getItem('VS1LeaveTaken_Report')) {
+      const options = await templateObject.reportOptions.get();
+      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let ignoreDate = options.ignoreDate || false;
+      data = await reportService.getLeaveTakenReport( dateFrom, dateTo, ignoreDate);
+      if( data.tleavetaken.length > 0 ){
+        localStorage.setItem('VS1LeaveTaken_Report', JSON.stringify(data)||'');
+      }
+    }else{
+      data = JSON.parse(localStorage.getItem('VS1LeaveTaken_Report'));
+    }
+    let reportData = [];
+    if( data.tleavetaken.length > 0 ){
+      for (const item of data.tleavetaken ) {   
+        let isExist = reportData.filter((subitem) => {
+          if( subitem.EmployeeID == item.EmployeeID ){
+              subitem.SubAccounts.push(item)
+              return subitem
+          }
+        });
+
+        if( isExist.length == 0 ){
+          reportData.push({
+              TotalAmountUsed: 0,
+              TotalBalance: 0,
+              SubAccounts: [item],
+              ...item
+          });
+        }
+        $(".fullScreenSpin").css("display", "none");
+      }     
+    }
+    // No balance field is available in the api response
+    // let useData = reportData.filter((item) => {
+    //   let TotalOrCost = 0;
+    //   let TotalCrCost = 0;
+    //   item.SubAccounts.map((subitem) => {
+    //     TotalOrCost += subitem.Linecost;
+    //     TotalCrCost += subitem.linecostinc;
+    //   });
+    //   item.TotalOrCost = TotalOrCost;
+    //   item.TotalCrCost = TotalCrCost;
+    //   return item;
+    // });    
+    templateObject.records.set(reportData);
+    if (templateObject.records.get()) {
+      setTimeout(function () {
+        $("td a").each(function () {
+          if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+            $(this).addClass("text-danger");
+            $(this).removeClass("fgrblue");
+          }
+        });
+        $("td").each(function () {
+          if ($(this).text().indexOf("-" + Currency) >= 0) {
+            $(this).addClass("text-danger");
+            $(this).removeClass("fgrblue");
+          }
+        });
+        $(".fullScreenSpin").css("display", "none");
+      }, 1000);
+    }  
+  }
+
+  templateObject.setReportOptions();
 
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
@@ -421,7 +510,23 @@ Template.payrollleavetaken.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },
-
+  records: () => {
+    return Template.instance().records.get();
+  },
+  formatPrice( amount ){
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+    return ( amount != 0 )? utilityService.modifynegativeCurrencyFormat(amount): "" || "";
+  },
+  checkZero( value ){
+     return ( value == 0 )? '': value;
+  },
+  formatDate: ( date ) => {
+    return ( date )? moment(date).format("YYYY/MM/DD") : '';
+  },
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 

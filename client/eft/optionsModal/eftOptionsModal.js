@@ -41,17 +41,18 @@ Template.eftOptionsModal.onRendered(function () {
   }
 
   templateObject.loadEftOptions = () => {
-    getVS1Data("TEftOptions")
-      .then(function (dataObject) {
-        if (dataObject.length === 0) {
-          templateObject.setInitEftOptions();
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          templateObject.eftOptionsList.set(data)
-        }
-      }).catch(function (err) {
-        templateObject.setInitEftOptions();
-      });
+      templateObject.setInitEftOptions();
+      // getVS1Data("TEftOptions")
+      // .then(function (dataObject) {
+      //   if (dataObject.length === 0) {
+      //     templateObject.setInitEftOptions();
+      //   } else {
+      //     let data = JSON.parse(dataObject[0].data);
+      //     templateObject.eftOptionsList.set(data)
+      //   }
+      // }).catch(function (err) {
+      //   templateObject.setInitEftOptions();
+      // });
   };
   templateObject.loadEftOptions();
 });
@@ -93,6 +94,9 @@ Template.eftOptionsModal.events({
     $('#eftOptionsModal').modal('hide');
   },
 
+  "click .chkEftOption": (e) => {
+
+  }
 });
 
 Template.eftOptionsModal.helpers({

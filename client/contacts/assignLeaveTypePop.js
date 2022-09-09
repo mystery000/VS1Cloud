@@ -42,7 +42,12 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#period').editableSelect('add','Four Weekly');
         $('#period').editableSelect('add','Monthly');
         $('#period').editableSelect('add','Quarterly');
-        
+
+
+        // $('#leaveCalcMethodSelect').editableSelect('add','Fixed Amount Each Period');
+        // $('#leaveCalcMethodSelect').editableSelect('add','Manually Recorded Rate');
+        // $('#leaveCalcMethodSelect').editableSelect('add','No Calculation Required');
+        // $('#leaveCalcMethodSelect').editableSelect('add','Based on Ordinary Earnings');
         // $('.customEditableSelect').editableSelect('add', function(item){
         //     $(this).val(item.id);
         //     $(this).text(item.name);
@@ -50,6 +55,9 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#edtTfnExemption').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
+        });
+        $('#edtTfnExemption').editableSelect().on('blur.editable-select', async function (e, li) {
+            $("#edtTaxFileNumber").val("");
         });
         $('#edtEmploymentBasis').editableSelect('add', function(item){
             $(this).val(item.id);
@@ -67,6 +75,16 @@ Template.assignLeaveTypePop.onCreated(function () {
             $(this).val(item.id);
             $(this).text(item.name);
         });
+        $('#onTerminationUnusedBalance').editableSelect().on('blur.editable-select', async function (e, li) {
+            let onTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
+            if( onTerminationUnusedBalance == '1' || onTerminationUnusedBalance == 'Paid Out'){
+                $('.eftLeaveTypeCont').removeClass('hideelement')
+                $("#eftLeaveType").attr('checked', false)
+            }else{
+                $('.eftLeaveTypeCont').addClass('hideelement')
+                $('.superannuationGuaranteeCont').addClass('hideelement')
+            }
+        });
         $('#superannuationTypeSelect').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
@@ -74,6 +92,31 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#paymentFrequency').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
+        });
+        $('#leaveCalcMethodSelect').editableSelect();
+        $('#leaveCalcMethodSelect').editableSelect().on('blur.editable-select', async function (e, li) {
+            let leaveCalcMethod = e.target.value || '';
+            switch(leaveCalcMethod){
+                case 'Manually Recorded Rate':
+                    $('#hoursLeave').val('');
+                    $('.handleLeaveTypeOption').addClass('hideelement')
+                    $('.manuallyRecordedRate').removeClass('hideelement')
+                break;
+                case 'No Calculation Required':
+                    $('.handleLeaveTypeOption').addClass('hideelement')
+                break;
+                case 'Based on Ordinary Earnings':
+                    $('#hoursAccruedAnnuallyFullTimeEmp').val('');
+                    $('#hoursFullTimeEmpFortnightlyPay').val('');
+                    $('.handleLeaveTypeOption').addClass('hideelement')
+                    $('.basedonOrdinaryEarnings').removeClass('hideelement')
+                break;
+                default:
+                    $('#hoursAccruedAnnually').val('');
+                    $('.handleLeaveTypeOption').addClass('hideelement')
+                    $('.fixedAmountEachPeriodOption').removeClass('hideelement')
+                break;
+            }
         });
         $('#edtLeaveTypeofRequest').editableSelect();
         $('#edtLeaveTypeofRequest').editableSelect()

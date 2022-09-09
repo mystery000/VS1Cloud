@@ -4658,7 +4658,6 @@ Template.new_invoice.onRendered(() => {
             var duedate = $('#dtDueDate').val();
             var po = $('#ponumber').val() || '.';
 
-
             $('#tblInvoiceLine > tbody > tr').each(function () {
 
                 var lineID = this.id;
@@ -4693,7 +4692,7 @@ Template.new_invoice.onRendered(() => {
                         });
                     }
                     else {
-                        taxItems[targetTaxCode] = taxTotal;
+                        // taxItems[targetTaxCode] = taxTotal;
                     }
                 }
 
@@ -4730,7 +4729,11 @@ Template.new_invoice.onRendered(() => {
                 stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
             }
             stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+            if(stripe_id != ""){
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+            }else{
+              $(".linkText").attr("href", "#");
+            };
 
             if(number == 1)
             {
@@ -4867,6 +4870,9 @@ Template.new_invoice.onRendered(() => {
             }
 
             item_invoices.taxItems = taxItems;
+            if(stripe_id == ""){
+            item_invoices.paylink = '';
+            };
 
             object_invoce.push(item_invoices);
 
@@ -4962,7 +4968,11 @@ Template.new_invoice.onRendered(() => {
                 stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
             }
             stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+            if(stripe_id != ""){
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+            }else{
+              $(".linkText").attr("href", "#");
+            };
 
 
 
@@ -5102,7 +5112,9 @@ Template.new_invoice.onRendered(() => {
 
 
 
-
+            if(stripe_id == ""){
+            item_invoices.paylink = '';
+            };
             object_invoce.push(item_invoices);
 
             $("#templatePreviewModal .field_payment").show();
@@ -5197,7 +5209,11 @@ Template.new_invoice.onRendered(() => {
                 stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
             }
             stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+            if(stripe_id != ""){
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+            }else{
+              $(".linkText").attr("href", "#");
+            };
 
 
 
@@ -5335,7 +5351,9 @@ Template.new_invoice.onRendered(() => {
 
             }
 
-
+            if(stripe_id == ""){
+            item_invoices.paylink = '';
+            };
 
 
             object_invoce.push(item_invoices);
@@ -7701,7 +7719,7 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                     });
                 }
                 else {
-                    taxItems[targetTaxCode] = taxTotal;
+                    // taxItems[targetTaxCode] = taxTotal;
                 }
             }
 
@@ -7738,7 +7756,11 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
             stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
         }
         stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+        if(stripe_id != ""){
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+        }else{
+          $(".linkText").attr("href", "#");
+        };
 
 
         if(number == 1)
@@ -7876,7 +7898,9 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
         }
 
         item_invoices.taxItems = taxItems;
-
+        if(stripe_id == ""){
+        item_invoices.paylink = '';
+        };
         object_invoce.push(item_invoices);
 
         $("#html-2-pdfwrapper_new .field_payment").show();
@@ -7973,7 +7997,11 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
             stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
         }
         stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+        if(stripe_id != ""){
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+        }else{
+          $(".linkText").attr("href", "#");
+        };
 
         if(number == 1)
         {
@@ -8105,7 +8133,9 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                 comment:comment,
             };
         }
-
+        if(stripe_id == ""){
+        item_invoices.paylink = '';
+        };
         object_invoce.push(item_invoices);
 
         $("#html-2-pdfwrapper_new .field_payment").show();
@@ -8201,7 +8231,11 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
             stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
         }
         stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+        if(stripe_id != ""){
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+        }else{
+          $(".linkText").attr("href", "#");
+        };
 
 
 
@@ -8341,7 +8375,9 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
 
 
 
-
+        if(stripe_id == ""){
+        item_invoices.paylink = '';
+        };
       object_invoce.push(item_invoices);
 
       $("#html-2-pdfwrapper_new .field_payment").show();
@@ -8513,26 +8549,31 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                         });
                     }
                     else {
-                        taxItems[targetTaxCode] = taxTotal;
+                        // taxItems[targetTaxCode] = taxTotal;
                     }
                 }
             });
-            $("#html-Invoice-pdfwrapper #tax_list_print").html("");
-            Object.keys(taxItems).map((code) => {
-                let html = `
-                    <div style="width: 100%; display: flex;">
-                        <div style="padding-right: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
-                                ${code}</p>
+            if(taxItems && Object.keys(taxItems).length>0) {
+                $("#html-Invoice-pdfwrapper #tax_list_print").html("");
+                Object.keys(taxItems).map((code) => {
+                    let html = `
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    ${code}</p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $${taxItems[code].toFixed(3)}</p>
+                            </div>
                         </div>
-                        <div style="padding-left: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
-                                $${taxItems[code].toFixed(2)}</p>
-                        </div>
-                    </div>
-                `;
-                $("#html-Invoice-pdfwrapper #tax_list_print").append(html);
-            });
+                    `;
+                    $("#html-Invoice-pdfwrapper #tax_list_print").append(html);
+                });
+            } else {
+                $("#html-Invoice-pdfwrapper #tax_list_print").remove();
+            }
+
 
 
             $("#html-Invoice-pdfwrapper #subtotal_totalPrint").html(subtotal);
@@ -8809,22 +8850,26 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
         if (object_invoce[0]["taxItems"]) {
 
             let taxItems = object_invoce[0]["taxItems"];
-            $("#templatePreviewModal #tax_list_print").html("");
-            Object.keys(taxItems).map((code) => {
-                let html = `
-                    <div style="width: 100%; display: flex;">
-                        <div style="padding-right: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
-                                ${code}</p>
+            if(taxItems && Object.keys(taxItems).length>0) {
+                $("#templatePreviewModal #tax_list_print").html("");
+                Object.keys(taxItems).map((code) => {
+                    let html = `
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    ${code}</p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $${taxItems[code].toFixed(3)}</p>
+                            </div>
                         </div>
-                        <div style="padding-left: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
-                                $${taxItems[code].toFixed(2)}</p>
-                        </div>
-                    </div>
-                `;
-                $("#templatePreviewModal #tax_list_print").append(html);
-            });
+                    `;
+                    $("#templatePreviewModal #tax_list_print").append(html);
+                });
+            } else {
+                $("#templatePreviewModal #tax_list_print").remove();
+            }
         }
         $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
 
@@ -9131,22 +9176,26 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
 
         if (object_invoce[0]["taxItems"]) {
             let taxItems = object_invoce[0]["taxItems"];
-            $("#html-2-pdfwrapper_new #tax_list_print").html("");
-            Object.keys(taxItems).map((code) => {
-                let html = `
-                    <div style="width: 100%; display: flex;">
-                        <div style="padding-right: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
-                                ${code}</p>
+            if(taxItems && Object.keys(taxItems).length>0) {
+                $("#html-2-pdfwrapper_new #tax_list_print").html("");
+                Object.keys(taxItems).map((code) => {
+                    let html = `
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    ${code}</p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $${taxItems[code].toFixed(3)}</p>
+                            </div>
                         </div>
-                        <div style="padding-left: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
-                                $${taxItems[code].toFixed(2)}</p>
-                        </div>
-                    </div>
-                `;
-                $("#html-2-pdfwrapper_new #tax_list_print").append(html);
-            });
+                    `;
+                    $("#html-2-pdfwrapper_new #tax_list_print").append(html);
+                });
+            } else {
+                $("#html-2-pdfwrapper_new #tax_list_print").remove();
+            }
         }
         $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
         }
@@ -9851,18 +9900,23 @@ Template.new_invoice.onRendered(function () {
         ];
       }
       let customFieldCount = reset_data.length;
-      for (let r = 0; r < reset_data.length; r++) {
+
+      // tempcode
+      for (let r = 0; r < customFieldCount; r++) {
         customData = {
           active: reset_data[r].active,
-          id: 0,
+          id: "",
           custfieldlabel: reset_data[r].label,
           datatype: "",
-          isempty: false,
+          isempty: true,
           iscombo: false,
-          dropdown: null,
         };
         custFields.push(customData);
       }
+      tempObj.displayfields.set(custFields);
+      return;
+      // tempcode
+
       /*
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
@@ -10157,6 +10211,13 @@ Template.new_invoice.helpers({
     // custom field displaysettings
     displayfields: () => {
       return Template.instance().displayfields.get();
+    },
+    loggedInCountryVAT: () => {
+      let countryVatLabel ="GST";
+      if(Session.get('ERPLoggedCountry') == "South Africa"){
+        countryVatLabel = "VAT";
+      }
+        return countryVatLabel;
     },
 });
 
@@ -10570,9 +10631,14 @@ Template.new_invoice.events({
                         $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
 
                         function generatePdfForMail(invoiceId) {
+                            let stripe_id = templateObject.accountID.get() || '';
                             let file = "Invoice-" + invoiceId + ".pdf"
                                 return new Promise((resolve, reject) => {
-                                $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+                                  if(stripe_id != ""){
+                                  $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+                                  }else{
+                                    $(".linkText").attr("href", "#");
+                                  };
                                 let templateObject = Template.instance();
                                 let completeTabRecord;
                                 let doc = new jsPDF('p', 'pt', 'a4');
@@ -12820,9 +12886,14 @@ Template.new_invoice.events({
 
             function generatePdfForMail(invoiceId) {
                 $('#html-Invoice-pdfwrapper').css('display', 'block');
+                let stripe_id = templateObject.accountID.get() || '';
                 let file = "Invoice-" + invoiceId + ".pdf"
                     return new Promise((resolve, reject) => {
-                    $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+                      if(stripe_id != ""){
+                      $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+                      }else{
+                        $(".linkText").attr("href", "#");
+                      };
                     let templateObject = Template.instance();
                     let completeTabRecord;
                     let doc = new jsPDF('p', 'pt', 'a4');
@@ -13534,9 +13605,14 @@ Template.new_invoice.events({
                 $('.po').text(ponumber);
 
                 function generatePdfForMail(invoiceId) {
+                    let stripe_id = templateObject.accountID.get() || '';
                     let file = "Invoice-" + invoiceId + ".pdf"
                         return new Promise((resolve, reject) => {
-                        $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+                          if(stripe_id != ""){
+                          $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+                          }else{
+                            $(".linkText").attr("href", "#");
+                          };
                         let templateObject = Template.instance();
                         let completeTabRecord;
                         let doc = new jsPDF('p', 'pt', 'a4');
@@ -14346,12 +14422,38 @@ Template.new_invoice.events({
         $('.colTaxRate').css('width', range + '%');
 
     },
-    'change .rngRangeAmount': function (event) {
+    'change .rngRangeAmountInc': function (event) {
 
         let range = $(event.target).val();
-        $(".spWidthAmount").html(range + '%');
-        $('.colAmount').css('width', range + '%');
+        //$(".spWidthAmount").html(range + '%');
+        $('.colAmountInc').css('width', range + '%');
 
+    },
+    'change .rngRangeAmountEx': function (event) {
+
+        let range = $(event.target).val();
+        //$(".spWidthAmount").html(range + '%');
+        $('.colAmountEx').css('width', range + '%');
+
+    },
+    'change .rngRangeTaxAmount': function (event) {
+
+        let range = $(event.target).val();
+        //$(".spWidthAmount").html(range + '%');
+        $('.colTaxAmount').css('width', range + '%');
+
+    },
+    'change .rngRangeDiscount': function (event) {
+        let range = $(event.target).val();
+        $('.colDiscount').css('width', range + '%');
+    },
+    'change .rngRangeSerialLot': function (event) {
+        let range = $(event.target).val();
+        $('.colSerialNo').css('width', range + '%');
+    },
+    'change .rngRangeTaxCode': function (event) {
+        let range = $(event.target).val();
+        $('.colTaxCode').css('width', range + '%');
     },
     'change .rngRangeCostPrice': function (event) {
 
@@ -14451,7 +14553,7 @@ Template.new_invoice.events({
     },
 
     // custom field displaysettings
-    'click .btnResetGridSettings': function(event) {
+    'click .btnResetGridSettings': async function(event) {
       let templateObject = Template.instance();
       let checkBackOrder = templateObject.includeBOnShippedQty.get();
       let reset_data = [];
@@ -14513,7 +14615,6 @@ Template.new_invoice.events({
       //   };
       //   custFields.push(customData);
       // }
-
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);

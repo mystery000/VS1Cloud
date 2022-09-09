@@ -179,7 +179,7 @@
 
                                     .table th,
                                     .table td {
-                                        text-align: right;
+                                        text-align: left;
                                         min-width: 150px;
                                     }
                                     .table th:first-child,
@@ -209,7 +209,7 @@
                                                 <th class="text-right">Cost (ex)</th>
                                                 <th class="text-right">Tax</th>
                                                 <th class="text-right">Cost (inc)</th>
-                                                <th>Tax Code</th>
+                                                <th class="text-right">Tax Code</th>
                                                 <th class="text-right">Qty Ordered</th>
                                                 <th class="text-right">Qty Received</th>
                                                 <th class="text-right">Qty BO</th>
@@ -219,62 +219,39 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td colspan="15" style="font-weight: 800;">Misc Supplier</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>1076</td>
-                                                <td>Purchase Order</td>
-                                                <td>Serial No Product</td>
-                                                <td>Serial No Product</td>
-                                                <td class="text-right text-success">$ 185.95</td>
-                                                <td class="text-right text-success">$ 0.00</td>
-                                                <td class="text-right text-success">$ 204.55</td>
-                                                <td>NCG</td>
-                                                <td class="text-right">3</td>
-                                                <td class="text-right">0</td>
-                                                <td class="text-right">3</td>
-                                                <td>25/05/2022</td>
-                                                <td>15/03/2022</td>
-                                                <td>24/03/2022</td>
-                                            </tr>
-                                            <tr class="departmentHeader">
-                                                <td colspan="15" style="font-weight: 800;">Default</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>1076</td>
-                                                <td>Purchase Order</td>
-                                                <td>Serial No Product</td>
-                                                <td>Serial No Product</td>
-                                                <td class="text-right text-success">$ 185.95</td>
-                                                <td class="text-right text-success">$ 0.00</td>
-                                                <td class="text-right text-success">$ 204.55</td>
-                                                <td>NCG</td>
-                                                <td class="text-right">3</td>
-                                                <td class="text-right">0</td>
-                                                <td class="text-right">3</td>
-                                                <td>25/05/2022</td>
-                                                <td>15/03/2022</td>
-                                                <td>24/03/2022</td>
-                                            </tr>
-                                            <!-- {{#if records}}
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                            {{else}}
-                                                <tr class="odd" style="text-align: center;">
-                                                    <td valign="top" colspan="12" class="dataTables_empty">No data available in table</td>
-                                                </tr>
-                                            {{/if}} -->
+                                            {{#if records}}
+                                                {{#each arrayify records}}
+                                                    <tr>
+                                                        <td colspan="15" style="font-weight: 800;">{{ value.Supplier_Name }}</td>
+                                                    </tr>
+                                                    {{#each item in value.SubAccounts}}
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ item.Purchase_Order_Number }}</td>
+                                                        <td>{{ item.Transaction_Type }}</td>
+                                                        <td>{{ item.Product_Name }}</td>
+                                                        <td>{{ item.Product_Description }}</td>
+                                                        <td class="text-right text-success">{{ formatPrice item.Line_Cost_Ex }}</td>
+                                                        <td class="text-right text-success">{{ formatPrice item.Line_Tax }}</td>
+                                                        <td class="text-right text-success">{{ formatPrice item.Line_Cost_Inc }}</td>
+                                                        <td class="text-right">{{ item.Tax_Code }}</td>
+                                                        <td class="text-right">{{ item.Ordered }}</td>
+                                                        <td class="text-right">{{ item.BackOrder }}</td>
+                                                        <td class="text-right">{{ item.BackOrder }}</td>
+                                                        <td>{{ formatDate item.ETADate }}</td>
+                                                        <td>{{ formatDate item.Order_Date }}</td>
+                                                        <td>{{ formatDate item.ReceivedDate }}</td>
+                                                    </tr>
+                                                    {{/each}}
+                                                    <tr>
+                                                        <td style="font-weight: 800;" colspan="5">{{ value.Supplier_Name }} Total</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalCostEx }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalTax }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalCostInc }}</td>
+                                                        <td colspan="7"></td>
+                                                    </tr>
+                                                {{/each}}
+                                            {{/if}}
                                         </tbody>
                                     </table>
                                 </div>

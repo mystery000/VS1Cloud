@@ -1,20 +1,42 @@
 export default class GlobalFunctions {
   /**
-   *
-   * @param {string} timestamp
-   * @returns {Date}
-   */
+     *
+     * @param {string} timestamp
+     * @returns {Date}
+     */
   static timestampToDate(timestamp) {
     const date = new Date(timestamp);
     return date;
   }
 
   /**
-   * 
-   * @param {string} myString 
-   * @returns {boolean}
-   */
+     *
+     * @param {string} myString
+     * @returns {boolean}
+     */
   static hasNumber(myString) {
     return /\d/.test(myString);
+  }
+
+  /**
+     *
+     * @param {Date} date1
+     * @param {Date} date2
+     * @return {boolean}
+     */
+  static isSameDay(date1, date2) {
+    if (date1 instanceof Date == false) {
+      date1 = new Date(date1);
+    }
+
+    if (date2 instanceof Date == false) {
+      date2 = new Date(date2);
+    }
+
+    if (date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate() && date1.getFullYear() == date2.getFullYear()) {
+      return true;
+    } else {
+      false;
+    }
   }
 }

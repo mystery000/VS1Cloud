@@ -76,6 +76,7 @@ Template.basreturn.onCreated(() => {
     templateObject.taxSummaryList = new ReactiveVar([]);
     templateObject.accountsList = new ReactiveVar([]);
     templateObject.availableCategories = new ReactiveVar([]);
+    templateObject.pageTitle = new ReactiveVar();
 });
 
 Template.basreturn.onRendered(function() {
@@ -585,6 +586,17 @@ Template.basreturn.onRendered(function() {
 
     templateObject.getAccountLists();
 
+    var url = FlowRouter.current().path;
+    if (url.indexOf('?id=') > 0) {
+        var getid = url.split('?id=');
+
+        if (getid[1]) {
+            templateObject.pageTitle.set("Edit BAS Return");
+        }
+    } else {
+        templateObject.pageTitle.set("New BAS Return");
+    }
+
     $('#sltDepartment').editableSelect();
 
     $('#sltDepartment').editableSelect()
@@ -689,11 +701,10 @@ Template.basreturn.helpers({
         let accountsArray = [1, 2, 3, 4, 5];
         return accountsArray;
     },
-    accountsPanListT3: () => {
-        let accountsArray = [1, 2, 3, 4, 5, 6];
-        return accountsArray;
+    taxcodesPanListT3: () => {
+        let taxcodesArray = [1, 2, 3, 4, 5];
+        return taxcodesArray;
     },
-
     accountsList: () => {
         return Template.instance()
             .accountsList.get()
@@ -708,6 +719,12 @@ Template.basreturn.helpers({
                     -1;
             });
     },
+    pageTitle: () => {
+        return Template.instance().pageTitle.get();
+    },
+
+
+
 
 
 
@@ -912,6 +929,7 @@ Template.basreturn.events({
                 $('.fullScreenSpin').css('display', 'inline-block');
                 fromDate = new Date($("#currentyear-t3").val() + "-" + $("#beginquarterlydate-t3").val());
                 fromDate = moment(fromDate).format("YYYY-MM-DD");
+                Template.instance().getTaxSummaryReports(fromDate, toDate, false);
                 Template.instance().getAccountsSummaryReports(fromDate, toDate);
 
             }
@@ -920,6 +938,7 @@ Template.basreturn.events({
                 $('.fullScreenSpin').css('display', 'inline-block');
                 fromDate = new Date($("#currentyear-t3").val() + "-" + $("#beginmonthlydate-t3").val());
                 fromDate = moment(fromDate).format("YYYY-MM-DD");
+                Template.instance().getTaxSummaryReports(fromDate, toDate, false);
                 Template.instance().getAccountsSummaryReports(fromDate, toDate);
             }
         }
@@ -969,9 +988,6 @@ Template.basreturn.events({
         let accountsList = templateObject.accountsList.get();
         let accountsSummaryList = templateObject.accountsSummaryList.get();
 
-        console.log("accountsList", accountsList);
-        console.log("accountsSummaryList", accountsSummaryList);
-
         let accountsPanID = $(event.target).attr('id').split("-")[1];
 
         var total_amounts = 0;
@@ -988,7 +1004,48 @@ Template.basreturn.events({
         $("#accounts" + accountsPanID + "cost").val(total_amounts);
         $("#accounts" + accountsPanID + "option").modal("toggle");
     },
+    'click .btnsel3TaxList': function(event) {
+        const templateObject = Template.instance();
+        let taxRateList = templateObject.taxRateList.get();
+        let taxSummaryList = templateObject.taxSummaryList.get();
 
+        let taxcodesPanID = $(event.target).attr('id').split("-")[1];
+
+        var total_tax = 0;
+        for (var i = 0; i < taxRateList.length; i++) {
+            if ($("#t3-" + taxcodesPanID + "-" + taxRateList[i].Id).prop('checked') == true) {
+                for (var j = 0; j < taxSummaryList.length; j++) {
+                    if (taxRateList[i].CodeName == taxSummaryList[j].taxcode) {
+                        total_tax += parseFloat(taxSummaryList[j].totaltaxdigit);
+                    }
+                }
+            }
+        }
+
+        $("#t3taxcodes" + taxcodesPanID + "cost").val(total_tax);
+        $("#t3taxcodes" + taxcodesPanID + "option").modal("toggle");
+    },
+    'click .btnsel3Accountant': function(event) {
+        const templateObject = Template.instance();
+        let accountsList = templateObject.accountsList.get();
+        let accountsSummaryList = templateObject.accountsSummaryList.get();
+
+        let accountsPanID = $(event.target).attr('id').split("-")[1];
+
+        var total_amounts = 0;
+        for (var i = 0; i < accountsList.length; i++) {
+            if ($("#f3-" + accountsPanID + "-" + accountsList[i].id).prop('checked') == true) {
+                for (var j = 0; j < accountsSummaryList.length; j++) {
+                    if (accountsList[i].accountname == accountsSummaryList[j].AccountName) {
+                        total_amounts += parseFloat(accountsSummaryList[j].balance);
+                    }
+                }
+            }
+        }
+
+        $("#t3accounts" + accountsPanID + "cost").val(total_amounts);
+        $("#t3accounts" + accountsPanID + "option").modal("toggle");
+    },
 
 
 

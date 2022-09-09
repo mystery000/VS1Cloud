@@ -476,7 +476,7 @@ Template.new_salesorder.onRendered(() => {
                     });
                 }
                 else {
-                    taxItems[targetTaxCode] = taxTotal;
+                    // taxItems[targetTaxCode] = taxTotal;
                 }
             }
 
@@ -974,7 +974,7 @@ Template.new_salesorder.onRendered(() => {
                     });
                 }
                 else {
-                    taxItems[targetTaxCode] = taxTotal;
+                    // taxItems[targetTaxCode] = taxTotal;
                 }
             }
 
@@ -1604,22 +1604,26 @@ Template.new_salesorder.onRendered(() => {
         if (object_invoce[0]["taxItems"]) {
 
             let taxItems = object_invoce[0]["taxItems"];
-            $("#templatePreviewModal #tax_list_print").html("");
-            Object.keys(taxItems).map((code) => {
-                let html = `
-                    <div style="width: 100%; display: flex;">
-                        <div style="padding-right: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
-                                ${code}</p>
+            if(taxItems && Object.keys(taxItems).length>0) {
+                $("#templatePreviewModal #tax_list_print").html("");
+                Object.keys(taxItems).map((code) => {
+                    let html = `
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    ${code}</p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $${taxItems[code].toFixed(3)}</p>
+                            </div>
                         </div>
-                        <div style="padding-left: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
-                                $${taxItems[code].toFixed(2)}</p>
-                        </div>
-                    </div>
-                `;
-                $("#templatePreviewModal #tax_list_print").append(html);
-            });
+                    `;
+                    $("#templatePreviewModal #tax_list_print").append(html);
+                });
+            } else {
+                $("#templatePreviewModal #tax_list_print").remove();
+            }
         }
         $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
 
@@ -1934,22 +1938,26 @@ Template.new_salesorder.onRendered(() => {
 
                 if (object_invoce[0]["taxItems"]) {
                 let taxItems = object_invoce[0]["taxItems"];
-                $("#html-2-pdfwrapper_new #tax_list_print").html("");
-                Object.keys(taxItems).map((code) => {
-                    let html = `
-                        <div style="width: 100%; display: flex;">
-                            <div style="padding-right: 16px; width: 50%;">
-                                <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
-                                    ${code}</p>
+                if(taxItems && Object.keys(taxItems).length>0) {
+                    $("#html-2-pdfwrapper_new #tax_list_print").html("");
+                    Object.keys(taxItems).map((code) => {
+                        let html = `
+                            <div style="width: 100%; display: flex;">
+                                <div style="padding-right: 16px; width: 50%;">
+                                    <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                        ${code}</p>
+                                </div>
+                                <div style="padding-left: 16px; width: 50%;">
+                                    <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                        $${taxItems[code].toFixed(3)}</p>
+                                </div>
                             </div>
-                            <div style="padding-left: 16px; width: 50%;">
-                                <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
-                                    $${taxItems[code].toFixed(2)}</p>
-                            </div>
-                        </div>
-                    `;
-                    $("#html-2-pdfwrapper_new #tax_list_print").append(html);
-                });
+                        `;
+                        $("#html-2-pdfwrapper_new #tax_list_print").append(html);
+                    });
+                } else {
+                    $("#html-2-pdfwrapper_new #tax_list_print").remove();
+                }
             }
             $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
             }
@@ -6430,7 +6438,7 @@ Template.new_salesorder.onRendered(() => {
                         });
                     }
                     else {
-                        taxItems[targetTaxCode] = taxTotal;
+                        // taxItems[targetTaxCode] = taxTotal;
                     }
                 }
 
@@ -6467,22 +6475,26 @@ Template.new_salesorder.onRendered(() => {
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
             $('#html-2-pdfwrapper').css('display', 'block');
 
-            $("#html-2-pdfwrapper #tax_list_print").html("");
-            Object.keys(taxItems).map((code) => {
-                let html = `
-                    <div style="width: 100%; display: flex;">
-                        <div style="padding-right: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
-                                ${code}</p>
+            if(taxItems && Object.keys(taxItems).length>0) {
+                $("#html-2-pdfwrapper #tax_list_print").html("");
+                Object.keys(taxItems).map((code) => {
+                    let html = `
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    ${code}</p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $${taxItems[code].toFixed(3)}</p>
+                            </div>
                         </div>
-                        <div style="padding-left: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
-                                $${taxItems[code].toFixed(2)}</p>
-                        </div>
-                    </div>
-                `;
-                $("#html-2-pdfwrapper #tax_list_print").append(html);
-            });
+                    `;
+                    $("#html-2-pdfwrapper #tax_list_print").append(html);
+                });
+            } else {
+                $("#html-2-pdfwrapper #tax_list_print").remove();
+            }
 
             var source = document.getElementById('html-2-pdfwrapper');
          
@@ -7310,6 +7322,22 @@ Template.new_salesorder.onRendered(function() {
       ];
       let customFieldCount = reset_data.length; 
 
+      // tempcode
+      for (let r = 0; r < customFieldCount; r++) {
+        customData = {
+          active: reset_data[r].active,
+          id: "",
+          custfieldlabel: reset_data[r].label,
+          datatype: "",
+          isempty: true,
+          iscombo: false,
+        };
+        custFields.push(customData);
+      }
+      tempObj.displayfields.set(custFields);
+      return;
+      // tempcode
+      
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
           customData = {
@@ -12115,6 +12143,60 @@ Template.new_salesorder.events({
                 });
             }
        }
+    },
+
+    'click #btnMakeWorkOrder': async function(event) {
+        let templateObject = Template.instance();
+        let workorderList = [];
+
+        //await function to get all work order list data
+        let temp = localStorage.getItem('TWorkorders');
+        workorderList = temp?JSON.parse(temp): [];
+
+
+        //end get work order list data
+
+        if(!FlowRouter.current().queryParams.id){
+            swal({
+                title: 'Oooops...',
+                text: "This sales order has not been saved yet, will save it first and then try again",
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {$('.btnSave').trigger('click')}
+                else if (result.dismiss === 'cancel') {
+
+                }
+            });
+        }else {
+            let salesOrderRecord = templateObject.salesorderrecord.get();
+            let lines = templateObject.salesorderrecord.get().LineItems;
+            let isAvailable = true;
+            if(lines.length == 0) {
+                isAvailable = false
+            }else {
+                for(let i = 0; i< lines.length; i++) {
+                    let isExisting = false;
+                     workorderList.map(order => {
+                        if(order.SalesOrderID == salesOrderRecord.id && order.Line.fields.productName == lines[i].item) {
+                            isExisting = true
+                            isAvailable = false;
+                        }
+                    })
+    
+                    if(isExisting == false) {
+                        FlowRouter.go('/workordercard?salesorderid='+FlowRouter.current().queryParams.id + '&lineId='+ i);
+                        return;
+                    }
+                }
+            }
+
+            if(isAvailable == false) {
+                swal('No available data to make work order!', '', 'warning');
+            }
+           
+        }
     },
 
 

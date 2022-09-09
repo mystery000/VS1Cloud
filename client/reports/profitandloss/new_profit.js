@@ -288,7 +288,7 @@ Template.newprofitandloss.onRendered(function () {
   // get 'financial year' to appear end
 
   templateObject.getProfitandLossReports = async function () {
-    if (!localStorage.getItem('VS1ProfitAndLoss_Report')) {
+    // if (!localStorage.getItem('VS1ProfitAndLoss_Report')) {
       const options = await templateObject.reportOptions.get();
       let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
       let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
@@ -371,8 +371,8 @@ Template.newprofitandloss.onRendered(function () {
             // Set Table Data
             templateObject.reportOptions.set(options);
             templateObject.records.set(records);
-            localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
-            localStorage.setItem('VS1ProfitAndLoss_Report', JSON.stringify(records) || '');
+            // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
+            // localStorage.setItem('VS1ProfitAndLoss_Report', JSON.stringify(records) || '');
             if (templateObject.records.get()) {
               setTimeout(function () {
                 $("td a").each(function () {
@@ -489,8 +489,8 @@ Template.newprofitandloss.onRendered(function () {
 
             templateObject.reportOptions.set(options);
             templateObject.records.set(records);
-            localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
-            localStorage.setItem('VS1ProfitAndLoss_Report', JSON.stringify(records) || '');
+            // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
+            // localStorage.setItem('VS1ProfitAndLoss_Report', JSON.stringify(records) || '');
             if (templateObject.records.get()) {
               setTimeout(function () {
                 $("td a").each(function () {
@@ -513,29 +513,29 @@ Template.newprofitandloss.onRendered(function () {
           $(".fullScreenSpin").css("display", "none");
         }
       }
-    }else{
-      let options = JSON.parse(localStorage.getItem('VS1ProfitAndLoss_Report_Options'));
-      let records = JSON.parse(localStorage.getItem('VS1ProfitAndLoss_Report'));
-      templateObject.reportOptions.set(options);
-      templateObject.records.set(records);
-      if (templateObject.records.get()) {
-        setTimeout(function () {
-          $("td a").each(function () {
-            if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
-              $(this).addClass("text-danger");
-              $(this).removeClass("fgrblue");
-            }
-          });
-          $("td").each(function () {
-            if ($(this).text().indexOf("-" + Currency) >= 0) {
-              $(this).addClass("text-danger");
-              $(this).removeClass("fgrblue");
-            }
-          });
-          $(".fullScreenSpin").css("display", "none");
-        }, 500);
-      }
-    }
+    // }else{
+    //   let options = JSON.parse(localStorage.getItem('VS1ProfitAndLoss_Report_Options'));
+    //   let records = JSON.parse(localStorage.getItem('VS1ProfitAndLoss_Report'));
+    //   templateObject.reportOptions.set(options);
+    //   templateObject.records.set(records);
+    //   if (templateObject.records.get()) {
+    //     setTimeout(function () {
+    //       $("td a").each(function () {
+    //         if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+    //           $(this).addClass("text-danger");
+    //           $(this).removeClass("fgrblue");
+    //         }
+    //       });
+    //       $("td").each(function () {
+    //         if ($(this).text().indexOf("-" + Currency) >= 0) {
+    //           $(this).addClass("text-danger");
+    //           $(this).removeClass("fgrblue");
+    //         }
+    //       });
+    //       $(".fullScreenSpin").css("display", "none");
+    //     }, 500);
+    //   }
+    // }
   };
 
   if (url.indexOf("?dateFrom") > 0) {

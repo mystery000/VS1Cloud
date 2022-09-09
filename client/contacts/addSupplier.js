@@ -614,7 +614,6 @@ Template.supplierscard.onRendered(function () {
         });
     };
     function setOneSupplierDataEx(data) {
-        console.log('data', data)
         let lineItemObj = {
             id : data.fields.ID,
             lid : 'Edit Supplier',

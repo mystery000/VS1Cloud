@@ -930,6 +930,128 @@ Template.trialbalance.events({
   "click .fx-rate-btn": async (e) => {
     await loadCurrency();
     //loadCurrencyHistory();
+  },
+
+
+   
+  "click #dropdownDateRang": function (e) {
+    let dateRangeID = e.target.id;
+    $("#btnSltDateRange").addClass("selectedDateRangeBtnMod");
+    $("#selectedDateRange").show();
+    if (dateRangeID == "thisMonth") {
+      document.getElementById("selectedDateRange").value = "This Month";
+    } else if (dateRangeID == "thisQuarter") {
+      document.getElementById("selectedDateRange").value = "This Quarter";
+    } else if (dateRangeID == "thisFinYear") {
+      document.getElementById("selectedDateRange").value =
+        "This Financial Year";
+    } else if (dateRangeID == "lastMonth") {
+      document.getElementById("selectedDateRange").value = "Last Month";
+    } else if (dateRangeID == "lastQuarter") {
+      document.getElementById("selectedDateRange").value = "Last Quarter";
+    } else if (dateRangeID == "lastFinYear") {
+      document.getElementById("selectedDateRange").value =
+        "Last Financial Year";
+    } else if (dateRangeID == "monthToDate") {
+      document.getElementById("selectedDateRange").value = "Month to Date";
+    } else if (dateRangeID == "quarterToDate") {
+      document.getElementById("selectedDateRange").value = "Quarter to Date";
+    } else if (dateRangeID == "finYearToDate") {
+      document.getElementById("selectedDateRange").value = "Year to Date";
+    }
+  },
+  "click #thisMonth": function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment().startOf("month").format("YYYY-MM-DD");
+    let endDate = moment().endOf("month").format("YYYY-MM-DD");
+    localStorage.setItem('VS1TrialBalance_Report', '');
+    templateObject.setReportOptions(0, fromDate, endDate);
+  },
+  "click #thisQuarter": function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
+    let endDate = moment().endOf("Q").format("YYYY-MM-DD");
+    localStorage.setItem('VS1TrialBalance_Report', '');
+    templateObject.setReportOptions(0, fromDate, endDate);
+  },
+  "click #thisFinYear": function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = null;
+    let endDate = null;
+    if (moment().quarter() == 4) {
+      fromDate = moment().month("July").startOf("month").format("YYYY-MM-DD");
+      endDate = moment()
+        .add(1, "year")
+        .month("June")
+        .endOf("month")
+        .format("YYYY-MM-DD");
+    } else {
+      fromDate = moment()
+        .subtract(1, "year")
+        .month("July")
+        .startOf("month")
+        .format("YYYY-MM-DD");
+      endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
+    }
+    localStorage.setItem('VS1TrialBalance_Report', '');
+    templateObject.setReportOptions(0, fromDate, endDate);
+  },
+  "click #lastFinYear": function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = null;
+    let endDate = null;
+    if (moment().quarter() == 4) {
+      fromDate = moment()
+        .subtract(1, "year")
+        .month("July")
+        .startOf("month")
+        .format("YYYY-MM-DD");
+      endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
+    } else {
+      fromDate = moment()
+        .subtract(2, "year")
+        .month("July")
+        .startOf("month")
+        .format("YYYY-MM-DD");
+      endDate = moment()
+        .subtract(1, "year")
+        .month("June")
+        .endOf("month")
+        .format("YYYY-MM-DD");
+    }
+    localStorage.setItem('VS1TrialBalance_Report', '');
+    templateObject.setReportOptions(0, fromDate, endDate);
+  },
+  "click #monthToDate": function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment().startOf("M").format("YYYY-MM-DD");
+    let endDate = moment().format("YYYY-MM-DD");
+    localStorage.setItem('VS1TrialBalance_Report', '');
+    templateObject.setReportOptions(0, fromDate, endDate);
+  },
+  "click #quarterToDate": function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
+    let endDate = moment().format("YYYY-MM-DD");
+    localStorage.setItem('VS1TrialBalance_Report', '');
+    templateObject.setReportOptions(0, fromDate, endDate);
+  },
+  "click #finYearToDate": function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment()
+      .month("january")
+      .startOf("month")
+      .format("YYYY-MM-DD");
+    let endDate = moment().format("YYYY-MM-DD");
+    localStorage.setItem('VS1TrialBalance_Report', '');
+    templateObject.setReportOptions(0, fromDate, endDate);
   }
 });
 

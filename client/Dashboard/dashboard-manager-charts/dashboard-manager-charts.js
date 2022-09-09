@@ -113,7 +113,10 @@ Template.dashboardManagerCharts.onRendered(function () {
                 tickColor: '#666',
                 labels: {
                     step: 2,
-                    rotation: 'auto'
+                    rotation: 'auto',
+                    style: {
+                        color: '#000'
+                    }
                 },
                 title: {
                     text: empData.name
@@ -121,20 +124,30 @@ Template.dashboardManagerCharts.onRendered(function () {
                 plotBands: [{
                     from: 0,
                     to: fourtyPercentOfQuota,
-                    color: '#DF5353' // red
+                    color: '#DF5353', // red
+                    thickness: 30
                 }, {
                     from: fourtyPercentOfQuota,
                     to: eightyPercentOfQuota,
-                    color: '#DDDF0D' // yellow
+                    color: '#DDDF0D', // yellow
+                    thickness: 30
                 }, {
                     from: eightyPercentOfQuota,
                     to: chartEndRangeValue,
-                    color: '#55BF3B' // green
+                    color: '#55BF3B', // green
+                    thickness: 30
                 }]
             },
             series: [{
                 name: 'Total Sales ',
-                data: [empData.totalSales]
+                data: [empData.totalSales],
+                dial: {
+                    radius: '80%',
+                    backgroundColor: 'gray',
+                    baseWidth: 12,
+                    baseLength: '0%',
+                    rearLength: '0%'
+                },
             }]
         };
 

@@ -1,9 +1,17 @@
 import { ReportService } from "../report-service";
 import 'jQuery.print/jQuery.print.js';
 import { UtilityService } from "../../utility-service";
+import { TaxRateService } from "../../settings/settings-service";
+import LoadingOverlay from "../../LoadingOverlay";
+import CachedHttp from "../../lib/global/CachedHttp";
+import GlobalFunctions from "../../GlobalFunctions";
 
-let reportService = new ReportService();
-let utilityService = new UtilityService();
+const reportService = new ReportService();
+const utilityService = new UtilityService();
+const taxRateService = new TaxRateService();
+
+let defaultCurrencyCode = CountryAbbr;
+
 Template.taxsummaryreport.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
@@ -17,12 +25,17 @@ Template.taxsummaryreport.onCreated(() => {
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.deptrecords = new ReactiveVar();
   templateObject.reportOptions = new ReactiveVar([]);
+
+    // Currency related vars //
+    templateObject.currencyList = new ReactiveVar([]);
+    templateObject.activeCurrencyList = new ReactiveVar([]);
+    templateObject.tcurrencyratehistory = new ReactiveVar([]);
 });
 
 Template.taxsummaryreport.onRendered(() => {
-  $('.fullScreenSpin').css('display', 'inline-block');
+  LoadingOverlay.show();
   const templateObject = Template.instance();
-  let utilityService = new UtilityService();
+
   let salesOrderTable;
   var splashArray = new Array();
   var today = moment().format('DD/MM/YYYY');
@@ -96,13 +109,402 @@ Template.taxsummaryreport.onRendered(() => {
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getTaxSummaryReports(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
   };
+
+  
+
+  templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
+    LoadingOverlay.show();
+
+    const _data = await CachedHttp.get("TTaxSummaryReport", async () => {
+      return await reportService.getTaxSummaryData(dateFrom, dateTo, ignoreDate);
+    }, {
+      validate: cachedResponse => {
+        if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
+          return true;
+        }
+        return false;
+      }
+    });
+
+    let data = _data.response;
+    
+    if (data.ttaxsummaryreport) {
+      const taxSummaryReport = data.ttaxsummaryreport;
+
+      reportService.getTaxCodesDetailVS1().then(function (data) {
+        const taxCodesDetail = data.ttaxcodevs1;
+      
+        localStorage.setItem('VS1TaxSummary_Report', JSON.stringify(data)||'');
+        let records = [];
+        let mainReportRecords = [];
+        let subReportRecords = [];
+        let allRecords = [];
+        let current = [];
+
+        let totalNetAssets = 0;
+        let GrandTotalLiability = 0;
+        let GrandTotalAsset = 0;
+        let incArr = [];
+        let cogsArr = [];
+        let expArr = [];
+        let accountData = taxSummaryReport;
+        let accountType = '';
+        let subTaxSummaryData = [];
+
+        accountData.forEach((account) => {
+          // let inputsexpurchases = utilityService.modifynegativeCurrencyFormat(data.INPUT_AmountEx) || 0;
+          // let inputsincpurchases = utilityService.modifynegativeCurrencyFormat(data.INPUT_AmountInc) || 0;
+          // let outputexsales = utilityService.modifynegativeCurrencyFormat(data.OUTPUT_AmountEx) || 0;
+          // let outputincsales = utilityService.modifynegativeCurrencyFormat(data.OUTPUT_AmountInc) || 0;
+          // let totalnet = utilityService.modifynegativeCurrencyFormat(data.TotalNet) || 0;
+          // let totaltax = utilityService.modifynegativeCurrencyFormat(data.TotalTax) || 0;
+          // let totaltax1 = utilityService.modifynegativeCurrencyFormat(data.TotalTax1) || 0;
+
+          let inputsexpurchases = account.INPUT_AmountEx || 0;
+          let inputsincpurchases = account.INPUT_AmountInc || 0;
+          let outputexsales = account.OUTPUT_AmountEx || 0;
+          let outputincsales = account.OUTPUT_AmountInc || 0;
+          let totalnet = account.TotalNet || 0;
+          let totaltax = account.TotalTax || 0;
+          let totaltax1 = account.TotalTax1 || 0;
+
+          const mainReportData = {
+            id: account.ID || '',
+            taxcode: account.TaxCode || '',
+            clientid: account.ClientID || '',
+            inputsexpurchases: inputsexpurchases,
+            inputsincpurchases: inputsincpurchases,
+            outputexsales: outputexsales,
+            outputincsales: outputincsales,
+            totalnet: totalnet || 0.00,
+            totaltax: totaltax || 0.00,
+            totaltax1: totaltax1 || 0.00,
+            taxrate: (account.TaxRate * 100).toFixed(2) + '%' || 0,
+            taxrate2: (account.TaxRate * 100).toFixed(2) || 0,
+            entries: account
+          };
+
+          mainReportRecords.push(mainReportData);
+
+          const taxDetail = taxCodesDetail.find((v) => v.CodeName === account.TaxCode);
+        
+          if (taxDetail && taxDetail.Lines) {
+
+            taxDetail.Lines.forEach((line) => {
+              const tax = (parseFloat(inputsexpurchases) - parseFloat(outputexsales)) * line.Percentage / 100.0;
+
+              const subReportData = {
+                id: account.ID || '',
+                taxcode: account.TaxCode || '',
+                subtaxcode: line.SubTaxCode || '',
+                clientid: '',
+                inputsexpurchases: inputsexpurchases,
+                inputsincpurchases: inputsincpurchases,
+                outputexsales: outputexsales,
+                outputincsales: outputincsales,
+                totalnet: totalnet || 0.00,
+                totaltax: Math.abs(tax) || 0.00,
+                totaltax1: tax || 0.00,
+                taxrate: (line.Percentage).toFixed(2) + '%' || 0,
+                taxrate2: (line.Percentage).toFixed(2) || 0
+              };
+              subReportRecords.push(subReportData);
+
+
+            })
+
+            // for (let j = 0; j < taxDetail.Lines.length; j++) {
+            //   const tax = (utilityService.convertSubstringParseFloat(inputsexpurchases) - utilityService.convertSubstringParseFloat(outputexsales)) * taxDetail.Lines[j].Percentage / 100.0;
+            //   const subReportData = {
+            //     id: taxSummaryReport[i].ID || '',
+            //     taxcode: taxSummaryReport[i].TaxCode || '',
+            //     subtaxcode: taxDetail.Lines[j].SubTaxCode || '',
+            //     clientid: '',
+            //     inputsexpurchases: inputsexpurchases,
+            //     inputsincpurchases: inputsincpurchases,
+            //     outputexsales: outputexsales,
+            //     outputincsales: outputincsales,
+            //     totalnet: totalnet || 0.00,
+            //     totaltax: utilityService.modifynegativeCurrencyFormat(Math.abs(tax)) || 0.00,
+            //     totaltax1: utilityService.modifynegativeCurrencyFormat(tax) || 0.00,
+            //     taxrate: (taxDetail.Lines[j].Percentage).toFixed(2) + '%' || 0,
+            //     taxrate2: (taxDetail.Lines[j].Percentage).toFixed(2) || 0
+            //   };
+            //   subReportRecords.push(subReportData);
+            // }
+          }
+        
+        });
+
+        // for (let i = 0; i < taxSummaryReport.length; i++) {
+
+        //   let inputsexpurchases = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].INPUT_AmountEx) || 0;
+        //   let inputsincpurchases = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].INPUT_AmountInc) || 0;
+        //   let outputexsales = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].OUTPUT_AmountEx) || 0;
+        //   let outputincsales = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].OUTPUT_AmountInc) || 0;
+        //   let totalnet = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalNet) || 0;
+        //   let totaltax = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax) || 0;
+        //   let totaltax1 = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax1) || 0;
+          
+        //   const mainReportData = {
+        //     id: taxSummaryReport[i].ID || '',
+        //     taxcode: taxSummaryReport[i].TaxCode || '',
+        //     clientid: taxSummaryReport[i].ClientID || '',
+        //     inputsexpurchases: inputsexpurchases,
+        //     inputsincpurchases: inputsincpurchases,
+        //     outputexsales: outputexsales,
+        //     outputincsales: outputincsales,
+        //     totalnet: totalnet || 0.00,
+        //     totaltax: totaltax || 0.00,
+        //     totaltax1: totaltax1 || 0.00,
+        //     taxrate: (taxSummaryReport[i].TaxRate * 100).toFixed(2) + '%' || 0,
+        //     taxrate2: (taxSummaryReport[i].TaxRate * 100).toFixed(2) || 0
+
+        //   };
+
+        //   mainReportRecords.push(mainReportData);
+
+        //   const taxDetail = taxCodesDetail.find((v) => v.CodeName === taxSummaryReport[i].TaxCode);
+        //   if (taxDetail && taxDetail.Lines) {
+        //     for (let j = 0; j < taxDetail.Lines.length; j++) {
+        //       const tax = (utilityService.convertSubstringParseFloat(inputsexpurchases) - utilityService.convertSubstringParseFloat(outputexsales)) * taxDetail.Lines[j].Percentage / 100.0;
+        //       const subReportData = {
+        //         id: taxSummaryReport[i].ID || '',
+        //         taxcode: taxSummaryReport[i].TaxCode || '',
+        //         subtaxcode: taxDetail.Lines[j].SubTaxCode || '',
+        //         clientid: '',
+        //         inputsexpurchases: inputsexpurchases,
+        //         inputsincpurchases: inputsincpurchases,
+        //         outputexsales: outputexsales,
+        //         outputincsales: outputincsales,
+        //         totalnet: totalnet || 0.00,
+        //         totaltax: utilityService.modifynegativeCurrencyFormat(Math.abs(tax)) || 0.00,
+        //         totaltax1: utilityService.modifynegativeCurrencyFormat(tax) || 0.00,
+        //         taxrate: (taxDetail.Lines[j].Percentage).toFixed(2) + '%' || 0,
+        //         taxrate2: (taxDetail.Lines[j].Percentage).toFixed(2) || 0
+        //       };
+        //       subReportRecords.push(subReportData);
+        //     }
+        //   }
+
+
+
+
+
+        //   //   if((taxSummaryReport[i].AmountDue != 0) || (taxSummaryReport[i].Current != 0)
+        //   //   || (taxSummaryReport[i]["30Days"] != 0) || (taxSummaryReport[i]["60Days"] != 0)
+        //   // || (taxSummaryReport[i]["90Days"] != 0) || (taxSummaryReport[i]["120Days"] != 0)){
+        //   //  records.push(recordObj);
+        //   //}
+
+
+
+        // }
+
+        mainReportRecords = _.sortBy(mainReportRecords, 'taxcode');
+        subReportRecords = _.sortBy(subReportRecords, 'subtaxcode');
+
+        // templateObject.mainReportRecords.set(mainReportRecords);
+        // templateObject.reportRecords.set(mainReportRecords);
+        //   records = _.sortBy(records, 'SupplierName');
+        // records = _.groupBy(records, 'SupplierName');
+
+
+        // for (let key in records) {
+        //   allRecords.push({
+        //       title: key,
+        //       entries: records[key],
+        //       total: {} // will be filled later
+        //   });
+        // }
+
+        let iterator = 0;
+        let inputsexpurchasestotal = 0;
+        let inputsincpurchasestotal = 0;
+        let outputexsalestotal = 0;
+        let outputincsalestotal = 0;
+        let nettotal = 0;
+        let taxtotal = 0;
+        let taxratetotal = 0;
+        let taxtotal1 = 0;
+
+        mainReportRecords.forEach((record) => {
+          const currencyLength = Currency.length;
+          inputsexpurchasestotal = inputsexpurchasestotal + parseFloat(record.inputsexpurchases);
+          inputsincpurchasestotal = inputsincpurchasestotal + parseFloat(record.inputsincpurchases);
+          outputexsalestotal = outputexsalestotal + parseFloat(record.outputexsales);
+          outputincsalestotal = outputincsalestotal + parseFloat(record.outputincsales);
+          nettotal = nettotal + parseFloat(record.totalnet);
+          taxtotal = taxtotal + parseFloat(record.totaltax);
+          taxratetotal = taxratetotal + Number(record.taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
+          taxtotal1 = taxtotal1 + parseFloat(record.totaltax1);
+
+          let val = {
+            InputsExPurchases: inputsexpurchasestotal,
+            InputsIncPurchases: inputsincpurchasestotal,
+            OutputExSales: outputexsalestotal,
+            OutputIncSales: outputincsalestotal,
+            Net: nettotal,
+            tax: taxtotal,
+            tax1: taxtotal1,
+            TaxRate: taxratetotal
+          }
+
+          current.push(val);
+
+          
+
+        });
+
+        templateObject.mainReportRecords.set(mainReportRecords);
+        templateObject.reportRecords.set(mainReportRecords); // this one will be used
+
+        // for (let i = 0; i < mainReportRecords.length; i++) {
+
+
+
+        //   const currencyLength = Currency.length;
+        //   inputsexpurchasestotal = inputsexpurchasestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].inputsexpurchases);
+        //   inputsincpurchasestotal = inputsincpurchasestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].inputsincpurchases);
+        //   outputexsalestotal = outputexsalestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].outputexsales);
+        //   outputincsalestotal = outputincsalestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].outputincsales);
+        //   nettotal = nettotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].totalnet);
+        //   taxtotal = taxtotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].totaltax);
+        //   taxratetotal = taxratetotal + Number(mainReportRecords[i].taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
+        //   taxtotal1 = taxtotal1 + utilityService.convertSubstringParseFloat(mainReportRecords[i].totaltax1);
+
+        //   let val = ['', utilityService.modifynegativeCurrencyFormat(inputsexpurchasestotal), utilityService.modifynegativeCurrencyFormat(inputsincpurchasestotal),
+        //     utilityService.modifynegativeCurrencyFormat(outputexsalestotal), utilityService.modifynegativeCurrencyFormat(outputincsalestotal), utilityService.modifynegativeCurrencyFormat(nettotal), utilityService.modifynegativeCurrencyFormat(taxtotal), '', utilityService.modifynegativeCurrencyFormat(taxtotal1)];
+        //   current.push(val);
+
+        // }
+
+        const mainGrandval = {
+          title: "Grand Total ",
+          total: {
+            net: utilityService.modifynegativeCurrencyFormat(nettotal),
+            tax: utilityService.modifynegativeCurrencyFormat(taxtotal)
+          }
+        };
+
+        // let mainGrandval = [
+        //   "Grand Total " + "",
+        //   // '','',
+        //   "",
+        //   "",
+        //   // '',
+        //   // '',
+        //   utilityService.modifynegativeCurrencyFormat(nettotal),
+
+        //               // taxratetotal.toFixed(2) + '%' || 0,
+        //   "",
+        //   utilityService.modifynegativeCurrencyFormat(taxtotal)
+        // ];
+        // utilityService.modifynegativeCurrencyFormat(taxtotal1)];
+
+        const subGrandval = {
+          title: "Grand Total ",
+          total: {
+            net: utilityService.modifynegativeCurrencyFormat(nettotal),
+            tax: utilityService.modifynegativeCurrencyFormat(taxtotal)
+          }
+        };
+
+        // let subGrandval = ['Grand Total ' + '',
+        //   '',
+        //   '',
+        //   '',
+        // utilityService.modifynegativeCurrencyFormat(nettotal),
+        //   '',
+        // utilityService.modifynegativeCurrencyFormat(taxtotal)];
+
+        //templateObject.records.set(totalRecord);
+
+
+        templateObject.mainGrandRecords.set(mainGrandval);
+        templateObject.subGrandRecords.set(subGrandval);
+        templateObject.grandRecords.set(mainGrandval);
+
+        let i = 0, posToAdd = -1, currentSubCode, subReportRecordsSize = subReportRecords.length;
+
+        // i should be iterated being lower than subReportRecordsSize, but iterated once more to summing last group
+        while (i <= subReportRecordsSize) {
+          if (i === subReportRecordsSize || currentSubCode !== subReportRecords[i].subtaxcode) {
+            if (posToAdd >= 0) {
+              const taxDetail = taxCodesDetail.find((v) => v.CodeName === subReportRecords[i - 1].taxcode);
+
+              const subReportData = {
+                id: taxDetail.ID,
+                taxcode: '',
+                subtaxcode: subReportRecords[i - 1].subtaxcode || '',
+                clientid: '',
+                inputsexpurchases: inputsexpurchasestotal,
+                inputsincpurchases: inputsincpurchasestotal,
+                outputexsales: outputexsalestotal,
+                outputincsales: outputincsalestotal,
+                totalnet: nettotal || 0.00,
+                totaltax: taxtotal || 0.00,
+                totaltax1: taxtotal1 || 0.00,
+                taxrate: (taxratetotal).toFixed(2) + '%' || 0,
+                taxrate2: (taxratetotal).toFixed(2) || 0
+              };
+              subReportRecords.splice(posToAdd, 0, subReportData);
+
+              // if this is last group summing, don't need to continue iterating
+              if (i === subReportRecordsSize) break;
+
+              i++;
+              subReportRecordsSize++;
+            }
+
+            posToAdd = i;
+            if (subReportRecords.length > 0) {
+              currentSubCode = subReportRecords[i].subtaxcode;
+            }
+
+            inputsexpurchasestotal = 0;
+            inputsincpurchasestotal = 0;
+            outputexsalestotal = 0;
+            outputincsalestotal = 0;
+            nettotal = 0;
+            taxtotal = 0;
+            taxratetotal = 0;
+            taxtotal1 = 0;
+          }
+          if (subReportRecords.length > 0) {
+            inputsexpurchasestotal = inputsexpurchasestotal + parseFloat(subReportRecords[i].inputsexpurchases);
+            inputsincpurchasestotal = inputsincpurchasestotal + parseFloat(subReportRecords[i].inputsincpurchases);
+            outputexsalestotal = outputexsalestotal + parseFloat(subReportRecords[i].outputexsales);
+            outputincsalestotal = outputincsalestotal + parseFloat(subReportRecords[i].outputincsales);
+            nettotal = nettotal + parseFloat(subReportRecords[i].totalnet);
+            taxtotal = taxtotal + parseFloat(subReportRecords[i].totaltax);
+            taxratetotal = taxratetotal + Number(subReportRecords[i].taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
+            taxtotal1 = taxtotal1 + parseFloat(subReportRecords[i].totaltax1);
+          }
+          i++;
+        }
+        templateObject.subReportRecords.set(subReportRecords);
+
+        if (templateObject.mainReportRecords.get()) {
+          templateObject.stylizeForm();
+        }
+        templateObject.isSub.set(false);
+      });
+      LoadingOverlay.hide();
+    }
+
+
+      LoadingOverlay.hide();
+
+  }
+
   templateObject.getTaxSummaryReports = function (dateFrom, dateTo, ignoreDate) {
     if (!localStorage.getItem('VS1TaxSummary_Report')) {
       reportService.getTaxSummaryData(dateFrom, dateTo, ignoreDate).then(function (data) {
         let totalRecord = [];
         let grandtotalRecord = [];
 
-        if (data.ttaxsummaryreport.length) {
+        if (data.ttaxsummaryreport) {
           const taxSummaryReport = data.ttaxsummaryreport;
 
           reportService.getTaxCodesDetailVS1().then(function (data) {
@@ -124,19 +526,27 @@ Template.taxsummaryreport.onRendered(() => {
             let accountType = '';
             let subTaxSummaryData = [];
 
-            for (let i = 0; i < taxSummaryReport.length; i++) {
+            taxSummaryReport.forEach((data) => {
+              // let inputsexpurchases = utilityService.modifynegativeCurrencyFormat(data.INPUT_AmountEx) || 0;
+              // let inputsincpurchases = utilityService.modifynegativeCurrencyFormat(data.INPUT_AmountInc) || 0;
+              // let outputexsales = utilityService.modifynegativeCurrencyFormat(data.OUTPUT_AmountEx) || 0;
+              // let outputincsales = utilityService.modifynegativeCurrencyFormat(data.OUTPUT_AmountInc) || 0;
+              // let totalnet = utilityService.modifynegativeCurrencyFormat(data.TotalNet) || 0;
+              // let totaltax = utilityService.modifynegativeCurrencyFormat(data.TotalTax) || 0;
+              // let totaltax1 = utilityService.modifynegativeCurrencyFormat(data.TotalTax1) || 0;
 
-              let inputsexpurchases = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].INPUT_AmountEx) || 0;
-              let inputsincpurchases = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].INPUT_AmountInc) || 0;
-              let outputexsales = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].OUTPUT_AmountEx) || 0;
-              let outputincsales = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].OUTPUT_AmountInc) || 0;
-              let totalnet = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalNet) || 0;
-              let totaltax = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax) || 0;
-              let totaltax1 = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax1) || 0;
+              let inputsexpurchases = data.INPUT_AmountEx || 0;
+              let inputsincpurchases = data.INPUT_AmountInc || 0;
+              let outputexsales = data.OUTPUT_AmountEx || 0;
+              let outputincsales = data.OUTPUT_AmountInc || 0;
+              let totalnet = data.TotalNet || 0;
+              let totaltax = data.TotalTax || 0;
+              let totaltax1 = data.TotalTax1 || 0;
+
               const mainReportData = {
-                id: taxSummaryReport[i].ID || '',
-                taxcode: taxSummaryReport[i].TaxCode || '',
-                clientid: taxSummaryReport[i].ClientID || '',
+                id: data.ID || '',
+                taxcode: data.TaxCode || '',
+                clientid: data.ClientID || '',
                 inputsexpurchases: inputsexpurchases,
                 inputsincpurchases: inputsincpurchases,
                 outputexsales: outputexsales,
@@ -144,21 +554,23 @@ Template.taxsummaryreport.onRendered(() => {
                 totalnet: totalnet || 0.00,
                 totaltax: totaltax || 0.00,
                 totaltax1: totaltax1 || 0.00,
-                taxrate: (taxSummaryReport[i].TaxRate * 100).toFixed(2) + '%' || 0,
-                taxrate2: (taxSummaryReport[i].TaxRate * 100).toFixed(2) || 0
-
+                taxrate: (data.TaxRate * 100).toFixed(2) + '%' || 0,
+                taxrate2: (data.TaxRate * 100).toFixed(2) || 0,
+                entries: data
               };
 
               mainReportRecords.push(mainReportData);
 
-              const taxDetail = taxCodesDetail.find((v) => v.CodeName === taxSummaryReport[i].TaxCode);
+              const taxDetail = taxCodesDetail.find((v) => v.CodeName === data.TaxCode);
               if (taxDetail && taxDetail.Lines) {
-                for (let j = 0; j < taxDetail.Lines.length; j++) {
+
+                taxDetail.Lines.forEach((line) => {
                   const tax = (utilityService.convertSubstringParseFloat(inputsexpurchases) - utilityService.convertSubstringParseFloat(outputexsales)) * taxDetail.Lines[j].Percentage / 100.0;
+
                   const subReportData = {
-                    id: taxSummaryReport[i].ID || '',
-                    taxcode: taxSummaryReport[i].TaxCode || '',
-                    subtaxcode: taxDetail.Lines[j].SubTaxCode || '',
+                    id: data.ID || '',
+                    taxcode: data.TaxCode || '',
+                    subtaxcode: line.SubTaxCode || '',
                     clientid: '',
                     inputsexpurchases: inputsexpurchases,
                     inputsincpurchases: inputsincpurchases,
@@ -167,37 +579,116 @@ Template.taxsummaryreport.onRendered(() => {
                     totalnet: totalnet || 0.00,
                     totaltax: utilityService.modifynegativeCurrencyFormat(Math.abs(tax)) || 0.00,
                     totaltax1: utilityService.modifynegativeCurrencyFormat(tax) || 0.00,
-                    taxrate: (taxDetail.Lines[j].Percentage).toFixed(2) + '%' || 0,
-                    taxrate2: (taxDetail.Lines[j].Percentage).toFixed(2) || 0
+                    taxrate: (line.Percentage).toFixed(2) + '%' || 0,
+                    taxrate2: (line.Percentage).toFixed(2) || 0
                   };
                   subReportRecords.push(subReportData);
-                }
+
+
+                })
+
+                // for (let j = 0; j < taxDetail.Lines.length; j++) {
+                //   const tax = (utilityService.convertSubstringParseFloat(inputsexpurchases) - utilityService.convertSubstringParseFloat(outputexsales)) * taxDetail.Lines[j].Percentage / 100.0;
+                //   const subReportData = {
+                //     id: taxSummaryReport[i].ID || '',
+                //     taxcode: taxSummaryReport[i].TaxCode || '',
+                //     subtaxcode: taxDetail.Lines[j].SubTaxCode || '',
+                //     clientid: '',
+                //     inputsexpurchases: inputsexpurchases,
+                //     inputsincpurchases: inputsincpurchases,
+                //     outputexsales: outputexsales,
+                //     outputincsales: outputincsales,
+                //     totalnet: totalnet || 0.00,
+                //     totaltax: utilityService.modifynegativeCurrencyFormat(Math.abs(tax)) || 0.00,
+                //     totaltax1: utilityService.modifynegativeCurrencyFormat(tax) || 0.00,
+                //     taxrate: (taxDetail.Lines[j].Percentage).toFixed(2) + '%' || 0,
+                //     taxrate2: (taxDetail.Lines[j].Percentage).toFixed(2) || 0
+                //   };
+                //   subReportRecords.push(subReportData);
+                // }
               }
+            
+            });
+
+            // for (let i = 0; i < taxSummaryReport.length; i++) {
+
+            //   let inputsexpurchases = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].INPUT_AmountEx) || 0;
+            //   let inputsincpurchases = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].INPUT_AmountInc) || 0;
+            //   let outputexsales = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].OUTPUT_AmountEx) || 0;
+            //   let outputincsales = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].OUTPUT_AmountInc) || 0;
+            //   let totalnet = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalNet) || 0;
+            //   let totaltax = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax) || 0;
+            //   let totaltax1 = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax1) || 0;
+              
+            //   const mainReportData = {
+            //     id: taxSummaryReport[i].ID || '',
+            //     taxcode: taxSummaryReport[i].TaxCode || '',
+            //     clientid: taxSummaryReport[i].ClientID || '',
+            //     inputsexpurchases: inputsexpurchases,
+            //     inputsincpurchases: inputsincpurchases,
+            //     outputexsales: outputexsales,
+            //     outputincsales: outputincsales,
+            //     totalnet: totalnet || 0.00,
+            //     totaltax: totaltax || 0.00,
+            //     totaltax1: totaltax1 || 0.00,
+            //     taxrate: (taxSummaryReport[i].TaxRate * 100).toFixed(2) + '%' || 0,
+            //     taxrate2: (taxSummaryReport[i].TaxRate * 100).toFixed(2) || 0
+
+            //   };
+
+            //   mainReportRecords.push(mainReportData);
+
+            //   const taxDetail = taxCodesDetail.find((v) => v.CodeName === taxSummaryReport[i].TaxCode);
+            //   if (taxDetail && taxDetail.Lines) {
+            //     for (let j = 0; j < taxDetail.Lines.length; j++) {
+            //       const tax = (utilityService.convertSubstringParseFloat(inputsexpurchases) - utilityService.convertSubstringParseFloat(outputexsales)) * taxDetail.Lines[j].Percentage / 100.0;
+            //       const subReportData = {
+            //         id: taxSummaryReport[i].ID || '',
+            //         taxcode: taxSummaryReport[i].TaxCode || '',
+            //         subtaxcode: taxDetail.Lines[j].SubTaxCode || '',
+            //         clientid: '',
+            //         inputsexpurchases: inputsexpurchases,
+            //         inputsincpurchases: inputsincpurchases,
+            //         outputexsales: outputexsales,
+            //         outputincsales: outputincsales,
+            //         totalnet: totalnet || 0.00,
+            //         totaltax: utilityService.modifynegativeCurrencyFormat(Math.abs(tax)) || 0.00,
+            //         totaltax1: utilityService.modifynegativeCurrencyFormat(tax) || 0.00,
+            //         taxrate: (taxDetail.Lines[j].Percentage).toFixed(2) + '%' || 0,
+            //         taxrate2: (taxDetail.Lines[j].Percentage).toFixed(2) || 0
+            //       };
+            //       subReportRecords.push(subReportData);
+            //     }
+            //   }
 
 
 
 
 
-              //   if((taxSummaryReport[i].AmountDue != 0) || (taxSummaryReport[i].Current != 0)
-              //   || (taxSummaryReport[i]["30Days"] != 0) || (taxSummaryReport[i]["60Days"] != 0)
-              // || (taxSummaryReport[i]["90Days"] != 0) || (taxSummaryReport[i]["120Days"] != 0)){
-              //  records.push(recordObj);
-              //}
+            //   //   if((taxSummaryReport[i].AmountDue != 0) || (taxSummaryReport[i].Current != 0)
+            //   //   || (taxSummaryReport[i]["30Days"] != 0) || (taxSummaryReport[i]["60Days"] != 0)
+            //   // || (taxSummaryReport[i]["90Days"] != 0) || (taxSummaryReport[i]["120Days"] != 0)){
+            //   //  records.push(recordObj);
+            //   //}
 
 
 
-            }
+            // }
 
             mainReportRecords = _.sortBy(mainReportRecords, 'taxcode');
             subReportRecords = _.sortBy(subReportRecords, 'subtaxcode');
 
-            templateObject.mainReportRecords.set(mainReportRecords);
-            templateObject.reportRecords.set(mainReportRecords);
+            // templateObject.mainReportRecords.set(mainReportRecords);
+            // templateObject.reportRecords.set(mainReportRecords);
             //   records = _.sortBy(records, 'SupplierName');
             // records = _.groupBy(records, 'SupplierName');
+
             for (let key in records) {
-              let obj = [{ key: key }, { data: records[key] }];
-              allRecords.push(obj);
+              allRecords.push({
+                  title: key,
+                  entries: records[key],
+                  total: {} // will be filled later
+              });
             }
 
             let iterator = 0;
@@ -209,46 +700,96 @@ Template.taxsummaryreport.onRendered(() => {
             let taxtotal = 0;
             let taxratetotal = 0;
             let taxtotal1 = 0;
-            for (let i = 0; i < mainReportRecords.length; i++) {
 
-
-
+            mainReportRecords.forEach((record) => {
               const currencyLength = Currency.length;
-              inputsexpurchasestotal = inputsexpurchasestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].inputsexpurchases);
-              inputsincpurchasestotal = inputsincpurchasestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].inputsincpurchases);
-              outputexsalestotal = outputexsalestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].outputexsales);
-              outputincsalestotal = outputincsalestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].outputincsales);
-              nettotal = nettotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].totalnet);
-              taxtotal = taxtotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].totaltax);
-              taxratetotal = taxratetotal + Number(mainReportRecords[i].taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
-              taxtotal1 = taxtotal1 + utilityService.convertSubstringParseFloat(mainReportRecords[i].totaltax1);
+              inputsexpurchasestotal = inputsexpurchasestotal + parseFloat(record.inputsexpurchases);
+              inputsincpurchasestotal = inputsincpurchasestotal + parseFloat(record.inputsincpurchases);
+              outputexsalestotal = outputexsalestotal + parseFloat(record.outputexsales);
+              outputincsalestotal = outputincsalestotal + parseFloat(record.outputincsales);
+              nettotal = nettotal + parseFloat(record.totalnet);
+              taxtotal = taxtotal + parseFloat(record.totaltax);
+              taxratetotal = taxratetotal + Number(record.taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
+              taxtotal1 = taxtotal1 + parseFloat(record.totaltax1);
 
-              let val = ['', utilityService.modifynegativeCurrencyFormat(inputsexpurchasestotal), utilityService.modifynegativeCurrencyFormat(inputsincpurchasestotal),
-                utilityService.modifynegativeCurrencyFormat(outputexsalestotal), utilityService.modifynegativeCurrencyFormat(outputincsalestotal), utilityService.modifynegativeCurrencyFormat(nettotal), utilityService.modifynegativeCurrencyFormat(taxtotal), '', utilityService.modifynegativeCurrencyFormat(taxtotal1)];
+              let val = {
+                InputsExPurchases: inputsexpurchasestotal,
+                InputsIncPurchases: inputsincpurchasestotal,
+                OutputExSales: outputexsalestotal,
+                OutputIncSales: outputincsalestotal,
+                Net: nettotal,
+                tax: taxtotal,
+                tax1: taxtotal1,
+                TaxRate: taxratetotal
+              }
+
               current.push(val);
 
-            }
+              
 
-            let mainGrandval = ['Grand Total ' + '',
-              // '','',
-              '',
-              '',
-            // '',
-            // '',
-            utilityService.modifynegativeCurrencyFormat(nettotal),
+            });
 
-              // taxratetotal.toFixed(2) + '%' || 0,
-              '',
-            utilityService.modifynegativeCurrencyFormat(taxtotal)];
+            templateObject.mainReportRecords.set(mainReportRecords);
+            templateObject.reportRecords.set(mainReportRecords);
+
+            // for (let i = 0; i < mainReportRecords.length; i++) {
+
+
+
+            //   const currencyLength = Currency.length;
+            //   inputsexpurchasestotal = inputsexpurchasestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].inputsexpurchases);
+            //   inputsincpurchasestotal = inputsincpurchasestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].inputsincpurchases);
+            //   outputexsalestotal = outputexsalestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].outputexsales);
+            //   outputincsalestotal = outputincsalestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].outputincsales);
+            //   nettotal = nettotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].totalnet);
+            //   taxtotal = taxtotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].totaltax);
+            //   taxratetotal = taxratetotal + Number(mainReportRecords[i].taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
+            //   taxtotal1 = taxtotal1 + utilityService.convertSubstringParseFloat(mainReportRecords[i].totaltax1);
+
+            //   let val = ['', utilityService.modifynegativeCurrencyFormat(inputsexpurchasestotal), utilityService.modifynegativeCurrencyFormat(inputsincpurchasestotal),
+            //     utilityService.modifynegativeCurrencyFormat(outputexsalestotal), utilityService.modifynegativeCurrencyFormat(outputincsalestotal), utilityService.modifynegativeCurrencyFormat(nettotal), utilityService.modifynegativeCurrencyFormat(taxtotal), '', utilityService.modifynegativeCurrencyFormat(taxtotal1)];
+            //   current.push(val);
+
+            // }
+
+            const mainGrandval = {
+              title: "Grand Total ",
+              total: {
+                net: utilityService.modifynegativeCurrencyFormat(nettotal),
+                tax: utilityService.modifynegativeCurrencyFormat(taxtotal)
+              }
+            };
+
+            // let mainGrandval = [
+            //   "Grand Total " + "",
+            //   // '','',
+            //   "",
+            //   "",
+            //   // '',
+            //   // '',
+            //   utilityService.modifynegativeCurrencyFormat(nettotal),
+
+            //               // taxratetotal.toFixed(2) + '%' || 0,
+            //   "",
+            //   utilityService.modifynegativeCurrencyFormat(taxtotal)
+            // ];
             // utilityService.modifynegativeCurrencyFormat(taxtotal1)];
 
-            let subGrandval = ['Grand Total ' + '',
-              '',
-              '',
-              '',
-            utilityService.modifynegativeCurrencyFormat(nettotal),
-              '',
-            utilityService.modifynegativeCurrencyFormat(taxtotal)];
+            const subGrandval = {
+              title: "Grand Total ",
+              total: {
+                net: utilityService.modifynegativeCurrencyFormat(nettotal),
+                tax: utilityService.modifynegativeCurrencyFormat(taxtotal)
+              }
+            };
+
+            // let subGrandval = ['Grand Total ' + '',
+            //   '',
+            //   '',
+            //   '',
+            // utilityService.modifynegativeCurrencyFormat(nettotal),
+            //   '',
+            // utilityService.modifynegativeCurrencyFormat(taxtotal)];
 
             //templateObject.records.set(totalRecord);
             templateObject.mainGrandRecords.set(mainGrandval);
@@ -320,7 +861,7 @@ Template.taxsummaryreport.onRendered(() => {
             }
             templateObject.isSub.set(false);
           });
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
         } else {
           let records = [];
           let recordObj = {};
@@ -343,12 +884,12 @@ Template.taxsummaryreport.onRendered(() => {
           records.push(recordObj);
           templateObject.records.set(records);
           templateObject.grandrecords.set('');
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
         }
 
       }).catch(function (err) {
         //Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
       });
     } else {
       let data = JSON.parse(localStorage.getItem('VS1TaxSummary_Report'));
@@ -490,7 +1031,7 @@ Template.taxsummaryreport.onRendered(() => {
             $('td:nth-child(8)').each(function () {
               $(this).addClass('text-right');
             });
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
           }, 100);
         }
 
@@ -516,7 +1057,7 @@ Template.taxsummaryreport.onRendered(() => {
         records.push(recordObj);
         templateObject.records.set(records);
         templateObject.grandrecords.set('');
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
       }
 
     }
@@ -547,14 +1088,15 @@ Template.taxsummaryreport.onRendered(() => {
       $('td:nth-child(8)').each(function () {
         $(this).addClass('text-right');
       });
-      $('.fullScreenSpin').css('display', 'none');
+      LoadingOverlay.hide();
     }, 100);
   }
 
   var currentDate2 = new Date();
   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
   let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + currentDate2.getDate();
-  templateObject.getTaxSummaryReports(getDateFrom, getLoadDate, false);
+  // templateObject.getTaxSummaryReports(getDateFrom, getLoadDate, false);
+  templateObject.loadReport(getDateFrom, getLoadDate, false);
 
   templateObject.getDepartments = function () {
     reportService.getDepartment().then(function (data) {
@@ -574,6 +1116,25 @@ Template.taxsummaryreport.onRendered(() => {
   }
   // templateObject.getAllProductData();
   templateObject.getDepartments();
+
+
+
+    /**
+     * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
+     * So we have a showable list of currencies to toggle
+     */
+
+     templateObject.loadCurrency = async () => {
+      await loadCurrency();
+    };
+
+    //templateObject.loadCurrency();
+
+    templateObject.loadCurrencyHistory = async () => {
+      await loadCurrencyHistory();
+    };
+
+    //templateObject.loadCurrencyHistory();
 });
 
 Template.taxsummaryreport.events({
@@ -611,7 +1172,7 @@ Template.taxsummaryreport.events({
     $('#dateFrom').attr('readonly', false);
     $('#dateTo').attr('readonly', false);
     templateObject.records.set('');
-    templateObject.grandrecords.set('');
+    templateObject.grandRecords.set('');
     setTimeout(function () {
       var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
       var dateTo = new Date($("#dateTo").datepicker("getDate"));
@@ -623,14 +1184,16 @@ Template.taxsummaryreport.events({
       var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
       //templateObject.dateAsAt.set(formatDate);
       if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
-        templateObject.getTaxSummaryReports('', '', true);
+        // templateObject.getTaxSummaryReports('', '', true);
+        templateObject.loadReport('', '', true);
         templateObject.dateAsAt.set('Current Date');
       } else {
-        templateObject.getTaxSummaryReports(formatDateFrom, formatDateTo, false);
+        // templateObject.getTaxSummaryReports(formatDateFrom, formatDateTo, false);
+        templateObject.loadReport(formatDateFrom, formatDateTo, false);
         templateObject.dateAsAt.set(formatDate);
       }
     }, 500);
-    $('.fullScreenSpin').css('display', 'none');
+    LoadingOverlay.hide();
   },
   'change #dateFrom': function () {
     let templateObject = Template.instance();
@@ -638,7 +1201,7 @@ Template.taxsummaryreport.events({
     $('#dateFrom').attr('readonly', false);
     $('#dateTo').attr('readonly', false);
     templateObject.records.set('');
-    templateObject.grandrecords.set('');
+    templateObject.grandRecords.set('');
     setTimeout(function () {
       var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
       var dateTo = new Date($("#dateTo").datepicker("getDate"));
@@ -650,21 +1213,23 @@ Template.taxsummaryreport.events({
       var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
       //templateObject.dateAsAt.set(formatDate);
       if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
-        templateObject.getTaxSummaryReports('', '', true);
+        // templateObject.getTaxSummaryReports('', '', true);
+        templateObject.loadReport('', '', true);
         templateObject.dateAsAt.set('Current Date');
       } else {
-        templateObject.getTaxSummaryReports(formatDateFrom, formatDateTo, false);
+        // templateObject.getTaxSummaryReports(formatDateFrom, formatDateTo, false);
+        templateObject.loadReport(formatDateFrom, formatDateTo, false);
         templateObject.dateAsAt.set(formatDate);
       }
 
     }, 500);
-    $('.fullScreenSpin').css('display', 'none');
+    LoadingOverlay.hide();
   },
   'click .btnRefresh': function () {
     $('.fullScreenSpin').css('display', 'inline-block');
     localStorage.setItem('VS1TaxSummary_Report', '');
     Meteor._reload.reload();
-    $('.fullScreenSpin').css('display', 'none');
+    LoadingOverlay.hide();
   },
   'click td a': function (event) {
     let redirectid = $(event.target).closest('tr').attr('id');
@@ -756,7 +1321,7 @@ Template.taxsummaryreport.events({
     //     }
     //
     // });
-    $('.fullScreenSpin').css('display', 'none');
+    LoadingOverlay.hide();
   },
   "change .edtReportDates": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -884,9 +1449,64 @@ Template.taxsummaryreport.events({
     Template.instance().grandRecords.set(grandData);
     Template.instance().isSub.set(true);
     Template.instance().stylizeForm();
-  }
+  },
 
 
+   // CURRENCY MODULE //
+  "click .fx-rate-btn": async (e, ui) => {
+    await loadCurrency(ui);
+    //loadCurrencyHistory();
+  },
+  "click .currency-modal-save": (e) => {
+    //$(e.currentTarget).parentsUntil(".modal").modal("hide");
+    LoadingOverlay.show();
+
+    let templateObject = Template.instance();
+
+    // Get all currency list
+    let _currencyList = templateObject.currencyList.get();
+
+    // Get all selected currencies
+    const currencySelected = $(".currency-selector-js:checked");
+    let _currencySelectedList = [];
+    if (currencySelected.length > 0) {
+      $.each(currencySelected, (index, e) => {
+        const sellRate = $(e).attr("sell-rate");
+        const buyRate = $(e).attr("buy-rate");
+        const currencyCode = $(e).attr("currency");
+        const currencyId = $(e).attr("currency-id");
+        let _currency = _currencyList.find((c) => c.id == currencyId);
+        _currency.active = true;
+        _currencySelectedList.push(_currency);
+      });
+    } else {
+      let _currency = _currencyList.find((c) => c.code == defaultCurrencyCode);
+      _currency.active = true;
+      _currencySelectedList.push(_currency);
+    }
+
+    _currencyList.forEach((value, index) => {
+      if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
+        _currencyList[index].active = _currencySelectedList.find(
+          (c) => c.id == _currencyList[index].id
+        ).active;
+      } else {
+        _currencyList[index].active = false;
+      }
+    });
+
+    _currencyList = _currencyList.sort((a, b) => {
+      if (a.code == defaultCurrencyCode) {
+        return -1;
+      }
+      return 1;
+    });
+
+    // templateObject.activeCurrencyList.set(_activeCurrencyList);
+    templateObject.currencyList.set(_currencyList);
+
+    LoadingOverlay.hide();
+  },
 });
 Template.taxsummaryreport.helpers({
   records: () => {
@@ -949,7 +1569,165 @@ Template.taxsummaryreport.helpers({
     } else {
       return deptData;
     }
-  }
+  },
+
+
+
+   // FX Module //
+   convertAmount: (amount, currencyData) => {
+    let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
+
+    if(isNaN(amount)) {
+      if (!amount || amount.trim() == "") {
+        return "";
+      }
+      amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+    }
+    // if (currencyData.code == defaultCurrencyCode) {
+    //   // default currency
+    //   return amount;
+    // }
+
+
+    // Lets remove the minus character
+    const isMinus = amount < 0;
+    if (isMinus == true) amount = amount * -1; // make it positive for now
+
+    // // get default currency symbol
+    // let _defaultCurrency = currencyList.filter(
+    //   (a) => a.Code == defaultCurrencyCode
+    // )[0];
+
+    // amount = amount.replace(_defaultCurrency.symbol, "");
+
+
+    // amount =
+    //   isNaN(amount) == true
+    //     ? parseFloat(amount.substring(1))
+    //     : parseFloat(amount);
+
+
+
+    // Get the selected date
+    let dateTo = $("#dateTo").val();
+    const day = dateTo.split("/")[0];
+    const m = dateTo.split("/")[1];
+    const y = dateTo.split("/")[2];
+    dateTo = new Date(y, m, day);
+    dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
+
+
+    // Filter by currency code
+    currencyList = currencyList.filter((a) => a.Code == currencyData.code);
+
+    // Sort by the closest date
+    currencyList = currencyList.sort((a, b) => {
+      a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
+      a.setHours(0);
+      a.setMinutes(0);
+      a.setSeconds(0);
+
+      b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
+      b.setHours(0);
+      b.setMinutes(0);
+      b.setSeconds(0);
+
+      var distancea = Math.abs(dateTo - a);
+      var distanceb = Math.abs(dateTo - b);
+      return distancea - distanceb; // sort a before b when the distance is smaller
+
+      // const adate= new Date(a.MsTimeStamp);
+      // const bdate = new Date(b.MsTimeStamp);
+
+      // if(adate < bdate) {
+      //   return 1;
+      // }
+      // return -1;
+    });
+
+    const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
+
+
+
+    let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
+
+
+
+
+    amount = parseFloat(amount * rate); // Multiply by the rate
+    amount = Number(amount).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }); // Add commas
+
+    let convertedAmount =
+      isMinus == true
+        ? `- ${currencyData.symbol} ${amount}`
+        : `${currencyData.symbol} ${amount}`;
+
+
+    return convertedAmount;
+  },
+  count: (array) => {
+    return array.length;
+  },
+  countActive: (array) => {
+    if (array.length == 0) {
+      return 0;
+    }
+    let activeArray = array.filter((c) => c.active == true);
+    return activeArray.length;
+  },
+  currencyList: () => {
+    return Template.instance().currencyList.get();
+  },
+  isNegativeAmount(amount) {
+    if (Math.sign(amount) === -1) {
+
+      return true;
+    }
+    return false;
+  },
+  isOnlyDefaultActive() {
+    const array = Template.instance().currencyList.get();
+    if (array.length == 0) {
+      return false;
+    }
+    let activeArray = array.filter((c) => c.active == true);
+
+    if (activeArray.length == 1) {
+
+      if (activeArray[0].code == defaultCurrencyCode) {
+        return !true;
+      } else {
+        return !false;
+      }
+    } else {
+      return !false;
+    }
+  },
+  isCurrencyListActive() {
+    const array = Template.instance().currencyList.get();
+    let activeArray = array.filter((c) => c.active == true);
+
+    return activeArray.length > 0;
+  },
+  isObject(variable) {
+    return typeof variable === "object" && variable !== null;
+  },
+  currency: () => {
+    return Currency;
+  },
+
+  formatPrice( amount){
+
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
 });
 Template.registerHelper('equals', function (a, b) {
   return a === b;
@@ -962,3 +1740,65 @@ Template.registerHelper('notEquals', function (a, b) {
 Template.registerHelper('containsequals', function (a, b) {
   return (a.indexOf(b) >= 0);
 });
+
+
+
+
+/**
+ *
+ */
+ async function loadCurrency(templateObject) {
+  //let templateObject = Template.instance();
+
+  if ((await templateObject.currencyList.get().length) == 0) {
+    LoadingOverlay.show();
+
+    let _currencyList = [];
+    const result = await taxRateService.getCurrencies();
+
+    //taxRateService.getCurrencies().then((result) => {
+
+    const data = result.tcurrency;
+
+    for (let i = 0; i < data.length; i++) {
+      // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+      var dataList = {
+        id: data[i].Id || "",
+        code: data[i].Code || "-",
+        currency: data[i].Currency || "NA",
+        symbol: data[i].CurrencySymbol || "NA",
+        buyrate: data[i].BuyRate || "-",
+        sellrate: data[i].SellRate || "-",
+        country: data[i].Country || "NA",
+        description: data[i].CurrencyDesc || "-",
+        ratelastmodified: data[i].RateLastModified || "-",
+        active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
+        //active: false,
+        // createdAt: new Date(data[i].MsTimeStamp) || "-",
+        // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+      };
+
+      _currencyList.push(dataList);
+      //}
+    }
+    _currencyList = _currencyList.sort((a, b) => {
+      return a.currency
+        .split("")[0]
+        .toLowerCase()
+        .localeCompare(b.currency.split("")[0].toLowerCase());
+    });
+
+    templateObject.currencyList.set(_currencyList);
+
+    await loadCurrencyHistory(templateObject);
+    LoadingOverlay.hide();
+    //});
+  }
+}
+
+async function loadCurrencyHistory(templateObject) {
+  let result = await taxRateService.getCurrencyHistory();
+  const data = result.tcurrencyratehistory;
+  templateObject.tcurrencyratehistory.set(data);
+  LoadingOverlay.hide();
+}

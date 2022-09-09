@@ -12,7 +12,8 @@ let defaultCurrencyCode = CountryAbbr;
 Template.supplierproductreport.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
-
+  templateObject.records = new ReactiveVar([]);
+  templateObject.reportOptions = new ReactiveVar([]);
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
@@ -74,6 +75,105 @@ Template.supplierproductreport.onRendered(() => {
 
     //--------- END OF DATE ---------------//
   };
+
+  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+    let defaultOptions = templateObject.reportOptions.get();
+    if (defaultOptions) {
+      defaultOptions.fromDate = formatDateFrom;
+      defaultOptions.toDate = formatDateTo;
+      defaultOptions.ignoreDate = ignoreDate;
+    } else {
+      defaultOptions = {
+        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
+        toDate: moment().format("YYYY-MM-DD"),
+        ignoreDate: true
+      };
+    }
+    $("#dateFrom").val(defaultOptions.fromDate);
+    $("#dateTo").val(defaultOptions.toDate);
+    await templateObject.reportOptions.set(defaultOptions);
+    await templateObject.getSupplierProductReportData();
+  };
+
+  templateObject.getSupplierProductReportData = async function () {
+    let data = [];
+    if (!localStorage.getItem('VS1SupplierProduct_Report')) {
+      const options = await templateObject.reportOptions.get();
+      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let ignoreDate = options.ignoreDate || false;
+      data = await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
+      if( data.tsupplierproduct.length > 0 ){
+        localStorage.setItem('VS1SupplierProduct_Report', JSON.stringify(data)||'');
+      }
+    }else{
+      data = JSON.parse(localStorage.getItem('VS1SupplierProduct_Report'));
+    }
+    let reportSummary = data.tsupplierproduct.map(el => {
+      let resultobj = {};
+      Object.entries(el).map(([key, val]) => {      
+          resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
+          return resultobj;
+      })
+      return resultobj;
+    })
+    let reportData = [];
+    if( reportSummary.length > 0 ){
+      for (const item of reportSummary ) {   
+        let isExist = reportData.filter((subitem) => {
+          if( subitem.Supplier_Name == item.Supplier_Name ){
+              subitem.SubAccounts.push(item)
+              return subitem
+          }
+        });
+
+        if( isExist.length == 0 ){
+          reportData.push({
+              TotalCostEx: 0,
+              TotalCostInc: 0,
+              TotalTax: 0,
+              SubAccounts: [item],
+              ...item
+          });
+        }
+        $(".fullScreenSpin").css("display", "none");
+      }     
+    }
+    let useData = reportData.filter((item) => {
+      let TotalCostEx = 0;
+      let TotalCostInc = 0;
+      let TotalTax = 0;
+      item.SubAccounts.map((subitem) => {
+        TotalCostEx += subitem.Line_Cost_Ex;
+        TotalCostInc += subitem.Line_Cost_Inc;
+        TotalTax += subitem.Line_Tax;
+      });
+      item.TotalCostEx = TotalCostEx;
+      item.TotalCostInc = TotalCostInc;
+      item.TotalTax = TotalTax;
+      return item;
+    });    
+    templateObject.records.set(useData);
+    if (templateObject.records.get()) {
+      setTimeout(function () {
+        $("td a").each(function () {
+          if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+            $(this).addClass("text-danger");
+            $(this).removeClass("fgrblue");
+          }
+        });
+        $("td").each(function () {
+          if ($(this).text().indexOf("-" + Currency) >= 0) {
+            $(this).addClass("text-danger");
+            $(this).removeClass("fgrblue");
+          }
+        });
+        $(".fullScreenSpin").css("display", "none");
+      }, 1000);
+    }  
+  }
+
+  templateObject.setReportOptions();
 
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
@@ -417,6 +517,23 @@ Template.supplierproductreport.events({
 Template.supplierproductreport.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
+  },
+  records: () => {
+    return Template.instance().records.get();
+  },
+  formatPrice( amount ){
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+    return ( amount != 0 )? utilityService.modifynegativeCurrencyFormat(amount): "" || "";
+  },
+  checkZero( value ){
+    return ( value == 0 )? '': value;
+  },
+  formatDate: ( date ) => {
+    return ( date )? moment(date).format("YYYY/MM/DD") : '';
   },
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory

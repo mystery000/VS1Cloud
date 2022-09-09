@@ -71,11 +71,7 @@
             </div>
             <div class="col-6 col-md-4">
               <div class="form-group" style="margin: 4px;"><label>Bank Name</label>
-                <select class="form-control pointer" id="sltBankName" name="sltBankName">
-                  <option value=""></option>
-                  {{#each item in bankNames}}
-                  <option value="{{item.value}}">{{item.label}} </option>
-                  {{/each}}
+                <select type="search" class="form-control pointer" id="sltBankName" name="sltBankName"> 
                 </select>
               </div>
             </div>
@@ -105,12 +101,8 @@
             <div class="col-6 col-md-4">
               <div class="form-group" style="margin: 4px;">
                 <label>Transaction Description</label>
-                <select class="form-control pointer" id="sltTransactionDescription" name="sltTransactionDescription">
-                  <option value=""></option>
-                  {{#each item in transactionDescriptions}}
-                  <option value="{{item.value}}">{{item.label}}</option>
-                  {{/each}}
-                </select>
+                <select type="search" class="form-control pointer" id="sltTransactionDescription" name="sltTransactionDescription"> 
+                </select> 
               </div>
             </div>
           </div>
@@ -236,6 +228,14 @@
 
   <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
     {{> addaccountpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">
+    {{> bankNameModal}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="transactionDescriptionModal">
+    {{> transactionDescriptionModal}}
   </div>
 
   {{> eftOptionsModal}}

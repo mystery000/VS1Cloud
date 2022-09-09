@@ -180,40 +180,100 @@ Template.eftExportModal.onRendered(function () {
       }
     });
 
-
-  $(document).on("click", "#tblAccount tbody tr", function(e) {
+  $(document).on("click", "#tblAccount tbody tr", function (e) {
     $(".colAccount").removeClass('boldtablealertsborder');
-      let selectLineID = $('#selectLineID').val();
-      // let taxcodeList = templateObject.taxraterecords.get();
-      // var table = $(this);
-      // let utilityService = new UtilityService();
-      // let $tblrows = $("#tblDepositEntryLine tbody tr");
+    var table = $(this);
+    let lineProductName = table.find(".productName").text();
+    let lineProductDesc = table.find(".productDesc").text();
+    let lineAccoutNo = table.find(".accountnumber").text();
+    $('#accountListModal').modal('toggle');
+    $('#sltBankAccountName').val(lineProductName);
+  });
 
-      // if(selectLineID){
-      //     let lineProductName = table.find(".productName").text();
-      //     let lineProductDesc = table.find(".productDesc").text();
-      //     let lineAccoutNo = table.find(".accountnumber").text();
+  $("#sltBankName").editableSelect();
+  $("#sltBankName")
+    .editableSelect()
+    .on("click.editable-select", function (e, li) {
+      var $earch = $(this);
+      var offset = $earch.offset(); 
+      var bankName = e.target.value || "";
+
+      if (e.pageX > offset.left + $earch.width() - 8) {
+        $("#bankNameModal").modal();
+        $(".fullScreenSpin").css("display", "none");
+
+      } else {
+        if (bankName.replace(/\s/g, "") != "") {
+          $("#bankNameModal").modal("toggle");
+        } else {
+          $("#bankNameModal").modal();
+        }
+      }
+    });
+
+  $(document).on("click", "#tblBankName tbody tr", function (e) {
+    var table = $(this);
+    let BankName = table.find(".bankName").text(); 
+    $('#bankNameModal').modal('toggle');
+    $('#sltBankName').val(BankName);
+  });
 
 
-      //     $('#'+selectLineID+" .lineAccountName").val(lineProductName);
-      //     $('#accountListModal').modal('toggle');
+  $("#sltTransactionDescription").editableSelect();
+  $("#sltTransactionDescription")
+    .editableSelect()
+    .on("click.editable-select", function (e, li) {
+      var $earch = $(this);
+      var offset = $earch.offset(); 
+      var bankName = e.target.value || "";
 
-      //       $(".colAccount").removeClass('boldtablealertsborder');
-      // }else{
-      //   let accountname = table.find(".productName").text();
-      //   $('#accountListModal').modal('toggle');
-      //   $('#sltAccountName').val(accountname);
-      //   if($tblrows.find(".lineAccountName").val() === ''){
-      //       $tblrows.find(".colAccount").addClass('boldtablealertsborder');
-      //   }
-      // }
+      if (e.pageX > offset.left + $earch.width() - 8) {
+        $("#transactionDescriptionModal").modal();
+        $(".fullScreenSpin").css("display", "none");
 
-      // $('#tblAccount_filter .form-control-sm').val('');
-      // setTimeout(function () {
-      //     $('.btnRefreshAccount').trigger('click');
-      //     $('.fullScreenSpin').css('display', 'none');
-      //       // $(".colAccount").removeClass('boldtablealertsborder');
-      // }, 1000);
+      } else {
+        if (bankName.replace(/\s/g, "") != "") {
+          $("#transactionDescriptionModal").modal("toggle");
+        } else {
+          $("#transactionDescriptionModal").modal();
+        }
+      }
+    });
+
+  $(document).on("click", "#tblTransactionDescription tbody tr", function (e) {
+    var table = $(this);
+    let transactionDescription = table.find(".transactionDescription").text(); 
+    $('#transactionDescriptionModal').modal('toggle');
+    $('#sltTransactionDescription').val(transactionDescription);
+  });
+
+
+  $("#sltTransactionCode").editableSelect();
+  $("#sltTransactionCode")
+    .editableSelect()
+    .on("click.editable-select", function (e, li) {
+      var $earch = $(this);
+      var offset = $earch.offset(); 
+      var bankName = e.target.value || "";
+
+      if (e.pageX > offset.left + $earch.width() - 8) {
+        $("#transactionCodeModal").modal();
+        $(".fullScreenSpin").css("display", "none");
+
+      } else {
+        if (bankName.replace(/\s/g, "") != "") {
+          $("#transactionCodeModal").modal("toggle");
+        } else {
+          $("#transactionCodeModal").modal();
+        }
+      }
+    });
+
+  $(document).on("click", "#tblTransactionCode tbody tr", function (e) {
+    var table = $(this);
+    let transactionDescription = table.find(".transactionDescription").text(); 
+    $('#transactionCodeModal').modal('toggle');
+    $('#sltTransactionCode').val(transactionDescription);
   });
 });
 

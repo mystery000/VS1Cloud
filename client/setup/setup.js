@@ -452,7 +452,9 @@ Template.setup.onRendered(function () {
   };
 
   //templateObject.setSetupFinished();
-
+  $( function() {
+    $( ".resizablePopup" ).resizable();
+  } );
   // Step 1 Render functionalities
   let countries = [];
   var countryService = new CountryService();
@@ -1821,7 +1823,7 @@ Template.setup.onRendered(function () {
                   MakeNegative();
                 }, 100);
               }
-
+              
               if ($.fn.dataTable.isDataTable("#termsList")) {
                 $("#termsList").DataTable().destroy();
               }
@@ -4645,7 +4647,7 @@ Template.setup.events({
   
   "click .visiblePopupDiv": function () {
     setTimeout(() => {
-      $('.modal-backdrop').addClass('giveEccess');
+      $('.modal-backdrop').addClass('giveAccess');
     }, 100);
   },
   "click .downloadHelpFile": function (event) {
@@ -4654,7 +4656,7 @@ Template.setup.events({
     let iframeLink = $(event.target).attr('data-href');
     $('.customDownloadHelpIframe').attr('src', iframeLink);
     setTimeout(() => {
-      $('.modal-backdrop').addClass('giveEccess');
+      $('.modal-backdrop').addClass('giveAccess');
     }, 100);
   },
   "click .chkDatatableTaxRate": function (event) {

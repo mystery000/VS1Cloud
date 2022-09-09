@@ -1632,7 +1632,7 @@ Template.employeescard.onRendered(function () {
                                             PasswordHash: useData[i].fields.User.fields.LogonPassword || ''
                                         };
                                         emplineItems.push(emplineItemObj);
-                                        templateObject.empuserrecord.set(emplineItems);
+                                        // templateObject.empuserrecord.set(emplineItems);
                                     } else {
                                         let emplineItems = [];
                                         let emplineItemObj = {};
@@ -5504,8 +5504,9 @@ Template.employeescard.events({
         }
 
         let edtDashboardOptions = $('#edtDashboardOptions').val()||'';
+        let utilityService = new UtilityService();
         let edtSalesQuota = $('#edtSalesQuota').val()||'';
-
+        edtSalesQuota = utilityService.removeCurrency(edtSalesQuota);
         if (!isNaN(currentId.id)) {
 
             currentEmployee = parseInt(currentId.id);
@@ -5734,10 +5735,10 @@ Template.employeescard.events({
                 var enteredEmail = $("#cloudEmpEmailAddress").val();
                 var checkifupdate = $("#cloudCheckEmpEmailAddress").val();
                 var enteredPassword = $("#cloudEmpUserPassword").val();
-                let cloudpassword = $("#cloudEmpUserPassword").val().replace(/;/g, ",");
+                let cloudpassword = $("#cloudEmpUserPassword").val() && $("#cloudEmpUserPassword").val().replace(/;/g, ",");
                 let cloudcheckpassword = $("#cloudCheckEmpUserPassword").val();
                 if (($.trim(enteredEmail).length != 0) && ($.trim(enteredPassword).length != 0)) {
-                    if (cloudpassword.toUpperCase() != cloudcheckpassword.toUpperCase()) {
+                    if (cloudpassword && cloudcheckpassword && cloudpassword.toUpperCase() != cloudcheckpassword.toUpperCase()) {
                         var cloudHashPassword = CryptoJS.MD5(enteredPassword).toString().toUpperCase();
                         if ($.trim(checkifupdate).length != 0) {
 
@@ -10467,41 +10468,41 @@ Template.employeescard.events({
         }
     },
 
-    'change #leaveCalcMethodSelect': function(e){
-        let leaveCalcMethod = $('#leaveCalcMethodSelect').val();
-        switch(leaveCalcMethod){
-            case 'Manually Recorded Rate':
-                $('#hoursLeave').val('');
-                $('.handleLeaveTypeOption').addClass('hideelement')
-                $('.manuallyRecordedRate').removeClass('hideelement')
-            break;
-            case 'No Calculation Required':
-                $('.handleLeaveTypeOption').addClass('hideelement')
-            break;
-            case 'Based on Ordinary Earnings':
-                $('#hoursAccruedAnnuallyFullTimeEmp').val('');
-                $('#hoursFullTimeEmpFortnightlyPay').val('');
-                $('.handleLeaveTypeOption').addClass('hideelement')
-                $('.basedonOrdinaryEarnings').removeClass('hideelement')
-            break;
-            default:
-                $('#hoursAccruedAnnually').val('');
-                $('.handleLeaveTypeOption').addClass('hideelement')
-                $('.fixedAmountEachPeriodOption').removeClass('hideelement')
-            break;
-        }
-    },
+    // 'change #leaveCalcMethodSelect': function(e){
+    //     let leaveCalcMethod = $(e.target).val();
+    //     switch(leaveCalcMethod){
+    //         case 'Manually Recorded Rate':
+    //             $('#hoursLeave').val('');
+    //             $('.handleLeaveTypeOption').addClass('hideelement')
+    //             $('.manuallyRecordedRate').removeClass('hideelement')
+    //         break;
+    //         case 'No Calculation Required':
+    //             $('.handleLeaveTypeOption').addClass('hideelement')
+    //         break;
+    //         case 'Based on Ordinary Earnings':
+    //             $('#hoursAccruedAnnuallyFullTimeEmp').val('');
+    //             $('#hoursFullTimeEmpFortnightlyPay').val('');
+    //             $('.handleLeaveTypeOption').addClass('hideelement')
+    //             $('.basedonOrdinaryEarnings').removeClass('hideelement')
+    //         break;
+    //         default:
+    //             $('#hoursAccruedAnnually').val('');
+    //             $('.handleLeaveTypeOption').addClass('hideelement')
+    //             $('.fixedAmountEachPeriodOption').removeClass('hideelement')
+    //         break;
+    //     }
+    // },
 
-    'change #onTerminationUnusedBalance': function(e){
-        let onTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
-        if( onTerminationUnusedBalance == '1' || onTerminationUnusedBalance == 'Paid Out'){
-            $('.eftLeaveTypeCont').removeClass('hideelement')
-            $("#eftLeaveType").attr('checked', false)
-        }else{
-            $('.eftLeaveTypeCont').addClass('hideelement')
-            $('.superannuationGuaranteeCont').addClass('hideelement')
-        }
-    },
+    // 'change #onTerminationUnusedBalance': function(e){
+    //     let onTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
+    //     if( onTerminationUnusedBalance == '1' || onTerminationUnusedBalance == 'Paid Out'){
+    //         $('.eftLeaveTypeCont').removeClass('hideelement')
+    //         $("#eftLeaveType").attr('checked', false)
+    //     }else{
+    //         $('.eftLeaveTypeCont').addClass('hideelement')
+    //         $('.superannuationGuaranteeCont').addClass('hideelement')
+    //     }
+    // },
 
     'click #eftLeaveType': function(){
         if( $('#eftLeaveType').is(':checked') ){
@@ -10950,10 +10951,17 @@ Template.employeescard.events({
     }
     $('#paySlipModal').modal('show');
     $('.fullScreenSpin').css('display', 'none');
+  },
+  "blur #edtSalesQuota": function() {
+    let utilityService = new UtilityService();
+    let amount = $('#edtSalesQuota').val();
+    if( isNaN(amount) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+    amount = utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+    $('#edtSalesQuota').val(amount);
   }
-//   'click #edtLeaveTypeofRequest': (e, ui) => {
-//     ui.getAssignLeaveTypes();
-//   }
 });
 
 Template.employeescard.helpers({

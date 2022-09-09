@@ -175,12 +175,7 @@
                                     }
                                     .table th,
                                     .table td {
-                                        text-align: right;
                                         min-width: 150px;
-                                    }
-                                    .table th:first-child,
-                                    .table td:first-child {
-                                        text-align: left;
                                     }
                                     table tr .text-danger,
                                     table tr .text-danger a {
@@ -299,7 +294,7 @@
                                                             <td class="text-right text-success">{{ formatPrice value.Total_Amount_Ex }}</td>
                                                             <td class="text-right text-success">{{ formatPrice value.Total_Amount_Inc }}</td>
                                                             <td class="text-right text-success">{{ formatPrice value.Gross_Profit }}</td>
-                                                            <td>{{ formatPrice value.Margin }}</td>
+                                                            <td class="text-right">{{ formatPrice value.Margin }}</td>
 
                                                         {{/if}}
                                                     </tr>

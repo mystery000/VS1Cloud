@@ -108,8 +108,7 @@ Template.balancesheetreport.onRendered(() => {
             let date = new Date(dateAsOf);
             let previousYear = date.getFullYear() - 1;
             let Balancedatedisplay = moment(dateAsOf).format("DD/MM/YYYY");
-            let lastdatemonthdisplay =
-                moment(dateAsOf).format("DD MMM") + " " + previousYear;
+            let lastdatemonthdisplay = moment(dateAsOf).format("DD MMM") + " " + previousYear;
             templateObject.dateAsAtAYear.set(lastdatemonthdisplay);
             templateObject.dateAsAt.set(Balancedatedisplay);
             setTimeout(function() {
@@ -1065,7 +1064,7 @@ Template.balancesheetreport.events({
     },
     "change .balancedate": function() {
         let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
+        LoadingOverlay.show();
         let balanceDate = templateObject.$("#balancedate").val();
         let formatBalDate = moment(balanceDate).format("YYYY-MM-DD");
         localStorage.setItem("VS1BalanceSheet_Report", "");
@@ -1075,7 +1074,7 @@ Template.balancesheetreport.events({
     },
     "click .lastMonth": function() {
         let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
+        LoadingOverlay.show();
         var dateTo = new Date($("#balancedate").datepicker("getDate"));
         //if(dateTo.getMonth()+1)
         localStorage.setItem("VS1BalanceSheet_Report", "");
@@ -1100,7 +1099,7 @@ Template.balancesheetreport.events({
     },
     "click #lastQuarter": function() {
         let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
+        LoadingOverlay.show();
         localStorage.setItem("VS1BalanceSheet_Report", "");
         $("#balancedate").attr("readonly", false);
         var currentDate = new Date();
@@ -1138,11 +1137,11 @@ Template.balancesheetreport.events({
         var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
         let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
         templateObject.getBalanceSheetReports(getDateFrom);
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
     },
     "click #last12Months": function() {
         let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
+        LoadingOverlay.show();
         localStorage.setItem("VS1BalanceSheet_Report", "");
         $("#balancedate").attr("readonly", false);
         var currentDate = new Date();
@@ -1175,16 +1174,16 @@ Template.balancesheetreport.events({
             "-" +
             currentDate2.getDate();
         templateObject.getBalanceSheetReports(getDateFrom);
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
     },
-    "click #ignoreDate": function() {
-        let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
+    "click #ignoreDate": (e, templateObject) => {
+      
+        LoadingOverlay.show();
         localStorage.setItem("VS1BalanceSheet_Report", "");
         $("#balancedate").attr("readonly", true);
         templateObject.dateAsAt.set("Current Date");
         templateObject.getBalanceSheetReports("", "", true);
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
     },
     "click .sales-tab-item": function(event) {
         let tempInstance = Template.instance();
@@ -1249,10 +1248,10 @@ Template.balancesheetreport.events({
         $("#editor-buttons").hide();
     },
     "click .btnRefresh": function() {
-        $(".fullScreenSpin").css("display", "inline-block");
+        LoadingOverlay.show();
         localStorage.setItem("VS1BalanceSheet_Report", "");
         Meteor._reload.reload();
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
     },
     "click .btnPrintReport": function(event) {
         $("a").attr("href", "/");
@@ -1268,7 +1267,7 @@ Template.balancesheetreport.events({
         }, 100);
     },
     "click .btnExportReport": function() {
-        $(".fullScreenSpin").css("display", "inline-block");
+        LoadingOverlay.show();
         let utilityService = new UtilityService();
         let templateObject = Template.instance();
         let balanceDate = new Date($("#balancedate").datepicker("getDate"));
@@ -1296,7 +1295,7 @@ Template.balancesheetreport.events({
         //     }
         //
         // });
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
     },
     "keyup #myInputSearch": function(event) {
         $(".table tbody tr").show();

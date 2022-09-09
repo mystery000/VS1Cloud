@@ -205,7 +205,7 @@ Template.invoicelist.onRendered(function () {
                             custfield1: data.tinvoicelist[i].SaleCustField1 || '',
                             custfield2: data.tinvoicelist[i].SaleCustField2 || '',
                             custfield3: data.tinvoicelist[i].SaleCustField3 || '',
-                            comments: data.tinvoicelist[i].Comments || '',                            
+                            comments: data.tinvoicelist[i].Comments || '',
                             // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
 
                         };
@@ -539,7 +539,7 @@ Template.invoicelist.onRendered(function () {
                         custfield2: data.tinvoicelist[i].SaleCustField2 || '',
                         custfield3: data.tinvoicelist[i].SaleCustField3 || '',
                         custfield: data.tinvoicelist[i].SaleCustField || '',
-                        comments: data.tinvoicelist[i].Comments || '',                        
+                        comments: data.tinvoicelist[i].Comments || '',
                         // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
 
                     };
@@ -1675,56 +1675,45 @@ Template.invoicelist.events({
 
         });
 
+        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(async function(dataCustPay) {
+           addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
+
+            }).catch(function(err) {
+
+            });
+        }).catch(function(err) {
+
+        });
+
+        sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
+            addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function (datareturn) {
+
+            }).catch(function (err) {
+
+            });
+        }).catch(function (err) {
+
+        });
+
+
 
         sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(async function (dataInvoice) {
             addVS1Data('TInvoiceList', JSON.stringify(dataInvoice)).then(function (datareturn) {
-              sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
-                  addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function (datareturn) {
-                    sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(async function(dataPaymentList) {
-            addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
-                sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(async function(dataSuppPay) {
-                    addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
-                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(async function(dataCustPay) {
-                            await addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
-                              setTimeout(function () {
-                                window.open('/invoicelist', '_self');
-                              }, 2000);
-                            }).catch(function(err) {
-                              setTimeout(function () {
-                                window.open('/invoicelist', '_self');
-                              }, 2000);
-                            });
-                        }).catch(function(err) {
-                          setTimeout(function () {
-                            window.open('/invoicelist', '_self');
-                          }, 2000);
-                        });
-                    }).catch(function(err) {
-                        setTimeout(function () {
-                            window.open('/invoicelist', '_self');
-                         }, 2000);
-                    });
-                }).catch(function(err) {
-                  setTimeout(function () {
-                    window.open('/invoicelist', '_self');
-                  }, 2000);
-                });
-            }).catch(function(err) {
-              setTimeout(function () {
-                window.open('/invoicelist', '_self');
-              }, 2000);
-            });
-        }).catch(function(err) {
-          setTimeout(function () {
-            window.open('/invoicelist', '_self');
-          }, 2000);
-
-        });
-                  }).catch(function (err) {
+              sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(async function(dataPaymentList) {
+                    await addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
+                    setTimeout(function () {
                       window.open('/invoicelist', '_self');
+                    }, 200);
+                  }).catch(function(err) {
+                    setTimeout(function () {
+                      window.open('/invoicelist', '_self');
+                    }, 200);
                   });
-              }).catch(function (err) {
+              }).catch(function(err) {
+                setTimeout(function () {
                   window.open('/invoicelist', '_self');
+                }, 200);
+
               });
             }).catch(function (err) {
               sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {

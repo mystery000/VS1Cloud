@@ -1,3 +1,4 @@
+import moment from "moment";
 import { BaseService } from "../js/base-service.js";
 
 export class ReportService extends BaseService {
@@ -14,7 +15,8 @@ export class ReportService extends BaseService {
     let options = {
       //select: "[Active]=true",
       //ListType:"Detail",
-      DateTo: '"' + dateAsOf + '"',
+      DateFrom: '"' + dateAsOf + '"',
+      DateTo: '"' + moment().format('YYYY-MM-DD') + '"',
     };
     return this.getList(this.ERPObjects.BalanceSheetReport, options);
   }
@@ -483,7 +485,7 @@ export class ReportService extends BaseService {
     return this.getList(this.ERPObjects.TProductSalesDetailsReport, options);
   }
 
-  getTaxSummaryData(dateFrom, dateTo, ignoreDate) {
+  getTaxSummaryData(dateFrom, dateTo, ignoreDate = false) {
     let options = "";
     if (ignoreDate == true) {
       options = {
@@ -492,7 +494,7 @@ export class ReportService extends BaseService {
       };
     } else {
       options = {
-        IgnoreDates: false,
+        IgnoreDates: ignoreDate,
         ReportType: "Summary",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -589,7 +591,55 @@ export class ReportService extends BaseService {
         DateTo: '"' + dateTo + '"',
       };
     }
-    return this.getList(this.ERPObjects.TProductStocknSalePeriodReport, options);
+    return this.getList(this.ERPObjects.TStockQuantityLocation, options);
+  }
+
+  getStockValueReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TStockValue, options);
+  }
+  
+  getLeaveTakenReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TLeaveTaken, options);
+  }  
+
+  getSupplierProductReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TSupplierProduct, options);
   }
 
   getStockMovementReport(dateFrom, dateTo, ignoreDate = false) {
@@ -644,6 +694,54 @@ export class ReportService extends BaseService {
       };
     }
     return this.getList(this.ERPObjects.TProductBin, options);
+  }
+
+  getTransactionJournalReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TTransactionListReport, options);
+  }
+
+  getJobSalesSummaryReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TJobSalesSummary, options);
+  }
+
+  getJobProfitabilityReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TJobProfitability, options);
   }
 
   getCustomerDetailReport(dateFrom, dateTo, ignoreDate = false) {
