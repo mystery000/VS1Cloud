@@ -5,8 +5,18 @@ import 'jQuery.print/jQuery.print.js';
 import {
     UtilityService
 } from "../../utility-service";
-let reportService = new ReportService();
-let utilityService = new UtilityService();
+import LoadingOverlay from "../../LoadingOverlay";
+import { TaxRateService } from "../../settings/settings-service";
+import GlobalFunctions from "../../GlobalFunctions";
+import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
+
+
+const reportService = new ReportService();
+const utilityService = new UtilityService();
+const taxRateService = new TaxRateService();
+
+
 Template.salesreport.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar([]);
@@ -16,472 +26,280 @@ Template.salesreport.onCreated(() => {
 });
 
 Template.salesreport.onRendered(() => {
-    $('.fullScreenSpin').css('display', 'inline-block');
     const templateObject = Template.instance();
-    let utilityService = new UtilityService();
-    let salesOrderTable;
-    var splashArray = new Array();
-    var today = moment().format('DD/MM/YYYY');
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-    let fromDateMonth = (currentDate.getMonth() + 1);
-    let fromDateDay = currentDate.getDate();
-    if ((currentDate.getMonth() + 1) < 10) {
-        fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
+    LoadingOverlay.show();
 
-    let imageData = (localStorage.getItem("Image"));
-    if (imageData) {
-        $('#uploadedImage').attr('src', imageData);
-        $('#uploadedImage').attr('width', '50%');
-    }
-
-    if (currentDate.getDate() < 10) {
-        fromDateDay = "0" + currentDate.getDate();
-    }
-    var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
     var url = FlowRouter.current().path;
-    templateObject.dateAsAt.set(begunDate);
-    const dataTableList = [];
-    const deptrecords = [];
-    $("#date-input,#dateTo,#dateFrom").datepicker({
-        showOn: 'button',
-        buttonText: 'Show Date',
-        buttonImageOnly: true,
-        buttonImage: '/img/imgCal2.png',
-        dateFormat: 'dd/mm/yy',
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-90:+10",
-        onChangeMonthYear: function(year, month, inst){
-        // Set date to picker
-        $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
-        // Hide (close) the picker
-        // $(this).datepicker('hide');
-        // // Change ttrigger the on change function
-        // $(this).trigger('change');
-       }
-    });
-
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
     let currenctURL = FlowRouter.current().queryParams;
-    templateObject.getSalesReports = function(dateFrom, dateTo, ignoreDate) {
-        templateObject.records.set('');
-        templateObject.grandrecords.set('');
-        if (!localStorage.getItem('VS1Sales_Report')) {
-            reportService.getSalesDetailsData(dateFrom, dateTo, ignoreDate).then(function(data) {
-                let totalRecord = [];
-                let grandtotalRecord = [];
 
-                if (data.tsaleslist.length) {
-                    localStorage.setItem('VS1Sales_Report', JSON.stringify(data) || '');
-                    let records = [];
-                    let allRecords = [];
-                    let current = [];
+    templateObject.initDate = () => {
+        const currentDate = new Date();
 
-                    let totalNetAssets = 0;
-                    let GrandTotalLiability = 0;
-                    let GrandTotalAsset = 0;
-                    let incArr = [];
-                    let cogsArr = [];
-                    let expArr = [];
-                    let accountData = data.tsaleslist;
-                    let accountType = '';
-                    let purchaseID = '';
-                    for (let i = 0; i < accountData.length; i++) {
-                        // if(data.tsaleslist[i].Type == "Bill"){
-                        //   purchaseID = data.tsaleslist[i].PurchaseOrderID;
-                        // }
-                        let recordObj = {};
-                        recordObj.Id = data.tsaleslist[i].SaleId;
-                        recordObj.type = data.tsaleslist[i].Type;
-                        recordObj.Company = data.tsaleslist[i].CustomerName;
-                        recordObj.dataArr = [
-                            '',
-                            data.tsaleslist[i].Type,
-                            data.tsaleslist[i].Saleno,
-                            // moment(data.tsaleslist[i].InvoiceDate).format("DD MMM YYYY") || '-',
-                            data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
-                            data.tsaleslist[i].employeename || '-',
-                            utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmount) || '0.00',
-                            utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalTax) || '0.00',
-                            utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || '0.00',
-                            utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || '0.00'
+        /**
+             * This will init dates
+             */
+        let begunDate = moment(currentDate).format("DD/MM/YYYY");
+        templateObject.dateAsAt.set(begunDate);
 
-                            //
-                        ];
+        let fromDateMonth = currentDate.getMonth() + 1;
+        let fromDateDay = currentDate.getDate();
+        if (currentDate.getMonth() + 1 < 10) {
+            fromDateMonth = "0" + (
+            currentDate.getMonth() + 1);
+        }
 
-                        if ((data.tsaleslist[i].TotalAmount != 0) || (data.tsaleslist[i].TotalTax != 0) ||
-                            (data.tsaleslist[i].TotalAmountinc != 0) || (data.tsaleslist[i].Balance != 0)) {
-                            //records.push(recordObj);
-                            if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
-                                if (currenctURL.contact.replace(/\s/g, '') == data.tsaleslist[i].CustomerName.replace(/\s/g, '')) {
-                                    if ((data.tsaleslist[i].Type != "Sales Order") && (data.tsaleslist[i].Type != "Quote")) {
-                                        records.push(recordObj);
-                                    }
-                                }
+        let prevMonth = moment().subtract(1, "months").format("MM");
 
-                            } else {
-                                if ((data.tsaleslist[i].Type != "Sales Order") && (data.tsaleslist[i].Type != "Quote")) {
-                                    records.push(recordObj);
-                                }
-                            }
-                        }
+        if (currentDate.getDate() < 10) {
+            fromDateDay = "0" + currentDate.getDate();
+        }
+        // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
+        var fromDate = fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
 
-                    }
+        $("#date-input,#dateTo,#dateFrom").datepicker({
+            showOn: "button",
+            buttonText: "Show Date",
+            buttonImageOnly: true,
+            buttonImage: "/img/imgCal2.png",
+            dateFormat: "dd/mm/yy",
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-90:+10",
+            onChangeMonthYear: function (year, month, inst) {
+            // Set date to picker
+            $(this).datepicker("setDate", new Date(year, inst.selectedMonth, inst.selectedDay));
+            // Hide (close) the picker
+            // $(this).datepicker('hide');
+            //  Change ttrigger the on change function
+            // $(this).trigger('change');
+            }
+        });
 
-                    records = _.sortBy(records, 'Company');
-                    records = _.groupBy(records, 'Company');
-                    for (let key in records) {
-                        let obj = [{
-                            key: key
-                        }, {
-                            data: records[key]
-                        }];
-                        allRecords.push(obj);
-                    }
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(begunDate);
 
-                    let iterator = 0;
-                    for (let i = 0; i < allRecords.length; i++) {
-                        let totalAmountEx = 0;
-                        let totalTax = 0;
-                        let amountInc = 0;
-                        let balance = 0;
-                        let twoMonth = 0;
-                        let threeMonth = 0;
-                        let Older = 0;
-                        const currencyLength = Currency.length;
-                        for (let k = 0; k < allRecords[i][1].data.length; k++) {
-                            totalAmountEx = totalAmountEx + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
-                            totalTax = totalTax + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
-                            amountInc = amountInc + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
-                            balance = balance + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
+        if (url.indexOf('?dateFrom') > 0) {
+            // localStorage.setItem('VS1Sales_Report', '');
+            url = new URL(window.location.href);
+            $("#dateFrom").val(moment(url.searchParams.get("dateFrom")).format("DD/MM/YYYY"));
+            $("#dateTo").val(moment(url.searchParams.get("dateTo")).format("DD/MM/YYYY"));
+      
+        } 
 
-                        }
-                        let val = ['Total ' + allRecords[i][0].key + '', '', '', '', '',
-                            utilityService.modifynegativeCurrencyFormat(totalAmountEx), utilityService.modifynegativeCurrencyFormat(totalTax), utilityService.modifynegativeCurrencyFormat(amountInc), utilityService.modifynegativeCurrencyFormat(balance)
-                        ];
-                        current.push(val);
+        //--------- END OF DATE ---------------//
+    };
 
-                    }
+   
+    
+    const deptrecords = [];
 
-                    //grandtotalRecord
-                    let grandamountduetotal = 0;
-                    let grandtotalAmountEx = 0;
-                    let grandtotalTax = 0;
-                    let grandamountInc = 0;
-                    let grandbalance = 0;
+    templateObject.initUploadedImage = () => {
+        let imageData = localStorage.getItem("Image");
+        if (imageData) {
+          $("#uploadedImage").attr("src", imageData);
+          $("#uploadedImage").attr("width", "50%");
+        }
+      };
+ 
+    templateObject.getSalesReports = async (dateFrom, dateTo, ignoreDate) => {
+        LoadingOverlay.show();
 
-                    for (let n = 0; n < current.length; n++) {
+        let data = await CachedHttp.get(erpObject.TSalesList, async () => {
+            return await  reportService.getSalesDetailsData(dateFrom, dateTo, ignoreDate);
+        }, {
+            requestParams: {
+                DateFrom: dateFrom,
+                DateTo: dateTo,
+                IgnoreDates: ignoreDate
+            },
+            useIndexDb: true,
+            useLocalStorage: false,
+            validate: (cachedResponse) => {
+              if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
+              && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+              && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
+                return true;
+              }
+              return false;
+            }
+        });
+        data = data.response;
 
-                        const grandcurrencyLength = Currency.length;
+        let totalRecord = [];
+        let grandtotalRecord = [];
 
-                        grandtotalAmountEx = grandtotalAmountEx + utilityService.convertSubstringParseFloat(current[n][5]);
-                        grandtotalTax = grandtotalTax + utilityService.convertSubstringParseFloat(current[n][6]);
-                        grandamountInc = grandamountInc + utilityService.convertSubstringParseFloat(current[n][7]);
-                        grandbalance = grandbalance + utilityService.convertSubstringParseFloat(current[n][8]);
+        if (data.tsaleslist.length) {
+            localStorage.setItem('VS1Sales_Report', JSON.stringify(data) || '');
+            let records = [];
+            let allRecords = [];
+            let current = [];
 
-                    }
+            let totalNetAssets = 0;
+            let GrandTotalLiability = 0;
+            let GrandTotalAsset = 0;
+            let incArr = [];
+            let cogsArr = [];
+            let expArr = [];
+            let accountData = data.tsaleslist;
+            let accountType = '';
+            let purchaseID = '';
+            for (let i = 0; i < accountData.length; i++) {
+                // if(data.tsaleslist[i].Type == "Bill"){
+                //   purchaseID = data.tsaleslist[i].PurchaseOrderID;
+                // }
+                let recordObj = {};
+                recordObj.Id = data.tsaleslist[i].SaleId;
+                recordObj.type = data.tsaleslist[i].Type;
+                recordObj.Company = data.tsaleslist[i].CustomerName;
+                recordObj.dataArr = [
+                    '',
+                    data.tsaleslist[i].Type,
+                    data.tsaleslist[i].Saleno,
+                    // moment(data.tsaleslist[i].InvoiceDate).format("DD MMM YYYY") || '-',
+                    data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
+                    data.tsaleslist[i].employeename || '-',
+                    utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmount) || '0.00',
+                    utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalTax) || '0.00',
+                    utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || '0.00',
+                    utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || '0.00'
 
-                    let grandval = ['Grand Total ' + '', '', '', '', '',
-                        utilityService.modifynegativeCurrencyFormat(grandtotalAmountEx),
-                        utilityService.modifynegativeCurrencyFormat(grandtotalTax),
-                        utilityService.modifynegativeCurrencyFormat(grandamountInc),
-                        utilityService.modifynegativeCurrencyFormat(grandbalance)
-                    ];
+                    //
+                ];
 
-                    for (let key in records) {
-                        let dataArr = current[iterator]
-                        let obj = [{
-                            key: key
-                        }, {
-                            data: records[key]
-                        }, {
-                            total: [{
-                                dataArr: dataArr
-                            }]
-                        }];
-                        totalRecord.push(obj);
-                        iterator += 1;
-                    }
-
-                    templateObject.records.set(totalRecord);
-                    templateObject.grandrecords.set(grandval);
-
-                    if (templateObject.records.get()) {
-                        setTimeout(function() {
-                            $('td a').each(function() {
-                                if ($(this).text().indexOf('-' + Currency) >= 0)
-                                    $(this).addClass('text-danger')
-                            });
-                            $('td').each(function() {
-                                if ($(this).text().indexOf('-' + Currency) >= 0)
-                                    $(this).addClass('text-danger')
-                            });
-
-                            $('td').each(function() {
-
-                                let lineValue = $(this).first().text()[0];
-                                if (lineValue != undefined) {
-                                    if (lineValue.indexOf(Currency) >= 0)
-                                        $(this).addClass('text-right')
-                                }
-
-                            });
-
-                            $('td').each(function() {
-                                if ($(this).first().text().indexOf('-' + Currency) >= 0)
-                                    $(this).addClass('text-right')
-                            });
-
-                            $('.fullScreenSpin').css('display', 'none');
-                        }, 100);
-                    }
-
-                } else {
-                    let records = [];
-                    let recordObj = {};
-                    recordObj.Id = '';
-                    recordObj.type = '';
-                    recordObj.SupplierName = ' ';
-                    recordObj.dataArr = [
-                        '-',
-                        '-',
-                        '-',
-                        '-',
-                        '-',
-                        '-',
-                        '-',
-                        '-',
-                        '-',
-                        '-'
-                    ];
-
-                    records.push(recordObj);
-                    templateObject.records.set(records);
-                    templateObject.grandrecords.set('');
-                    $('.fullScreenSpin').css('display', 'none');
-                }
-
-            }).catch(function(err) {
-                //Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-            let data = JSON.parse(localStorage.getItem('VS1Sales_Report'));
-            let totalRecord = [];
-            let grandtotalRecord = [];
-
-            if (data.tsaleslist.length) {
-                let records = [];
-                let allRecords = [];
-                let current = [];
-
-                let totalNetAssets = 0;
-                let GrandTotalLiability = 0;
-                let GrandTotalAsset = 0;
-                let incArr = [];
-                let cogsArr = [];
-                let expArr = [];
-                let accountData = data.tsaleslist;
-                let accountType = '';
-                let purchaseID = '';
-                for (let i = 0; i < accountData.length; i++) {
-                    // if(data.tsaleslist[i].Type == "Bill"){
-                    //   purchaseID = data.tsaleslist[i].PurchaseOrderID;
-                    // }
-                    let recordObj = {};
-                    recordObj.Id = data.tsaleslist[i].SaleId;
-                    recordObj.type = data.tsaleslist[i].Type;
-                    recordObj.Company = data.tsaleslist[i].CustomerName;
-                    recordObj.dataArr = [
-                        '',
-                        data.tsaleslist[i].Type,
-                        data.tsaleslist[i].Saleno,
-                        // moment(data.tsaleslist[i].InvoiceDate).format("DD MMM YYYY") || '-',
-                        data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
-                        data.tsaleslist[i].employeename || '-',
-                        utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmount) || '0.00',
-                        utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalTax) || '0.00',
-                        utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || '0.00',
-                        utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || '0.00'
-
-                        //
-                    ];
-
-                    if ((data.tsaleslist[i].TotalAmount != 0) || (data.tsaleslist[i].TotalTax != 0) ||
-                        (data.tsaleslist[i].TotalAmountinc != 0) || (data.tsaleslist[i].Balance != 0)) {
-                        //records.push(recordObj);
-                        if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
-                            if (currenctURL.contact.replace(/\s/g, '') == data.tsaleslist[i].CustomerName.replace(/\s/g, '')) {
-                                if ((data.tsaleslist[i].Type != "Sales Order") && (data.tsaleslist[i].Type != "Quote")) {
-                                    records.push(recordObj);
-                                }
-                            }
-
-                        } else {
+                if ((data.tsaleslist[i].TotalAmount != 0) || (data.tsaleslist[i].TotalTax != 0) ||
+                    (data.tsaleslist[i].TotalAmountinc != 0) || (data.tsaleslist[i].Balance != 0)) {
+                    //records.push(recordObj);
+                    if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
+                        if (currenctURL.contact.replace(/\s/g, '') == data.tsaleslist[i].CustomerName.replace(/\s/g, '')) {
                             if ((data.tsaleslist[i].Type != "Sales Order") && (data.tsaleslist[i].Type != "Quote")) {
                                 records.push(recordObj);
                             }
                         }
+
+                    } else {
+                        if ((data.tsaleslist[i].Type != "Sales Order") && (data.tsaleslist[i].Type != "Quote")) {
+                            records.push(recordObj);
+                        }
                     }
-
                 }
 
-                records = _.sortBy(records, 'Company');
-                records = _.groupBy(records, 'Company');
-                for (let key in records) {
-                    let obj = [{
-                        key: key
-                    }, {
-                        data: records[key]
-                    }];
-                    allRecords.push(obj);
-                }
-
-                let iterator = 0;
-                for (let i = 0; i < allRecords.length; i++) {
-                    let totalAmountEx = 0;
-                    let totalTax = 0;
-                    let amountInc = 0;
-                    let balance = 0;
-                    let twoMonth = 0;
-                    let threeMonth = 0;
-                    let Older = 0;
-                    const currencyLength = Currency.length;
-                    for (let k = 0; k < allRecords[i][1].data.length; k++) {
-                        totalAmountEx = totalAmountEx + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
-                        totalTax = totalTax + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
-                        amountInc = amountInc + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
-                        balance = balance + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
-
-                    }
-                    let val = ['Total ' + allRecords[i][0].key + '', '', '', '', '',
-                        utilityService.modifynegativeCurrencyFormat(totalAmountEx), utilityService.modifynegativeCurrencyFormat(totalTax), utilityService.modifynegativeCurrencyFormat(amountInc), utilityService.modifynegativeCurrencyFormat(balance)
-                    ];
-                    current.push(val);
-
-                }
-
-                //grandtotalRecord
-                let grandamountduetotal = 0;
-                let grandtotalAmountEx = 0;
-                let grandtotalTax = 0;
-                let grandamountInc = 0;
-                let grandbalance = 0;
-
-                for (let n = 0; n < current.length; n++) {
-
-                    const grandcurrencyLength = Currency.length;
-
-                    grandtotalAmountEx = grandtotalAmountEx + utilityService.convertSubstringParseFloat(current[n][5]);
-                    grandtotalTax = grandtotalTax + utilityService.convertSubstringParseFloat(current[n][6]);
-                    grandamountInc = grandamountInc + utilityService.convertSubstringParseFloat(current[n][7]);
-                    grandbalance = grandbalance + utilityService.convertSubstringParseFloat(current[n][8]);
-
-                }
-
-                let grandval = ['Grand Total ' + '', '', '', '', '',
-                    utilityService.modifynegativeCurrencyFormat(grandtotalAmountEx),
-                    utilityService.modifynegativeCurrencyFormat(grandtotalTax),
-                    utilityService.modifynegativeCurrencyFormat(grandamountInc),
-                    utilityService.modifynegativeCurrencyFormat(grandbalance)
-                ];
-
-                for (let key in records) {
-                    let dataArr = current[iterator]
-                    let obj = [{
-                        key: key
-                    }, {
-                        data: records[key]
-                    }, {
-                        total: [{
-                            dataArr: dataArr
-                        }]
-                    }];
-                    totalRecord.push(obj);
-                    iterator += 1;
-                }
-
-                templateObject.records.set(totalRecord);
-                templateObject.grandrecords.set(grandval);
-
-                if (templateObject.records.get()) {
-                    setTimeout(function() {
-                        $('td a').each(function() {
-                            if ($(this).text().indexOf('-' + Currency) >= 0)
-                                $(this).addClass('text-danger')
-                        });
-                        $('td').each(function() {
-                            if ($(this).text().indexOf('-' + Currency) >= 0)
-                                $(this).addClass('text-danger')
-                        });
-
-                        $('td').each(function() {
-
-                            let lineValue = $(this).first().text()[0];
-                            if (lineValue != undefined) {
-                                if (lineValue.indexOf(Currency) >= 0)
-                                    $(this).addClass('text-right')
-                            }
-
-                        });
-
-                        $('td').each(function() {
-                            if ($(this).first().text().indexOf('-' + Currency) >= 0)
-                                $(this).addClass('text-right')
-                        });
-
-                        $('.fullScreenSpin').css('display', 'none');
-                    }, 100);
-                }
-
-            } else {
-                let records = [];
-                let recordObj = {};
-                recordObj.Id = '';
-                recordObj.type = '';
-                recordObj.SupplierName = ' ';
-                recordObj.dataArr = [
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-'
-                ];
-
-                records.push(recordObj);
-                templateObject.records.set(records);
-                templateObject.grandrecords.set('');
-                $('.fullScreenSpin').css('display', 'none');
             }
 
-        }
-    };
-    if (url.indexOf('?dateFrom') > 0) {
-        localStorage.setItem('VS1Sales_Report', '');
-        url = new URL(window.location.href);
-        $("#dateFrom").val(moment(url.searchParams.get("dateFrom")).format("DD/MM/YYYY"));
-        $("#dateTo").val(moment(url.searchParams.get("dateTo")).format("DD/MM/YYYY"));
-        var getDateFrom = url.searchParams.get("dateFrom");
-        var getLoadDate = url.searchParams.get("dateTo");
-        templateObject.getSalesReports(getDateFrom, getLoadDate, false);
-    } else {
-        var currentDate2 = new Date();
-        var currentDate2 = new Date();
-        var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-        let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + currentDate2.getDate();
-        templateObject.getSalesReports(getDateFrom, getLoadDate, false);
+            records = _.sortBy(records, 'Company');
+            records = _.groupBy(records, 'Company');
+            for (let key in records) {
+                let obj = [{
+                    key: key
+                }, {
+                    data: records[key]
+                }];
+                allRecords.push(obj);
+            }
 
-    }
+            let iterator = 0;
+            for (let i = 0; i < allRecords.length; i++) {
+                let totalAmountEx = 0;
+                let totalTax = 0;
+                let amountInc = 0;
+                let balance = 0;
+                let twoMonth = 0;
+                let threeMonth = 0;
+                let Older = 0;
+                const currencyLength = Currency.length;
+                for (let k = 0; k < allRecords[i][1].data.length; k++) {
+                    totalAmountEx = totalAmountEx + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
+                    totalTax = totalTax + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
+                    amountInc = amountInc + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
+                    balance = balance + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
+
+                }
+                let val = ['Total ' + allRecords[i][0].key + '', '', '', '', '',
+                    utilityService.modifynegativeCurrencyFormat(totalAmountEx), utilityService.modifynegativeCurrencyFormat(totalTax), utilityService.modifynegativeCurrencyFormat(amountInc), utilityService.modifynegativeCurrencyFormat(balance)
+                ];
+                current.push(val);
+
+            }
+
+            //grandtotalRecord
+            let grandamountduetotal = 0;
+            let grandtotalAmountEx = 0;
+            let grandtotalTax = 0;
+            let grandamountInc = 0;
+            let grandbalance = 0;
+
+            for (let n = 0; n < current.length; n++) {
+
+                const grandcurrencyLength = Currency.length;
+
+                grandtotalAmountEx = grandtotalAmountEx + utilityService.convertSubstringParseFloat(current[n][5]);
+                grandtotalTax = grandtotalTax + utilityService.convertSubstringParseFloat(current[n][6]);
+                grandamountInc = grandamountInc + utilityService.convertSubstringParseFloat(current[n][7]);
+                grandbalance = grandbalance + utilityService.convertSubstringParseFloat(current[n][8]);
+
+            }
+
+            let grandval = ['Grand Total ' + '', '', '', '', '',
+                utilityService.modifynegativeCurrencyFormat(grandtotalAmountEx),
+                utilityService.modifynegativeCurrencyFormat(grandtotalTax),
+                utilityService.modifynegativeCurrencyFormat(grandamountInc),
+                utilityService.modifynegativeCurrencyFormat(grandbalance)
+            ];
+
+            for (let key in records) {
+                let dataArr = current[iterator]
+                let obj = [{
+                    key: key
+                }, {
+                    data: records[key]
+                }, {
+                    total: [{
+                        dataArr: dataArr
+                    }]
+                }];
+                totalRecord.push(obj);
+                iterator += 1;
+            }
+
+            templateObject.records.set(totalRecord);
+            templateObject.grandrecords.set(grandval);
+
+            if (templateObject.records.get()) {
+                setTimeout(function() {
+                    $('td a').each(function() {
+                        if ($(this).text().indexOf('-' + Currency) >= 0)
+                            $(this).addClass('text-danger')
+                    });
+                    $('td').each(function() {
+                        if ($(this).text().indexOf('-' + Currency) >= 0)
+                            $(this).addClass('text-danger')
+                    });
+
+                    $('td').each(function() {
+
+                        let lineValue = $(this).first().text()[0];
+                        if (lineValue != undefined) {
+                            if (lineValue.indexOf(Currency) >= 0)
+                                $(this).addClass('text-right')
+                        }
+
+                    });
+
+                    $('td').each(function() {
+                        if ($(this).first().text().indexOf('-' + Currency) >= 0)
+                            $(this).addClass('text-right')
+                    });
+
+                    LoadingOverlay.hide();
+                }, 100);
+            }
+
+        } 
+
+        LoadingOverlay.hide();
+    };
+    
 
     templateObject.getDepartments = function() {
         reportService.getDepartment().then(function(data) {
@@ -499,8 +317,17 @@ Template.salesreport.onRendered(() => {
         });
 
     }
+
+    templateObject.initDate();
+    templateObject.initUploadedImage();
     // templateObject.getAllProductData();
     templateObject.getDepartments();
+
+    templateObject.getSalesReports( 
+        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+        GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+        false);
+  
 });
 
 Template.salesreport.events({
@@ -509,7 +336,7 @@ Template.salesreport.events({
     },
     'change #dateTo': function() {
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
         templateObject.records.set('');
@@ -536,7 +363,7 @@ Template.salesreport.events({
     },
     'change #dateFrom': function() {
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
         templateObject.records.set('');
@@ -562,7 +389,7 @@ Template.salesreport.events({
         },500);
     },
     'click .btnRefresh': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         localStorage.setItem('VS1Sales_Report', '');
         Meteor._reload.reload();
     },
@@ -622,7 +449,7 @@ Template.salesreport.events({
         })
     },
     'click .btnExportReport': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         let utilityService = new UtilityService();
         let templateObject = Template.instance();
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
@@ -660,8 +487,7 @@ Template.salesreport.events({
     },
     'click #lastMonth': function() {
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        localStorage.setItem('VS1Sales_Report', '');
+      
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
         var currentDate = new Date();
@@ -695,8 +521,7 @@ Template.salesreport.events({
     },
     'click #lastQuarter': function() {
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        localStorage.setItem('VS1Sales_Report', '');
+      
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
         var currentDate = new Date();
@@ -736,8 +561,7 @@ Template.salesreport.events({
     },
     'click #last12Months': function() {
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        localStorage.setItem('VS1Sales_Report', '');
+      
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
         var currentDate = new Date();
@@ -765,8 +589,7 @@ Template.salesreport.events({
     },
     'click #ignoreDate': function() {
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        localStorage.setItem('VS1Sales_Report', '');
+    
         $('#dateFrom').attr('readonly', true);
         $('#dateTo').attr('readonly', true);
         templateObject.dateAsAt.set('Current Date');

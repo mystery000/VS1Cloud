@@ -30,58 +30,62 @@ Template.productsalesreport.onCreated(()=>{
 Template.productsalesreport.onRendered(()=>{
   LoadingOverlay.show();
   const templateObject = Template.instance();
-  let utilityService = new UtilityService();
-  let salesOrderTable;
-  var splashArray = new Array();
-  var today = moment().format('DD/MM/YYYY');
-  var currentDate = new Date();
-  var begunDate = moment(currentDate).format("DD/MM/YYYY");
-  let fromDateMonth = (currentDate.getMonth() + 1);
-  let fromDateDay = currentDate.getDate();
-  if((currentDate.getMonth()+1) < 10){
-    fromDateMonth = "0" + (currentDate.getMonth()+1);
-  }
 
-  let imageData= (localStorage.getItem("Image"));
-  if(imageData)
-  {
-      $('#uploadedImage').attr('src', imageData);
-      $('#uploadedImage').attr('width','50%');
-  }
+  templateObject.initDate = () => {
+    const currentDate = new Date();
 
-  if(currentDate.getDate() < 10){
-    fromDateDay = "0" + currentDate.getDate();
-  }
-  var fromDate =fromDateDay + "/" +(fromDateMonth) + "/" + currentDate.getFullYear();
+    /**
+     * This will init dates
+     */
+    let begunDate = moment(currentDate).format("DD/MM/YYYY");
+    templateObject.dateAsAt.set(begunDate);
 
+    let fromDateMonth = currentDate.getMonth() + 1;
+    let fromDateDay = currentDate.getDate();
+    if (currentDate.getMonth() + 1 < 10) {
+      fromDateMonth = "0" + (currentDate.getMonth() + 1);
+    }
 
-  templateObject.dateAsAt.set(begunDate);
- const dataTableList = [];
- const deptrecords = [];
-  $("#date-input,#dateTo,#dateFrom").datepicker({
-      showOn: 'button',
-      buttonText: 'Show Date',
+    let prevMonth = moment().subtract(1, "months").format("MM");
+
+    if (currentDate.getDate() < 10) {
+      fromDateDay = "0" + currentDate.getDate();
+    }
+    // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
+    var fromDate =
+      fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
+
+    $("#date-input,#dateTo,#dateFrom").datepicker({
+      showOn: "button",
+      buttonText: "Show Date",
       buttonImageOnly: true,
-      buttonImage: '/img/imgCal2.png',
-      dateFormat: 'dd/mm/yy',
+      buttonImage: "/img/imgCal2.png",
+      dateFormat: "dd/mm/yy",
       showOtherMonths: true,
       selectOtherMonths: true,
       changeMonth: true,
       changeYear: true,
       yearRange: "-90:+10",
-      onChangeMonthYear: function(year, month, inst){
-      // Set date to picker
-      $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
-      // Hide (close) the picker
-      // $(this).datepicker('hide');
-      // // Change ttrigger the on change function
-      // $(this).trigger('change');
-     }
-  });
+      onChangeMonthYear: function (year, month, inst) {
+        // Set date to picker
+        $(this).datepicker(
+          "setDate",
+          new Date(year, inst.selectedMonth, inst.selectedDay)
+        );
+        // Hide (close) the picker
+        // $(this).datepicker('hide');
+        // // Change ttrigger the on change function
+        // $(this).trigger('change');
+      },
+    });
 
-  $("#dateFrom").val(fromDate);
-   $("#dateTo").val(begunDate);
+    $("#dateFrom").val(fromDate);
+    $("#dateTo").val(begunDate);
 
+    //--------- END OF DATE ---------------//
+  };
+
+ 
     templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate = false) => {
       LoadingOverlay.show();
       const _data = await CachedHttp.get("TProductSalesDetailsReport", async () => {
@@ -642,11 +646,6 @@ let grandtotalqty = 0;
       }
     };
 
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + currentDate2.getDate();
-    //templateObject.getSalesReports(getDateFrom,getLoadDate,false);
-    templateObject.loadReport(getDateFrom,getLoadDate,false);
 
 
     templateObject.getDepartments = function(){
@@ -666,7 +665,15 @@ let grandtotalqty = 0;
 
     }
     // templateObject.getAllProductData();
+
+
+    templateObject.initDate();
     templateObject.getDepartments();
+
+    templateObject.loadReport(   
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    false);
   });
 
   Template.productsalesreport.events({
