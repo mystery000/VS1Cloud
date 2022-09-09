@@ -164,7 +164,10 @@ Template.jobsalessummary.onRendered(() => {
   templateObject.initUploadedImage();
 
 
-  templateObject.loadReport(convertYearMonthDay($('#dateFrom').val()), convertYearMonthDay($('#dateTo').val()));
+  templateObject.loadReport(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val())
+  );
 
   LoadingOverlay.hide();
 });
@@ -731,10 +734,3 @@ async function loadCurrencyHistory(templateObject) {
   LoadingOverlay.hide();
 }
 
-
-function convertYearMonthDay(date, split = "/", replace = "-") {
-  const _date = date.split(split);
-
-  let newDate = _date[2] + replace + _date[1] +  replace + _date[0];
-  return newDate;
-}

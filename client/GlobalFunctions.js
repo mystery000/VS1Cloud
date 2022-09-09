@@ -39,4 +39,11 @@ export default class GlobalFunctions {
       false;
     }
   }
+
+  static convertYearMonthDay(date, split = "/", replace = "-") {
+    const _date = date.split(split);
+  
+    let newDate = _date[2] + replace + _date[1] +  replace + _date[0];
+    return newDate;
+  }
 }
