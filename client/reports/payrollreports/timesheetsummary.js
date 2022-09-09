@@ -109,6 +109,7 @@ Template.timesheetsummary.onRendered(() => {
     await templateObject.getTimeSheetEntry();
   };
   templateObject.getTimeSheetEntry = async function () {
+    LoadingOverlay.show();
     let data = [];
     if (!localStorage.getItem('VS1TimesheetSummary_Report')) {
       const options = await templateObject.reportOptions.get();
@@ -138,14 +139,16 @@ Template.timesheetsummary.onRendered(() => {
       });
       
     }
-    $(".fullScreenSpin").css("display", "none");
     templateObject.records.set(result);    
+    LoadingOverlay.hide();
+
   };
-  templateObject.getTimeSheetEntry();
+  
 
 
   templateObject.initDate();
   templateObject.initUploadedImage();
+  templateObject.getTimeSheetEntry();
   LoadingOverlay.hide();
 });
 
@@ -274,26 +277,26 @@ Template.timesheetsummary.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click #lastMonth": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1TimesheetSummary_Report', '');
+    // $(".fullScreenSpin").css("display", "inline-block");
+    // localStorage.setItem('VS1TimesheetSummary_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
+   
   },
   "click #lastQuarter": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1TimesheetSummary_Report', '');
+    // $(".fullScreenSpin").css("display", "inline-block");
+    // localStorage.setItem('VS1TimesheetSummary_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
+    // $(".fullScreenSpin").css("display", "none");
   },
   "click #last12Months": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1TimesheetSummary_Report', '');
+    // $(".fullScreenSpin").css("display", "inline-block");
+    // localStorage.setItem('VS1TimesheetSummary_Report', '');
     let templateObject = Template.instance();
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
@@ -318,15 +321,15 @@ Template.timesheetsummary.events({
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-    $(".fullScreenSpin").css("display", "none");
+    // $(".fullScreenSpin").css("display", "none");
   },
   "click #ignoreDate": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem('VS1TimesheetSummary_Report', '');
+    // $(".fullScreenSpin").css("display", "inline-block");
+    // localStorage.setItem('VS1TimesheetSummary_Report', '');
     let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
     await templateObject.setReportOptions(true);
-    $(".fullScreenSpin").css("display", "none");
+    // $(".fullScreenSpin").css("display", "none");
   },
 
 });
