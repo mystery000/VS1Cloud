@@ -1,20 +1,26 @@
 import LoadingOverlay from "../../LoadingOverlay";
+import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 
-
-export default class GlobalReportListeners {
+export default class GlobalReportEvents {
+  /**
+     *
+     * @param {*} options
+     * @returns
+     */
   static getFxListeners(defaultCurrencyCode) {
+
     return {
       // CURRENCY MODULE
-      "click .fx-rate-btn": async e => {
-        await loadCurrency();
+      "click .fx-rate-btn": async (e, ui) => {
+        await FxGlobalFunctions.loadCurrency(ui, defaultCurrencyCode);
         //loadCurrencyHistory();
       },
-      "click .currency-modal-save": (e, templateObject) => {
+      "click .currency-modal-save": (e, ui) => {
         //$(e.currentTarget).parentsUntil(".modal").modal("hide");
         LoadingOverlay.show();
 
         // Get all currency list
-        let _currencyList = templateObject.currencyList.get();
+        let _currencyList = ui.currencyList.get();
 
         // Get all selected currencies
         const currencySelected = $(".currency-selector-js:checked");
@@ -50,8 +56,8 @@ export default class GlobalReportListeners {
           return 1;
         });
 
-        // templateObject.activeCurrencyList.set(_activeCurrencyList);
-        templateObject.currencyList.set(_currencyList);
+        // ui.activeCurrencyList.set(_activeCurrencyList);
+        ui.currencyList.set(_currencyList);
 
         LoadingOverlay.hide();
       }

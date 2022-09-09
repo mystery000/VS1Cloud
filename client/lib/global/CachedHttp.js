@@ -1,7 +1,7 @@
 
 
 /**
- * 
+ *
  * The console.logs here are only for debug purpose, wont work on production
  */
 class CachedHttp {
@@ -45,22 +45,19 @@ class CachedHttp {
 
       localStorage.setItem(endPointName, JSON.stringify(cachedResponse));
 
-      if (this.debug) 
-        console.log("Loading from remote");
-      
+      if (this.debug)
+
       return cachedResponse;
     };
 
     if (options.forceOverride) {
-      if (this.debug) 
-        console.log("Forced from remote");
+      if (this.debug)
       return getFromRemote();
     }
 
     if (cachedData) {
-      if (this.debug) 
-        console.log("Cached data is available");
-      
+      if (this.debug)
+
       cachedData = JSON.parse(localStorage.getItem(endPointName));
 
       if (options.validate(cachedData) == true) {
@@ -70,19 +67,16 @@ class CachedHttp {
         const hours = Math.abs(options.date - cachedData.requestDate) / 36e5;
 
         if (hours > this.limit) {
-          if (this.debug) 
-            console.log("Cached data is expired");
+          if (this.debug)
           return getFromRemote();
         } else {
-          if (this.debug) 
-            console.log("Loading from cache");
-          
+          if (this.debug)
+
           return JSON.parse(localStorage.getItem(endPointName));
         }
       } else {
-        if (this.debug) 
-          console.log("No cached data is found with these params", cachedData.response.Params);
-        
+        if (this.debug)
+
         // the requested params has changed, to we need to make a new request for this time
         return getFromRemote();
       }

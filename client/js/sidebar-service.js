@@ -1,6 +1,17 @@
 import { BaseService } from "../js/base-service.js";
 import { HTTP } from "meteor/http";
 export class SideBarService extends BaseService {
+
+  getRegionalOptionInfo() {
+
+    let options = {
+      ListType:"Detail",
+      select: "[Region]=" + Session.get('ERPLoggedCountry'),
+    };
+
+    return this.getList(this.ERPObjects.TRegionalOptions, options);
+  }
+
   getNewProductListVS1(limitcount, limitfrom) {
     let options = "";
     if (limitcount == "All") {
@@ -1863,18 +1874,18 @@ export class SideBarService extends BaseService {
     if(isDeleted == "" || isDeleted == false || isDeleted == null || isDeleted == undefined){
     if (ignoreDate == true) {
       options = {
-        //OrderBy: "TransactionDate desc",
+        OrderBy: "TransactionDate desc",
         IgnoreDates: true,
-        //Search: "Deleted != true",
+        Search: "Deleted != true",
         IsDetailReport: true,
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        //OrderBy: "TransactionDate desc",
+        OrderBy: "TransactionDate desc",
         IgnoreDates: false,
-        //Search: "Deleted != true",
+        Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -1884,7 +1895,7 @@ export class SideBarService extends BaseService {
     }else{
       if (ignoreDate == true) {
         options = {
-          //OrderBy: "TransactionDate desc",
+          OrderBy: "TransactionDate desc",
           IgnoreDates: true,
           IsDetailReport: true,
           LimitCount: '"' + limitcount + '"',
@@ -1892,7 +1903,7 @@ export class SideBarService extends BaseService {
         };
       } else {
         options = {
-          //OrderBy: "TransactionDate desc",
+          OrderBy: "TransactionDate desc",
           IgnoreDates: false,
           DateFrom: '"' + dateFrom + '"',
           DateTo: '"' + dateTo + '"',

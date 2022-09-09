@@ -5504,8 +5504,9 @@ Template.employeescard.events({
         }
 
         let edtDashboardOptions = $('#edtDashboardOptions').val()||'';
+        let utilityService = new UtilityService();
         let edtSalesQuota = $('#edtSalesQuota').val()||'';
-
+        edtSalesQuota = utilityService.removeCurrency(edtSalesQuota);
         if (!isNaN(currentId.id)) {
 
             currentEmployee = parseInt(currentId.id);
@@ -11038,10 +11039,17 @@ Template.employeescard.events({
     }
     $('#paySlipModal').modal('show');
     $('.fullScreenSpin').css('display', 'none');
+  },
+  "blur #edtSalesQuota": function() {
+    let utilityService = new UtilityService();
+    let amount = $('#edtSalesQuota').val();
+    if( isNaN(amount) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+    amount = utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+    $('#edtSalesQuota').val(amount);
   }
-//   'click #edtLeaveTypeofRequest': (e, ui) => {
-//     ui.getAssignLeaveTypes();
-//   }
 });
 
 Template.employeescard.helpers({
