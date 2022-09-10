@@ -2462,7 +2462,7 @@ Template.accountant_company.helpers({
 
     companyname: () => {
         let tradingname = localStorage.getItem("tradingName") || "";
-        return tradingname + " " + loggedCompany;
+        return loggedCompany + " " + tradingname;
     },
 
     fiscalYearEnding: () => {

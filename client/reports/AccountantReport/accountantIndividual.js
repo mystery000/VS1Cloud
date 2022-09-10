@@ -2435,7 +2435,7 @@ Template.accountant_individual.helpers({
 
     companyname: () => {
         let tradingname = localStorage.getItem("tradingName") || "";
-        return tradingname + " " + loggedCompany;
+        return loggedCompany + " " + tradingname;
     },
 
     fiscalYearEnding: () => {
