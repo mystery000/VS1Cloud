@@ -240,8 +240,6 @@ export default class CronSetting {
     }
 
     this.toParse = text;
-
-    console.log(this.toParse);
   }
 
   /**
