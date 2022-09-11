@@ -3,6 +3,7 @@ const highCharts = require('highcharts');
 require('highcharts/modules/exporting')(highCharts);
 require('highcharts/highcharts-more')(highCharts);
 let _ = require("lodash");
+import { UtilityService } from "../../utility-service";
 
 
 Template.dashboardManagerCharts.onCreated(function() {
@@ -13,12 +14,30 @@ Template.dashboardManagerCharts.onCreated(function() {
 
 Template.dashboardManagerCharts.onRendered(function () {
     const templateObject = Template.instance();
-    window.highCharts = highCharts;
-    function renderSPMEmployeeChart(employeeNames, employeeSalesQuota) {
+
+    function formatPrice( amount ){
+        let utilityService = new UtilityService();
+        if( isNaN(amount) || !amount){
+            amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+            amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+        }
+        return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+    }
+
+    function renderSPMEmployeeChart() {
+        let employeeNames = [];
+        let employeesTotalDiscount = [];
+        const filteredEmployees = _.filter(templateObject.employeesByTotalSales.get(), emp => !!emp.totalDiscount);
+        _.each(filteredEmployees, emp => {
+            if(emp.totalDiscount > 0) {
+                employeeNames.push(emp.name);
+                employeesTotalDiscount.push(emp.totalDiscount);
+            }
+        });
         highCharts.chart('spd-employee-chart', {
             series: [{
                 name: 'Employees',
-                data: employeeSalesQuota
+                data: employeesTotalDiscount
 
             }],
             chart: {
@@ -63,7 +82,7 @@ Template.dashboardManagerCharts.onRendered(function () {
                 plotShadow: false
             },
             title: {
-                text: empData.name
+                text: ''
             },
             pane: {
                 startAngle: -150,
@@ -119,7 +138,7 @@ Template.dashboardManagerCharts.onRendered(function () {
                     }
                 },
                 title: {
-                    text: empData.name
+                    text: ''
                 },
                 plotBands: [{
                     from: 0,
@@ -155,11 +174,20 @@ Template.dashboardManagerCharts.onRendered(function () {
             highCharts.chart(divId, options);
             $(`#${divId}`).css('display', 'block');
             $('.sortable-chart-widget-js').removeClass(`spd-gauge-chart${index+1}`);
+            if($(`#${divId}-emp`).length) {
+                $(`#${divId}-emp`).css('display', 'block');
+                $(`#${divId}-emp`).html(empData.name);
+            }
+            if($(`#${divId}-amount`).length) {
+                $(`#${divId}-amount`).css('display', 'block');
+                $(`#${divId}-amount`).html(formatPrice(empData.totalSales));
+            }
         }
     };
 
     templateObject.renderSPDCharts = function () {
-        const employeesByTotalSales = _.sortBy(templateObject.employeesByTotalSales.get(), ['sale']).reverse().slice(0, 6); // get top 6 employees
+        const filteredEmployees = _.sortBy(_.filter(templateObject.employeesByTotalSales.get(), emp => !!emp.salesQuota), ['totalSales']);
+        const employeesByTotalSales = _.sortBy(filteredEmployees, ['sale']).reverse().slice(0, 6); // get top 6 employees
         _.each(employeesByTotalSales, (empData, index) => {
             setGauageChart({ divId: `spd-gauge-area${index + 1}`, empData, index });
         });
@@ -181,28 +209,30 @@ Template.dashboardManagerCharts.onRendered(function () {
             });
             templateObject.employees.set(employees);
         }
-        renderSPMEmployeeChart(employeeNames, employeeSalesQuota);
 
         getVS1Data('TInvoiceList').then(function (dataObject) {
             if (dataObject.length) {
                 let { tinvoicelist } = JSON.parse(dataObject[0].data);
                 const tinvoicelistGroupBy = _.groupBy(tinvoicelist, 'EmployeeName');
                 let employeesByTotalSales = [];
-                _.each(_.keys(tinvoicelistGroupBy), key => {
+                _.each(templateObject.employees.get(), employee => {
                     let lastMonthUnix = moment().subtract(1, 'months').unix();
-                    let employeeData = { name: key, totalSales: 0, salesQuota: 0 };
-                    let employee = _.find(templateObject.employees.get(), { EmployeeName: key });
-                    if (employee) {
-                        employeeData.salesQuota = isNaN(parseInt(employee.CustFld12)) ? 0 : parseInt(employee.CustFld12);
+                    let employeeData = { name: employee.EmployeeName, totalSales: 0, salesQuota: 0, totalDiscount: 0 };
+                    if (employee.CustFld12 && Number(employee.CustFld12) != 'NaN' && Number(employee.CustFld12) > 0) {
+                        employeeData.salesQuota = Number(employee.CustFld12);
                     }
-                    _.each(tinvoicelistGroupBy[key], invoiceData => {
-                        if (moment(invoiceData.SaleDate).unix() > lastMonthUnix) {
-                            employeeData.totalSales += invoiceData.TotalAmountInc
-                        }
-                    });
+                    if(tinvoicelistGroupBy[employee.EmployeeName]) {
+                        _.each(tinvoicelistGroupBy[employee.EmployeeName], invoiceData => {
+                            if (moment(invoiceData.SaleDate).unix() > lastMonthUnix) {
+                                employeeData.totalSales += invoiceData.TotalAmountInc
+                                employeeData.totalDiscount += invoiceData.TotalDiscount
+                            }
+                        });
+                    }
                     employeesByTotalSales.push(employeeData);
                 });
-                templateObject.employeesByTotalSales.set(_.filter(employeesByTotalSales, emp => !!emp.salesQuota));
+                templateObject.employeesByTotalSales.set(employeesByTotalSales);
+                renderSPMEmployeeChart();
                 templateObject.renderSPDCharts();
             }
         }).catch(function (err) {
