@@ -17,7 +17,6 @@ Template.accountsoverview.onCreated(function() {
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.accountTypes = new ReactiveVar([]);
-    templateObject.availableCategories = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
     templateObject.selectedFile = new ReactiveVar();
     templateObject.isBankAccount = new ReactiveVar();
@@ -368,14 +367,19 @@ Template.accountsoverview.onRendered(function() {
 
     // templateObject.getAllTaxCodes();
     // $('#tblAccountOverview').DataTable();
+    // function MakeNegative() {
+    //     var TDs = document.getElementsByTagName("td");
+    //     for (var i = 0; i < TDs.length; i++) {
+    //         var temp = TDs[i];
+    //         if (temp.firstChild.nodeValue.indexOf("-" + Currency) === 0) {
+    //             temp.className = "colBalance text-danger";
+    //         }
+    //     }
+    // }
     function MakeNegative() {
-        var TDs = document.getElementsByTagName("td");
-        for (var i = 0; i < TDs.length; i++) {
-            var temp = TDs[i];
-            if (temp.firstChild.nodeValue.indexOf("-" + Currency) === 0) {
-                temp.className = "colBalance text-danger";
-            }
-        }
+        $('td').each(function () {
+            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+        });
     }
 
     if (FlowRouter.current().queryParams.id) {
@@ -605,7 +609,7 @@ Template.accountsoverview.onRendered(function() {
                 lineData = data.taccountvs1[i].fields;
             }
             if (accountTypeList) {
-                for (var j = 0; j < accountTypeList.length; j++) {
+                for (let j = 0; j < accountTypeList.length; j++) {
                     if (lineData.AccountTypeName === accountTypeList[j].accounttypename) {
                         fullAccountTypeName = accountTypeList[j].description || "";
                     }
@@ -620,7 +624,7 @@ Template.accountsoverview.onRendered(function() {
                 usedCategories.push(data.taccountvs1[i].fields);
             }
 
-            var dataList = {
+            const dataList = {
                 id: lineData.ID || "",
                 accountname: lineData.AccountName || "",
                 description: lineData.Description || "",
@@ -647,8 +651,6 @@ Template.accountsoverview.onRendered(function() {
             dataTableList.push(dataList);
         }
         usedCategories = [...new Set(usedCategories)];
-        let availableCategories = categories.filter((item) => !usedCategories.includes(item));
-        templateObject.availableCategories.set(availableCategories);
         templateObject.datatablerecords.set(dataTableList);
         categories.forEach((citem, j) => {
             let cdataList = null;
@@ -717,8 +719,7 @@ Template.accountsoverview.onRendered(function() {
                 }
             });
             // //$.fn.dataTable.moment('DD/MM/YY');
-            $("#tblAccountOverview")
-                .DataTable({
+            $("#tblAccountOverview").DataTable({
                     columnDefs: [
                         // { type: 'currency', targets: 4 }
                     ],
@@ -807,7 +808,7 @@ Template.accountsoverview.onRendered(function() {
             // $('.fullScreenSpin').css('display','none');
         }, 10);
 
-        var columns = $("#tblAccountOverview th");
+        const columns = $("#tblAccountOverview th");
         let sTible = "";
         let sWidth = "";
         let sIndex = "";
@@ -1495,16 +1496,7 @@ Template.accountsoverview.events({
                 },
             };
             accountService.saveAccount(data).then(function(data2) {
-                // sideBarService.getAccountListVS1().then(function(dataReload) {
-                //     addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
-                //         goSaveAccount(accountID);
-                //     }).catch(function(err) {
-                //
-                //     });
-                // }).catch(function(err) {
-                //
-                // });
-                goSaveAccount(accountID);
+                doBeforeSave(accountID);
             }).catch(function(err) {
                 swal({
                     title: "Oooops...",
@@ -1518,9 +1510,9 @@ Template.accountsoverview.events({
                 return false;
             })
         } else {
-            goSaveAccount(accountID);
+            doBeforeSave(accountID);
         }
-        function goSaveAccount(accountID) {
+        function doBeforeSave(accountID) {
             if (accountID == "") {
                 accountService.getCheckAccountData(accountname).then(function (data) {
                     accountID = parseInt(data.taccount[0].Id) || 0;
@@ -1532,7 +1524,6 @@ Template.accountsoverview.events({
                 doSaveAccount(accountID);
             }
         }
-
         function doSaveAccount(accountID) {
             data = {
                 type: "TAccount",
@@ -1591,36 +1582,12 @@ Template.accountsoverview.events({
                         localStorage.setItem("vs1companyBankBSB", bsb);
                         localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
                         localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                        sideBarService.getAccountListVS1().then(function(dataReload) {
-                            addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
-                                successSaveEvent(accountID);
-                            }).catch(function(err) {
-                                window.open("/accountsoverview", "_self");
-                            });
-                        }).catch(function(err) {
-                            window.open("/accountsoverview", "_self");
-                        });
+                        doAfterSave(accountID);
                     }).catch(function(err) {
-                        sideBarService.getAccountListVS1().then(function(dataReload) {
-                            addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
-                                successSaveEvent(accountID);
-                            }).catch(function(err) {
-                                window.open("/accountsoverview", "_self");
-                            });
-                        }).catch(function(err) {
-                            window.open("/accountsoverview", "_self");
-                        });
+                        doAfterSave(accountID);
                     });
                 } else {
-                    sideBarService.getAccountListVS1().then(function(dataReload) {
-                        addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
-                            successSaveEvent(accountID);
-                        }).catch(function(err) {
-                            window.open("/accountsoverview", "_self");
-                        });
-                    }).catch(function(err) {
-                        window.open("/accountsoverview", "_self");
-                    });
+                    doAfterSave(accountID);
                 }
             }).catch(function(err) {
                 swal({
@@ -1637,7 +1604,17 @@ Template.accountsoverview.events({
                 $(".fullScreenSpin").css("display", "none");
             });
         }
-
+        function doAfterSave(accountID) {
+            sideBarService.getAccountListVS1().then(function(dataReload) {
+                addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
+                    successSaveEvent(accountID);
+                }).catch(function(err) {
+                    window.open("/accountsoverview", "_self");
+                });
+            }).catch(function(err) {
+                window.open("/accountsoverview", "_self");
+            });
+        }
         function successSaveEvent(accountID) {
             let successTxt = "";
             if (accountID == "") {
@@ -1659,6 +1636,7 @@ Template.accountsoverview.events({
                 window.open("/accountsoverview", "_self");
             }, 100);
         }
+
     },
     "click .btnAddNewAccounts": function() {
         $("#add-account-title").text("Add New Account");
@@ -1680,20 +1658,20 @@ Template.accountsoverview.events({
         $(".showOnTransactions").prop("checked", false);
         $(".useReceiptClaim").prop("checked", false);
         $("#expenseCategory").val("");
-        let availableCategories = Template.instance().availableCategories.get();
-        let cateogoryHtml = "";
-        availableCategories.forEach(function(item) {
-            cateogoryHtml += '<option value="' + item + '">' + item + '</option>';
-        });
-        $("#expenseCategory").empty();
-        $("#expenseCategory").append(cateogoryHtml);
-        if (cateogoryHtml == "") {
-            $("#expenseCategory").attr("readonly", true);
-            $("#expenseCategory").attr("disabled", "disabled");
-        } else {
-            $("#expenseCategory").removeAttr("readonly", true);
-            $("#expenseCategory").removeAttr("disabled", "disabled");
-        }
+        // let availableCategories = Template.instance().availableCategories.get();
+        // let cateogoryHtml = "";
+        // availableCategories.forEach(function(item) {
+        //     cateogoryHtml += '<option value="' + item + '">' + item + '</option>';
+        // });
+        // $("#expenseCategory").empty();
+        // $("#expenseCategory").append(cateogoryHtml);
+        // if (cateogoryHtml == "") {
+        //     $("#expenseCategory").attr("readonly", true);
+        //     $("#expenseCategory").attr("disabled", "disabled");
+        // } else {
+        //     $("#expenseCategory").removeAttr("readonly", true);
+        //     $("#expenseCategory").removeAttr("disabled", "disabled");
+        // }
         $(".isBankAccount").addClass("isNotBankAccount");
         $(".isCreditAccount").addClass("isNotCreditAccount");
     },
