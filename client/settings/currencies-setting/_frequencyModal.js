@@ -289,6 +289,7 @@ Template._frequencyModal.onRendered(function () {
     try {
       var erpGet = erpDb();
       Meteor.call("addCurrencyCron", cronSetting, erpGet);
+      _formFequencyModal.save();
       LoadingOverlay.hide(0);
       swal({title: "Success", text: "Fx update was scheduled successfully", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(() => {
         window.open("/currenciessettings", "_self");
