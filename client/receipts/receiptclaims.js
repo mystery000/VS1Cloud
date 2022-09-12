@@ -473,32 +473,17 @@ Template.receiptsoverview.onRendered(function() {
                 getVS1Data('TEmployee').then(function(dataObject) {
                     if (dataObject.length == 0) {
                         sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function(data) {
-                            addVS1Data('TEmployee', JSON.stringify(data));
-                            for (let i = 0; i < data.temployee.length; i++) {
-                                if (data.temployee[i].fields.ID == editId) {
-                                    showEditEmployeeView(data.temployee[i].fields);
-                                }
-                            }
+                            setEmployeeData(data, editId);
                         }).catch(function(err) {
 
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
-                        let useData = data.temployee;
-                        for (let i = 0; i < useData.length; i++) {
-                            if (useData[i].fields.ID == editId) {
-                                showEditEmployeeView(useData[i].fields);
-                            }
-                        }
+                        setEmployeeData(data, editId);
                     }
                 }).catch(function(err) {
                     sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function(data) {
-                        addVS1Data('TEmployee', JSON.stringify(data));
-                        for (let i = 0; i < data.temployee.length; i++) {
-                            if (data.temployee[i].fields.ID == editId) {
-                                showEditEmployeeView(data.temployee[i].fields);
-                            }
-                        }
+                        setEmployeeData(data, editId);
                     }).catch(function(err) {
 
                     });
@@ -508,7 +493,14 @@ Template.receiptsoverview.onRendered(function() {
             }
         }
     }
-
+    function setEmployeeData(data, editId) {
+        addVS1Data('TEmployee', JSON.stringify(data));
+        for (let i = 0; i < data.temployee.length; i++) {
+            if (data.temployee[i].fields.ID == editId) {
+                showEditEmployeeView(data.temployee[i].fields);
+            }
+        }
+    }
     function showEditEmployeeView(data) {
         $('.fullScreenSpin').css('display', 'none');
         $('#add-customer-title').text('Edit Employee');
@@ -588,35 +580,20 @@ Template.receiptsoverview.onRendered(function() {
             if (supplierDataName.replace(/\s/g, '') != '') {
                 getVS1Data('TSupplierVS1').then(function(dataObject) {
                     if (dataObject.length == 0) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        sideBarService.getOneSupplierDataExByName(supplierDataName).then(function(data) {
-                            showEditSupplierView(data.tsuppliervs1[0].fields);
+                        sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function(data) {
+                            setSupplierData(data, supplierDataName);
                         }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
+
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
-                        let added = false;
-                        for (let i = 0; i < data.tsuppliervs1.length; i++) {
-                            if ((data.tsuppliervs1[i].fields.ClientName) === supplierDataName) {
-                                added = true;
-                                showEditSupplierView(data.tsuppliervs1[i].fields);
-                            }
-                        }
-                        if (!added) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            sideBarService.getOneSupplierDataExByName(supplierDataName).then(function(data) {
-                                showEditSupplierView(data.tsuppliervs1[0].fields);
-                            }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
-                        }
+                        setSupplierData(data, supplierDataName);
                     }
                 }).catch(function(err) {
-                    sideBarService.getOneSupplierDataExByName(supplierDataName).then(function(data) {
-                        showEditSupplierView(data.tsuppliervs1[0].fields);
+                    sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function(data) {
+                        setSupplierData(data, supplierDataName);
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'none');
+
                     });
                 });
             } else {
@@ -632,7 +609,23 @@ Template.receiptsoverview.onRendered(function() {
             }
         }
     };
+    function setSupplierData(data, supplierDataName) {
+        addVS1Data('TSupplierVS1', JSON.stringify(data));
+        let added = false;
+        for (let i = 0; i < data.tsuppliervs1.length; i++) {
+            if ((data.tsuppliervs1[i].fields.ClientName) === supplierDataName) {
+                added = true;
+                showEditSupplierView(data.tsuppliervs1[i].fields);
+            }
+        }
+        if (!added) {
+            sideBarService.getOneSupplierDataExByName(supplierDataName).then(function(data) {
+                showEditSupplierView(data.tsuppliervs1[0].fields);
+            }).catch(function(err) {
 
+            });
+        }
+    }
     function showEditSupplierView(data) {
         $('.fullScreenSpin').css('display', 'none');
         $('#add-supplier-title').text('Edit Supplier');
@@ -719,49 +712,16 @@ Template.receiptsoverview.onRendered(function() {
                     if (dataObject.length == 0) {
                         $('.fullScreenSpin').css('display', 'inline-block');
                         sideBarService.getCurrencies().then(function(data) {
-                            addVS1Data('TCurrency', JSON.stringify(data));
-                            for (let i in data.tcurrency) {
-                                if (data.tcurrency.hasOwnProperty(i)) {
-                                    if (data.tcurrency[i].fields.Code === currencyDataName) {
-                                        showEditCurrencyView(data.tcurrency[i]);
-                                    }
-                                }
-                            }
-                            setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
-                                $('#newCurrencyModal').modal('toggle');
-                                $('#sedtCountry').attr('readonly', true);
-                            }, 200);
+                            setCurrencyData(data, currencyDataName);
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
-                        let useData = data.tcurrency;
-                        for (let i = 0; i < data.tcurrency.length; i++) {
-                            if (data.tcurrency[i].fields.Code === currencyDataName) {
-                                showEditCurrencyView(data.tcurrency[i]);
-                            }
-                        }
-                        setTimeout(function() {
-                            $('.fullScreenSpin').css('display', 'none');
-                            $('#newCurrencyModal').modal('toggle');
-                        }, 200);
+                        setCurrencyData(data, currencyDataName);
                     }
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'inline-block');
                     sideBarService.getCurrencies().then(function(data) {
-                        addVS1Data('TCurrency', JSON.stringify(data));
-                        for (let i in data.tcurrency) {
-                            if (data.tcurrency.hasOwnProperty(i)) {
-                                if (data.tcurrency[i].fields.Code === currencyDataName) {
-                                    showEditCurrencyView(data.tcurrency[i]);
-                                }
-                            }
-                        }
-                        setTimeout(function() {
-                            $('.fullScreenSpin').css('display', 'none');
-                            $('#newCurrencyModal').modal('toggle');
-                            $('#sedtCountry').attr('readonly', true);
-                        }, 200);
+                        setCurrencyData(data, currencyDataName);
                     });
                 });
             } else {
@@ -777,7 +737,21 @@ Template.receiptsoverview.onRendered(function() {
             }
         }
     }
-
+    function setCurrencyData(data, currencyDataName) {
+        addVS1Data('TCurrency', JSON.stringify(data));
+        for (let i in data.tcurrency) {
+            if (data.tcurrency.hasOwnProperty(i)) {
+                if (data.tcurrency[i].fields.Code === currencyDataName) {
+                    showEditCurrencyView(data.tcurrency[i]);
+                }
+            }
+        }
+        setTimeout(function() {
+            $('.fullScreenSpin').css('display', 'none');
+            $('#newCurrencyModal').modal('toggle');
+            $('#sedtCountry').attr('readonly', true);
+        }, 200);
+    }
     function showEditCurrencyView(data) {
         $('#edtCurrencyID').val(data.fields.ID);
         setTimeout(function() {
@@ -812,54 +786,20 @@ Template.receiptsoverview.onRendered(function() {
             if (accountDataName.replace(/\s/g, '') != '') { // edit employee
                 getVS1Data('TAccountVS1').then(function(dataObject) {
                     if (dataObject.length == 0) {
-                        accountService.getOneAccountByName(accountDataName).then(function(data) {
-                            $('#add-account-title').text('Edit Account Details');
-                            $('#edtAccountName').attr('readonly', true);
-                            $('#sltAccountType').attr('readonly', true);
-                            $('#sltAccountType').attr('disabled', 'disabled');
-                            showEditAccountView(data.taccountvs1[0]);
+                        accountService.getAccountListVS1().then(function(data) {
+                            setAccountData(data, accountDataName);
                         }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
+
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
-                        let useData = data.taccountvs1;
-                        let added = false;
-                        $('#add-account-title').text('Edit Account Details');
-                        $('#edtAccountName').attr('readonly', true);
-                        $('#sltAccountType').attr('readonly', true);
-                        $('#sltAccountType').attr('disabled', 'disabled');
-                        for (let a = 0; a < data.taccountvs1.length; a++) {
-                            if ((data.taccountvs1[a].fields.AccountName) === accountDataName) {
-                                added = true;
-                                showEditAccountView(data.taccountvs1[a]);
-                            }
-                        }
-                        if (!added) {
-                            accountService.getOneAccountByName(accountDataName).then(function(data) {
-                                $('#add-account-title').text('Edit Account Details');
-                                $('#edtAccountName').attr('readonly', true);
-                                $('#sltAccountType').attr('readonly', true);
-                                $('#sltAccountType').attr('disabled', 'disabled');
-                                showEditAccountView(data.taccountvs1[0]);
-                            }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
-                        }
+                        setAccountData(data, accountDataName);
                     }
                 }).catch(function(err) {
-                    accountService.getOneAccountByName(accountDataName).then(function(data) {
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        let fullAccountTypeName = '';
-                        let accBalance = '';
-                        $('#add-account-title').text('Edit Account Details');
-                        $('#edtAccountName').attr('readonly', true);
-                        $('#sltAccountType').attr('readonly', true);
-                        $('#sltAccountType').attr('disabled', 'disabled');
-                        showEditAccountView(data.taccountvs1[0]);
+                    accountService.getAccountListVS1().then(function(data) {
+                        setAccountData(data, accountDataName);
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'none');
+
                     });
                 });
                 $('#addAccountModal').modal('toggle');
@@ -878,7 +818,31 @@ Template.receiptsoverview.onRendered(function() {
             }
         }
     };
-
+    function setAccountData(data, accountDataName) {
+        addVS1Data('TAccountVS1', JSON.stringify(data));
+        let added = false;
+        $('#add-account-title').text('Edit Account Details');
+        $('#edtAccountName').attr('readonly', true);
+        $('#sltAccountType').attr('readonly', true);
+        $('#sltAccountType').attr('disabled', 'disabled');
+        for (let a = 0; a < data.taccountvs1.length; a++) {
+            if ((data.taccountvs1[a].fields.AccountName) === accountDataName) {
+                added = true;
+                showEditAccountView(data.taccountvs1[a]);
+            }
+        }
+        if (!added) {
+            accountService.getOneAccountByName(accountDataName).then(function(data) {
+                $('#add-account-title').text('Edit Account Details');
+                $('#edtAccountName').attr('readonly', true);
+                $('#sltAccountType').attr('readonly', true);
+                $('#sltAccountType').attr('disabled', 'disabled');
+                showEditAccountView(data.taccountvs1[0]);
+            }).catch(function(err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        }
+    }
     function showEditAccountView(data) {
         $('.fullScreenSpin').css('display', 'none');
         const accountid = data.fields.ID || '';
@@ -945,61 +909,16 @@ Template.receiptsoverview.onRendered(function() {
                 $('#paymentMethodHeader').text('Edit Payment Method');
                 getVS1Data('TPaymentMethod').then(function(dataObject) {
                     if (dataObject.length == 0) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
                         sideBarService.getPaymentMethodDataVS1().then(function(data) {
-                            for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                                if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
-                                    $('#edtPaymentMethodID').val(data.tpaymentmethodvs1[i].fields.ID);
-                                    $('#edtPaymentMethodName').val(data.tpaymentmethodvs1[i].fields.PaymentMethodName);
-                                    if (data.tpaymentmethodvs1[i].fields.IsCreditCard === true) {
-                                        $('#isformcreditcard').prop('checked', true);
-                                    } else {
-                                        $('#isformcreditcard').prop('checked', false);
-                                    }
-                                }
-                            }
-                            setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
-                                $('#newPaymentMethodModal').modal('toggle');
-                            }, 200);
+                            setPaymentMethodData(data, paymentDataName);
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
-                        let useData = data.tpaymentmethodvs1;
-                        for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                            if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
-                                $('#edtPaymentMethodID').val(data.tpaymentmethodvs1[i].fields.ID);
-                                $('#edtPaymentMethodName').val(data.tpaymentmethodvs1[i].fields.PaymentMethodName);
-                                if (data.tpaymentmethodvs1[i].fields.IsCreditCard === true) {
-                                    $('#isformcreditcard').prop('checked', true);
-                                } else {
-                                    $('#isformcreditcard').prop('checked', false);
-                                }
-                            }
-                        }
-                        setTimeout(function() {
-                            $('.fullScreenSpin').css('display', 'none');
-                            $('#newPaymentMethodModal').modal('toggle');
-                        }, 200);
+                        setPaymentMethodData(data, paymentDataName);
                     }
                 }).catch(function(err) {
-                    $('.fullScreenSpin').css('display', 'inline-block');
                     sideBarService.getPaymentMethodDataVS1().then(function(data) {
-                        for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                            if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
-                                $('#edtPaymentMethodID').val(data.tpaymentmethodvs1[i].fields.ID);
-                                $('#edtPaymentMethodName').val(data.tpaymentmethodvs1[i].fields.PaymentMethodName);
-                                if (data.tpaymentmethodvs1[i].fields.IsCreditCard === true) {
-                                    $('#isformcreditcard').prop('checked', true);
-                                } else {
-                                    $('#isformcreditcard').prop('checked', false);
-                                }
-                            }
-                        }
-                        setTimeout(function() {
-                            $('.fullScreenSpin').css('display', 'none');
-                            $('#newPaymentMethodModal').modal('toggle');
-                        }, 200);
+                        setPaymentMethodData(data, paymentDataName);
                     });
                 });
             } else {
@@ -1008,12 +927,29 @@ Template.receiptsoverview.onRendered(function() {
                     $('#paymentmethodList_filter .form-control-sm').focus();
                     $('#paymentmethodList_filter .form-control-sm').val('');
                     $('#paymentmethodList_filter .form-control-sm').trigger("input");
-                    var datatable = $('#paymentmethodList').DataTable();
+                    const datatable = $('#paymentmethodList').DataTable();
                     datatable.draw();
                     $('#paymentmethodList_filter .form-control-sm').trigger("input");
                 }, 500);
             }
         }
+    }
+    function setPaymentMethodData(data, paymentDataName) {
+        addVS1Data('TPaymentMethod', JSON.stringify(data));
+        for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
+            if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
+                $('#edtPaymentMethodID').val(data.tpaymentmethodvs1[i].fields.ID);
+                $('#edtPaymentMethodName').val(data.tpaymentmethodvs1[i].fields.PaymentMethodName);
+                if (data.tpaymentmethodvs1[i].fields.IsCreditCard === true) {
+                    $('#isformcreditcard').prop('checked', true);
+                } else {
+                    $('#isformcreditcard').prop('checked', false);
+                }
+            }
+        }
+        setTimeout(function() {
+            $('#newPaymentMethodModal').modal('toggle');
+        }, 200);
     }
 
     $("#date-input,#dateTo,#dateFrom,.dtReceiptDate, #dateFromMerge, #dateToMerge").datepicker({
@@ -1320,7 +1256,6 @@ Template.receiptsoverview.onRendered(function() {
         getVS1Data('TExpenseClaim').then(function(dataObject) {
             if (dataObject.length == 0) { // check if no idexdb
                 accountService.getExpenseClaim().then(function(data) {
-                    addVS1Data('TExpenseClaim', JSON.stringify(data));
                     getExpenseClaimList(data);
                 });
             } else { //else load data from indexdb
@@ -1329,12 +1264,12 @@ Template.receiptsoverview.onRendered(function() {
             }
         }).catch(function(err) {
             accountService.getExpenseClaim().then(function(data) {
-                addVS1Data('TExpenseClaim', JSON.stringify(data));
                 getExpenseClaimList(data);
             });
         });
     };
     function getExpenseClaimList(data) {
+        addVS1Data('TExpenseClaim', JSON.stringify(data));
         let lineItems = [];
         data.texpenseclaimex.forEach(expense => {
             if (Object.prototype.toString.call(expense.fields.Lines) === "[object Array]") {
