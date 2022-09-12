@@ -101,12 +101,11 @@ Template.dashboardSalesCharts.onRendered(function () {
         });
         leadsSorcesCount = _.sortBy(leadsSorcesCount, ['totalCount']).reverse().slice(0, 3);
         let sources = ['Total Leads'];
-        let sourcesValues = [leadsCount6Months]
+        let sourcesValues = [leadsCount6Months];
         _.each(leadsSorcesCount, (sourceCount) => {
             sources.push(sourceCount.sourceName);
             sourcesValues.push(sourceCount.totalCount)
         });
-
         renderOppertunitiesChart({sources, sourcesValues});
     };
 

@@ -44,14 +44,12 @@ Template.myTasksWidget.onRendered(function () {
 
     crmService.getAllTaskList(employeeID).then(function (data) {
       if (data.tprojecttasks && data.tprojecttasks.length > 0) {
-        let today = moment().format("YYYY-MM-DD");
         let all_records = data.tprojecttasks;
         // all_records = all_records.filter(item => item.fields.ProjectID == 11);
         templateObject.allWithCompletedRecords.set(all_records);
 
         all_records = all_records.filter((item) => item.fields.Completed == false);
-        let today_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) == today);
-        templateObject.todayTasks.set(today_records);
+        templateObject.todayTasks.set(all_records);
 
       }
       $(".fullScreenSpin").css("display", "none");

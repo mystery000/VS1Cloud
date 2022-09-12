@@ -2440,7 +2440,7 @@ Template.accountant_financialstatement.helpers({
 
     companyname: () => {
         let tradingname = localStorage.getItem("tradingName") || "";
-        return loggedCompany + " " + tradingname;
+        return loggedCompany + " trading as " + tradingname;
     },
 
     fiscalYearEnding: () => {

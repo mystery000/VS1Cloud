@@ -11147,7 +11147,7 @@ Template.employeescard.helpers({
     },
     formatPrice( amount ){
         let utilityService = new UtilityService();
-        if( isNaN(amount) ){
+        if( isNaN(amount) || !amount){
             amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
             amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
         }
