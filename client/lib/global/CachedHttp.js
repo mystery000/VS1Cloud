@@ -183,6 +183,6 @@ class CachedHttp {
 export default CachedHttp = new CachedHttp({
   limit: 1,
   debug: Meteor.isDevelopment,
-  endpointPrefix: "cached_http/",
+  endpointPrefix: Meteor.isDevelopment ? "cached_http/dev/" : "cached_http/",
 });
 
