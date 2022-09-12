@@ -1187,10 +1187,20 @@ Template.generalledger.helpers({
     } else if (item.type === 'Stock Transfer') {
       return '#noInfoFound';
     } else if (item.type === 'Stock Adjustment') {
-      return '#noInfoFound';
+      return '/stockadjustmentcard?id=' + item.paymentId;
     } else if (item.type === 'Fixed Asset Depreciation') {
       return '#noInfoFound';
     }else if (item.type === 'Cash Sale') {
+      return '#noInfoFound';
+    } else if (item.type === 'Journal Entry') {
+      return '#noInfoFound';
+    } else if (item.type === 'Payroll Accrued Leave') {
+      return '#noInfoFound';
+    } else if (item.type === 'Payroll Nett Wages') {
+      return '#noInfoFound';
+    } else if (item.type === 'Payroll PAYG Tax') {
+      return '#noInfoFound';
+    } else if (item.type === 'Payroll Superannuation') {
       return '#noInfoFound';
     } else {
       return '#noInfoFound';
