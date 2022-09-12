@@ -12,6 +12,9 @@ import { Random } from 'meteor/random';
 import { Session } from 'meteor/session';
 import f from "jspdf";
 import { template } from "lodash";
+import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
+import LoadingOverlay from "../../LoadingOverlay";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -246,14 +249,14 @@ Template.payrollrules.onRendered(function() {
                         $('#changeLogo').show();
 
             
-                    setTimeout(function () { $('.fullScreenSpin').css('display', 'none');},2000);
+                    setTimeout(function () { LoadingOverlay.hide();},2000);
 
                   }
 
 
                 
                  }).catch(function (err) {
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
                   });
                 }else{
 
@@ -300,7 +303,7 @@ Template.payrollrules.onRendered(function() {
                         $('#removeLogo').show();
                         $('#changeLogo').show();
                         
-                        setTimeout(function () { $('.fullScreenSpin').css('display', 'none');},2000);
+                        setTimeout(function () { LoadingOverlay.hide();},2000);
                             
                         }
 
@@ -354,7 +357,7 @@ Template.payrollrules.onRendered(function() {
                     $('#uploadedImage').attr('height','100%');
                     $('#removeLogo').show();
                     $('#changeLogo').show();
-                    setTimeout(function () { $('.fullScreenSpin').css('display', 'none');},2000);
+                    setTimeout(function () { LoadingOverlay.hide();},2000);
                 }
                
             
@@ -513,11 +516,11 @@ Template.payrollrules.onRendered(function() {
                                                 $("#tblAlowances").dataTable().fnPageChange('last');
                                               }, 400);
 
-                                              $('.fullScreenSpin').css('display', 'none');
+                                              LoadingOverlay.hide();
 
 
                                   }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
+                                      LoadingOverlay.hide();
                                   });
 
                               });
@@ -543,22 +546,22 @@ Template.payrollrules.onRendered(function() {
                     let dataLenght = settings._iDisplayLength;
                     splashArrayAllowanceList = [];
                     if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
 
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         } else {
                             sideBarService.getAllowance(dataLenght, 0).then(function (dataNonBo) {
 
                                 addVS1Data('TAllowance', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }
                     }
@@ -572,9 +575,9 @@ Template.payrollrules.onRendered(function() {
 
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-              $('.fullScreenSpin').css('display', 'none');
+              LoadingOverlay.hide();
           }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
           });
         }else{
 
@@ -721,11 +724,11 @@ Template.payrollrules.onRendered(function() {
                                             $("#tblAlowances").dataTable().fnPageChange('last');
                                           }, 400);
 
-                                          $('.fullScreenSpin').css('display', 'none');
+                                          LoadingOverlay.hide();
 
 
                               }).catch(function (err) {
-                                  $('.fullScreenSpin').css('display', 'none');
+                                  LoadingOverlay.hide();
                               });
 
                           });
@@ -751,22 +754,22 @@ Template.payrollrules.onRendered(function() {
                 let dataLenght = settings._iDisplayLength;
                 splashArrayAllowanceList = [];
                 if (dataLenght == -1) {
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
 
                 } else {
                     if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                     } else {
                         sideBarService.getAllowance(dataLenght, 0).then(function (dataNonBo) {
 
                             addVS1Data('TAllowance', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                 templateObject.resetData(dataNonBo);
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }).catch(function (err) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     }
                 }
@@ -779,7 +782,7 @@ Template.payrollrules.onRendered(function() {
           }, 0);
 
           $('div.dataTables_filter input').addClass('form-control form-control-sm');
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
 
         }
     }).catch(function(err) {
@@ -925,11 +928,11 @@ Template.payrollrules.onRendered(function() {
                                             $("#tblAlowances").dataTable().fnPageChange('last');
                                           }, 400);
 
-                                          $('.fullScreenSpin').css('display', 'none');
+                                          LoadingOverlay.hide();
 
 
                               }).catch(function (err) {
-                                  $('.fullScreenSpin').css('display', 'none');
+                                  LoadingOverlay.hide();
                               });
 
                           });
@@ -955,22 +958,22 @@ Template.payrollrules.onRendered(function() {
                 let dataLenght = settings._iDisplayLength;
                 splashArrayAllowanceList = [];
                 if (dataLenght == -1) {
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
 
                 } else {
                     if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                     } else {
                         sideBarService.getAllowance(dataLenght, 0).then(function (dataNonBo) {
 
                             addVS1Data('TAllowance', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                 templateObject.resetData(dataNonBo);
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }).catch(function (err) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     }
                 }
@@ -984,9 +987,9 @@ Template.payrollrules.onRendered(function() {
 
           $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
       }).catch(function (err) {
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
       });
     });
     };
@@ -1148,11 +1151,11 @@ Template.payrollrules.onRendered(function() {
                                                 $("#tblDeductions").dataTable().fnPageChange('last');
                                               }, 400);
 
-                                              $('.fullScreenSpin').css('display', 'none');
+                                              LoadingOverlay.hide();
 
 
                                   }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
+                                      LoadingOverlay.hide();
                                   });
 
                               });
@@ -1178,22 +1181,22 @@ Template.payrollrules.onRendered(function() {
                     let dataLenght = settings._iDisplayLength;
                     splashArrayDeductionList = [];
                     if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
 
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         } else {
                             sideBarService.getDeduction(dataLenght, 0).then(function (dataNonBo) {
 
                                 addVS1Data('TDeduction', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }
                     }
@@ -1207,9 +1210,9 @@ Template.payrollrules.onRendered(function() {
 
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-              $('.fullScreenSpin').css('display', 'none');
+              LoadingOverlay.hide();
           }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
           });
         }else{
 
@@ -1367,11 +1370,11 @@ Template.payrollrules.onRendered(function() {
                                             $("#tblDeductions").dataTable().fnPageChange('last');
                                           }, 400);
 
-                                          $('.fullScreenSpin').css('display', 'none');
+                                          LoadingOverlay.hide();
 
 
                               }).catch(function (err) {
-                                  $('.fullScreenSpin').css('display', 'none');
+                                  LoadingOverlay.hide();
                               });
 
                           });
@@ -1397,22 +1400,22 @@ Template.payrollrules.onRendered(function() {
                 let dataLenght = settings._iDisplayLength;
                 splashArrayDeductionList = [];
                 if (dataLenght == -1) {
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
 
                 } else {
                     if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                     } else {
                         sideBarService.getDeduction(dataLenght, 0).then(function (dataNonBo) {
 
                             addVS1Data('TDeduction', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                 templateObject.resetData(dataNonBo);
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }).catch(function (err) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     }
                 }
@@ -1425,7 +1428,7 @@ Template.payrollrules.onRendered(function() {
           }, 0);
 
           $('div.dataTables_filter input').addClass('form-control form-control-sm');
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
 
         }
     }).catch(function(err) {
@@ -1582,11 +1585,11 @@ Template.payrollrules.onRendered(function() {
                                             $("#tblDeductions").dataTable().fnPageChange('last');
                                           }, 400);
 
-                                          $('.fullScreenSpin').css('display', 'none');
+                                          LoadingOverlay.hide();
 
 
                               }).catch(function (err) {
-                                  $('.fullScreenSpin').css('display', 'none');
+                                  LoadingOverlay.hide();
                               });
 
                           });
@@ -1612,22 +1615,22 @@ Template.payrollrules.onRendered(function() {
                 let dataLenght = settings._iDisplayLength;
                 splashArrayDeductionList = [];
                 if (dataLenght == -1) {
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
 
                 } else {
                     if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                     } else {
                         sideBarService.getDeduction(dataLenght, 0).then(function (dataNonBo) {
 
                             addVS1Data('TDeduction', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                 templateObject.resetData(dataNonBo);
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }).catch(function (err) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     }
                 }
@@ -1641,548 +1644,731 @@ Template.payrollrules.onRendered(function() {
 
           $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
       }).catch(function (err) {
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
       });
     });
     };
     templateObject.getAllDeductions();
 
-    templateObject.getCalenders = function(){
-        getVS1Data('TPayrollCalendars').then(function(dataObject) {
+    templateObject.getCalenders = async () => {
+        LoadingOverlay.show();
 
-            if (dataObject.length == 0) {
-              sideBarService.getCalender(initialBaseDataLoad, 0).then(function (data) {
-
-                  addVS1Data('TPayrollCalendars', JSON.stringify(data));
-                  let lineItems = [];
-                  let lineItemObj = {};
-                  for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-                      var dataListAllowance = [
-                          data.tpayrollcalendars[i].fields.ID || '',
-                          data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-                          data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-                          moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
-                          moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
-                          '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                      ];
-
-                      splashArrayCalenderList.push(dataListAllowance);
-                  }
-
-
-
-
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-                  setTimeout(function () {
-                      $('#tblPayCalendars').DataTable({
-
-                          data: splashArrayCalenderList,
-                          "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                          columnDefs: [
-                              {
-                                className: "colCalenderID hiddenColumn",
-                                "targets": [0]
-                              },
-                              {
-                                  className: "colPayCalendarName",
-                                  "targets": [1]
-                              },
-                              {
-                                  className: "colPayPeriod",
-                                  "targets": [2]
-                              },
-                              {
-                                  className: "colNextPayPeriod",
-                                  "targets": [3]
-                              },
-                              {
-                                  className: "colNextPaymentDate",
-                                  "targets": [4]
-                              },
-                              {
-                                  className: "colDeleteCalenders",
-                                  "orderable": false,
-                                  "targets": -1
-                              }
-                          ],
-                          select: true,
-                          destroy: true,
-                          colReorder: true,
-                          pageLength: initialDatatableLoad,
-                          lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                          info: true,
-                          responsive: true,
-                          "order": [[0, "asc"]],
-                          action: function () {
-                              $('#tblPayCalendars').DataTable().ajax.reload();
-                          },
-                          "fnDrawCallback": function (oSettings) {
-                              $('.paginate_button.page-item').removeClass('disabled');
-                              $('#tblPayCalendars_ellipsis').addClass('disabled');
-                              if (oSettings._iDisplayLength == -1) {
-                                  if (oSettings.fnRecordsDisplay() > 150) {
-
-                                  }
-                              } else {
-
-                              }
-                              if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                  $('.paginate_button.page-item.next').addClass('disabled');
-                              }
-
-                              $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                  .on('click', function () {
-                                      $('.fullScreenSpin').css('display', 'inline-block');
-                                      var splashArrayCalenderListDupp = new Array();
-                                      let dataLenght = oSettings._iDisplayLength;
-                                      let customerSearch = $('#tblPayCalendars_filter input').val();
-
-                                      sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-                                          for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-                                            var dataListAllowance = [
-                                                data.tpayrollcalendars[i].fields.ID || '',
-                                                data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-                                                data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-                                                moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
-                                                moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
-                                                '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                            ];
-
-                                            splashArrayCalenderList.push(dataListAllowance);
-                                        }
-
-                                                  let uniqueChars = [...new Set(splashArrayCalenderList)];
-                                                  var datatable = $('#tblPayCalendars').DataTable();
-                                                  datatable.clear();
-                                                  datatable.rows.add(uniqueChars);
-                                                  datatable.draw(false);
-                                                  setTimeout(function () {
-                                                    $("#tblPayCalendars").dataTable().fnPageChange('last');
-                                                  }, 400);
-
-                                                  $('.fullScreenSpin').css('display', 'none');
-
-
-                                      }).catch(function (err) {
-                                          $('.fullScreenSpin').css('display', 'none');
-                                      });
-
-                                  });
-                              setTimeout(function () {
-                                  MakeNegative();
-                              }, 100);
-                          },
-                          "fnInitComplete": function () {
-
-                              $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
-                              $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
-
-                          }
-
-                      }).on('page', function () {
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-
-                      }).on('column-reorder', function () {
-
-                      }).on('length.dt', function (e, settings, len) {
-                        //$('.fullScreenSpin').css('display', 'inline-block');
-                        let dataLenght = settings._iDisplayLength;
-                        splashArrayCalenderList = [];
-                        if (dataLenght == -1) {
-                          $('.fullScreenSpin').css('display', 'none');
-
-                        } else {
-                            if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            } else {
-                                sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
-
-                                    addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                        templateObject.resetData(dataNonBo);
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-                            }
-                        }
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-                      });
-
-
-                  }, 0);
-
-                  $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-                  $('.fullScreenSpin').css('display', 'none');
-              }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-              });
-            }else{
-
-              let data = JSON.parse(dataObject[0].data);
-
-              let useData = data;
-              let lineItems = [];
-              let lineItemObj = {};
-              for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-                var dataListAllowance = [
-                    data.tpayrollcalendars[i].fields.ID || '',
-                    data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-                    data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-                    moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
-                    moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
-                    '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                ];
-
-                splashArrayCalenderList.push(dataListAllowance);
+        let _data = await CachedHttp.get(erpObject.TPayrollCalendars, async () => {
+            return await sideBarService.getCalender(initialBaseDataLoad, 0);
+        }, {
+            useIndexDb: true,
+            useLocalStorage: false,
+            validate: (cachedResponse) => {
+                return false;
             }
 
-
-
-
-              setTimeout(function () {
-                  MakeNegative();
-              }, 100);
-              setTimeout(function () {
-                  $('#tblPayCalendars').DataTable({
-
-                      data: splashArrayCalenderList,
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      columnDefs: [
-                        {
-                          className: "colCalenderID hiddenColumn",
-                          "targets": [0]
-                        },
-                        {
-                            className: "colPayCalendarName",
-                            "targets": [1]
-                        },
-                        {
-                            className: "colPayPeriod",
-                            "targets": [2]
-                        },
-                        {
-                            className: "colNextPayPeriod",
-                            "targets": [3]
-                        },
-                        {
-                            className: "colNextPaymentDate",
-                            "targets": [4]
-                        },
-                        {
-                            className: "colDeleteCalenders",
-                            "orderable": false,
-                            "targets": -1
-                        }
-                    ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                      info: true,
-                      responsive: true,
-                      "order": [[0, "asc"]],
-                      action: function () {
-                          $('#tblPayCalendars').DataTable().ajax.reload();
-                      },
-                      "fnDrawCallback": function (oSettings) {
-                          $('.paginate_button.page-item').removeClass('disabled');
-                          $('#tblPayCalendars_ellipsis').addClass('disabled');
-                          if (oSettings._iDisplayLength == -1) {
-                              if (oSettings.fnRecordsDisplay() > 150) {
-
-                              }
-                          } else {
-
-                          }
-                          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                              $('.paginate_button.page-item.next').addClass('disabled');
-                          }
-
-                          $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                              .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
-                                  var splashArrayCalenderListDupp = new Array();
-                                  let dataLenght = oSettings._iDisplayLength;
-                                  let customerSearch = $('#tblPayCalendars_filter input').val();
-
-                                  sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-                                    for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-                                        var dataListAllowance = [
-                                            data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-                                            data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-                                            data.tpayrollcalendars[i].fields.PayrollCalendarStartDate || '',
-                                            data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate || '',
-                                            '<td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                        ];
-
-                                        splashArrayCalenderList.push(dataListAllowance);
-                                    }
-
-                                              let uniqueChars = [...new Set(splashArrayCalenderList)];
-                                              var datatable = $('#tblPayCalendars').DataTable();
-                                              datatable.clear();
-                                              datatable.rows.add(uniqueChars);
-                                              datatable.draw(false);
-                                              setTimeout(function () {
-                                                $("#tblPayCalendars").dataTable().fnPageChange('last');
-                                              }, 400);
-
-                                              $('.fullScreenSpin').css('display', 'none');
-
-
-                                  }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
-                                  });
-
-                              });
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-                      },
-                      "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
-                          $("<button class='btn btn-primary btnRefreshcalender' type='button' id='btnRefreshcalender' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayCalendars_filter");
-
-                      }
-
-                  }).on('page', function () {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-
-                  }).on('column-reorder', function () {
-
-                  }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
-                    let dataLenght = settings._iDisplayLength;
-                    splashArrayCalenderList = [];
-                    if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
-
-                    } else {
-                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        } else {
-                            sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
-
-                                addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                    templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
-                        }
-                    }
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  });
-
-
-              }, 0);
-
-              $('div.dataTables_filter input').addClass('form-control form-control-sm');
-              $('.fullScreenSpin').css('display', 'none');
-
-            }
-        }).catch(function(err) {
-          sideBarService.getCalender(initialBaseDataLoad, 0).then(function (data) {
-              addVS1Data('TPayrollCalendars', JSON.stringify(data));
-              let lineItems = [];
-              let lineItemObj = {};
-              for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-                var dataListAllowance = [
-                    data.tpayrollcalendars[i].fields.ID || '',
-                    data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-                    data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-                    moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
-                    moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
-                    '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                ];
-
-                splashArrayCalenderList.push(dataListAllowance);
-            }
-
-
-              setTimeout(function () {
-                  MakeNegative();
-              }, 100);
-              setTimeout(function () {
-                  $('#tblPayCalendars').DataTable({
-
-                      data: splashArrayCalenderList,
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      columnDefs: [
-                        {
-                          className: "colCalenderID hiddenColumn",
-                          "targets": [0]
-                        },
-                        {
-                            className: "colPayCalendarName",
-                            "targets": [1]
-                        },
-                        {
-                            className: "colPayPeriod",
-                            "targets": [2]
-                        },
-                        {
-                            className: "colNextPayPeriod",
-                            "targets": [3]
-                        },
-                        {
-                            className: "colNextPaymentDate",
-                            "targets": [4]
-                        },
-                        {
-                            className: "colDeleteCalenders",
-                            "orderable": false,
-                            "targets": -1
-                        }
-                    ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                      info: true,
-                      responsive: true,
-                      "order": [[0, "asc"]],
-                      action: function () {
-                          $('#tblPayCalendars').DataTable().ajax.reload();
-                      },
-                      "fnDrawCallback": function (oSettings) {
-                          $('.paginate_button.page-item').removeClass('disabled');
-                          $('#tblPayCalendars_ellipsis').addClass('disabled');
-                          if (oSettings._iDisplayLength == -1) {
-                              if (oSettings.fnRecordsDisplay() > 150) {
-
-                              }
-                          } else {
-
-                          }
-                          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                              $('.paginate_button.page-item.next').addClass('disabled');
-                          }
-
-                          $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                              .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
-                                  var splashArrayCalenderListDupp = new Array();
-                                  let dataLenght = oSettings._iDisplayLength;
-                                  let customerSearch = $('#tblPayCalendars_filter input').val();
-
-                                  sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-                                    for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-                                        var dataListAllowance = [
-                                            data.tpayrollcalendars[i].fields.ID || '',
-                                            data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-                                            data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-                                            moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
-                                            moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
-                                            '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                        ];
-
-                                        splashArrayCalenderList.push(dataListAllowance);
-                                    }
-
-                                         let uniqueChars = [...new Set(splashArrayCalenderList)];
-                                         var datatable = $('#tblPayCalendars').DataTable();
-                                              datatable.clear();
-                                              datatable.rows.add(uniqueChars);
-                                              datatable.draw(false);
-                                              setTimeout(function () {
-                                                $("#tblPayCalendars").dataTable().fnPageChange('last');
-                                              }, 400);
-
-                                              $('.fullScreenSpin').css('display', 'none');
-
-
-                                  }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
-                                  });
-
-                              });
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-                      },
-                      "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddNewPayCalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
-                          $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshCalender' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayCalendars_filter");
-
-                      }
-
-                  }).on('page', function () {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-
-                  }).on('column-reorder', function () {
-
-                  }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
-                    let dataLenght = settings._iDisplayLength;
-                    splashArrayCalenderList = [];
-                    if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
-
-                    } else {
-                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        } else {
-                            sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
-
-                                addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                    templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
-                        }
-                    }
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  });
-
-
-              }, 0);
-
-              $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-              $('.fullScreenSpin').css('display', 'none');
-          }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
-          });
         });
+
+        let data = _data.response;
+
+        for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+            var dataListAllowance = [
+                data.tpayrollcalendars[i].fields.ID || '',
+                data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+                data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+                moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+                moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+                '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+            ];
+
+            splashArrayCalenderList.push(dataListAllowance);
+        }
+
+        setTimeout(function () {
+            MakeNegative();
+        }, 100);
+        setTimeout(function () {
+            $('#tblPayCalendars').DataTable({
+
+                data: splashArrayCalenderList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                      className: "colCalenderID hiddenColumn",
+                      "targets": [0]
+                    },
+                    {
+                        className: "colPayCalendarName",
+                        "targets": [1]
+                    },
+                    {
+                        className: "colPayPeriod",
+                        "targets": [2]
+                    },
+                    {
+                        className: "colNextPayPeriod",
+                        "targets": [3]
+                    },
+                    {
+                        className: "colNextPaymentDate",
+                        "targets": [4]
+                    },
+                    {
+                        className: "colDeleteCalenders",
+                        "orderable": false,
+                        "targets": -1
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[0, "asc"]],
+                action: function () {
+                    $('#tblPayCalendars').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#tblPayCalendars_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                        .on('click', function () {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            var splashArrayCalenderListDupp = new Array();
+                            let dataLenght = oSettings._iDisplayLength;
+                            let customerSearch = $('#tblPayCalendars_filter input').val();
+
+                            sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+
+                                for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+                                  var dataListAllowance = [
+                                      data.tpayrollcalendars[i].fields.ID || '',
+                                      data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+                                      data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+                                      moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+                                      moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+                                      '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                                  ];
+
+                                  splashArrayCalenderList.push(dataListAllowance);
+                              }
+
+                                        let uniqueChars = [...new Set(splashArrayCalenderList)];
+                                        var datatable = $('#tblPayCalendars').DataTable();
+                                        datatable.clear();
+                                        datatable.rows.add(uniqueChars);
+                                        datatable.draw(false);
+                                        setTimeout(function () {
+                                          $("#tblPayCalendars").dataTable().fnPageChange('last');
+                                        }, 400);
+
+                                        LoadingOverlay.hide();
+
+
+                            }).catch(function (err) {
+                                LoadingOverlay.hide();
+                            });
+
+                        });
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                },
+                "fnInitComplete": function () {
+
+                    $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
+                    $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
+
+                }
+
+            }).on('page', function () {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+
+            }).on('column-reorder', function () {
+
+            }).on('length.dt', function (e, settings, len) {
+              //$('.fullScreenSpin').css('display', 'inline-block');
+              let dataLenght = settings._iDisplayLength;
+              splashArrayCalenderList = [];
+              if (dataLenght == -1) {
+                LoadingOverlay.hide();
+
+              } else {
+                  if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                      LoadingOverlay.hide();
+                  } else {
+                      sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
+
+                          addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                              templateObject.resetData(dataNonBo);
+                              LoadingOverlay.hide();
+                          }).catch(function (err) {
+                              LoadingOverlay.hide();
+                          });
+                      }).catch(function (err) {
+                          LoadingOverlay.hide();
+                      });
+                  }
+              }
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            });
+
+
+        }, 0);
+
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+        LoadingOverlay.hide();
+
+
+
+        // getVS1Data('TPayrollCalendars').then(function(dataObject) {
+
+        //     if (dataObject.length == 0) {
+        //       sideBarService.getCalender(initialBaseDataLoad, 0).then(function (data) {
+
+        //           addVS1Data('TPayrollCalendars', JSON.stringify(data));
+        //           let lineItems = [];
+        //           let lineItemObj = {};
+
+        //           for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+        //               var dataListAllowance = [
+        //                   data.tpayrollcalendars[i].fields.ID || '',
+        //                   data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+        //                   data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+        //                   moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+        //                   moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+        //                   '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        //               ];
+
+        //               splashArrayCalenderList.push(dataListAllowance);
+        //           }
+
+        //           setTimeout(function () {
+        //               MakeNegative();
+        //           }, 100);
+        //           setTimeout(function () {
+        //               $('#tblPayCalendars').DataTable({
+
+        //                   data: splashArrayCalenderList,
+        //                   "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        //                   columnDefs: [
+        //                       {
+        //                         className: "colCalenderID hiddenColumn",
+        //                         "targets": [0]
+        //                       },
+        //                       {
+        //                           className: "colPayCalendarName",
+        //                           "targets": [1]
+        //                       },
+        //                       {
+        //                           className: "colPayPeriod",
+        //                           "targets": [2]
+        //                       },
+        //                       {
+        //                           className: "colNextPayPeriod",
+        //                           "targets": [3]
+        //                       },
+        //                       {
+        //                           className: "colNextPaymentDate",
+        //                           "targets": [4]
+        //                       },
+        //                       {
+        //                           className: "colDeleteCalenders",
+        //                           "orderable": false,
+        //                           "targets": -1
+        //                       }
+        //                   ],
+        //                   select: true,
+        //                   destroy: true,
+        //                   colReorder: true,
+        //                   pageLength: initialDatatableLoad,
+        //                   lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+        //                   info: true,
+        //                   responsive: true,
+        //                   "order": [[0, "asc"]],
+        //                   action: function () {
+        //                       $('#tblPayCalendars').DataTable().ajax.reload();
+        //                   },
+        //                   "fnDrawCallback": function (oSettings) {
+        //                       $('.paginate_button.page-item').removeClass('disabled');
+        //                       $('#tblPayCalendars_ellipsis').addClass('disabled');
+        //                       if (oSettings._iDisplayLength == -1) {
+        //                           if (oSettings.fnRecordsDisplay() > 150) {
+
+        //                           }
+        //                       } else {
+
+        //                       }
+        //                       if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+        //                           $('.paginate_button.page-item.next').addClass('disabled');
+        //                       }
+
+        //                       $('.paginate_button.next:not(.disabled)', this.api().table().container())
+        //                           .on('click', function () {
+        //                               $('.fullScreenSpin').css('display', 'inline-block');
+        //                               var splashArrayCalenderListDupp = new Array();
+        //                               let dataLenght = oSettings._iDisplayLength;
+        //                               let customerSearch = $('#tblPayCalendars_filter input').val();
+
+        //                               sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+
+        //                                   for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+        //                                     var dataListAllowance = [
+        //                                         data.tpayrollcalendars[i].fields.ID || '',
+        //                                         data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+        //                                         data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+        //                                         moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+        //                                         moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+        //                                         '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        //                                     ];
+
+        //                                     splashArrayCalenderList.push(dataListAllowance);
+        //                                 }
+
+        //                                           let uniqueChars = [...new Set(splashArrayCalenderList)];
+        //                                           var datatable = $('#tblPayCalendars').DataTable();
+        //                                           datatable.clear();
+        //                                           datatable.rows.add(uniqueChars);
+        //                                           datatable.draw(false);
+        //                                           setTimeout(function () {
+        //                                             $("#tblPayCalendars").dataTable().fnPageChange('last');
+        //                                           }, 400);
+
+        //                                           LoadingOverlay.hide();
+
+
+        //                               }).catch(function (err) {
+        //                                   LoadingOverlay.hide();
+        //                               });
+
+        //                           });
+        //                       setTimeout(function () {
+        //                           MakeNegative();
+        //                       }, 100);
+        //                   },
+        //                   "fnInitComplete": function () {
+
+        //                       $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
+        //                       $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
+
+        //                   }
+
+        //               }).on('page', function () {
+        //                   setTimeout(function () {
+        //                       MakeNegative();
+        //                   }, 100);
+
+        //               }).on('column-reorder', function () {
+
+        //               }).on('length.dt', function (e, settings, len) {
+        //                 //$('.fullScreenSpin').css('display', 'inline-block');
+        //                 let dataLenght = settings._iDisplayLength;
+        //                 splashArrayCalenderList = [];
+        //                 if (dataLenght == -1) {
+        //                   LoadingOverlay.hide();
+
+        //                 } else {
+        //                     if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+        //                         LoadingOverlay.hide();
+        //                     } else {
+        //                         sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
+
+        //                             addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
+        //                                 templateObject.resetData(dataNonBo);
+        //                                 LoadingOverlay.hide();
+        //                             }).catch(function (err) {
+        //                                 LoadingOverlay.hide();
+        //                             });
+        //                         }).catch(function (err) {
+        //                             LoadingOverlay.hide();
+        //                         });
+        //                     }
+        //                 }
+        //                   setTimeout(function () {
+        //                       MakeNegative();
+        //                   }, 100);
+        //               });
+
+
+        //           }, 0);
+
+        //           $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+        //           LoadingOverlay.hide();
+        //       }).catch(function (err) {
+        //         LoadingOverlay.hide();
+        //       });
+        //     }else{
+
+        //       let data = JSON.parse(dataObject[0].data);
+
+        //       let useData = data;
+        //       let lineItems = [];
+        //       let lineItemObj = {};
+        //       for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+        //         var dataListAllowance = [
+        //             data.tpayrollcalendars[i].fields.ID || '',
+        //             data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+        //             data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+        //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+        //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+        //             '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        //         ];
+
+        //         splashArrayCalenderList.push(dataListAllowance);
+        //     }
+
+
+
+
+        //       setTimeout(function () {
+        //           MakeNegative();
+        //       }, 100);
+        //       setTimeout(function () {
+        //           $('#tblPayCalendars').DataTable({
+
+        //               data: splashArrayCalenderList,
+        //               "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        //               columnDefs: [
+        //                 {
+        //                   className: "colCalenderID hiddenColumn",
+        //                   "targets": [0]
+        //                 },
+        //                 {
+        //                     className: "colPayCalendarName",
+        //                     "targets": [1]
+        //                 },
+        //                 {
+        //                     className: "colPayPeriod",
+        //                     "targets": [2]
+        //                 },
+        //                 {
+        //                     className: "colNextPayPeriod",
+        //                     "targets": [3]
+        //                 },
+        //                 {
+        //                     className: "colNextPaymentDate",
+        //                     "targets": [4]
+        //                 },
+        //                 {
+        //                     className: "colDeleteCalenders",
+        //                     "orderable": false,
+        //                     "targets": -1
+        //                 }
+        //             ],
+        //               select: true,
+        //               destroy: true,
+        //               colReorder: true,
+        //               pageLength: initialDatatableLoad,
+        //               lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+        //               info: true,
+        //               responsive: true,
+        //               "order": [[0, "asc"]],
+        //               action: function () {
+        //                   $('#tblPayCalendars').DataTable().ajax.reload();
+        //               },
+        //               "fnDrawCallback": function (oSettings) {
+        //                   $('.paginate_button.page-item').removeClass('disabled');
+        //                   $('#tblPayCalendars_ellipsis').addClass('disabled');
+        //                   if (oSettings._iDisplayLength == -1) {
+        //                       if (oSettings.fnRecordsDisplay() > 150) {
+
+        //                       }
+        //                   } else {
+
+        //                   }
+        //                   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+        //                       $('.paginate_button.page-item.next').addClass('disabled');
+        //                   }
+
+        //                   $('.paginate_button.next:not(.disabled)', this.api().table().container())
+        //                       .on('click', function () {
+        //                           $('.fullScreenSpin').css('display', 'inline-block');
+        //                           var splashArrayCalenderListDupp = new Array();
+        //                           let dataLenght = oSettings._iDisplayLength;
+        //                           let customerSearch = $('#tblPayCalendars_filter input').val();
+
+        //                           sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+
+        //                             for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+        //                                 var dataListAllowance = [
+        //                                     data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+        //                                     data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+        //                                     data.tpayrollcalendars[i].fields.PayrollCalendarStartDate || '',
+        //                                     data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate || '',
+        //                                     '<td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        //                                 ];
+
+        //                                 splashArrayCalenderList.push(dataListAllowance);
+        //                             }
+
+        //                                       let uniqueChars = [...new Set(splashArrayCalenderList)];
+        //                                       var datatable = $('#tblPayCalendars').DataTable();
+        //                                       datatable.clear();
+        //                                       datatable.rows.add(uniqueChars);
+        //                                       datatable.draw(false);
+        //                                       setTimeout(function () {
+        //                                         $("#tblPayCalendars").dataTable().fnPageChange('last');
+        //                                       }, 400);
+
+        //                                       LoadingOverlay.hide();
+
+
+        //                           }).catch(function (err) {
+        //                               LoadingOverlay.hide();
+        //                           });
+
+        //                       });
+        //                   setTimeout(function () {
+        //                       MakeNegative();
+        //                   }, 100);
+        //               },
+        //               "fnInitComplete": function () {
+        //                   $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
+        //                   $("<button class='btn btn-primary btnRefreshcalender' type='button' id='btnRefreshcalender' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayCalendars_filter");
+
+        //               }
+
+        //           }).on('page', function () {
+        //               setTimeout(function () {
+        //                   MakeNegative();
+        //               }, 100);
+
+        //           }).on('column-reorder', function () {
+
+        //           }).on('length.dt', function (e, settings, len) {
+        //             //$('.fullScreenSpin').css('display', 'inline-block');
+        //             let dataLenght = settings._iDisplayLength;
+        //             splashArrayCalenderList = [];
+        //             if (dataLenght == -1) {
+        //               LoadingOverlay.hide();
+
+        //             } else {
+        //                 if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+        //                     LoadingOverlay.hide();
+        //                 } else {
+        //                     sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
+
+        //                         addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
+        //                             templateObject.resetData(dataNonBo);
+        //                             LoadingOverlay.hide();
+        //                         }).catch(function (err) {
+        //                             LoadingOverlay.hide();
+        //                         });
+        //                     }).catch(function (err) {
+        //                         LoadingOverlay.hide();
+        //                     });
+        //                 }
+        //             }
+        //               setTimeout(function () {
+        //                   MakeNegative();
+        //               }, 100);
+        //           });
+
+
+        //       }, 0);
+
+        //       $('div.dataTables_filter input').addClass('form-control form-control-sm');
+        //       LoadingOverlay.hide();
+
+        //     }
+        // }).catch(function(err) {
+        //   sideBarService.getCalender(initialBaseDataLoad, 0).then(function (data) {
+        //       addVS1Data('TPayrollCalendars', JSON.stringify(data));
+        //       let lineItems = [];
+        //       let lineItemObj = {};
+        //       for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+        //         var dataListAllowance = [
+        //             data.tpayrollcalendars[i].fields.ID || '',
+        //             data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+        //             data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+        //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+        //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+        //             '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        //         ];
+
+        //         splashArrayCalenderList.push(dataListAllowance);
+        //     }
+
+
+        //       setTimeout(function () {
+        //           MakeNegative();
+        //       }, 100);
+        //       setTimeout(function () {
+        //           $('#tblPayCalendars').DataTable({
+
+        //               data: splashArrayCalenderList,
+        //               "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        //               columnDefs: [
+        //                 {
+        //                   className: "colCalenderID hiddenColumn",
+        //                   "targets": [0]
+        //                 },
+        //                 {
+        //                     className: "colPayCalendarName",
+        //                     "targets": [1]
+        //                 },
+        //                 {
+        //                     className: "colPayPeriod",
+        //                     "targets": [2]
+        //                 },
+        //                 {
+        //                     className: "colNextPayPeriod",
+        //                     "targets": [3]
+        //                 },
+        //                 {
+        //                     className: "colNextPaymentDate",
+        //                     "targets": [4]
+        //                 },
+        //                 {
+        //                     className: "colDeleteCalenders",
+        //                     "orderable": false,
+        //                     "targets": -1
+        //                 }
+        //             ],
+        //               select: true,
+        //               destroy: true,
+        //               colReorder: true,
+        //               pageLength: initialDatatableLoad,
+        //               lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+        //               info: true,
+        //               responsive: true,
+        //               "order": [[0, "asc"]],
+        //               action: function () {
+        //                   $('#tblPayCalendars').DataTable().ajax.reload();
+        //               },
+        //               "fnDrawCallback": function (oSettings) {
+        //                   $('.paginate_button.page-item').removeClass('disabled');
+        //                   $('#tblPayCalendars_ellipsis').addClass('disabled');
+        //                   if (oSettings._iDisplayLength == -1) {
+        //                       if (oSettings.fnRecordsDisplay() > 150) {
+
+        //                       }
+        //                   } else {
+
+        //                   }
+        //                   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+        //                       $('.paginate_button.page-item.next').addClass('disabled');
+        //                   }
+
+        //                   $('.paginate_button.next:not(.disabled)', this.api().table().container())
+        //                       .on('click', function () {
+        //                           $('.fullScreenSpin').css('display', 'inline-block');
+        //                           var splashArrayCalenderListDupp = new Array();
+        //                           let dataLenght = oSettings._iDisplayLength;
+        //                           let customerSearch = $('#tblPayCalendars_filter input').val();
+
+        //                           sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+
+        //                             for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+        //                                 var dataListAllowance = [
+        //                                     data.tpayrollcalendars[i].fields.ID || '',
+        //                                     data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+        //                                     data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+        //                                     moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+        //                                     moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+        //                                     '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        //                                 ];
+
+        //                                 splashArrayCalenderList.push(dataListAllowance);
+        //                             }
+
+        //                                  let uniqueChars = [...new Set(splashArrayCalenderList)];
+        //                                  var datatable = $('#tblPayCalendars').DataTable();
+        //                                       datatable.clear();
+        //                                       datatable.rows.add(uniqueChars);
+        //                                       datatable.draw(false);
+        //                                       setTimeout(function () {
+        //                                         $("#tblPayCalendars").dataTable().fnPageChange('last');
+        //                                       }, 400);
+
+        //                                       LoadingOverlay.hide();
+
+
+        //                           }).catch(function (err) {
+        //                               LoadingOverlay.hide();
+        //                           });
+
+        //                       });
+        //                   setTimeout(function () {
+        //                       MakeNegative();
+        //                   }, 100);
+        //               },
+        //               "fnInitComplete": function () {
+        //                   $("<button class='btn btn-primary btnAddNewPayCalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
+        //                   $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshCalender' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayCalendars_filter");
+
+        //               }
+
+        //           }).on('page', function () {
+        //               setTimeout(function () {
+        //                   MakeNegative();
+        //               }, 100);
+
+        //           }).on('column-reorder', function () {
+
+        //           }).on('length.dt', function (e, settings, len) {
+        //             //$('.fullScreenSpin').css('display', 'inline-block');
+        //             let dataLenght = settings._iDisplayLength;
+        //             splashArrayCalenderList = [];
+        //             if (dataLenght == -1) {
+        //               LoadingOverlay.hide();
+
+        //             } else {
+        //                 if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+        //                     LoadingOverlay.hide();
+        //                 } else {
+        //                     sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
+
+        //                         addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
+        //                             templateObject.resetData(dataNonBo);
+        //                             LoadingOverlay.hide();
+        //                         }).catch(function (err) {
+        //                             LoadingOverlay.hide();
+        //                         });
+        //                     }).catch(function (err) {
+        //                         LoadingOverlay.hide();
+        //                     });
+        //                 }
+        //             }
+        //               setTimeout(function () {
+        //                   MakeNegative();
+        //               }, 100);
+        //           });
+
+
+        //       }, 0);
+
+        //       $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+        //       LoadingOverlay.hide();
+        //   }).catch(function (err) {
+        //     LoadingOverlay.hide();
+        //   });
+        // });
     };
     templateObject.getCalenders();
 
@@ -2299,11 +2485,11 @@ Template.payrollrules.onRendered(function() {
                                                     $("#tblHolidays").dataTable().fnPageChange('last');
                                                   }, 400);
 
-                                                  $('.fullScreenSpin').css('display', 'none');
+                                                  LoadingOverlay.hide();
 
 
                                       }).catch(function (err) {
-                                          $('.fullScreenSpin').css('display', 'none');
+                                          LoadingOverlay.hide();
                                       });
 
                                   });
@@ -2330,22 +2516,22 @@ Template.payrollrules.onRendered(function() {
                         let dataLenght = settings._iDisplayLength;
                         splashArrayHolidayList = [];
                         if (dataLenght == -1) {
-                          $('.fullScreenSpin').css('display', 'none');
+                          LoadingOverlay.hide();
 
                         } else {
                             if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             } else {
                                 sideBarService.getHolidayData(dataLenght, 0).then(function (dataNonBo) {
 
                                     addVS1Data('TPayrollHolidays', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                         templateObject.resetData(dataNonBo);
-                                        $('.fullScreenSpin').css('display', 'none');
+                                        LoadingOverlay.hide();
                                     }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
+                                        LoadingOverlay.hide();
                                     });
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }
                         }
@@ -2359,9 +2545,9 @@ Template.payrollrules.onRendered(function() {
 
                   $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
               }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
               });
             }else{
 
@@ -2476,11 +2662,11 @@ Template.payrollrules.onRendered(function() {
                                                 $("#tblHolidays").dataTable().fnPageChange('last');
                                               }, 400);
 
-                                              $('.fullScreenSpin').css('display', 'none');
+                                              LoadingOverlay.hide();
 
 
                                   }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
+                                      LoadingOverlay.hide();
                                   });
 
                               });
@@ -2507,22 +2693,22 @@ Template.payrollrules.onRendered(function() {
                     let dataLenght = settings._iDisplayLength;
                     splashArrayHolidayList = [];
                     if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
 
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         } else {
                             sideBarService.getHolidayData(dataLenght, 0).then(function (dataNonBo) {
 
                                 addVS1Data('TPayrollHolidays', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }
                     }
@@ -2535,7 +2721,7 @@ Template.payrollrules.onRendered(function() {
               }, 0);
 
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
-              $('.fullScreenSpin').css('display', 'none');
+              LoadingOverlay.hide();
 
             }
         }).catch(function(err) {
@@ -2645,11 +2831,11 @@ Template.payrollrules.onRendered(function() {
                                                 $("#tblHolidays").dataTable().fnPageChange('last');
                                               }, 400);
 
-                                              $('.fullScreenSpin').css('display', 'none');
+                                              LoadingOverlay.hide();
 
 
                                   }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
+                                      LoadingOverlay.hide();
                                   });
 
                               });
@@ -2675,22 +2861,22 @@ Template.payrollrules.onRendered(function() {
                     let dataLenght = settings._iDisplayLength;
                     splashArrayCalenderList = [];
                     if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
 
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         } else {
                             sideBarService.getHolidayData(dataLenght, 0).then(function (dataNonBo) {
 
                                 addVS1Data('TPayrollHolidays', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }
                     }
@@ -2704,9 +2890,9 @@ Template.payrollrules.onRendered(function() {
 
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-              $('.fullScreenSpin').css('display', 'none');
+              LoadingOverlay.hide();
           }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
           });
         });
 
@@ -2854,11 +3040,11 @@ Template.payrollrules.onRendered(function() {
                       let dataLenght = settings._iDisplayLength;
                       splashArrayEarningList = [];
                       if (dataLenght == -1) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
       
                       } else {
                           if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                              $('.fullScreenSpin').css('display', 'none');
+                              LoadingOverlay.hide();
                           } else {
                            
                           }
@@ -2872,7 +3058,7 @@ Template.payrollrules.onRendered(function() {
                 }, 0);
       
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
 
             }
             else
@@ -3021,11 +3207,11 @@ Template.payrollrules.onRendered(function() {
                       let dataLenght = settings._iDisplayLength;
                       splashArrayEarningList = [];
                       if (dataLenght == -1) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
       
                       } else {
                           if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                              $('.fullScreenSpin').css('display', 'none');
+                              LoadingOverlay.hide();
                           } else {
                            
                           }
@@ -3039,7 +3225,7 @@ Template.payrollrules.onRendered(function() {
                 }, 0);
       
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
 
 
             }
@@ -3177,11 +3363,11 @@ Template.payrollrules.onRendered(function() {
                       let dataLenght = settings._iDisplayLength;
                       splashArrayLeaveList = [];
                       if (dataLenght == -1) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
   
                       } else {
                           if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                              $('.fullScreenSpin').css('display', 'none');
+                              LoadingOverlay.hide();
                           } else {
                            
                           }
@@ -3195,7 +3381,7 @@ Template.payrollrules.onRendered(function() {
                 }, 0);
   
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
 
             }
             else
@@ -3324,11 +3510,11 @@ Template.payrollrules.onRendered(function() {
                       let dataLenght = settings._iDisplayLength;
                       splashArrayLeaveList = [];
                       if (dataLenght == -1) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
   
                       } else {
                           if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                              $('.fullScreenSpin').css('display', 'none');
+                              LoadingOverlay.hide();
                           } else {
                            
                           }
@@ -3342,7 +3528,7 @@ Template.payrollrules.onRendered(function() {
                 }, 0);
   
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
 
 
             }
@@ -3482,11 +3668,11 @@ Template.payrollrules.onRendered(function() {
                                         setTimeout(function () {
                                         $("#tblLeave").dataTable().fnPageChange('last');
                                         }, 400);
-                                        $('.fullScreenSpin').css('display', 'none');
+                                        LoadingOverlay.hide();
 
 
                                       }).catch(function (err) {
-                                          $('.fullScreenSpin').css('display', 'none');
+                                          LoadingOverlay.hide();
                                       });
 
                                   });
@@ -3512,22 +3698,22 @@ Template.payrollrules.onRendered(function() {
                         let dataLenght = settings._iDisplayLength;
                         splashArrayLeaveList = [];
                         if (dataLenght == -1) {
-                          $('.fullScreenSpin').css('display', 'none');
+                          LoadingOverlay.hide();
 
                         } else {
                             if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             } else {
                                 sideBarService.getUnPaidLeave(dataLenght, 0).then(function (dataNonBo) {
 
                                     addVS1Data('TUnpaidLeave', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                         templateObject.resetData(dataNonBo);
-                                        $('.fullScreenSpin').css('display', 'none');
+                                        LoadingOverlay.hide();
                                     }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
+                                        LoadingOverlay.hide();
                                     });
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }
                         }
@@ -3541,9 +3727,9 @@ Template.payrollrules.onRendered(function() {
 
                   $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
               }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
               });
             }else{
 
@@ -3673,11 +3859,11 @@ Template.payrollrules.onRendered(function() {
                                                 $("#tblLeave").dataTable().fnPageChange('last');
                                               }, 400);
 
-                                              $('.fullScreenSpin').css('display', 'none');
+                                              LoadingOverlay.hide();
 
 
                                   }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
+                                      LoadingOverlay.hide();
                                   });
 
                               });
@@ -3703,22 +3889,22 @@ Template.payrollrules.onRendered(function() {
                     let dataLenght = settings._iDisplayLength;
                     splashArrayLeaveList = [];
                     if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
 
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         } else {
                             sideBarService.getUnPaidLeave(dataLenght, 0).then(function (dataNonBo) {
 
                                 addVS1Data('TUnpaidLeave', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }
                     }
@@ -3731,7 +3917,7 @@ Template.payrollrules.onRendered(function() {
               }, 0);
 
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
-              $('.fullScreenSpin').css('display', 'none');
+              LoadingOverlay.hide();
 
             }
         }).catch(function(err) {
@@ -3861,11 +4047,11 @@ Template.payrollrules.onRendered(function() {
                                                 $("#tblLeave").dataTable().fnPageChange('last');
                                               }, 400);
 
-                                              $('.fullScreenSpin').css('display', 'none');
+                                              LoadingOverlay.hide();
 
 
                                   }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
+                                      LoadingOverlay.hide();
                                   });
 
                               });
@@ -3891,22 +4077,22 @@ Template.payrollrules.onRendered(function() {
                     let dataLenght = settings._iDisplayLength;
                     splashArrayLeaveList = [];
                     if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
 
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         } else {
                             sideBarService.getUnPaidLeave(dataLenght, 0).then(function (dataNonBo) {
 
                                 addVS1Data('TUnpaidLeave', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }
                     }
@@ -3920,9 +4106,9 @@ Template.payrollrules.onRendered(function() {
 
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-              $('.fullScreenSpin').css('display', 'none');
+              LoadingOverlay.hide();
           }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
           });
         });
 
@@ -4035,11 +4221,11 @@ Template.payrollrules.onRendered(function() {
                                                     $("#tblReimbursements").dataTable().fnPageChange('last');
                                                   }, 400);
 
-                                                  $('.fullScreenSpin').css('display', 'none');
+                                                  LoadingOverlay.hide();
 
 
                                       }).catch(function (err) {
-                                          $('.fullScreenSpin').css('display', 'none');
+                                          LoadingOverlay.hide();
                                       });
 
                                   });
@@ -4065,22 +4251,22 @@ Template.payrollrules.onRendered(function() {
                         let dataLenght = settings._iDisplayLength;
                         splashArrayReisument = [];
                         if (dataLenght == -1) {
-                          $('.fullScreenSpin').css('display', 'none');
+                          LoadingOverlay.hide();
 
                         } else {
                             if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             } else {
                                 sideBarService.getReimbursement(dataLenght, 0).then(function (dataNonBo) {
 
                                     addVS1Data('tblReimbursements', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                         templateObject.resetData(dataNonBo);
-                                        $('.fullScreenSpin').css('display', 'none');
+                                        LoadingOverlay.hide();
                                     }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
+                                        LoadingOverlay.hide();
                                     });
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }
                         }
@@ -4094,9 +4280,9 @@ Template.payrollrules.onRendered(function() {
 
                   $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
               }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
               });
             }else{
 
@@ -4202,11 +4388,11 @@ Template.payrollrules.onRendered(function() {
                                                 $("#tblReimbursements").dataTable().fnPageChange('last');
                                               }, 400);
 
-                                              $('.fullScreenSpin').css('display', 'none');
+                                              LoadingOverlay.hide();
 
 
                                   }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
+                                      LoadingOverlay.hide();
                                   });
 
                               });
@@ -4232,22 +4418,22 @@ Template.payrollrules.onRendered(function() {
                     let dataLenght = settings._iDisplayLength;
                     splashArrayCalenderList = [];
                     if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
 
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         } else {
                             sideBarService.getReimbursement(dataLenght, 0).then(function (dataNonBo) {
 
                                 addVS1Data('TReimbursement', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }
                     }
@@ -4260,7 +4446,7 @@ Template.payrollrules.onRendered(function() {
               }, 0);
 
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
-              $('.fullScreenSpin').css('display', 'none');
+              LoadingOverlay.hide();
 
             }
         }).catch(function(err) {
@@ -4364,11 +4550,11 @@ Template.payrollrules.onRendered(function() {
                                                 $("#tblReimbursements").dataTable().fnPageChange('last');
                                               }, 400);
 
-                                              $('.fullScreenSpin').css('display', 'none');
+                                              LoadingOverlay.hide();
 
 
                                   }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
+                                      LoadingOverlay.hide();
                                   });
 
                               });
@@ -4394,22 +4580,22 @@ Template.payrollrules.onRendered(function() {
                     let dataLenght = settings._iDisplayLength;
                     splashArrayReisument = [];
                     if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
 
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         } else {
                             sideBarService.getReimbursement(dataLenght, 0).then(function (dataNonBo) {
 
                                 addVS1Data('TReimbursement', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }
                     }
@@ -4423,9 +4609,9 @@ Template.payrollrules.onRendered(function() {
 
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-              $('.fullScreenSpin').css('display', 'none');
+              LoadingOverlay.hide();
           }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
           });
         });
 
@@ -4581,11 +4767,11 @@ Template.payrollrules.onRendered(function() {
                                                     $("#tblSuperannuation").dataTable().fnPageChange('last');
                                                   }, 400);
 
-                                                  $('.fullScreenSpin').css('display', 'none');
+                                                  LoadingOverlay.hide();
 
 
                                       }).catch(function (err) {
-                                          $('.fullScreenSpin').css('display', 'none');
+                                          LoadingOverlay.hide();
                                       });
 
                                   });
@@ -4611,22 +4797,22 @@ Template.payrollrules.onRendered(function() {
                         let dataLenght = settings._iDisplayLength;
                         splashArraySuperannuationList = [];
                         if (dataLenght == -1) {
-                          $('.fullScreenSpin').css('display', 'none');
+                          LoadingOverlay.hide();
 
                         } else {
                             if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             } else {
                                 sideBarService.getSuperannuation(dataLenght, 0).then(function (dataNonBo) {
 
                                     addVS1Data('Tsuperannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                         templateObject.resetData(dataNonBo);
-                                        $('.fullScreenSpin').css('display', 'none');
+                                        LoadingOverlay.hide();
                                     }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
+                                        LoadingOverlay.hide();
                                     });
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }
                         }
@@ -4640,9 +4826,9 @@ Template.payrollrules.onRendered(function() {
 
                   $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
               }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
               });
             }else{
 
@@ -4788,11 +4974,11 @@ Template.payrollrules.onRendered(function() {
                                                 $("#tblSuperannuation").dataTable().fnPageChange('last');
                                        }, 400);
 
-                                       $('.fullScreenSpin').css('display', 'none');
+                                       LoadingOverlay.hide();
 
 
                                   }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
+                                      LoadingOverlay.hide();
                                   });
 
                               });
@@ -4818,22 +5004,22 @@ Template.payrollrules.onRendered(function() {
                     let dataLenght = settings._iDisplayLength;
                     splashArraySuperannuationList = [];
                     if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
 
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         } else {
                             sideBarService.getSuperannuation(dataLenght, 0).then(function (dataNonBo) {
 
                                 addVS1Data('Tsuperannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }
                     }
@@ -4846,7 +5032,7 @@ Template.payrollrules.onRendered(function() {
               }, 0);
 
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
-              $('.fullScreenSpin').css('display', 'none');
+              LoadingOverlay.hide();
 
             }
         }).catch(function(err) {
@@ -4995,11 +5181,11 @@ Template.payrollrules.onRendered(function() {
                                                 $("#tblSuperannuation").dataTable().fnPageChange('last');
                                               }, 400);
 
-                                              $('.fullScreenSpin').css('display', 'none');
+                                              LoadingOverlay.hide();
 
 
                                   }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
+                                      LoadingOverlay.hide();
                                   });
 
                               });
@@ -5025,22 +5211,22 @@ Template.payrollrules.onRendered(function() {
                     let dataLenght = settings._iDisplayLength;
                     splashArraySuperannuationList = [];
                     if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
 
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         } else {
                             sideBarService.getSuperannuation(dataLenght, 0).then(function (dataNonBo) {
 
                                 addVS1Data('Tsuperannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }
                     }
@@ -5054,9 +5240,9 @@ Template.payrollrules.onRendered(function() {
 
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-              $('.fullScreenSpin').css('display', 'none');
+              LoadingOverlay.hide();
           }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
           });
         });
 
@@ -13656,7 +13842,7 @@ Template.payrollrules.onRendered(function() {
           $('#tblratetypelist_filter .form-control-sm').val('');
              setTimeout(function () {
                     $('.btnRefreshRateType').trigger('click');
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
            }, 1000);
     });
 
@@ -13683,7 +13869,7 @@ Template.payrollrules.onRendered(function() {
         $('#ttblgrouptypelist_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshGroupType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
 
@@ -13728,7 +13914,7 @@ Template.payrollrules.onRendered(function() {
         $('#tblfundtypelist_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshFundType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
 
@@ -14234,7 +14420,7 @@ Template.payrollrules.onRendered(function() {
         $('#tblAccount_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
 
@@ -20516,7 +20702,7 @@ Template.payrollrules.events({
                     templateObject.datatablerecords.set(splashArrayInvoiceList);
 
                     let item = templateObject.datatablerecords.get();
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     if (splashArrayInvoiceList) {
                         var datatable = $('#tblPayCalendars').DataTable();
                         $("#tblPayCalendars > tbody").empty();
@@ -20537,7 +20723,7 @@ Template.payrollrules.events({
                     }
 
                 } else {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
 
                     swal({
                         title: 'Question',
@@ -20555,11 +20741,11 @@ Template.payrollrules.events({
                     });
                 }
             }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         } else {
             
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
 
             swal({
                 title: 'Alert',
@@ -20621,7 +20807,7 @@ Template.payrollrules.events({
                 templateObject.datatablerecords.set(splashArrayInvoiceList);
 
                 let item = templateObject.datatablerecords.get();
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 if (splashArrayInvoiceList) {
                     var datatable = $('#tblHolidays').DataTable();
                     $("#tblHolidays > tbody").empty();
@@ -20642,7 +20828,7 @@ Template.payrollrules.events({
                 }
 
             } else {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
 
                 swal({
                     title: 'Question',
@@ -20660,12 +20846,12 @@ Template.payrollrules.events({
                 });
             }
         }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         });
     } else {
 
 
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
 
         swal({
             title: 'Alert',
@@ -20735,7 +20921,7 @@ Template.payrollrules.events({
                     templateObject.datatablerecords.set(splashArrayInvoiceList);
     
                     let item = templateObject.datatablerecords.get();
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     if (splashArrayInvoiceList) {
                         var datatable = $('#tblSuperannuation').DataTable();
                         $("#tblSuperannuation > tbody").empty();
@@ -20761,7 +20947,7 @@ Template.payrollrules.events({
                     }
     
                 } else {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
     
                     swal({
                         title: 'Question',
@@ -20779,10 +20965,10 @@ Template.payrollrules.events({
                     });
                 }
             }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         } else {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
     
             swal({
                 title: 'Alert',
@@ -20832,7 +21018,7 @@ Template.payrollrules.events({
                     templateObject.datatablerecords.set(splashArrayInvoiceList);
     
                     let item = templateObject.datatablerecords.get();
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     if (splashArrayInvoiceList) {
                         var datatable = $('#tblHolidays').DataTable();
                         $("#tblHolidays > tbody").empty();
@@ -20853,7 +21039,7 @@ Template.payrollrules.events({
                     }
     
                 } else {
-                    $('.fullScreenSpin').css('display', 'none');  
+                    LoadingOverlay.hide();  
                     swal({
                         title: 'Question',
                         text: "Holiday does not exist, would you like to create it?",
@@ -20870,12 +21056,12 @@ Template.payrollrules.events({
                     });
                 }
             }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         } else {
     
     
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
     
             swal({
                 title: 'Alert',
@@ -20945,7 +21131,7 @@ Template.payrollrules.events({
                 templateObject.datatablerecords.set(splashArrayInvoiceList);
 
                 let item = templateObject.datatablerecords.get();
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
 
 
                 if (splashArrayInvoiceList) {
@@ -20974,7 +21160,7 @@ Template.payrollrules.events({
                 }
 
             } else {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
 
                 swal({
                     title: 'Question',
@@ -20992,10 +21178,10 @@ Template.payrollrules.events({
                 });
             }
         }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         });
     } else {
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
 
             swal({
                 title: 'Alert',
@@ -21080,7 +21266,7 @@ Template.payrollrules.events({
             templateObject.datatablerecords.set(splashArrayInvoiceList);
 
             let item = templateObject.datatablerecords.get();
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
             if (splashArrayInvoiceList) {
                 var datatable = $('#tblDeductions').DataTable();
                 $("#tblDeductions > tbody").empty();
@@ -21106,7 +21292,7 @@ Template.payrollrules.events({
             }
 
         } else {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
 
             swal({
                 title: 'Question',
@@ -21124,11 +21310,11 @@ Template.payrollrules.events({
             });
              }
             }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         } else {
 
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
 
             swal({
                 title: 'Alert',
@@ -21194,7 +21380,7 @@ Template.payrollrules.events({
                     templateObject.datatablerecords.set(splashArrayInvoiceList);
 
                     let item = templateObject.datatablerecords.get();
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     if (splashArrayInvoiceList) {
                         var datatable = $('#tblEarnings').DataTable();
                         $("#tblEarnings > tbody").empty();
@@ -21221,7 +21407,7 @@ Template.payrollrules.events({
                     }
 
                 } else {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
 
                     swal({
                         title: 'Question',
@@ -21239,11 +21425,11 @@ Template.payrollrules.events({
                     });
                 }
             }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         } else {
 
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
 
             swal({
                 title: 'Alert',
@@ -21307,7 +21493,7 @@ Template.payrollrules.events({
             templateObject.datatablerecords.set(splashArrayInvoiceList);
 
             let item = templateObject.datatablerecords.get();
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
             if (splashArrayInvoiceList) {
                 var datatable = $('#tblLeave').DataTable();
                 $("#tblLeave > tbody").empty();
@@ -21330,7 +21516,7 @@ Template.payrollrules.events({
             }
 
         } else {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
 
             swal({
                 title: 'Question',
@@ -21348,11 +21534,11 @@ Template.payrollrules.events({
             });
         }
     }).catch(function (err) {
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
     });
 } else {
 
-    $('.fullScreenSpin').css('display', 'none');
+    LoadingOverlay.hide();
 
     swal({
         title: 'Alert',
@@ -21410,7 +21596,7 @@ Template.payrollrules.events({
                     templateObject.datatablerecords.set(splashArrayInvoiceList);
 
                     let item = templateObject.datatablerecords.get();
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     if (splashArrayInvoiceList) {
                         var datatable = $('#tblReimbursements').DataTable();
                         $("#tblReimbursements > tbody").empty();
@@ -21429,7 +21615,7 @@ Template.payrollrules.events({
                     }
 
                 } else {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
 
                     swal({
                         title: 'Question',
@@ -21447,11 +21633,11 @@ Template.payrollrules.events({
                     });
                 }
             }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         } else {
 
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
 
             swal({
                 title: 'Alert',

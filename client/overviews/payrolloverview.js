@@ -14,6 +14,7 @@ import Tvs1chart from "../js/Api/Model/Tvs1Chart";
 import ChartsEditor from "../js/Charts/ChartsEditor";
 import Tvs1ChartDashboardPreferenceField from "../js/Api/Model/Tvs1ChartDashboardPreferenceField";
 import ApiService from "../js/Api/Module/ApiService";
+import LoadingOverlay from "../LoadingOverlay";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -47,7 +48,7 @@ Template.payrolloverview.onCreated(function () {
 });
 
 Template.payrolloverview.onRendered(function () {
-  $(".fullScreenSpin").css("display", "inline-block");
+  LoadingOverlay.show();
   let templateObject = Template.instance();
   let contactService = new ContactService();
   let productService = new ProductService();
@@ -582,7 +583,7 @@ Template.payrolloverview.onRendered(function () {
                         ".paginate_button.next:not(.disabled)",
                         this.api().table().container()
                       ).on("click", function () {
-                        $(".fullScreenSpin").css("display", "inline-block");
+                        LoadingOverlay.show();
                         let dataLenght = oSettings._iDisplayLength;
 
                         sideBarService
@@ -883,7 +884,7 @@ Template.payrolloverview.onRendered(function () {
                     ".paginate_button.next:not(.disabled)",
                     this.api().table().container()
                   ).on("click", function () {
-                    $(".fullScreenSpin").css("display", "inline-block");
+                    LoadingOverlay.show();
                     let dataLenght = oSettings._iDisplayLength;
 
                     sideBarService
@@ -1173,7 +1174,7 @@ Template.payrolloverview.onRendered(function () {
                       ".paginate_button.next:not(.disabled)",
                       this.api().table().container()
                     ).on("click", function () {
-                      $(".fullScreenSpin").css("display", "inline-block");
+                      LoadingOverlay.show();
                       let dataLenght = oSettings._iDisplayLength;
 
                       sideBarService
@@ -1654,7 +1655,7 @@ Template.payrolloverview.onRendered(function () {
                         ".paginate_button.next:not(.disabled)",
                         this.api().table().container()
                       ).on("click", function () {
-                        $(".fullScreenSpin").css("display", "inline-block");
+                        LoadingOverlay.show();
                         let dataLenght = oSettings._iDisplayLength;
                         let customerSearch = $(
                           "#tblInventoryPayrollService_filter input"
@@ -1743,7 +1744,7 @@ Template.payrolloverview.onRendered(function () {
                     },
                   })
                   .on("length.dt", function (e, settings, len) {
-                    $(".fullScreenSpin").css("display", "inline-block");
+                    LoadingOverlay.show();
                     let dataLenght = settings._iDisplayLength;
                     // splashArrayProductList = [];
                     if (dataLenght == -1) {
@@ -1903,7 +1904,7 @@ Template.payrolloverview.onRendered(function () {
                     ".paginate_button.next:not(.disabled)",
                     this.api().table().container()
                   ).on("click", function () {
-                    $(".fullScreenSpin").css("display", "inline-block");
+                    LoadingOverlay.show();
                     let dataLenght = oSettings._iDisplayLength;
                     let customerSearch = $(
                       "#tblInventoryPayrollService_filter input"
@@ -1990,7 +1991,7 @@ Template.payrolloverview.onRendered(function () {
                 },
               })
               .on("length.dt", function (e, settings, len) {
-                $(".fullScreenSpin").css("display", "inline-block");
+                LoadingOverlay.show();
                 let dataLenght = settings._iDisplayLength;
                 // splashArrayProductList = [];
                 if (dataLenght == -1) {
@@ -2156,7 +2157,7 @@ Template.payrolloverview.onRendered(function () {
                       ".paginate_button.next:not(.disabled)",
                       this.api().table().container()
                     ).on("click", function () {
-                      $(".fullScreenSpin").css("display", "inline-block");
+                      LoadingOverlay.show();
                       let dataLenght = oSettings._iDisplayLength;
                       let customerSearch = $(
                         "#tblInventoryPayrollService_filter input"
@@ -2243,7 +2244,7 @@ Template.payrolloverview.onRendered(function () {
                   },
                 })
                 .on("length.dt", function (e, settings, len) {
-                  $(".fullScreenSpin").css("display", "inline-block");
+                  LoadingOverlay.show();
                   let dataLenght = settings._iDisplayLength;
                   // splashArrayProductList = [];
                   if (dataLenght == -1) {
@@ -2403,7 +2404,7 @@ Template.payrolloverview.onRendered(function () {
           //FlowRouter.go('/productview?prodname=' + $(event.target).text());
           let lineExtaSellItems = [];
           let lineExtaSellObj = {};
-          $(".fullScreenSpin").css("display", "inline-block");
+          LoadingOverlay.show();
           getVS1Data("TProductWeb")
             .then(function (dataObject) {
               if (dataObject.length == 0) {
@@ -2798,7 +2799,7 @@ Template.payrolloverview.onRendered(function () {
           getVS1Data("TCustomerVS1")
             .then(function (dataObject) {
               if (dataObject.length == 0) {
-                $(".fullScreenSpin").css("display", "inline-block");
+                LoadingOverlay.show();
                 sideBarService
                   .getOneCustomerDataExByName(customerDataName)
                   .then(function (data) {
@@ -3076,7 +3077,7 @@ Template.payrolloverview.onRendered(function () {
                   }
                 }
                 if (!added) {
-                  $(".fullScreenSpin").css("display", "inline-block");
+                  LoadingOverlay.show();
                   sideBarService
                     .getOneCustomerDataExByName(customerDataName)
                     .then(function (data) {
@@ -3844,7 +3845,7 @@ Template.payrolloverview.events({
       }
       $("#btnSaveTimeSheet").trigger("click");
     } else {
-      $(".fullScreenSpin").css("display", "inline-block");
+      LoadingOverlay.show();
       if (
         checkStartTime != "" &&
         checkEndTime == "" &&
@@ -4068,7 +4069,7 @@ Template.payrolloverview.events({
         confirmButtonText: "Yes",
       }).then((result) => {
         if (result.value) {
-          $(".fullScreenSpin").css("display", "inline-block");
+          LoadingOverlay.show();
           document.getElementById("endTime").value =
             moment().startOf("hour").format("HH") +
             ":" +
@@ -4269,7 +4270,7 @@ Template.payrolloverview.events({
     $("#frmOnHoldModal").modal("show");
   },
   "click .btnSaveTimeSheet": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     let templateObject = Template.instance();
     let showTimesheetStatus = Session.get("CloudShowTimesheet") || true;
     let checkStatus = "";
@@ -4717,7 +4718,7 @@ Template.payrolloverview.events({
     }
   },
   "click .processTimesheet": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     let templateObject = Template.instance();
     let checkStatus = "";
     let checkStartTime = "";
@@ -5145,7 +5146,7 @@ Template.payrolloverview.events({
     let contactService = new ContactService();
     let barcodeData = $("#barcodeScanInput").val();
     let empNo = barcodeData.replace(/^\D+/g, "");
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     if (barcodeData == "") {
       swal("Please enter the employee number", "", "warning");
       $(".fullScreenSpin").css("display", "none");
@@ -5456,7 +5457,7 @@ Template.payrolloverview.events({
   },
   "click .btnPauseJob": function (event) {
     templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     let contactService = new ContactService();
     let checkStatus = "";
     let checkStartTime = "";
@@ -5679,7 +5680,7 @@ Template.payrolloverview.events({
       confirmButtonText: "Yes",
     }).then((result) => {
       if (result.value) {
-        $(".fullScreenSpin").css("display", "inline-block");
+        LoadingOverlay.show();
         let timesheetID = $("#updateID").val();
         if (timesheetID == "") {
           //window.open('/timesheet', '_self');
@@ -5725,17 +5726,17 @@ Template.payrolloverview.events({
     });
   },
   "click .exportbtn": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     jQuery("#tblPayHistorylist_wrapper .dt-buttons .btntabletocsv").click();
     $(".fullScreenSpin").css("display", "none");
   },
   "click .exportbtnExcel": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     jQuery("#tblPayHistorylist_wrapper .dt-buttons .btntabletoexcel").click();
     $(".fullScreenSpin").css("display", "none");
   },
   "click .btnRefresh": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     let templateObject = Template.instance();
     sideBarService
       .getAllAppointmentPredList()
@@ -5796,7 +5797,7 @@ Template.payrolloverview.events({
       });
   },
   "click .printConfirm": function (event) {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     jQuery("#tblPayHistorylist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
   },
@@ -5922,7 +5923,7 @@ Template.payrolloverview.events({
     }
   },
   "click .btnImport": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     let templateObject = Template.instance();
     let contactService = new ContactService();
     let objDetails;
