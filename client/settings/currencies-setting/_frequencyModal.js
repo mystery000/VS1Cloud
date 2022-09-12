@@ -284,35 +284,32 @@ Template._frequencyModal.onRendered(function () {
 
     _formFequencyModal.EmployeeId = employeeId
 
-    console.log('Fx update: ', fxUpdateObject);
-    console.log('Form : ', _formFequencyModal);
-
     cronSetting.buildParsedText();
 
-    // try {
-    //   var erpGet = erpDb();
-    //   Meteor.call("addCurrencyCron", cronSetting, erpGet);
-    //   LoadingOverlay.hide(0);
-    //   swal({title: "Success", text: "Fx update was scheduled successfully", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(() => {
-    //     window.open("/currenciessettings", "_self");
-    //   });
-    // } catch (exception) {
-    //   LoadingOverlay.hide(0);
+    try {
+      var erpGet = erpDb();
+      Meteor.call("addCurrencyCron", cronSetting, erpGet);
+      LoadingOverlay.hide(0);
+      swal({title: "Success", text: "Fx update was scheduled successfully", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(() => {
+        window.open("/currenciessettings", "_self");
+      });
+    } catch (exception) {
+      LoadingOverlay.hide(0);
 
-    //   swal({title: "Oooops...", text: "Couldn't save schedule", type: "error", showCancelButton: true, confirmButtonText: "Try Again"}).then(result => {
-    //     if (result.value) {
-    //       $(".btnSaveFrequency").click();
-    //       // Meteor._reload.reload();
-    //     } else if (result.dismiss === "cancel") {}
-    //   });
-    // }
+      swal({title: "Oooops...", text: "Couldn't save schedule", type: "error", showCancelButton: true, confirmButtonText: "Try Again"}).then(result => {
+        if (result.value) {
+          $(".btnSaveFrequency").click();
+          // Meteor._reload.reload();
+        } else if (result.dismiss === "cancel") {}
+      });
+    }
 
-    // addVS1Data("TCurrencyFrequencySettings", JSON.stringify(fxUpdateObject)).then(function (datareturn) {
-    //   //location.reload(true);
-    //   $("#frequencyModal").modal("hide");
-    // }).catch(function (err) {
-    //   //location.reload(true);
-    // });
+    addVS1Data("TCurrencyFrequencySettings", JSON.stringify(fxUpdateObject)).then(function (datareturn) {
+      //location.reload(true);
+      $("#frequencyModal").modal("hide");
+    }).catch(function (err) {
+      //location.reload(true);
+    });
     LoadingOverlay.hide();
   };
 
