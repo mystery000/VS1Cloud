@@ -25,6 +25,11 @@ class CachedHttp {
     }
   }
 
+  logSeparator() {
+    const separator = '===================================';
+    this.logger(separator);
+  }
+
   findParamByKey(key, params = {}) {
     if (params[key]) {
       return params[key];
@@ -48,7 +53,9 @@ class CachedHttp {
       return false;
     }
   }) {
-    this.logger("=========================================");
+    this.logSeparator();
+    this.logger('You see this because you are in dev mode');
+
     const endPointName = this.endpointPrefix + endpoint;
 
     const getFromLocalStorage = endpoint => {
@@ -139,7 +146,9 @@ class CachedHttp {
 
     if (options.forceOverride) {
       this.logger("Forced from remote ----");
-      return await getFromRemote();
+      const _data = await getFromRemote();
+      this.logSeparator();
+      return _data;
     }
 
     if (cachedData) {
@@ -157,13 +166,17 @@ class CachedHttp {
 
         if (hours > this.limit) {
           this.logger("NOTICE: Cached data is expired");
-          return await getFromRemote();
+          const _data = await getFromRemote();
+          this.logSeparator();
+          return _data;
         } else {
           this.logger("NOTICE: Loading from cache, the last request is recent");
 
-          return await getFromLocalIndexDb(endpoint, async () => {
+          const _data = await getFromLocalIndexDb(endpoint, async () => {
             return getFromLocalStorage(endPointName);
           });
+          this.logSeparator();
+          return _data;
           // return JSON.parse(localStorage.getItem(endPointName));
         }
       } else {
@@ -171,10 +184,14 @@ class CachedHttp {
         this.logger("NOTICE: Found from cache: ", cachedData.response.Params);
 
         // the requested params has changed, to we need to make a new request for this time
-        return await getFromRemote();
+        const _data = await getFromRemote();
+        this.logSeparator();
+        return _data;
       }
     } else {
-      return await getFromRemote();
+       const _data = await getFromRemote();
+       this.logSeparator();
+       return _data;
     }
   }
 }
