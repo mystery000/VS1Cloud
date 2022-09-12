@@ -182,6 +182,9 @@
                                     table.tableExportDetailDiv th {
                                         min-width: 170px !important; 
                                     }
+                                    .swal2-popup.swal2-modal {
+                                        padding-bottom: 25px !important;
+                                    }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table tableExportDetailDiv table-sm" id="tableExport" name="tableExport">
@@ -264,16 +267,16 @@
                                                                                 {{#each c in currencyList }}
                                                                                     {{# if c.active}}
 
-                                                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
-                                                                                                    <a href="#" style="text-decoration:none!important;">{{convertAmount subItem.value c}}</a>
-                                                                                                </td>
+                                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}}">
+                                                                                            <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{convertAmount subItem.value c}}</a>
+                                                                                        </td>
 
                                                                                     {{/if}}
                                                                                 {{/each}}
                                                                             {{/if}}
                                                                         {{else}}
                                                                             <td class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem}} text-danger {{/if}}">
-                                                                                <a href="#" style="text-decoration:none!important;">{{subItem}}</a>
+                                                                                <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{subItem}}</a>
                                                                             </td>
 
                                                                         {{/if}}
@@ -281,11 +284,11 @@
                                                                     {{else}}
                                                                         {{#if isObject subItem}}
                                                                             <td class="Total1Indented MenuLeft text-nowrap Indent1 rightAlignMent {{#if isNegativeAmount subItem.amount}} text-danger {{/if}} ">
-                                                                                <a href="#" style="text-decoration:none!important;">{{subItem.value}}</a>
+                                                                                <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{subItem.value}}</a>
                                                                             </td>
                                                                         {{else}}
                                                                             <td class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem}} text-danger {{/if}}">
-                                                                                <a href="#" style="text-decoration:none!important;">{{subItem}}</a>
+                                                                                <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{subItem}}</a>
                                                                             </td>
                                                                         {{/if}}
                                                                         
