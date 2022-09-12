@@ -36,55 +36,114 @@ Template.taxsummaryreport.onRendered(() => {
   LoadingOverlay.show();
   const templateObject = Template.instance();
 
-  let salesOrderTable;
-  var splashArray = new Array();
-  var today = moment().format('DD/MM/YYYY');
-  var currentDate = new Date();
-  var begunDate = moment(currentDate).format("DD/MM/YYYY");
-  let fromDateMonth = (currentDate.getMonth() + 1);
-  let fromDateDay = currentDate.getDate();
-  if ((currentDate.getMonth() + 1) < 10) {
-    fromDateMonth = "0" + (currentDate.getMonth() + 1);
-  }
+  // let salesOrderTable;
+  // var splashArray = new Array();
+  // var today = moment().format('DD/MM/YYYY');
+  // var currentDate = new Date();
+  // var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  // let fromDateMonth = (currentDate.getMonth() + 1);
+  // let fromDateDay = currentDate.getDate();
+  // if ((currentDate.getMonth() + 1) < 10) {
+  //   fromDateMonth = "0" + (currentDate.getMonth() + 1);
+  // }
 
-  let imageData = (localStorage.getItem("Image"));
-  if (imageData) {
-    $('#uploadedImage').attr('src', imageData);
-    $('#uploadedImage').attr('width', '50%');
-  }
+  // let imageData = (localStorage.getItem("Image"));
+  // if (imageData) {
+  //   $('#uploadedImage').attr('src', imageData);
+  //   $('#uploadedImage').attr('width', '50%');
+  // }
 
-  if (currentDate.getDate() < 10) {
-    fromDateDay = "0" + currentDate.getDate();
-  }
-  var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
+  // if (currentDate.getDate() < 10) {
+  //   fromDateDay = "0" + currentDate.getDate();
+  // }
+  // var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
 
 
-  templateObject.dateAsAt.set(begunDate);
-  const dataTableList = [];
-  const deptrecords = [];
-  $("#date-input,#dateTo,#dateFrom").datepicker({
-    showOn: 'button',
-    buttonText: 'Show Date',
-    buttonImageOnly: true,
-    buttonImage: '/img/imgCal2.png',
-    dateFormat: 'dd/mm/yy',
-    showOtherMonths: true,
-    selectOtherMonths: true,
-    changeMonth: true,
-    changeYear: true,
-    yearRange: "-90:+10",
-    onChangeMonthYear: function (year, month, inst) {
-      // Set date to picker
-      $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
-      // Hide (close) the picker
-      // $(this).datepicker('hide');
-      // // Change ttrigger the on change function
-      // $(this).trigger('change');
+  // templateObject.dateAsAt.set(begunDate);
+  // const dataTableList = [];
+  // const deptrecords = [];
+  // $("#date-input,#dateTo,#dateFrom").datepicker({
+  //   showOn: 'button',
+  //   buttonText: 'Show Date',
+  //   buttonImageOnly: true,
+  //   buttonImage: '/img/imgCal2.png',
+  //   dateFormat: 'dd/mm/yy',
+  //   showOtherMonths: true,
+  //   selectOtherMonths: true,
+  //   changeMonth: true,
+  //   changeYear: true,
+  //   yearRange: "-90:+10",
+  //   onChangeMonthYear: function (year, month, inst) {
+  //     // Set date to picker
+  //     $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+  //     // Hide (close) the picker
+  //     // $(this).datepicker('hide');
+  //     // // Change ttrigger the on change function
+  //     // $(this).trigger('change');
+  //   }
+  // });
+
+  // $("#dateFrom").val(fromDate);
+  // $("#dateTo").val(begunDate);
+
+  templateObject.initDate = () => {
+    const currentDate = new Date();
+
+    /**
+     * This will init dates
+     */
+    let begunDate = moment(currentDate).format("DD/MM/YYYY");
+    templateObject.dateAsAt.set(begunDate);
+
+    let fromDateMonth = currentDate.getMonth() + 1;
+    let fromDateDay = currentDate.getDate();
+    if (currentDate.getMonth() + 1 < 10) {
+      fromDateMonth = "0" + (currentDate.getMonth() + 1);
     }
-  });
 
-  $("#dateFrom").val(fromDate);
-  $("#dateTo").val(begunDate);
+    let prevMonth = moment().subtract(1, "months").format("MM");
+
+    if (currentDate.getDate() < 10) {
+      fromDateDay = "0" + currentDate.getDate();
+    }
+    // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
+    var fromDate =
+      fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
+
+    $("#date-input,#dateTo,#dateFrom").datepicker({
+      showOn: "button",
+      buttonText: "Show Date",
+      buttonImageOnly: true,
+      buttonImage: "/img/imgCal2.png",
+      dateFormat: "dd/mm/yy",
+      showOtherMonths: true,
+      selectOtherMonths: true,
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "-90:+10",
+      onChangeMonthYear: function (year, month, inst) {
+        // Set date to picker
+        $(this).datepicker(
+          "setDate",
+          new Date(year, inst.selectedMonth, inst.selectedDay)
+        );
+        // Hide (close) the picker
+        // $(this).datepicker('hide');
+        // // Change ttrigger the on change function
+        // $(this).trigger('change');
+      },
+    });
+
+    $("#dateFrom").val(fromDate);
+    $("#dateTo").val(begunDate);
+
+    //--------- END OF DATE ---------------//
+  };
+
+
+  templateObject.initDate();
+
+
   templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
@@ -1104,11 +1163,14 @@ Template.taxsummaryreport.onRendered(() => {
     }, 100);
   }
 
-  var currentDate2 = new Date();
-  var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-  let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + currentDate2.getDate();
-  // templateObject.getTaxSummaryReports(getDateFrom, getLoadDate, false);
-  templateObject.loadReport(getDateFrom, getLoadDate, false);
+  // var currentDate2 = new Date();
+  // var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+  // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + currentDate2.getDate();
+  // // templateObject.getTaxSummaryReports(getDateFrom, getLoadDate, false);
+  templateObject.loadReport( 
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+    false);
 
   templateObject.getDepartments = function () {
     reportService.getDepartment().then(function (data) {
@@ -1180,7 +1242,7 @@ Template.taxsummaryreport.events({
   },
   'change #dateTo': function () {
     let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display', 'inline-block');
+    LoadingOverlay.show();
     $('#dateFrom').attr('readonly', false);
     $('#dateTo').attr('readonly', false);
     templateObject.records.set('');
@@ -1209,7 +1271,7 @@ Template.taxsummaryreport.events({
   },
   'change #dateFrom': function () {
     let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display', 'inline-block');
+    LoadingOverlay.show();
     $('#dateFrom').attr('readonly', false);
     $('#dateTo').attr('readonly', false);
     templateObject.records.set('');
@@ -1238,7 +1300,7 @@ Template.taxsummaryreport.events({
     LoadingOverlay.hide();
   },
   'click .btnRefresh': function () {
-    $('.fullScreenSpin').css('display', 'inline-block');
+    LoadingOverlay.show();
     localStorage.setItem('VS1TaxSummary_Report', '');
     Meteor._reload.reload();
     LoadingOverlay.hide();
@@ -1299,7 +1361,7 @@ Template.taxsummaryreport.events({
     })
   },
   'click .btnExportReport': function () {
-    $('.fullScreenSpin').css('display', 'inline-block');
+    LoadingOverlay.show();
     let utilityService = new UtilityService();
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
@@ -1336,34 +1398,34 @@ Template.taxsummaryreport.events({
     LoadingOverlay.hide();
   },
   "change .edtReportDates": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem('VS1TaxSummary_Report', '');
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
     await templateObject.setReportOptions(false, dateFrom, dateTo);
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
 },
 "click #lastMonth": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem('VS1TaxSummary_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
 },
 "click #lastQuarter": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem('VS1TaxSummary_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
 },
 "click #last12Months": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem('VS1TaxSummary_Report', '');
     let templateObject = Template.instance();
     $("#dateFrom").attr("readonly", false);
@@ -1389,15 +1451,15 @@ Template.taxsummaryreport.events({
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
 },
 "click #ignoreDate": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem('VS1TaxSummary_Report', '');
     let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
     await templateObject.setReportOptions(true);
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
 },
   'keyup #myInputSearch': function (event) {
     $('.table tbody tr').show();
