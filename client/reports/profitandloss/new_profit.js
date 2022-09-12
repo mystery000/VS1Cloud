@@ -543,6 +543,11 @@ Template.newprofitandloss.onRendered(function () {
     url = new URL(window.location.href);
     var getDateFrom = url.searchParams.get("dateFrom");
     var getLoadDate = url.searchParams.get("dateTo");
+    if( typeof getDateFrom === undefined || getDateFrom == "" || getDateFrom === null){
+      let currentUrl = FlowRouter.current().queryParams;
+      getDateFrom = currentUrl.dateFrom
+      getLoadDate = currentUrl.dateTo
+    }
     localStorage.setItem('VS1ProfitAndLoss_Report', '');
     templateObject.setReportOptions(0, getDateFrom, getLoadDate);
   } else if (url.indexOf("?daterange") > 0) {
