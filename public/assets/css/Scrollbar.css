@@ -550,6 +550,11 @@ td.td-input {
     background-color: #e74a3b !important;
     color: #fff;
 }
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .chart-visibility {
+        width: 50% !important;
+    }
+}
 @media only screen and (max-width: 767px) {
     .chart-visibility {
         width: 100% !important;
