@@ -96,6 +96,9 @@ Template.alltaskdatatable.onRendered(function () {
         templateObject.updateTaskSchedule(task_id, dateText);
       },
     });
+    let currentDate = new Date();
+    let begunDate = moment(currentDate).format("DD/MM/YYYY");
+    $(".crmDatepicker").val(begunDate);
   };
 
   templateObject.initSubtaskDatatable = function () {
@@ -3881,6 +3884,9 @@ function openEditTaskModal(id, type) {
           templateObject.updateTaskSchedule(task_id, dateText);
         },
       });
+      let currentDate = new Date();
+      let begunDate = moment(currentDate).format("DD/MM/YYYY");
+      $(".crmDatepicker").val(begunDate);
 
     } else {
       swal("Cannot edit this task", "", "warning");
