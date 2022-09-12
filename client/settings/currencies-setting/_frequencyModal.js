@@ -275,10 +275,8 @@ Template._frequencyModal.events({
     let templateObject = Template.instance();
     document.querySelector("#frequencyDaily").click();
   },
-  "click .btnSaveFrequency": e => {
-    let templateObject = Template.instance();
-
-    templateObject.saveShedule();
+  "click .btnSaveFrequency": (e, ui) => {
+    ui.saveShedule();
   },
   'click input[name="frequencyRadio"]': event => {
     if (event.target.id == "frequencyMonthly") {
