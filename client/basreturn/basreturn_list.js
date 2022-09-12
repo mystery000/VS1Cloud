@@ -354,7 +354,6 @@ Template.basreturnlist.onRendered(function() {
                 // });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                console.log("data=", data);
 
                 for (let i = 0; i < data.length; i++) {
                     var dataList = {

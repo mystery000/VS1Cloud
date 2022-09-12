@@ -3603,7 +3603,7 @@ Template.accessleveldup.events({
                 if(oPost.readyState == 4 && oPost.status == 200) {
                     $('.fullScreenSpin').css('display','none');
                     swal({
-                        title: 'Settings Successly Saved',
+                        title: 'Settings Successfully Saved',
                         text: "Please log out to activate your changes.",
                         type: 'success',
                         showCancelButton: false,
@@ -3777,7 +3777,7 @@ Template.accessleveldup.events({
                         $('.fullScreenSpin').css('display','none');
                         if((employeeID == empLoggedID) ){
                             swal({
-                                title: 'Settings Successly Saved',
+                                title: 'Settings Successfully Saved',
                                 text: "Please log out to activate your changes.",
                                 type: 'success',
                                 showCancelButton: false,
@@ -3799,7 +3799,7 @@ Template.accessleveldup.events({
                                 }
                             });
                         }else{
-                            swal('Settings Successly Saved', '', 'success');
+                            swal('Settings Successfully Saved', '', 'success');
                         }
                     }else if(oPost.readyState == 4 && oPost.status == 403){
                         $('.fullScreenSpin').css('display','none');

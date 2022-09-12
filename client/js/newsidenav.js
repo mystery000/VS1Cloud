@@ -143,7 +143,7 @@ Template.newsidenav.onCreated(function() {
 Template.newsidenav.onRendered(function() {
 
     var countObjectTimes = 0;
-    let allDataToLoad = 75;
+    let allDataToLoad = 74;
     let progressPercentage = 0;
 
     let templateObject = Template.instance();
@@ -1056,7 +1056,7 @@ Template.newsidenav.onRendered(function() {
         }
       });
     });
-
+    /*
     sideBarService.getRegionalOptionInfo().then(function(data) {
       for (let i in data.tregionaloptions) {
               localStorage.setItem('TRegionalOptionsID', data.tregionaloptions[i].ID||"");
@@ -1099,6 +1099,7 @@ Template.newsidenav.onRendered(function() {
     }).catch(function(err) {
 
     });
+    */
 
   }else{
     setTimeout(function () {

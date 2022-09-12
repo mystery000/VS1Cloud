@@ -435,10 +435,23 @@ Template.setup.onRendered(function () {
    */
   templateObject.setSetupFinished = async () => {
     LoadingOverlay.show();
+    let dashboardArray = [];
     let data = await organisationService.getOrganisationDetail();
     let companyInfo = data.tcompanyinfo[0];
 
     companyInfo.IsSetUpWizard = true;
+    getVS1Data('vscloudlogininfo').then(function (dataObject) {
+      if(dataObject.length == 0){
+      }else{
+        dashboardArray = dataObject[0].data;
+        dashboardArray.ProcessLog.ClientDetails.ProcessLog.TVS1_Dashboard_summary.fields.Companyinfo_IsSetupWizard = true;
+        addLoginData(dashboardArray).then(function (datareturnCheck) {
+
+        }).catch(function (err) {
+
+        });
+      };
+    });
 
     await organisationService.saveOrganisationSetting({
       type: "TCompanyInfo",
@@ -1823,7 +1836,7 @@ Template.setup.onRendered(function () {
                   MakeNegative();
                 }, 100);
               }
-              
+
               if ($.fn.dataTable.isDataTable("#termsList")) {
                 $("#termsList").DataTable().destroy();
               }
@@ -4644,7 +4657,7 @@ Template.setup.events({
 
   // TODO: Step 2
   // Active Tax Rates
-  
+
   "click .visiblePopupDiv": function () {
     setTimeout(() => {
       $('.modal-backdrop').addClass('giveAccess');
@@ -4912,17 +4925,12 @@ Template.setup.events({
           });
         } else {
           let loginDataArray = [];
-          if (
-            dataObject[0].EmployeeEmail === localStorage.getItem("mySession")
-          ) {
+          if (dataObject[0].EmployeeEmail === localStorage.getItem("mySession")) {
             loginDataArray = dataObject[0].data;
 
-            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc =
-              purchasetaxcode;
-            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc =
-              salestaxcode;
-            addLoginData(loginDataArray)
-              .then(function (datareturnCheck) {
+            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc = purchasetaxcode;
+            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc = salestaxcode;
+            addLoginData(loginDataArray).then(function (datareturnCheck) {
                 LoadingOverlay.hide();
                 swal({
                   title: "Default Tax Rate Successfully Changed",
@@ -4945,8 +4953,7 @@ Template.setup.events({
                   // );
                   // localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
                 });
-              })
-              .catch(function (err) {
+              }).catch(function (err) {
                 LoadingOverlay.hide();
                 swal({
                   title: "Default Tax Rate Successfully Changed",

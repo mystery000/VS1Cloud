@@ -95,10 +95,9 @@ Template.basreturn.onRendered(function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         getVS1Data('TBasReturn').then(function(dataObject) {
             if (dataObject.length > 0) {
-                console.log("dataObject", dataObject);
+
             }
         }).catch(function(err) {
-            console.log("err", err);
             $('.fullScreenSpin').css('display', 'none');
         });
     });
@@ -601,8 +600,6 @@ Template.basreturn.onRendered(function() {
     templateObject.selTaxList = function(pan) {
         let taxRateList = templateObject.taxRateList.get();
         let taxSummaryList = templateObject.taxSummaryList.get();
-
-        console.log("taxSummaryList", taxSummaryList);
 
         var total_tax = 0;
         for (var i = 0; i < taxRateList.length; i++) {
