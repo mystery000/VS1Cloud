@@ -566,7 +566,8 @@ vs1GlobalBackButton = async function () {
 tableResize = function() {
   setTimeout(function() {
     const tableHandler = new TableHandler();
-  }, 2000);
+    $('.dataTables_filter input[type="search"]').attr("placeholder", "Search List...");
+  }, 2500);
 };
 // $(window).load(function() {
 //
