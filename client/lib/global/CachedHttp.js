@@ -1,5 +1,6 @@
 import GlobalFunctions from "../../GlobalFunctions.js";
 import "../global/indexdbstorage.js";
+import {Meteor} from 'meteor/meteor';
 
 /**
  *
@@ -9,7 +10,7 @@ class CachedHttp {
   constructor(options = {
     limit: 1,
     endpointPrefix: "cached_http/",
-    debug: true
+    debug: false
   }) {
     this.limit = options.limit;
     this.endpointPrefix = options.endpointPrefix;
@@ -20,7 +21,7 @@ class CachedHttp {
     const prefix = "CachedHttp | ";
 
     if (this.debug) {
-      console.log(prefix, message, ...optionalParams);
+      console.info(prefix, message, ...optionalParams);
     }
   }
 
@@ -178,4 +179,10 @@ class CachedHttp {
   }
 }
 
-export default CachedHttp = new CachedHttp();
+
+export default CachedHttp = new CachedHttp({
+  limit: 1,
+  debug: Meteor.isDevelopment,
+  endpointPrefix: "cached_http/",
+});
+
