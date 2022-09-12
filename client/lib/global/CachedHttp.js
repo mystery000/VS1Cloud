@@ -19,10 +19,11 @@ class CachedHttp {
   logger(message, ...optionalParams) {
     const prefix = "CachedHttp | ";
 
-    if (this.debug) 
+    if (this.debug) {
       console.log(prefix, message, ...optionalParams);
     }
-  
+  }
+
   findParamByKey(key, params = {}) {
     if (params[key]) {
       return params[key];
