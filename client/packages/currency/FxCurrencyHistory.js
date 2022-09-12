@@ -8,8 +8,12 @@ import "../../lib/global/indexdbstorage.js";
 import { CountryService } from "../../js/country-service";
 import { TaxRateService } from "../../settings/settings-service";
 import LoadingOverlay from "../../LoadingOverlay";
-let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
+import CachedHttp from "../../lib/global/CachedHttp";
+
+const sideBarService = new SideBarService();
+const utilityService = new UtilityService();
+const taxRateService = new TaxRateService();
+
 
 const currentUrl = new URL(window.location.href);
 
@@ -26,7 +30,6 @@ Template.FxCurrencyHistory.onRendered(function () {
 
   LoadingOverlay.show();
   let templateInstance = Template.instance();
-  let taxRateService = new TaxRateService();
   let dataTableList = [];
   const tableHeaderList = [];
 
@@ -94,7 +97,20 @@ Template.FxCurrencyHistory.onRendered(function () {
 
   templateInstance.loadCurrencies  = async () => {
     LoadingOverlay.show();
-    let result = await taxRateService.getCurrencyHistory();
+    // let result = await taxRateService.getCurrencyHistory();
+
+    let data = await CachedHttp.get(erpObjects.TCurrencyRateHistory, async () => {
+      return await taxRateService.getCurrencyHistory();
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        return false;
+      }
+    });
+
+    let result = data.response;
+
 
     if(result.tcurrencyratehistory) {
       const data = result.tcurrencyratehistory;
