@@ -10,6 +10,7 @@ import {DailyFrequencyModel, MonthlyFrequencyModel, OneTimeOnlyFrequencyModel, O
 import LoadingOverlay from "../../LoadingOverlay";
 import {updateAllCurrencies} from "./currencies";
 import CronSetting from "../../CronSetting";
+import FormFrequencyModel from "./Model/FormFrequencyModel";
 
 let sideBarService = new SideBarService();
 let taxRateService = new TaxRateService();
@@ -127,6 +128,8 @@ Template._frequencyModal.onRendered(function () {
       type: fxUpdateObject.type
     });
 
+    let _formFequencyModal = new FormFrequencyModel({});
+
     /**
          * If monthly
          */
@@ -150,6 +153,13 @@ Template._frequencyModal.onRendered(function () {
       cronSetting.months = checkedMonths;
       cronSetting.dayNumberOfMonth = convertDayNumberToString(fxUpdateObject.everyDay);
 
+      _formFequencyModal = new FormFrequencyModel({
+        MonthlyEveryDay: $("#sltDay").val(),
+        MonthlyOfMonths: checkedMonths,
+        MonthlyStartDate: $("#edtMonthlyStartDate").val(),
+        MonthlyStartTime: $("#edtMonthlyStartTime").val(),
+      })
+
       //cronSetting.parsed = later.recur()
     } else if (fxUpdateObject instanceof WeeklyFrequencyModel) {
       const selectedDay = document.querySelector(".weekly-input-js input[type=checkbox]:checked").value;
@@ -169,6 +179,16 @@ Template._frequencyModal.onRendered(function () {
       cronSetting.days = fxUpdateObject.selectedDays;
       cronSetting.every = fxUpdateObject.everyWeeks;
       cronSetting.startAt = fxUpdateObject.getDate();
+
+      _formFequencyModal = new FormFrequencyModel({
+        WeeklyEvery: fxUpdateObject.everyWeeks,
+        WeeklyStartDate: $("#edtWeeklyStartDate").val(),
+        WeeklyStartTime: $("#edtWeeklyStartTime").val(),
+        WeeklySelectDays: fxUpdateObject.selectedDays,
+      });
+
+
+
     } else if (fxUpdateObject instanceof DailyFrequencyModel) {
       reportSchedule.fields.Frequency = "D";
 
@@ -188,6 +208,10 @@ Template._frequencyModal.onRendered(function () {
         reportSchedule.fields.SunAction = "D";
 
         cronSetting.days = selectedDays;
+
+        _formFequencyModal = new FormFrequencyModel({
+          DailyWeekDays: selectedDays,
+        });
       } else if ($("#dailyEveryDay").prop("checked")) {
         fxUpdateObject.weekDays = [
           "monday",
@@ -204,6 +228,12 @@ Template._frequencyModal.onRendered(function () {
 
         cronSetting.every = 1;
         cronSetting.days = fxUpdateObject.weekDays;
+
+        _formFequencyModal = new FormFrequencyModel({
+          DailyEvery: fxUpdateObject.every, 
+          DailyWeekDays: fxUpdateObject.weekDays,
+          DailyEveryDay: true
+        });
       } else if ($("#dailyEvery").prop("checked")) {
         fxUpdateObject.weekDays = null;
         fxUpdateObject.every = parseInt($("#dailyEveryXDays").val());
@@ -211,6 +241,10 @@ Template._frequencyModal.onRendered(function () {
         reportSchedule.fields.Every = fxUpdateObject.every;
 
         cronSetting.every = fxUpdateObject.every;
+
+        _formFequencyModal = new FormFrequencyModel({
+          DailyEvery: fxUpdateObject.every, 
+        });
       }
 
       fxUpdateObject.startDate = $("#edtDailyStartDate").val();
@@ -219,6 +253,10 @@ Template._frequencyModal.onRendered(function () {
       reportSchedule.fields.StartDate = fxUpdateObject.getDate();
 
       cronSetting.startAt = fxUpdateObject.getDate();
+
+      _formFequencyModal.DailyStartDate = $("#edtDailyStartDate").val();
+      _formFequencyModal.DailyStartTime = $("#edtDailyStartTime").val();
+
     } else if (fxUpdateObject instanceof OneTimeOnlyFrequencyModel) {
       fxUpdateObject.startDate = $("#edtOneTimeOnlyDate").val();
       fxUpdateObject.startTime = $("#edtOneTimeOnlyTime").val();
@@ -228,40 +266,58 @@ Template._frequencyModal.onRendered(function () {
 
     
       cronSetting.startAt = fxUpdateObject.getDate();
+
+      _formFequencyModal = new FormFrequencyModel({
+        OneTimeStartDate: fxUpdateObject.startDate,
+        OneTimeStartTime: fxUpdateObject.startTime
+      });
     } else if (fxUpdateObject instanceof OnEventFrequencyModel) {
       fxUpdateObject.onLogin = $("#settingsOnLogon").prop("checked");
       fxUpdateObject.onLogout = $("#settingsOnLogout").prop("checked");
       reportSchedule.fields.Frequency = "";
+
+      _formFequencyModal = new FormFrequencyModel({
+        OnEventLogIn: fxUpdateObject.onLogin,
+        OnEventLogOut: fxUpdateObject.onLogout
+      });
     }
+
+    _formFequencyModal.EmployeeId = employeeId
+
+    console.log('Fx update: ', fxUpdateObject);
+    console.log('Form : ', _formFequencyModal);
 
     cronSetting.buildParsedText();
 
-    try {
-      var erpGet = erpDb();
-      Meteor.call("addCurrencyCron", cronSetting, erpGet);
-      LoadingOverlay.hide(0);
-      swal({title: "Success", text: "Fx update was scheduled successfully", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(() => {
-        window.open("/currenciessettings", "_self");
-      });
-    } catch (exception) {
-      LoadingOverlay.hide(0);
+    // try {
+    //   var erpGet = erpDb();
+    //   Meteor.call("addCurrencyCron", cronSetting, erpGet);
+    //   LoadingOverlay.hide(0);
+    //   swal({title: "Success", text: "Fx update was scheduled successfully", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(() => {
+    //     window.open("/currenciessettings", "_self");
+    //   });
+    // } catch (exception) {
+    //   LoadingOverlay.hide(0);
 
-      swal({title: "Oooops...", text: "Couldn't save schedule", type: "error", showCancelButton: true, confirmButtonText: "Try Again"}).then(result => {
-        if (result.value) {
-          $(".btnSaveFrequency").click();
-          // Meteor._reload.reload();
-        } else if (result.dismiss === "cancel") {}
-      });
-    }
+    //   swal({title: "Oooops...", text: "Couldn't save schedule", type: "error", showCancelButton: true, confirmButtonText: "Try Again"}).then(result => {
+    //     if (result.value) {
+    //       $(".btnSaveFrequency").click();
+    //       // Meteor._reload.reload();
+    //     } else if (result.dismiss === "cancel") {}
+    //   });
+    // }
 
-    addVS1Data("TCurrencyFrequencySettings", JSON.stringify(fxUpdateObject)).then(function (datareturn) {
-      //location.reload(true);
-      $("#frequencyModal").modal("hide");
-    }).catch(function (err) {
-      //location.reload(true);
-    });
+    // addVS1Data("TCurrencyFrequencySettings", JSON.stringify(fxUpdateObject)).then(function (datareturn) {
+    //   //location.reload(true);
+    //   $("#frequencyModal").modal("hide");
+    // }).catch(function (err) {
+    //   //location.reload(true);
+    // });
     LoadingOverlay.hide();
   };
+
+
+
 });
 
 Template._frequencyModal.events({
