@@ -122,6 +122,7 @@ Template._frequencyModal.onRendered(function () {
 
     let cronSetting = new CronSetting({
       id: 1,
+      isProcessed: 1,
       employeeId: employeeId,
       startAt: new Date(),
       cronJob: () => updateAllCurrencies,
@@ -197,11 +198,14 @@ Template._frequencyModal.onRendered(function () {
       reportSchedule.fields.Every = -1;
       if ($("#dailyWeekdays").prop("checked")) {
         let selectedDays = [];
+        let selectedDayNumbers = [];
         document.querySelectorAll(".daily-input-js input[type=checkbox]:checked").forEach(element => {
           selectedDays.push(element.getAttribute("value"));
+          selectedDayNumbers.push(parseInt(element.getAttribute("data-value")));
         });
 
         fxUpdateObject.weekDays = selectedDays;
+        cronSetting.dayInNumbers = selectedDayNumbers;
         fxUpdateObject.every = null;
 
         reportSchedule.fields.SatAction = "D";
@@ -213,6 +217,7 @@ Template._frequencyModal.onRendered(function () {
           DailyWeekDays: selectedDays,
         });
       } else if ($("#dailyEveryDay").prop("checked")) {
+        cronSetting.dayInNumbers = [1,2,3,4,5,6,7];
         fxUpdateObject.weekDays = [
           "monday",
           "tuesday",
@@ -284,15 +289,16 @@ Template._frequencyModal.onRendered(function () {
 
     _formFequencyModal.EmployeeId = employeeId
 
-    cronSetting.buildParsedText();
+    cronSetting.isProcessed = 1;
 
+    cronSetting.buildParsedText();
     try {
       var erpGet = erpDb();
       Meteor.call("addCurrencyCron", cronSetting, erpGet);
       _formFequencyModal.save();
       LoadingOverlay.hide(0);
       swal({title: "Success", text: "Fx update was scheduled successfully", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(() => {
-        window.open("/currenciessettings", "_self");
+        // window.open("/currenciessettings", "_self");
       });
     } catch (exception) {
       LoadingOverlay.hide(0);

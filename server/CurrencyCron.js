@@ -1,4 +1,5 @@
 import { Meteor, fetch } from "meteor/meteor";
+import moment from "moment";
 import CronSetting from "./Currency/CronSetting";
 import FxApi from "./Currency/FxApi";
 FutureTasks = new Meteor.Collection("cron-jobs");
@@ -134,6 +135,41 @@ function _updateRates(dbCurrencies = [], FxCurrencies = [], erpGet, callback = (
 
 }
 
+function buildParser(cronSetting, parser ){
+  // let cronStartDate = moment(cronSetting.startAt).subtract(1, 'days');  
+  let cronStartDate = cronSetting.startAt;  
+  if ( cronSetting.isProcessed == 1 ) {
+    let parseTime = moment(cronStartDate).format('h:mm a');
+    let parseDay = moment(cronStartDate).format('Do');
+    let parseMonth = moment(cronStartDate).format('MMMM');
+    let parseYear = moment(cronStartDate).format('YYYY');
+    return parser.text(`at ${parseTime} every ${parseDay} day of ${parseMonth} in ${parseYear}`);
+  }else{
+    if( cronSetting.type == 'Daily' ){
+      if( parseInt( cronSetting.every ) == 1 ){
+        let parseTime = moment(cronStartDate).format('h:mm a');
+        let parseDays = cronSetting.days.reduce((text, value, i, array) => text + (i < array.length - 1 ? ', ' : ' and ') + value);
+        return parser.text(`at ${parseTime} on ${parseDays}`);
+      }else{
+        let parseHour = moment(cronStartDate).format('HH');
+        let parseMinute = moment(cronStartDate).format('mm');
+        return parser.cron(`${parseMinute} ${parseHour} */${cronSetting.every} * *`);
+      }
+    }else if( cronSetting.type == 'Weekly' ){
+      let parseTime = moment(cronStartDate).format('h:mm a');
+      return parser.text(`every ${cronSetting.every} week on ${cronSetting.days} at ${parseTime}`)
+    }else if( cronSetting.type == 'Monthly' ){
+      return parser.text(`${cronSetting.toParse}`);
+    }else if( cronSetting.type == 'OneTime' ){
+      let parseTime = moment(cronStartDate).format('h:mm a');
+      let parseDay = moment(cronStartDate).format('Do');
+      let parseMonth = moment(cronStartDate).format('MMMM');
+      let parseYear = moment(cronStartDate).format('YYYY');
+      return parser.text(`at ${parseTime} every ${parseDay} day of ${parseMonth} in ${parseYear}`);
+    }
+  }
+}
+
 /**
  * This functions will save one currency
  * @param {*} currency
@@ -204,16 +240,28 @@ Meteor.methods({
 
     return SyncedCron.add({
       name: cronId,
-      schedule: function (parser) {
-       
-       const parsed = parser.text(cronSetting.toParse);
-        // const parsed = parser.text("every 2 minutes");
+      schedule: function (parser) {       
+        //  const parsed = parser.recur().on(cronSetting.dayInNumbers).dayOfWeek()
+                        // .and().every(15).minute().startingOn(14);
+                        
+        //  const parsed = parser.text('at 5:00 am every 10th day of September in 2022');
+        //  const parsed = parser.text('every 4th week');
+        // return parser.text('every 10th day at 08:00 am on monday');
+        // return parser.text('every 4 weeks on Wednesday at 08:00 am')
+        // return parser.cron(`5 8 * * 4/Sun`);
+        const parsed = buildParser(cronSetting, parser);
+        // const parsed = parser.text('at 5:00 am and every 10th day on Friday')
         return parsed;
   
       },
       job: () => {
-        Meteor.call("runCron", cronSetting, erpGet, function (error, results) {
-        });
+        if(cronSetting.isProcessed == 1 && cronSetting.type != 'OneTime' ){          
+          cronSetting.isProcessed = 0;
+          Meteor.call("addCurrencyCron", cronSetting);
+        }else{
+          Meteor.call("runCron", cronSetting, erpGet, function (error, results) {
+          });
+        }
       },
     });
   },
@@ -223,7 +271,6 @@ Meteor.methods({
    * @param {Object} cronSetting
    */
   scheduleCron: (cronSetting) => {
-   
     FutureTasks.insert(cronSetting);
   },
 });
