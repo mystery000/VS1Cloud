@@ -2429,7 +2429,7 @@ Template.accountant_companyastrustee.helpers({
 
     companyname: () => {
         let tradingname = localStorage.getItem("tradingName") || "";
-        return tradingname + " " + loggedCompany;
+        return loggedCompany + " trading as " + tradingname;
     },
 
     fiscalYearEnding: () => {

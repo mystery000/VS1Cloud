@@ -393,7 +393,6 @@ let grandtotalqty = 0;
     }
 
       templateObject.records.set(totalRecord);
-      console.log('totalRecord', totalRecord);
       templateObject.grandrecords.set(grandval);
 
 

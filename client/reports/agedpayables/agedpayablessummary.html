@@ -399,26 +399,26 @@
 
                                 {{else}}
 
-                                    <td class="Total1Indented MenuLeft TotalField">
+                                    <td class="Total1Indented MenuLeft TotalField text-right">
                                         <span class="table-cells">
                                         
                                             <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.amountdue}}</a>
                                         </span></td>
 
-                                    <td class="Total1Indented MenuLeft TotalField">
+                                    <td class="Total1Indented MenuLeft TotalField text-right">
                                         <span class="table-cells">
                                         
                                             <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.current}}</a>
                                         </span></td>
 
-                                    <td class="Total1Indented MenuLeft TotalField">
+                                    <td class="Total1Indented MenuLeft TotalField text-right">
                                         <span class="table-cells">
                                         
                                             <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.day30}}</a>
                                         </span></td>
 
 
-                                    <td class="Total1Indented MenuLeft TotalField">
+                                    <td class="Total1Indented MenuLeft TotalField text-right">
                                         <span class="table-cells">
                                         
                                             <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.day60}}</a>
@@ -454,37 +454,37 @@
 
                                       {{#each c in currencyList }}
                                         {{#if c.active}}
-                                          <td>{{ convertAmount grandrecords.TotalAmountDue c null}}</td>
+                                          <td class="text-right">{{ convertAmount grandrecords.TotalAmountDue c null}}</td>
                                         {{/if}}
                                       {{/each}}
 
                                       {{#each c in currencyList }}
                                         {{#if c.active}}
-                                          <td>{{ convertAmount grandrecords.TotalCurrent c null}}</td>
+                                          <td class="text-right">{{ convertAmount grandrecords.TotalCurrent c null}}</td>
                                         {{/if}}
                                       {{/each}}
 
                                       {{#each c in currencyList }}
                                         {{#if c.active}}
-                                          <td>{{ convertAmount grandrecords.OneMonth c null}}</td>
+                                          <td class="text-right">{{ convertAmount grandrecords.OneMonth c null}}</td>
                                         {{/if}}
                                       {{/each}}
 
                                       {{#each c in currencyList }}
                                         {{#if c.active}}
-                                          <td>{{ convertAmount grandrecords.TwoMonth c null}}</td>
+                                          <td class="text-right">{{ convertAmount grandrecords.TwoMonth c null}}</td>
                                         {{/if}}
                                       {{/each}}
 
                                       {{#each c in currencyList }}
                                         {{#if c.active}}
-                                          <td>{{ convertAmount grandrecords.ThreeMonth c null}}</td>
+                                          <td class="text-right">{{ convertAmount grandrecords.ThreeMonth c null}}</td>
                                         {{/if}}
                                       {{/each}}
 
                                       {{#each c in currencyList }}
                                         {{#if c.active}}
-                                          <td>{{ convertAmount grandrecords.OlderMonth c null}}</td>
+                                          <td class="text-right">{{ convertAmount grandrecords.OlderMonth c null}}</td>
                                         {{/if}}
                                       {{/each}}
 
@@ -493,12 +493,12 @@
                                     {{/if}}
                             {{else}}
 
-                              <td>{{ formatPrice grandrecords.TotalAmountDue}}</td>
-                              <td>{{ formatPrice grandrecords.TotalCurrent}}</td>
-                              <td>{{ formatPrice grandrecords.OneMonth}}</td>
-                              <td>{{ formatPrice grandrecords.TwoMonth}}</td>
-                              <td>{{ formatPrice grandrecords.ThreeMonth}}</td>
-                              <td>{{ formatPrice grandrecords.OlderMonth}}</td>
+                              <td class="text-right">{{ formatPrice grandrecords.TotalAmountDue}}</td>
+                              <td class="text-right">{{ formatPrice grandrecords.TotalCurrent}}</td>
+                              <td class="text-right">{{ formatPrice grandrecords.OneMonth}}</td>
+                              <td class="text-right">{{ formatPrice grandrecords.TwoMonth}}</td>
+                              <td class="text-right">{{ formatPrice grandrecords.ThreeMonth}}</td>
+                              <td class="text-right">{{ formatPrice grandrecords.OlderMonth}}</td>
 
                             {{/if}}
 

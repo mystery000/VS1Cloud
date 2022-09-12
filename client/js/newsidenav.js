@@ -143,7 +143,7 @@ Template.newsidenav.onCreated(function() {
 Template.newsidenav.onRendered(function() {
 
     var countObjectTimes = 0;
-    let allDataToLoad = 74;
+    let allDataToLoad = 75;
     let progressPercentage = 0;
 
     let templateObject = Template.instance();
@@ -924,7 +924,6 @@ Template.newsidenav.onRendered(function() {
             countObjectTimes++;
             progressPercentage = (countObjectTimes * 100) / allDataToLoad;
             $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
-            //$(".progressBarInner").text("App User "+Math.round(progressPercentage)+"%");
             $(".progressBarInner").text(Math.round(progressPercentage)+"%");
             $(".progressName").text("App User ");
             if((progressPercentage > 0) && (Math.round(progressPercentage) != 100)){
@@ -948,7 +947,6 @@ Template.newsidenav.onRendered(function() {
 
               }, 1000);
             }
-              //localStorage.setItem('VS1TAppUserList', JSON.stringify(data) || '');
               addVS1Data('TAppUser', JSON.stringify(data));
               $("<span class='process'>App User Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
           }).catch(function(err) {
@@ -1024,7 +1022,6 @@ Template.newsidenav.onRendered(function() {
         countObjectTimes++;
         progressPercentage = (countObjectTimes * 100) / allDataToLoad;
         $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
-        //$(".progressBarInner").text("App User "+Math.round(progressPercentage)+"%");
         $(".progressBarInner").text(Math.round(progressPercentage)+"%");
         $(".progressName").text("App User ");
         if((progressPercentage > 0) && (Math.round(progressPercentage) != 100)){
@@ -1048,7 +1045,6 @@ Template.newsidenav.onRendered(function() {
 
           }, 1000);
         }
-          //localStorage.setItem('VS1TAppUserList', JSON.stringify(data) || '');
           addVS1Data('TAppUser', JSON.stringify(data));
           $("<span class='process'>App User Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
       }).catch(function(err) {
@@ -1060,6 +1056,50 @@ Template.newsidenav.onRendered(function() {
         }
       });
     });
+
+    sideBarService.getRegionalOptionInfo().then(function(data) {
+      for (let i in data.tregionaloptions) {
+              localStorage.setItem('TRegionalOptionsID', data.tregionaloptions[i].ID||"");
+              localStorage.setItem('BusinessTaxNoLabel', data.tregionaloptions[i].BusinessTaxNoLabel||"GST");
+              localStorage.setItem('ERPTaxCodePurchaseInc', data.tregionaloptions[i].TaxCodePurchaseInc||"NCG");
+              localStorage.setItem('ERPTaxCodeSalesInc', data.tregionaloptions[i].TaxCodeSalesInc||"GST");
+      }
+
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      $(".progressBarInner").text(Math.round(progressPercentage)+"%");
+      $(".progressName").text("Regional options ");
+
+      if((progressPercentage > 0) && (Math.round(progressPercentage) != 100)){
+        if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }else{
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      }else if(Math.round(progressPercentage) >= 100){
+          $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function() {
+          if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }else{
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+
+        addVS1Data('TRegionalOptions', JSON.stringify(data));
+        $("<span class='process'>Regional options Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+
+    }).catch(function(err) {
+
+    });
+
   }else{
     setTimeout(function () {
     $('.allocationModal').removeClass('killAllocationPOP');

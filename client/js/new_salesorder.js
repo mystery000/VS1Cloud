@@ -476,7 +476,7 @@ Template.new_salesorder.onRendered(() => {
                     });
                 }
                 else {
-                    taxItems[targetTaxCode] = taxTotal;
+                    // taxItems[targetTaxCode] = taxTotal;
                 }
             }
 
@@ -974,7 +974,7 @@ Template.new_salesorder.onRendered(() => {
                     });
                 }
                 else {
-                    taxItems[targetTaxCode] = taxTotal;
+                    // taxItems[targetTaxCode] = taxTotal;
                 }
             }
 
@@ -1604,22 +1604,26 @@ Template.new_salesorder.onRendered(() => {
         if (object_invoce[0]["taxItems"]) {
 
             let taxItems = object_invoce[0]["taxItems"];
-            $("#templatePreviewModal #tax_list_print").html("");
-            Object.keys(taxItems).map((code) => {
-                let html = `
-                    <div style="width: 100%; display: flex;">
-                        <div style="padding-right: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
-                                ${code}</p>
+            if(taxItems && Object.keys(taxItems).length>0) {
+                $("#templatePreviewModal #tax_list_print").html("");
+                Object.keys(taxItems).map((code) => {
+                    let html = `
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    ${code}</p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $${taxItems[code].toFixed(3)}</p>
+                            </div>
                         </div>
-                        <div style="padding-left: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
-                                $${taxItems[code].toFixed(2)}</p>
-                        </div>
-                    </div>
-                `;
-                $("#templatePreviewModal #tax_list_print").append(html);
-            });
+                    `;
+                    $("#templatePreviewModal #tax_list_print").append(html);
+                });
+            } else {
+                $("#templatePreviewModal #tax_list_print").remove();
+            }
         }
         $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
 
@@ -1934,22 +1938,26 @@ Template.new_salesorder.onRendered(() => {
 
                 if (object_invoce[0]["taxItems"]) {
                 let taxItems = object_invoce[0]["taxItems"];
-                $("#html-2-pdfwrapper_new #tax_list_print").html("");
-                Object.keys(taxItems).map((code) => {
-                    let html = `
-                        <div style="width: 100%; display: flex;">
-                            <div style="padding-right: 16px; width: 50%;">
-                                <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
-                                    ${code}</p>
+                if(taxItems && Object.keys(taxItems).length>0) {
+                    $("#html-2-pdfwrapper_new #tax_list_print").html("");
+                    Object.keys(taxItems).map((code) => {
+                        let html = `
+                            <div style="width: 100%; display: flex;">
+                                <div style="padding-right: 16px; width: 50%;">
+                                    <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                        ${code}</p>
+                                </div>
+                                <div style="padding-left: 16px; width: 50%;">
+                                    <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                        $${taxItems[code].toFixed(3)}</p>
+                                </div>
                             </div>
-                            <div style="padding-left: 16px; width: 50%;">
-                                <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
-                                    $${taxItems[code].toFixed(2)}</p>
-                            </div>
-                        </div>
-                    `;
-                    $("#html-2-pdfwrapper_new #tax_list_print").append(html);
-                });
+                        `;
+                        $("#html-2-pdfwrapper_new #tax_list_print").append(html);
+                    });
+                } else {
+                    $("#html-2-pdfwrapper_new #tax_list_print").remove();
+                }
             }
             $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
             }
@@ -6430,7 +6438,7 @@ Template.new_salesorder.onRendered(() => {
                         });
                     }
                     else {
-                        taxItems[targetTaxCode] = taxTotal;
+                        // taxItems[targetTaxCode] = taxTotal;
                     }
                 }
 
@@ -6467,22 +6475,26 @@ Template.new_salesorder.onRendered(() => {
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
             $('#html-2-pdfwrapper').css('display', 'block');
 
-            $("#html-2-pdfwrapper #tax_list_print").html("");
-            Object.keys(taxItems).map((code) => {
-                let html = `
-                    <div style="width: 100%; display: flex;">
-                        <div style="padding-right: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
-                                ${code}</p>
+            if(taxItems && Object.keys(taxItems).length>0) {
+                $("#html-2-pdfwrapper #tax_list_print").html("");
+                Object.keys(taxItems).map((code) => {
+                    let html = `
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    ${code}</p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $${taxItems[code].toFixed(3)}</p>
+                            </div>
                         </div>
-                        <div style="padding-left: 16px; width: 50%;">
-                            <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
-                                $${taxItems[code].toFixed(2)}</p>
-                        </div>
-                    </div>
-                `;
-                $("#html-2-pdfwrapper #tax_list_print").append(html);
-            });
+                    `;
+                    $("#html-2-pdfwrapper #tax_list_print").append(html);
+                });
+            } else {
+                $("#html-2-pdfwrapper #tax_list_print").remove();
+            }
 
             var source = document.getElementById('html-2-pdfwrapper');
          

@@ -11,6 +11,7 @@ let reportService = new ReportService();
 let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
 
+
 let defaultCurrencyCode = CountryAbbr;
 
 Template.jobsalessummary.onCreated(() => {
@@ -26,6 +27,7 @@ Template.jobsalessummary.onCreated(() => {
 
 Template.jobsalessummary.onRendered(() => {
   const templateObject = Template.instance();
+  const jobSalesApi = new JobSalesApi();
   LoadingOverlay.show();
   templateObject.initDate = () => {
     const currentDate = new Date();
@@ -92,8 +94,10 @@ Template.jobsalessummary.onRendered(() => {
   templateObject.loadReport = async (dateFrom, dateTo, ignoreDate = false) => {
     LoadingOverlay.show();
 
-    let data = await CachedHttp.get(JobSalesApi.collectionNames.TJobSalesSummary, async () => {
-      let endPoint = JobSalesApi.collection.findByName(JobSalesApi.collectionNames.TJobSalesSummary);
+
+    let data = await CachedHttp.get(jobSalesApi.collectionNames.TJobSalesSummary, async () => {
+
+      let endPoint = jobSalesApi.collection.findByName(jobSalesApi.collectionNames.TJobSalesSummary);
 
       endPoint.url.searchParams.set('IgnoreDates', ignoreDate);
       endPoint.url.searchParams.set('ListType', "'Summary'");

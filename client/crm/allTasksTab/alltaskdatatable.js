@@ -96,6 +96,9 @@ Template.alltaskdatatable.onRendered(function () {
         templateObject.updateTaskSchedule(task_id, dateText);
       },
     });
+    let currentDate = new Date();
+    let begunDate = moment(currentDate).format("DD/MM/YYYY");
+    $(".crmDatepicker").val(begunDate);
   };
 
   templateObject.initSubtaskDatatable = function () {
@@ -895,21 +898,21 @@ Template.alltaskdatatable.onRendered(function () {
     let completed_style = "";
     task_array.forEach((item) => {
       if (item.fields.Completed) {
-        completed = "disabled checked";
-        chk_complete = "";
-        completed_style = "display:none;"
+        completed = "checked";
+        chk_complete = "chk_uncomplete";
+        // completed_style = "display:none;"
       } else {
         completed = "";
         chk_complete = "chk_complete";
       }
-      // td0 = `
-      //   <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${item.fields.priority}"
-      //     style="width:15px;margin-right: -6px;">
-      //     <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
-      //       id="formCheck-${item.fields.ID}" ${completed}>
-      //     <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
-      //       for="formCheck-${item.fields.ID}"></label>
-      //   </div>`;
+      td0 = `
+        <div class="custom-control custom-checkbox chkBox pointer no-modal "
+          style="width:15px;margin-right: -6px;">
+          <input class="custom-control-input chkBox chkComplete pointer ${chk_complete}" type="checkbox"
+            id="formCheck-${item.fields.ID}" ${completed}>
+          <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
+            for="formCheck-${item.fields.ID}"></label>
+        </div>`;
 
       tflag = `<i class="fas fa-flag task_modal_priority_${item.fields.priority}" data-id="${item.fields.ID}" aria-haspopup="true" aria-expanded="false"></i>`;
 
@@ -965,12 +968,12 @@ Template.alltaskdatatable.onRendered(function () {
 
       let all_projects = templateObject.all_projects.get();
       let projectColor = 'transparent';
-      if(item.fields.ProjectID != 0) {
+      if (item.fields.ProjectID != 0) {
         let projects = all_projects.filter(project => project.fields.ID == item.fields.ProjectID);
-        if(projects.length && projects[0].fields.ProjectColour) {
+        if (projects.length && projects[0].fields.ProjectColour) {
           projectColor = projects[0].fields.ProjectColour;
-        } 
-      } 
+        }
+      }
 
       td5 = `
         <div class="dropdown btnTaskTableAction">
@@ -1813,6 +1816,7 @@ Template.alltaskdatatable.events({
   "click .chk_complete": function (e) {
     let id = e.target.dataset.id;
     if (id == "edit") id = $("#txtCrmTaskID").val();
+
     // handle complete process via api
     var objDetails = {
       type: "Tprojecttasks",
@@ -1826,14 +1830,42 @@ Template.alltaskdatatable.events({
       $(".fullScreenSpin").css("display", "inline-block");
       let templateObject = Template.instance();
       crmService.saveNewTask(objDetails).then(function (objDetails) {
-        // $('#ttodo_' + id).remove();
         $(".chkComplete").prop("checked", false);
         // recalculate count here
         templateObject.getAllTaskList();
         templateObject.getTProjectList();
-        // $("#newProjectTasksModal").modal("hide");
 
         $(".fullScreenSpin").css("display", "none");
+        $(".btnRefresh").addClass('btnSearchAlert');
+
+      });
+    }
+  },
+
+  // complete task
+  "click .chk_uncomplete": function (e) {
+    let id = e.target.dataset.id;
+    if (id == "edit") id = $("#txtCrmTaskID").val();
+
+    // handle complete process via api
+    var objDetails = {
+      type: "Tprojecttasks",
+      fields: {
+        ID: id,
+        Completed: false,
+      },
+    };
+
+    if (id) {
+      $(".fullScreenSpin").css("display", "inline-block");
+      let templateObject = Template.instance();
+      crmService.saveNewTask(objDetails).then(function (objDetails) {
+        templateObject.getAllTaskList();
+        templateObject.getTProjectList();
+        templateObject.view_all_task_completed.set("NO"); 
+
+        $(".fullScreenSpin").css("display", "none");
+        $(".btnRefresh").addClass('btnSearchAlert');
       });
     }
   },
@@ -3468,14 +3500,28 @@ function openEditTaskModal(id, type) {
 
       let projectName = selected_record.ProjectName == "Default" ? "All Tasks" : selected_record.ProjectName;
 
+      if (selected_record.Completed) {
+        $('#lblComplete_taskEditLabel').removeClass('chk_complete');
+        $('#lblComplete_taskEditLabel').addClass('chk_uncomplete');
+        $('#chkComplete_taskEdit').removeClass('chk_complete');
+        $('#chkComplete_taskEdit').addClass('chk_uncomplete');
+        $('#chkComplete_taskEdit').prop("checked", true); 
+      } else {
+        $('#lblComplete_taskEditLabel').removeClass('chk_uncomplete');
+        $('#lblComplete_taskEditLabel').addClass('chk_complete');
+        $('#chkComplete_taskEdit').removeClass('chk_uncomplete');
+        $('#chkComplete_taskEdit').addClass('chk_complete');
+        $('#chkComplete_taskEdit').prop("checked", false); 
+      }
+
       let all_projects = templateObject.all_projects.get();
       let projectColorStyle = '';
-      if(selected_record.ProjectID != 0) {
+      if (selected_record.ProjectID != 0) {
         let projects = all_projects.filter(project => project.fields.ID == selected_record.ProjectID);
-        if(projects.length && projects[0].fields.ProjectColour) {
+        if (projects.length && projects[0].fields.ProjectColour) {
           projectColorStyle = 'color: ' + projects[0].fields.ProjectColour + ' !important';
-        } 
-      } 
+        }
+      }
 
       let catg = "";
       let today = moment().format("YYYY-MM-DD");
@@ -3538,7 +3584,7 @@ function openEditTaskModal(id, type) {
       let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
       let date_component = ` <div class="dropdown btnTaskTableAction">
         <div data-toggle="dropdown" title="Reschedule Task" style="cursor:pointer;">
-          <i class="far fa-calendar-plus" style="margin-right: 5px;"></i> 
+          <i class="far fa-calendar-plus" style="margin-right: 5px;"></i>
           <span id="edit_task_modal_due_date">${due_date}</span>
         </div>
         <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
@@ -3584,8 +3630,7 @@ function openEditTaskModal(id, type) {
           </div>
         </div>
       </div>`;
-      
-      console.log('openeditmosal from alltask.....')
+
       // $("#taskmodalDuedate").html(due_date);
       $("#taskmodalDuedate").html(date_component);
       $("#taskmodalDescription").html(selected_record.TaskDescription);
@@ -3839,6 +3884,9 @@ function openEditTaskModal(id, type) {
           templateObject.updateTaskSchedule(task_id, dateText);
         },
       });
+      let currentDate = new Date();
+      let begunDate = moment(currentDate).format("DD/MM/YYYY");
+      $(".crmDatepicker").val(begunDate);
 
     } else {
       swal("Cannot edit this task", "", "warning");

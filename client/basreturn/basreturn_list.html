@@ -227,18 +227,18 @@
                             <tbody>
                                 {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
-                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                    <td contenteditable="false" class="colBasNumber">78</td>
-                                    <td contenteditable="false" class="colBasName">{{item.memo}}</td>
-                                    <td contenteditable="false" class="t1Period">Quarterly</td>
-                                    <td contenteditable="false" class="t1From">2000-02-02</td>
-                                    <td contenteditable="false" class="t1To">2020-02-02</td>
-                                    <td contenteditable="false" class="t2Period">Quarterly</td>
-                                    <td contenteditable="false" class="t2From">2000-02-02</td>
-                                    <td contenteditable="false" class="t2To">2020-02-02</td>
-                                    <td contenteditable="false" class="t3Period">Quarterly</td>
-                                    <td contenteditable="false" class="t3From">2000-02-02</td>
-                                    <td contenteditable="false" class="t3To">2020-02-02</td>
+                                <tr class="dnd-moved" id="{{item.basnumber}}" style="cursor: pointer;">
+                                    <td contenteditable="false" class="colBasNumber">{{item.basnumber}}</td>
+                                    <td contenteditable="false" class="colBasName">{{item.description}}</td>
+                                    <td contenteditable="false" class="t1Period">{{item.tab1datemethod}}</td>
+                                    <td contenteditable="false" class="t1From">{{item.tab1startDate}}</td>
+                                    <td contenteditable="false" class="t1To">{{item.tab1endDate}}</td>
+                                    <td contenteditable="false" class="t2Period">{{item.tab2datemethod}}</td>
+                                    <td contenteditable="false" class="t2From">{{item.tab2startDate}}</td>
+                                    <td contenteditable="false" class="t2To">{{item.tab2endDate}}</td>
+                                    <td contenteditable="false" class="t3Period">{{item.tab2datemethod2}}</td>
+                                    <td contenteditable="false" class="t3From">{{item.tab2startDate2}}</td>
+                                    <td contenteditable="false" class="t3To">{{item.tab2endDate2}}</td>
                                     <!-- <td contenteditable="false" class="colStatus hiddenColumn">{{item.orderstatus}}</td> -->
                                 </tr>
                                 {{/each}}

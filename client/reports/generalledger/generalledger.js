@@ -117,7 +117,6 @@ Template.generalledger.onRendered(() => {
       reportService.getGeneralLedgerDetailsData(dateFrom, dateTo, ignoreDate).then(function (data) {
           let totalRecord = [];
           let grandtotalRecord = [];
-
           if (data.tgeneralledgerreport.length) {
             localStorage.setItem("VS1GeneralLedger_Report",JSON.stringify(data) || "");
             let records = [];
@@ -137,6 +136,9 @@ Template.generalledger.onRendered(() => {
               let recordObj = {};
               recordObj.Id = data.tgeneralledgerreport[i].PURCHASEORDERID;
               recordObj.type = data.tgeneralledgerreport[i].TYPE;
+              recordObj.paymentId = data.tgeneralledgerreport[i].PAYMENTID;
+              recordObj.saleId = data.tgeneralledgerreport[i].SALEID;
+              recordObj.cheqNumber = data.tgeneralledgerreport[i].CHEQUENUMBER;
               recordObj.AccountName = data.tgeneralledgerreport[i].ACCOUNTNAME;
               recordObj.dataArr = [
                 "",
@@ -361,9 +363,7 @@ Template.generalledger.onRendered(() => {
       let data = JSON.parse(localStorage.getItem("VS1GeneralLedger_Report"));
       let totalRecord = [];
       let grandtotalRecord = [];
-
-
-
+      
       if (data.tgeneralledgerreport.length) {
         let records = [];
         let allRecords = [];
@@ -434,6 +434,7 @@ Template.generalledger.onRendered(() => {
           //   }
 
           records.push(recordObj);
+          
         }
         records = _.sortBy(records, "AccountName");
         records = _.groupBy(records, "AccountName");
@@ -538,6 +539,7 @@ Template.generalledger.onRendered(() => {
           iterator += 1;
         }
 
+        
         templateObject.records.set(totalRecord);
         templateObject.grandrecords.set(grandval);
 
@@ -591,6 +593,7 @@ Template.generalledger.onRendered(() => {
 
         records.push(recordObj);
         templateObject.records.set(records);
+
         $(".fullScreenSpin").css("display", "none");
       templateObject.grandrecords.set("");
       }
@@ -826,24 +829,24 @@ Template.generalledger.events({
     localStorage.setItem("VS1GeneralLedger_Report", "");
     Meteor._reload.reload();
   },
-  "click td a": function (event) {
-    let redirectid = $(event.target).closest("tr").attr("id");
+  // "click td a": function (event) {
+  //   let redirectid = $(event.target).closest("tr").attr("id");
 
-    let transactiontype = $(event.target).closest("tr").attr("class");
+  //   let transactiontype = $(event.target).closest("tr").attr("class");
 
-    if (redirectid && transactiontype) {
-      if (transactiontype === "Bill") {
-        window.open("/billcard?id=" + redirectid, "_self");
-      } else if (transactiontype === "PO") {
-        window.open("/purchaseordercard?id=" + redirectid, "_self");
-      } else if (transactiontype === "Credit") {
-        window.open("/creditcard?id=" + redirectid, "_self");
-      } else if (transactiontype === "Supplier Payment") {
-        window.open("/supplierpaymentcard?id=" + redirectid, "_self");
-      }
-    }
-    // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
-  },
+  //   if (redirectid && transactiontype) {
+  //     if (transactiontype === "Bill") {
+  //       window.open("/billcard?id=" + redirectid, "_self");
+  //     } else if (transactiontype === "PO") {
+  //       window.open("/purchaseordercard?id=" + redirectid, "_self");
+  //     } else if (transactiontype === "Credit") {
+  //       window.open("/creditcard?id=" + redirectid, "_self");
+  //     } else if (transactiontype === "Supplier Payment") {
+  //       window.open("/supplierpaymentcard?id=" + redirectid, "_self");
+  //     }
+  //   }
+  //   // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
+  // },
   "click .btnPrintReport": function (event) {
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
@@ -1037,6 +1040,14 @@ Template.generalledger.events({
   "click .fx-rate-btn": async (e) => {
     await loadCurrency();
     //loadCurrencyHistory();
+  },
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
   }
 });
 
@@ -1153,6 +1164,37 @@ Template.generalledger.helpers({
       return true;
     }
     return false;
+  },
+  redirectionType(item) {
+    if(item.type === 'PO') {
+      return '/purchaseordercard?id=' + item.Id;
+    } else if (item.type === 'Invoice') {
+      return '/invoicecard?id=' + item.saleId;
+    } else if (item.type === 'Bill') {
+      return '/billcard?id=' + item.Id;
+    } else if (item.type === 'Cheque') {
+      return '/chequecard?id=' + item.Id;
+    } else if (item.type === 'Un-Invoiced PO') {
+      return '/purchaseordercard?id=' + item.Id;
+    } else if (item.type === 'Supplier Payment') {
+      return '/supplierpaymentcard?id=' + item.paymentId;
+    } else if (item.type === 'Customer Payment') {
+      return '/paymentcard?id=' + item.paymentId;
+    } else if (item.type === 'Refund') {
+      return 'refundcard?id=' + item.saleId;
+    } else if (item.type === 'Closing Date Summary') {
+      return '#noInfoFound';
+    } else if (item.type === 'Stock Transfer') {
+      return '#noInfoFound';
+    } else if (item.type === 'Stock Adjustment') {
+      return '#noInfoFound';
+    } else if (item.type === 'Fixed Asset Depreciation') {
+      return '#noInfoFound';
+    }else if (item.type === 'Cash Sale') {
+      return '#noInfoFound';
+    } else {
+      return '#noInfoFound';
+    }
   },
   isOnlyDefaultActive() {
     const array = Template.instance().currencyList.get();

@@ -86,7 +86,7 @@ Template.serialnumberlist.onRendered(function() {
                             barcode: data.tserialnumberlistcurrentreport[i].Barcode,
                             serialnumber: data.tserialnumberlistcurrentreport[i].SerialNumber,
                             status: data.tserialnumberlistcurrentreport[i].AllocType,
-                            date: sdatet,
+                            date: data.tserialnumberlistcurrentreport[i].TransDate !=''? moment(data.tserialnumberlistcurrentreport[i].TransDate).format("YYYY/MM/DD"): data.tserialnumberlistcurrentreport[i].TransDate,
                             cssclass:tclass
                         };
                         dataTableList.push(dataList);
@@ -366,7 +366,7 @@ Template.serialnumberlist.onRendered(function() {
                                 barcode: data.tserialnumberlistcurrentreport[i].Barcode,
                                 serialnumber: data.tserialnumberlistcurrentreport[i].SerialNumber,
                                 status: data.tserialnumberlistcurrentreport[i].AllocType,
-                                date: sdatet,
+                                date: data.tserialnumberlistcurrentreport[i].TransDate !=''? moment(data.tserialnumberlistcurrentreport[i].TransDate).format("YYYY/MM/DD"): data.tserialnumberlistcurrentreport[i].TransDate,
                                 cssclass:tclass
                             };
 
@@ -554,7 +554,7 @@ Template.serialnumberlist.onRendered(function() {
                         barcode: data.tserialnumberlistcurrentreport[i].Barcode,
                         serialnumber: data.tserialnumberlistcurrentreport[i].SerialNumber,
                         status: data.tserialnumberlistcurrentreport[i].AllocType,
-                        date: sdatet,
+                        date: data.tserialnumberlistcurrentreport[i].TransDate !=''? moment(data.tserialnumberlistcurrentreport[i].TransDate).format("YYYY/MM/DD"): data.tserialnumberlistcurrentreport[i].TransDate,
                         cssclass:tclass
                     };
                     dataTableList.push(dataList);
