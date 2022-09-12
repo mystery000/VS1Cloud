@@ -46,11 +46,22 @@
                 a:link {
                     text-decoration: none !important;
                 }
-
                 a[href]:after {
                     content: none !important;
                 }
-                
+                .printReport,
+                .printReport .table-responsive {
+                    width: 100% !important;
+                    background: #fff !important;
+                }
+                .printReport .table-responsive table {
+                    width: 100% !important;
+                }
+                .printReport .table-responsive table th,
+                .printReport .table-responsive table td {
+                    min-width: unset !important;
+                }
+
             }
             
         </style>
@@ -260,6 +271,7 @@
                                                     <tr>
                                                         <td style="font-weight: 800;">{{ value.Name }}</td>
                                                         <td style="font-weight: 800;">{{ value.Phone }}</td>
+                                                        <td style="font-weight: 800;"></td>
                                                         {{#if isOnlyDefaultActive }}
                                                             {{#if currencyList}}
                                                                 {{#each c in currencyList }}
@@ -282,14 +294,12 @@
                                                             <td style="font-weight: 800;"></td>
                                                             <td style="font-weight: 800;"></td>
                                                             <td style="font-weight: 800;"></td>
-                                                            <td style="font-weight: 800;"></td>
                                                         {{/if}}
                                                          <td style="font-weight: 800;"></td>
-                                                       
-                                                        <td style="font-weight: 800;">{{ value.Address }}</td>
-                                                        <td style="font-weight: 800;">{{ value.Address_2 }}</td>
-                                                        <td style="font-weight: 800;">{{ value.Postcode }}</td>
-                                                        <td style="font-weight: 800;">{{ value.State }}</td>
+                                                         <td style="font-weight: 800;">{{ value.Address }}</td>
+                                                         <td style="font-weight: 800;">{{ value.Address_2 }}</td>
+                                                         <td style="font-weight: 800;">{{ value.Postcode }}</td>
+                                                         <td style="font-weight: 800;">{{ value.State }}</td>
                                                     </tr>
                                                     {{#each item in value.SubAccounts}}
                                                         {{#if checkEmptySubAccount item }}
