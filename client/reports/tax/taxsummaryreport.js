@@ -1173,6 +1173,7 @@ Template.taxsummaryreport.onRendered(() => {
     false);
 
   templateObject.getDepartments = function () {
+    let deptrecordObj = [];
     reportService.getDepartment().then(function (data) {
       for (let i in data.tdeptclass) {
 
