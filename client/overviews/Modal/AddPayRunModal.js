@@ -45,18 +45,19 @@ Template.AddPayRunModal.onRendered(() => {
     // });
     let splashArrayCalenderList = [];
 
-    for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-      var dataListAllowance = [
-        data.tpayrollcalendars[i].fields.ID || "",
-        data.tpayrollcalendars[i].fields.PayrollCalendarName || "",
-        data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || "",
-        moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format("DD/MM/YYYY") || "",
-        moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format("DD/MM/YYYY") || "",
-        '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    data.tpayrollcalendars.forEach(calendar => {
+      dataListAllowance = [
+        calendar.fields.ID || "",
+        calendar.fields.PayrollCalendarName || "",
+        calendar.fields.PayrollCalendarPayPeriod || "",
+        moment(calendar.fields.PayrollCalendarStartDate).format("DD/MM/YYYY") || "",
+        moment(calendar.fields.PayrollCalendarFirstPaymentDate).format("DD/MM/YYYY") || ""
+        // '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
       ];
 
       splashArrayCalenderList.push(dataListAllowance);
-    }
+    });
+
     setTimeout(function () {
       $("#tblPayCalendars").DataTable({
         data: splashArrayCalenderList,
@@ -77,10 +78,6 @@ Template.AddPayRunModal.onRendered(() => {
           }, {
             className: "colNextPaymentDate",
             targets: [4]
-          }, {
-            className: "colDeleteCalenders",
-            orderable: false,
-            targets: -1
           }
         ],
         select: true,
@@ -147,18 +144,18 @@ Template.AddPayRunModal.onRendered(() => {
               LoadingOverlay.hide();
             });
           });
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
+          // setTimeout(function () {
+          //   MakeNegative();
+          // }, 100);
         },
         fnInitComplete: function () {
           $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
           $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
         }
       }).on("page", function () {
-        setTimeout(function () {
-          MakeNegative();
-        }, 100);
+        // setTimeout(function () {
+        //   MakeNegative();
+        // }, 100);
       }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
         //$('.fullScreenSpin').css('display', 'inline-block');
         let dataLenght = settings._iDisplayLength;
@@ -181,28 +178,36 @@ Template.AddPayRunModal.onRendered(() => {
             });
           }
         }
-        setTimeout(function () {
-          MakeNegative();
-        }, 100);
+        // setTimeout(function () {
+        //   MakeNegative();
+        // }, 100);
       });
     }, 0);
 
     $("div.dataTables_filter input").addClass("form-control form-control-sm");
 
-    $("#AppTableModal").modal("show");
+
+    setTimeout(() => {
+      const trs = $('#tblPayCalendars tbody').find('tr');
+      console.log(trs);
+      $("#AppTableModal").modal("show");
+
+      $(trs).each((tr) => {
+        $(tr).on('click', (e) => {
+          const id = $(e.currentTarget).find('.colCalenderID').text();
+          console.log(id);
+        })
+      });
+
+
+    }, 300);
+
+
+
+
     LoadingOverlay.hide();
   };
 
-  $(document).on("click", ".colDeleteCalenders", function (event) {
-    event.stopPropagation();
-    let targetID = $(event.target).closest("tr").find(".colCalenderID").text() || 0; // table row ID
-
-    let calenderName = $(this).closest("tr").find(".colPayCalendarName").text() || "";
-
-    $("#selectColDeleteLineID").val(targetID);
-    $("#selectCalenderName").val(targetID);
-    $("#deleteCalenderLineModal").modal("toggle");
-  });
 
   //templateObject.loadPayRuns();
 });
@@ -216,8 +221,7 @@ Template.AddPayRunModal.events({
   "click .btnPayRunNext": event => {
     $(".modal-backdrop").css("display", "none");
     FlowRouter.go("/payrundetails");
-  },
-
+  }
 });
 
 Template.AddPayRunModal.helpers({
