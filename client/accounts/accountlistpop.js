@@ -224,6 +224,8 @@ Template.accountlistpop.onRendered(function() {
                             { className: "taxrate", "targets": [5] },
                             { className: "colAccountID hiddenColumn", "targets": [6] }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
                         "order": [
                             [0, "asc"]
@@ -311,6 +313,8 @@ Template.accountlistpop.onRendered(function() {
                             { className: "taxrate", "targets": [5] },
                             { className: "colAccountID hiddenColumn", "targets": [6] }
                         ],
+                        select: true,
+                        destroy: true,
                         colReorder: true,
                         "order": [
                             [0, "asc"]
@@ -338,7 +342,7 @@ Template.accountlistpop.onRendered(function() {
     .editableSelect()
     .on("click.editable-select", function (e, li) {
       var $earch = $(this);
-      var offset = $earch.offset(); 
+      var offset = $earch.offset();
       var bankName = e.target.value || "";
 
       if (e.pageX > offset.left + $earch.width() - 8) {
@@ -356,7 +360,7 @@ Template.accountlistpop.onRendered(function() {
 
   $(document).on("click", "#tblBankCode tbody tr", function (e) {
     var table = $(this);
-    let bankCode = table.find(".bankCode").text(); 
+    let bankCode = table.find(".bankCode").text();
     $('#bankCodeModal').modal('toggle');
     $('#sltBankCodes').val(bankCode);
   });

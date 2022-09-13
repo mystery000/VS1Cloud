@@ -4,7 +4,7 @@ import {Meteor} from 'meteor/meteor';
 
 /**
  *
- * The console.logs here are only for debug purpose, wont work on production
+ * The  here are only for debug purpose, wont work on production
  */
 class CachedHttp {
   constructor(options = {
@@ -212,4 +212,3 @@ export default CachedHttp = new CachedHttp({
   debug: Meteor.isDevelopment,
   endpointPrefix: Meteor.isDevelopment ? "cached_http/dev/" : "cached_http/",
 });
-

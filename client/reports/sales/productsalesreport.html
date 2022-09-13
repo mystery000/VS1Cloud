@@ -223,10 +223,10 @@
                         <th>Sales Date</th>
                         <th>Customer</th>
                         <th class="text-right">Qty</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">Line Cost
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Line Cost
                         </th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">Total Amount</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">Total Profit</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total Amount</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total Profit</th>
                       </tr>
 
                       {{#if isOnlyDefaultActive equal "false" }}
@@ -242,7 +242,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -250,7 +250,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -258,7 +258,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -310,7 +310,7 @@
                                 <a href="#" style="text-decoration:none!important;">{{entry.entries.CustomerName}}</a>
                               </td>
 
-                              <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
+                              <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
                                 <a href="#" style="text-decoration:none!important;">{{entry.entries.Qty}}</a>
                               </td>
 
@@ -320,7 +320,7 @@
                                   {{#each c in currencyList }}
                                     {{# if c.active}}
 
-                                      <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
+                                      <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1  text-right">
                                         <a href="#" style="text-decoration:none!important;">{{ convertAmount entry.entries.LineCostEx c}}</a>
                                       </td>
                                     {{/if}}
@@ -328,7 +328,7 @@
 
                                   {{#each c in currencyList }}
                                     {{# if c.active}}
-                                      <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
+                                      <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1  text-right">
                                         <a href="#" style="text-decoration:none!important;">{{ convertAmount entry.entries.TotalAmountEx c}}</a>
                                       </td>
                                     {{/if}}
@@ -336,7 +336,7 @@
 
                                   {{#each c in currencyList }}
                                     {{# if c.active}}
-                                      <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
+                                      <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1  text-right">
                                         <a href="#" style="text-decoration:none!important;">{{ convertAmount entry.entries.TotalProfitEx c}}</a>
                                       </td>
                                     {{/if}}
@@ -345,15 +345,15 @@
                                 {{/if}}
                               {{else}}
 
-                                <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
+                                <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right">
                                   <a href="#" style="text-decoration:none!important;">{{ formatPrice entry.entries.LineCostEx}}</a>
                                 </td>
 
-                                <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
+                                <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right">
                                   <a href="#" style="text-decoration:none!important;">{{ formatPrice entry.entries.TotalAmountEx}}</a>
                                 </td>
 
-                                <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
+                                <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right">
                                   <a href="#" style="text-decoration:none!important;">{{ formatPrice entry.entries.TotalProfitEx}}</a>
                                 </td>
 
@@ -467,20 +467,20 @@
                             
                               {{#each c in currencyList }}
                                   {{# if c.active}}
-                                      <td currency="{{c.code}}" currency-id="{{c.id}}" >{{ convertAmount grandRecords.Tax c}}</td>
+                                      <td class="text-right" currency="{{c.code}}" currency-id="{{c.id}}" >{{ convertAmount grandRecords.Tax c}}</td>
                                   {{/if}}
                               {{/each}}
 
 
                               {{#each c in currencyList }}
                                 {{# if c.active}}
-                                  <td currency="{{c.code}}" currency-id="{{c.id}}" >{{ convertAmount grandRecords.AmountInc c}}</td>
+                                  <td class="text-right" currency="{{c.code}}" currency-id="{{c.id}}" >{{ convertAmount grandRecords.AmountInc c}}</td>
                                 {{/if}}
                               {{/each}}
 
                               {{#each c in currencyList }}
                                   {{# if c.active}}
-                                  <td currency="{{c.code}}" currency-id="{{c.id}}" >{{ convertAmount grandRecords.Balance c}}</td>
+                                  <td class="text-right" currency="{{c.code}}" currency-id="{{c.id}}" >{{ convertAmount grandRecords.Balance c}}</td>
                                   {{/if}}
                               {{/each}}
 
@@ -488,9 +488,9 @@
 
                           {{else}}
 
-                            <td>{{ formatPrice grandRecords.Tax}}</td>
-                            <td>{{ formatPrice grandRecords.AmountInc}}</td>
-                            <td>{{ formatPrice grandRecords.Balance}}</td>
+                            <td class="text-right">{{ formatPrice grandRecords.Tax}}</td>
+                            <td class="text-right">{{ formatPrice grandRecords.AmountInc}}</td>
+                            <td class="text-right">{{ formatPrice grandRecords.Balance}}</td>
 
 
                           {{/if}}

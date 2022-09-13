@@ -1155,7 +1155,21 @@ Template.balancesheetreport.events({
         if (currentDate.getDate() < 10) {
             fromDateDay = "0" + currentDate.getDate();
         }
+        var quarterAdjustment = (moment().month() % 3) + 1;
+        var lastQuarterEndDate = moment()
+            .subtract({ months: quarterAdjustment })
+            .endOf("month");
+        var lastQuarterStartDate = lastQuarterEndDate
+            .clone()
+            .subtract({ months: 2 })
+            .startOf("month");
+        var lastQuarterStartDateFormat =
+            moment(lastQuarterStartDate).format("DD/MM/YYYY");
+        var lastQuarterEndDateFormat =
+            moment(lastQuarterEndDate).format("DD/MM/YYYY");
 
+        templateObject.dateAsAt.set(lastQuarterStartDateFormat);
+        $("#balancedate").val(lastQuarterStartDateFormat);
         var fromDate =
             fromDateDay +
             "/" +

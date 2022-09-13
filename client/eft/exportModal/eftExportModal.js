@@ -255,16 +255,17 @@ Template.eftExportModal.onRendered(function () {
       var $earch = $(this);
       var offset = $earch.offset(); 
       var bankName = e.target.value || "";
+      console.log(bankName)
 
       if (e.pageX > offset.left + $earch.width() - 8) {
-        $("#transactionCodeModal").modal();
+        // $("#transactionCodeModal").modal();
         $(".fullScreenSpin").css("display", "none");
 
       } else {
         if (bankName.replace(/\s/g, "") != "") {
-          $("#transactionCodeModal").modal("toggle");
+          // $("#transactionCodeModal").modal("toggle");
         } else {
-          $("#transactionCodeModal").modal();
+          // $("#transactionCodeModal").modal();
         }
       }
     });
