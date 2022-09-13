@@ -1,6 +1,8 @@
 import "../../lib/global/indexdbstorage.js";
 import { CRMService } from "../crm-service";
+import { SideBarService } from '../../js/sidebar-service';
 let crmService = new CRMService();
+let sideBarService = new SideBarService();
 
 Template.alltaskdatatable.onCreated(function () {
   let templateObject = Template.instance();
@@ -39,11 +41,12 @@ Template.alltaskdatatable.onCreated(function () {
 
   templateObject.subTasks = new ReactiveVar([]);
 
-
   // labels tab
   templateObject.alllabels = new ReactiveVar([]);
   templateObject.allfilters = new ReactiveVar([]);
   // labels tab
+  templateObject.allLeads = new ReactiveVar([]);
+
 });
 
 Template.alltaskdatatable.onRendered(function () {
@@ -1745,6 +1748,50 @@ Template.alltaskdatatable.onRendered(function () {
   };
   // projects tab ------------------- //
 
+  templateObject.getLeads = function () {
+    // use API TProspectEx instead of TLeads
+    getVS1Data('TProspectEx').then(function (dataObject) {
+      if (dataObject.length === 0) {
+        sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function (data) {
+          addVS1Data('TProspectEx', JSON.stringify(data));
+          // setAllLeads(data);
+          templateObject.allLeads.set(data);
+          initLeadOptions(data)
+        }).catch(function (err) {
+          $('.fullScreenSpin').css('display', 'none');
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        // setAllLeads(data);
+        templateObject.allLeads.set(data);
+        initLeadOptions(data)
+      }
+    }).catch(function (err) {
+      sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function (data) {
+        addVS1Data('TProspectEx', JSON.stringify(data));
+        // setAllLeads(data);
+        templateObject.allLeads.set(data);
+        initLeadOptions(data)
+      }).catch(function (err) {
+        $('.fullScreenSpin').css('display', 'none');
+      });
+    });
+  };
+  templateObject.getLeads();
+
+  function initLeadOptions(data) {
+    let leadId = FlowRouter.current().queryParams.leadid;
+    let options = '<option></option>';
+    let selected = '';
+    let tprospect = data.tprospect ? data.tprospect : [];
+    tprospect.forEach(lead => {
+      selected = leadId === lead.fields.ID ? 'selected' : '';
+      options += `<option value="${lead.fields.ID}" ${selected}>${lead.fields.ClientName}</option>`;
+    });
+
+    $('.crmSelectLeadList').html(options)
+  }
+
   setTimeout(() => {
     $(".crmEditDatepicker").datepicker({
       showOn: "button",
@@ -1862,7 +1909,7 @@ Template.alltaskdatatable.events({
       crmService.saveNewTask(objDetails).then(function (objDetails) {
         templateObject.getAllTaskList();
         templateObject.getTProjectList();
-        templateObject.view_all_task_completed.set("NO"); 
+        templateObject.view_all_task_completed.set("NO");
 
         $(".fullScreenSpin").css("display", "none");
         $(".btnRefresh").addClass('btnSearchAlert');
@@ -3436,43 +3483,32 @@ Template.alltaskdatatable.helpers({
     return Template.instance().favorite_projects.get();
   },
 
-  // projects tab ------------------
-  active_projects: () => {
-    return Template.instance().active_projects.get();
-  },
+  // projects tab ------------------ 
 
-  deleted_projects: () => {
-    return Template.instance().deleted_projects.get();
-  },
+  // getProjectColor: (color) => {
+  //   if (color == 0) {
+  //     return "gray";
+  //   }
+  //   return color;
+  // },
 
-  favorite_projects: () => {
-    return Template.instance().favorite_projects.get();
-  },
+  // getProjectCount: (tasks) => {
+  //   if (tasks == null) {
+  //     return "";
+  //   } else if (Array.isArray(tasks) == true) {
+  //     return tasks.length;
+  //   } else {
+  //     return 1;
+  //   }
+  // },
 
-  getProjectColor: (color) => {
-    if (color == 0) {
-      return "gray";
-    }
-    return color;
-  },
-
-  getProjectCount: (tasks) => {
-    if (tasks == null) {
-      return "";
-    } else if (Array.isArray(tasks) == true) {
-      return tasks.length;
-    } else {
-      return 1;
-    }
-  },
-
-  getProjectStatus: (status) => {
-    if (status) {
-      return "Active";
-    } else {
-      return "Deleted";
-    }
-  },
+  // getProjectStatus: (status) => {
+  //   if (status) {
+  //     return "Active";
+  //   } else {
+  //     return "Deleted";
+  //   }
+  // },
   // projects tab ------------------
 });
 
@@ -3505,13 +3541,13 @@ function openEditTaskModal(id, type) {
         $('#lblComplete_taskEditLabel').addClass('chk_uncomplete');
         $('#chkComplete_taskEdit').removeClass('chk_complete');
         $('#chkComplete_taskEdit').addClass('chk_uncomplete');
-        $('#chkComplete_taskEdit').prop("checked", true); 
+        $('#chkComplete_taskEdit').prop("checked", true);
       } else {
         $('#lblComplete_taskEditLabel').removeClass('chk_uncomplete');
         $('#lblComplete_taskEditLabel').addClass('chk_complete');
         $('#chkComplete_taskEdit').removeClass('chk_uncomplete');
         $('#chkComplete_taskEdit').addClass('chk_complete');
-        $('#chkComplete_taskEdit').prop("checked", false); 
+        $('#chkComplete_taskEdit').prop("checked", false);
       }
 
       let all_projects = templateObject.all_projects.get();

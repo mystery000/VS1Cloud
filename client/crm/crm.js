@@ -112,7 +112,10 @@ Template.crmoverview.onRendered(function () {
     });
   }
   function setCustomerByID(data) {
-    $("#add_task_name").val(data.fields.ClientName);
+    // $("#add_task_name").val(data.fields.ClientName);
+    const $select = document.querySelector('#add_contact_name');
+    $select.value = data.fields.ID
+
     $("#editProjectID").val("");
     $("#txtCrmSubTaskID").val("");
 
@@ -142,6 +145,7 @@ Template.crmoverview.onRendered(function () {
     let type = "";
     openEditTaskModal(FlowRouter.current().queryParams.taskid, type);
   }
+
 });
 
 Template.crmoverview.events({
@@ -258,7 +262,7 @@ Template.crmoverview.events({
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     // let employeeID = Session.get("mySessionEmployeeLoggedID");
-
+console.log('btnRefresh here////////')
     crmService.getAllTaskList().then(function (data) {
       addVS1Data("TCRMTaskList", JSON.stringify(data));
       crmService.getTProjectList().then(function (data) {
@@ -308,20 +312,27 @@ Template.crmoverview.events({
 
             addVS1Data("TCRMLeadBarChart", JSON.stringify(bar_records));
             addVS1Data("TCRMLeadPieChart", JSON.stringify(pie_records));
-            Meteor._reload.reload();
-
+            // Meteor._reload.reload();
+            // FlowRouter.go('/crmoverview');
+            console.log('reload...')
+            // document.location.reload(true);
+            // window.history.pushState('name', '', 'crmoverview');
           }).catch(function (err) {
             Meteor._reload.reload();
+            console.log('reload...')
           });
 
         }).catch(function (err) {
           Meteor._reload.reload();
+          console.log('reload...')
         });
       }).catch(function (err) {
         Meteor._reload.reload();
+        console.log('reload...')
       });
     }).catch(function (err) {
       Meteor._reload.reload();
+      console.log('reload...')
     });
   },
 
@@ -766,15 +777,15 @@ Template.crmoverview.helpers({
   crmtaskmitem: () => {
     return Template.instance().crmtaskmitem.get();
   },
-  isAllTasks: () => {
-    return Template.instance().crmtaskmitem.get() === "all";
-  },
-  isTaskToday: () => {
-    return Template.instance().crmtaskmitem.get() === "today";
-  },
-  isTaskUpcoming: () => {
-    return Template.instance().crmtaskmitem.get() === "upcoming";
-  },
+  // isAllTasks: () => {
+  //   return Template.instance().crmtaskmitem.get() === "all";
+  // },
+  // isTaskToday: () => {
+  //   return Template.instance().crmtaskmitem.get() === "today";
+  // },
+  // isTaskUpcoming: () => {
+  //   return Template.instance().crmtaskmitem.get() === "upcoming";
+  // },
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();
   },
@@ -782,4 +793,3 @@ Template.crmoverview.helpers({
     return Template.instance().currentTabID.get();
   },
 });
- 
