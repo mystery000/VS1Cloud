@@ -3378,7 +3378,7 @@ Template.appointmentlist.events({
                             }
                         };
                         appointmentService.saveAppointment(objectDataConverted).then(function (data) {
-                            FlowRouter.go('/invoicelist?success=true');
+                            FlowRouter.go('/invoicelist?success=true&apptId='+parseInt(selectAppointmentID));
                         }).catch(function (err) {
                             $('.fullScreenSpin').css('display', 'none');
                         });
