@@ -1,4 +1,5 @@
 import {ReactiveVar} from "meteor/reactive-var";
+import moment from "moment";
 import {AccountService} from "../../accounts/account-service";
 import {OrganisationService} from "../../js/organisation-service";
 import {SideBarService} from "../../js/sidebar-service";
@@ -186,28 +187,26 @@ Template.AddPayRunModal.onRendered(() => {
 
     $("div.dataTables_filter input").addClass("form-control form-control-sm");
 
-
     setTimeout(() => {
-      const trs = $('#tblPayCalendars tbody').find('tr');
-      console.log(trs);
+      const trs = $("#tblPayCalendars tbody").find("tr");
+
       $("#AppTableModal").modal("show");
+      $(trs).each(tr => {
+        $(tr).on("click", e => {
+          const id = $(e.currentTarget).find(".colCalenderID").text();
+          const name = $(e.currentTarget).find(".colPayCalendarName").text();
+          const payPeriod = $(e.currentTarget).find(".colPayPeriod").text();
+          const nextPayPeriod = $(e.currentTarget).find(".colNextPayPeriod").text();
+          const nextPaymentDate = $(e.currentTarget).find(".ccolNextPaymentDate").text();
 
-      $(trs).each((tr) => {
-        $(tr).on('click', (e) => {
-          const id = $(e.currentTarget).find('.colCalenderID').text();
-          console.log(id);
-        })
+          $("#selectAPayRun").attr("calendar-id", id);
+          $("#selectAPayRun").val(`${name} (${payPeriod} | ${nextPayPeriod}) - ${nextPaymentDate}`);
+        });
       });
-
-
     }, 300);
-
-
-
 
     LoadingOverlay.hide();
   };
-
 
   //templateObject.loadPayRuns();
 });
