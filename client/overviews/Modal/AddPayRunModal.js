@@ -213,7 +213,6 @@ Template.AddPayRunModal.onRendered(() => {
 
 Template.AddPayRunModal.events({
   "click .selectAPayRun": (e, ui) => {
-    console.log(e);
     ui.loadPayRuns();
     //$('#AppTableModal').modal("show");
   },
