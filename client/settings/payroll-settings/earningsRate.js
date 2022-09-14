@@ -907,29 +907,17 @@ Template.earningRateSettings.events({
         let ExemptReportable = ( $('#formCheck-ExemptReportable').is(':checked') )? true: false;
 
         if(EarningsName == ''){
-            swal({
-                title: "Warning",
-                text: "Please select Earning Name",
-                type: 'warning',
-            })
+            handleValidationError('Please select Earning Name!', 'edtEarningsName');
             return false;
         }
 
         if(EarningsRateType == ''){
-            swal({
-                title: "Warning",
-                text: "Please enter Earning Rate Type",
-                type: 'warning',
-            })
+            handleValidationError('Please enter Earning Rate Type!', 'edtRateType');
             return false;
         }
 
         if(ExpenseAccount == ''){
-            swal({
-                title: "Warning",
-                text: "Please enter Expense Account",
-                type: 'warning',
-            })
+            handleValidationError('Please enter Expense Account!', 'edtExpenseAccount');
             return false;
         }
         
@@ -940,7 +928,7 @@ Template.earningRateSettings.events({
         let earningRateSetting = new Earning({
             type: 'TEarnings',
             fields: new EarningFields({
-                ID: ID,
+                ID: parseInt(ID),
                 EarningsName: EarningsName,
                 EarningType: EarningsType,
                 EarningsDisplayName: EarningsDisplayName,
@@ -984,7 +972,7 @@ Template.earningRateSettings.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
