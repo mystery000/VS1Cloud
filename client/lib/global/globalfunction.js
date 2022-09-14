@@ -567,15 +567,9 @@ tableResize = function() {
   setTimeout(function() {
     const tableHandler = new TableHandler();
     $('.dataTables_filter input[type="search"]').attr("placeholder", "Search List...");
-<<<<<<< HEAD
     $('.dataTables_filter label:contains("Search:")').each(function(){
       $(this).html($(this).html().split("Search:").join(""));
     });
-=======
-
-    $('.dataTable').attr("language", '{ search: "",searchPlaceholder: "Search List..." }');
-
->>>>>>> bb7f613c65181e2075eb14aac57d9b639bde1d36
   }, 2500);
   setTimeout(function() {
     $('.dataTables_filter input[type="search"]').attr("placeholder", "Search List...");

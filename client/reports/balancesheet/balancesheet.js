@@ -96,7 +96,7 @@ Template.balancesheetreport.onRendered(() => {
         $(".nav-tabs").hide();
     }
 
-    templateObject.getBalanceSheetReports = async(dateAsOf, isIgnore = true) => {
+    templateObject.getBalanceSheetReports = async(dateAsOf) => {
         LoadingOverlay.show();
 
         let data = !localStorage.getItem("VS1BalanceSheet_Report1") ?
