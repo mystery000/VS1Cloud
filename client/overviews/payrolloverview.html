@@ -894,14 +894,14 @@
                                 <tbody>
                                     {{#if draftPayRunRecords}}
                                         {{#each item in draftPayRunRecords}}
-                                            <tr class="dnd-moved" id="{{item.id}}" name="{{item.id}}">
-                                                <td class="colPayRunCalendar" contenteditable="false"></td>
-                                                <td class="colPayRunPeriod" contenteditable="false"></td>
-                                                <td class="colPayRunPaymentDate" contenteditable="false"></td>
-                                                <td class="colPayRunWages" contenteditable="false"></td>
-                                                <td class="colPayRunTax" contenteditable="false"></td>
-                                                <td class="colPayRunSuper" contenteditable="false"></td>
-                                                <td class="colPayRunNetPay" contenteditable="false"></td>
+                                            <tr class="dnd-moved redirect-to-payrun-details" id="{{item.id}}" name="{{item.id}}" calendar-id="{{item.calendar.ID}}">
+                                                <td class="colPayRunCalendar" contenteditable="false">{{ item.calendar.PayrollCalendarName }}</td>
+                                                <td class="colPayRunPeriod" contenteditable="false">{{ item.calendar.PayrollCalendarPayPeriod }}</td>
+                                                <td class="colPayRunPaymentDate" contenteditable="false">{{ PaymentDateFormat item.calendar.PayrollCalendarFirstPaymentDate }}</td>
+                                                <td class="colPayRunWages" contenteditable="false">{{ item.wages }}</td>
+                                                <td class="colPayRunTax" contenteditable="false">{{ item.taxes }}</td>
+                                                <td class="colPayRunSuper" contenteditable="false">{{ item.superAnnuation }}</td>
+                                                <td class="colPayRunNetPay" contenteditable="false">{{ item.netPay }}</td>
                                             </tr>
                                         {{/each}}
                                     {{/if}}
