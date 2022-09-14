@@ -113,6 +113,7 @@ Template.clienttypepopup.onRendered(function() {
                             lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                             info: true,
                             responsive: true,
+                            language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function () {
                                 $("<button class='btn btn-primary btnAddNewClientType' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#clienttypeList_filter");
                                 $("<button class='btn btn-primary btnRefreshClientType' type='button' id='btnRefreshClientType' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#clienttypeList_filter");
@@ -195,6 +196,7 @@ Template.clienttypepopup.onRendered(function() {
                         lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
                             $("<button class='btn btn-primary btnAddNewClientType' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#clienttypeList_filter");
                             $("<button class='btn btn-primary btnRefreshClientType' type='button' id='btnRefreshClientType' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#clienttypeList_filter");
@@ -274,6 +276,7 @@ Template.clienttypepopup.onRendered(function() {
                       lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                       info: true,
                       responsive: true,
+                      language: { search: "",searchPlaceholder: "Search List..." },
                       "fnInitComplete": function () {
                           $("<button class='btn btn-primary btnAddNewClientType' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#clienttypeList_filter");
                           $("<button class='btn btn-primary btnRefreshClientType' type='button' id='btnRefreshClientType' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#clienttypeList_filter");

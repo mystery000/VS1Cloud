@@ -17,16 +17,20 @@
                         </style>
                         <table style="width:100%" class="dataTable table table-hover table-striped table-bordered">
                             <thead>
-                                {{#each row in AppTableModalData.headers}}
-                                    <tr class="dnd-moved">
-                                        <th class="th" >{{ row.title }}</th>
-                                    </tr>
-                                {{/each}}
+                                <tr class="dnd-moved">
+                                    {{#each row in AppTableModalData.headers}}
+                                            <th class="th" >{{ row.title }}</th>
+                                    {{/each}}
+                                </tr>
+
                             </thead>
                             <tbody>
                                 {{#each row in AppTableModalData.body}}
-                                    <tr class="dnd-moved" id="{{row.id}}">
-                                        <td contenteditable="false" style="width: 20% !important;" value='{{row.value}}'>{{row.title}}</td>
+                                    <tr class="dnd-moved" value='{{row.value}}'>
+                                        <td id="{{row.id}}" contenteditable="false" style="width: 20% !important;" value='{{row.value}}'>{{row.title}}</td>
+                                        {{#each td in row.td}}
+                                            <td id="{{row.id}}" contenteditable="false" style="width: 20% !important;" value='{{row.value}}'>{{td.title}}</td>
+                                        {{/each}}
                                     </tr>
                                 {{/each}}
                             </tbody>

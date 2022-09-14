@@ -201,6 +201,8 @@ Template.timesheet.onRendered(function () {
                 $(this).addClass('isProcessedColumn');
             } else if ($(this).text() == "Unprocessed") {
                 $(this).addClass('isUnprocessedColumn');
+            }else if ($(this).text() == "Converted") {
+                $(this).addClass('isConvertedColumn');
             }
 
         });
@@ -496,6 +498,7 @@ Template.timesheet.onRendered(function () {
                                   MakeNegative();
                               }, 100);
                           },
+                          language: { search: "",searchPlaceholder: "Search List..." },
                           "fnInitComplete": function () {
                               let urlParametersPage = FlowRouter.current().queryParams.page;
                               if (urlParametersPage) {
@@ -952,6 +955,7 @@ Template.timesheet.onRendered(function () {
                                 MakeNegative();
                             }, 100);
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
                             let urlParametersPage = FlowRouter.current().queryParams.page;
                             if (urlParametersPage) {
@@ -1306,6 +1310,7 @@ Template.timesheet.onRendered(function () {
                               MakeNegative();
                           }, 100);
                       },
+                      language: { search: "",searchPlaceholder: "Search List..." },
                       "fnInitComplete": function () {
                           let urlParametersPage = FlowRouter.current().queryParams.page;
                           if (urlParametersPage) {
@@ -2141,6 +2146,7 @@ Template.timesheet.onRendered(function () {
 
                                   });
                           },
+                          language: { search: "",searchPlaceholder: "Search List..." },
                           "fnInitComplete": function () {
                               $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryPayrollService_filter");
                               $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryPayrollService_filter");
@@ -2319,6 +2325,7 @@ Template.timesheet.onRendered(function () {
 
                               });
                       },
+                      language: { search: "",searchPlaceholder: "Search List..." },
                       "fnInitComplete": function () {
                           $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryPayrollService_filter");
                           $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryPayrollService_filter");
@@ -2497,6 +2504,7 @@ Template.timesheet.onRendered(function () {
 
                             });
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     "fnInitComplete": function () {
                         $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryPayrollService_filter");
                         $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryPayrollService_filter");
@@ -4625,6 +4633,7 @@ Template.timesheet.onRendered(function () {
                     var listData = $(this).closest('tr').find(".colID").text()||0;
                     const templateObject = Template.instance();
                     const selectedTimesheetList = [];
+                    const selectedTimesheetToConvertList = [];
                     const selectedTimesheetCheck = [];
                     let ids = [];
                     let JsonIn = {};
@@ -4633,19 +4642,20 @@ Template.timesheet.onRendered(function () {
                     $('.chkBox:checkbox:checked').each(function () {
                         var chkIdLine = $(this).closest('tr').find(".colID").text()||0;
                         let obj = {
-                            AppointID: parseInt(chkIdLine)
+                            TimesheetID: parseInt(chkIdLine)
                         }
 
                         selectedTimesheetList.push(obj);
-
+                        selectedTimesheetToConvertList.push(parseInt(chkIdLine));
                         templateObject.selectedTimesheetID.set(chkIdLine);
                         // selectedAppointmentCheck.push(JsonIn1);
                         // }
                     });
                     templateObject.selectedTimesheet.set(selectedTimesheetList);
                     JsonIn = {
+                        Name: "VS1_InvoiceTimesheet",
                         Params: {
-                            TimesheetIDs: selectedTimesheetList
+                            TimesheetIDs: selectedTimesheetToConvertList
                         }
                     };
                     templateObject.selectedConvertTimesheet.set(JsonIn);
@@ -4664,21 +4674,28 @@ Template.timesheet.onRendered(function () {
                         let contactService = new ContactService();
                         var erpGet = erpDb();
                         var oPost = new XMLHttpRequest();
-                        oPost.open("POST", URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_InvoiceTimesheet"', true);
+                        oPost.open("POST", URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/VS1_Cloud_Task/Method', true);
                         oPost.setRequestHeader("database", erpGet.ERPDatabase);
                         oPost.setRequestHeader("username", erpGet.ERPUsername);
                         oPost.setRequestHeader("password", erpGet.ERPPassword);
                         oPost.setRequestHeader("Accept", "application/json");
                         oPost.setRequestHeader("Accept", "application/html");
                         oPost.setRequestHeader("Content-type", "application/json");
-                        // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
-                        oPost.send(JSON.stringify(selectClient));
+
+                        // let objDetailsTimeSheet = {
+                        //     Name: "VS1_InvoiceTimesheet",
+                        //     Params: {
+                        //       selectClient
+                        //   }
+                        // };
+                        let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
+                        oPost.send(objDataSave);
 
                         oPost.onreadystatechange = function () {
                             if (oPost.readyState == 4 && oPost.status == 200) {
                                 $('.fullScreenSpin').css('display', 'none');
                                 var myArrResponse = JSON.parse(oPost.responseText);
-                                if (myArrResponse.ProcessLog.ResponseStatus.includes("OK")) {
+                                // if (myArrResponse.ProcessLog.ResponseStatus.includes("OK")) {
                                     let objectDataConverted = {
                                         type: "TTimeSheet",
                                         fields: {
@@ -4696,21 +4713,21 @@ Template.timesheet.onRendered(function () {
 
 
 
-                                } else {
-                                    swal({
-                                        title: 'Oooops...',
-                                        text: myArrResponse.ProcessLog.ResponseStatus,
-                                        type: 'warning',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'Try Again'
-                                    }).then((result) => {
-                                        if (result.value) {
-
-                                        } else if (result.dismiss === 'cancel') {
-
-                                        }
-                                    });
-                                }
+                                // } else {
+                                    // swal({
+                                    //     title: 'Oooops...',
+                                    //     text: myArrResponse.ProcessLog.ResponseStatus,
+                                    //     type: 'warning',
+                                    //     showCancelButton: false,
+                                    //     confirmButtonText: 'Try Again'
+                                    // }).then((result) => {
+                                    //     if (result.value) {
+                                    //
+                                    //     } else if (result.dismiss === 'cancel') {
+                                    //
+                                    //     }
+                                    // });
+                                // }
 
                             } else if (oPost.readyState == 4 && oPost.status == 403) {
                                 $('.fullScreenSpin').css('display', 'none');
@@ -5872,7 +5889,7 @@ Template.timesheet.onRendered(function () {
                             let data = {
                                 type: "TTimeSheet",
                                 fields: {
-                                    ID: selectClient[x].AppointID,
+                                    ID: selectClient[x].TimesheetID,
                                     Status: "Processed"
                                 }
 

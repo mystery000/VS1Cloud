@@ -4,7 +4,7 @@ import {Meteor} from 'meteor/meteor';
 
 /**
  *
- * The console.logs here are only for debug purpose, wont work on production
+ * The  here are only for debug purpose, wont work on production
  */
 class CachedHttp {
   constructor(options = {
@@ -21,7 +21,7 @@ class CachedHttp {
     const prefix = "CachedHttp | ";
 
     if (this.debug) {
-      console.info(prefix, message, ...optionalParams);
+      // console info(prefix, message, ...optionalParams);
     }
   }
 
@@ -37,6 +37,13 @@ class CachedHttp {
     return false;
   }
 
+  /**
+   * 
+   * @param {String} endpoint 
+   * @param {CallableFunction} onRemoteCall 
+   * @param {Object} options 
+   * @returns 
+   */
   async get(endpoint, onRemoteCall = async () => {}, options = {
     date: new Date(),
     forceOverride: false,
@@ -47,6 +54,9 @@ class CachedHttp {
       // this function should return true if the request is using any previously used params
       // else if any params has been changed, it should return false
       // this will validate or not the local request
+
+      // If return false, it wont load from local stored data
+      // If return true, it will load from local stored data
       if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
         return true;
       }
@@ -202,4 +212,3 @@ export default CachedHttp = new CachedHttp({
   debug: Meteor.isDevelopment,
   endpointPrefix: Meteor.isDevelopment ? "cached_http/dev/" : "cached_http/",
 });
-

@@ -7,6 +7,8 @@ import {SideBarService} from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import FxApi from "./FxApi";
 import LoadingOverlay from "../../LoadingOverlay";
+import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
 let sideBarService = new SideBarService();
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
@@ -53,21 +55,36 @@ Template.currenciessettings.onRendered(function () {
     );
   }
 
-  templateObject.getCurrencies = async (fromRemote = true, refresh = false) => {
+  templateObject.getCurrencies = async (fromRemote = false, refresh = false) => {
     LoadingOverlay.show();
-    let currencies = [];
-    let data;
 
-    if (fromRemote == true) {
-      data = await taxRateService.getCurrencies();
-      // TO DO: We should save these locally too
-      // await addVS1Data("TCurrency", data);
-    } else {
-      let dataObject = await getVS1Data("TCurrency");
-      data = ((dataObject.length == 0) == refresh) == true
-        ? await taxRateService.getCurrencies()
-        : JSON.parse(dataObject[0].data);
-    }
+    let data = await CachedHttp.get(erpObject.TCurrency, async () => {
+      return await taxRateService.getCurrencies();
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        if(fromRemote == true || refresh == true) {
+          return false;
+        }
+        return true;
+      }
+    });
+
+    data = data.response;
+
+    let currencies = [];
+
+    // if (fromRemote == true) {
+    //   data = await taxRateService.getCurrencies();
+    //   // TO DO: We should save these locally too
+    //   // await addVS1Data("TCurrency", data);
+    // } else {
+    //   let dataObject = await getVS1Data("TCurrency");
+    //   data = ((dataObject.length == 0) == refresh) == true
+    //     ? await taxRateService.getCurrencies()
+    //     : JSON.parse(dataObject[0].data);
+    // }
 
     data.tcurrency.forEach(_currency => {
       currencies.push({

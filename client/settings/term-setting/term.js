@@ -192,6 +192,7 @@ Template.termsettings.onRendered(function() {
                       responsive: true,
                       "order": [[ 0, "asc" ]],
                       // "aaSorting": [[1,'desc']],
+                      language: { search: "",searchPlaceholder: "Search List..." },
                       action: function () {
                           $('#termsList').DataTable().ajax.reload();
                       },
@@ -378,6 +379,7 @@ setTimeout(function () {
           responsive: true,
           "order": [[ 0, "asc" ]],
           // "aaSorting": [[1,'desc']],
+          language: { search: "",searchPlaceholder: "Search List..." },
           action: function () {
               $('#termsList').DataTable().ajax.reload();
           },
@@ -559,6 +561,7 @@ templateObject.tableheaderrecords.set(tableHeaderList);
                     responsive: true,
                     "order": [[ 0, "asc" ]],
                     // "aaSorting": [[1,'desc']],
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     action: function () {
                         $('#termsList').DataTable().ajax.reload();
                     },

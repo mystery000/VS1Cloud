@@ -377,6 +377,7 @@ Template.invoicelistBO.onRendered(function() {
                                     MakeNegative();
                                 }, 100);
                             },
+                            language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function () {
                               this.fnPageChange('last');
                               if(data.Params.Search.replace(/\s/g, "") == ""){
@@ -703,6 +704,7 @@ Template.invoicelistBO.onRendered(function() {
                                 MakeNegative();
                             }, 100);
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
                           this.fnPageChange('last');
                           if(data.Params.Search.replace(/\s/g, "") == ""){
@@ -1025,6 +1027,7 @@ Template.invoicelistBO.onRendered(function() {
                                 MakeNegative();
                             }, 100);
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
                           this.fnPageChange('last');
                           if(data.Params.Search.replace(/\s/g, "") == ""){

@@ -85,7 +85,7 @@ Template.productsalesreport.onRendered(()=>{
     //--------- END OF DATE ---------------//
   };
 
- 
+
     templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate = false) => {
       LoadingOverlay.show();
       const _data = await CachedHttp.get("TProductSalesDetailsReport", async () => {
@@ -99,8 +99,8 @@ Template.productsalesreport.onRendered(()=>{
           IgnoreDates: ignoreDate
         },
         validate: cachedResponse => {
-          if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
-          && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+          if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom)
+          && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo)
           && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
             return true;
           }
@@ -219,12 +219,12 @@ Template.productsalesreport.onRendered(()=>{
         if (templateObject.records.get()) {
           setTimeout(function () {
             $("td a").each(function () {
-              if ($(this).text().indexOf("-" + Currency) >= 0) 
+              if ($(this).text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-danger");
               }
             );
             $("td").each(function () {
-              if ($(this).text().indexOf("-" + Currency) >= 0) 
+              if ($(this).text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-danger");
               }
             );
@@ -232,13 +232,13 @@ Template.productsalesreport.onRendered(()=>{
             $("td").each(function () {
               let lineValue = $(this).first().text()[0];
               if (lineValue != undefined) {
-                if (lineValue.indexOf(Currency) >= 0) 
+                if (lineValue.indexOf(Currency) >= 0)
                   $(this).addClass("text-right");
                 }
               });
 
             $("td").each(function () {
-              if ($(this).first().text().indexOf("-" + Currency) >= 0) 
+              if ($(this).first().text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-right");
               }
             );
@@ -583,7 +583,6 @@ let grandtotalqty = 0;
     }
 
       templateObject.records.set(totalRecord);
-      console.log('totalRecord', totalRecord);
       templateObject.grandRecords.set(grandval);
 
 
@@ -670,9 +669,9 @@ let grandtotalqty = 0;
     templateObject.initDate();
     templateObject.getDepartments();
 
-    templateObject.loadReport(   
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    templateObject.loadReport(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false);
   });
 
@@ -930,7 +929,7 @@ let grandtotalqty = 0;
 
     },
     'click #ignoreDate': (e, ui) => {
-   
+
       $('#dateFrom').attr('readonly', true);
       $('#dateTo').attr('readonly', true);
       ui.dateAsAt.set('Current Date');
@@ -999,12 +998,12 @@ let grandtotalqty = 0;
     "click .currency-modal-save": (e) => {
       //$(e.currentTarget).parentsUntil(".modal").modal("hide");
       LoadingOverlay.show();
-  
+
       let templateObject = Template.instance();
-  
+
       // Get all currency list
       let _currencyList = templateObject.currencyList.get();
-  
+
       // Get all selected currencies
       const currencySelected = $(".currency-selector-js:checked");
       let _currencySelectedList = [];
@@ -1023,7 +1022,7 @@ let grandtotalqty = 0;
         _currency.active = true;
         _currencySelectedList.push(_currency);
       }
-  
+
       _currencyList.forEach((value, index) => {
         if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
           _currencyList[index].active = _currencySelectedList.find(
@@ -1033,17 +1032,17 @@ let grandtotalqty = 0;
           _currencyList[index].active = false;
         }
       });
-  
+
       _currencyList = _currencyList.sort((a, b) => {
         if (a.code == defaultCurrencyCode) {
           return -1;
         }
         return 1;
       });
-  
+
       // templateObject.activeCurrencyList.set(_activeCurrencyList);
       templateObject.currencyList.set(_currencyList);
-  
+
       LoadingOverlay.hide();
     },
 

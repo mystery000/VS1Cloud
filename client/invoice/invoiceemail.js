@@ -261,6 +261,7 @@ Template.invoiceemail.onRendered(function() {
                           MakeNegative();
                         }, 100);
                       },
+                      language: { search: "",searchPlaceholder: "Search List..." },
                       "fnInitComplete": function () {
                         this.fnPageChange('last');
                           $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistemail_filter");
@@ -451,6 +452,7 @@ setTimeout(function () {
               MakeNegative();
             }, 100);
           },
+          language: { search: "",searchPlaceholder: "Search List..." },
           "fnInitComplete": function () {
             this.fnPageChange('last');
               $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistemail_filter");
@@ -636,6 +638,7 @@ templateObject.tableheaderrecords.set(tableHeaderList);
                           MakeNegative();
                         }, 100);
                       },
+                      language: { search: "",searchPlaceholder: "Search List..." },
                       "fnInitComplete": function () {
                         this.fnPageChange('last');
                           $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistemail_filter");

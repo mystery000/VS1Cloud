@@ -1822,6 +1822,7 @@ Template.paymentcard.onRendered(() => {
                     "order": [
                         [1, "desc"]
                     ],
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     // "aaSorting": [[1,'desc']],
                     action: function() {
                         $('#tblcustomerAwaitingPayment').DataTable().ajax.reload();

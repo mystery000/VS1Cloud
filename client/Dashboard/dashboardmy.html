@@ -1,0 +1,80 @@
+<template name="dashboardmy">
+    <style>
+        .custom-sales-card > .card-body{
+            padding: 1rem 0.4rem;
+        }
+        .small-heading {
+            font-size: 14px;
+        }
+
+        .my-tasks {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            background-color: #9ed5f5;
+            border-radius: 14px;
+            color: black;
+            margin-left: -4px;
+            max-height: 350px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .highcharts-credits {
+            display: none !important;
+        }
+
+        .currency-value {
+            font-size: 28px;
+            color: rgb(221,223,235);
+        }
+
+        .fs-18 {
+            font-size: 18px !important;
+        }
+
+        .fs-24 {
+            font-size: 24px !important;
+        }
+    </style>
+    <div class="container-fluid">
+        {{#if includeDashboard}}
+            <div class="row mb-2">
+                <div class="col-12 col-md-12">
+                    <header class="pt-1 pb-1 d-flex justify-content-center">
+                        <h2>My Performance Dashboard</h2>
+                    </header>
+                    <hr>
+                </div>
+            </div>
+            <div class="row pt-3 pb-3">
+                <div class="col-md-8" data-default-class="col-md-10">
+                    {{> allCardsLists tabGroupID="10" chartGroup="dashboardMy" type="dashboardMy"}}
+                </div>
+                <div class="col-md-4">
+                    <div class="my-tasks">
+                        {{> myTasksWidget}}
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row align-items-center pt-3 pb-3">
+                {{> allChartLists  tabGroupID="10" chartGroup="DSMCharts" }}
+            </div>
+            <hr>
+            <div class="row align-items-center pt-3 pb-3">
+                <div class="col-md-6 no-gutters">
+                    {{> appointmentsWidget}}
+                </div>
+                <div class="col-md-6 no-gutters">
+                </div>
+            </div>
+            <hr>
+            <div class="pt-3 pb-3" style="overflow: hidden;">
+                {{> leadlist}}
+            </div>
+        {{/if}}
+    </div>
+</template>

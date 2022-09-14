@@ -10,6 +10,7 @@ import {DailyFrequencyModel, MonthlyFrequencyModel, OneTimeOnlyFrequencyModel, O
 import LoadingOverlay from "../../LoadingOverlay";
 import {updateAllCurrencies} from "./currencies";
 import CronSetting from "../../CronSetting";
+import FormFrequencyModel from "./Model/FormFrequencyModel";
 
 let sideBarService = new SideBarService();
 let taxRateService = new TaxRateService();
@@ -121,11 +122,14 @@ Template._frequencyModal.onRendered(function () {
 
     let cronSetting = new CronSetting({
       id: 1,
+      isProcessed: 1,
       employeeId: employeeId,
       startAt: new Date(),
       cronJob: () => updateAllCurrencies,
       type: fxUpdateObject.type
     });
+
+    let _formFequencyModal = new FormFrequencyModel({});
 
     /**
          * If monthly
@@ -150,6 +154,13 @@ Template._frequencyModal.onRendered(function () {
       cronSetting.months = checkedMonths;
       cronSetting.dayNumberOfMonth = convertDayNumberToString(fxUpdateObject.everyDay);
 
+      _formFequencyModal = new FormFrequencyModel({
+        MonthlyEveryDay: $("#sltDay").val(),
+        MonthlyOfMonths: checkedMonths,
+        MonthlyStartDate: $("#edtMonthlyStartDate").val(),
+        MonthlyStartTime: $("#edtMonthlyStartTime").val(),
+      })
+
       //cronSetting.parsed = later.recur()
     } else if (fxUpdateObject instanceof WeeklyFrequencyModel) {
       const selectedDay = document.querySelector(".weekly-input-js input[type=checkbox]:checked").value;
@@ -169,6 +180,16 @@ Template._frequencyModal.onRendered(function () {
       cronSetting.days = fxUpdateObject.selectedDays;
       cronSetting.every = fxUpdateObject.everyWeeks;
       cronSetting.startAt = fxUpdateObject.getDate();
+
+      _formFequencyModal = new FormFrequencyModel({
+        WeeklyEvery: fxUpdateObject.everyWeeks,
+        WeeklyStartDate: $("#edtWeeklyStartDate").val(),
+        WeeklyStartTime: $("#edtWeeklyStartTime").val(),
+        WeeklySelectDays: fxUpdateObject.selectedDays,
+      });
+
+
+
     } else if (fxUpdateObject instanceof DailyFrequencyModel) {
       reportSchedule.fields.Frequency = "D";
 
@@ -177,18 +198,26 @@ Template._frequencyModal.onRendered(function () {
       reportSchedule.fields.Every = -1;
       if ($("#dailyWeekdays").prop("checked")) {
         let selectedDays = [];
+        let selectedDayNumbers = [];
         document.querySelectorAll(".daily-input-js input[type=checkbox]:checked").forEach(element => {
           selectedDays.push(element.getAttribute("value"));
+          selectedDayNumbers.push(parseInt(element.getAttribute("data-value")));
         });
 
         fxUpdateObject.weekDays = selectedDays;
+        cronSetting.dayInNumbers = selectedDayNumbers;
         fxUpdateObject.every = null;
 
         reportSchedule.fields.SatAction = "D";
         reportSchedule.fields.SunAction = "D";
 
         cronSetting.days = selectedDays;
+
+        _formFequencyModal = new FormFrequencyModel({
+          DailyWeekDays: selectedDays,
+        });
       } else if ($("#dailyEveryDay").prop("checked")) {
+        cronSetting.dayInNumbers = [1,2,3,4,5,6,7];
         fxUpdateObject.weekDays = [
           "monday",
           "tuesday",
@@ -204,6 +233,12 @@ Template._frequencyModal.onRendered(function () {
 
         cronSetting.every = 1;
         cronSetting.days = fxUpdateObject.weekDays;
+
+        _formFequencyModal = new FormFrequencyModel({
+          DailyEvery: fxUpdateObject.every, 
+          DailyWeekDays: fxUpdateObject.weekDays,
+          DailyEveryDay: true
+        });
       } else if ($("#dailyEvery").prop("checked")) {
         fxUpdateObject.weekDays = null;
         fxUpdateObject.every = parseInt($("#dailyEveryXDays").val());
@@ -211,6 +246,10 @@ Template._frequencyModal.onRendered(function () {
         reportSchedule.fields.Every = fxUpdateObject.every;
 
         cronSetting.every = fxUpdateObject.every;
+
+        _formFequencyModal = new FormFrequencyModel({
+          DailyEvery: fxUpdateObject.every, 
+        });
       }
 
       fxUpdateObject.startDate = $("#edtDailyStartDate").val();
@@ -219,6 +258,10 @@ Template._frequencyModal.onRendered(function () {
       reportSchedule.fields.StartDate = fxUpdateObject.getDate();
 
       cronSetting.startAt = fxUpdateObject.getDate();
+
+      _formFequencyModal.DailyStartDate = $("#edtDailyStartDate").val();
+      _formFequencyModal.DailyStartTime = $("#edtDailyStartTime").val();
+
     } else if (fxUpdateObject instanceof OneTimeOnlyFrequencyModel) {
       fxUpdateObject.startDate = $("#edtOneTimeOnlyDate").val();
       fxUpdateObject.startTime = $("#edtOneTimeOnlyTime").val();
@@ -228,20 +271,34 @@ Template._frequencyModal.onRendered(function () {
 
     
       cronSetting.startAt = fxUpdateObject.getDate();
+
+      _formFequencyModal = new FormFrequencyModel({
+        OneTimeStartDate: fxUpdateObject.startDate,
+        OneTimeStartTime: fxUpdateObject.startTime
+      });
     } else if (fxUpdateObject instanceof OnEventFrequencyModel) {
       fxUpdateObject.onLogin = $("#settingsOnLogon").prop("checked");
       fxUpdateObject.onLogout = $("#settingsOnLogout").prop("checked");
       reportSchedule.fields.Frequency = "";
+
+      _formFequencyModal = new FormFrequencyModel({
+        OnEventLogIn: fxUpdateObject.onLogin,
+        OnEventLogOut: fxUpdateObject.onLogout
+      });
     }
 
-    cronSetting.buildParsedText();
+    _formFequencyModal.EmployeeId = employeeId
 
+    cronSetting.isProcessed = 1;
+
+    cronSetting.buildParsedText();
     try {
       var erpGet = erpDb();
       Meteor.call("addCurrencyCron", cronSetting, erpGet);
+      _formFequencyModal.save();
       LoadingOverlay.hide(0);
       swal({title: "Success", text: "Fx update was scheduled successfully", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(() => {
-        window.open("/currenciessettings", "_self");
+        // window.open("/currenciessettings", "_self");
       });
     } catch (exception) {
       LoadingOverlay.hide(0);
@@ -262,6 +319,9 @@ Template._frequencyModal.onRendered(function () {
     });
     LoadingOverlay.hide();
   };
+
+
+
 });
 
 Template._frequencyModal.events({
@@ -275,10 +335,8 @@ Template._frequencyModal.events({
     let templateObject = Template.instance();
     document.querySelector("#frequencyDaily").click();
   },
-  "click .btnSaveFrequency": e => {
-    let templateObject = Template.instance();
-
-    templateObject.saveShedule();
+  "click .btnSaveFrequency": (e, ui) => {
+    ui.saveShedule();
   },
   'click input[name="frequencyRadio"]': event => {
     if (event.target.id == "frequencyMonthly") {

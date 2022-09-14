@@ -587,9 +587,9 @@ Template.vs1login.onRendered(function () {
                 $('.myVS1Video').css('display', 'none');
                 $('.myVS1VideoLogin').css('display', 'none');
 
-                //window.open('/dashboard', '_self');
+                window.open('/dashboard', '_self');
 
-                handleSetupRedirection();
+                //handleSetupRedirection();
 
             }
         }
@@ -671,7 +671,7 @@ Template.vs1login.onRendered(function () {
 
     }
 
-    function getAccessLevelData(userAccessOptions, isSameUserLogin) {
+    function getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard) {
         let lineItemslevel = [];
         let lineItemObjlevel = {};
         let lineItemsAccesslevel = [];
@@ -1167,21 +1167,22 @@ Template.vs1login.onRendered(function () {
                 }
                 return (a.description.toLowerCase() > b.description.toLowerCase()) ? 1 : -1;
             });
+            if(isSetupWizard == true){
+              if (isAppointmentScheduling == true) {
+                  if (isAllocationLaunch == true) {
+                      window.open('/appointments#allocationModal', '_self');
+                  } else if (isAppointmentLaunch == true) {
+                      window.open('/appointments', '_self');
+                  } else {
+                      window.open('/dashboard', '_self');
+                  }
+              } else {
+                  window.open('/dashboard', '_self');
+              }
+            }else{
+              handleSetupRedirection();
+            };
 
-            if (isAppointmentScheduling == true) {
-                if (isAllocationLaunch == true) {
-                    window.open('/appointments#allocationModal', '_self');
-                } else if (isAppointmentLaunch == true) {
-                    window.open('/appointments', '_self');
-                } else {
-                    //window.open('/dashboard', '_self');
-                    handleSetupRedirection();
-                }
-            } else {
-                //window.open('/dashboard', '_self');
-
-                handleSetupRedirection();
-            }
 
         } else {
             pausevideo();
@@ -2116,12 +2117,15 @@ Template.vs1login.onRendered(function () {
                                                     var sessionDataToLog = localStorage.getItem('mySession');
                                                     Session.setPersistent('mySessionEmployee', employeename);
                                                     let userAccessOptions = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail || '';
-
+                                                    let isSetupWizard = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_IsSetupWizard || false;
+                                                    if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_IsSetupWizard == undefined){
+                                                      isSetupWizard = true;
+                                                    };
                                                     if (userAccessOptions != "") {
                                                         addLoginData(dataReturnRes).then(function (datareturn) {
-                                                            getAccessLevelData(userAccessOptions, isSameUserLogin);
+                                                            getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard);
                                                         }).catch(function (err) {
-                                                            getAccessLevelData(userAccessOptions, isSameUserLogin);
+                                                            getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard);
                                                         });
 
                                                     }
@@ -2136,8 +2140,8 @@ Template.vs1login.onRendered(function () {
                                                     .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                                                     .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                                                     .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/"));
-                                                    $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
-                                                    $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
+                                                    $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
+                                                    $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
                                                     swal({
                                                         title: 'Awaiting Email Validation',
                                                         html: true,
@@ -2788,23 +2792,27 @@ Template.vs1login.onRendered(function () {
                                 var sessionDataToLog = localStorage.getItem('mySession');
                                 Session.setPersistent('mySessionEmployee', employeename);
                                 let userAccessOptions = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail || '';
+                                let isSetupWizard = true;
+                                if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_IsSetupWizard == undefined){
+                                  isSetupWizard = true;
+                                };
                                 if (userAccessOptions != "") {
 
                                     addLoginData(dataReturnRes).then(function (datareturn) {
                                         if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-                                            getAccessLevelData(userAccessOptions, isSameUserLogin);
+                                            getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard);
                                         } else {
                                             myVS1VideoLogin.onended = function (e) {
-                                                getAccessLevelData(userAccessOptions, isSameUserLogin);
+                                                getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard);
                                             }
                                         }
 
                                     }).catch(function (err) {
                                         if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-                                            getAccessLevelData(userAccessOptions, isSameUserLogin);
+                                            getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard);
                                         } else {
                                             myVS1VideoLogin.onended = function (e) {
-                                                getAccessLevelData(userAccessOptions, isSameUserLogin);
+                                                getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard);
                                             }
                                         }
                                     });
@@ -3325,12 +3333,15 @@ Template.vs1login.onRendered(function () {
                                                 var sessionDataToLog = localStorage.getItem('mySession');
                                                 Session.setPersistent('mySessionEmployee', employeename);
                                                 let userAccessOptions = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail || '';
-
+                                                let isSetupWizard = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_IsSetupWizard || false;
+                                                if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_IsSetupWizard == undefined){
+                                                  isSetupWizard = true;
+                                                };
                                                 if (userAccessOptions != "") {
                                                     addLoginData(dataReturnRes).then(function (datareturn) {
-                                                        getAccessLevelData(userAccessOptions, isSameUserLogin);
+                                                        getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard);
                                                     }).catch(function (err) {
-                                                        getAccessLevelData(userAccessOptions, isSameUserLogin);
+                                                        getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard);
                                                     });
 
                                                 }
@@ -3345,8 +3356,8 @@ Template.vs1login.onRendered(function () {
                                                 .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                                                 .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                                                 .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/"));
-                                                $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
-                                                $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
+                                                $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
+                                                $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
                                                 swal({
                                                     title: 'Awaiting Email Validation',
                                                     html: true,
@@ -4060,12 +4071,15 @@ Template.vs1login.onRendered(function () {
                                             var sessionDataToLog = localStorage.getItem('mySession');
                                             Session.setPersistent('mySessionEmployee', employeename);
                                             let userAccessOptions = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail || '';
-
+                                            let isSetupWizard = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_IsSetupWizard || false;
+                                            if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_IsSetupWizard == undefined){
+                                              isSetupWizard = true;
+                                            };
                                             if (userAccessOptions != "") {
                                                 addLoginData(dataReturnRes).then(function (datareturn) {
-                                                    getAccessLevelData(userAccessOptions, isSameUserLogin);
+                                                    getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard);
                                                 }).catch(function (err) {
-                                                    getAccessLevelData(userAccessOptions, isSameUserLogin);
+                                                    getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard);
                                                 });
 
                                             }
@@ -4080,8 +4094,8 @@ Template.vs1login.onRendered(function () {
                                             .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                                             .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                                             .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/"));
-                                            $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
-                                            $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
+                                            $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
+                                            $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
                                             swal({
                                                 title: 'Awaiting Email Validation',
                                                 html: true,
@@ -4760,12 +4774,15 @@ Template.vs1login.onRendered(function () {
                                         var sessionDataToLog = localStorage.getItem('mySession');
                                         Session.setPersistent('mySessionEmployee', employeename);
                                         let userAccessOptions = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail || '';
-
+                                        let isSetupWizard = dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_IsSetupWizard || false;
+                                        if(dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_IsSetupWizard == undefined){
+                                          isSetupWizard = true;
+                                        };
                                         if (userAccessOptions != "") {
                                             addLoginData(dataReturnRes).then(function (datareturn) {
-                                                getAccessLevelData(userAccessOptions, isSameUserLogin);
+                                                getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard);
                                             }).catch(function (err) {
-                                                getAccessLevelData(userAccessOptions, isSameUserLogin);
+                                                getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard);
                                             });
 
                                         }
@@ -4780,8 +4797,8 @@ Template.vs1login.onRendered(function () {
                                         .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                                         .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                                         .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/"));
-                                        $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
-                                        $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
+                                        $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
+                                        $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
                                         swal({
                                             title: 'Awaiting Email Validation',
                                             html: true,
@@ -4969,6 +4986,9 @@ Template.vs1login.onRendered(function () {
                 clearCaches();
 
             }).then(() => {
+              localStorage.usremail = userLoginEmail;
+              localStorage.usrpassword = passwordSecret;
+              localStorage.chkbx = true;
                 swal({
                     title: 'You are now Signed Out of all devices',
                     text: "",
@@ -4989,6 +5009,9 @@ Template.vs1login.onRendered(function () {
               }
               clearCaches();
           }).then(() => {
+            localStorage.usremail = userLoginEmail;
+            localStorage.usrpassword = passwordSecret;
+            localStorage.chkbx = true;
               swal({
                   title: 'You are now Signed Out of all devices',
                   text: "",

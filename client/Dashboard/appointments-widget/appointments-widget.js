@@ -7709,7 +7709,7 @@ Template.appointmentsWidget.events({
                         };
                         appointmentService.saveAppointment(objectDataConverted).then(function (data) {
                             $('.modal-backdrop').css('display', 'none');
-                            FlowRouter.go('/invoicelist?success=true');
+                            FlowRouter.go('/invoicelist?success=true&apptId='+parseInt(id));
                         }).catch(function (err) {
                             $('.fullScreenSpin').css('display', 'none');
                         });

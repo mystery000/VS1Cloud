@@ -435,10 +435,23 @@ Template.setup.onRendered(function () {
    */
   templateObject.setSetupFinished = async () => {
     LoadingOverlay.show();
+    let dashboardArray = [];
     let data = await organisationService.getOrganisationDetail();
     let companyInfo = data.tcompanyinfo[0];
 
     companyInfo.IsSetUpWizard = true;
+    getVS1Data('vscloudlogininfo').then(function (dataObject) {
+      if(dataObject.length == 0){
+      }else{
+        dashboardArray = dataObject[0].data;
+        dashboardArray.ProcessLog.ClientDetails.ProcessLog.TVS1_Dashboard_summary.fields.Companyinfo_IsSetupWizard = true;
+        addLoginData(dashboardArray).then(function (datareturnCheck) {
+
+        }).catch(function (err) {
+
+        });
+      };
+    });
 
     await organisationService.saveOrganisationSetting({
       type: "TCompanyInfo",
@@ -1823,7 +1836,7 @@ Template.setup.onRendered(function () {
                   MakeNegative();
                 }, 100);
               }
-              
+
               if ($.fn.dataTable.isDataTable("#termsList")) {
                 $("#termsList").DataTable().destroy();
               }
@@ -2422,6 +2435,7 @@ Template.setup.onRendered(function () {
             action: function () {
               $("#employeeListTable").DataTable().ajax.reload();
             },
+            language: { search: "",searchPlaceholder: "Search List..." },
             fnInitComplete: function () {
               $(
                 "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
@@ -2766,6 +2780,7 @@ Template.setup.onRendered(function () {
                 paging: false,
                 info: true,
                 responsive: true,
+                language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
                     "<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -2915,6 +2930,7 @@ Template.setup.onRendered(function () {
               paging: false,
               info: true,
               responsive: true,
+              language: { search: "",searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
                   "<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -3064,6 +3080,7 @@ Template.setup.onRendered(function () {
               paging: false,
               info: true,
               responsive: true,
+              language: { search: "",searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
                   "<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -3157,6 +3174,7 @@ Template.setup.onRendered(function () {
         fnDrawCallback: function (oSettings) {
           // $('.dataTables_paginate').css('display', 'none');
         },
+        language: { search: "",searchPlaceholder: "Search List..." },
         fnInitComplete: function () {
           $(
             "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -3453,6 +3471,7 @@ Template.setup.onRendered(function () {
                 MakeNegative();
               }, 100);
             },
+            language: { search: "",searchPlaceholder: "Search List..." },
             fnInitComplete: function () {
               $(
                 "<button class='btn btn-primary btnRefreshCustomers' type='button' id='btnRefreshCustomers' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
@@ -3761,6 +3780,7 @@ Template.setup.onRendered(function () {
                 MakeNegative();
               }, 100);
             },
+            language: { search: "",searchPlaceholder: "Search List..." },
             fnInitComplete: function () {
               // let urlParametersPage = FlowRouter.current().queryParams.page;
               // if (urlParametersPage) {
@@ -4195,6 +4215,7 @@ Template.setup.onRendered(function () {
             //     MakeNegative();
             //   }, 100);
             // },
+            language: { search: "",searchPlaceholder: "Search List..." },
             fnInitComplete: function () {
               $(
                 "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
@@ -4644,7 +4665,7 @@ Template.setup.events({
 
   // TODO: Step 2
   // Active Tax Rates
-  
+
   "click .visiblePopupDiv": function () {
     setTimeout(() => {
       $('.modal-backdrop').addClass('giveAccess');
@@ -4912,17 +4933,12 @@ Template.setup.events({
           });
         } else {
           let loginDataArray = [];
-          if (
-            dataObject[0].EmployeeEmail === localStorage.getItem("mySession")
-          ) {
+          if (dataObject[0].EmployeeEmail === localStorage.getItem("mySession")) {
             loginDataArray = dataObject[0].data;
 
-            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc =
-              purchasetaxcode;
-            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc =
-              salestaxcode;
-            addLoginData(loginDataArray)
-              .then(function (datareturnCheck) {
+            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc = purchasetaxcode;
+            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc = salestaxcode;
+            addLoginData(loginDataArray).then(function (datareturnCheck) {
                 LoadingOverlay.hide();
                 swal({
                   title: "Default Tax Rate Successfully Changed",
@@ -4945,8 +4961,7 @@ Template.setup.events({
                   // );
                   // localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
                 });
-              })
-              .catch(function (err) {
+              }).catch(function (err) {
                 LoadingOverlay.hide();
                 swal({
                   title: "Default Tax Rate Successfully Changed",

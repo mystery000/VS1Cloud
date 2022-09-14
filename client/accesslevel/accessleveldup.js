@@ -14,6 +14,8 @@ import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 
 const _ = require('lodash');
+const defaultAdditionModules = ["POS", "Appointment Scheduling", "Manufacturing", "Add Extra User", "Matrix", "Seed To Sale", "FX Currency", "WMS", "Payroll Integration", "Link To TrueERP"];
+
 let addNewEmployeesList = [];
 
 Template.accessleveldup.onCreated(()=>{
@@ -123,8 +125,11 @@ Template.accessleveldup.onRendered(function(){
             templateObject.erpAccessLevelRecord.set(lineItemsForm);
 
         }
-
-        getTableData('All');
+        
+        templateObject.fetchAdditionalSettings();
+        setTimeout(function () {
+            getTableData('All');
+        }, 1000);
 
     });
       }else{
@@ -164,10 +169,11 @@ Template.accessleveldup.onRendered(function(){
             lineItemsForm.push(lineItemObjForm);
             splashArray.push(lineItemObjForm);
             templateObject.erpAccessLevelRecord.set(lineItemsForm);
-
         }
-
-        getTableData('All');
+        templateObject.fetchAdditionalSettings();
+        setTimeout(function () {
+            getTableData('All');
+        }, 1000);
       }
     }).catch(function (err) {
       accesslevelService.getCloudTERPForm().then(function(data){
@@ -208,11 +214,69 @@ Template.accessleveldup.onRendered(function(){
           templateObject.erpAccessLevelRecord.set(lineItemsForm);
 
       }
-
-      getTableData('All');
+      templateObject.fetchAdditionalSettings();
+      setTimeout(function () {
+          getTableData('All');
+      }, 1000);
 
   });
     });
+
+    templateObject.fetchAdditionalSettings = async () => {
+        let additionModuleSettings = await getVS1Data('vscloudlogininfo');
+        if( additionModuleSettings.length > 0 ){
+            let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
+            if( additionModules.length > 0 ){
+                let adModulesList = additionModules.filter((item) => {
+                    if( item.ExtraModules == true && item.ModuleActive == true ){
+                        return item;
+                    }
+                });
+                // let adModulesList = additionModules;
+                if( adModulesList.length > 0 ){
+                    for (const item of adModulesList) {
+                        let groupName = "";
+                        switch (item.ModuleName) {
+                            case "Add Extra User":
+                                groupName = "Employee";
+                            break;
+                            case "Matrix":
+                                groupName = "Inventory";
+                            break;
+                            case "POS":
+                                groupName = "POS";
+                            break;
+                            case "Seed To Sale":
+                                groupName = "Seed To Sale";
+                            break;
+                            case "FX Currency":
+                                groupName = "Accounts";
+                            break;
+                            case "WMS":
+                                groupName = "Inventory";
+                            break;
+                            case "Payroll Integration":
+                                groupName = "Integration";
+                            break;
+                            case "Link To TrueERP":
+                                groupName = "Integration";
+                            break;
+                            case "Manufacturing":
+                                groupName = "Manufacturing";
+                            break;
+                        }
+                        let moduleObj = {
+                            lineID: "",
+                            description: item.ModuleName,
+                            skingroup:  groupName
+                        }
+                        splashArray.push(moduleObj);
+                    }
+                }
+            }
+        }
+    }    
+
     if (!localStorage.getItem('VS1TERPFormList')) {
 
     }else{
@@ -304,10 +368,7 @@ Template.accessleveldup.onRendered(function(){
             let formAccessLevel = 1;
             var groupName = '';
             if(splashArray.length > 0){
-
                 $.grep(splashArray, function(n) {
-
-
                     if((n.description === "Accounts") && (!isAccountsLicence)){
                         formClass = 'activeLicence';
 
@@ -439,6 +500,12 @@ Template.accessleveldup.onRendered(function(){
                     }else{
                       formAccessLevel = 1;
                     }
+
+                    if( defaultAdditionModules.includes(n.description) ){
+                        formAccessLevel = 1;
+                        formClassHidden = '';
+                    }
+
                     lineItemObjlevel = {
                         accessID: '' || '',
                         formID: n.lineID || '',
@@ -478,8 +545,6 @@ Template.accessleveldup.onRendered(function(){
                         }
                     }
                 });
-
-
                 templateObject.accessgrouprecord.set(groups);
                 templateObject.accesslevelrecord.set(lineItemslevel);
             }
@@ -527,6 +592,11 @@ Template.accessleveldup.onRendered(function(){
                       }else{
                         formClassHidden = '';
                       }
+                        let formAccessLevel = "";
+                        if( defaultAdditionModules.includes(n.description) ){
+                            formAccessLevel = 1;
+                            formClassHidden = '';
+                        }
 
 
                         lineItemObjlevel = {
@@ -535,7 +605,7 @@ Template.accessleveldup.onRendered(function(){
                             lineID: n.lineID || '',
                             skingroup: n.skingroup || '',
                             accessLevel: '' || '',
-                            accessLevelname: '' || '',
+                            accessLevelname: formAccessLevel || '',
                             description: n.description || '',
                             formName: '' || '',
                             formClass: formClass || '',
@@ -735,6 +805,11 @@ Template.accessleveldup.onRendered(function(){
                                           }
                                         }else{
                                           formClassHidden = '';
+                                        }
+
+                                        if( additionModules.includes(n.description) ){
+                                            formAccessLevel = 1;
+                                            formClassHidden = '';
                                         }
 
                                         lineItemObjlevel = {
@@ -1072,6 +1147,11 @@ Template.accessleveldup.onRendered(function(){
                       }else{
                         formClassHidden = '';
                       }
+                        let formAccessLevel = "";
+                        if( defaultAdditionModules.includes(n.description) ){
+                            formAccessLevel = 1;
+                            formClassHidden = '';
+                        }
 
 
                         lineItemObjlevel = {
@@ -1079,7 +1159,7 @@ Template.accessleveldup.onRendered(function(){
                             formID: n.lineID || '',
                             lineID: n.lineID || '',
                             skingroup: n.skingroup || '',
-                            accessLevel: '' || '',
+                            accessLevel: formAccessLevel || '',
                             accessLevelname: '' || '',
                             description: n.description || '',
                             formName: '' || '',
@@ -1195,91 +1275,91 @@ Template.accessleveldup.onRendered(function(){
                                         if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Accounts") && (data.temployeeformaccessdetail[i].fields.Description === "Accounts")){
                                             formClassHidden = 'hiddenRow';
                                             if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
-                                              setTimeout(function () {
-                                              $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
-                                              },500);
+                                            setTimeout(function () {
+                                            $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
+                                            },500);
                                             }
                                         }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Appointments") && (data.temployeeformaccessdetail[i].fields.Description === "Appointments")){
                                             formClassHidden = 'hiddenRow';
                                             if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
-                                              setTimeout(function () {
-                                              $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
-                                              },500);
+                                            setTimeout(function () {
+                                            $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
+                                            },500);
                                             }
                                         }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "CRM") && (data.temployeeformaccessdetail[i].fields.Description === "CRM")){
                                             formClassHidden = 'hiddenRow';
                                             if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
-                                              setTimeout(function () {
-                                              $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
-                                              },500);
+                                            setTimeout(function () {
+                                            $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
+                                            },500);
                                             }
                                         }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Employee") && (data.temployeeformaccessdetail[i].fields.Description === "Settings")){
                                             formClassHidden = 'hiddenRow';
                                             if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
-                                              setTimeout(function () {
-                                              $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
-                                              },500);
+                                            setTimeout(function () {
+                                            $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
+                                            },500);
                                             }
                                         }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "General") && (data.temployeeformaccessdetail[i].fields.Description === "Settings")){
                                             formClassHidden = 'hiddenRow';
                                             if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
-                                              setTimeout(function () {
-                                              $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
-                                              },500);
+                                            setTimeout(function () {
+                                            $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
+                                            },500);
                                             }
                                         }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Inventory") && (data.temployeeformaccessdetail[i].fields.Description === "Inventory")){
                                             formClassHidden = 'hiddenRow';
                                             if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
-                                              setTimeout(function () {
+                                            setTimeout(function () {
                                                 setTimeout(function () {
                                                 $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
                                                 },500);
-                                              },500);
+                                            },500);
                                             }
                                         }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Manufacturing") && (data.temployeeformaccessdetail[i].fields.Description === "Manufacturing")){
                                             formClassHidden = 'hiddenRow';
                                             if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
-                                              setTimeout(function () {
-                                              $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
-                                              },500);
+                                            setTimeout(function () {
+                                            $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
+                                            },500);
                                             }
                                         }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Payments") && (data.temployeeformaccessdetail[i].fields.Description === "Payments")){
                                             formClassHidden = 'hiddenRow';
                                             if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
-                                              setTimeout(function () {
-                                              $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
-                                              },500);
+                                            setTimeout(function () {
+                                            $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
+                                            },500);
                                             }
                                         }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Purchases") && (data.temployeeformaccessdetail[i].fields.Description === "Purchases")){
                                             formClassHidden = 'hiddenRow';
                                             if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
-                                              setTimeout(function () {
-                                              $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
-                                              },500);
+                                            setTimeout(function () {
+                                            $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
+                                            },500);
                                             }
                                         }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Sales") && (data.temployeeformaccessdetail[i].fields.Description === "Sales")){
                                             formClassHidden = 'hiddenRow';
                                             if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
-                                              setTimeout(function () {
-                                              $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
-                                              },500);
+                                            setTimeout(function () {
+                                            $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
+                                            },500);
                                             }
                                         }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Payroll") && (data.temployeeformaccessdetail[i].fields.Description === "Payroll")){
-                                          formClassHidden = 'hiddenRow';
-                                          if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
+                                        formClassHidden = 'hiddenRow';
+                                        if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
                                             setTimeout(function () {
                                             $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
                                             },500);
-                                          }
+                                        }
                                         }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Shipping") && (data.temployeeformaccessdetail[i].fields.Description === "Shipping")){
-                                          formClassHidden = 'hiddenRow';
-                                          if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
+                                        formClassHidden = 'hiddenRow';
+                                        if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
                                             setTimeout(function () {
                                             $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
                                             },500);
-                                          }
+                                        }
                                         }else{
-                                          formClassHidden = '';
+                                        formClassHidden = '';
                                         }
 
                                         lineItemObjlevel = {
@@ -1303,8 +1383,7 @@ Template.accessleveldup.onRendered(function(){
                                     }
 
 
-                                }
-
+                                }  
 
                                 groups[groupName].sort(function(a, b){
                                     if (a.description == 'NA') {
@@ -1317,7 +1396,6 @@ Template.accessleveldup.onRendered(function(){
                                 });
 
                                 groups[groupName].push(lineItemObjlevel);
-
                                 splashArrayAccess.push(lineItemObjlevel);
                                 lineItemslevel.push(lineItemObjlevel);
                                 recordsaccess.push(lineItemObjlevel);
@@ -1614,13 +1692,19 @@ Template.accessleveldup.onRendered(function(){
                       formClassHidden = '';
                     }
 
+                    let formAccessLevel = "";
+                    if( defaultAdditionModules.includes(n.description) ){
+                        formAccessLevel = 1;
+                        formClassHidden = '';
+                    }
+
 
                       lineItemObjlevel = {
                           accessID: '' || '',
                           formID: n.lineID || '',
                           lineID: n.lineID || '',
                           skingroup: n.skingroup || '',
-                          accessLevel: '' || '',
+                          accessLevel: formAccessLevel || '',
                           accessLevelname: '' || '',
                           description: n.description || '',
                           formName: '' || '',
@@ -2160,6 +2244,12 @@ Template.accessleveldup.onRendered(function(){
                         formClassHidden = '';
                       }
 
+                      let formAccessLevel = "";
+                      if( defaultAdditionModules.includes(n.description) ){
+                          formAccessLevel = 1;
+                          formClassHidden = '';
+                      }
+
 
                         lineItemObjlevel = {
                             accessID: '' || '',
@@ -2167,7 +2257,7 @@ Template.accessleveldup.onRendered(function(){
                             lineID: n.lineID || '',
                             skingroup: n.skingroup || '',
                             accessLevel: '' || '',
-                            accessLevelname: '' || '',
+                            accessLevelname: formAccessLevel || '',
                             description: n.description || '',
                             formName: '' || '',
                             formClass: formClass || '',
@@ -3603,7 +3693,7 @@ Template.accessleveldup.events({
                 if(oPost.readyState == 4 && oPost.status == 200) {
                     $('.fullScreenSpin').css('display','none');
                     swal({
-                        title: 'Settings Successly Saved',
+                        title: 'Settings Successfully Saved',
                         text: "Please log out to activate your changes.",
                         type: 'success',
                         showCancelButton: false,
@@ -3777,7 +3867,7 @@ Template.accessleveldup.events({
                         $('.fullScreenSpin').css('display','none');
                         if((employeeID == empLoggedID) ){
                             swal({
-                                title: 'Settings Successly Saved',
+                                title: 'Settings Successfully Saved',
                                 text: "Please log out to activate your changes.",
                                 type: 'success',
                                 showCancelButton: false,
@@ -3799,7 +3889,7 @@ Template.accessleveldup.events({
                                 }
                             });
                         }else{
-                            swal('Settings Successly Saved', '', 'success');
+                            swal('Settings Successfully Saved', '', 'success');
                         }
                     }else if(oPost.readyState == 4 && oPost.status == 403){
                         $('.fullScreenSpin').css('display','none');

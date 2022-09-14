@@ -1177,6 +1177,7 @@ Template.productview.onRendered(function() {
                             "fnDrawCallback": function(oSettings) {
                                 // $('.dataTables_paginate').css('display', 'none');
                             },
+                            language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function() {
                                 $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                                 $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
@@ -1240,6 +1241,7 @@ Template.productview.onRendered(function() {
                         "fnDrawCallback": function(oSettings) {
                             // $('.dataTables_paginate').css('display', 'none');
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                             $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                             $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
@@ -1304,6 +1306,7 @@ Template.productview.onRendered(function() {
                         "fnDrawCallback": function(oSettings) {
                             // $('.dataTables_paginate').css('display', 'none');
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                             $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                             $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
@@ -3278,7 +3281,7 @@ Template.productview.onRendered(function() {
         let className = $(event.target).attr('class')
         let attachmentID = parseInt(className.split('remove-attachment-')[1]);
         let modalId = $(event.target).closest('.modal').attr("id");
-        
+
         if ($("#"+modalId+" .confirm-action-" + attachmentID).length) {
             $("#"+modalId+" .confirm-action-" + attachmentID).remove();
         } else {
@@ -3319,7 +3322,7 @@ Template.productview.onRendered(function() {
             utilityService.customShowUploadedAttachment(uploadedArray, modalId)
         }
 
-        
+
 
 
         // templateObject.uploadedFiles.set(uploadedArray);
@@ -4782,10 +4785,10 @@ Template.productview.events({
                                     "<div class='col inboxcol2' style='text-align: center;'>" +
                                         "<div>Upload files or add files from the file library.</div>"
                                         if(tempObject.isMobileDevices.get() == true) {
-                                            attachModalHtml = attachModalHtml +"<div>Capture copies of receipt's or take photo's of completed jobs.</div>" 
+                                            attachModalHtml = attachModalHtml +"<div>Capture copies of receipt's or take photo's of completed jobs.</div>"
                                         }
-                                            
-                                        
+
+
                                         attachModalHtml = attachModalHtml + "<p style='color: #ababab;'>Only users with access to your company can view these files</p>" +
                                     "</div>" +
                                 "</div>" +
@@ -4794,7 +4797,7 @@ Template.productview.events({
                             if(tempObject.isMobileDevices.get() == true) {
                                 attachModalHtml = attachModalHtml +"<input type='file' class='img-attachment-upload' id='img-attachment-upload' style='display:none' accept='image/*' capture='camera'>" +
                                 "<button class='btn btn-primary btnUploadFile img_new_attachment_btn' type='button'><i class='fas fa-camera' style='margin-right: 5px;'></i>Capture</button>" +
-        
+
                                 "<input type='file' class='attachment-upload' id='attachment-upload' style='display:none' multiple accept='.jpg,.gif,.png'>"
                             }else {
                                 attachModalHtml = attachModalHtml + "<input type='file' class='attachment-upload' id='attachment-upload' style='display:none' multiple accept='.jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt," +
@@ -4810,7 +4813,7 @@ Template.productview.events({
                                 "application/vnd.apple.keynote,application/x-iwork-pages-sffpages," +
                                 "application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers," +
                                 "application/vnd.apple.numbers,application/zip,application/rar," +
-                                "application/x-zip-compressed,application/x-zip,application/x-7z-compressed'>" 
+                                "application/x-zip-compressed,application/x-zip,application/x-7z-compressed'>"
                             }
                             attachModalHtml = attachModalHtml +
                                 "<button class='btn btn-primary btnUploadFile new_attachment_btn' type='button'><i class='fa fa-cloud-upload' style='margin-right: 5px;'></i>Upload</button>" +
@@ -4954,7 +4957,7 @@ Template.productview.events({
         }
 
         tempObject.bomStructure.set(objDetails);
-        swal('BOM Settings Successly Saved', '', 'success');
+        swal('BOM Settings Successfully Saved', '', 'success');
     },
 
 
@@ -4982,7 +4985,7 @@ Template.productview.events({
     //     let lineIDForAttachment = false;
     //     let uploadData = utilityService.attachmentUpload([], myFiles, saveToTAttachment, lineIDForAttachment);
     // },
-  
+
 
     // 'click .remove-attachment': function (event, ui) {
     //     let tempObj = Template.instance();

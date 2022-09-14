@@ -113,7 +113,6 @@ Template.eftExportModal.onRendered(function () {
       let accountService = new AccountService();
       const accountTypeList = [];
       var accountDataName = e.target.value || "";
-
       if (e.pageX > offset.left + $earch.width() - 8) {
         $("#accountListModal").modal();
         $(".fullScreenSpin").css("display", "none");
@@ -257,14 +256,14 @@ Template.eftExportModal.onRendered(function () {
       var bankName = e.target.value || "";
 
       if (e.pageX > offset.left + $earch.width() - 8) {
-        $("#transactionCodeModal").modal();
+        // $("#transactionCodeModal").modal();
         $(".fullScreenSpin").css("display", "none");
 
       } else {
         if (bankName.replace(/\s/g, "") != "") {
-          $("#transactionCodeModal").modal("toggle");
+          // $("#transactionCodeModal").modal("toggle");
         } else {
-          $("#transactionCodeModal").modal();
+          // $("#transactionCodeModal").modal();
         }
       }
     });

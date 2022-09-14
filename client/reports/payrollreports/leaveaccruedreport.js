@@ -104,8 +104,8 @@ Template.leaveaccruedreport.onRendered(() => {
     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getleaveAccrualReport(  
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+    await templateObject.getleaveAccrualReport(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()), false);
   };
 
@@ -124,15 +124,15 @@ Template.leaveaccruedreport.onRendered(() => {
       useLocalStorage: false,
       validate: (cachedResponse) => {
         if(cachedResponse.response.Params) {
-          if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
-          && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+          if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom)
+          && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo)
           && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
             return true;
           }
           return false;
         }
         return false;
-      
+
       }
     });
 
@@ -163,7 +163,6 @@ Template.leaveaccruedreport.onRendered(() => {
       });
     }
 
-    console.log(result);
 
     templateObject.records.set(result);
     setTimeout(function() {
@@ -173,7 +172,7 @@ Template.leaveaccruedreport.onRendered(() => {
     LoadingOverlay.hide();
   }
 
- 
+
 
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
@@ -191,13 +190,13 @@ Template.leaveaccruedreport.onRendered(() => {
     templateObject.loadCurrency = async () => {
       await loadCurrency();
     };
-  
+
     //templateObject.loadCurrency();
-  
+
     templateObject.loadCurrencyHistory = async () => {
       await loadCurrencyHistory();
     };
-  
+
     //templateObject.loadCurrencyHistory();
   templateObject.initDate();
   templateObject.initUploadedImage();

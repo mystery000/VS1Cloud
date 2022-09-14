@@ -215,7 +215,7 @@ Template.accountant_company.onRendered(() => {
         }
 
         $('.fullScreenSpin').css('display', 'none');
-        templateObject.getAccountLists();
+        // templateObject.getAccountLists();
     }
     templateObject.getReceiptCategoryList();
 
@@ -443,11 +443,11 @@ Template.accountant_company.onRendered(() => {
             categoryAccountList.push(cdataList);
         });
 
-        if (templateObject.datatablerecords.get()) {
-            setTimeout(function() {
-                MakeNegative();
-            }, 100);
-        }
+        // if (templateObject.datatablerecords.get()) {
+        //     setTimeout(function() {
+        //         MakeNegative();
+        //     }, 100);
+        // }
 
         $(".fullScreenSpin").css("display", "none");
         setTimeout(function() {
@@ -485,8 +485,7 @@ Template.accountant_company.onRendered(() => {
                     }
                 });
             }
-
-            $("#tblAccountOverview")
+            $(".tblAccountOverview")
                 .DataTable({
                     columnDefs: [
                         // { type: 'currency', targets: 4 }
@@ -540,32 +539,30 @@ Template.accountant_company.onRendered(() => {
                         [0, "asc"]
                     ],
                     action: function() {
-                        $("#tblAccountOverview").DataTable().ajax.reload();
+                        $(".tblAccountOverview").DataTable().ajax.reload();
                     },
                     fnDrawCallback: function(oSettings) {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
+                        // setTimeout(function() {
+                        //     MakeNegative();
+                        // }, 100);
                     },
-                    fnInitComplete: function() {
-                        $(
-                            "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                        ).insertAfter("#tblAccountOverview_filter");
-                    },
+                    fnInitComplete: function() {},
                 })
                 .on("page", function() {
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
+                    // setTimeout(function() {
+                    //     MakeNegative();
+                    // }, 100);
                     let draftRecord = templateObject.datatablerecords.get();
                     templateObject.datatablerecords.set(draftRecord);
                 })
                 .on("column-reorder", function() {})
                 .on("length.dt", function(e, settings, len) {
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
+                    // setTimeout(function() {
+                    //     MakeNegative();
+                    // }, 100);
                 });
+
+            $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccountOverview_wrapper .dataTables_filter");
             // $('.fullScreenSpin').css('display','none');
         }, 10);
 

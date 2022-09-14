@@ -1,6 +1,4 @@
-import { PaymentsService } from '../payments/payments-service';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
 import { ContactService } from "../contacts/contact-service";
 import { AccountService } from "../accounts/account-service";
 import { UtilityService } from "../utility-service";
@@ -1454,7 +1452,6 @@ Template.receiptsoverview.onRendered(function() {
     templateObject.getOCRResultFromImage = function(imageData, fileName) {
         $('.fullScreenSpin').css('display', 'inline-block');
         ocrService.POST(imageData, fileName).then(function(data) {
-
             $('.fullScreenSpin').css('display', 'none');
             let from = $('#employeeListModal').attr('data-from');
             let paymenttype = data.payment_type;
@@ -1466,7 +1463,6 @@ Template.receiptsoverview.onRendered(function() {
             } else if (paymenttype == "visa") {
                 transactionTypeName = "VISA";
             }
-
             let loggedUserName = Session.get('mySessionEmployee');
             let loggedUserId = Session.get('mySessionEmployeeLoggedID');
             let currency = Session.get('ERPCountryAbbr');
@@ -1478,7 +1474,6 @@ Template.receiptsoverview.onRendered(function() {
             } else if (from == 'NavTime') {
                 parentElement = "#nav-time";
             }
-
             let objDetails;
             let supplier_name = data.vendor.name? data.vendor.name:"";
             let phone_number = data.vendor.phone_number? data.vendor.phone_number:"";
@@ -1518,7 +1513,6 @@ Template.receiptsoverview.onRendered(function() {
                         $(parentElement + ' .merchants').attr('data-id', supplier.supplierid);
                     }
                 });
-
                 if (!isExistSupplier) {
                     contactService.getOneSupplierDataExByName(supplier_name).then(function (data) {
                         if (data.tsupplier.length == 0) {
@@ -1623,7 +1617,6 @@ Template.receiptsoverview.onRendered(function() {
             $(parentElement + ' .edtTotal').val(data.total);
             $(parentElement + ' .transactionTypes').val(transactionTypeName);
             $(parentElement + ' #txaDescription').val(note);
-
         }).catch(function(err) {
             let errText = "";
             if (err.error == "401") {
@@ -1636,15 +1629,11 @@ Template.receiptsoverview.onRendered(function() {
                 text: errText,
                 type: 'error',
                 showCancelButton: false,
-                confirmButtonText: 'Try Again'
+                showConfirmButton: false,
+                // confirmButtonText: 'Try Again'
+                timer: 2000
             }).then((result) => {
-                if (result.value) {
-                    if(err == checkResponseError){
-                        window.open('/', '_self');
-                    }
-                } else if (result.dismiss == 'cancel') {
-
-                }
+                swal.close();
             });
             $('.fullScreenSpin').css('display', 'none');
         });

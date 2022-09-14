@@ -230,6 +230,8 @@ Template.supportmodalpop.onRendered(function() {
     $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
   }else if(url.includes("/dashboardsales")) {
     $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/dashboardsalesmy")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
   }else if(url.includes("/processlist")) {
     $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
   }else if(url.includes("/processlist")) {

@@ -1062,8 +1062,8 @@ Template.taxRatesSettings.events({
     $('#subTaxCode').val('');
     $('#subTaxPercent').val('');
     $('#subTaxPercentageOn').prop('readonly', false);
-    $('#subTaxCapAmt').val('');
-    $('#subTaxThresholdAmt').val('');
+    $('#subTaxCapAmt').val('0');
+    $('#subTaxThresholdAmt').val('0');
     $('#add-subtax-title').text('Add Sub Tax');
   },
   "click .btnSaveSubTax": function () {
