@@ -3439,8 +3439,11 @@ Template.employeescard.onRendered(function () {
         if( useData.length ){
             setTimeout(function () {
                 Array.prototype.forEach.call(useData, (item) => {
-                    amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                    let amount = item.fields.Amount;
+                    if( isNaN(amount) || !amount){
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : item.fields.Amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                    }
                     $(`#ptDeductionType${item.fields.ID}`).val( item.fields.DeductionType );
                     $(`#ptDeductionAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(amount)|| 0.00 );
                     let percentage = ( item.fields.Percentage === undefined || item.fields.Percentage === null || item.fields.Percentage.length === 0) ? 0 : item.fields.Percentage;
@@ -4336,6 +4339,7 @@ Template.employeescard.onRendered(function () {
                 let $search = $(this);
                 let offset = $search.offset();
                 let dropDownID = $search.attr('id')
+                $('#edtEarningDropDownID').val(dropDownID);
                 templateObject.currentDrpDownID.set(dropDownID);
                 let searchName = e.target.value || '';
                 if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
@@ -4385,6 +4389,7 @@ Template.employeescard.onRendered(function () {
                     let $search = $(this);
                     let offset = $search.offset();
                     let dropDownID = $search.attr('id')
+                    $('#edtDeductionDropDownID').val(dropDownID);
                     templateObject.currentDrpDownID.set(dropDownID);
                     let searchName = e.target.value || '';
                     if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
@@ -4443,6 +4448,7 @@ Template.employeescard.onRendered(function () {
                 .on('click.editable-select', async function (e, li) {
                     let $search = $(this);
                     let dropDownID = $search.attr('id')
+                    $('#edtSuperAnnuationDropDownID').val(dropDownID);
                     templateObject.currentDrpDownID.set(dropDownID);
                     let offset = $search.offset();
                     let searchName = e.target.value || '';
@@ -4503,6 +4509,7 @@ Template.employeescard.onRendered(function () {
                 .on('click.editable-select', async function (e, li) {
                     let $search = $(this);
                     let dropDownID = $search.attr('id')
+                    $('#edtReimbursementDropDownID').val(dropDownID);
                     templateObject.currentDrpDownID.set(dropDownID);
                     let offset = $search.offset();
                     let searchName = e.target.value || '';

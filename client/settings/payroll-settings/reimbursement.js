@@ -210,7 +210,7 @@ Template.reimbursementSettings.onRendered(function() {
                     MakeNegative();
                 }, 100);
             });
-        }, 0);
+        }, 1000);
     } catch (error) {
         $('.fullScreenSpin').css('display', 'none');
     } 
@@ -223,6 +223,7 @@ $('.reimbursementDropDown').editableSelect()
     .on('click.editable-select', async function (e, li) {
         let $search = $(this);
         let dropDownID = $search.attr('id')
+        $('#edtReimbursementDropDownID').val(dropDownID);
         templateObject.currentDrpDownID.set(dropDownID);
         let offset = $search.offset();
         let searchName = e.target.value || '';
@@ -397,39 +398,58 @@ Template.reimbursementSettings.events({
             }
         };
 
-        const ApiResponse = await apiEndpoint.fetch(null, {
-            method: "POST",
-            headers: ApiService.getPostHeaders(),
-            body: JSON.stringify(reimbursementRateSettings),
-        });
-
-    
-        if (ApiResponse.ok == true) {
-            const jsonResponse = await ApiResponse.json();
-            $('#reimbursementRateForm')[0].reset();
-            await templateObject.saveDataLocalDB();
-            // await templateObject.getReimbursement();
-            $('#newReimbursementModal').modal('hide');
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Success",
-                text: "Reimbursement has been saved",
-                type: 'success',   
-                showCancelButton: false,
-                confirmButtonText: 'Done'             
-            }).then((result) => {
-                if (result.value) {                    
-                    window.location.reload();
-                }
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(reimbursementRateSettings),
             });
-        }else{
+    
+        
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                $('#reimbursementRateForm')[0].reset();
+                await templateObject.saveDataLocalDB();
+                await templateObject.getReimbursement();
+                let drpDownID = $('#edtReimbursementDropDownID').val();
+                $('#' + drpDownID).val(reimbursementname);
+                $('#newReimbursementModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Reimbursement added successfully',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) { }
+                    } 
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
+            }
+        } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
             swal({
-                title: "Error",
-                text: "Failed to add deduction",
+                title: 'Oooops...',
+                text: error,
                 type: 'error',
-            })
-        }
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });
+        }        
     },
 });
 
