@@ -242,7 +242,8 @@ Template.AddPayRunModal.events({
   "click .btnPayRunNext": event => {
     $(".modal-backdrop").css("display", "none");
     const id = $("#selectAPayRun").attr("calendar-id");
-    FlowRouter.go(`/payrundetails?cid=${id}`);
+    // FlowRouter.go(`/payrundetails?cid=${id}`);
+    window.location.href = `/payrundetails?cid=${id}`;
   },
 
   "click .btnAddNewPayCalender": (e, ui) => {
