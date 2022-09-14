@@ -191,16 +191,17 @@ Template.AddPayRunModal.onRendered(() => {
       const trs = $("#tblPayCalendars tbody").find("tr");
 
       $("#AppTableModal").modal("show");
-      $(trs).each(tr => {
+      $(trs).each((index, tr) => {
         $(tr).on("click", e => {
           const id = $(e.currentTarget).find(".colCalenderID").text();
           const name = $(e.currentTarget).find(".colPayCalendarName").text();
           const payPeriod = $(e.currentTarget).find(".colPayPeriod").text();
           const nextPayPeriod = $(e.currentTarget).find(".colNextPayPeriod").text();
-          const nextPaymentDate = $(e.currentTarget).find(".ccolNextPaymentDate").text();
+          const nextPaymentDate = $(e.currentTarget).find(".colNextPaymentDate").text();
 
           $("#selectAPayRun").attr("calendar-id", id);
           $("#selectAPayRun").val(`${name} (${payPeriod} | ${nextPayPeriod}) - ${nextPaymentDate}`);
+          $("#AppTableModal").modal("hide");
         });
       });
     }, 300);
