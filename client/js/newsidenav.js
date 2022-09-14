@@ -222,6 +222,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -244,6 +245,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').addClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -260,36 +262,60 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavshipping').removeClass('active');
                 $('#sidenavreceipt').removeClass('active');
                 $('.collapse').collapse('hide');
-            }else if (currentLoc == "/dashboardsalesmanager" || currentLoc == "/dashboardsales") {
-              $('#sidenavaccounts').removeClass('active');
-              $('#sidenavbanking').removeClass('active');
-              $('#sidenavdashbaord').removeClass('active');
-              $('#sidenavdashbaordexe').removeClass('active');
-              $('#sidenavmanufacturing').removeClass('active');
-              $('#sidenavappointment').removeClass('active');
-              $('#sidenavcontacts').removeClass('active');
-              $('#sidenavcrm').removeClass('active');
-              $('#sidenavinventory').removeClass('active');
-              $('#sidenavpayments').removeClass('active');
-              $('#sidenavpurchases').removeClass('active');
-              $('#sidenavreports').removeClass('active');
-              $('#sidenavsales').removeClass('active');
-              $('#sidenavsettings').removeClass('active');
-              $('#sidenavstocktake').removeClass('active');
-              $('#sidenavpayroll').removeClass('active');
-              $('#sidenavseedtosale').removeClass('active');
-              $('#sidenavshipping').removeClass('active');
-              $('#sidenavreceipt').removeClass('active');
-              $('.collapse').collapse('hide');
-              if(currentLoc == "/dashboardsales") {
-                $('#sidenavdashbaordsales').addClass('active');
-                $('#sidenavdashbaordsalesmanager').removeClass('active');
-              } else {
-                $('#sidenavdashbaordsalesmanager').addClass('active');
+            } else if (currentLoc == "/dashboardsalesmanager" || currentLoc == "/dashboardsales") {
+                $('#sidenavaccounts').removeClass('active');
+                $('#sidenavbanking').removeClass('active');
+                $('#sidenavdashbaord').removeClass('active');
+                $('#sidenavdashbaordexe').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
+                $('#sidenavmanufacturing').removeClass('active');
+                $('#sidenavappointment').removeClass('active');
+                $('#sidenavcontacts').removeClass('active');
+                $('#sidenavcrm').removeClass('active');
+                $('#sidenavinventory').removeClass('active');
+                $('#sidenavpayments').removeClass('active');
+                $('#sidenavpurchases').removeClass('active');
+                $('#sidenavreports').removeClass('active');
+                $('#sidenavsales').removeClass('active');
+                $('#sidenavsettings').removeClass('active');
+                $('#sidenavstocktake').removeClass('active');
+                $('#sidenavpayroll').removeClass('active');
+                $('#sidenavseedtosale').removeClass('active');
+                $('#sidenavshipping').removeClass('active');
+                $('#sidenavreceipt').removeClass('active');
+                $('.collapse').collapse('hide');
+                if(currentLoc == "/dashboardsales") {
+                    $('#sidenavdashbaordsales').addClass('active');
+                    $('#sidenavdashbaordsalesmanager').removeClass('active');
+                } else {
+                    $('#sidenavdashbaordsalesmanager').addClass('active');
+                    $('#sidenavdashbaordsales').removeClass('active');
+                }
+            } else if (currentLoc == "/dashboardmy") {
+                $('#sidenavaccounts').removeClass('active');
+                $('#sidenavbanking').removeClass('active');
+                $('#sidenavdashbaord').removeClass('active');
+                $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
-              }
-          }
-            else if ((currentLoc == "/appointments") || (currentLoc == "/appointmentlist") || (currentLoc == "/appointmenttimelist")) {
+                $('#sidenavdashbaordmy').addClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavmanufacturing').removeClass('active');
+                $('#sidenavappointment').removeClass('active');
+                $('#sidenavcontacts').removeClass('active');
+                $('#sidenavcrm').removeClass('active');
+                $('#sidenavinventory').removeClass('active');
+                $('#sidenavpayments').removeClass('active');
+                $('#sidenavpurchases').removeClass('active');
+                $('#sidenavreports').removeClass('active');
+                $('#sidenavsales').removeClass('active');
+                $('#sidenavsettings').removeClass('active');
+                $('#sidenavstocktake').removeClass('active');
+                $('#sidenavpayroll').removeClass('active');
+                $('#sidenavseedtosale').removeClass('active');
+                $('#sidenavshipping').removeClass('active');
+                $('#sidenavreceipt').removeClass('active');
+                $('.collapse').collapse('hide');
+            } else if ((currentLoc == "/appointments") || (currentLoc == "/appointmentlist") || (currentLoc == "/appointmenttimelist")) {
                 $('#sidenavaccounts').removeClass('active');
                 $('#sidenavbanking').removeClass('active');
                 $('#sidenavappointment').addClass('active');
@@ -297,6 +323,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -320,6 +347,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -345,6 +373,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -372,6 +401,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment ').removeClass('active');
                 $('#sidenavcontacts').addClass('active');
@@ -395,6 +425,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -421,6 +452,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -448,6 +480,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -472,6 +505,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -498,6 +532,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -531,6 +566,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -558,6 +594,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -585,6 +622,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -609,6 +647,7 @@ Template.newsidenav.onRendered(function() {
                   $('#sidenavdashbaordexe').removeClass('active');
                   $('#sidenavdashbaordsales').removeClass('active');
                   $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                   $('#sidenavmanufacturing').removeClass('active');
                   $('#sidenavappointment').removeClass('active');
                   $('#sidenavcontacts').removeClass('active');
@@ -636,6 +675,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment ').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -660,6 +700,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -683,6 +724,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
                 $('#sidenavdashbaordsalesmanager').removeClass('active');
+                $('#sidenavdashbaordmy').removeClass('active');
                 $('#sidenavmanufacturing').addClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
@@ -7067,7 +7109,7 @@ Template.newsidenav.events({
       let templateObject = Template.instance();
       templateObject.getSetSideNavFocus();
   },
-  'click #sidenavdashbaordsales': function(event) {
+    'click #sidenavdashbaordsales': function(event) {
     $('.accountsLi').addClass('opacityNotActive');
     $('.appointmentsLi').addClass('opacityNotActive');
     $('.bankingLi').addClass('opacityNotActive');
@@ -7106,6 +7148,45 @@ Template.newsidenav.events({
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
+    'click #sidenavdashbaordmy': function(event) {
+        $('.accountsLi').addClass('opacityNotActive');
+        $('.appointmentsLi').addClass('opacityNotActive');
+        $('.bankingLi').addClass('opacityNotActive');
+        $('.contactsLi').addClass('opacityNotActive');
+        $('.dashboardLi').addClass('opacityNotActive');
+        $('.dashboardLiExe').addClass('opacityNotActive');
+        $('.dashboardLiSales').removeClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
+        $('.manufacturingLi').addClass('opacityNotActive');
+        $('.gsemployeesLi').addClass('opacityNotActive');
+        $('.inventoryLi').addClass('opacityNotActive');
+        $('.paymentsLi').addClass('opacityNotActive');
+        $('.payrollLi').addClass('opacityNotActive');
+        $('.purchasesLi').addClass('opacityNotActive');
+        $('.reportsLi').addClass('opacityNotActive');
+        $('.reportsLi2').addClass('opacityNotActive');
+        $('.salesLi').addClass('opacityNotActive');
+        $('.seedtosaleLi').addClass('opacityNotActive');
+        $('.settingsLi').addClass('opacityNotActive');
+        $('.logoutLi').addClass('opacityNotActive');
+        $('#accountsSubmenu').collapse('hide');
+        $('#appointmentsSubmenu').collapse('hide');
+        $('#bankingSubmenu').collapse('hide');
+        $('#contactsSubmenu').collapse('hide');
+        $('#inventorySubmenu').collapse('hide');
+        $('#paymentsSubmenu').collapse('hide');
+        $('#payrollSubmenu').collapse('hide');
+        $('#purchasesSubmenu').collapse('hide');
+        $('#reportsSubmenu').collapse('hide');
+        $('#salesSubmenu').collapse('hide');
+        $('#seedToSaleSubmenu').collapse('hide');
+        $('#settingsSubmenu').collapse('hide');
+        $('#manufacturingSubmenu').collapse('hide');
+        event.preventDefault();
+        FlowRouter.go('/dashboardmy');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
     'click #sidenavappointment': function(event) {
         $('.accountsLi').addClass('opacityNotActive');
         $('.appointmentsLi').removeClass('opacityNotActive');
@@ -7255,7 +7336,6 @@ Template.newsidenav.events({
       $('#seedToSaleSubmenu').collapse('hide');
       $('#settingsSubmenu').collapse('hide');
     },
-
     'click #sidenavpayments': function(event) {
         $('.accountsLi').addClass('opacityNotActive');
         $('.appointmentsLi').addClass('opacityNotActive');
@@ -7305,7 +7385,6 @@ Template.newsidenav.events({
       templateObject.getSetSideNavFocus();
     },
     'click .sidenavpayments': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/paymentoverview');
         let templateObject = Template.instance();
@@ -7345,7 +7424,6 @@ Template.newsidenav.events({
         $('#settingsSubmenu').collapse('hide');
     },
     'click .sidenavpurchases': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/purchasesoverview');
         let templateObject = Template.instance();
@@ -7389,70 +7467,60 @@ Template.newsidenav.events({
         templateObject.getSetSideNavFocus();
     },
     'click #sidenav1099report': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/1099report');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavagedpayables': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/agedpayables');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavagedpayablessummary': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/agedpayablessummary');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavagedreceivables': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/agedreceivables');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavagedreceivablessummary': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/agedreceivablessummary');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavbalancesheetreport': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/balancesheetreport');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavgeneralledger': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/generalledger');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavstatementlist': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/statementlist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavstatementlist2': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/statementlist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavprofitlossreport': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/newprofitandloss');
         let templateObject = Template.instance();
@@ -7463,52 +7531,44 @@ Template.newsidenav.events({
         FlowRouter.go('/purchasesreport');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
-
     },
     'click #sidenavpurchasesummaryreport': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/purchasesummaryreport');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavproductsalesreport': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/productsalesreport');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavsalesreport': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/salesreport');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavsalessummaryreport': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/salessummaryreport');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavtaxsummaryreport': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/taxsummaryreport');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavtrialbalance': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/trialbalance');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click .sidenavreports': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/allreports');
         let templateObject = Template.instance();
@@ -7548,14 +7608,12 @@ Template.newsidenav.events({
         $('#settingsSubmenu').collapse('hide');
     },
     'click .sidenavsales': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/salesoverview');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click .sidenavsettings': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/settings');
         let templateObject = Template.instance();
@@ -7574,7 +7632,6 @@ Template.newsidenav.events({
         templateObject.getSetSideNavFocus();
     },
     'click #sidenaveproductlist': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/productlist');
         let templateObject = Template.instance();
@@ -7677,105 +7734,90 @@ Template.newsidenav.events({
         }
     },
     'click #sidenavawaitingCP': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/customerawaitingpayments');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavawaitingSPPO': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/supplierawaitingpurchaseorder');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavawaitingSPBill': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/supplierawaitingbills');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavcustomerP': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/customerpayment');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavnewcustomerP': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/paymentcard');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavsupplierP': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/supplierpayment');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavnewsupplierP': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/supplierpaymentcard');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavBill': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/billlist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavCredit': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/creditlist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavPurchaseOrder': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/purchaseorderlist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavPurchaseOrderBO': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/purchaseorderlistBO');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavnewBill': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/billcard');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavnewCredit': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/creditcard');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavnewPO': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/purchaseordercard');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavInvoice': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/invoicelist');
         let templateObject = Template.instance();
@@ -7788,56 +7830,48 @@ Template.newsidenav.events({
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavInvoiceEmail': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/invoiceemail');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavInvoiceBO': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/invoicelistBO');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavQuote': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/quoteslist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavSalesOrder': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/salesorderslist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavnewInvoice': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/invoicecard');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavnewQuote': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/quotecard');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavnewRefund': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/refundcard');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavnewSO': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/salesordercard');
         let templateObject = Template.instance();
@@ -7850,49 +7884,42 @@ Template.newsidenav.events({
         window.open('/companyappsettings', '_self');
     },
     'click #sidenavcurrenciesSettings': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/currenciessettings');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavdepartmentSettings': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/departmentSettings');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavorganisationsettings': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/organisationsettings');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavpaymentmethodSettings': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/paymentmethodSettings');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavtaxratesettings': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/taxratesettings');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavtermsettings': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/termsettings');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavtimesheet': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/timesheet');
         let templateObject = Template.instance();

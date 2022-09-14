@@ -1,13 +1,13 @@
 import { ReactiveVar } from "meteor/reactive-var";
 
-Template.dashboardsalesmy.onCreated(function () {
+Template.dashboardmy.onCreated(function () {
   this.loggedDb = new ReactiveVar("");
   const templateObject = Template.instance();
   templateObject.includeDashboard = new ReactiveVar();
   templateObject.includeDashboard.set(false);
 });
 
-Template.dashboardsalesmy.onRendered(function () {
+Template.dashboardmy.onRendered(function () {
   let templateObject = Template.instance();
   let isDashboard = Session.get("CloudDashboardModule");
   if (isDashboard) {
@@ -15,7 +15,7 @@ Template.dashboardsalesmy.onRendered(function () {
   }
 });
 
-Template.dashboardsalesmy.helpers({
+Template.dashboardmy.helpers({
   includeDashboard: () => {
     const res = Template.instance().includeDashboard.get();
     return res;
@@ -29,6 +29,6 @@ Template.dashboardsalesmy.helpers({
 });
 
 // Listen to event to update reactive variable
-Template.dashboardsalesmy.events({
+Template.dashboardmy.events({
 
 });

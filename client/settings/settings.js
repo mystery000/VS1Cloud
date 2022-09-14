@@ -49,6 +49,9 @@ Template.settings.events({
     'click .btnCustomerType': function (event) {
         FlowRouter.go('/clienttypesettings');
     },
+    'click .btnLeadStatus': function (event) {
+        FlowRouter.go('/leadstatussettings');
+    },
     'click .btncurrenciesSettings': function (event) {
         FlowRouter.go('/currenciessettings');
     },

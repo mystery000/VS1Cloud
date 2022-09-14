@@ -523,7 +523,6 @@
                                                         <script>
                                                             setTimeout(function() {
                                                                 const x = window.matchMedia("(max-width: 420px)");
-
                                                                 function mediaQuery(x) {
                                                                     if (x.matches) {
                                                                         $("#colStreetAddress").removeClass("col");
@@ -545,15 +544,12 @@
                                                                 .preferredPaymentMethodSelect {
                                                                     width: 215px !important;
                                                                 }
-
                                                                 .taxCodeSelect {
                                                                     width: 215px !important;
                                                                 }
-
                                                                 .attachementsImage1 {
                                                                     width: 200px !important;
                                                                 }
-
                                                                 .breakPhone {
                                                                     display: block !important;
                                                                 }
@@ -566,7 +562,6 @@
                                                                         <div class="row no-gutters">
                                                                             <h4 style="margin: 4px;">Shipping&nbsp;Address</h4>
                                                                         </div>
-
                                                                         <div class="row" style="margin: 4px 12px;">
                                                                             <div class="col-12 col-md-6" style="padding: 0px;">
                                                                                 <div class="form-group" style="margin: 4px;">
@@ -1017,19 +1012,11 @@
 
                                                                                                     {{#if equals item.sVisible true}}
                                                                                                         <script>
-                                                                                                            $("#" + {
-                                                                                                                {
-                                                                                                                    item.sIndex
-                                                                                                                }
-                                                                                                            } + ".chkDatatable").attr("checked", "checked");
+                                                                                                            $("#" + {{item.sIndex}} + ".chkDatatable").attr("checked", "checked");
                                                                                                         </script>
                                                                                                     {{else}}
                                                                                                         <script>
-                                                                                                            $("#" + {
-                                                                                                                {
-                                                                                                                    item.sIndex
-                                                                                                                }
-                                                                                                            } + ".chkDatatable").removeAttr("checked");
+                                                                                                            $("#" + {{item.sIndex}} + ".chkDatatable").removeAttr("checked");
                                                                                                         </script>
                                                                                                     {{/if}}
 

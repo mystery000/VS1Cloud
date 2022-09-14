@@ -1,21 +1,14 @@
-import {
-    TaxRateService
-} from "../settings/settings-service";
-import {
-    ReactiveVar
-} from 'meteor/reactive-var';
-import {
-    SideBarService
-} from '../js/sidebar-service';
+import { TaxRateService } from "../settings/settings-service";
+import { ReactiveVar } from 'meteor/reactive-var';
+import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
+
 Template.statuspop.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
-
     templateObject.deptrecords = new ReactiveVar();
-
     templateObject.include7Days = new ReactiveVar();
     templateObject.include7Days.set(false);
     templateObject.include30Days = new ReactiveVar();
@@ -26,12 +19,10 @@ Template.statuspop.onCreated(function() {
     templateObject.includeEOM.set(false);
     templateObject.includeEOMPlus = new ReactiveVar();
     templateObject.includeEOMPlus.set(false);
-
     templateObject.includeSalesDefault = new ReactiveVar();
     templateObject.includeSalesDefault.set(false);
     templateObject.includePurchaseDefault = new ReactiveVar();
     templateObject.includePurchaseDefault.set(false);
-
 });
 
 Template.statuspop.onRendered(function() {
@@ -54,10 +45,8 @@ Template.statuspop.onRendered(function() {
                     let hiddenColumn = customcolumn[i].hidden;
                     let columnClass = columHeaderUpdate.split('.')[1];
                     let columnWidth = customcolumn[i].width;
-
                     $("th." + columnClass + "").html(columData);
                     $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
                 }
             }
 
@@ -68,185 +57,13 @@ Template.statuspop.onRendered(function() {
         $('td').each(function() {
             if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
         });
-    };
+    }
 
-    templateObject.getTaxRates = function() {
+    templateObject.getStatusList = function() {
         getVS1Data('TLeadStatusType').then(function(dataObject) {
             if (dataObject.length == 0) {
                 taxRateService.getAllLeadStatus().then(function(data) {
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    let setISCOD = false;
-                    for (let i = 0; i < data.tleadstatustype.length; i++) {
-                        // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
-                        var dataList = {
-                            id: data.tleadstatustype[i].Id || '',
-                            typename: data.tleadstatustype[i].TypeName || '',
-                            description: data.tleadstatustype[i].Description || data.tleadstatustype[i].TypeName
-                        };
-
-                        dataTableList.push(dataList);
-                        //}
-                    }
-
-
-                    templateObject.datatablerecords.set(dataTableList);
-
-                    if (templateObject.datatablerecords.get()) {
-
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStatusPopList', function(error, result) {
-                            if (error) {
-
-                            } else {
-                                if (result) {
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.split('.')[1];
-                                        let columnWidth = customcolumn[i].width;
-                                        let columnindex = customcolumn[i].index + 1;
-
-                                        if (hiddenColumn == true) {
-
-                                            $("." + columnClass + "").addClass('hiddenColumn');
-                                            $("." + columnClass + "").removeClass('showColumn');
-                                        } else if (hiddenColumn == false) {
-                                            $("." + columnClass + "").removeClass('hiddenColumn');
-                                            $("." + columnClass + "").addClass('showColumn');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
-
-
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    }
-
-                    $('.fullScreenSpin').css('display', 'none');
-                    setTimeout(function() {
-                        $('#tblStatusPopList').DataTable({
-                            columnDefs: [{
-                                "orderable": false,
-                                "targets": -1
-                            }],
-                            select: true,
-                            destroy: true,
-                            colReorder: true,
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            buttons: [{
-                                    extend: 'csvHtml5',
-                                    text: '',
-                                    download: 'open',
-                                    className: "btntabletocsv hiddenColumn",
-                                    filename: "tblStatusPopList_" + moment().format(),
-                                    orientation: 'portrait',
-                                    exportOptions: {
-                                        columns: ':visible'
-                                    }
-                                }, {
-                                    extend: 'print',
-                                    download: 'open',
-                                    className: "btntabletopdf hiddenColumn",
-                                    text: '',
-                                    title: 'Term List',
-                                    filename: "tblStatusPopList_" + moment().format(),
-                                    exportOptions: {
-                                        columns: ':visible'
-                                    }
-                                },
-                                {
-                                    extend: 'excelHtml5',
-                                    title: '',
-                                    download: 'open',
-                                    className: "btntabletoexcel hiddenColumn",
-                                    filename: "tblStatusPopList_" + moment().format(),
-                                    orientation: 'portrait',
-                                    exportOptions: {
-                                        columns: ':visible'
-                                    }
-                                    // ,
-                                    // customize: function ( win ) {
-                                    //   $(win.document.body).children("h1:first").remove();
-                                    // }
-
-                                }
-                            ],
-                            // bStateSave: true,
-                            // rowId: 0,
-                            paging: false,
-                            // "scrollY": "400px",
-                            // "scrollCollapse": true,
-                            info: true,
-                            responsive: true,
-                            "order": [
-                                [0, "asc"]
-                            ],
-                            // "aaSorting": [[1,'desc']],
-                            action: function() {
-                                $('#tblStatusPopList').DataTable().ajax.reload();
-                            },
-                            "fnDrawCallback": function(oSettings) {
-                                setTimeout(function() {
-                                    MakeNegative();
-                                }, 100);
-                            },
-                            "fnInitComplete": function () {
-                                $("<button class='btn btn-primary btnAddNewStatus' data-dismiss='modal' data-toggle='modal' data-target='#newStatusPopModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblStatusPopList_filter");
-                                $("<button class='btn btn-primary btnRefreshStatus' type='button' id='btnRefreshStatus' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblStatusPopList_filter");
-                            },
-
-                        }).on('page', function() {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                            let draftRecord = templateObject.datatablerecords.get();
-                            templateObject.datatablerecords.set(draftRecord);
-                        }).on('column-reorder', function() {
-
-                        }).on('length.dt', function(e, settings, len) {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                        });
-                        $('.fullScreenSpin').css('display', 'none');
-                    }, 10);
-
-
-                    var columns = $('#tblStatusPopList th');
-                    let sTible = "";
-                    let sWidth = "";
-                    let sIndex = "";
-                    let sVisible = "";
-                    let columVisible = false;
-                    let sClass = "";
-                    $.each(columns, function(i, v) {
-                        if (v.hidden == false) {
-                            columVisible = true;
-                        }
-                        if ((v.className.includes("hiddenColumn"))) {
-                            columVisible = false;
-                        }
-                        sWidth = v.style.width.replace('px', "");
-
-                        let datatablerecordObj = {
-                            sTitle: v.innerText || '',
-                            sWidth: sWidth || '',
-                            sIndex: v.cellIndex || '',
-                            sVisible: columVisible || false,
-                            sClass: v.className || ''
-                        };
-                        tableHeaderList.push(datatablerecordObj);
-                    });
-                    templateObject.tableheaderrecords.set(tableHeaderList);
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
+                    setLeadStatus(data);
                 }).catch(function(err) {
                     // Bert.alert('<strong>' + err + '</strong>!', 'danger');
                     $('.fullScreenSpin').css('display', 'none');
@@ -254,366 +71,175 @@ Template.statuspop.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.tleadstatustype;
-                let lineItems = [];
-                let lineItemObj = {};
-                let setISCOD = false;
-                for (let i = 0; i < useData.length; i++) {
-                    // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
-                    var dataList = {
-                        id: useData[i].Id || '',
-                        typename: useData[i].TypeName || '',
-                        description: useData[i].Description || useData[i].TypeName
-                    };
-
-                    dataTableList.push(dataList);
-                    //}
-                }
-
-
-                templateObject.datatablerecords.set(dataTableList);
-
-                if (templateObject.datatablerecords.get()) {
-
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStatusPopList', function(error, result) {
-                        if (error) {
-
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                }
-
-                $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function() {
-                    $('#tblStatusPopList').DataTable({
-                        columnDefs: [{
-                            "orderable": false,
-                            "targets": -1
-                        }],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                                extend: 'csvHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "tblStatusPopList_" + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            }, {
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Term List',
-                                filename: "tblStatusPopList_" + moment().format(),
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            },
-                            {
-                                extend: 'excelHtml5',
-                                title: '',
-                                download: 'open',
-                                className: "btntabletoexcel hiddenColumn",
-                                filename: "tblStatusPopList_" + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                                // ,
-                                // customize: function ( win ) {
-                                //   $(win.document.body).children("h1:first").remove();
-                                // }
-
-                            }
-                        ],
-                        // bStateSave: true,
-                        // rowId: 0,
-                        paging: false,
-                        // "scrollY": "400px",
-                        // "scrollCollapse": true,
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [0, "asc"]
-                        ],
-                        // "aaSorting": [[1,'desc']],
-                        action: function() {
-                            $('#tblStatusPopList').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function(oSettings) {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddNewStatus' data-dismiss='modal' data-toggle='modal' data-target='#newStatusPopModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblStatusPopList_filter");
-                            $("<button class='btn btn-primary btnRefreshStatus' type='button' id='btnRefreshStatus' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblStatusPopList_filter");
-                        },
-
-                    }).on('page', function() {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function() {
-
-                    }).on('length.dt', function(e, settings, len) {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 10);
-
-
-                var columns = $('#tblStatusPopList th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
+                setLeadStatus(data);
             }
         }).catch(function(err) {
             taxRateService.getAllLeadStatus().then(function(data) {
-                let lineItems = [];
-                let lineItemObj = {};
-                let setISCOD = false;
-                for (let i = 0; i < data.tleadstatustype.length; i++) {
-                    // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
-                    var dataList = {
-                        id: data.tleadstatustype[i].Id || '',
-                        typename: data.tleadstatustype[i].TypeName || '',
-                        description: data.tleadstatustype[i].Description || data.tleadstatustype[i].TypeName
-                    };
-
-                    dataTableList.push(dataList);
-                    //}
-                }
-
-
-                templateObject.datatablerecords.set(dataTableList);
-
-                if (templateObject.datatablerecords.get()) {
-
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStatusPopList', function(error, result) {
-                        if (error) {
-
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                }
-
-                $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function() {
-                    $('#tblStatusPopList').DataTable({
-                        columnDefs: [{
-                            "orderable": false,
-                            "targets": -1
-                        }],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                                extend: 'csvHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "tblStatusPopList_" + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            }, {
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Term List',
-                                filename: "tblStatusPopList_" + moment().format(),
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            },
-                            {
-                                extend: 'excelHtml5',
-                                title: '',
-                                download: 'open',
-                                className: "btntabletoexcel hiddenColumn",
-                                filename: "tblStatusPopList_" + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                                // ,
-                                // customize: function ( win ) {
-                                //   $(win.document.body).children("h1:first").remove();
-                                // }
-
-                            }
-                        ],
-                        // bStateSave: true,
-                        // rowId: 0,
-                        paging: false,
-                        // "scrollY": "400px",
-                        // "scrollCollapse": true,
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [0, "asc"]
-                        ],
-                        // "aaSorting": [[1,'desc']],
-                        action: function() {
-                            $('#tblStatusPopList').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function(oSettings) {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddNewStatus' data-dismiss='modal' data-toggle='modal' data-target='#newStatusPopModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblStatusPopList_filter");
-                            $("<button class='btn btn-primary btnRefreshStatus' type='button' id='btnRefreshStatus' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblStatusPopList_filter");
-                        }
-
-                    }).on('page', function() {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function() {
-
-                    }).on('length.dt', function(e, settings, len) {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 10);
-
-
-                var columns = $('#tblStatusPopList th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
+                setLeadStatus(data);
             }).catch(function(err) {
                 // Bert.alert('<strong>' + err + '</strong>!', 'danger');
                 $('.fullScreenSpin').css('display', 'none');
                 // Meteor._reload.reload();
             });
         });
-
     }
+    function setLeadStatus(data) {
+        for (let i = 0; i < data.tleadstatustype.length; i++) {
+            // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
+            const dataList = {
+                id: data.tleadstatustype[i].Id || '',
+                typename: data.tleadstatustype[i].TypeName || '',
+                description: data.tleadstatustype[i].Description || data.tleadstatustype[i].TypeName
+            };
+            dataTableList.push(dataList);
+            //}
+        }
+        templateObject.datatablerecords.set(dataTableList);
+        if (templateObject.datatablerecords.get()) {
+            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblStatusPopList', function(error, result) {
+                if (error) {
 
-    templateObject.getTaxRates();
+                } else {
+                    if (result) {
+                        for (let i = 0; i < result.customFields.length; i++) {
+                            let customcolumn = result.customFields;
+                            let columData = customcolumn[i].label;
+                            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+                            let hiddenColumn = customcolumn[i].hidden;
+                            let columnClass = columHeaderUpdate.split('.')[1];
+                            let columnWidth = customcolumn[i].width;
+                            let columnindex = customcolumn[i].index + 1;
+                            if (hiddenColumn == true) {
+                                $("." + columnClass + "").addClass('hiddenColumn');
+                                $("." + columnClass + "").removeClass('showColumn');
+                            } else if (hiddenColumn == false) {
+                                $("." + columnClass + "").removeClass('hiddenColumn');
+                                $("." + columnClass + "").addClass('showColumn');
+                            }
+                        }
+                    }
+                }
+            });
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#tblStatusPopList').DataTable({
+                columnDefs: [{
+                    "orderable": false,
+                    "targets": -1
+                }],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [{
+                    extend: 'csvHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "tblStatusPopList_" + moment().format(),
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'Term List',
+                    filename: "tblStatusPopList_" + moment().format(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "tblStatusPopList_" + moment().format(),
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                        // ,
+                        // customize: function ( win ) {
+                        //   $(win.document.body).children("h1:first").remove();
+                        // }
+
+                    }
+                ],
+                // bStateSave: true,
+                // rowId: 0,
+                paging: false,
+                // "scrollY": "400px",
+                // "scrollCollapse": true,
+                info: true,
+                responsive: true,
+                "order": [
+                    [0, "asc"]
+                ],
+                // "aaSorting": [[1,'desc']],
+                action: function() {
+                    $('#tblStatusPopList').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                "fnInitComplete": function () {
+                    $("<button class='btn btn-primary btnAddNewStatus' data-dismiss='modal' data-toggle='modal' data-target='#newStatusPopModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblStatusPopList_filter");
+                    $("<button class='btn btn-primary btnRefreshStatus' type='button' id='btnRefreshStatus' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblStatusPopList_filter");
+                },
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+                let draftRecord = templateObject.datatablerecords.get();
+                templateObject.datatablerecords.set(draftRecord);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $('.fullScreenSpin').css('display', 'none');
+        }, 10);
+        const columns = $('#tblStatusPopList th');
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function(i, v) {
+            if (v.hidden == false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || '',
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+    templateObject.getStatusList();
 
     $(document).on('click', '.table-remove', function() {
         event.stopPropagation();
@@ -632,13 +258,13 @@ Template.statuspop.onRendered(function() {
     });
 
     $('#tblStatusPopList tbody').on('click', 'tr .colName, tr .colIsDays, tr .colIsEOM, tr .colDescription, tr .colIsCOD, tr .colIsEOMPlus, tr .colCustomerDef, tr .colSupplierDef', function() {
-        var listData = $(this).closest('tr').attr('id');
-        var is7days = false;
-        var is30days = false;
-        var isEOM = false;
-        var isEOMPlus = false;
-        var isSalesDefault = false;
-        var isPurchaseDefault = false;
+        let listData = $(this).closest('tr').attr('id');
+        const is7days = false;
+        const is30days = false;
+        let isEOM = false;
+        let isEOMPlus = false;
+        let isSalesDefault = false;
+        let isPurchaseDefault = false;
         if (listData) {
             $('#add-terms-title').text('Edit Term ');
             //$('#isformcreditcard').removeAttr('checked');
@@ -646,40 +272,29 @@ Template.statuspop.onRendered(function() {
                 listData = Number(listData);
                 //taxRateService.getOneTerms(listData).then(function (data) {
 
-                var termsID = listData || '';
-                var termsName = $(event.target).closest("tr").find(".colName").text() || '';
-                var description = $(event.target).closest("tr").find(".colDescription").text() || '';
-                var days = $(event.target).closest("tr").find(".colIsDays").text() || 0;
+                const termsID = listData || '';
+                const termsName = $(event.target).closest("tr").find(".colName").text() || '';
+                const description = $(event.target).closest("tr").find(".colDescription").text() || '';
+                const days = $(event.target).closest("tr").find(".colIsDays").text() || 0;
                 //let isDays = data.fields.IsDays || '';
                 if ($(event.target).closest("tr").find(".colIsEOM .chkBox").is(':checked')) {
                     isEOM = true;
                 }
-
                 if ($(event.target).closest("tr").find(".colIsEOMPlus .chkBox").is(':checked')) {
                     isEOMPlus = true;
                 }
-
                 if ($(event.target).closest("tr").find(".colCustomerDef .chkBox").is(':checked')) {
                     isSalesDefault = true;
                 }
-
                 if ($(event.target).closest("tr").find(".colSupplierDef .chkBox").is(':checked')) {
                     isPurchaseDefault = true;
                 }
-
-                if (isEOM == true || isEOMPlus == true) {
-                    isDays = false;
-                } else {
-                    isDays = true;
-                }
-
-
+                const isDays = !(isEOM == true || isEOMPlus == true);
                 $('#edtTermsID').val(termsID);
                 $('#edtName').val(termsName);
                 $('#edtName').prop('readonly', true);
                 $('#edtDesc').val(description);
                 $('#edtDays').val(days);
-
 
                 // if((isDays == true) && (days == 7)){
                 //   templateObject.include7Days.set(true);
@@ -691,69 +306,54 @@ Template.statuspop.onRendered(function() {
                 } else {
                     templateObject.includeCOD.set(false);
                 }
-
                 if ((isDays == true) && (days == 30)) {
                     templateObject.include30Days.set(true);
                 } else {
                     templateObject.include30Days.set(false);
                 }
-
                 if (isEOM == true) {
                     templateObject.includeEOM.set(true);
                 } else {
                     templateObject.includeEOM.set(false);
                 }
-
                 if (isEOMPlus == true) {
                     templateObject.includeEOMPlus.set(true);
                 } else {
                     templateObject.includeEOMPlus.set(false);
                 }
-
-
                 if (isSalesDefault == true) {
                     templateObject.includeSalesDefault.set(true);
                 } else {
                     templateObject.includeSalesDefault.set(false);
                 }
-
                 if (isPurchaseDefault == true) {
                     templateObject.includePurchaseDefault.set(true);
                 } else {
                     templateObject.includePurchaseDefault.set(false);
                 }
-
                 //});
-
-
                 $(this).closest('tr').attr('data-target', '#myModal');
                 $(this).closest('tr').attr('data-toggle', 'modal');
-
             }
-
         }
-
     });
 });
-
 
 Template.statuspop.events({
     'click .btnAddNewStatus': function (event) {
         setTimeout(function () {
-          $('#status').focus();
+            $('#status').focus();
         }, 1000);
     },
     'click #btnNewInvoice': function(event) {
         // FlowRouter.go('/invoicecard');
     },
     'click .chkDatatable': function(event) {
-        var columns = $('#tblStatusPopList th');
+        const columns = $('#tblStatusPopList th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
         $.each(columns, function(i, v) {
             let className = v.classList;
             let replaceClass = className[1];
-
             if (v.innerText == columnDataValue) {
                 if ($(event.target).is(':checked')) {
                     $("." + replaceClass + "").css('display', 'table-cell');
@@ -766,16 +366,16 @@ Template.statuspop.events({
         });
     },
     'click .resetTable': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
+        const getcurrentCloudDetails = CloudUser.findOne({
             _id: Session.get('mycloudLogonID'),
             clouddatabaseID: Session.get('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
+                const clientID = getcurrentCloudDetails._id;
+                const clientUsername = getcurrentCloudDetails.cloudUsername;
+                const clientEmail = getcurrentCloudDetails.cloudEmail;
+                const checkPrefDetails = CloudPreference.findOne({
                     userid: clientID,
                     PrefName: 'tblStatusPopList'
                 });
@@ -789,7 +389,6 @@ Template.statuspop.events({
                             Meteor._reload.reload();
                         }
                     });
-
                 }
             }
         }
@@ -797,16 +396,11 @@ Template.statuspop.events({
     'click .saveTable': function(event) {
         let lineItems = [];
         $('.columnSettings').each(function(index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || '';
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(':checked')) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
+            const $tblrow = $(this);
+            const colTitle = $tblrow.find(".divcolumn").text() || '';
+            const colWidth = $tblrow.find(".custom-range").val() || 0;
+            const colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+            let colHidden = !$tblrow.find(".custom-control-input").is(':checked');
             let lineItemObj = {
                 index: index,
                 label: colTitle,
@@ -814,20 +408,18 @@ Template.statuspop.events({
                 width: colWidth,
                 thclass: colthClass
             }
-
             lineItems.push(lineItemObj);
         });
-
-        var getcurrentCloudDetails = CloudUser.findOne({
+        const getcurrentCloudDetails = CloudUser.findOne({
             _id: Session.get('mycloudLogonID'),
             clouddatabaseID: Session.get('mycloudLogonDBID')
         });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
+                const clientID = getcurrentCloudDetails._id;
+                const clientUsername = getcurrentCloudDetails.cloudUsername;
+                const clientEmail = getcurrentCloudDetails.cloudEmail;
+                const checkPrefDetails = CloudPreference.findOne({
                     userid: clientID,
                     PrefName: 'tblStatusPopList'
                 });
@@ -852,7 +444,6 @@ Template.statuspop.events({
                             $('#myModal2').modal('toggle');
                         }
                     });
-
                 } else {
                     CloudPreference.insert({
                         userid: clientID,
@@ -868,7 +459,6 @@ Template.statuspop.events({
                             $('#myModal2').modal('toggle');
                         } else {
                             $('#myModal2').modal('toggle');
-
                         }
                     });
                 }
@@ -878,35 +468,28 @@ Template.statuspop.events({
     },
     'blur .divcolumn': function(event) {
         let columData = $(event.target).text();
-
         let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        var datable = $('#tblStatusPopList').DataTable();
-        var title = datable.column(columnDatanIndex).header();
+        const datable = $('#tblStatusPopList').DataTable();
+        const title = datable.column(columnDatanIndex).header();
         $(title).html(columData);
-
     },
     'change .rngRange': function(event) {
         let range = $(event.target).val();
         $(event.target).closest("div.divColWidth").find(".spWidth").html(range + 'px');
-
         let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
         let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#tblStatusPopList th');
+        const datable = $('#tblStatusPopList th');
         $.each(datable, function(i, v) {
-
             if (v.innerText == columnDataValue) {
                 let className = v.className;
                 let replaceClass = className.replace(/ /g, ".");
                 $("." + replaceClass + "").css('width', range + 'px');
-
             }
         });
-
     },
     'click .btnOpenSettings': function(event) {
         let templateObject = Template.instance();
-        var columns = $('#tblStatusPopList th');
-
+        const columns = $('#tblStatusPopList th');
         const tableHeaderList = [];
         let sTible = "";
         let sWidth = "";
@@ -922,7 +505,6 @@ Template.statuspop.events({
                 columVisible = false;
             }
             sWidth = v.style.width.replace('px', "");
-
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
@@ -938,7 +520,6 @@ Template.statuspop.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblStatusPopList_wrapper .dt-buttons .btntabletoexcel').click();
         $('.fullScreenSpin').css('display', 'none');
-
     },
     'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -955,8 +536,6 @@ Template.statuspop.events({
     'click .btnDeleteTerms': function() {
         let taxRateService = new TaxRateService();
         let termsId = $('#selectDeleteLineID').val();
-
-
         let objDetails = {
             type: "TTerms",
             fields: {
@@ -964,7 +543,6 @@ Template.statuspop.events({
                 Active: false
             }
         };
-
         taxRateService.saveTerms(objDetails).then(function(objDetails) {
             sideBarService.getAllLeadStatus().then(function(dataReload) {
                 addVS1Data('TTermsVS1', JSON.stringify(dataReload)).then(function(datareturn) {
@@ -991,7 +569,6 @@ Template.statuspop.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
-
     },
     'click .btnSaveTerms': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -1000,52 +577,24 @@ Template.statuspop.events({
         let termsName = $('#edtName').val();
         let description = $('#edtDesc').val();
         let termdays = $('#edtDays').val();
-
         let isDays = false;
         let is30days = false;
         let isEOM = false;
         let isEOMPlus = false;
         let days = 0;
-
         let isSalesdefault = false;
         let isPurchasedefault = false;
-        if (termdays.replace(/\s/g, '') != "") {
-            isDays = true;
-        } else {
-            isDays = false;
-        }
-
-        if ($('#isEOM').is(':checked')) {
-            isEOM = true;
-        } else {
-            isEOM = false;
-        }
-
-        if ($('#isEOMPlus').is(':checked')) {
-            isEOMPlus = true;
-        } else {
-            isEOMPlus = false;
-        }
-
-        if ($('#chkCustomerDef').is(':checked')) {
-            isSalesdefault = true;
-        } else {
-            isSalesdefault = false;
-        }
-
-        if ($('#chkSupplierDef').is(':checked')) {
-            isPurchasedefault = true;
-        } else {
-            isPurchasedefault = false;
-        }
-
+        isDays = termdays.replace(/\s/g, '') != "";
+        isEOM = !!$('#isEOM').is(':checked');
+        isEOMPlus = !!$('#isEOMPlus').is(':checked');
+        isSalesdefault = !!$('#chkCustomerDef').is(':checked');
+        isPurchasedefault = !!$('#chkSupplierDef').is(':checked');
         let objDetails = '';
         if (termsName === '') {
             $('.fullScreenSpin').css('display', 'none');
             Bert.alert('<strong>WARNING:</strong> Term Name cannot be blank!', 'warning');
             e.preventDefault();
         }
-
         if (termsID == "") {
             taxRateService.checkTermByName(termsName).then(function(data) {
                 termsID = data.tterms[0].Id;
@@ -1065,7 +614,6 @@ Template.statuspop.events({
                         PublishOnVS1: true
                     }
                 };
-
                 taxRateService.saveTerms(objDetails).then(function(objDetails) {
                     sideBarService.getAllLeadStatus().then(function(dataReload) {
                         addVS1Data('TTermsVS1', JSON.stringify(dataReload)).then(function(datareturn) {
@@ -1179,10 +727,6 @@ Template.statuspop.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
-
-
-
-
     },
     'click .btnAddTerms': function() {
         let templateObject = Template.instance();
@@ -1192,7 +736,6 @@ Template.statuspop.events({
         $('#edtName').prop('readonly', false);
         $('#edtDesc').val('');
         $('#edtDays').val('');
-
         templateObject.include7Days.set(false);
         templateObject.includeCOD.set(false);
         templateObject.include30Days.set(false);
@@ -1204,10 +747,9 @@ Template.statuspop.events({
         history.back(1);
     },
     'click .chkTerms': function(event) {
-        var $box = $(event.target);
-
+        const $box = $(event.target);
         if ($box.is(":checked")) {
-            var group = "input:checkbox[name='" + $box.attr("name") + "']";
+            const group = "input:checkbox[name='" + $box.attr("name") + "']";
             $(group).prop("checked", false);
             $box.prop("checked", true);
         } else {
@@ -1223,11 +765,9 @@ Template.statuspop.events({
             // let it happen, don't do anything
             return;
         }
-
         if (event.shiftKey == true) {
             event.preventDefault();
         }
-
         if ((event.keyCode >= 48 && event.keyCode <= 57) ||
             (event.keyCode >= 96 && event.keyCode <= 105) ||
             event.keyCode == 8 || event.keyCode == 9 ||
@@ -1236,8 +776,6 @@ Template.statuspop.events({
             event.preventDefault();
         }
     }
-
-
 });
 
 Template.statuspop.helpers({

@@ -683,11 +683,11 @@ Template.employeescard.onRendered(function () {
 
 
     templateObject.getAllProductData = function () {
-        productList = [];
+        let productList = [];
         getVS1Data('TProductVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
                 productService.getNewProductListVS1().then(function (data) {
-                    var dataList = {};
+                    let dataList = {};
                     for (let i = 0; i < data.tproductvs1.length; i++) {
                         dataList = {
                             id: data.tproductvs1[i].Id || '',
@@ -696,16 +696,13 @@ Template.employeescard.onRendered(function () {
                         if (data.tproductvs1[i].ProductType != 'INV') {
                             productList.push(dataList);
                         }
-
                     }
-
                     templateObject.productsdatatable.set(productList);
-
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tproductvs1;
-                var dataList = {};
+                let dataList = {};
                 for (let i = 0; i < useData.length; i++) {
                     dataList = {
                         id: useData[i].fields.ID || '',
@@ -720,8 +717,7 @@ Template.employeescard.onRendered(function () {
             }
         }).catch(function (err) {
             productService.getNewProductListVS1().then(function (data) {
-
-                var dataList = {};
+                let dataList = {};
                 for (let i = 0; i < data.tproductvs1.length; i++) {
                     dataList = {
                         id: data.tproductvs1[i].Id || '',
@@ -730,10 +726,8 @@ Template.employeescard.onRendered(function () {
                     if (data.tproductvs1[i].ProductType != 'INV') {
                         productList.push(dataList);
                     }
-
                 }
                 templateObject.productsdatatable.set(productList);
-
             });
         });
 
@@ -2877,7 +2871,7 @@ Template.employeescard.onRendered(function () {
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
-            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
             if( employeePayrolEndpointJsonResponse.tpayslips.length ){
                 await addVS1Data('TPaySlips', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
@@ -2900,7 +2894,7 @@ Template.employeescard.onRendered(function () {
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
-            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
             if( employeePayrolEndpointJsonResponse.tleavrequest.length ){
                 await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
@@ -2911,21 +2905,18 @@ Template.employeescard.onRendered(function () {
     templateObject.saveAssignLeaveLocalDB = async function(){
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
-        const employeePayrolEndpoint={};
+        let employeePayrolEndpoint={};
         employeePayrolEndpoint = employeePayrolApis.collection.findByName(
             employeePayrolApis.collectionNames.TAssignLeaveType
         );
-
-
 
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
         );
-
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
         if (employeePayrolEndpointResponse.ok == true) {
-            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
             if(employeePayrolEndpointJsonResponse.tassignleavetype.length ){
                 await addVS1Data('TAssignLeaveType', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
@@ -3079,7 +3070,7 @@ Template.employeescard.onRendered(function () {
                 //LoadingOverlay.show();
 
                 let dataLenght = settings._iDisplayLength;
-                splashArrayPayNotesList = [];
+                let splashArrayPayNotesList = [];
                 if (dataLenght == -1) {
                 $('.fullScreenSpin').css('display', 'none');
 
@@ -3114,16 +3105,14 @@ Template.employeescard.onRendered(function () {
         const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
             employeePayrolApis.collectionNames.TPayNotes
         );
-
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
         );
-
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
-            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
             if( employeePayrolEndpointJsonResponse.tpaynotes.length ){
                 await addVS1Data('TPayNotes', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
@@ -3134,13 +3123,13 @@ Template.employeescard.onRendered(function () {
 
     templateObject.getPayNotesTypes = async () => {
 
-        let dataObject = await getVS1Data('TPayNotes')
-        if ( dataObject.length == 0) {
+        let dataObject = await getVS1Data('TPayNotes');
+        let TPayNotesData;
+        if (dataObject.length == 0) {
             TPayNotesData = await templateObject.saveNotesLocalDB();
-        }else{
+        } else {
             TPayNotesData = JSON.parse(dataObject[0].data);
         }
-
         let useData = PayNotes.fromList(
             TPayNotesData.tpaynotes
         ).filter((item) => {
@@ -3313,7 +3302,7 @@ Template.employeescard.onRendered(function () {
             return payTemplateEarningLines;
         }
 
-        if(type == "deductionLines"){
+        if (type == "deductionLines"){
             let payTemplateDeductionLines = [];
             let checkPayTemplateDeductionLine = templateObject.payTemplateDeductionLineInfo.get();
             if( Array.isArray( checkPayTemplateDeductionLine ) ){
@@ -3326,10 +3315,8 @@ Template.employeescard.onRendered(function () {
                 });
             }
             return payTemplateDeductionLines;
-
         }
-
-        if(type == "superannuationLines"){
+        if (type == "superannuationLines"){
             let payTemplateSuperannuationLines = [];
             let checkPayTemplateSuperannuationLine = templateObject.payTemplateSuperannuationLineInfo.get();
             if( Array.isArray( checkPayTemplateSuperannuationLine ) ){
@@ -3344,7 +3331,7 @@ Template.employeescard.onRendered(function () {
             return payTemplateSuperannuationLines;
 
         }
-        if(type == "reiumbursementLines"){
+        if (type == "reiumbursementLines"){
             let payTemplateReiumbursementLines = [];
             let checkPayTemplateReiumbursementLine = templateObject.payTemplateReiumbursementLineInfo.get();
             if( Array.isArray( checkPayTemplateReiumbursementLine ) ){
@@ -3366,16 +3353,13 @@ Template.employeescard.onRendered(function () {
         const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
             employeePayrolApis.collectionNames.TPayTemplateEarningLine
         );
-
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
         );
-
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
-
         if (employeePayrolEndpointResponse.ok == true) {
-            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
             if( employeePayrolEndpointJsonResponse.tpaytemplateearningline.length ){
                 await addVS1Data('TPayTemplateEarningLine', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
@@ -3387,16 +3371,15 @@ Template.employeescard.onRendered(function () {
     templateObject.getPayEarningLines = async function(){
         let data = [];
         let dataObject = await getVS1Data('TPayTemplateEarningLine')
-        if ( dataObject.length == 0) {
+        if (dataObject.length == 0) {
             data = await templateObject.saveEarningLocalDB();
-        }else{
+        } else {
             data = JSON.parse(dataObject[0].data);
         }
-
         let useData = PayTemplateEarningLine.fromList(
             data.tpaytemplateearningline
         ).filter((item) => {
-            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+            if (parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
                 return item;
             }
         });
@@ -3422,16 +3405,13 @@ Template.employeescard.onRendered(function () {
         const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
             employeePayrolApis.collectionNames.TPayTemplateDeductionLine
         );
-
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
         );
-
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
-
         if (employeePayrolEndpointResponse.ok == true) {
-            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
             if( employeePayrolEndpointJsonResponse.tpaytemplatedeductionline.length ){
                 await addVS1Data('TPayTemplateDeductionLine', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
@@ -3444,10 +3424,9 @@ Template.employeescard.onRendered(function () {
         let dataObject = await getVS1Data('TPayTemplateDeductionLine')
         if ( dataObject.length == 0) {
             data = await templateObject.saveDeductionLocalDB();
-        }else{
+        } else {
             data = JSON.parse(dataObject[0].data);
         }
-
         let useData = PayTemplateDeductionLine.fromList(
             data.tpaytemplatedeductionline
         ).filter((item) => {
@@ -3455,7 +3434,6 @@ Template.employeescard.onRendered(function () {
                 return item;
             }
         });
-
         await templateObject.payTemplateDeductionLineInfo.set(useData);
         await templateObject.setDeductionLineDropDown();
         if( useData.length ){
@@ -3491,7 +3469,7 @@ Template.employeescard.onRendered(function () {
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
-            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
             if( employeePayrolEndpointJsonResponse.tpaytemplatesuperannuationline.length ){
                 await addVS1Data('TPayTemplateSuperannuationLine', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
@@ -3508,8 +3486,6 @@ Template.employeescard.onRendered(function () {
         }else{
             data = JSON.parse(dataObject[0].data);
         }
-
-
         let useData = PayTemplateSuperannuationLine.fromList(
             data.tpaytemplatesuperannuationline
         ).filter((item) => {
@@ -3517,7 +3493,6 @@ Template.employeescard.onRendered(function () {
                 return item;
             }
         });
-
         await templateObject.payTemplateSuperannuationLineInfo.set(useData);
         await templateObject.setSuperannuationDropDown();
         if( useData.length ){
@@ -3549,7 +3524,7 @@ Template.employeescard.onRendered(function () {
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
-            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
             if( employeePayrolEndpointJsonResponse.tpaytemplatereiumbursementline.length ){
                 await addVS1Data('TPayTemplateReiumbursementLine', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
@@ -3603,7 +3578,7 @@ Template.employeescard.onRendered(function () {
 
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
         if (employeePayrolEndpointResponse.ok == true) {
-            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
             if( employeePayrolEndpointJsonResponse.topeningbalances.length ){
                 await addVS1Data('TOpeningBalances', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
@@ -3655,7 +3630,6 @@ Template.employeescard.onRendered(function () {
                     return item;
                 }
             });
-
 
             templateObject.assignLeaveTypeInfos.set(useData);
             for (let i = 0; i < useData.length; i++) {
@@ -3924,7 +3898,7 @@ Template.employeescard.onRendered(function () {
 
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
         if (employeePayrolEndpointResponse.ok == true) {
-            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
             if( employeePayrolEndpointJsonResponse.temployeepaysettings.length ){
                 await addVS1Data('TEmployeepaysettings', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
@@ -4687,10 +4661,8 @@ Template.employeescard.events({
     //                 value: 'S',
     //             },
 
-
     //         ]
     //     });
-
 
     //     setTimeout(() => {
     //         $('#AppTableModal').modal('toggle');
@@ -5035,7 +5007,6 @@ Template.employeescard.events({
            $(".btnRefreshAssignLeave").trigger("click");
         }
     },
-    
     'click .btnRefreshAssignLeave':function(event){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
@@ -5108,9 +5079,8 @@ Template.employeescard.events({
         } else {
           $(".btnSearchAlert").trigger("click");
         }
-
     },
-  'keyup .txtSearchCustomer': function (event) {
+    'keyup .txtSearchCustomer': function (event) {
         if($(event.target).val() != ''){
           $(".btnRefreshEmployees").addClass('btnSearchAlert');
         }else{
@@ -5181,27 +5151,24 @@ Template.employeescard.events({
     'click #customerShipping-1': function (event) {
         if ($(event.target).is(':checked')) {
             $('.customerShipping-2').css('display', 'none');
-
         } else {
             $('.customerShipping-2').css('display', 'block');
         }
     },
     'click .tabproductsservices': function (event) {
-      LoadingOverlay.show();
-
-      let templateObject = Template.instance();
-      let currentId = FlowRouter.current().queryParams;
-      let tempCurrenctTRePService = templateObject.allrepservicedata.get() || '';
-      if(FlowRouter.current().queryParams.id){
-        if(tempCurrenctTRePService.length > 0){
-          $('.fullScreenSpin').css('display', 'none');
-        }else{
-          templateObject.getAllSelectedProducts(FlowRouter.current().queryParams.id);
+        LoadingOverlay.show();
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let tempCurrenctTRePService = templateObject.allrepservicedata.get() || '';
+        if (FlowRouter.current().queryParams.id) {
+            if (tempCurrenctTRePService.length > 0) {
+                $('.fullScreenSpin').css('display', 'none');
+            } else {
+                templateObject.getAllSelectedProducts(FlowRouter.current().queryParams.id);
+            }
+        } else {
+            $('.fullScreenSpin').css('display', 'none');
         }
-
-      }else{
-          $('.fullScreenSpin').css('display', 'none');
-      }
     },
     'click .colServiceDelete': function (event) {
         let templateObject = Template.instance();
@@ -5253,17 +5220,15 @@ Template.employeescard.events({
         });
     },
     'click .btnRefreshProductService': function (event) {
-      LoadingOverlay.show();
-
-      let templateObject = Template.instance();
-      let currentId = FlowRouter.current().queryParams;
-      if(FlowRouter.current().queryParams.id){
-        templateObject.getAllSelectedProducts(FlowRouter.current().queryParams.id);
-        window.open('/employeescard?id=' + currentId.id +'&transTab=prod', '_self');
-      }else{
-          $('.fullScreenSpin').css('display', 'none');
-      }
-
+        LoadingOverlay.show();
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        if(FlowRouter.current().queryParams.id){
+            templateObject.getAllSelectedProducts(FlowRouter.current().queryParams.id);
+            window.open('/employeescard?id=' + currentId.id +'&transTab=prod', '_self');
+        } else {
+            $('.fullScreenSpin').css('display', 'none');
+        }
         // let templateObject = Template.instance();
         // var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         // $('#selectDeleteServiceID').val(targetID);
@@ -5272,19 +5237,18 @@ Template.employeescard.events({
     'click .btnDeleteProductService': function (event) {
         let selectLineID = $('#selectDeleteServiceID').val()||'';
         let contactService = new ContactService();
-        if($.isNumeric(selectLineID)){
-          var objDetails = {
-              type: "TRepServices",
-              fields: {
-                  ID: parseInt(selectLineID)||0,
-                  Active: false
-              }
-          };
-          contactService.saveEmployeeProducts(objDetails).then(function (data) {});
-        }else{
+        if ($.isNumeric(selectLineID)) {
+            const objDetails = {
+                type: "TRepServices",
+                fields: {
+                    ID: parseInt(selectLineID) || 0,
+                    Active: false
+                }
+            };
+            contactService.saveEmployeeProducts(objDetails).then(function (data) {});
+        } else {
 
         }
-
         $('#' + selectLineID).closest('tr').remove();
         $('#deleteServiceModal').modal('toggle');
     },
@@ -5304,9 +5268,7 @@ Template.employeescard.events({
             // };
             selectedproduct.push(productName);
         });
-
-       templateObject.selectedemployeeproducts.set(selectedproduct);
-
+        templateObject.selectedemployeeproducts.set(selectedproduct);
     },
     'click .chkBoxAll': function () {
         if ($(event.target).is(':checked')) {
@@ -5324,77 +5286,68 @@ Template.employeescard.events({
         let trepserviceObjects = templateObject.selectedemployeeproducts.get();
         let getselectedproducts = templateObject.selectedproducts.get();
         let productService = new ProductService();
-        var splashArrayRepServiceListGet = new Array();
-
+        const splashArrayRepServiceListGet = new Array();
         let tempCurrenctTRePService = templateObject.allrepservicedata.get() || '';
         //var splashArrayRepServiceList = new Array();
         //var splashArrayRepServiceList = new Array();
         let tokenid = Random.id();
-        var tblInventoryService = $(".tblInventoryService").dataTable();
-        var dataserviceList = {};
+        const tblInventoryService = $(".tblInventoryService").dataTable();
+        let dataserviceList = {};
         let productservicelist = [];
         $(".chkServiceCard:checked", tblInventoryService.fnGetNodes()).each(function() {
-          let productServiceID = $(this).closest('tr').find('.colProuctPOPID').text()||'';
-          let productServiceName = $(this).closest('tr').find('.productName').text()||'';
-          let productServiceDesc = $(this).closest('tr').find('.productDesc').text()||'';
-          let productServicerate = $(this).closest('tr').find('.costPrice').text()||'';
-          let productServicecost = $(this).closest('tr').find('.salePrice').text()||'';
+            let productServiceID = $(this).closest('tr').find('.colProuctPOPID').text()||'';
+            let productServiceName = $(this).closest('tr').find('.productName').text()||'';
+            let productServiceDesc = $(this).closest('tr').find('.productDesc').text()||'';
+            let productServicerate = $(this).closest('tr').find('.costPrice').text()||'';
+            let productServicecost = $(this).closest('tr').find('.salePrice').text()||'';
+            let objServiceDetails = {
+                type:"TServices",
+                fields:
+                {
+                    ProductId:parseInt(productServiceID),
+                    ServiceDesc:productServiceName,
+                    StandardRate:parseFloat(productServicerate.replace(/[^0-9.-]+/g,"")) || 0,
+                }
+            };
+            productService.saveProductService(objServiceDetails).then(function (objServiceDetails) { });
 
-          let objServiceDetails = {
-              type:"TServices",
-              fields:
-              {
-                  ProductId:parseInt(productServiceID),
-                  ServiceDesc:productServiceName,
-                  StandardRate:parseFloat(productServicerate.replace(/[^0-9.-]+/g,"")) || 0,
-              }
-          };
-          productService.saveProductService(objServiceDetails).then(function (objServiceDetails) { });
+            dataserviceList = {
+                id: tokenid||'',
+                employee: Session.get('mySessionEmployee') || '',
+                productname: productServiceName || '',
+                productdesc: productServiceDesc || '',
+                rate: productServicerate || 0,
+                payrate:productServicecost || 0
+            };
+            const dataListService = [
+                productServiceName || '',
+                productServiceDesc || '',
+                '<input class="colServiceCostPrice highlightInput" type="text" value="' + productServicerate + '">' || '',
+                '<input class="colServiceSalesPrice highlightInput" type="text" value="' + productServicecost + '">' || '',
+                tokenid || '',
+                '<span class="table-remove colServiceDelete"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>' || ''
+                // JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null
+            ];
+            let checkServiceArray = getselectedproducts.filter(function(prodData){ return prodData.productname === productServiceName })||'';
+            if (checkServiceArray.length > 0) {
 
-          dataserviceList = {
-              id: tokenid||'',
-              employee: Session.get('mySessionEmployee') || '',
-              productname: productServiceName || '',
-              productdesc: productServiceDesc || '',
-              rate: productServicerate || 0,
-              payrate:productServicecost || 0
-          };
-
-          var dataListService = [
-                    productServiceName || '',
-                    productServiceDesc || '',
-                    '<input class="colServiceCostPrice highlightInput" type="text" value="'+productServicerate+'">' || '',
-                    '<input class="colServiceSalesPrice highlightInput" type="text" value="'+productServicecost+'">' || '',
-                    tokenid || '',
-                    '<span class="table-remove colServiceDelete"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>' || ''
-                    // JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null
-                ];
-
-          let checkServiceArray = getselectedproducts.filter(function(prodData){ return prodData.productname === productServiceName })||'';
-
-          if (checkServiceArray.length > 0) {
-          }else{
-            splashArrayRepServiceListGet.push(dataListService);
-
-            getselectedproducts.push(dataserviceList);
-          }
-
-
-      });
-
-      templateObject.selectedproducts.set(getselectedproducts);
-      var thirdaryData = $.merge($.merge([], tempCurrenctTRePService), splashArrayRepServiceListGet);
-      if(thirdaryData){
-        templateObject.allrepservicedata.set(thirdaryData);
-      let uniqueChars = [...new Set(thirdaryData)];
-      var datatable = $('#tblEmpServiceList').DataTable();
-      datatable.clear();
-      datatable.rows.add(uniqueChars);
-      datatable.draw(false);
-      }
-
-      //$('#tblEmpServiceList_info').html('Showing 1 to '+getselectedproducts.length+ ' of ' +getselectedproducts.length+ ' entries');
-      $('#productListModal').modal('toggle');
+            }else{
+                splashArrayRepServiceListGet.push(dataListService);
+                getselectedproducts.push(dataserviceList);
+            }
+        });
+        templateObject.selectedproducts.set(getselectedproducts);
+        const thirdaryData = $.merge($.merge([], tempCurrenctTRePService), splashArrayRepServiceListGet);
+        if(thirdaryData){
+            templateObject.allrepservicedata.set(thirdaryData);
+            let uniqueChars = [...new Set(thirdaryData)];
+            const datatable = $('#tblEmpServiceList').DataTable();
+            datatable.clear();
+            datatable.rows.add(uniqueChars);
+            datatable.draw(false);
+        }
+        //$('#tblEmpServiceList_info').html('Showing 1 to '+getselectedproducts.length+ ' of ' +getselectedproducts.length+ ' entries');
+        $('#productListModal').modal('toggle');
     },
     'click .btnSave': async function (event) {
         let templateObject = Template.instance();
@@ -6047,7 +6000,6 @@ Template.employeescard.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
-
     },
     'click #btnPayslip': async function(event) {
         let templateObject = Template.instance();
@@ -6150,7 +6102,6 @@ Template.employeescard.events({
             });
         }
     },
-
     'click #saveObEarningsRate': async function(event) {
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
@@ -6230,9 +6181,7 @@ Template.employeescard.events({
                 if (result.value) {}
             });
         }
-        
     },
-
     'click #saveObDeductionType': async function(event) {
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
@@ -6313,7 +6262,6 @@ Template.employeescard.events({
             });
         }
     },
-
     'click #saveObSuperannuationType': async function(event) {
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
@@ -6397,7 +6345,6 @@ Template.employeescard.events({
             });
         }
     },
-
     'click .colEmpPayrollNotes': function( event ){
         $('#newPayNotesLabel').text('Edit Note');
         let ID = $(event.target).parent().find('.colEmpPayrollNotesID').text();
@@ -6406,13 +6353,11 @@ Template.employeescard.events({
         $('#payRollNotes').val(NotesDesc);
         $('#newNoteModal').modal('show');
     },
-
     'click .btnAddNewNotes': function(){
         $('#newPayNotesLabel').text('Add New Note');
         $('#payRollNoteID').val(0);
         $('#payRollNotes').val("");
     },
-
     'click #saveobReimbursement': async function(event) {
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
@@ -6493,7 +6438,6 @@ Template.employeescard.events({
             });
         }
     },
-
     // Save LeaveRequest Popup
     'click #btnSaveLeaveRequest': async function(event) {
         let templateObject = Template.instance();
@@ -6631,7 +6575,6 @@ Template.employeescard.events({
             }
         }
     },
-
     // Save AssignLeaveType Popup
     'click #btnSaveAssignLeaveType': async function(event) {
         let templateObject = Template.instance();
@@ -6794,7 +6737,6 @@ Template.employeescard.events({
             });
         }
     },
-
     'click #savePayRollNotes': async function(){
         let templateObject = Template.instance();
 
@@ -6878,26 +6820,23 @@ Template.employeescard.events({
             });
         }
     },
-
     // NEXT TASK HERE
     'click .btnLeaveRequestBtn':function(){
         $('#newLeaveRequestLabel').text('New Leave Request');
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
+        let today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        const yyyy = today.getFullYear();
         today = dd+'/'+mm+'/'+ yyyy;
         $('#leaveRequestForm')[0].reset();
         $('#edtLeaveStartDate').val(today);
         $('#edtLeaveStartDate').val(today);
         $('#removeLeaveRequestBtn').hide();       
     },
-
     'change #taxes :input, #taxes :select': async function(){
         $('.statusSaved').hide();
         $('.statusUnsaved').show();
     },
-
     // Pay Template Tab
     'click #addEarningsLine': async function(){
         let templateObject = Template.instance();
@@ -7005,9 +6944,7 @@ Template.employeescard.events({
                 if (result.value) {}
             });                
         }
-
     },
-
     'click #addDeductionLine': async function(){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
@@ -7114,7 +7051,6 @@ Template.employeescard.events({
             });                
         }
     },
-
     'click #addSuperannuationLine': async function(){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
@@ -7181,7 +7117,7 @@ Template.employeescard.events({
                 LiabilityAccount: LiabilityAccount,
                 PaymentFrequency: PaymentFrequency,
                 PeriodPaymentDate: moment(PeriodPaymentDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss'),
-                PeriodPaymentDate: 0,
+                // PeriodPaymentDate: 0,
                 Percentage: 0,
                 Amount: 0,
                 Active: true
@@ -7247,7 +7183,6 @@ Template.employeescard.events({
             });                
         }
     },
-
     'click #addReiumbursementLine': async function(){
         const templateObject = Template.instance();        
         let currentId = FlowRouter.current().queryParams;
@@ -7355,7 +7290,6 @@ Template.employeescard.events({
             });                
         }
     },
-
     'change #superannuationTypeSelect': function(){
         let CalculationType = $('#superannuationTypeSelect').val();
         $('#reducesSGCContainer').addClass('hideelement')
@@ -7372,7 +7306,6 @@ Template.employeescard.events({
             break;
         }
     },
-
     // Pay Template Earning Line Drop Down
     // 'click #earningRateSelect': function(){
     //     let earningRate = $('#earningRateSelect').val();
@@ -7395,7 +7328,6 @@ Template.employeescard.events({
     //         break;
     //     }
     // },
-
     'click .removePayTempEarning': async function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
@@ -7490,7 +7422,6 @@ Template.employeescard.events({
             }
         });
     },
-
     'click .removePayTempDeduction': async function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
@@ -7580,12 +7511,10 @@ Template.employeescard.events({
             }
         });
     },
-
     'click .btnAssignLeaveType': function(){
         $('#assignteavetypeID').val(0);
         $('#assignLeaveTypeForm')[0].reset();
     },
-
     'click .removePayTempSuperannuation': async function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
@@ -7675,7 +7604,6 @@ Template.employeescard.events({
             }
         });
     },
-
     'click .removePayTempReimbursement': async function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
@@ -7765,7 +7693,6 @@ Template.employeescard.events({
             }
         });
     },
-
     'click .removeObEarning': async function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
@@ -7856,7 +7783,6 @@ Template.employeescard.events({
             }
         })
     },
-
     'click .removeObDeduction': async function(e){
         let templateObject = Template.instance();
         // let currentId = FlowRouter.current().queryParams;
@@ -7946,11 +7872,9 @@ Template.employeescard.events({
                         if (result.value) {}
                     });                
                 }
-                
             }
         });
     },
-
     'click .removeObSuperannuation': async function(e){
         let templateObject = Template.instance();
 
@@ -7969,7 +7893,6 @@ Template.employeescard.events({
                 const apiEndpoint = employeePayrolApis.collection.findByName(
                     employeePayrolApis.collectionNames.TOpeningBalances
                 );
-
                 let reiumbursementSettings =  new OpeningBalance({
                     type: "TOpeningBalances",
                     fields: new OpeningBalanceFields({
@@ -7977,14 +7900,12 @@ Template.employeescard.events({
                         Active: false
                     }),
                 })
-
                 try {
                     const ApiResponse = await apiEndpoint.fetch(null, {
                         method: "POST",
                         headers: ApiService.getPostHeaders(),
                         body: JSON.stringify(reiumbursementSettings),
                     });
-                    
                     if (ApiResponse.ok == true) {
                         let dataObject = await getVS1Data('TOpeningBalances');
                         if ( dataObject.length > 0) {
@@ -8015,7 +7936,7 @@ Template.employeescard.events({
                                 if (result.value) {}
                             } 
                         });
-                    }else{
+                    } else {
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Oooops...',
@@ -8042,7 +7963,6 @@ Template.employeescard.events({
             }
         });
     },
-
     'click .removeObReimbursement': async function(e){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
@@ -8135,7 +8055,6 @@ Template.employeescard.events({
             }
         })
     },
-
     'change .obCalculateTotalAmount': function(e){
         let templateObject = Template.instance();
         // handleTotalAmount( 'obCalculateEarningTotalAmount', 'obEarningTotalAmount' )
@@ -8143,7 +8062,6 @@ Template.employeescard.events({
         let ID = $(e.target).data('id');
         templateObject.updateOBTotal(Amount, ID);
     },
-
     'click #saveOpeningBalance': async function(e){
         // TO DO
         $('.fullScreenSpin').css('display', 'block');
@@ -8162,7 +8080,7 @@ Template.employeescard.events({
                 }
             });
         }
-        let obEarningLines = []
+        let obEarningLines = [];
         let checkOpeningBalances = templateObject.openingBalanceInfo.get();
         if( Array.isArray( checkOpeningBalances ) ){
             obEarningLines = OpeningBalance.fromList(
@@ -8173,16 +8091,14 @@ Template.employeescard.events({
                 }
             });
         }
-        if( obEarningLines.length ){
+        if (obEarningLines.length) {
             Array.prototype.forEach.call(obEarningLines, (EarningLine, index) => {
                 EarningLine.fields.Amount = $('#obEarningAmount' + index).val();
                 openingBalances.push(EarningLine);
             })
         }
-
-
-        let obDeductionLines = []
-        if( Array.isArray( checkOpeningBalances ) ){
+        let obDeductionLines = [];
+        if (Array.isArray(checkOpeningBalances)) {
             obDeductionLines = OpeningBalance.fromList(
                 checkOpeningBalances
             ).filter((item) => {
@@ -8191,14 +8107,14 @@ Template.employeescard.events({
                 }
             });
         }
-        if( obDeductionLines.length ){
+        if (obDeductionLines.length) {
             Array.prototype.forEach.call(obDeductionLines, (DeductionLine, index) => {
                 DeductionLine.fields.Amount = $('#obDeductionAmount' + index).val();
                 openingBalances.push(DeductionLine);
             })
         }
         let obSuperannuationLines = []
-        if( Array.isArray( checkOpeningBalances ) ){
+        if (Array.isArray(checkOpeningBalances)) {
             obSuperannuationLines = OpeningBalance.fromList(
                 checkOpeningBalances
             ).filter((item) => {
@@ -8207,15 +8123,14 @@ Template.employeescard.events({
                 }
             });
         }
-        if( obSuperannuationLines.length ){
-            Array.prototype.forEach.call(obEarningLines(), (obSuperannuationLine, index) => {
+        if (obSuperannuationLines.length) {
+            Array.prototype.forEach.call(obEarningLines, (obSuperannuationLine, index) => {
                 obSuperannuationLine.fields.Amount = $('#obSuperannuationAmount' + index).val();
                 openingBalances.push(obSuperannuationLine);
             })
         }
-
-        let obReimbursementLines = []
-        if( Array.isArray( checkOpeningBalances ) ){
+        let obReimbursementLines = [];
+        if (Array.isArray(checkOpeningBalances)) {
             obReimbursementLines = OpeningBalance.fromList(
                 checkOpeningBalances
             ).filter((item) => {
@@ -8224,8 +8139,8 @@ Template.employeescard.events({
                 }
             });
         }
-        if( obReimbursementLines.length ){
-            Array.prototype.forEach.call(obEarningLines(), (obReimbursementLine, index) => {
+        if (obReimbursementLines.length) {
+            Array.prototype.forEach.call(obEarningLines, (obReimbursementLine, index) => {
                 obReimbursementLine.fields.Amount = $('#obReimbursementAmount' + index).val();
                 openingBalances.push(obReimbursementLine);
             })
@@ -8294,7 +8209,6 @@ Template.employeescard.events({
                 });
                 return false
             }
-
             if( ResidencyStatus == "" ){
                 swal({
                     title: 'Validation Error',
@@ -8304,7 +8218,6 @@ Template.employeescard.events({
                 });
                 return false
             }
-
             if( EdtPayPeriod == "" ){
                 swal({
                     title: 'Validation Error',
@@ -8314,7 +8227,6 @@ Template.employeescard.events({
                 });
                 return false
             }
-
             if( FirstPayDate == "" ){
                 swal({
                     title: 'Validation Error',
@@ -8324,9 +8236,7 @@ Template.employeescard.events({
                 });
                 return false
             }
-
             LoadingOverlay.show();
-
             let currentId = FlowRouter.current().queryParams;
             let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
             let templateObject = Template.instance();
@@ -8371,15 +8281,12 @@ Template.employeescard.events({
                     }
                 }
             };
-
-
             try {
                 const ApiResponse = await apiEndpoint.fetch(null, {
                     method: "POST",
                     headers: ApiService.getPostHeaders(),
                     body: JSON.stringify(employeePaySettings),
                 });
-
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
                     await templateObject.saveEmployeePaySettingsLocalDB();
@@ -8455,9 +8362,9 @@ Template.employeescard.events({
                 });
                 $('.fullScreenSpin').css('display', 'none');
             });
-        }else if(activeTab == "leave") {
+        } else if (activeTab == "leave") {
 
-        }else if(activeTab == "bankaccounts") {          
+        } else if (activeTab == "bankaccounts") {
 
             let currentId = FlowRouter.current().queryParams;
             let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -8681,8 +8588,6 @@ Template.employeescard.events({
                     }
                 });
             }
-
-
             let secondStatementText = $(".secondStatementText").val();
             let secondAccName = $(".secondAccName").val();
             let secondBsbNumber = $(".secondBsbNumber").val();
@@ -8694,13 +8599,11 @@ Template.employeescard.events({
                 if(secondAccName == "") secondFlag = true;
                 if(secondBsbNumber == "") secondFlag = true;
                 if(secondAccNumber == "") secondFlag = true;
-
                 if(secondFlag) {
                     swal('Second Bank Account cannot be blank!', '', 'info');
                     event.preventDefault();
                     return;
                 }
-
                 data.push({
                     type: "TBankAccounts",
                     fields: {
@@ -8726,13 +8629,11 @@ Template.employeescard.events({
                 if(thirdAccName == "") thirdFlag = true;
                 if(thirdBsbNumber == "") thirdFlag = true;
                 if(thirdAccNumber == "") thirdFlag = true;
-
                 if(thirdFlag) {
                     swal('Third Bank Account cannot be blank!', '', 'info');
                     event.preventDefault();
                     return;
                 }
-
                 data.push({
                     type: "TBankAccounts",
                     fields: {
@@ -8746,19 +8647,10 @@ Template.employeescard.events({
                     }
                 });
             }
-
-
             LoadingOverlay.show();
-
-
             addVS1Data('TBankAccounts', JSON.stringify(data));
-
             $('.fullScreenSpin').css('display', 'none');
-
             return;
-
-
-
             employeePayrollService.saveTBankAccounts(data).then(function(objDetails) {
                 employeePayrollService.getAllTBankAccounts('All',0).then(function (data) {
                     addVS1Data('TBankAccounts', data);
@@ -8778,7 +8670,6 @@ Template.employeescard.events({
                 });
                 $('.fullScreenSpin').css('display', 'none');
             });
-
 
             // let StatementText = $(".statementText").val();
             // let AccName = $(".accName").val();
@@ -8802,16 +8693,16 @@ Template.employeescard.events({
             // }]
             // addVS1Data('TBankAccounts', JSON.stringify(data));
 
-        }else if(activeTab == "payslips") {
+        } else if (activeTab == "payslips") {
 
-        }else if(activeTab == "paytemplate") {
+        } else if (activeTab == "paytemplate") {
             $('.fullScreenSpin').css('display', 'block');
             // $('.fullScreenSpin').show();
             let templateObject = Template.instance();
             let currentId = FlowRouter.current().queryParams;
             let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
             const employeePayrolApis = new EmployeePayrollApi();
-            const apiEndpoint=[];
+            let apiEndpoint = [];
 
             // WORKING HERE
             // Fetch earning lines values
@@ -8855,7 +8746,6 @@ Template.employeescard.events({
                     headers: ApiService.getPostHeaders(),
                     body: JSON.stringify(payTemplateEarningLineObj),
                 });
-
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
                     await templateObject.saveEarningLocalDB();
@@ -9002,7 +8892,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
             }
 
-        }else if(activeTab == "openingbalances") {
+        } else if (activeTab == "openingbalances") {
             $('.fullScreenSpin').show();
             let templateObject = Template.instance();
             let currentId = FlowRouter.current().queryParams;
@@ -9037,9 +8927,9 @@ Template.employeescard.events({
              * Fetch deduction Opening fields data
              */
             let obDeductionLines = templateObject.filterOpeningBalance(1);
-            if( obDeductionLines.length > 0 ){
+            if (obDeductionLines.length > 0) {
                 for (const item of obDeductionLines) {
-                    if( item.fields.Active == true ){
+                    if (item.fields.Active == true) {
                         let AType = $(`#obDeductionLine${item.fields.ID}`).val();
                         let amount = $(`#obDeductionAmount${item.fields.ID}`).val();
                         amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
@@ -9059,15 +8949,15 @@ Template.employeescard.events({
             /**
              * Fetch superannuation Opening fields data
              */
-             let obSAnnuationLines = templateObject.filterOpeningBalance(2);
-             if( obSAnnuationLines.length > 0 ){
-                 for (const item of obSAnnuationLines) {
-                     if( item.fields.Active == true ){
-                         let AType = $(`#obSuperannuationFund${item.fields.ID}`).val();
-                         let amount = $(`#obSuperannuationAmount${item.fields.ID}`).val();
-                         amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
-                         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-                         tOpeningBalance.push({
+            let obSAnnuationLines = templateObject.filterOpeningBalance(2);
+            if( obSAnnuationLines.length > 0 ){
+                for (const item of obSAnnuationLines) {
+                    if (item.fields.Active == true) {
+                        let AType = $(`#obSuperannuationFund${item.fields.ID}`).val();
+                        let amount = $(`#obSuperannuationAmount${item.fields.ID}`).val();
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        tOpeningBalance.push({
                             type: "TOpeningBalances",
                             fields: {
                                 ID: item.fields.ID,
@@ -9076,21 +8966,21 @@ Template.employeescard.events({
                                 Active: true
                             }
                         })
-                     }
-                 }
-             }
+                    }
+                }
+            }
             /**
              * Fetch Reinmbursment Opening fields data
              */
-             let obReImbursmentLines = templateObject.filterOpeningBalance(3);
-             if( obReImbursmentLines.length > 0 ){
-                 for (const item of obReImbursmentLines) {
-                     if( item.fields.Active == true ){
-                         let AType = $(`#obReimbursementFund${item.fields.ID}`).val();
-                         let amount = $(`#obReimbursementAmount${item.fields.ID}`).val();
-                         amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
-                         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-                         tOpeningBalance.push({
+            let obReImbursmentLines = templateObject.filterOpeningBalance(3);
+            if (obReImbursmentLines.length > 0) {
+                for (const item of obReImbursmentLines) {
+                    if (item.fields.Active == true) {
+                        let AType = $(`#obReimbursementFund${item.fields.ID}`).val();
+                        let amount = $(`#obReimbursementAmount${item.fields.ID}`).val();
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        tOpeningBalance.push({
                             type: "TOpeningBalances",
                             fields: {
                                 ID: item.fields.ID,
@@ -9099,23 +8989,19 @@ Template.employeescard.events({
                                 Active: true
                             }
                         })
-                     }
-                 }
+                    }
+                }
             }
-
             // Making bulk saving object
             if( tOpeningBalance.length > 0 ){
                 let openingBalanceObj = {
                     type: "TOpeningBalances",
                     objects: tOpeningBalance
                 };
-
                 const employeePayrolApis = new EmployeePayrollApi();
-
-                apiEndpoint = employeePayrolApis.collection.findByName(
+                const apiEndpoint = employeePayrolApis.collection.findByName(
                     employeePayrolApis.collectionNames.TOpeningBalances
                 );
-
                 const ApiResponse = await apiEndpoint.fetch(null, {
                     method: "POST",
                     headers: ApiService.getPostHeaders(),
@@ -9139,7 +9025,7 @@ Template.employeescard.events({
                             if (result.value) {}
                         } 
                     }); 
-                }else{
+                } else {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
@@ -9151,7 +9037,7 @@ Template.employeescard.events({
                         if (result.value) {}
                     });
                 }
-            }else{
+            } else {
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
@@ -9163,14 +9049,13 @@ Template.employeescard.events({
                     if (result.value) {}
                 });
             }
-        }else if(activeTab == "notes") {
+        } else if (activeTab == "notes") {
 
-        }else{
+        } else {
             return;
         }
     },
     'change .colServiceCostPrice': function (event) {
-
         let utilityService = new UtilityService();
         let inputUnitPrice = 0;
         if (!isNaN($(event.target).val())) {
@@ -9178,9 +9063,7 @@ Template.employeescard.events({
             $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
         } else {
             inputUnitPrice = Number($(event.target).val().replace(/[^0-9.-]+/g, "")) || 0;
-
             $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
-
         }
     },
     'change .colServiceSalesPrice': function (event) {
@@ -9230,7 +9113,6 @@ Template.employeescard.events({
         } else {
             window.open('/employeescard', '_self');
         }
-
     },
     'click .btnChargeAccount': function (event) {
         LoadingOverlay.show();
@@ -9856,28 +9738,23 @@ Template.employeescard.events({
         let employeename = firstname + ' ' + lastname;
         $('#cloudEmpName').val(employeename);
         $('#edtCustomerCompany').val(employeename);
-
     },
     'keyup .search': function (event) {
-        var searchTerm = $(".search").val();
-        var listItem = $('.results tbody').children('tr');
-        var searchSplit = searchTerm.replace(/ /g, "'):containsi('");
-
+        const searchTerm = $(".search").val();
+        const listItem = $('.results tbody').children('tr');
+        const searchSplit = searchTerm.replace(/ /g, "'):containsi('");
         $.extend($.expr[':'], {
             'containsi': function (elem, i, match, array) {
                 return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
             }
         });
-
         $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
             $(this).attr('visible', 'false');
         });
-
         $(".results tbody tr:containsi('" + searchSplit + "')").each(function (e) {
             $(this).attr('visible', 'true');
         });
-
-        var jobCount = $('.results tbody tr[visible="true"]').length;
+        const jobCount = $('.results tbody tr[visible="true"]').length;
         $('.counter').text(jobCount + ' items');
 
         if (jobCount == '0') {
@@ -9890,29 +9767,24 @@ Template.employeescard.events({
                 $(this).attr('visible', 'true');
                 $('.no-result').hide();
             });
-
             //setTimeout(function () {
-            var rowCount = $('.results tbody tr').length;
+            const rowCount = $('.results tbody tr').length;
             $('.counter').text(rowCount + ' items');
             //}, 500);
         }
-
     },
     'click .tblEmployeeSideList tbody tr': function (event) {
-
-        var empLineID = $(event.target).attr('id');
+        const empLineID = $(event.target).attr('id');
         if (empLineID) {
             window.open('/employeescard?id=' + empLineID, '_self');
         }
     },
     'click .chkDatatable': function (event) {
-        var columns = $('#tblTransactionlist th');
+        const columns = $('#tblTransactionlist th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
         $.each(columns, function (i, v) {
             let className = v.classList;
             let replaceClass = className[1];
-
             if (v.innerText == columnDataValue) {
                 if ($(event.target).is(':checked')) {
                     $("." + replaceClass + "").css('display', 'table-cell');
@@ -10083,31 +9955,24 @@ Template.employeescard.events({
     },
     'blur .divcolumn': function (event) {
         let columData = $(event.target).text();
-
         let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-
-        var datable = $('#tblTransactionlist').DataTable();
-        var title = datable.column(columnDatanIndex).header();
+        const datable = $('#tblTransactionlist').DataTable();
+        const title = datable.column(columnDatanIndex).header();
         $(title).html(columData);
-
     },
     'change .rngRange': function (event) {
         let range = $(event.target).val();
         // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
-
         // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
         let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#tblTransactionlist th');
+        const datable = $('#tblTransactionlist th');
         $.each(datable, function (i, v) {
-
             if (v.innerText == columnDataValue) {
                 let className = v.className;
                 let replaceClass = className.replace(/ /g, ".");
                 $("." + replaceClass + "").css('width', range + 'px');
-
             }
         });
-
     },
     'click .transTab': function (event) {
         let templateObject = Template.instance();
@@ -10148,10 +10013,8 @@ Template.employeescard.events({
     },
     'click #exportbtn': function () {
         LoadingOverlay.show();
-
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletocsv').click();
         $('.fullScreenSpin').css('display', 'none');
-
     },
     'click .printConfirm': function (event) {
 
@@ -10164,6 +10027,7 @@ Template.employeescard.events({
         Meteor._reload.reload();
     },
     'click .btnRemoveProduct': function () {
+
     },
     'click #formCheck-2': function () {
         if ($(event.target).is(':checked')) {
@@ -10507,19 +10371,17 @@ Template.employeescard.events({
     },
     'click .btnDeleteEmployee': function (event) {
         LoadingOverlay.show();
-
-
         let templateObject = Template.instance();
         let contactService2 = new ContactService();
 
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
+        const url = FlowRouter.current().path;
+        const getso_id = url.split('?id=');
 
         let currentId = FlowRouter.current().queryParams;
-        var objDetails = '';
+        let objDetails = '';
 
         if (!isNaN(currentId.id)) {
-            currentEmployee = parseInt(currentId.id);
+            const currentEmployee = parseInt(currentId.id);
             objDetails = {
                 type: "TEmployeeEx",
                 fields: {
@@ -10527,7 +10389,6 @@ Template.employeescard.events({
                     Active: false
                 }
             };
-
             contactService2.saveEmployeeEx(objDetails).then(function (objDetails) {
                 FlowRouter.go('/employeelist?success=true');
             }).catch(function (err) {
@@ -10555,7 +10416,6 @@ Template.employeescard.events({
             Bert.alert('<strong>Please Note:</strong> This function is only available on mobile devices!', 'now-dangerorange');
         }
     },
-
     // 'change #leaveCalcMethodSelect': function(e){
     //     let leaveCalcMethod = $(e.target).val();
     //     switch(leaveCalcMethod){
@@ -10591,7 +10451,6 @@ Template.employeescard.events({
     //         $('.superannuationGuaranteeCont').addClass('hideelement')
     //     }
     // },
-
     'click #eftLeaveType': function(){
         if( $('#eftLeaveType').is(':checked') ){
             $('.superannuationGuaranteeCont').removeClass('hideelement')
@@ -10600,256 +10459,91 @@ Template.employeescard.events({
             $('.superannuationGuaranteeCont').addClass('hideelement')
         }
     },
-
     // add to custom field
-  "click #edtSaleCustField1": function (e) {
-    $("#clickedControl").val("one");
-  },
+    "click #edtSaleCustField1": function (e) {
+        $("#clickedControl").val("one");
+    },
+    // add to custom field
+    "click #edtSaleCustField2": function (e) {
+        $("#clickedControl").val("two");
+    },
+    // add to custom field
+    "click #edtSaleCustField3": function (e) {
+        $("#clickedControl").val("three");
+    },
+    "click .btnDeletePayslip": function (e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id') || '';
+        swal({
+            title: 'Delete Pay Slip',
+            text: "Are you sure you want to Delete this pay slip?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then(async (result) => {
+            if (result.value) {
+                $('.fullScreenSpin').css('display', 'block');
+                const employeePayrolApis = new EmployeePayrollApi();
+                // now we have to make the post request to save the data in database
+                const apiEndpoint = employeePayrolApis.collection.findByName(
+                    employeePayrolApis.collectionNames.TPaySlips
+                );
 
-  // add to custom field
-  "click #edtSaleCustField2": function (e) {
-    $("#clickedControl").val("two");
-  },
-
-  // add to custom field
-  "click #edtSaleCustField3": function (e) {
-    $("#clickedControl").val("three");
-  },
-  "click .btnDeletePayslip": function (e){
-    let templateObject = Template.instance();
-    let deleteID = $(e.target).data('id') || '';
-    swal({
-        title: 'Delete Pay Slip',
-        text: "Are you sure you want to Delete this pay slip?",
-        type: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Yes'
-    }).then(async (result) => {
-        if (result.value) {
-            $('.fullScreenSpin').css('display', 'block');
-            const employeePayrolApis = new EmployeePayrollApi();
-            // now we have to make the post request to save the data in database
-            const apiEndpoint = employeePayrolApis.collection.findByName(
-                employeePayrolApis.collectionNames.TPaySlips
-            );
-
-            let paySlipSettings =  new PaySlips({
-                type: "TPaySlips",
-                fields: new PaySlipsFields({
-                    ID: parseInt( deleteID ),
-                    Active: false
-                }),
-            })
-
-            try{
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(paySlipSettings),
-                });
-                if (ApiResponse.ok == true) {
-                    let dataObject = await getVS1Data('TPaySlips');
-                    if ( dataObject.length > 0) {
-                        data = JSON.parse(dataObject[0].data);
-                        let updatedLines = data.tpayslips.map( (item) => {
-                            if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
-                                item.fields.Active = false;
-                            }
-                            return item;
-                        });
-                        let paySlipObj = {
-                            tpayslips: updatedLines
-                        }
-                        await addVS1Data('TPaySlips', JSON.stringify(paySlipObj));                        
-                    }
-                    templateObject.getPaySlips();
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: 'Pay Slip deleted successfully',
-                        text: '',
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.value) {
-                            if (result.value) {}
-                        } 
-                    }); 
-                }else{            
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: 'Oooops...',
-                        text: error,
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Try Again'
-                    }).then((result) => {
-                        if (result.value) {}
-                    });  
-                }
-            } catch (error) {
-                $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: 'Oooops...',
-                    text: error,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {}
-                });                
-            }            
-        }
-    });
-  },
-  "click .btnDeleteAssignLeaveType": function (e){
-    let templateObject = Template.instance();
-    let deleteID = $(e.target).data('id') || '';
-    swal({
-        title: 'Delete Assign Leave Type',
-        text: "Are you sure you want to Delete this assign leave type?",
-        type: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Yes'
-    }).then(async (result) => {
-        if (result.value) {
-            $('.fullScreenSpin').css('display', 'block');
-
-            const employeePayrolApis = new EmployeePayrollApi();
-            // now we have to make the post request to save the data in database
-            const apiEndpoint = employeePayrolApis.collection.findByName(
-                employeePayrolApis.collectionNames.TAssignLeaveType
-            );
-
-            let assignLeaveSettings =  new AssignLeaveType({
-                type: "TAssignLeaveType",
-                fields: new AssignLeaveTypeFields({
-                    ID: parseInt( deleteID ),
-                    Active: false
-                }),
-            })
-
-            try {
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(assignLeaveSettings),
-                });
-    
-                let dataObject = await getVS1Data('TAssignLeaveType')
-    
-                if ( dataObject.length > 0) {
-                    data = JSON.parse(dataObject[0].data);
-                    if( data.tassignleavetype.length > 0 ){
-                        let updatedLines = data.tassignleavetype.map((item) => {
-                            if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
-                                item.fields.Active = false;
-                            }
-                            return item;
-                        });
-                        let leaveTypeObj = {
-                            tassignleavetype: updatedLines
-                        }
-                        await addVS1Data('TAssignLeaveType', JSON.stringify(leaveTypeObj))
-                        await templateObject.getAssignLeaveTypes();   
-                    }
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: 'Assign Leave deleted successfully',
-                        text: '',
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.value) {
-                            if (result.value) {}
-                        } 
-                    }); 
-                }else{            
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: 'Oooops...',
-                        text: error,
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Try Again'
-                    }).then((result) => {
-                        if (result.value) {}
-                    });  
-                }
-            } catch (error) {
-                $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: 'Oooops...',
-                    text: error,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {}
-                });                
-            }            
-        }
-    });
-  },
-  "click .removeLeaveRequest": function(e){
-    let templateObject = Template.instance();
-    var deleteID = $(e.target).data('id') || '';
-    swal({
-        title: 'Delete Leave Request',
-        text: "Are you sure you want to Delete this Leave Request?",
-        type: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Yes'
-    }).then( async (result) => {
-        if (result.value) {
-            $('.fullScreenSpin').css('display', 'block');
-            const employeePayrolApis = new EmployeePayrollApi();
-            const apiEndpoint = employeePayrolApis.collection.findByName(
-                employeePayrolApis.collectionNames.TLeavRequest
-            );
-            
-            try {
-                let leaveSetting =  new LeaveRequest({
-                    type: "TLeavRequest",
-                    fields: new LeaveRequestFields({
+                let paySlipSettings =  new PaySlips({
+                    type: "TPaySlips",
+                    fields: new PaySlipsFields({
                         ID: parseInt( deleteID ),
                         Active: false
                     }),
                 })
-    
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(leaveSetting),
-                });
-                if (ApiResponse.ok == true) {
-                    let dataObject = await getVS1Data('TLeavRequest');
-                    if ( dataObject.length > 0) {
-                        data = JSON.parse(dataObject[0].data);
-                        if( data.tleavrequest.length > 0 ){
-                            let updatedLeaveRequest = data.tleavrequest.map( (item) => {
-                                if( deleteID == item.fields.ID ){
+
+                try{
+                    const ApiResponse = await apiEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(paySlipSettings),
+                    });
+                    if (ApiResponse.ok == true) {
+                        let dataObject = await getVS1Data('TPaySlips');
+                        if ( dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            let updatedLines = data.tpayslips.map( (item) => {
+                                if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
                                     item.fields.Active = false;
                                 }
                                 return item;
                             });
-                            let leaveRequestObj = {
-                                tleavrequest: updatedLeaveRequest
+                            let paySlipObj = {
+                                tpayslips: updatedLines
                             }
-                            await addVS1Data('TLeavRequest', JSON.stringify(leaveRequestObj))
+                            await addVS1Data('TPaySlips', JSON.stringify(paySlipObj));
                         }
+                        templateObject.getPaySlips();
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Pay Slip deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                if (result.value) {}
+                            }
+                        });
+                    }else{
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Oooops...',
+                            text: error,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {}
+                        });
                     }
-                    await templateObject.getLeaveRequests();
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: 'Leave request deleted successfully',
-                        text: '',
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'OK'
-                    });
-                }else{
+                } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
@@ -10859,86 +10553,87 @@ Template.employeescard.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {}
-                    });  
+                    });
                 }
-            } catch (error) {
-                $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: 'Oooops...',
-                    text: error,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {}
-                });                
             }
-        }
-    });
-  },
-  "click .btnDeletePayNote": function (e){
-    let templateObject = Template.instance();
-    let deleteID = $(e.target).data('id') || '';
-    swal({
-        title: 'Delete Note',
-        text: "Are you sure you want to delete this note?",
-        type: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Yes'
-    }).then( async (result) => {
-        if (result.value) {
-            $('.fullScreenSpin').css('display', 'block');
-            const employeePayrolApis = new EmployeePayrollApi();
-            // now we have to make the post request to save the data in database
-            const apiEndpoint = employeePayrolApis.collection.findByName(
-                employeePayrolApis.collectionNames.TPayNotes
-            );
+        });
+    },
+    "click .btnDeleteAssignLeaveType": function (e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id') || '';
+        swal({
+            title: 'Delete Assign Leave Type',
+            text: "Are you sure you want to Delete this assign leave type?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then(async (result) => {
+            if (result.value) {
+                $('.fullScreenSpin').css('display', 'block');
 
-            let noteSettings =  new PayNotes({
-                type: "TPayNotes",
-                fields: new PayNotesFields({
-                    ID: parseInt( deleteID ),
-                    Active: false
-                }),
-            })
+                const employeePayrolApis = new EmployeePayrollApi();
+                // now we have to make the post request to save the data in database
+                const apiEndpoint = employeePayrolApis.collection.findByName(
+                    employeePayrolApis.collectionNames.TAssignLeaveType
+                );
 
-            try {
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(noteSettings),
-                });
-                if (ApiResponse.ok == true) {
-                    let dataObject = await getVS1Data('TPayNotes');
+                let assignLeaveSettings =  new AssignLeaveType({
+                    type: "TAssignLeaveType",
+                    fields: new AssignLeaveTypeFields({
+                        ID: parseInt( deleteID ),
+                        Active: false
+                    }),
+                })
+
+                try {
+                    const ApiResponse = await apiEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(assignLeaveSettings),
+                    });
+
+                    let dataObject = await getVS1Data('TAssignLeaveType')
+
                     if ( dataObject.length > 0) {
                         data = JSON.parse(dataObject[0].data);
-                        if( data.tpaynotes.length > 0 ){
-                            let updatedNotes = data.tpaynotes.map( (item) => {
-                                if( deleteID == item.fields.ID ){
+                        if( data.tassignleavetype.length > 0 ){
+                            let updatedLines = data.tassignleavetype.map((item) => {
+                                if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
                                     item.fields.Active = false;
                                 }
                                 return item;
                             });
-                            let notesObj = {
-                                tpaynotes: updatedNotes
+                            let leaveTypeObj = {
+                                tassignleavetype: updatedLines
                             }
-                            await addVS1Data('TPayNotes', JSON.stringify(notesObj))
+                            await addVS1Data('TAssignLeaveType', JSON.stringify(leaveTypeObj))
+                            await templateObject.getAssignLeaveTypes();
                         }
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Assign Leave deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                if (result.value) {}
+                            }
+                        });
+                    }else{
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Oooops...',
+                            text: error,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {}
+                        });
                     }
-                    await templateObject.getPayNotesTypes();
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: 'Note deleted successfully',
-                        text: '',
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.value) {
-                            if (result.value) { }
-                        } 
-                    });
-                }else{
+                } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
@@ -10948,108 +10643,269 @@ Template.employeescard.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {}
-                    });  
+                    });
                 }
-            } catch (error) {
-                $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: 'Oooops...',
-                    text: error,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {}
-                });                
+            }
+        });
+    },
+    "click .removeLeaveRequest": function(e){
+        let templateObject = Template.instance();
+            const deleteID = $(e.target).data('id') || '';
+            swal({
+            title: 'Delete Leave Request',
+            text: "Are you sure you want to Delete this Leave Request?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then( async (result) => {
+            if (result.value) {
+                $('.fullScreenSpin').css('display', 'block');
+                const employeePayrolApis = new EmployeePayrollApi();
+                const apiEndpoint = employeePayrolApis.collection.findByName(
+                    employeePayrolApis.collectionNames.TLeavRequest
+                );
+
+                try {
+                    let leaveSetting =  new LeaveRequest({
+                        type: "TLeavRequest",
+                        fields: new LeaveRequestFields({
+                            ID: parseInt( deleteID ),
+                            Active: false
+                        }),
+                    })
+
+                    const ApiResponse = await apiEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(leaveSetting),
+                    });
+                    if (ApiResponse.ok == true) {
+                        let dataObject = await getVS1Data('TLeavRequest');
+                        if ( dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            if( data.tleavrequest.length > 0 ){
+                                let updatedLeaveRequest = data.tleavrequest.map( (item) => {
+                                    if( deleteID == item.fields.ID ){
+                                        item.fields.Active = false;
+                                    }
+                                    return item;
+                                });
+                                let leaveRequestObj = {
+                                    tleavrequest: updatedLeaveRequest
+                                }
+                                await addVS1Data('TLeavRequest', JSON.stringify(leaveRequestObj))
+                            }
+                        }
+                        await templateObject.getLeaveRequests();
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Leave request deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        });
+                    }else{
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Oooops...',
+                            text: error,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {}
+                        });
+                    }
+                } catch (error) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Oooops...',
+                        text: error,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });
+                }
+            }
+        });
+    },
+    "click .btnDeletePayNote": function (e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id') || '';
+        swal({
+            title: 'Delete Note',
+            text: "Are you sure you want to delete this note?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then( async (result) => {
+            if (result.value) {
+                $('.fullScreenSpin').css('display', 'block');
+                const employeePayrolApis = new EmployeePayrollApi();
+                // now we have to make the post request to save the data in database
+                const apiEndpoint = employeePayrolApis.collection.findByName(
+                    employeePayrolApis.collectionNames.TPayNotes
+                );
+
+                let noteSettings =  new PayNotes({
+                    type: "TPayNotes",
+                    fields: new PayNotesFields({
+                        ID: parseInt( deleteID ),
+                        Active: false
+                    }),
+                })
+
+                try {
+                    const ApiResponse = await apiEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(noteSettings),
+                    });
+                    if (ApiResponse.ok == true) {
+                        let dataObject = await getVS1Data('TPayNotes');
+                        if ( dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            if( data.tpaynotes.length > 0 ){
+                                let updatedNotes = data.tpaynotes.map( (item) => {
+                                    if( deleteID == item.fields.ID ){
+                                        item.fields.Active = false;
+                                    }
+                                    return item;
+                                });
+                                let notesObj = {
+                                    tpaynotes: updatedNotes
+                                }
+                                await addVS1Data('TPayNotes', JSON.stringify(notesObj))
+                            }
+                        }
+                        await templateObject.getPayNotesTypes();
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Note deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                if (result.value) { }
+                            }
+                        });
+                    }else{
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Oooops...',
+                            text: error,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {}
+                        });
+                    }
+                } catch (error) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Oooops...',
+                        text: error,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });
+                }
+            }
+        });
+    },
+    "click #btnEditAssignLeaveType": function (e){
+        setTimeout(()=>{
+            $("#edtLeaveTypeofRequest").trigger("click.editable-select");
+        }, 200);
+    },
+    "click .colLeaveRequest": async function(e){
+        $('.fullScreenSpin').css('display', 'block');
+        let ID = $(e.target).parent().find('.colLRID').text();
+        $('#newLeaveRequestLabel').text('Edit Leave Request');
+        let dataObject = await getVS1Data('TLeavRequest');
+        if ( dataObject.length > 0) {
+            data = JSON.parse(dataObject[0].data);
+            if( data.tleavrequest.length > 0 ){
+                let useData = data.tleavrequest.filter( (item) => {
+                    if( ID == item.fields.ID ){
+                        return item;
+                    }
+                });
+                if( useData.length > 0 ){
+                    $('#removeLeaveRequestBtn').show();
+                    $('#edtLeaveRequestID').val(useData[0].fields.ID);
+                    $('#removeLeaveRequestBtn').data('id', useData[0].fields.ID);
+                    $('#edtLeaveTypeofRequestID').val(useData[0].fields.TypeOfRequest);
+                    $('#edtLeaveTypeofRequest').val(useData[0].fields.LeaveMethod);
+                    $('#edtLeaveDescription').val(useData[0].fields.Description);
+                    $('#edtLeaveStartDate').val(moment(useData[0].fields.StartDate).format('DD/MM/YYYY'));
+                    $('#edtLeaveEndDate').val(moment(useData[0].fields.EndDate).format('DD/MM/YYYY'));
+                    $('#edtLeavePayPeriod').val(useData[0].fields.PayPeriod);
+                    $('#edtLeaveHours').val(useData[0].fields.Hours);
+                    $('#edtLeavePayStatus').val(useData[0].fields.Status);
+                }
             }
         }
-    });
-  },
-  "click #btnEditAssignLeaveType": function (e){
-    setTimeout(()=>{
-        $("#edtLeaveTypeofRequest").trigger("click.editable-select");
-    }, 200);
-  },
-  "click .colLeaveRequest": async function(e){
-    $('.fullScreenSpin').css('display', 'block');
-    let ID = $(e.target).parent().find('.colLRID').text();
-    $('#newLeaveRequestLabel').text('Edit Leave Request');
-    let dataObject = await getVS1Data('TLeavRequest');
-    if ( dataObject.length > 0) {
-        data = JSON.parse(dataObject[0].data);
-        if( data.tleavrequest.length > 0 ){
-            let useData = data.tleavrequest.filter( (item) => {
-                if( ID == item.fields.ID ){
-                    return item;
+        $('#newLeaveRequestModal').modal('show');
+        $('.fullScreenSpin').css('display', 'none');
+    },
+    "click .addNewSlip": function(){
+        $('#btnDeletePayslipBtn').hide();
+        $('#newPaySlipLabel').text('New payslip');
+        $('#paySlipForm')[0].reset();
+        $('#periodID').val(0);
+        $('#paymentDate').val(moment().format('DD/MM/YYYY'));
+    },
+    "click .colPaySlip": async function(e){
+        $('.fullScreenSpin').css('display', 'block');
+        let ID = $(e.target).parent().find('.colPayslipID').text();
+        $('#newPaySlipLabel').text('Edit Pay Slip');
+        let dataObject = await getVS1Data('TPaySlips');
+        if ( dataObject.length > 0) {
+            let data = JSON.parse(dataObject[0].data);
+            if( data.tpayslips.length > 0 ){
+                let useData = data.tpayslips.filter( (item) => {
+                    if( ID == item.fields.ID ){
+                        return item;
+                    }
+                });
+                if( useData.length > 0 ){
+                    $('#periodID').val(useData[0].fields.ID);
+                    $('#period').val(useData[0].fields.Period);
+                    $('#paymentDate').val(moment(useData[0].fields.PaymentDate).format('DD/MM/YYYY'));
+                    let payPrice = useData[0].fields.TotalPay
+                    if (!isNaN(payPrice)){
+                        $('#totalPay').val(utilityService.modifynegativeCurrencyFormat(payPrice));
+                    }else{
+                        payPrice = Number(payPrice.replace(/[^0-9.-]+/g,""));
+                        $('#totalPay').val(utilityService.modifynegativeCurrencyFormat(payPrice));
+                    }
+                    $('#btnDeletePayslipBtn').show();
+                    $('#btnDeletePayslipBtn').data('id', useData[0].fields.ID);
                 }
-            });
-            if( useData.length > 0 ){
-                $('#removeLeaveRequestBtn').show();
-                $('#edtLeaveRequestID').val(useData[0].fields.ID);
-                $('#removeLeaveRequestBtn').data('id', useData[0].fields.ID);
-                $('#edtLeaveTypeofRequestID').val(useData[0].fields.TypeOfRequest);
-                $('#edtLeaveTypeofRequest').val(useData[0].fields.LeaveMethod);
-                $('#edtLeaveDescription').val(useData[0].fields.Description);
-                $('#edtLeaveStartDate').val(moment(useData[0].fields.StartDate).format('DD/MM/YYYY'));
-                $('#edtLeaveEndDate').val(moment(useData[0].fields.EndDate).format('DD/MM/YYYY'));
-                $('#edtLeavePayPeriod').val(useData[0].fields.PayPeriod);
-                $('#edtLeaveHours').val(useData[0].fields.Hours);
-                $('#edtLeavePayStatus').val(useData[0].fields.Status);
             }
         }
-    }
-    $('#newLeaveRequestModal').modal('show');
-    $('.fullScreenSpin').css('display', 'none');
-  },
-  "click .addNewSlip": function(){
-    $('#btnDeletePayslipBtn').hide();
-    $('#newPaySlipLabel').text('New payslip');
-    $('#paySlipForm')[0].reset();
-    $('#periodID').val(0);
-    $('#paymentDate').val(moment().format('DD/MM/YYYY'));
-  },
-  "click .colPaySlip": async function(e){
-    $('.fullScreenSpin').css('display', 'block');
-    let ID = $(e.target).parent().find('.colPayslipID').text();
-    $('#newPaySlipLabel').text('Edit Pay Slip');
-    let dataObject = await getVS1Data('TPaySlips');
-    if ( dataObject.length > 0) {
-        data = JSON.parse(dataObject[0].data);
-        if( data.tpayslips.length > 0 ){
-            let useData = data.tpayslips.filter( (item) => {
-                if( ID == item.fields.ID ){
-                    return item;
-                }
-            });
-            if( useData.length > 0 ){
-                $('#periodID').val(useData[0].fields.ID);
-                $('#period').val(useData[0].fields.Period);
-                $('#paymentDate').val(moment(useData[0].fields.PaymentDate).format('DD/MM/YYYY'));
-                let payPrice = useData[0].fields.TotalPay
-                if (!isNaN(payPrice)){
-                    $('#totalPay').val(utilityService.modifynegativeCurrencyFormat(payPrice));
-                }else{
-                    payPrice = Number(payPrice.replace(/[^0-9.-]+/g,""));
-                    $('#totalPay').val(utilityService.modifynegativeCurrencyFormat(payPrice));
-                }
-                $('#btnDeletePayslipBtn').show();
-                $('#btnDeletePayslipBtn').data('id', useData[0].fields.ID);
-            }
+        $('#paySlipModal').modal('show');
+        $('.fullScreenSpin').css('display', 'none');
+    },
+    "blur #edtSalesQuota": function() {
+        let utilityService = new UtilityService();
+        let amount = $('#edtSalesQuota').val();
+        if( isNaN(amount) ){
+            amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+            amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
         }
+        amount = utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+        $('#edtSalesQuota').val(amount);
     }
-    $('#paySlipModal').modal('show');
-    $('.fullScreenSpin').css('display', 'none');
-  },
-  "blur #edtSalesQuota": function() {
-    let utilityService = new UtilityService();
-    let amount = $('#edtSalesQuota').val();
-    if( isNaN(amount) ){
-        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-    }
-    amount = utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
-    $('#edtSalesQuota').val(amount);
-  }
 });
 
 Template.employeescard.helpers({
@@ -11248,7 +11104,7 @@ Template.employeescard.helpers({
         return Template.instance().deliveryMethodList.get();
     },
     dashboardOptionsList: () => {
-        return ['All', 'Accounts', 'Executive', 'Marketing', 'Sales', 'Sales Manager'];
+        return ['All', 'Accounts', 'Executive', 'Marketing', 'Sales', 'Sales Manager', 'My'];
     },
     taxCodeList: () => {
         return Template.instance().taxCodeList.get();

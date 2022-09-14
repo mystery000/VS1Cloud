@@ -185,62 +185,60 @@ Template.allCardsLists.onRendered(function () {
 
 Template.allCardsLists.events({
     'click .customerawaitingpayments':function(event){
-        var url = window.location.href;
+        const url = window.location.href;
+        const newurl = new URL(window.location.href);
         let customerID = 0;
         if (url.indexOf("customerscard?id=") > 0) {
-            newurl = new URL(window.location.href);
             customerID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
         }
         if (url.indexOf("customerscard?jobid=") > 0) {
-            newurl = new URL(window.location.href);
             customerID = ( !isNaN(newurl.searchParams.get("jobid")) )? newurl.searchParams.get("jobid") : 0;
         }
-        if( customerID != 0 ){
+        if (customerID != 0) {
             window.location.href = 'customerawaitingpayments?id=' + customerID;
-        }else{
+        } else {
             window.location.href = 'customerawaitingpayments';
         }
     },
     'click .overduecustomerawaitingpayments':function(event){
-        var url = window.location.href;
+        const url = window.location.href;
+        const newurl = new URL(window.location.href);
         let customerID = 0;
         if (url.indexOf("customerscard?id=") > 0) {
-            newurl = new URL(window.location.href);
             customerID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
         }
         if (url.indexOf("customerscard?jobid=") > 0) {
-            newurl = new URL(window.location.href);
             customerID = ( !isNaN(newurl.searchParams.get("jobid")) )? newurl.searchParams.get("jobid") : 0;
         }
-        if( customerID != 0 ){
+        if (customerID != 0) {
             window.location.href = 'overduecustomerawaitingpayments?id=' + customerID;
-        }else{
+        } else {
             window.location.href = 'overduecustomerawaitingpayments';
         }
     },
     'click .supplierawaitingpurchaseorder':function(event){
-        var url = window.location.href;
+        const url = window.location.href;
+        const newurl = new URL(window.location.href);
         let supplierID = 0;
         if (url.indexOf("supplierscard?id=") > 0) {
-            newurl = new URL(window.location.href);
             supplierID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
         }
-        if( supplierID != 0 ){
+        if (supplierID != 0) {
             window.location.href = 'supplierawaitingpurchaseorder?id=' + supplierID;
-        }else{
+        } else {
             window.location.href = 'supplierawaitingpurchaseorder';
         }
     },
     'click .overduesupplierawaiting':function(event){
-        var url = window.location.href;
+        const url = window.location.href;
+        const newurl = new URL(window.location.href);
         let supplierID = 0;
         if (url.indexOf("supplierscard?id=") > 0) {
-            newurl = new URL(window.location.href);
             supplierID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
         }
-        if( supplierID != 0 ){
+        if (supplierID != 0) {
             window.location.href = 'overduesupplierawaiting?id=' + supplierID;
-        }else{
+        } else {
             window.location.href = 'overduesupplierawaiting';
         }
     },

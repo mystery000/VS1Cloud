@@ -642,12 +642,10 @@ Template.accountlistpop.events({
 
                     });
                 }).catch(function (err) {
-
                     window.open('/creditcard', '_self');
                 });
             }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
-
                 swal({
                     title: 'Oooops...',
                     text: err,

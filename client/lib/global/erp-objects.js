@@ -268,15 +268,12 @@ const erpObject = {
     TLeaveTaken: "TLeaveTaken",
     TLeave: "TLeave",
     Tsuperannuation: "Tsuperannuation",
-    TTransactionListReport: "TTransactionListReport",
     TJobSalesSummary: "TJobSalesSummary",
     TJobProfitability: "TJobProfitability",
     TBasReturn: "TBasReturn"
-
 };
 
 export default erpObject;
-
 
 ERPObjects = function() {
     return erpObject;
