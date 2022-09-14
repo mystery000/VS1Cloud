@@ -23,7 +23,7 @@ Template.crmoverview.onRendered(function () {
     getVS1Data("TCustomerVS1").then(function (dataObject) {
       if (dataObject.length === 0) {
         contactService.getOneCustomerDataEx(customerID).then(function (data) {
-          setCustomerByID(data);
+          setCustomerByID(data, 'Customer');
         });
       } else {
         let data = JSON.parse(dataObject[0].data);
@@ -32,21 +32,21 @@ Template.crmoverview.onRendered(function () {
         for (let i = 0; i < useData.length; i++) {
           if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
             added = true;
-            setCustomerByID(useData[i]);
+            setCustomerByID(useData[i], 'Customer');
           }
         }
         if (!added) {
           contactService
             .getOneCustomerDataEx(customerID)
             .then(function (data) {
-              setCustomerByID(data);
+              setCustomerByID(data, 'Customer');
             });
         }
       }
     }).catch(function (err) {
       contactService.getOneCustomerDataEx(customerID).then(function (data) {
         $(".fullScreenSpin").css("display", "none");
-        setCustomerByID(data);
+        setCustomerByID(data, 'Customer');
       });
     });
   }
@@ -54,7 +54,7 @@ Template.crmoverview.onRendered(function () {
     getVS1Data("TSupplierVS1").then(function (dataObject) {
       if (dataObject.length === 0) {
         contactService.getOneSupplierDataEx(customerID).then(function (data) {
-          setCustomerByID(data);
+          setCustomerByID(data, 'Supplier');
         });
       } else {
         let data = JSON.parse(dataObject[0].data);
@@ -63,21 +63,21 @@ Template.crmoverview.onRendered(function () {
         for (let i = 0; i < useData.length; i++) {
           if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
             added = true;
-            setCustomerByID(useData[i]);
+            setCustomerByID(useData[i], 'Supplier');
           }
         }
         if (!added) {
           contactService
             .getOneSupplierDataEx(customerID)
             .then(function (data) {
-              setCustomerByID(data);
+              setCustomerByID(data, 'Supplier');
             });
         }
       }
     }).catch(function (err) {
       contactService.getOneSupplierDataEx(customerID).then(function (data) {
         $(".fullScreenSpin").css("display", "none");
-        setCustomerByID(data);
+        setCustomerByID(data, 'Supplier');
       });
     });
   }
@@ -85,7 +85,7 @@ Template.crmoverview.onRendered(function () {
     getVS1Data("TProspectEx").then(function (dataObject) {
       if (dataObject.length === 0) {
         contactService.getOneLeadDataEx(leadID).then(function (data) {
-          setCustomerByID(data);
+          setCustomerByID(data, 'Lead');
         });
 
       } else {
@@ -95,26 +95,28 @@ Template.crmoverview.onRendered(function () {
         for (let i = 0; i < useData.length; i++) {
           if (parseInt(useData[i].fields.ID) === parseInt(leadID)) {
             added = true;
-            setCustomerByID(useData[i]);
+            setCustomerByID(useData[i], 'Lead');
           }
         }
         if (!added) {
           contactService.getOneLeadDataEx(leadID).then(function (data) {
-            setCustomerByID(data);
+            setCustomerByID(data, 'Lead');
           });
         }
       }
     }).catch(function (err) {
       contactService.getOneLeadDataEx(leadID).then(function (data) {
         $(".fullScreenSpin").css("display", "none");
-        setCustomerByID(data);
+        setCustomerByID(data, 'Lead');
       });
     });
   }
-  function setCustomerByID(data) {
+  function setCustomerByID(data, type) {
     // $("#add_task_name").val(data.fields.ClientName);
     const $select = document.querySelector('#add_contact_name');
-    $select.value = data.fields.ID
+    $select.value = data.fields.ClientName
+    $('#contactID').val(data.fields.ID)
+    $('#contactType').val(type)
 
     $("#editProjectID").val("");
     $("#txtCrmSubTaskID").val("");
@@ -132,6 +134,7 @@ Template.crmoverview.onRendered(function () {
 
     $("#newTaskModal").modal("toggle");
   }
+
   if (FlowRouter.current().queryParams.customerid) {
     getCustomerData(FlowRouter.current().queryParams.customerid);
   }
@@ -145,6 +148,38 @@ Template.crmoverview.onRendered(function () {
     let type = "";
     openEditTaskModal(FlowRouter.current().queryParams.taskid, type);
   }
+
+  ///////////////////////////////////////////////////
+  $(".crmSelectLeadList").editableSelect();
+  $(".crmSelectLeadList").editableSelect().on("click.editable-select", function (e, li) {
+    $("#customerListModal").modal();
+  });
+
+
+  $(document).on("click", "#tblContactlist tbody tr", function (e) {
+    var table = $(this);
+    let colClientName = table.find(".colClientName").text();
+    let colID = table.find(".colID").text();
+    let colType = table.find(".colType").text();
+    console.log(colClientName, colType, colID)
+
+    if (colType == 'Lead' || colType == 'Customer' || colType == 'Supplier' || colType == 'Employee') {
+      $('#customerListModal').modal('toggle');
+
+      // for add modal
+      $('#add_contact_name').val(colClientName);
+      // for edit modal
+      $('#crmSelectLeadList').val(colClientName);
+
+      $('#contactID').val(colID)
+      $('#contactType').val(colType)
+    } else {
+      swal("Please select valid type of contact", "", "error");
+      return false;
+    }
+
+  });
+  ///////////////////////////////////////////////////
 
 });
 
@@ -261,8 +296,7 @@ Template.crmoverview.events({
 
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    // let employeeID = Session.get("mySessionEmployeeLoggedID");
-console.log('btnRefresh here////////')
+
     crmService.getAllTaskList().then(function (data) {
       addVS1Data("TCRMTaskList", JSON.stringify(data));
       crmService.getTProjectList().then(function (data) {
@@ -312,27 +346,24 @@ console.log('btnRefresh here////////')
 
             addVS1Data("TCRMLeadBarChart", JSON.stringify(bar_records));
             addVS1Data("TCRMLeadPieChart", JSON.stringify(pie_records));
-            // Meteor._reload.reload();
-            // FlowRouter.go('/crmoverview');
-            console.log('reload...')
-            // document.location.reload(true);
-            // window.history.pushState('name', '', 'crmoverview');
-          }).catch(function (err) {
+            window.history.pushState('name', '', 'crmoverview');
             Meteor._reload.reload();
-            console.log('reload...')
+          }).catch(function (err) {
+            window.history.pushState('name', '', 'crmoverview');
+            Meteor._reload.reload();
           });
 
         }).catch(function (err) {
+          window.history.pushState('name', '', 'crmoverview');
           Meteor._reload.reload();
-          console.log('reload...')
         });
       }).catch(function (err) {
+        window.history.pushState('name', '', 'crmoverview');
         Meteor._reload.reload();
-        console.log('reload...')
       });
     }).catch(function (err) {
+      window.history.pushState('name', '', 'crmoverview');
       Meteor._reload.reload();
-      console.log('reload...')
     });
   },
 

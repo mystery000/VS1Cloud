@@ -1,8 +1,10 @@
 import "../../lib/global/indexdbstorage.js";
 import { CRMService } from "../crm-service";
 import { SideBarService } from '../../js/sidebar-service';
+import { ContactService } from "../../contacts/contact-service";
 let crmService = new CRMService();
 let sideBarService = new SideBarService();
+let contactService = new ContactService();
 
 Template.alltaskdatatable.onCreated(function () {
   let templateObject = Template.instance();
@@ -1748,49 +1750,49 @@ Template.alltaskdatatable.onRendered(function () {
   };
   // projects tab ------------------- //
 
-  templateObject.getLeads = function () {
-    // use API TProspectEx instead of TLeads
-    getVS1Data('TProspectEx').then(function (dataObject) {
-      if (dataObject.length === 0) {
-        sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function (data) {
-          addVS1Data('TProspectEx', JSON.stringify(data));
-          // setAllLeads(data);
-          templateObject.allLeads.set(data);
-          initLeadOptions(data)
-        }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
-        });
-      } else {
-        let data = JSON.parse(dataObject[0].data);
-        // setAllLeads(data);
-        templateObject.allLeads.set(data);
-        initLeadOptions(data)
-      }
-    }).catch(function (err) {
-      sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function (data) {
-        addVS1Data('TProspectEx', JSON.stringify(data));
-        // setAllLeads(data);
-        templateObject.allLeads.set(data);
-        initLeadOptions(data)
-      }).catch(function (err) {
-        $('.fullScreenSpin').css('display', 'none');
-      });
-    });
-  };
-  templateObject.getLeads();
+  // templateObject.getLeads = function () {
+  //   // use API TProspectEx instead of TLeads
+  //   getVS1Data('TProspectEx').then(function (dataObject) {
+  //     if (dataObject.length === 0) {
+  //       sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function (data) {
+  //         addVS1Data('TProspectEx', JSON.stringify(data));
+  //         // setAllLeads(data);
+  //         templateObject.allLeads.set(data);
+  //         initLeadOptions(data)
+  //       }).catch(function (err) {
+  //         $('.fullScreenSpin').css('display', 'none');
+  //       });
+  //     } else {
+  //       let data = JSON.parse(dataObject[0].data);
+  //       // setAllLeads(data);
+  //       templateObject.allLeads.set(data);
+  //       initLeadOptions(data)
+  //     }
+  //   }).catch(function (err) {
+  //     sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function (data) {
+  //       addVS1Data('TProspectEx', JSON.stringify(data));
+  //       // setAllLeads(data);
+  //       templateObject.allLeads.set(data);
+  //       initLeadOptions(data)
+  //     }).catch(function (err) {
+  //       $('.fullScreenSpin').css('display', 'none');
+  //     });
+  //   });
+  // };
+  // templateObject.getLeads();
 
-  function initLeadOptions(data) {
-    let leadId = FlowRouter.current().queryParams.leadid;
-    let options = '<option></option>';
-    let selected = '';
-    let tprospect = data.tprospect ? data.tprospect : [];
-    tprospect.forEach(lead => {
-      selected = leadId === lead.fields.ID ? 'selected' : '';
-      options += `<option value="${lead.fields.ID}" ${selected}>${lead.fields.ClientName}</option>`;
-    });
+  // function initLeadOptions(data) {
+  //   let leadId = FlowRouter.current().queryParams.leadid;
+  //   let options = '<option></option>';
+  //   let selected = '';
+  //   let tprospect = data.tprospect ? data.tprospect : [];
+  //   tprospect.forEach(lead => {
+  //     selected = leadId === lead.fields.ID ? 'selected' : '';
+  //     options += `<option value="${lead.fields.ID}" ${selected}>${lead.fields.ClientName}</option>`;
+  //   });
 
-    $('.crmSelectLeadList').html(options)
-  }
+  //   // $('.crmSelectLeadList').html(options)
+  // }
 
   setTimeout(() => {
     $(".crmEditDatepicker").datepicker({
@@ -1814,6 +1816,7 @@ Template.alltaskdatatable.onRendered(function () {
 });
 
 Template.alltaskdatatable.events({
+
   "click .btnAddSubTask": function (event) {
     $("#newTaskModal").modal("toggle");
   },
@@ -2085,6 +2088,19 @@ Template.alltaskdatatable.events({
         return;
       }
 
+      let contactID = $('#contactID').val();
+      let contactType = $('#contactType').val();
+      let customerID = 0;
+      let leadID = 0;
+      let supplierID = 0;
+      if (contactType == 'Customer') {
+        customerID = contactID
+      } else if (contactType == 'Lead') {
+        leadID = contactID
+      } else if (contactType == 'Supplier') {
+        supplierID = contactID
+      }
+
       let templateObject = Template.instance();
       var objDetails = {
         type: "Tprojecttasks",
@@ -2092,12 +2108,16 @@ Template.alltaskdatatable.events({
           ID: taskID,
           TaskName: editTaskDetailName,
           TaskDescription: editTaskDetailDescription,
+          CustomerID: customerID,
+          LeadID: leadID,
+          SupplierID: supplierID,
         },
       };
       $(".fullScreenSpin").css("display", "inline-block");
 
       crmService.saveNewTask(objDetails).then(function (data) {
         $(".fullScreenSpin").css("display", "none");
+        $(".btnRefresh").addClass('btnSearchAlert');
 
         setTimeout(() => {
           templateObject.getAllTaskList();
@@ -2149,6 +2169,19 @@ Template.alltaskdatatable.events({
     let employeeID = Session.get("mySessionEmployeeLoggedID");
     let employeeName = Session.get("mySessionEmployee");
 
+    let contactID = $('#contactID').val();
+    let contactType = $('#contactType').val();
+    let customerID = 0;
+    let leadID = 0;
+    let supplierID = 0;
+    if (contactType == 'Customer') {
+      customerID = contactID
+    } else if (contactType == 'Lead') {
+      leadID = contactID
+    } else if (contactType == 'Supplier') {
+      supplierID = contactID
+    }
+
     // tempcode
     // subtask api is not completed
     // label api is not completed
@@ -2169,6 +2202,9 @@ Template.alltaskdatatable.events({
                 priority: priority,
                 EnteredByID: parseInt(employeeID),
                 EnteredBy: employeeName,
+                CustomerID: customerID,
+                LeadID: leadID,
+                SupplierID: supplierID,
               },
             }
           ]
@@ -2186,6 +2222,9 @@ Template.alltaskdatatable.events({
           priority: priority,
           EnteredByID: parseInt(employeeID),
           EnteredBy: employeeName,
+          CustomerID: customerID,
+          LeadID: leadID,
+          SupplierID: supplierID,
         },
       };
     }
@@ -3512,6 +3551,82 @@ Template.alltaskdatatable.helpers({
   // projects tab ------------------
 });
 
+function getContactData(contactID, contactType) {
+  if (contactType == 'Customer') {
+    getVS1Data("TCustomerVS1").then(function (dataObject) {
+      if (dataObject.length === 0) {
+        contactService.getOneCustomerDataEx(contactID).then(function (data) {
+          setContactDataToDetail(data, contactType);
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.tcustomervs1;
+        for (let i = 0; i < useData.length; i++) {
+          if (parseInt(useData[i].fields.ID) === parseInt(contactID)) {
+            setContactDataToDetail(useData[i], contactType);
+          }
+        }
+      }
+    }).catch(function (err) {
+      contactService.getOneCustomerDataEx(contactID).then(function (data) {
+        setContactDataToDetail(data, contactType);
+      });
+    });
+  } else if (contactType == 'Supplier') {
+    getVS1Data("TSupplierVS1").then(function (dataObject) {
+      if (dataObject.length === 0) {
+        contactService.getOneSupplierDataEx(contactID).then(function (data) {
+          setContactDataToDetail(data, contactType);
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.tsuppliervs1;
+        for (let i = 0; i < useData.length; i++) {
+          if (parseInt(useData[i].fields.ID) === parseInt(contactID)) {
+            setContactDataToDetail(useData[i], contactType);
+          }
+        }
+      }
+    }).catch(function (err) {
+      contactService.getOneSupplierDataEx(contactID).then(function (data) {
+        setContactDataToDetail(data, contactType);
+      });
+    });
+  } else if (contactType == 'Lead') {
+    getVS1Data("TProspectEx").then(function (dataObject) {
+      if (dataObject.length === 0) {
+        contactService.getOneLeadDataEx(contactID).then(function (data) {
+          setContactDataToDetail(data, contactType);
+        });
+
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.tprospectvs1;
+        for (let i = 0; i < useData.length; i++) {
+          if (parseInt(useData[i].fields.ID) === parseInt(contactID)) {
+            setContactDataToDetail(useData[i], contactType);
+          }
+        }
+      }
+    }).catch(function (err) {
+      contactService.getOneLeadDataEx(contactID).then(function (data) {
+        setContactDataToDetail(data, contactType);
+      });
+    });
+  } else {
+    $('#crmSelectLeadList').val('');
+    $('#contactID').val('')
+    $('#contactType').val('')
+  }
+  return;
+}
+
+function setContactDataToDetail(data, contactType) {
+  $('#crmSelectLeadList').val(data.fields.ClientName);
+  $('#contactID').val(data.fields.ID)
+  $('#contactType').val(contactType)
+}
+
 
 function openEditTaskModal(id, type) {
   // let catg = e.target.dataset.catg;
@@ -3924,15 +4039,29 @@ function openEditTaskModal(id, type) {
       let begunDate = moment(currentDate).format("DD/MM/YYYY");
       $(".crmDatepicker").val(begunDate);
 
+
+      let contactID = 0;
+      let contactType = '';
+      if (selected_record.CustomerID) {
+        contactID = selected_record.CustomerID;
+        contactType = 'Customer';
+      } else if (selected_record.SupplierID) {
+        contactID = selected_record.SupplierID;
+        contactType = 'Supplier';
+      } else if (selected_record.LeadID) {
+        contactID = selected_record.LeadID;
+        contactType = 'Lead';
+      }
+      getContactData(contactID, contactType);
+
     } else {
       swal("Cannot edit this task", "", "warning");
       return;
     }
-  })
-    .catch(function (err) {
-      $(".fullScreenSpin").css("display", "none");
+  }).catch(function (err) {
+    $(".fullScreenSpin").css("display", "none");
 
-      swal(err, "", "error");
-      return;
-    });
+    swal(err, "", "error");
+    return;
+  });
 }

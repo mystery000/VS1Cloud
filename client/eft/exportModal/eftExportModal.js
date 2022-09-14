@@ -113,7 +113,6 @@ Template.eftExportModal.onRendered(function () {
       let accountService = new AccountService();
       const accountTypeList = [];
       var accountDataName = e.target.value || "";
-
       if (e.pageX > offset.left + $earch.width() - 8) {
         $("#accountListModal").modal();
         $(".fullScreenSpin").css("display", "none");
@@ -255,7 +254,6 @@ Template.eftExportModal.onRendered(function () {
       var $earch = $(this);
       var offset = $earch.offset(); 
       var bankName = e.target.value || "";
-      console.log(bankName)
 
       if (e.pageX > offset.left + $earch.width() - 8) {
         // $("#transactionCodeModal").modal();
