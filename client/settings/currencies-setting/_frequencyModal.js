@@ -385,6 +385,17 @@ Template._frequencyModal.events({
     ui.loadDefault();
   },
   "click .btnSaveFrequency": (e, ui) => {
+    if($(".months-input-js input.chkBox:checked").length == 0) {
+      handleValidationError('You must select at least one month', 'Cron Settings');
+      return false;
+    }
+
+    if($(".weekly-input-js input.chkBoxDays:checked").length == 0) {
+      handleValidationError('You must select at least one day', 'Cron Settings');
+      return false;
+    }
+
+
     ui.saveShedule();
   },
   'click input[name="frequencyRadio"]': event => {
@@ -489,3 +500,4 @@ Template._frequencyModal.events({
     });
   }
 });
+
