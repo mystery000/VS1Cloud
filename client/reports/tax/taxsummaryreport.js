@@ -1458,6 +1458,8 @@ Template.taxsummaryreport.events({
     LoadingOverlay.show();
     localStorage.setItem('VS1TaxSummary_Report', '');
     let templateObject = Template.instance();
+    $("#dateFrom").attr("readonly", true);
+    $("#dateTo").attr("readonly", true);
     templateObject.dateAsAt.set("Current Date");
     await templateObject.setReportOptions(true);
     LoadingOverlay.hide();

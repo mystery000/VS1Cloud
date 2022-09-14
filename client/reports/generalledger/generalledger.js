@@ -988,6 +988,8 @@ Template.generalledger.events({
 },
 "click #ignoreDate": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
+    $("#dateFrom").attr("readonly", true);
+    $("#dateTo").attr("readonly", true);
     localStorage.setItem('VS1GeneralLedger_Report', '');
     let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");

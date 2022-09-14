@@ -96,7 +96,7 @@ Template.balancesheetreport.onRendered(() => {
         $(".nav-tabs").hide();
     }
 
-    templateObject.getBalanceSheetReports = async(dateAsOf) => {
+    templateObject.getBalanceSheetReports = async(dateAsOf, isIgnore = true) => {
         LoadingOverlay.show();
 
         let data = !localStorage.getItem("VS1BalanceSheet_Report1") ?
@@ -110,7 +110,12 @@ Template.balancesheetreport.onRendered(() => {
             let Balancedatedisplay = moment(dateAsOf).format("DD/MM/YYYY");
             let lastdatemonthdisplay = moment(dateAsOf).format("DD MMM") + " " + previousYear;
             templateObject.dateAsAtAYear.set(lastdatemonthdisplay);
-            templateObject.dateAsAt.set(Balancedatedisplay);
+            // if( Balancedatedisplay == 'Invalid date'){
+            //     templateObject.dateAsAt.set("Current Date");
+            // } else {
+            //     Balancedatedisplay = ;
+            //     templateObject.dateAsAt.set(moment(Balancedatedisplay).format("DD/MM/YYYY"));
+            // }
             setTimeout(function() {
                 $("#balanceData tbody tr:first td .SubHeading").html(
                     "As at " + moment(dateAsOf).format("DD/MM/YYYY")
@@ -1146,7 +1151,7 @@ Template.balancesheetreport.events({
         $("#balancedate").attr("readonly", false);
         var currentDate = new Date();
         var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
+        
         let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
         let fromDateDay = currentDate.getDate();
         if (currentDate.getMonth() + 1 < 10) {
@@ -1195,9 +1200,9 @@ Template.balancesheetreport.events({
         LoadingOverlay.show();
         localStorage.setItem("VS1BalanceSheet_Report", "");
         $("#balancedate").attr("readonly", true);
-        templateObject.dateAsAt.set("Current Date");
         templateObject.getBalanceSheetReports("", "", true);
         LoadingOverlay.hide();
+        templateObject.dateAsAt.set("Current Date");
     },
     "click .sales-tab-item": function(event) {
         let tempInstance = Template.instance();

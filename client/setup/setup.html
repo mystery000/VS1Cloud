@@ -48,9 +48,9 @@
             text-decoration: none !important;
             white-space: nowrap;
         }
-        .clickDisabled {
+        /* .clickDisabled {
             pointer-events: none;
-        }
+        } */
         .addEmployeeModalNew .row.no-gutters .chkaddress {
             width: auto !important;
         }
@@ -85,6 +85,12 @@
             min-width: 300px !important;
             min-height: 300px !important;
         }
+        .centerPopupDiv .resizablePopup {
+            max-width: 60% !important;
+        }
+        .centerPopupDiv .resizablePopup {
+            width: 600px;
+        }
         .centerPopupDiv iframe,
         .centerPopupDiv video {
             width: 100% !important;
@@ -98,6 +104,28 @@
         }
         .centerPopupDiv .modal-content .modal-body {
             height: calc(100% - 70px) !important;
+        }
+        .responsiveIframe {
+            position: relative;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            width: 100% !important;
+            aspect-ratio: 2/1.06 !important;
+            height: 100% !important;
+        }
+        .responsiveIframe img {
+            width: 100% !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            aspect-ratio: 2/1.06 !important;
+            height: 100% !important;
+        }
+        .responsiveIframe iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
         }
     </style>
     <div class="setup-wizard">
@@ -174,7 +202,7 @@
                                                 </div>
                                                 <!-- Start Help Video Modal -->
                                                     <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="OrganizationSettingsVideo" data-backdrop="static">
-                                                        <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
+                                                        <div class="modal-dialog ui-widget-content resizablePopup" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <h4 class="title-header">Organization Settings</h4>
@@ -536,7 +564,7 @@
                                                  <!-- Start Help Video Modal -->
 
                                                 <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="activeTaxRatesVideo" data-backdrop="static" aria-hidden="true">
-                                                    <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
+                                                    <div class="modal-dialog ui-widget-content resizablePopup" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                             
@@ -753,7 +781,7 @@
                                                  <!-- Start Help Video Modal -->
 
                                                 <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="paymentMethodSettingsVideo" data-backdrop="static">
-                                                    <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
+                                                    <div class="modal-dialog ui-widget-content resizablePopup" role="document">
                                                         <div class="modal-content" >
                                                             <div class="modal-header" >
                                                                 <h4 class="title-header" >Payment Methods</h4>
@@ -1039,7 +1067,7 @@
                                     </div>
                                     <!-- Start Help Video Modal -->
                                     <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="termsSettingsVideo" data-backdrop="static">
-                                        <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
+                                        <div class="modal-dialog ui-widget-content resizablePopup" role="document">
                                             <div class="modal-content" >
                                                 <div class="modal-header" >
                                                     <h4 class="title-header" >Term Settings</h4>
@@ -1260,7 +1288,7 @@
                                            
                                             <!-- Start Help Video Modal -->
                                                 <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalEmployee" data-backdrop="static">
-                                                    <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
+                                                    <div class="modal-dialog ui-widget-content resizablePopup" role="document">
                                                         <div class="modal-content" >
                                                             <div class="modal-header" >
 
@@ -1484,7 +1512,7 @@
 
                                                  <!-- Start Help Video Modal -->
                                                     <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalAccount" data-backdrop="static">
-                                                        <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
+                                                        <div class="modal-dialog ui-widget-content resizablePopup" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
 
@@ -1810,7 +1838,7 @@
 
                                          <!-- Start Help Video Modal -->
                                             <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalCustomers" data-backdrop="static">
-                                                <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
+                                                <div class="modal-dialog ui-widget-content resizablePopup" role="document">
                                                     <div class="modal-content" >
                                                         <div class="modal-header" >
 
@@ -2055,7 +2083,7 @@
 
                                         <!-- Start Help Video Modal -->
                                             <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalSuppliers" data-backdrop="static">
-                                                <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
+                                                <div class="modal-dialog ui-widget-content resizablePopup" role="document">
                                                     <div class="modal-content" >
                                                         <div class="modal-header" >
 
@@ -2279,7 +2307,7 @@
 
                                         <!-- Start Help Video Modal -->
                                             <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="helpModalInventory" data-backdrop="static">
-                                                <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
+                                                <div class="modal-dialog ui-widget-content resizablePopup" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
 
@@ -2585,12 +2613,21 @@
                     </div>
                 </div>
                 <div class="setup-step setup-step-10 {{#if isActive currentStep '10'}} show {{/if}}" >
-                    <div class="first-page-container" style="margin: auto;">
-                        <div class="flex justify-content-center align-items-center"><img src="assets/img/VS1.png"/></div>
-                        <h1 class="text-center">Initial set up is completed</h1>
-                        <h1 class="text-center">If you skipped any steps you can finish these at any time.</h1>
-                        <button id="launchBtn">Launch VS1Cloud</button>
-                    </div>
+                   <!-- {{#if setupFinished }}
+                        <div class="first-page-container" style="margin: auto;">
+                            <div class="flex justify-content-center align-items-center"><img src="assets/img/VS1.png"/></div>
+                            <h1 class="text-center">Welcome to VS1Cloud</h1>
+                            <h1 class="text-center">The Set Up Wizard will guide you through Steps to configure your database</h1>
+                            <button id="launchBtn">Start Wizard</button>
+                        </div>
+                   {{else}} -->
+                        <div class="first-page-container" style="margin: auto;">
+                            <div class="flex justify-content-center align-items-center"><img src="assets/img/VS1.png"/></div>
+                            <h1 class="text-center">Initial set up is completed</h1>
+                            <h1 class="text-center">If you skipped any steps you can finish these at any time.</h1>
+                            <button id="launchBtn">Launch VS1Cloud</button>
+                        </div>
+                   <!-- {{/if}} -->
                 </div>  
             </div>
         </div>
@@ -2637,7 +2674,7 @@
         </div>
     </div>
     <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="downloadHelpFileModal" data-backdrop="static" aria-hidden="true">
-        <div class="modal-dialog ui-widget-content resizablePopup" role="document" style="max-width: 670px!important;">
+        <div class="modal-dialog ui-widget-content resizablePopup" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">Download Help</h4>
@@ -2645,7 +2682,10 @@
                             aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
-                    <iframe class="customDownloadHelpIframe" width="640" height="360" src="" frameborder="0" allowfullscreen=""></iframe>
+                    <!-- <div class="responsiveIframe"> -->
+                        <!-- <img src="assets/img/VS1CloudBackground.jpeg" alt="img"> -->
+                        <iframe class="customDownloadHelpIframe" src="" allowfullscreen=""></iframe>
+                    <!-- </div> -->
                 </div>
             </div>
         </div>

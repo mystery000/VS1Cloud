@@ -9422,7 +9422,14 @@ Template.setup.helpers({
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
   },
-
+  setupFinished: () => {
+    let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+    if (setupFinished == true || setupFinished == "true") {
+      return true;
+    } else {
+      return false;
+    }
+  },
   // Step 3 helpers
   paymentmethoddatatablerecords: () => {
     return Template.instance().paymentmethoddatatablerecords.get()
