@@ -77,6 +77,46 @@ Template.new_invoice.onCreated(() => {
 });
 
 Template.new_invoice.onRendered(() => {
+  ///////////////////////////
+  sideBarService.getNewCustomFieldsWithQuery(3, 'table1').then(function (data) {
+                console.log('new custom get.......', data)
+              }).catch(function (err) {
+                console.log('new custom get.......', err)
+              });
+  let test_data = {
+    "JsonIn": {
+      "Name": "VS1_Customize",
+      "Params":
+      {
+          "TableName": "table1",
+          "EmployeeId": 3,
+          "Columns": [
+              {
+                  "Index": 1,
+                  "Header": "modifieddddd",
+                  "Width": 30,
+                  "Hidden": true
+              },
+              {
+                  "index": 2,
+                  "header": "modified",
+                  "width": 30,
+                  "hidden": false
+              }
+          ],
+          "erpusername":"dene@vs1cloud.com",
+          "ERPPassword":"Dene@123"
+      }
+    }
+  }
+  sideBarService.saveNewCustomFields(test_data).then(function (data) {
+    console.log('new custom add.......', data)
+  }).catch(function (err) {
+    console.log('new custom add.......', err)
+  });
+  ///////////////////////////
+
+
   // $('#lotNumberModal .btnSelect').removeClass('d-none');
   // $('#lotNumberModal .btnAutoFill').addClass('d-none');
   $("#serialNumberModal .btnSelect").removeClass("d-none");
