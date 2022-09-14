@@ -78,42 +78,55 @@ Template.new_invoice.onCreated(() => {
 
 Template.new_invoice.onRendered(() => {
   ///////////////////////////
-  sideBarService.getNewCustomFieldsWithQuery(3, 'table1').then(function (data) {
+  sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), 'table1').then(function (data) {
                 console.log('new custom get.......', data)
               }).catch(function (err) {
                 console.log('new custom get.......', err)
               });
+
+    var erpGet = erpDb();
+
   let test_data = {
-    "JsonIn": {
-      "Name": "VS1_Customize",
-      "Params":
+      Name: "VS1_Customize",
+      Params:
       {
-          "TableName": "table1",
-          "EmployeeId": 3,
-          "Columns": [
+          TableName: "table1",
+          EmployeeId: parseInt(Session.get('mySessionEmployeeLoggedID'))||0,
+          Columns: [
               {
-                  "Index": 1,
-                  "Header": "modifieddddd",
-                  "Width": 30,
-                  "Hidden": true
+                  Index: 1,
+                  Header: "modifieddddd",
+                  Width: 30,
+                  Hidden: true
               },
               {
-                  "index": 2,
-                  "header": "modified",
-                  "width": 30,
-                  "hidden": false
+                  index: 2,
+                  header: "modified",
+                  width: 30,
+                  hidden: false
               }
           ],
-          "erpusername":"dene@vs1cloud.com",
-          "ERPPassword":"Dene@123"
+          ERPUserName:erpGet.ERPUsername,
+          ERPPassword:erpGet.ERPPassword
       }
-    }
-  }
-  sideBarService.saveNewCustomFields(test_data).then(function (data) {
-    console.log('new custom add.......', data)
-  }).catch(function (err) {
-    console.log('new custom add.......', err)
-  });
+  };
+  var myCustomizeString = '"JsonIn"'+':'+JSON.stringify(test_data);
+  console.log(myCustomizeString);
+  var oPost = new XMLHttpRequest();
+  oPost.open("POST",URLRequest +erpGet.ERPIPAddress +":" +erpGet.ERPPort +"/" +'erpapi/VS1_Cloud_Task/Method',true);
+  oPost.setRequestHeader("database", erpGet.ERPDatabase);
+  oPost.setRequestHeader("username", erpGet.ERPUsername);
+  oPost.setRequestHeader("password", erpGet.ERPPassword);
+  oPost.setRequestHeader("Accept", "application/json");
+  oPost.setRequestHeader("Accept", "application/html");
+  oPost.setRequestHeader("Content-type", "application/json");
+  // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
+  oPost.send(myCustomizeString);
+  // sideBarService.saveNewCustomFields(myCustomizeString).then(function (data) {
+  //   console.log('new custom add.......', data)
+  // }).catch(function (err) {
+  //   console.log('new custom add.......', err)
+  // });
   ///////////////////////////
 
 

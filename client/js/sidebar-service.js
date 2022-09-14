@@ -3418,13 +3418,13 @@ export class SideBarService extends BaseService {
   getNewCustomFieldsWithQuery(employeeID='', tableName='') {
     let options = {
       EmployeeID: employeeID,
-    }; 
+    };
 
     if(tableName) {
       options = {
         EmployeeID: employeeID,
         TableName: tableName,
-      }; 
+      };
     }
 
     return this.getList(this.ERPObjects.VS1_Customize, options);
@@ -3432,7 +3432,7 @@ export class SideBarService extends BaseService {
 
   saveNewCustomFields(data)
   {
-      return this.POST(this.ERPObjects.VS1_Customize, data);
+      return this.POST('VS1_Cloud_Task/method', data);
   }
 
 }

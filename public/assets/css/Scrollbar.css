@@ -562,3 +562,16 @@ td.td-input {
         width: 100% !important;
     }
 }
+
+div.dataTables_wrapper div.dataTables_filter input{
+  margin-left: 0px!important;
+  margin-right: 12px;
+}
+
+div.dataTables_wrapper button{
+  margin-right: 12px;
+}
+
+.align-items-xl-start .btnRefresh{
+  margin-left: 0px!important;
+}
