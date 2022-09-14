@@ -52,8 +52,8 @@ Template.AddPayRunModal.onRendered(() => {
         calendar.fields.PayrollCalendarName || "",
         calendar.fields.PayrollCalendarPayPeriod || "",
         moment(calendar.fields.PayrollCalendarStartDate).format("DD/MM/YYYY") || "",
-        moment(calendar.fields.PayrollCalendarFirstPaymentDate).format("DD/MM/YYYY") || ""
-        // '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        moment(calendar.fields.PayrollCalendarFirstPaymentDate).format("DD/MM/YYYY") || "",
+        '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
       ];
 
       splashArrayCalenderList.push(dataListAllowance);
@@ -79,6 +79,10 @@ Template.AddPayRunModal.onRendered(() => {
           }, {
             className: "colNextPaymentDate",
             targets: [4]
+          }, {
+            className: "colDeleteCalenders",
+            orderable: false,
+            targets: -1
           }
         ],
         select: true,
@@ -112,7 +116,7 @@ Template.AddPayRunModal.onRendered(() => {
           }
 
           $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
-            $(".fullScreenSpin").css("display", "inline-block");
+            LoadingOverlay.show();
             var splashArrayCalenderListDupp = new Array();
             let dataLenght = oSettings._iDisplayLength;
             let customerSearch = $("#tblPayCalendars_filter input").val();
@@ -191,22 +195,41 @@ Template.AddPayRunModal.onRendered(() => {
       const trs = $("#tblPayCalendars tbody").find("tr");
 
       $("#AppTableModal").modal("show");
-      $(trs).each(tr => {
+      $(trs).each((index, tr) => {
         $(tr).on("click", e => {
           const id = $(e.currentTarget).find(".colCalenderID").text();
           const name = $(e.currentTarget).find(".colPayCalendarName").text();
           const payPeriod = $(e.currentTarget).find(".colPayPeriod").text();
           const nextPayPeriod = $(e.currentTarget).find(".colNextPayPeriod").text();
-          const nextPaymentDate = $(e.currentTarget).find(".ccolNextPaymentDate").text();
+          const nextPaymentDate = $(e.currentTarget).find(".colNextPaymentDate").text();
 
           $("#selectAPayRun").attr("calendar-id", id);
-          $("#selectAPayRun").val(`${name} (${payPeriod} | ${nextPayPeriod}) - ${nextPaymentDate}`);
+          $("#selectAPayRun").val(`${name} (${payPeriod} | ${nextPayPeriod} - ${nextPaymentDate})`);
+          $("#AppTableModal").modal("hide");
         });
+      });
+
+      $(document).on("click", ".colDeleteCalenders", function (event) {
+        event.stopPropagation();
+        let targetID = $(event.target).closest("tr").find(".colCalenderID").text() || 0; // table row ID
+
+        let calenderName = $(this).closest("tr").find(".colPayCalendarName").text() || "";
+
+        $("#selectColDeleteLineID").val(targetID);
+        $("#selectCalenderName").val(targetID);
+        $("#deleteCalenderLineModal").modal("toggle");
       });
     }, 300);
 
     LoadingOverlay.hide();
   };
+
+  $("#payperiod").editableSelect("add", "Weekly");
+  $("#payperiod").editableSelect("add", "Fortnightly");
+  $("#payperiod").editableSelect("add", "Twice Monthly");
+  $("#payperiod").editableSelect("add", "Four Weekly");
+  $("#payperiod").editableSelect("add", "Monthly");
+  $("#payperiod").editableSelect("add", "Quarterly");
 
   //templateObject.loadPayRuns();
 });
@@ -218,7 +241,258 @@ Template.AddPayRunModal.events({
   },
   "click .btnPayRunNext": event => {
     $(".modal-backdrop").css("display", "none");
-    FlowRouter.go("/payrundetails");
+    const id = $("#selectAPayRun").attr("calendar-id");
+    FlowRouter.go(`/payrundetails?cid=${id}`);
+  },
+
+  "click .btnAddNewPayCalender": (e, ui) => {
+    let id = $("#paycalendarId").val();
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+    today = dd + "/" + mm + "/" + yyyy;
+    $("#edtStartDate").val(today);
+    $("#edtFirstPaymentDate").val(today);
+    $("#paycalendarId").val(0);
+    $("#calender_name").val("");
+    $("#newPayCalendarLabel").text("Add New Pay Calender");
+    $("#payperiod").val("");
+  },
+
+  "click .savenewcalender": (e, ui) => {
+    LoadingOverlay.show();
+    let taxRateService = new TaxRateService();
+    let oldpaycalenderid = $("#paycalendarId").val() || 0;
+    let payperiod = $("#payperiod").val() || "";
+    let calender_name = $("#calender_name").val() || "";
+    let startdate = $("#edtStartDate").val() || "";
+    let FirstPaymentDate = $("#edtFirstPaymentDate").val() || "";
+
+    if (payperiod === "") {
+      LoadingOverlay.hide();
+      swal("Pay period has not been selected!", "", "warning");
+      e.preventDefault();
+    } else if (calender_name === "") {
+      LoadingOverlay.hide();
+      swal("Calender Name Can not blank!", "", "warning");
+      e.preventDefault();
+    } else if (startdate === "") {
+      LoadingOverlay.hide();
+      swal("Start Date Has not been selected!", "", "warning");
+      e.preventDefault();
+    } else if (FirstPaymentDate === "") {
+      LoadingOverlay.hide();
+      swal("First Payment Date Has not been selected!", "", "warning");
+      e.preventDefault();
+    } else {
+      if (oldpaycalenderid != 0) {
+        LoadingOverlay.show();
+        objDetails = {
+          type: "TPayrollCalendars",
+          fields: {
+            ID: parseInt(oldpaycalenderid),
+            PayrollCalendarPayPeriod: payperiod,
+            PayrollCalendarName: calender_name,
+            PayrollCalendarStartDate: moment(startdate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+            PayrollCalendarFirstPaymentDate: moment(FirstPaymentDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+            PayrollCalendarActive: true
+          }
+        };
+
+        taxRateService.saveCalender(objDetails).then(function (objDetails) {
+          LoadingOverlay.hide();
+          swal({title: "Success", text: "Pay Calendar saved successfully.", type: "success", showCancelButton: false, confirmButtonText: "Done"}).then(result => {
+            if (result.value) {
+              sideBarService.getCalender(initialBaseDataLoad, 0).then(function (dataReload) {
+                addVS1Data("TPayrollCalendars", JSON.stringify(dataReload)).then(function (datareturn) {
+                  $("#closemodel").trigger("click");
+                  LoadingOverlay.show();
+                  // window.open("/payrollrules?active_key=calender", "_self");
+                  ui.loadPayRuns();
+                }).catch(function (err) {
+                  $("#closemodel").trigger("click");
+                  LoadingOverlay.show();
+
+                  // window.open("/payrollrules?active_key=calender", "_self");
+                  ui.loadPayRuns();
+                });
+              }).catch(function (err) {
+                $("#closemodel").trigger("click");
+                LoadingOverlay.show();
+
+                // window.open("/payrollrules?active_key=calender", "_self");
+                ui.loadPayRuns();
+              });
+            } else if (result.dismiss === "cancel") {}
+          });
+        }).catch(function (err) {
+          LoadingOverlay.hide();
+          swal({title: "Oooops...", text: err, type: "error", showCancelButton: false, confirmButtonText: "ok"}).then(result => {
+            if (result.value) {} else if (result.dismiss === "cancel") {}
+          });
+        });
+      } else {
+        LoadingOverlay.show();
+
+        taxRateService.checkCalenderName(calender_name).then(function (data) {
+          calenderID = data.tpayrollcalendars;
+          var calender_id = calenderID[0];
+
+          objDetails = {
+            type: "TPayrollCalendars",
+            fields: {
+              ID: parseInt(calender_id.Id),
+              PayrollCalendarPayPeriod: payperiod,
+              PayrollCalendarName: calender_name,
+              PayrollCalendarStartDate: moment(startdate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+              PayrollCalendarFirstPaymentDate: moment(FirstPaymentDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+              PayrollCalendarActive: true
+            }
+          };
+
+          taxRateService.saveCalender(objDetails).then(function (objDetails) {
+            LoadingOverlay.hide();
+            swal({title: "Success", text: "Pay Calendar saved successfully.", type: "success", showCancelButton: false, confirmButtonText: "Done"}).then(result => {
+              if (result.value) {
+                sideBarService.getCalender(initialBaseDataLoad, 0).then(function (dataReload) {
+                  addVS1Data("TPayrollCalendars", JSON.stringify(dataReload)).then(function (datareturn) {
+                    $("#closemodel").trigger("click");
+                    LoadingOverlay.show();
+                    // window.open("/payrollrules?active_key=calender", "_self");
+                    ui.loadPayRuns();
+                  }).catch(function (err) {
+                    $("#closemodel").trigger("click");
+                    LoadingOverlay.show();
+                    // window.open("/payrollrules?active_key=calender", "_self");
+                    ui.loadPayRuns();
+                  });
+                }).catch(function (err) {
+                  $("#closemodel").trigger("click");
+                  LoadingOverlay.show();
+                  // window.open("/payrollrules?active_key=calender", "_self");
+                  ui.loadPayRuns();
+                });
+              } else if (result.dismiss === "cancel") {}
+            });
+          }).catch(function (err) {
+            LoadingOverlay.hide();
+            swal({title: "Oooops...", text: err, type: "error", showCancelButton: false, confirmButtonText: "ok"}).then(result => {
+              if (result.value) {} else if (result.dismiss === "cancel") {}
+            });
+          });
+        }).catch(function (err) {
+          objDetails = {
+            type: "TPayrollCalendars",
+            fields: {
+              PayrollCalendarPayPeriod: payperiod,
+              PayrollCalendarName: calender_name,
+              PayrollCalendarStartDate: moment(startdate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+              PayrollCalendarFirstPaymentDate: moment(FirstPaymentDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+              PayrollCalendarActive: true
+            }
+          };
+
+          taxRateService.saveCalender(objDetails).then(function (objDetails) {
+            LoadingOverlay.hide();
+            swal({title: "Success", text: "Pay Calendar saved successfully.", type: "success", showCancelButton: false, confirmButtonText: "Done"}).then(result => {
+              if (result.value) {
+                sideBarService.getCalender(initialBaseDataLoad, 0).then(function (dataReload) {
+                  addVS1Data("TPayrollCalendars", JSON.stringify(dataReload)).then(function (datareturn) {
+                    $("#closemodel").trigger("click");
+                    LoadingOverlay.show();
+                    // window.open("/payrollrules?active_key=calender", "_self");
+                    ui.loadPayRuns();
+                  }).catch(function (err) {
+                    $("#closemodel").trigger("click");
+                    LoadingOverlay.show();
+                    // window.open("/payrollrules?active_key=calender", "_self");
+                    ui.loadPayRuns();
+                  });
+                }).catch(function (err) {
+                  $("#closemodel").trigger("click");
+                  LoadingOverlay.show();
+                  // window.open("/payrollrules?active_key=calender", "_self");
+                  ui.loadPayRuns();
+                });
+              } else if (result.dismiss === "cancel") {}
+            });
+          }).catch(function (err) {
+            LoadingOverlay.hide();
+            swal({title: "Oooops...", text: err, type: "error", showCancelButton: false, confirmButtonText: "ok"}).then(result => {
+              if (result.value) {} else if (result.dismiss === "cancel") {}
+            });
+          });
+        });
+      }
+    }
+
+    $("#newPayCalendarModal").modal("show");
+  },
+
+  // "click .colDeleteCalenders": (e, ui) => {
+  //   
+  //   e.stopPropagation();
+  //   let targetID = $(e.target).closest("tr").find(".colCalenderID").text() || 0;  table row ID
+
+  //   let calenderName = $(this).closest("tr").find(".colPayCalendarName").text() || "";
+
+  //   $("#selectColDeleteLineID").val(targetID);
+  //   $("#selectCalenderName").val(targetID);
+  //   $("#deleteCalenderLineModal").modal("toggle");
+  // }
+
+  "click .btnDeleteCalender": (e, ui) => {
+    let taxRateService = new TaxRateService();
+    let calenderid = $("#selectColDeleteLineID").val() || 0;
+    let calendername = $("#selectCalenderName").val() || 0;
+    LoadingOverlay.show();
+
+    let objDetails = {
+      type: "TPayrollCalendars",
+      fields: {
+        Id: calendername,
+        PayrollCalendarActive: false
+      }
+    };
+
+    if (calendername != 0) {
+      taxRateService.saveCalender(objDetails).then(function (objDetails) {
+        LoadingOverlay.hide();
+        swal({title: "Success", text: "Calender Removed Successfully", type: "success", showCancelButton: false, confirmButtonText: "Done"}).then(result => {
+          if (result.value) {
+            $("#hidedeleteca").trigger("click");
+            sideBarService.getCalender(initialBaseDataLoad, 0).then(function (dataReload) {
+              addVS1Data("TPayrollCalendars", JSON.stringify(dataReload)).then(function (datareturn) {
+                // $("#hidedeleteca").trigger("click");
+
+                // window.open("/payrollrules?active_key=calender", "_self");
+                ui.loadPayRuns();
+              }).catch(function (err) {
+                LoadingOverlay.show();
+                // window.open("/payrollrules?active_key=calender", "_self");
+                ui.loadPayRuns();
+              });
+            }).catch(function (err) {
+              $("#hidedeleteca").trigger("click");
+              LoadingOverlay.show();
+              // window.open("/payrollrules?active_key=calender", "_self");
+              ui.loadPayRuns();
+            });
+          } else if (result.dismiss === "cancel") {}
+        });
+      }).catch(function (err) {
+        swal({title: "Oooops...", text: err, type: "error", showCancelButton: false, confirmButtonText: "ok"}).then(result => {
+          if (result.value) {} else if (result.dismiss === "cancel") {}
+        });
+        LoadingOverlay.hide();
+      });
+    } else {
+      LoadingOverlay.hide();
+      swal({title: "Oooops...", text: "Calender ID missing", type: "error", showCancelButton: false, confirmButtonText: "Try Again"}).then(result => {
+        if (result.value) {} else if (result.dismiss === "cancel") {}
+      });
+    }
   }
 });
 
