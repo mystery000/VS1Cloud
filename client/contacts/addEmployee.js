@@ -43,21 +43,6 @@ let utilityService = new UtilityService();
 const employeePayrollServices = new EmployeePayrollService();
 let edtProductSelect = "";
 
-function handleTotalAmount( amountField, totalAmountCont ) {
-    let totalAmount = 0;
-    let amount = 0;
-    $('.' + amountField).each(function(){
-        amount = $(this).val();
-        amount = ( amount === null || amount == '') ? 0 : amount;
-        amount = Number(amount.replace(/[^0-9.-]+/g,""));
-        totalAmount += parseFloat( amount );
-    });
-    let utilityService = new UtilityService();
-    let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
-    $('#' + totalAmountCont).text(totalFomattedAmount);
-}
-
-
 Template.employeescard.onCreated(function () {
     const templateObject = Template.instance();
     setTimeout(function () {
@@ -6065,27 +6050,15 @@ Template.employeescard.events({
         let totalPay = $('#totalPay').val();
 
         if(period == ''){
-            swal({
-                title: "Warning",
-                text: "Please enter period",
-                type: 'warning',
-            })
+            handleValidationError('Please enter Period!', 'period');
             return false
         }
         if(paymentDate == ''){
-            swal({
-                title: "Warning",
-                text: "Please enter total pay",
-                type: 'warning',
-            })
+            handleValidationError('Please enter Payment Date!', 'paymentDate');
             return false
         }
         if(totalPay == ''){
-            swal({
-                title: "Warning",
-                text: "Please enter total pay",
-                type: 'warning',
-            })
+            handleValidationError('Please enter Total Pay!', 'totalPay');
             return false
         } 
 
@@ -6135,7 +6108,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
@@ -6163,11 +6136,7 @@ Template.employeescard.events({
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let EarningsRate = $('#obEarningsRate').val();
         if(EarningsRate == ''){
-            swal({
-                title: "Warning",
-                text: "Please select earning rate",
-                type: 'warning',
-            })
+            handleValidationError('Please select Earning Rate!', 'obEarningsRate');
             return false;
         }
         $('.fullScreenSpin').css('display', 'block');
@@ -6216,7 +6185,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
@@ -6245,11 +6214,7 @@ Template.employeescard.events({
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let DeductionType = $('#obDeductionType').val();
         if(DeductionType == ''){
-            swal({
-                title: "Warning",
-                text: "Please select deduction type",
-                type: 'warning',
-            })
+            handleValidationError('Please select Deduction Type!', 'obDeductionType');
             return false;
         }
         $('.fullScreenSpin').css('display', 'block');
@@ -6298,7 +6263,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
@@ -6327,11 +6292,7 @@ Template.employeescard.events({
         let SuperannuationFund = $('#obSuperannuationFund').val();
         let ContributionType = $('#obContributionType').val();
         if(SuperannuationFund == ''){
-            swal({
-                title: "Warning",
-                text: "Please selec Superannuation fund",
-                type: 'warning',
-            })
+            handleValidationError('Please select Superannuation Fund!', 'obSuperannuationFund');
             return false;
         }
         $('.fullScreenSpin').css('display', 'block');
@@ -6382,7 +6343,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
@@ -6425,11 +6386,7 @@ Template.employeescard.events({
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let Reimbursement = $('#obReimbursementType').val();
         if(Reimbursement == ''){
-            swal({
-                title: "Warning",
-                text: "Please select Reimbursement",
-                type: 'warning',
-            })
+            handleValidationError('Please select Reimbursement!', 'obReimbursementType');
             return false;
         }
         $('.fullScreenSpin').css('display', 'block');
@@ -6478,7 +6435,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
@@ -6528,41 +6485,23 @@ Template.employeescard.events({
         //     );
         // }
         if(isNaN(TypeofRequest)){
-            swal({
-                title: "Warning",
-                text: "Request type must be a number",
-                type: 'warning',
-            })
+            handleValidationError('Request type must be a number!', 'edtLeaveTypeofRequestID');
+            return false
         }else if(Description == ''){
-            swal({
-                title: "Warning",
-                text: "Please enter leave description",
-                type: 'warning',
-            })
+            handleValidationError('Please enter Leave Description!', 'edtLeaveDescription');
+            return false
         }else if(PayPeriod == ''){
-            swal({
-                title: "Warning",
-                text: "Please enter Pay Period",
-                type: 'warning',
-            })
+            handleValidationError('Please enter Pay Period!', 'edtLeavePayPeriod');
+            return false;
         }else if(Hours == ''){
-            swal({
-                title: "Warning",
-                text: "Please enter hours",
-                type: 'warning',
-            })
+            handleValidationError('Please enter Hours!', 'edtLeaveHours');
+            return false;
         }else if(isNaN(Hours)){
-            swal({
-                title: "Warning",
-                text: "Hours must be a number",
-                type: 'warning',
-            })
+            handleValidationError('Hours must be a Number!', 'edtLeaveHours');
+            return false;
         }else if(Status == ''){
-            swal({
-                title: "Warning",
-                text: "Please select status",
-                type: 'warning',
-            })
+            handleValidationError('HPlease select Status!', 'edtLeavePayStatus');
+            return false;
         } else{
             $('.fullScreenSpin').css('display', 'block');
 
@@ -6615,7 +6554,7 @@ Template.employeescard.events({
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
-                        text: error,
+                        text: ApiResponse.headers.get('errormessage'),
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Try Again'
@@ -6658,15 +6597,19 @@ Template.employeescard.events({
         let HoursAccruedAnnuallyFullTimeEmp = 0;
         let HoursFullTimeEmpFortnightlyPay = 0;
         let HoursAccruedAnnually = 0;
+        if( LeaveType == ""){
+            handleValidationError('Please select a Leave!', 'leaveTypeSelect');
+            return false;
+        }
+        if( LeaveCalcMethod == ""){
+            handleValidationError('Leave Calculation Method!', 'leaveCalcMethodSelect');
+            return false;
+        }
         switch(LeaveCalcMethod){
             case 'Manually Recorded Rate':
                 HoursLeave = $('#hoursLeave').val();
-                if(isNaN(HoursLeave)){
-                    swal({
-                        title: "Confirm",
-                        text: "Hours Leave must be a number",
-                        type: 'warning',
-                    })
+                if( HoursLeave == ""){
+                    handleValidationError('Hours Leave is required!', 'hoursLeave');
                     return false;
                 }
             break;
@@ -6676,42 +6619,23 @@ Template.employeescard.events({
             case 'Based on Ordinary Earnings':
                 HoursAccruedAnnuallyFullTimeEmp = $('#hoursAccruedAnnuallyFullTimeEmp').val();
                 HoursFullTimeEmpFortnightlyPay = $('#hoursFullTimeEmpFortnightlyPay').val();
-                if(isNaN(HoursAccruedAnnuallyFullTimeEmp)){
-                    swal({
-                        title: "Warning",
-                        text: "Hours Accrued Annually Full Time Emp is required",
-                        type: 'warning',
-                    })
-                    return false;
-                }
-                if(isNaN(HoursFullTimeEmpFortnightlyPay)){
-                    swal({
-                        title: "Warning",
-                        text: "Hours Accrued Annually Full Time Emp is required",
-                        type: 'warning',
-                    })
+                if( HoursAccruedAnnuallyFullTimeEmp == "" ){
+                    handleValidationError('Hours Accrued Annually Full Time Emp is required!', 'hoursAccruedAnnuallyFullTimeEmp');
                     return false;
                 }
             break;
             default:
                 HoursAccruedAnnually = $('#hoursAccruedAnnually').val();
-                if(isNaN(HoursAccruedAnnually)){
-                    swal({
-                        title: "Warning",
-                        text: "Hours Accrued Annually is required",
-                        type: 'warning',
-                    })
+                if( HoursAccruedAnnually == ""){
+                    handleValidationError('Hours Accrued Annually is required!', 'hoursAccruedAnnually');
                     return false;
                 }
             break;
         }
 
-        if(isNaN(OpeningBalance)){
-            swal({
-                title: "Warning",
-                text: "Opening Balance is required",
-                type: 'warning',
-            })
+        if( OpeningBalance == ""){
+            handleValidationError('Opening Balance is required!', 'openingBalance');
+            return false;
         }
         $('.fullScreenSpin').css('display', 'block');
 
@@ -6779,7 +6703,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
@@ -6815,11 +6739,7 @@ Template.employeescard.events({
         let Notes = $('#payRollNotes').val();
         let ID = $('#payRollNoteID').val();
         if(Notes == ''){
-            swal({
-                title: "Error",
-                text: "Please enter a Note",
-                type: 'warning',
-            })
+            handleValidationError('Please enter a Note!', 'payRollNotes');
             return false;
         } 
         $('.fullScreenSpin').css('display', 'block');
@@ -6863,7 +6783,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
@@ -6915,29 +6835,17 @@ Template.employeescard.events({
         let ExpenseAccount = $('#expenseAccount').val();
         
         if( EarningRate == ""){
-            swal({
-                title: "Error",
-                text: "Please select Earning Rate",
-                type: 'warning',
-            });
+            handleValidationError('Please select Earning Rate!', 'earningRateSelect');
             return false
         }
 
         if( CalculationType == ""){
-            swal({
-                title: "Error",
-                text: "Please select Calculation Type",
-                type: 'warning',
-            });
+            handleValidationError('Please select Calculation Type!', 'calculationType');
             return false
         }
 
         if( ExpenseAccount == ""){
-            swal({
-                title: "Error",
-                text: "Please enter Expense Account",
-                type: 'warning',
-            });
+            handleValidationError('Please enter Expense Account!', 'expenseAccount');
             return false
         }
 
@@ -6991,7 +6899,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
@@ -7023,29 +6931,17 @@ Template.employeescard.events({
         let ControlAccount = $('#controlAccountDeduction').val();
 
         if( DeductionType == "" ){
-            swal({
-                title: "Error",
-                text: "Please select Deduction Type",
-                type: 'warning',
-            });
+            handleValidationError('Please select Deduction Type!', 'deductionTypeSelect');
             return false
         }
 
         if( CalculationType == "" ){
-            swal({
-                title: "Error",
-                text: "Please select Calculation Type",
-                type: 'warning',
-            });
+            handleValidationError('Please select Calculation Type!', 'calculationTypeDeduction');
             return false
         }
 
         if( ControlAccount == "" ){
-            swal({
-                title: "Error",
-                text: "Please select Control Account",
-                type: 'warning',
-            });
+            handleValidationError('Please select Control Account!', 'controlAccountDeduction');
             return false
         }
         
@@ -7099,7 +6995,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
@@ -7135,35 +7031,23 @@ Template.employeescard.events({
         let PaymentFrequency = $('#paymentFrequency').val();
         let PeriodPaymentDate = $('#edtPeriodPaymentDate').val();
         if(Fund == ''){
-            swal({
-                title: "Error",
-                text: "Please select Superannuation Fund",
-                type: 'error',
-            })
+            handleValidationError('Please select Superannuation Fund!', 'superannuationFund');
             return false
         } 
         if(ContributionType == ''){
-            swal({
-                title: "Error",
-                text: "Please select Contribution Type",
-                type: 'error',
-            })
+            handleValidationError('Please select Contribution Type!', 'superannuationTypeSelect');
             return false
         }
         if(CalculationType == ''){
-            swal({
-                title: "Error",
-                text: "Please enter Calculation Type",
-                type: 'error',
-            })
+            handleValidationError('Please select Calculation Type!', 'calculationTypeSuperannuation');
             return false
         }
         if(MinimumMonthlyEarnings == ''){
-            swal({
-                title: "Error",
-                text: "Please enter Minimum Monthly Earnings",
-                type: 'error',
-            });
+            handleValidationError('Please enter Minimum Monthly Earnings!', 'MinimumMonthlyEarnings');
+            return false;
+        }
+        if(ExpenseAccount == ''){
+            handleValidationError('Please select Expense Account!', 'expenseSuperannuationAccount');
             return false;
         }
         $('.fullScreenSpin').css('display', 'block');
@@ -7232,7 +7116,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
@@ -7261,31 +7145,19 @@ Template.employeescard.events({
         let ReiumbursementType = $('#reimbursementTypeSelect').val();
         let Description = $('#reiumbursementDescription').val();
         let ControlExpenseAccount = $('#controlExpenseAccount').val();
-
+        
         if(ReiumbursementType == ''){
-            swal({
-                title: "Error",
-                text: "Please Select Reiumbursement Type",
-                type: 'error',
-            });
+            handleValidationError('Please Select Reiumbursement Type!', 'reimbursementTypeSelect');
             return false;
         }
 
         if(Description == ''){
-            swal({
-                title: "Error",
-                text: "Please Enter Description",
-                type: 'error',
-            });
+            handleValidationError('Please Enter Description!', 'reiumbursementDescription');
             return false;
         }
 
         if(ControlExpenseAccount == ''){
-            swal({
-                title: "Error",
-                text: "Please Enter Control Expense Account",
-                type: 'error',
-            });
+            handleValidationError('lease Enter Control Expense Account!', 'controlExpenseAccount');
             return false;
         }
 
@@ -7340,7 +7212,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
@@ -7473,7 +7345,7 @@ Template.employeescard.events({
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Oooops...',
-                            text: error,
+                            text: ApiResponse.headers.get('errormessage'),
                             type: 'error',
                             showCancelButton: false,
                             confirmButtonText: 'Try Again'
@@ -7563,7 +7435,7 @@ Template.employeescard.events({
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Oooops...',
-                            text: error,
+                            text: ApiResponse.headers.get('errormessage'),
                             type: 'error',
                             showCancelButton: false,
                             confirmButtonText: 'Try Again'
@@ -7658,7 +7530,7 @@ Template.employeescard.events({
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Oooops...',
-                            text: error,
+                            text: ApiResponse.headers.get('errormessage'),
                             type: 'error',
                             showCancelButton: false,
                             confirmButtonText: 'Try Again'
@@ -7748,7 +7620,7 @@ Template.employeescard.events({
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Oooops...',
-                            text: error,
+                            text: ApiResponse.headers.get('errormessage'),
                             type: 'error',
                             showCancelButton: false,
                             confirmButtonText: 'Try Again'
@@ -7839,7 +7711,7 @@ Template.employeescard.events({
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Oooops...',
-                            text: error,
+                            text: ApiResponse.headers.get('errormessage'),
                             type: 'error',
                             showCancelButton: false,
                             confirmButtonText: 'Try Again'
@@ -7932,7 +7804,7 @@ Template.employeescard.events({
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Oooops...',
-                            text: error,
+                            text: ApiResponse.headers.get('errormessage'),
                             type: 'error',
                             showCancelButton: false,
                             confirmButtonText: 'Try Again'
@@ -8025,7 +7897,7 @@ Template.employeescard.events({
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Oooops...',
-                            text: error,
+                            text: ApiResponse.headers.get('errormessage'),
                             type: 'error',
                             showCancelButton: false,
                             confirmButtonText: 'Try Again'
@@ -8118,7 +7990,7 @@ Template.employeescard.events({
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Oooops...',
-                            text: error,
+                            text: ApiResponse.headers.get('errormessage'),
                             type: 'error',
                             showCancelButton: false,
                             confirmButtonText: 'Try Again'
@@ -8264,10 +8136,10 @@ Template.employeescard.events({
         if(activeTab == "taxes") {
             // we are in tax rates tab
             let TaxFileNumber = $("#edtTaxFileNumber").val();
-            let TFNExemption = $("#edtTfnExemption").attr('data-value') || $("#edtTfnExemption").val();
-            let EmploymentBasis = $("#edtEmploymentBasis").attr('data-value') || $("#edtEmploymentBasis").val();
-            let ResidencyStatus = $("#edtResidencyStatus").attr('data-value') || $("#edtResidencyStatus").val();
-            let EdtPayPeriod = $("#edtPayPeriod").attr('data-value') || $("#edtPayPeriod").val();
+            let TFNExemption = $("#edtTfnExemption").val();
+            let EmploymentBasis = $("#edtEmploymentBasis").val();
+            let ResidencyStatus = $("#edtResidencyStatus").val();
+            let EdtPayPeriod = $("#edtPayPeriod").val();
             let FirstPayDate = $("#edtFirstPayDate").val();
             let StartingDate = $("#dtStartingDate").val();
             let FirstName = $("#edtFirstName").val();
@@ -8283,52 +8155,27 @@ Template.employeescard.events({
             let SeniorandPensionersTaxOffsetClaimed = $("#taxesSeniorPensionersTaxOffsetClaimed").is(':checked') ? true : false;
             let HasApprovedWithholdingVariation = $("#taxesHasApprovedWithholdingVariation").is(':checked') ? true : false;
             if( TaxFileNumber == "" && TFNExemption == "" ){
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please enter Tax File Number or TFN Exemption',
-                    type: 'error',
-                    showCancelButton: false,
-                });
-                return false
+                handleValidationError('Please enter Tax File Number or TFN Exemption!', 'edtTaxFileNumber');
+                return false;
             }
             if( EmploymentBasis == "" ){
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please select Employment Basis',
-                    type: 'error',
-                    showCancelButton: false,
-                });
-                return false
+                handleValidationError('Please select Employment Basis!', 'edtEmploymentBasis');
+                return false;
             }
 
             if( ResidencyStatus == "" ){
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please select Residency Status',
-                    type: 'error',
-                    showCancelButton: false,
-                });
-                return false
+                handleValidationError('Please select Residency Status!', 'edtResidencyStatus');
+                return false;
             }
 
             if( EdtPayPeriod == "" ){
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please select Pay Period',
-                    type: 'error',
-                    showCancelButton: false,
-                });
-                return false
+                handleValidationError('Please select Pay Period!', 'edtPayPeriod');
+                return false;
             }
 
             if( FirstPayDate == "" ){
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please select First Pay Date',
-                    type: 'error',
-                    showCancelButton: false,
-                });
-                return false
+                handleValidationError('Please select First Pay Date!', 'edtFirstPayDate');
+                return false;
             }
 
             LoadingOverlay.show();
@@ -8387,7 +8234,6 @@ Template.employeescard.events({
                 });
 
                 if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
                     await templateObject.saveEmployeePaySettingsLocalDB();
                     await templateObject.getEmployeePaySettings();
                     $('.statusUnsaved').hide();
@@ -8408,7 +8254,7 @@ Template.employeescard.events({
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
-                        text: error,
+                        text: ApiResponse.headers.get('errormessage'),
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Try Again'
@@ -8484,57 +8330,27 @@ Template.employeescard.events({
             let EdtPayPeriod = $("#edtPayPeriod").val();
             let FirstPayDate = $("#edtFirstPayDate").val();
             if( FirstPayDate == "" ){
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please select first pay date in taxes tab',
-                    type: 'error',
-                    showCancelButton: false,
-                });
-                return false
+                handleValidationError('Please select First Pay Date in Taxes Tab!', 'edtFirstPayDate');
+                return false;
             }
             if( EdtPayPeriod == "" ){
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please select Pay Period in Taxes tab',
-                    type: 'error',
-                    showCancelButton: false,
-                });
+                handleValidationError('Please select Pay Period in Taxes Tab!', 'edtPayPeriod');
                 return false
             }
             if( bankAccountStatement == "" ){
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please enter Statement Text',
-                    type: 'error',
-                    showCancelButton: false,
-                });
+                handleValidationError('Please enter Statement Text!', 'bankAccountStatement');
                 return false
             }
             if( bankAccountName == "" ){
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please enter Account Name',
-                    type: 'error',
-                    showCancelButton: false,
-                });
+                handleValidationError('Please enter Account Name!', 'bankAccountName');
                 return false
             }
             if( bankAccountNo == "" ){
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please enter Account Number',
-                    type: 'error',
-                    showCancelButton: false,
-                });
+                handleValidationError('Please enter Account Number!', 'bankAccountNo');
                 return false
             }
             if( bankAccountBSB == "" ){
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please enter Account BSB',
-                    type: 'error',
-                    showCancelButton: false,
-                });
+                handleValidationError('Please enter Account BSB!', 'bankAccountBSB');
                 return false
             }
             $('.fullScreenSpin').css('display', 'block');            
@@ -8563,7 +8379,6 @@ Template.employeescard.events({
                 });
 
                 if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
                     await templateObject.saveEmployeePaySettingsLocalDB();
                     await templateObject.getEmployeePaySettings();
                     $('.fullScreenSpin').css('display', 'none');
@@ -8582,7 +8397,7 @@ Template.employeescard.events({
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
-                        text: error,
+                        text: ApiResponse.headers.get('errormessage'),
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Try Again'
@@ -9149,7 +8964,7 @@ Template.employeescard.events({
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
-                        text: error,
+                        text: ApiResponse.headers.get('errormessage'),
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Try Again'
@@ -10685,7 +10500,7 @@ Template.employeescard.events({
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
-                        text: error,
+                        text: ApiResponse.headers.get('errormessage'),
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Try Again'
@@ -10775,7 +10590,7 @@ Template.employeescard.events({
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
-                        text: error,
+                        text: ApiResponse.headers.get('errormessage'),
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Try Again'
@@ -10859,7 +10674,7 @@ Template.employeescard.events({
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
-                        text: error,
+                        text: ApiResponse.headers.get('errormessage'),
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Try Again'
@@ -10948,7 +10763,7 @@ Template.employeescard.events({
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
-                        text: error,
+                        text: ApiResponse.headers.get('errormessage'),
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Try Again'
