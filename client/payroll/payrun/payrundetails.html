@@ -175,27 +175,27 @@
                         <div class="row no-gutters">
                             <div class="col-6 col-md-2" style="border-right: 1px solid #e3e6f0;padding: 16px;;">
                                 <h5 style="font-size: 16px; font-weight: 700;">Earnings</h5>
-                                <p style="font-size: 24px; margin-bottom: 0px;">2,000.00</p>
+                                <p style="font-size: 24px; margin-bottom: 0px;">{{ payRunDetails.earnings }}</p>
                             </div>
                             <div class="col-6 col-md-2" style="border-right: 1px solid #e3e6f0;padding: 16px;;">
                                 <h5 style="font-size: 16px; font-weight: 700;">Taxes</h5>
-                                <p style="font-size: 24px; margin-bottom: 0px;">940.00</p>
+                                <p style="font-size: 24px; margin-bottom: 0px;">{{ payRunDetails.taxes }}</p>
                             </div>
                             <div class="col-6 col-md-2" style="border-right: 1px solid #e3e6f0;padding: 16px;;">
                                 <h5 style="font-size: 16px; font-weight: 700;">Superannuation</h5>
-                                <p style="font-size: 24px; margin-bottom: 0px;">0.00</p>
+                                <p style="font-size: 24px; margin-bottom: 0px;">{{ payRunDetails.superAnnuation }}</p>
                             </div>
                             <div class="col-6 col-md-2" style="border-right: 1px solid #e3e6f0;padding: 16px;;">
                                 <h5 style="font-size: 16px; font-weight: 700;">Net Pay</h5>
-                                <p style="font-size: 24px; margin-bottom: 0px;">1,060.00</p>
+                                <p style="font-size: 24px; margin-bottom: 0px;">{{ payRunDetails.netPay }}</p>
                             </div>
                             <div class="col-6 col-md-2" style="border-right: 1px solid #e3e6f0;padding: 16px;;">
                                 <h5 style="font-size: 16px; font-weight: 700;">Status</h5>
-                                <p style="font-size: 24px; margin-bottom: 0px;">Draft</p>
+                                <p style="font-size: 24px; margin-bottom: 0px;">{{ PayRunStatus payRunDetails.stpFilling }}</p>
                             </div>
                             <div class="col-6 col-md-2" style="padding: 16px;">
                                 <h5 style="font-size: 16px; font-weight: 700;">Payment Date</h5>
-                                <p style="font-size: 24px; margin-bottom: 0px;">11 Jan 2022</p>
+                                <p style="font-size: 24px; margin-bottom: 0px;">{{  PaymentDateFormat payRunDetails.calendar.PayrollCalendarFirstPaymentDate }}</p>
                             </div>
                         </div>
                     </div>
@@ -299,7 +299,7 @@
                                 <tr class="dnd-moved" id="" name="">
                                     <td class="colPayRunDetailsFirstName" contenteditable="false">Simon</td>
                                     <td class="colPayRunDetailsLastName" contenteditable="false">Clive</td>
-                                    <td class="colPayRunDetailsEmployeeGroup" contenteditable="false"></td>
+                                    <td class="colPayRunDetailsEmployeeGroup" contenteditable="false"> (static user) </td>
                                     <td class="colPayRunDetailsLastEdited" contenteditable="false"></td>
                                     <td class="colPayRunDetailsEarnings" contenteditable="false" style="text-align: right;">$2,000.00</td>
                                     <td class="colPayRunDetailsTax" contenteditable="false" style="text-align: right;">$940.00</td>
@@ -312,11 +312,11 @@
                                         </div>
                                     </td>
                                 </tr>
-                                {{#if datatablerecords}}
-                                    {{#each item in datatablerecords}}
+                                {{#if payRunDetails.employees}}
+                                    {{#each item in payRunDetails.employees}}
                                         <tr class="dnd-moved" id="{{item.id}}" name="{{item.id}}">
-                                            <td class="colPayRunDetailsFirstName" contenteditable="false"></td>
-                                            <td class="colPayRunDetailsLastName" contenteditable="false"></td>
+                                            <td class="colPayRunDetailsFirstName" contenteditable="false">{{ item.fields.EmployeeName }}</td>
+                                            <td class="colPayRunDetailsLastName" contenteditable="false">{{ item.fields.EmployeeName }}</td>
                                             <td class="colPayRunDetailsEmployeeGroup" contenteditable="false"></td>
                                             <td class="colPayRunDetailsLastEdited" contenteditable="false"></td>
                                             <td class="colPayRunDetailsEarnings" contenteditable="false"></td>
