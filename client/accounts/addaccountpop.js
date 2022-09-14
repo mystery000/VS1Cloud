@@ -457,7 +457,10 @@ Template.addaccountpop.events({
                         sideBarService.getAccountListVS1().then(function (dataReload) {
                             addVS1Data('TAccountVS1', JSON.stringify(dataReload)).then(function (datareturn) {
                                 if( url.includes("/employeescard") ){
-                                    Meteor._reload.reload();
+                                    // Meteor._reload.reload();
+                                    let drpDownID = $('#accSelected').val();
+                                    $('#' + drpDownID).val(accountname);
+                                    $('.fullScreenSpin').css('display', 'none');
                                     return false;
                                 }
                                 if(url.includes("/productview")) {
@@ -475,7 +478,10 @@ Template.addaccountpop.events({
                                 window.open('/accountsoverview', '_self');
                             }).catch(function (err) {
                                 if( url.includes("/employeescard") ){
-                                    Meteor._reload.reload();
+                                    let drpDownID = $('#accSelected').val();
+                                    $('#' + drpDownID).val(accountname);
+                                    $('.fullScreenSpin').css('display', 'none');
+                                    // Meteor._reload.reload();
                                     return false;
                                 }
                               if(url.includes("/productview")) {
@@ -494,7 +500,10 @@ Template.addaccountpop.events({
                             });
                         }).catch(function (err) {
                             if( url.includes("/employeescard") ){
-                                Meteor._reload.reload();
+                                // Meteor._reload.reload();
+                                let drpDownID = $('#accSelected').val();
+                                $('#' + drpDownID).val(accountname);
+                                $('.fullScreenSpin').css('display', 'none');
                                 return false;
                             }
                             if(url.includes("/productview")) {
@@ -515,7 +524,10 @@ Template.addaccountpop.events({
                       sideBarService.getAccountListVS1().then(function (dataReload) {
                           addVS1Data('TAccountVS1', JSON.stringify(dataReload)).then(function (datareturn) {
                             if( url.includes("/employeescard") ){
-                                Meteor._reload.reload();
+                                // Meteor._reload.reload();
+                                let drpDownID = $('#accSelected').val();
+                                $('#' + drpDownID).val(accountname);
+                                $('.fullScreenSpin').css('display', 'none');
                                 return false;
                             }
                           if(url.includes("/productview")) {
@@ -533,7 +545,10 @@ Template.addaccountpop.events({
                               window.open('/accountsoverview', '_self');
                           }).catch(function (err) {
                             if( url.includes("/employeescard") ){
-                                Meteor._reload.reload();
+                                // Meteor._reload.reload();
+                                let drpDownID = $('#accSelected').val();
+                                $('#' + drpDownID).val(accountname);
+                                $('.fullScreenSpin').css('display', 'none');
                                 return false;
                             }
                             if(url.includes("/productview")) {
@@ -552,7 +567,10 @@ Template.addaccountpop.events({
                           });
                       }).catch(function (err) {
                             if( url.includes("/employeescard") ){
-                                Meteor._reload.reload();
+                                // Meteor._reload.reload();
+                                let drpDownID = $('#accSelected').val();
+                                $('#' + drpDownID).val(accountname);
+                                $('.fullScreenSpin').css('display', 'none');
                                 return false;
                             }
                                 if(url.includes("/productview")) {
@@ -575,7 +593,10 @@ Template.addaccountpop.events({
                         sideBarService.getAccountListVS1().then(function (dataReload) {
                             addVS1Data('TAccountVS1', JSON.stringify(dataReload)).then(function (datareturn) {
                                 if( url.includes("/employeescard") ){
-                                    Meteor._reload.reload();
+                                    // Meteor._reload.reload();
+                                    let drpDownID = $('#accSelected').val();
+                                    $('#' + drpDownID).val(accountname);
+                                    $('.fullScreenSpin').css('display', 'none');
                                     return false;
                                 }
                                if(url.includes("/productview")) {
@@ -593,7 +614,10 @@ Template.addaccountpop.events({
                                 window.open('/accountsoverview', '_self');
                             }).catch(function (err) {
                                 if( url.includes("/employeescard") ){
-                                    Meteor._reload.reload();
+                                    // Meteor._reload.reload();
+                                    let drpDownID = $('#accSelected').val();
+                                    $('#' + drpDownID).val(accountname);
+                                    $('.fullScreenSpin').css('display', 'none');
                                     return false;
                                 }
                                if(url.includes("/productview")) {
@@ -612,7 +636,10 @@ Template.addaccountpop.events({
                             });
                         }).catch(function (err) {
                             if( url.includes("/employeescard") ){
-                                Meteor._reload.reload();
+                                // Meteor._reload.reload();
+                                let drpDownID = $('#accSelected').val();
+                                $('#' + drpDownID).val(accountname);
+                                $('.fullScreenSpin').css('display', 'none');
                                 return false;
                             }
                            if(url.includes("/productview")) {

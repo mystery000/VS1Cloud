@@ -256,7 +256,7 @@ templateObject.getEarnings = async function(){
                     MakeNegative();
                 }, 100);
             });
-        }, 0);
+        }, 1000);
     } catch (error) {
         $('.fullScreenSpin').css('display', 'none');
     }
@@ -624,7 +624,7 @@ setTimeout(function() {
     $('.edtExpenseAccountDropDown').editableSelect().on('click.editable-select', async function (e, li) {
         let $search = $(this);
         let dropDownID = $search.attr('id')
-        $('#selectLineID').val(dropDownID);
+        $('#accSelected').val(dropDownID);
         if( dropDownID == 'liabilityAccount'){
             $('#tblAccount_filter input').val('liability');
             $('#tblAccount_filter input').trigger('keyup');
@@ -715,6 +715,7 @@ setTimeout(function() {
         let $search = $(this);
         let offset = $search.offset();
         let dropDownID = $search.attr('id')
+        $('#edtEarningDropDownID').val(dropDownID);
         templateObject.currentDrpDownID.set(dropDownID);
         let searchName = e.target.value || '';
         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
@@ -792,7 +793,7 @@ setTimeout(function() {
         let searchFilterID = $('#selectLineID').val();
         $('#' + searchFilterID).val(name);
         $("#edtDeductionAccountID").val(accountID);
-        $("#edtDeductionDesctiption").val(description);
+        // $("#edtDeductionDesctiption").val(description);
         $('#accountListModal').modal('toggle');
     });
 
@@ -951,41 +952,58 @@ Template.earningRateSettings.events({
                 Active: true
             })
         });
-        const ApiResponse = await apiEndpoint.fetch(null, {
-            method: "POST",
-            headers: ApiService.getPostHeaders(),
-            body: JSON.stringify(earningRateSetting),
-        });
-    
-        if (ApiResponse.ok == true) {
-            const jsonResponse = await ApiResponse.json();
-            $('#earningRateForm')[0].reset();
-            await templateObject.saveDataLocalDB();
-            await templateObject.getEarnings();
-            $('#ordinaryTimeEarningsModal').modal('hide');
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Success",
-                text: "Earning Rate has been saved",
-                type: 'success',   
-                showCancelButton: false,
-                confirmButtonText: 'Done'             
-            }).then((result) => {
-                if (result.value) {                    
-                    window.location.reload();
-                }
+
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(earningRateSetting),
             });
-        }else{
+        
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                $('#earningRateForm')[0].reset();
+                await templateObject.saveDataLocalDB();
+                await templateObject.getEarnings();
+                let drpDownID = $('#edtEarningDropDownID').val();
+                $('#' + drpDownID).val(EarningsName);
+                $('#ordinaryTimeEarningsModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Earning Rate saved successfully',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) { }
+                    } 
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
+            }
+        } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
             swal({
-                title: "Error",
-                text: "Failed to saved",
+                title: 'Oooops...',
+                text: error,
                 type: 'error',
-                
-            })
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });  
         }
-        
-        
     },
 });
 

@@ -257,7 +257,7 @@ Template.deductionSettings.onRendered(function() {
                         MakeNegative();
                     }, 100);
                 });
-            }, 0);
+            }, 1000);
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
         }
@@ -272,6 +272,7 @@ Template.deductionSettings.onRendered(function() {
             let $search = $(this);
             let offset = $search.offset();
             let dropDownID = $search.attr('id')
+            $('#edtDeductionDropDownID').val(dropDownID);
             templateObject.currentDrpDownID.set(dropDownID);
             let searchName = e.target.value || '';
             if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
@@ -356,6 +357,7 @@ Template.deductionSettings.events({
         }
     },
     'click .btnAddordinaryTimeDeductions':function(event){
+        $('#edtDeductionID').val(0);
         $('#deductionRateForm')[0].reset();
         $('#headerDeductionLabel').text('Add New Deduction');
         $('#noneModal').modal('show');
@@ -492,7 +494,7 @@ Template.deductionSettings.events({
         let deductionRateSettings = {
             type: "TDeduction",
             fields: {
-                ID: parseInt(deductionID),
+                ID: ( deductionID !== "" )? parseInt(deductionID): 0,
                 Active: true,
                 Accountid: parseInt(deductionAccountID),
                 Accountname: deductionAccount,
@@ -508,40 +510,57 @@ Template.deductionSettings.events({
             }
         };
 
-
-        const ApiResponse = await apiEndpoint.fetch(null, {
-            method: "POST",
-            headers: ApiService.getPostHeaders(),
-            body: JSON.stringify(deductionRateSettings),
-        });
-    
-        if (ApiResponse.ok == true) {
-            const jsonResponse = await ApiResponse.json();
-            $('#deductionRateForm')[0].reset();
-            await templateObject.saveDataLocalDB();
-            await templateObject.getDeductions();
-            $('#noneModal').modal('hide');
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Success",
-                text: "Deduction has been saved",
-                type: 'success',   
-                showCancelButton: false,
-                confirmButtonText: 'Done'             
-            }).then((result) => {
-                if (result.value) {                    
-                    window.location.reload();
-                }
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(deductionRateSettings),
             });
-        }else{
+        
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                $('#deductionRateForm')[0].reset();
+                await templateObject.saveDataLocalDB();
+                await templateObject.getDeductions();
+                let dropDownID = $('#edtDeductionDropDownID').val();
+                $('#' + dropDownID).val(deductionDesctiption);
+                $('#noneModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Deduction saved successfully',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) { }
+                    } 
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
+            }
+        } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
             swal({
-                title: "Error",
-                text: "Failed to add deduction",
+                title: 'Oooops...',
+                text: error,
                 type: 'error',
-            })
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });  
         }
-        
         
     },
 });
