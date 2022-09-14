@@ -205,6 +205,7 @@ Template.bankrecon.onRendered(function() {
                         "order": [
                             [1, "desc"]
                         ],
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         action: function() {
                             $('#tblVS1Dep').DataTable().ajax.reload();
                         }
@@ -243,6 +244,7 @@ Template.bankrecon.onRendered(function() {
                       "order": [
                           [1, "desc"]
                       ],
+                      language: { search: "",searchPlaceholder: "Search List..." },
                       action: function() {
                           $('#tblVS1Dep').DataTable().ajax.reload();
                       }
@@ -317,6 +319,7 @@ Template.bankrecon.onRendered(function() {
                           "order": [
                               [1, "desc"]
                           ],
+                          language: { search: "",searchPlaceholder: "Search List..." },
                           action: function() {
                               $('#tblVS1With').DataTable().ajax.reload();
                           }
@@ -355,6 +358,7 @@ Template.bankrecon.onRendered(function() {
                       "order": [
                           [1, "desc"]
                       ],
+                      language: { search: "",searchPlaceholder: "Search List..." },
                       action: function() {
                           $('#tblVS1With').DataTable().ajax.reload();
                       }
@@ -629,6 +633,7 @@ Template.bankrecon.onRendered(function() {
                                 "order": [
                                     [1, "desc"]
                                 ],
+                                language: { search: "",searchPlaceholder: "Search List..." },
                                 action: function() {
                                     $('#tblVS1Dep').DataTable().ajax.reload();
                                 }
@@ -706,6 +711,7 @@ Template.bankrecon.onRendered(function() {
                         "order": [
                             [1, "desc"]
                         ],
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         action: function() {
                             $('#tblVS1Dep').DataTable().ajax.reload();
                         }
@@ -789,6 +795,7 @@ Template.bankrecon.onRendered(function() {
                                 "order": [
                                     [1, "desc"]
                                 ],
+                                language: { search: "",searchPlaceholder: "Search List..." },
                                 action: function() {
                                     $('#tblVS1With').DataTable().ajax.reload();
                                 }
@@ -863,6 +870,7 @@ Template.bankrecon.onRendered(function() {
                         "order": [
                             [1, "desc"]
                         ],
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         action: function() {
                             $('#tblVS1With').DataTable().ajax.reload();
                         }

@@ -377,6 +377,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                     MakeNegative();
                                 }, 100);
                             },
+                            language: { search: "",searchPlaceholder: "Search List..." },
                              "fnInitComplete": function () {
                                let urlParametersPage = FlowRouter.current().queryParams.page;
                                //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
@@ -735,6 +736,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                 MakeNegative();
                             }, 100);
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                          "fnInitComplete": function () {
                            let urlParametersPage = FlowRouter.current().queryParams.page;
                            //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
@@ -1085,6 +1087,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                 MakeNegative();
                             }, 100);
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                          "fnInitComplete": function () {
                            let urlParametersPage = FlowRouter.current().queryParams.page;
                            //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
@@ -1449,6 +1452,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                     MakeNegative();
                                 }, 100);
                             },
+                            language: { search: "",searchPlaceholder: "Search List..." },
                              "fnInitComplete": function () {
                                let urlParametersPage = FlowRouter.current().queryParams.page;
                                //if (urlParametersPage || FlowRouter.current().queryParams.overdue || FlowRouter.current().queryParams.type) {
@@ -1776,6 +1780,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                 MakeNegative();
                             }, 100);
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                          "fnInitComplete": function () {
                            let urlParametersPage = FlowRouter.current().queryParams.page;
                            //if (urlParametersPage || FlowRouter.current().queryParams.overdue || FlowRouter.current().queryParams.type) {
@@ -2081,6 +2086,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                               MakeNegative();
                           }, 100);
                       },
+                      language: { search: "",searchPlaceholder: "Search List..." },
                        "fnInitComplete": function () {
                          let urlParametersPage = FlowRouter.current().queryParams.page;
                          //if (urlParametersPage || FlowRouter.current().queryParams.overdue || FlowRouter.current().queryParams.type) {

@@ -425,6 +425,7 @@ Template.purchasesoverview.onRendered(function () {
                         MakeNegative();
                       }, 100);
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     fnInitComplete: function () {
                       this.fnPageChange('last');
                       if(data.Params.Search.replace(/\s/g, "") == ""){
@@ -812,6 +813,7 @@ Template.purchasesoverview.onRendered(function () {
                     MakeNegative();
                   }, 100);
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   this.fnPageChange('last');
                   if(data.Params.Search.replace(/\s/g, "") == ""){
@@ -1192,6 +1194,7 @@ Template.purchasesoverview.onRendered(function () {
                       MakeNegative();
                     }, 100);
                   },
+                  language: { search: "",searchPlaceholder: "Search List..." },
                   fnInitComplete: function () {
                     this.fnPageChange('last');
                     if(data.Params.Search.replace(/\s/g, "") == ""){
@@ -1401,7 +1404,7 @@ Template.purchasesoverview.onRendered(function () {
   function initCustomFieldDisplaySettings(data, listType) {
     let custFields = [];
     let dispFields = [];
-    let customData = {}; 
+    let customData = {};
 
     let reset_data = [
       { label: 'Order Date', class: 'colOrderDate', active: true, width: 0 },
@@ -1418,7 +1421,7 @@ Template.purchasesoverview.onRendered(function () {
       { label: 'Contact', class: 'colEmployee', active: false, width: 0 },
       { label: 'Comments', class: 'colComments', active: true, width: 0 }
     ];
-    let customFieldCount = reset_data.length; 
+    let customFieldCount = reset_data.length;
 
     for (let x = 0; x < data.tcustomfieldlist.length; x++) {
       if (data.tcustomfieldlist[x].fields.ListType == 'ltOrder') {

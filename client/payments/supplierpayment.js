@@ -224,6 +224,7 @@ Template.supplierpayment.onRendered(function() {
                     action: function () {
                         $('#tblSupplierPayment').DataTable().ajax.reload();
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                      "fnInitComplete": function () {
                        this.fnPageChange('last');
                        if(data.Params.Search.replace(/\s/g, "") == ""){
@@ -504,6 +505,7 @@ Template.supplierpayment.onRendered(function() {
                                     MakeNegative();
                                 }, 100);
                             },
+                            language: { search: "",searchPlaceholder: "Search List..." },
                              "fnInitComplete": function () {
                                this.fnPageChange('last');
                                if(data.Params.Search.replace(/\s/g, "") == ""){
@@ -782,6 +784,7 @@ Template.supplierpayment.onRendered(function() {
                                 MakeNegative();
                             }, 100);
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                          "fnInitComplete": function () {
                            this.fnPageChange('last');
                            if(data.Params.Search.replace(/\s/g, "") == ""){
@@ -1056,6 +1059,7 @@ Template.supplierpayment.onRendered(function() {
                               MakeNegative();
                           }, 100);
                       },
+                      language: { search: "",searchPlaceholder: "Search List..." },
                        "fnInitComplete": function () {
                          this.fnPageChange('last');
                          if(data.Params.Search.replace(/\s/g, "") == ""){

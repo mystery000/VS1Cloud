@@ -327,6 +327,7 @@ Template.contactoverview.onRendered(function () {
                         MakeNegative();
                       }, 100);
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     fnInitComplete: function () {
                       let urlParametersPage =
                         FlowRouter.current().queryParams.page;
@@ -885,6 +886,7 @@ Template.contactoverview.onRendered(function () {
                     MakeNegative();
                   }, 100);
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   let urlParametersPage = FlowRouter.current().queryParams.page;
                   if (urlParametersPage) {
