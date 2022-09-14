@@ -301,6 +301,7 @@ openDb = function(dbName) {
             db.createObjectStore('TCorrespondence', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TEftOptions', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TBasReturn', { keyPath: "EmployeeEmail" });
+            db.createObjectStore('VS1_Customize', { keyPath: "EmployeeEmail" });
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });
