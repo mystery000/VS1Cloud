@@ -379,6 +379,7 @@ Template.alltaskdatatable.onRendered(function () {
           // MakeNegative();
         }, 100);
       },
+      language: { search: "",searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchAllTaskDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>" +
@@ -601,6 +602,7 @@ Template.alltaskdatatable.onRendered(function () {
           // MakeNegative();
         }, 100);
       },
+      language: { search: "",searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchTodayTaskDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewTodayCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewTodayCompleted'>" +
@@ -782,6 +784,7 @@ Template.alltaskdatatable.onRendered(function () {
           // MakeNegative();
         }, 100);
       },
+      language: { search: "",searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchUpcomingTaskDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewUpcomingCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewUpcomingCompleted'>" +
@@ -1309,6 +1312,7 @@ Template.alltaskdatatable.onRendered(function () {
       action: function () {
         $("#tblLabels").DataTable().ajax.reload();
       },
+      language: { search: "",searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnNewLabel' type='button' id='btnNewLabel' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus' style='margin-right: 5px'></i>New Label</button>"
@@ -1549,6 +1553,7 @@ Template.alltaskdatatable.onRendered(function () {
       action: function () {
         $("#tblProjectsDatatable").DataTable().ajax.reload();
       },
+      language: { search: "",searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchProjectsDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewProjectCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewProjectCompleted'>" +
@@ -1739,6 +1744,7 @@ Template.alltaskdatatable.onRendered(function () {
       action: function () {
         $("#tblProjectTasks").DataTable().ajax.reload();
       },
+      language: { search: "",searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchProjectTasksDatatable' type='button' id='btnRefreshProjectTasks' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
@@ -3483,7 +3489,7 @@ Template.alltaskdatatable.helpers({
     return Template.instance().favorite_projects.get();
   },
 
-  // projects tab ------------------ 
+  // projects tab ------------------
 
   // getProjectColor: (color) => {
   //   if (color == 0) {

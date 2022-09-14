@@ -445,6 +445,7 @@ Template.inventorylist.onRendered(function() {
                                               MakeNegative();
                                           }, 100);
                                       },
+                                      language: { search: "",searchPlaceholder: "Search List..." },
                                       fnInitComplete: function() {
                                           $(
                                               "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
@@ -743,6 +744,7 @@ Template.inventorylist.onRendered(function() {
                                         MakeNegative();
                                     }, 100);
                                 },
+                                language: { search: "",searchPlaceholder: "Search List..." },
                                 fnInitComplete: function() {
                                     $(
                                         "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
@@ -1037,6 +1039,7 @@ Template.inventorylist.onRendered(function() {
                                           MakeNegative();
                                       }, 100);
                                   },
+                                  language: { search: "",searchPlaceholder: "Search List..." },
                                   fnInitComplete: function() {
                                       $(
                                           "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"

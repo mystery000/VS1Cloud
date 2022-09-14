@@ -166,7 +166,7 @@ Template.popemployeelist.onRendered(function() {
                       action: function () {
                           $('#tblEmployeelistpop').DataTable().ajax.reload();
                       },
-
+                      language: { search: "",searchPlaceholder: "Search List..." },
                   }).on('page', function () {
 
                       let draftRecord = templateObject.datatablerecords.get();
@@ -334,7 +334,7 @@ Template.popemployeelist.onRendered(function() {
           action: function () {
               $('#tblEmployeelistpop').DataTable().ajax.reload();
           },
-
+          language: { search: "",searchPlaceholder: "Search List..." },
       }).on('page', function () {
 
           let draftRecord = templateObject.datatablerecords.get();
@@ -496,7 +496,7 @@ Template.popemployeelist.onRendered(function() {
                     action: function () {
                         $('#tblEmployeelistpop').DataTable().ajax.reload();
                     },
-
+                    language: { search: "",searchPlaceholder: "Search List..." },
                 }).on('page', function () {
 
                     let draftRecord = templateObject.datatablerecords.get();

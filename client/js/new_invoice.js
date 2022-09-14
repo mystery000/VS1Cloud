@@ -4279,7 +4279,7 @@ Template.new_invoice.onRendered(() => {
                       cust_data.customername == useData[d].fields.ClientName
                     );
                   });
-                  
+
                   getVS1Data("TAppointment").then(function (dataObject) {
                     let appointments = JSON.parse(dataObject[0].data);
                     let allAppointments = appointments.tappointmentex;
@@ -4295,7 +4295,7 @@ Template.new_invoice.onRendered(() => {
                             appointmentAttachments
                           );
                     }
-                   
+
                   });
                   templateObject.singleInvoiceData.set(useData[d]);
                   let lineItems = [];
@@ -12653,6 +12653,7 @@ Template.new_invoice.onRendered(function () {
                   fnDrawCallback: function (oSettings) {
                     // $('.dataTables_paginate').css('display', 'none');
                   },
+                  language: { search: "",searchPlaceholder: "Search List..." },
                   fnInitComplete: function () {
                     $(
                       "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -12761,6 +12762,7 @@ Template.new_invoice.onRendered(function () {
                 fnDrawCallback: function (oSettings) {
                   // $('.dataTables_paginate').css('display', 'none');
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
                     "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -12946,6 +12948,7 @@ Template.new_invoice.onRendered(function () {
                 fnDrawCallback: function (oSettings) {
                   // $('.dataTables_paginate').css('display', 'none');
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
                     "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -13028,6 +13031,7 @@ Template.new_invoice.onRendered(function () {
                 fnDrawCallback: function (oSettings) {
                   // $('.dataTables_paginate').css('display', 'none');
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
                     "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -13100,6 +13104,7 @@ Template.new_invoice.onRendered(function () {
               fnDrawCallback: function (oSettings) {
                 // $('.dataTables_paginate').css('display', 'none');
               },
+              language: { search: "",searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
                   "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -13173,6 +13178,7 @@ Template.new_invoice.onRendered(function () {
               fnDrawCallback: function (oSettings) {
                 // $('.dataTables_paginate').css('display', 'none');
               },
+              language: { search: "",searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
                   "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -15917,6 +15923,7 @@ Template.new_invoice.events({
           info: true,
           responsive: true,
           fnDrawCallback: function (oSettings) {},
+          language: { search: "",searchPlaceholder: "Search List..." },
           fnInitComplete: function () {
             $(
               "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"

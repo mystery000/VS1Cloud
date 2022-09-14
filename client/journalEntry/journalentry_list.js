@@ -309,6 +309,7 @@ Template.journalentrylist.onRendered(function() {
                               MakeNegative();
                           }, 100);
                       },
+                      language: { search: "",searchPlaceholder: "Search List..." },
                       "fnInitComplete": function () {
                         this.fnPageChange('last');
                         if(data.Params.Search.replace(/\s/g, "") == ""){
@@ -578,6 +579,7 @@ Template.journalentrylist.onRendered(function() {
                             MakeNegative();
                         }, 100);
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     "fnInitComplete": function () {
                       this.fnPageChange('last');
                       if(data.Params.Search.replace(/\s/g, "") == ""){
@@ -841,6 +843,7 @@ Template.journalentrylist.onRendered(function() {
                             MakeNegative();
                         }, 100);
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     "fnInitComplete": function () {
                       this.fnPageChange('last');
                       if(data.Params.Search.replace(/\s/g, "") == ""){
@@ -1545,9 +1548,9 @@ Template.journalentrylist.helpers({
 
     // Lets remove the minus character
     const isMinus = amount < 0;
-    if (isMinus == true) 
+    if (isMinus == true)
       amount = amount * -1; // make it positive for now
-    
+
     //  get default currency symbol
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode

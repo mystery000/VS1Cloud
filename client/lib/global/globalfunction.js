@@ -567,6 +567,9 @@ tableResize = function() {
   setTimeout(function() {
     const tableHandler = new TableHandler();
     $('.dataTables_filter input[type="search"]').attr("placeholder", "Search List...");
+
+    $('.dataTable').attr("language", '{ search: "",searchPlaceholder: "Search List..." }');
+
   }, 2500);
 };
 // $(window).load(function() {

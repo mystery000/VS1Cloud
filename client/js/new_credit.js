@@ -4279,7 +4279,7 @@ Template.creditcard.onRendered(() => {
 
         let id = $('.printID').attr("id");
         document.getElementById('html-2-pdfwrapper').style.display="block";
-      
+
         let subtotal = $('#subtotal_total').text();
         let net = $('#subtotal_nett').text();
         let subtotal_discount = $('#subtotal_discount').text();
@@ -4461,6 +4461,7 @@ Template.creditcard.onRendered(function() {
                             ],
                             info: true,
                             responsive: true,
+                            language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function() {
                                 $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
                             }
@@ -4553,6 +4554,7 @@ Template.creditcard.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                             $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
                         }
@@ -4639,6 +4641,7 @@ Template.creditcard.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                             $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
                         }
@@ -4716,6 +4719,7 @@ Template.creditcard.onRendered(function() {
                             ],
                             info: true,
                             responsive: true,
+                            language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function() {
                                 $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                                 $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
@@ -4789,6 +4793,7 @@ Template.creditcard.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                             $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                             $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
@@ -4856,6 +4861,7 @@ Template.creditcard.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                             $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                             $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
@@ -5869,6 +5875,7 @@ Template.creditcard.events({
                     "fnDrawCallback": function (oSettings) {
 
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     "fnInitComplete": function () {
                         $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxDetail_filter");
                         $("<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxDetail_filter");

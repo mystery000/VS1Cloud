@@ -507,6 +507,7 @@ Template.appointmenttimelist.onRendered(function () {
                   MakeNegative();
                 }, 100);
               },
+              language: { search: "",searchPlaceholder: "Search List..." },
               "fnInitComplete": function () {
                   $("<button class='btn btn-primary btnRefreshAppointmentTimeList' type='button' id='btnRefreshAppointmentTimeList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblappointmenttimelist_filter");
               }
@@ -610,7 +611,7 @@ Template.appointmenttimelist.onRendered(function () {
             if (Array.isArray(useData[i].fields.AppointmentsTimeLog)) {
               for (let a = 0; a < useData[i].fields.AppointmentsTimeLog.length; a++) {
                 const appointmentdate = useData[i].fields.StartTime != '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : useData[i].fields.StartTime;
-                
+
                 if (searchID != 0) {
                   if (searchID == useData[i].fields.AppointmentsTimeLog[a].fields.AppointID) {
                     if (useData[i].fields.AppointmentsTimeLog[a].fields.StartDatetime != "") {
@@ -729,14 +730,14 @@ Template.appointmenttimelist.onRendered(function () {
               }
             } else {
               if (searchID != 0) {
-                
+
                 if (useData[i].fields.AppointmentsTimeLog.fields.StartDatetime != "") {
                   useData[i].fields.AppointmentsTimeLog.fields.StartDatetime = moment(useData[i].fields.AppointmentsTimeLog.fields.StartDatetime).format('h:mm a');
                 }
                 if (useData[i].fields.AppointmentsTimeLog.fields.EndDatetime != "") {
                   useData[i].fields.AppointmentsTimeLog.fields.EndDatetime = moment(useData[i].fields.AppointmentsTimeLog.fields.EndDatetime).format('h:mm a');
                 }
-                
+
                 if (searchID == useData[i].fields.AppointmentsTimeLog.fields.AppointID) {
 
                   let time = new Date();
@@ -928,6 +929,7 @@ Template.appointmenttimelist.onRendered(function () {
               MakeNegative();
             }, 100);
           },
+          language: { search: "",searchPlaceholder: "Search List..." },
            "fnInitComplete": function () {
                   $("<button class='btn btn-primary btnRefreshAppointmentTimeList' type='button' id='btnRefreshAppointmentTimeList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblappointmenttimelist_filter");
           }

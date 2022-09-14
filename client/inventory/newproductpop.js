@@ -794,6 +794,7 @@ Template.newproductpop.onRendered(function () {
                 action: function () {
                   $("#productrecentlist").DataTable().ajax.reload();
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
               })
               .on("page", function () {})
               .on("column-reorder", function () {});
@@ -2270,7 +2271,7 @@ Template.newproductpop.events({
                   IncomeAccount: sltsalesacount,
                   BuyQty1Cost: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
                   SellQty1Price: parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0,
-                  BuyQty1: parseFloat(edttotalqtyinstock1) || 1,                 
+                  BuyQty1: parseFloat(edttotalqtyinstock1) || 1,
                   SellQty1: parseFloat(edttotalqtyinstock1) || 1,
                   TaxCodePurchase: slttaxcodepurchase,
                   TaxCodeSales: slttaxcodesales,
@@ -2300,7 +2301,7 @@ Template.newproductpop.events({
                   IncomeAccount: sltsalesacount,
                   BuyQty1Cost: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
                   SellQty1Price: parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0,
-                  BuyQty1: parseFloat(edttotalqtyinstock1) || 1,                 
+                  BuyQty1: parseFloat(edttotalqtyinstock1) || 1,
                   SellQty1: parseFloat(edttotalqtyinstock1) || 1,
                   TaxCodePurchase: slttaxcodepurchase,
                   TaxCodeSales: slttaxcodesales,
@@ -2536,7 +2537,7 @@ Template.newproductpop.events({
                 IncomeAccount: sltsalesacount,
                 BuyQty1Cost: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
                 SellQty1Price: parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0,
-                BuyQty1: parseFloat(edttotalqtyinstock1) || 1,                 
+                BuyQty1: parseFloat(edttotalqtyinstock1) || 1,
                 SellQty1: parseFloat(edttotalqtyinstock1) || 1,
                 TaxCodePurchase: slttaxcodepurchase,
                 TaxCodeSales: slttaxcodesales,
@@ -2566,7 +2567,7 @@ Template.newproductpop.events({
                 IncomeAccount: sltsalesacount,
                 BuyQty1Cost: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
                 SellQty1Price: parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0,
-                BuyQty1: parseFloat(edttotalqtyinstock1) || 1,                 
+                BuyQty1: parseFloat(edttotalqtyinstock1) || 1,
                 SellQty1: parseFloat(edttotalqtyinstock1) || 1,
                 TaxCodePurchase: slttaxcodepurchase,
                 TaxCodeSales: slttaxcodesales,

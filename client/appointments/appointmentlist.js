@@ -868,6 +868,7 @@ Template.appointmentlist.onRendered(async function () {
                                   MakeNegative();
                               }, 100);
                           },
+                          language: { search: "",searchPlaceholder: "Search List..." },
                           "fnInitComplete": function () {
                             let urlParametersPage = FlowRouter.current().queryParams.page;
                             //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
@@ -1368,6 +1369,7 @@ Template.appointmentlist.onRendered(async function () {
                                 MakeNegative();
                             }, 100);
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
                           let urlParametersPage = FlowRouter.current().queryParams.page;
                           //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
@@ -1800,6 +1802,7 @@ Template.appointmentlist.onRendered(async function () {
                                 MakeNegative();
                             }, 100);
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
                           let urlParametersPage = FlowRouter.current().queryParams.page;
                           //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {

@@ -312,6 +312,7 @@ Template.header.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnDrawCallback": function(oSettings) {
                             var searchDataValue = $('.txtGlobalSearch').val().toLowerCase();
                             $('#tblSearchOverview_wrapper .paginate_button.page-item').removeClass('disabled');
@@ -1162,6 +1163,7 @@ Template.header.onRendered(function() {
                                 ],
                                 info: true,
                                 responsive: true,
+                                language: { search: "",searchPlaceholder: "Search List..." },
                                 "fnDrawCallback": function(oSettings) {
                                     var searchDataValue = $('.txtGlobalSearch').val().toLowerCase();
                                     $('#tblSearchOverview_wrapper .paginate_button.page-item').removeClass('disabled');

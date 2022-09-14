@@ -199,6 +199,7 @@ Template.supplierlist.onRendered(function() {
                                     MakeNegative();
                                 }, 100);
                             },
+                            language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function() {
                                 $("<button class='btn btn-primary btnRefreshSuppliers' type='button' id='btnRefreshSuppliers' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierlist_filter");
                             }
@@ -443,6 +444,7 @@ Template.supplierlist.onRendered(function() {
                                 MakeNegative();
                             }, 100);
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                             let urlParametersPage = FlowRouter.current().queryParams.page;
                             if (urlParametersPage) {
@@ -676,7 +678,7 @@ Template.supplierlist.onRendered(function() {
                                 MakeNegative();
                             }, 100);
                         },
-
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                             $("<button class='btn btn-primary btnRefreshSuppliers' type='button' id='btnRefreshSuppliers' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierlist_filter");
                         }

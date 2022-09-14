@@ -161,6 +161,7 @@ Template.accountsoverview.onRendered(function() {
                             fnDrawCallback: function(oSettings) {
                                 // $('.dataTables_paginate').css('display', 'none');
                             },
+                            language: { search: "",searchPlaceholder: "Search List..." },
                             fnInitComplete: function() {
                                 $(
                                     "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -230,6 +231,7 @@ Template.accountsoverview.onRendered(function() {
                         fnDrawCallback: function(oSettings) {
                             // $('.dataTables_paginate').css('display', 'none');
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         fnInitComplete: function() {
                             $(
                                 "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -299,6 +301,7 @@ Template.accountsoverview.onRendered(function() {
                         fnDrawCallback: function(oSettings) {
                             // $('.dataTables_paginate').css('display', 'none');
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         fnInitComplete: function() {
                             $(
                                 "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -781,11 +784,13 @@ Template.accountsoverview.onRendered(function() {
                     action: function() {
                         $("#tblAccountOverview").DataTable().ajax.reload();
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     fnDrawCallback: function(oSettings) {
                         setTimeout(function() {
                             MakeNegative();
                         }, 100);
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     fnInitComplete: function() {
                         $(
                             "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
