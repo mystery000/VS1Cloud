@@ -599,3 +599,19 @@ setupMessagehideshow();
 //   }
 // });
 //});
+
+
+handleValidationError = async function ( errorMessage, fieldID ) {
+  swal({
+      title: errorMessage,
+      type: 'warning',
+      showCancelButton: false,
+      confirmButtonText: 'OK'
+  }).then((result) => {
+      if (result.value) {
+          if (result.value) {
+              $(`#${fieldID}`).focus();
+          }
+      } 
+  }); 
+}

@@ -462,29 +462,17 @@ Template.deductionSettings.events({
         let ExemptReportable = ( $('#formCheck-ExcludedDeduction').is(':checked') )? true: false;
         
         if(deductionDesctiption == ''){
-            swal({
-                title: "Warning",
-                text: "Please select Deduction Name",
-                type: 'warning',
-            })
+            handleValidationError('Please select Deduction Name!', 'edtDeductionDesctiption');
             return false;
         }
 
         if(deductionAmount == ''){
-            swal({
-                title: "Warning",
-                text: "Please enter Amount",
-                type: 'warning',
-            })
+            handleValidationError('Please enter Amount!', 'edtDeductionAmount');
             return false;
         }
 
         if(deductionAccount == ''){
-            swal({
-                title: "Warning",
-                text: "Please enter Account",
-                type: 'warning',
-            })
+            handleValidationError('Please select Account!', 'deductionAccount');
             return false;
         }
         
@@ -541,7 +529,7 @@ Template.deductionSettings.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'

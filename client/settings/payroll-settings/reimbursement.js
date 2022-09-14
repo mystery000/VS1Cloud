@@ -368,11 +368,7 @@ Template.reimbursementSettings.events({
         let account = $('#edtReimbursementAccount').val() || '';
 
         if(reimbursementname == ''){
-            swal({
-                title: "Warning",
-                text: "Please select Reimbursement Name",
-                type: 'warning',
-            })
+            handleValidationError('Please select Reimbursement Name!', 'edtReimbursementName');
             return false;
         }
 
@@ -430,7 +426,7 @@ Template.reimbursementSettings.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'

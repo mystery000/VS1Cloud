@@ -438,11 +438,7 @@ Template.superannuationSettings.events({
         let fundtypeid = $('#fundtypeid').val();
 
         if(fundName == ''){
-            swal({
-                title: "Warning",
-                text: "Please select Superannuation Name",
-                type: 'warning',
-            })
+            handleValidationError('Please select Superannuation Name!', 'edtFundName');
             return false;
         }
 
@@ -498,7 +494,7 @@ Template.superannuationSettings.events({
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: error,
+                    text: ApiResponse.headers.get('errormessage'),
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
