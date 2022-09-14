@@ -31,7 +31,10 @@
                                             <td contenteditable="false" class="colStatusName" style="width: 20% !important;">{{item.typename}}</td>
                                             <td contenteditable="false" class="colDescription">{{item.description}}</td>
                                             <td contenteditable="false" class="colActive text-center" style="width: 5% !important;">
-                                                <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="active-{{item.id}}" checked disabled><label class="custom-control-label chkBox" for="active-{{item.id}}"></label></div>
+                                                <div class="custom-control custom-checkbox chkBox">
+                                                    <input class="custom-control-input chkBox" type="checkbox" id="active-{{item.id}}" checked disabled>
+                                                    <label class="custom-control-label chkBox" for="active-{{item.id}}"></label>
+                                                </div>
                                             </td>
                                         </tr>
                                     {{/each}}

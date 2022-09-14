@@ -1,25 +1,10 @@
-import {
-    SalesBoardService
-} from '../js/sales-service';
-import {
-    ReactiveVar
-} from 'meteor/reactive-var';
-import {
-    CoreService
-} from '../js/core-service';
-import {
-    UtilityService
-} from "../utility-service";
+import { SalesBoardService } from '../js/sales-service';
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
-import {
-    SideBarService
-} from '../js/sidebar-service';
+import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
-var times = 0;
 Template.newstatuspop.onCreated(() => {});
 Template.newstatuspop.onRendered(() => {});
 Template.newstatuspop.helpers({});
@@ -27,32 +12,35 @@ Template.newstatuspop.events({
     'click .btnSaveStatus': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         let clientService = new SalesBoardService()
-        let status = $('#newStatus').val();
-        let statusid = $('#statusId').val();
+        let statusName = $('#newStatus').val();
+        let statusId = $('#statusId').val();
+        let statusDesc = $('#description').val();
         let leadData = '';
-        if (statusid == "") {
+        if (statusId == "") {
             leadData = {
                 type: 'TLeadStatusType',
                 fields: {
-                    TypeName: status,
-                    KeyValue: status
+                    TypeName: statusName,
+                    Description: statusDesc,
+                    Active: true
                 }
             };
         } else {
             leadData = {
                 type: 'TLeadStatusType',
                 fields: {
-                    ID: parseInt(statusid),
-                    TypeName: status,
-                    KeyValue: status
+                    ID: parseInt(statusId),
+                    TypeName: statusName,
+                    Description: statusDesc,
+                    Active: true
                 }
             };
         }
 
-        if (status != "") {
+        if (statusName != "") {
             clientService.saveLeadStatus(leadData).then(function(objDetails) {
                 sideBarService.getAllLeadStatus().then(function(dataUpdate) {
-                    $('#sltStatus').val(status);
+                    $('#sltStatus').val(statusName);
                     $('#newStatusPopModal').modal('toggle');
                     $('.fullScreenSpin').css('display', 'none');
                     addVS1Data('TLeadStatusType', JSON.stringify(dataUpdate)).then(function(datareturn) {

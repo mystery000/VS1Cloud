@@ -25,12 +25,10 @@
                         overflow-x: hidden;
                         overflow-y: hidden;
                     }
-
                     .cardB {
                         /* max-height: 700px; */
                         overflow-y: auto;
                     }
-
                     .cardB420 {
                         max-height: 300px;
                         overflow-y: auto;
@@ -39,47 +37,38 @@
                     .rowB {
                         overflow-x: auto;
                     }
-
                     .nav-tabs .nav-link.active {
                         color: rgb(0, 163, 211) !important;
                         background-color: #EDEDED !important;
                         border-color: #00a3d3 #00a3d3 #ededed #00a3d3 !important;
                     }
-
                     .nav-tabs .nav-link {
                         background-color: #fff !important;
                         border-color: #00a3d3 !important;
                     }
-
                     @media only screen and (max-width: 600px) {
                         .sideSearch {
                             width: auto;
                         }
                     }
-
                     #btnView {
                         display: none;
                     }
-
                     @media screen and (min-width: 1025px) {
                         .viewList {
                             display: none;
                         }
-
                         /*.displayList {*/
                         /*    height: 115vh;*/
                         /*}*/
-
                         .leadCardParent {
                             height: 97%;
                         }
                     }
-
                     .currentSelect {
                         background-color: #ededed99;
                         color: #00a3d3;
                     }
-
                     @media screen and (max-width: 450px) {
                         .sideSearch {
                             height: 400px !important;
@@ -92,7 +81,6 @@
                         {{> helpbutton}}
                     </h2>
                 </div>
-
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                     <div class="modal-dialog modal-sm" role="document">
                         <div class="modal-content">
@@ -109,7 +97,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-12 col-md-4 col-lg-2 displayList" id="displayList">
                         <div class="card shadow mb-4 leadCardParent" style="margin: 8px;">
@@ -174,11 +161,10 @@
                         <div class="card shadow mb-4 cardSizing" style="margin: 8px;">
                             <div class="card-header d-flex justify-content-between align-items-xl-center">
                                 <!-- <div class="custom-control custom-switch" style="margin: 4px;"><input class="custom-control-input" type="checkbox" id="activeChk" checked><label class="custom-control-label" for="activeChk"></label></div> -->
-
                                 <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 leadInfo" id="leadInfo" style="color: #00A3D3;">
-                                  {{#if notEquals record.id ''}}
-                                    LED-{{record.id}} -
-                                  {{/if}}
+                                    {{#if notEquals record.id ''}}
+                                        LED-{{record.id}} -
+                                    {{/if}}
                                     {{#if record}} {{record.employeeName}} - {{record.firstname}} {{record.lastname}} - {{record.phone}}{{/if}}
                                 </h6>
                                 <!--here-->
@@ -303,94 +289,26 @@
 
                                             @media only screen and (max-width: 1920px) {
                                                 .cardSizing {
-                                                    /*                                                width: 1464px;*/
-                                                }
-
-                                                .tab-1 {
-                                                    width: 100%;
-                                                }
-
-                                                .tab-2 {
-                                                    width: 100%;
-                                                }
-
-                                                .tab-3 {
-                                                    width: 100%;
-                                                }
-
-                                                .tab-4 {
-                                                    width: 100%;
+                                                    /* width: 1464px;*/
                                                 }
                                             }
-
                                             @media only screen and (max-width: 1600px) {
                                                 .cardSizing {
-                                                    /*                                                width: 1146px;*/
-                                                }
-
-                                                .tab-1 {
-                                                    width: 100%;
-                                                }
-
-                                                .tab-2 {
-                                                    width: 100%;
-                                                }
-
-                                                .tab-3 {
-                                                    width: 100%;
-                                                }
-
-                                                .tab-4 {
-                                                    width: 100%;
+                                                    /* width: 1146px;*/
                                                 }
                                             }
-
                                             @media only screen and (max-width: 1536px) {
                                                 .cardSizing {
-                                                    /*                                                width: 1066.400px;*/
-                                                }
-
-                                                .tab-1 {
-                                                    width: 100%;
-                                                }
-
-                                                .tab-2 {
-                                                    width: 100%;
-                                                }
-
-                                                .tab-3 {
-                                                    width: 100%;
-                                                }
-
-                                                .tab-4 {
-                                                    width: 100%;
+                                                    /* width: 1066.400px;*/
                                                 }
                                             }
-
                                             @media only screen and (max-width: 1367px) {
                                                 .cardSizing {
-                                                    /*                                                width: 898px;*/
-                                                }
-
-                                                .tab-1 {
-                                                    width: 100%;
-                                                }
-
-                                                .tab-2 {
-                                                    width: 100%;
-                                                }
-
-                                                .tab-3 {
-                                                    width: 100%;
-                                                }
-
-                                                .tab-4 {
-                                                    width: 100%;
+                                                    /*width: 898px;*/
                                                 }
                                             }
                                         </style>
                                         <div class="tab-pane active border rounded-0 tab-lead" role="tabpanel" id="tab-lead" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-
                                             <div class="row no-gutters" style="padding: 8px;">
                                                 <div class="col-12 col-md-5" style="padding: 0px 8px;">
                                                     <div class="form-group">
@@ -473,11 +391,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
                                             <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                                                 <div class="col">
-
                                                     <div class="row">
                                                         <div class="col d-xl-flex flex-row align-items-xl-start" style="padding: 0;">
                                                             <div class="form-group flex-grow-1" style="margin: 4px;">
@@ -918,7 +833,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                         <div class="tab-pane border rounded-0 tab-crm" role="tabpanel" id="tab-crm" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                             <div class="row d-xl-flex flex-row justify-content-xl-center">
@@ -1258,7 +1172,6 @@
             </div>
         </div>
     </div>
-
     <!-- End Help Video Modal -->
     <script>
         modalDraggable();
