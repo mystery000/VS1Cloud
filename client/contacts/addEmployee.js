@@ -10293,6 +10293,15 @@ Template.employeescard.events({
     "click #edtSaleCustField3": function (e) {
         $("#clickedControl").val("three");
     },
+      // add to custom field
+  "click #edtSaleCustField2": function (e) {
+    $("#clickedControl").val("two");
+  },
+
+  // add to custom field
+  "click #edtSaleCustField3": function (e) {
+    $("#clickedControl").val("three");
+  },
     "click .btnDeletePayslip": function (e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id') || '';
