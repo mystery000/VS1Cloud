@@ -502,6 +502,14 @@ Template.jobprofitabilityreport.events({
 
     LoadingOverlay.hide();
   },
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
+  }
 });
 
 Template.jobprofitabilityreport.helpers({
@@ -510,6 +518,29 @@ Template.jobprofitabilityreport.helpers({
   },
   records: () => {
     return Template.instance().records.get();
+  },
+  
+  redirectionType(item) {
+    if(item.TransactionType === 'Invoice') {
+      return '#noInfoFound';
+      return '/invoicecard?id=' + item.SaleID;
+    } else if (item.TransactionType === 'Quote') {
+      return '#noInfoFound';
+      return '/invoicecard?id=' + item.saleId;
+    } else if (item.TransactionType === 'Bill') {
+      return '#noInfoFound';
+      return '/billcard?id=' + item.saleId;
+    } else if (item.TransactionType === 'Timesheet') {
+      return '#noInfoFound';
+    } else if (item.TransactionType === 'Refund') {
+      return '#noInfoFound';
+      return 'refundcard?id=' + item.SaleID;
+    } else if (item.TransactionType === 'Purchase Order') {
+      return '#noInfoFound';
+      return '/purchaseordercard?id=' + item.saleId;
+    } else {
+      return '#noInfoFound';
+    }
   },
   formatPrice( amount ){
     let utilityService = new UtilityService();
