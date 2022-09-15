@@ -6682,9 +6682,9 @@ Template.refundcard.events({
             taxDetail.CodeName,
             `${taxDetail.Rate * 100}%`,
             "Selling Price",
-            `$${priceTotal}`,
-            `$${taxTotal}`,
-            `$${priceTotal + taxTotal}`,
+            `$${priceTotal.toFixed(3)}`,
+            `$${taxTotal.toFixed(3)}`,
+            `$${(priceTotal + taxTotal).toFixed(3)}`,
         ]);
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
@@ -6703,7 +6703,7 @@ Template.refundcard.events({
                     `${line.Percentage}%`,
                     line.PercentageOn,
                     "",
-                    `$${priceTotal * line.Percentage / 100}`,
+                    `$${(priceTotal * line.Percentage / 100).toFixed(3)}`,
                     ""
                 ]);
             });
