@@ -10988,6 +10988,7 @@ Template.purchaseordercard.events({
         let PurchaseData = templateObject.purchaseorderrecord.get();
         var target = event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
+        localStorage.setItem("selectedProductName", selectedProductName);
         let existProduct = false;
         let productService = new ProductService();
         PurchaseData.LineItems.forEach(element => {
@@ -11012,7 +11013,7 @@ Template.purchaseordercard.events({
                                     let shtml = '';
                                     let i = 0;
                                     shtml += `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
-                                    <tr><td class="text-start">#</td><td class="text-start">Lot number</td><td class="text-start">Expiry Date</td></tr>
+                                    <tr><td class="text-start">#</td><td class="text-start">Lot Number</td><td class="text-start">Expiry Date</td></tr>
                                     `;
                                     for (let k = 0; k < element.pqaseriallotdata.fields.PQABatch.length; k++) {
                                         const dates = element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate.split(' ')[0].split('-') || '';

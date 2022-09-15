@@ -4449,7 +4449,7 @@ Template.stocktransfercard.events({
                         expiryDates = expiryDates.split(',');
                         let shtml = '';
                         shtml += `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
-                        <tr><td class="text-start">#</td><td class="text-start">Lot number</td><td class="text-start">Expiry Date</td></tr>
+                        <tr><td class="text-start">#</td><td class="text-start">Lot Number</td><td class="text-start">Expiry Date</td></tr>
                         `;
                         for (let k = 0; k < lotNumbers.length; k++) {
                             if (k === 0) {
@@ -4491,7 +4491,7 @@ Template.stocktransfercard.events({
                         $('#tblLotlist tbody').html(shtml);
                     } else {
                         let shtml = `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
-                        <tr><td class="text-start">#</td><td class="text-start">Lot number</td><td class="text-start">Expiry Date</td></tr>
+                        <tr><td class="text-start">#</td><td class="text-start">Lot Number</td><td class="text-start">Expiry Date</td></tr>
                         <tr>
                             <td></td>
                             <td>*</td><td contenteditable="true" class="lineLotnumbers" id="first-lot-number"></td>
