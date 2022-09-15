@@ -1,20 +1,10 @@
 import {
     ReactiveVar
 } from 'meteor/reactive-var';
-import {
-    UtilityService
-} from "../utility-service";
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
-import {
-    SideBarService
-} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
-import { ProductService } from "../product/product-service";
-let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
-var autofilled = false;
 Template.availableserialnumberpop.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.serialnumberlist = new ReactiveVar();

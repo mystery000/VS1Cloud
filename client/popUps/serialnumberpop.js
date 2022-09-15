@@ -58,7 +58,7 @@ Template.serialnumberpop.events({
                         break;
                     }
                 }
-                if (existSameNumber) {
+                if (false) {
                     swal('', 'One or more than serial numbers already existed! Please try to change serial numbers.', 'error');
                 } else {
                     const rowNumber = $('#serialNumberModal').attr('data-row');
@@ -139,6 +139,13 @@ Template.serialnumberpop.events({
         '</tr>';
         $('#tblSeriallist tbody').html(defaultRow);
     },
+    'click .btnPrint': async function(event) {
+        const rowNumber = $('#serialNumberModal').attr('data-row');
+        const productName = $(`table tbody tr:nth-child(${rowNumber}) td.colProductName input`).val();
+        $('.tblSNlist').print({
+            title: productName + " - Serial Numbers"
+        });
+    },
     'click .btnAutoFill': async function(event) {
         let startSerialnum = Number($('#first-serial-number').text());
         let selectedunit = localStorage.getItem('productItem');
@@ -166,7 +173,7 @@ Template.serialnumberpop.events({
                         break;
                     }
                 }
-                if (existSameNumber) {
+                if (false) {
                     swal('', 'One or more than serial numbers already existed! Please try to change serial numbers.', 'error');
                 } else {
                     let shtml = '';

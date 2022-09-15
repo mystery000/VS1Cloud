@@ -20248,12 +20248,9 @@ Template.new_invoice.events({
   "click .btnSnLotmodal": function (event) {
     $(".fullScreenSpin").css("display", "inline-block");
     var target = event.target;
-    let selectedProductName = $(target)
-      .closest("tr")
-      .find(".lineProductName")
-      .val();
     let selectedunit = $(target).closest("tr").find(".lineOrdered").val();
     localStorage.setItem("productItem", selectedunit);
+    let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
     localStorage.setItem("selectedProductName", selectedProductName);
     let productService = new ProductService();
     const templateObject = Template.instance();
@@ -20262,33 +20259,14 @@ Template.new_invoice.events({
     InvoiceData.LineItems.forEach((element) => {
       if (element.item == selectedProductName) {
         existProduct = true;
-        productService
-          .getProductStatus(selectedProductName)
-          .then(function (data) {
+        productService.getProductStatus(selectedProductName).then(function (data) {
             $(".fullScreenSpin").css("display", "none");
-            if (
-              data.tproductvs1[0].Batch == false &&
-              data.tproductvs1[0].SNTracking == false
-            ) {
-              swal(
-                "",
-                'The product "' +
-                  selectedProductName +
-                  '" does not track Lot Number, Bin Location or Serial Number',
-                "info"
-              );
+            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+              swal("", 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', "info");
               event.preventDefault();
               return false;
-            } else if (
-              data.tproductvs1[0].Batch == true &&
-              data.tproductvs1[0].SNTracking == false
-            ) {
-              var row = $(target)
-                .parent()
-                .parent()
-                .parent()
-                .children()
-                .index($(target).parent().parent());
+            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
               $("#lotNumberModal").attr("data-row", row + 1);
               $("#lotNumberModal").modal("show");
               if (element.pqaseriallotdata == "null") {
@@ -20300,48 +20278,26 @@ Template.new_invoice.events({
                     let shtml = "";
                     let i = 0;
                     shtml += `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
-                                    <tr><td class="text-start">#</td><td class="text-start">Lot number</td><td class="text-start">Expiry Date</td></tr>
-                                    `;
-                    for (
-                      let k = 0;
-                      k < element.pqaseriallotdata.fields.PQABatch.length;
-                      k++
-                    ) {
-                      const dates =
-                        element.pqaseriallotdata.fields.PQABatch[
-                          k
-                        ].fields.BatchExpiryDate.split(" ")[0].split("-") || "";
-                      if (
-                        element.pqaseriallotdata.fields.PQABatch[k].fields
-                          .BatchNo == "null"
-                      ) {
+                      <tr><td class="text-start">#</td><td class="text-start">Lot Number</td><td class="text-start">Expiry Date</td></tr>`;
+                    for (let k = 0; k < element.pqaseriallotdata.fields.PQABatch.length; k++) {
+                      const dates = element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate.split(" ")[0].split("-") || "";
+                      if (element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo == "null") {
                       } else {
                         i++;
-                        shtml += `
-                                            <tr>
-                                                <td></td>
-                                                <td>${Number(
-                                                  i
-                                                )}</td><td contenteditable="true" class="lineLotnumbers">${
-                          element.pqaseriallotdata.fields.PQABatch[k].fields
-                            .BatchNo
-                        }</td>
-                                                <td class="lotExpiryDate">
-                                                    <div class="form-group m-0">
-                                                        <div class="input-group date" style="cursor: pointer;">
-                                                            <input type="text" class="form-control" style="height: 25px;" value="${
-                                                              dates[2]
-                                                            }/${dates[1]}/${
-                          dates[0]
-                        }">
-                                                            <div class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            `;
+                        shtml += `<tr>
+                          <td></td>
+                          <td>${Number(i)}</td><td contenteditable="true" class="lineLotnumbers">${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo}</td>
+                          <td class="lotExpiryDate">
+                              <div class="form-group m-0">
+                                <div class="input-group date" style="cursor: pointer;">
+                                  <input type="text" class="form-control" style="height: 25px;" value="${dates[2]}/${dates[1]}/${dates[0]}">
+                                  <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                        </tr>`;
                       }
                     }
                     $("#tblLotlist tbody").html(shtml);
@@ -20362,12 +20318,7 @@ Template.new_invoice.events({
               data.tproductvs1[0].Batch == false &&
               data.tproductvs1[0].SNTracking == true
             ) {
-              var row = $(target)
-                .parent()
-                .parent()
-                .parent()
-                .children()
-                .index($(target).parent().parent());
+              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
               $("#serialNumberModal").attr("data-row", row + 1);
               $("#serialNumberModal").modal("show");
               if (element.pqaseriallotdata == "null") {
@@ -20378,27 +20329,13 @@ Template.new_invoice.events({
                   } else {
                     let shtml = "";
                     let i = 0;
-                    shtml += `
-                                    <tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
-                                    <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>
-                                    `;
-                    for (
-                      let k = 0;
-                      k < element.pqaseriallotdata.fields.PQASN.length;
-                      k++
-                    ) {
-                      if (
-                        element.pqaseriallotdata.fields.PQASN[k].fields
-                          .SerialNumber == "null"
-                      ) {
+                    shtml += `<tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
+                      <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>`;
+                    for (let k = 0;k < element.pqaseriallotdata.fields.PQASN.length;k++) {
+                      if (element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber == "null") {
                       } else {
                         i++;
-                        shtml += `
-                                            <tr><td></td><td class="lineNo">${i}</td><td contenteditable="true" class="lineSerialnumbers">${Number(
-                          element.pqaseriallotdata.fields.PQASN[k].fields
-                            .SerialNumber
-                        )}</td></tr>
-                                            `;
+                        shtml += `<tr><td></td><td class="lineNo">${i}</td><td contenteditable="true" class="lineSerialnumbers">${Number(element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber)}</td></tr>`;
                       }
                     }
                     $("#tblSeriallist tbody").html(shtml);
@@ -20416,45 +20353,18 @@ Template.new_invoice.events({
         event.preventDefault();
         return false;
       } else {
-        productService
-          .getProductStatus(selectedProductName)
-          .then(function (data) {
+        productService.getProductStatus(selectedProductName).then(function (data) {
             $(".fullScreenSpin").css("display", "none");
-            if (
-              data.tproductvs1[0].Batch == false &&
-              data.tproductvs1[0].SNTracking == false
-            ) {
-              swal(
-                "",
-                "The product " +
-                  selectedProductName +
-                  " does not track Lot Number, Bin Location or Serial Number",
-                "info"
-              );
+            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+              swal("", "The product " + selectedProductName + " does not track Lot Number, Bin Location or Serial Number", "info");
               event.preventDefault();
               return false;
-            } else if (
-              data.tproductvs1[0].Batch == true &&
-              data.tproductvs1[0].SNTracking == false
-            ) {
-              var row = $(target)
-                .parent()
-                .parent()
-                .parent()
-                .children()
-                .index($(target).parent().parent());
+            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
               $("#lotNumberModal").attr("data-row", row + 1);
               $("#lotNumberModal").modal("show");
-            } else if (
-              data.tproductvs1[0].Batch == false &&
-              data.tproductvs1[0].SNTracking == true
-            ) {
-              var row = $(target)
-                .parent()
-                .parent()
-                .parent()
-                .children()
-                .index($(target).parent().parent());
+            } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
               $("#serialNumberModal").attr("data-row", row + 1);
               $("#serialNumberModal").modal("show");
             }
