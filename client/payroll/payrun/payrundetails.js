@@ -211,7 +211,6 @@ Template.payrundetails.onRendered(function () {
       payRunDetails = payRunsHistory.find(p => p.calendar.ID == urlParams.get("cid"));
 
       if (!payRunDetails) {
-       
         const calendar = await templateObject.loadCalendar(urlParams.get("cid")); // single calendar
         const employees = await templateObject.loadEmployees();
 
@@ -244,6 +243,29 @@ Template.payrundetails.onRendered(function () {
      * Save to history function
      */
 
+  templateObject.postPayRun = async () => {
+    let newPayRunDetails = new PayRun(templateObject.payRunDetails.get());
+
+    const toggleStatus = () => {
+      return PayRun.STPFilling.overdue; // this should automatically done
+    };
+
+    newPayRunDetails.stpFilling = toggleStatus();
+
+    templateObject.payRunDetails.set(newPayRunDetails);
+
+    // Get from the list
+    let payRunsHistory = JSON.parse(localStorage.getItem("TPayRunHistory")) || []; // we get the list and find
+    // let payRunDetails = payRunsHistory.find(p => p.calendar.ID == urlParams.get("cid"));
+
+    const index = payRunsHistory.findIndex(p => p.calendar.ID == urlParams.get("cid"));
+    payRunsHistory[index] = newPayRunDetails;
+
+    localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
+
+    window.location.href = "/payrolloverview";
+  };
+
   templateObject.loadPayRunData();
 });
 
@@ -259,6 +281,9 @@ Template.payrundetails.events({
     } else {
       $("#eftExportModal").modal("hide");
     }
+  },
+  "click .post-pay-run": (e, ui) => {
+    ui.postPayRun();
   }
 });
 
