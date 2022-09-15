@@ -115,6 +115,13 @@ Template.lotnumberpop.events({
             swal('', 'You should input more than one lot numbers.', 'info');
         }
     },
+    'click .btnPrint': async function(event) {
+        const rowNumber = $('#lotNumberModal').attr('data-row');
+        const productName = $(`table tbody tr:nth-child(${rowNumber}) td.colProductName input`).val();
+        $('.tblLNlist').print({
+            title: productName + " - Lot Numbers"
+        });
+    },
     'click .btnSelect': async function() {
         const lotList = await sideBarService.getAllSerialNumber();
         const productName = localStorage.getItem('selectedProductName');

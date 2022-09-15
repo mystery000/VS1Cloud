@@ -12026,6 +12026,7 @@ Template.new_salesorder.events({
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
         let selectedunit = $(target).closest('tr').find('.lineQty').val();
         localStorage.setItem('productItem', selectedunit);
+        localStorage.setItem("selectedProductName", selectedProductName);
         let productService = new ProductService();
         const templateObject = Template.instance();
         const SalesOrderData = templateObject.salesorderrecord.get();
@@ -12052,7 +12053,7 @@ Template.new_salesorder.events({
                                     let shtml = '';
                                     let i = 0;
                                     shtml += `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
-                                    <tr><td class="text-start">#</td><td class="text-start">Lot number</td><td class="text-start">Expiry Date</td></tr>
+                                    <tr><td class="text-start">#</td><td class="text-start">Lot Number</td><td class="text-start">Expiry Date</td></tr>
                                     `;
                                     for (let k = 0; k < element.pqaseriallotdata.fields.PQABatch.length; k++) {
                                         const dates = element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate.split(' ')[0].split('-') || '';

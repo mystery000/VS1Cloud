@@ -11,6 +11,7 @@ import LoadingOverlay from "../../LoadingOverlay";
 import {updateAllCurrencies} from "./currencies";
 import CronSetting from "../../CronSetting";
 import FormFrequencyModel from "./Model/FormFrequencyModel";
+import moment from "moment";
 
 let sideBarService = new SideBarService();
 let taxRateService = new TaxRateService();
@@ -154,6 +155,12 @@ Template._frequencyModal.onRendered(function () {
       cronSetting.months = checkedMonths;
       cronSetting.dayNumberOfMonth = convertDayNumberToString(fxUpdateObject.everyDay);
 
+      if ($(".months-input-js input.chkBox:checked").length == 0) {
+        LoadingOverlay.hide();
+        handleValidationError("You must select at least one month", "Cron Settings");
+        return false;
+      }
+
       _formFequencyModal = new FormFrequencyModel({MonthlyEveryDay: $("#sltDay").val(), MonthlyOfMonths: checkedMonths, MonthlyStartDate: $("#edtMonthlyStartDate").val(), MonthlyStartTime: $("#edtMonthlyStartTime").val()});
 
       //cronSetting.parsed = later.recur()
@@ -175,6 +182,12 @@ Template._frequencyModal.onRendered(function () {
       cronSetting.days = fxUpdateObject.selectedDays;
       cronSetting.every = fxUpdateObject.everyWeeks;
       cronSetting.startAt = fxUpdateObject.getDate();
+
+      if ($(".weekly-input-js input.chkBoxDays:checked").length == 0) {
+        LoadingOverlay.hide();
+        handleValidationError("You must select at least one day", "Cron Settings");
+        return false;
+      }
 
       _formFequencyModal = new FormFrequencyModel({WeeklyEvery: fxUpdateObject.everyWeeks, WeeklyStartDate: $("#edtWeeklyStartDate").val(), WeeklyStartTime: $("#edtWeeklyStartTime").val(), WeeklySelectDays: fxUpdateObject.selectedDays});
     } else if (fxUpdateObject instanceof DailyFrequencyModel) {
@@ -199,6 +212,12 @@ Template._frequencyModal.onRendered(function () {
         reportSchedule.fields.SunAction = "D";
 
         cronSetting.days = selectedDays;
+
+        if ($(".daily-input-js input.chkBoxDays:checked").length == 0) {
+          LoadingOverlay.hide();
+          handleValidationError("You must select at least one day", "Cron Settings");
+          return false;
+        }
 
         _formFequencyModal = new FormFrequencyModel({DailyWeekDays: selectedDays});
       } else if ($("#dailyEveryDay").prop("checked")) {
@@ -266,6 +285,14 @@ Template._frequencyModal.onRendered(function () {
       _formFequencyModal = new FormFrequencyModel({OnEventLogIn: fxUpdateObject.onLogin, OnEventLogOut: fxUpdateObject.onLogout});
     }
 
+    if (fxUpdateObject.startDate && fxUpdateObject.startTime) {
+      if (moment(fxUpdateObject.getDate()).isBefore(new Date())) {
+        LoadingOverlay.hide();
+        handleValidationError("You cannot schedule before your current time", "Cron Settings");
+        return false;
+      }
+    }
+
     _formFequencyModal.EmployeeId = employeeId;
 
     cronSetting.isProcessed = 1;
@@ -306,7 +333,7 @@ Template._frequencyModal.onRendered(function () {
       return;
     }
     let defaultFormFrequency = new FormFrequencyModel(JSON.parse(defaultForm[0].data));
-   
+
     if (defaultFormFrequency.MonthlyStartDate) {
       // it is montly
       const monthly = $("#monthlySettings");
@@ -385,17 +412,6 @@ Template._frequencyModal.events({
     ui.loadDefault();
   },
   "click .btnSaveFrequency": (e, ui) => {
-    if($(".months-input-js input.chkBox:checked").length == 0) {
-      handleValidationError('You must select at least one month', 'Cron Settings');
-      return false;
-    }
-
-    if($(".weekly-input-js input.chkBoxDays:checked").length == 0) {
-      handleValidationError('You must select at least one day', 'Cron Settings');
-      return false;
-    }
-
-
     ui.saveShedule();
   },
   'click input[name="frequencyRadio"]': event => {
@@ -500,4 +516,3 @@ Template._frequencyModal.events({
     });
   }
 });
-
