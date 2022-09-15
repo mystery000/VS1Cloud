@@ -125,7 +125,6 @@ Template.customerdetailsreport.onRendered(() => {
     }else{
       data = JSON.parse(localStorage.getItem('VS1CustomerDetails_Report'));
     }
-    
     let reportData = [];
     if( data.tcustomersummaryreport.length > 0 ){
         let reportGroups = []; 
@@ -475,6 +474,14 @@ Template.customerdetailsreport.events({
 
     LoadingOverlay.hide();
   },
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
+  }
 });
 
 Template.customerdetailsreport.helpers({
@@ -498,6 +505,17 @@ Template.customerdetailsreport.helpers({
   },
   records: () => {
     return Template.instance().records.get();
+  },
+  redirectionType(item) {
+    if(item.type === 'PO') {
+      return '#noInfoFound';
+      return '/purchaseordercard?id=' + item.SaleID;
+    } else if (item.type === 'Invoice') {
+      return '#noInfoFound';
+      return '/invoicecard?id=' + item.SaleID;
+    } else {
+      return '#noInfoFound';
+    }
   },
   formatPrice( amount ){
     let utilityService = new UtilityService();
