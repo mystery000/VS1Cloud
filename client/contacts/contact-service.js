@@ -455,7 +455,7 @@ export class ContactService extends BaseService {
 
     getLeadStatusData() {
         let options = {
-            PropertyList: "ID,TypeName,Description",
+            PropertyList: "ID,TypeName,Description,TypeCode",
             select: "[Active]=true"
         };
         return this.getList(this.ERPObjects.TLeadStatusType, options);

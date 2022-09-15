@@ -1,8 +1,11 @@
 import { ContactService } from "../../contacts/contact-service";
 import { SideBarService } from '../../js/sidebar-service';
 import { ReactiveVar } from 'meteor/reactive-var';
+import {UtilityService} from "../../utility-service";
 
 let sideBarService = new SideBarService();
+let utilityService = new UtilityService();
+
 Template.leadstatussettings.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -59,10 +62,12 @@ Template.leadstatussettings.onRendered(function () {
     }
     function setLeadStatusList(data) {
         for (let i = 0; i < data.tleadstatustype.length; i++) {
+            let eqpm = Number(data.tleadstatustype[i].KeyValue.replace(/[^0-9.-]+/g, "")) || 1.0;
             const dataList = {
                 id: data.tleadstatustype[i].Id || '',
                 typeName: data.tleadstatustype[i].TypeName || '',
-                description: data.tleadstatustype[i].Description || data.tleadstatustype[i].TypeName
+                description: data.tleadstatustype[i].Description || data.tleadstatustype[i].TypeName,
+                eqpm: utilityService.modifynegativeCurrencyFormat(eqpm)
             };
             dataTableList.push(dataList);
         }
@@ -167,12 +172,8 @@ Template.leadstatussettings.onRendered(function () {
         }, 0);
 
         const columns = $('#leadStatusList th');
-        let sTible = "";
         let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
         let columVisible = false;
-        let sClass = "";
         $.each(columns, function (i, v) {
             if (v.hidden == false) {
                 columVisible = true;
@@ -201,14 +202,16 @@ Template.leadstatussettings.onRendered(function () {
         $('#deleteLineModal').modal('toggle');
     });
 
-    $('#leadStatusList tbody').on('click', 'tr .colStatusName, tr .colDescription', function(event) {
+    $('#leadStatusList tbody').on('click', 'tr .colStatusName, tr .colDescription, tr .colQuantity', function(event) {
         $('#add-leadstatus-title').text('Edit Lead Status');
         let targetID = $(event.target).closest('tr').attr('id');
         let description = $(event.target).closest('tr').find('.colDescription').text();
         let statusName = $(event.target).closest('tr').find('.colStatusName').text();
+        let quantity = $(event.target).closest('tr').find('.colQuantity').text();
         $('#statusID').val(targetID);
         $('#edtLeadStatusName').val(statusName);
         $('#statusDescription').val(description);
+        $('#statusQuantity').val(quantity);
         $('#myModalLeadStatus').modal('show');
     });
 });
@@ -439,11 +442,13 @@ Template.leadstatussettings.events({
     },
     'click .btnSaveLeadStatus': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
-        const url = FlowRouter.current().path;
         let contactService = new ContactService();
-        let objDetails ={};
+        let objDetails = {};
         let statusName = $('#edtLeadStatusName').val() || '';
         let statusDesc = $('#statusDescription').val() || '';
+        let statusEQPM = $('#statusQuantity').val() || '';
+        statusEQPM = Number(statusEQPM.replace(/[^0-9.-]+/g, "")) || 1.0
+        statusEQPM = statusEQPM.toString();
         let id = $('#statusID').val() || '';
         if (statusName === '') {
             swal('Lead Status name cannot be blank!', '', 'warning');
@@ -456,6 +461,7 @@ Template.leadstatussettings.events({
                     fields: {
                         TypeName: statusName,
                         Description: statusDesc,
+                        KeyValue: statusEQPM,
                         Active: true
                     }
                 }
@@ -466,6 +472,7 @@ Template.leadstatussettings.events({
                         Id: id,
                         TypeName: statusName,
                         Description: statusDesc,
+                        KeyValue: statusEQPM,
                         Active: true
                     }
                 }

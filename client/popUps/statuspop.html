@@ -13,6 +13,7 @@
                                 <tr class="dnd-moved">
                                     <th class="th colStatusName" style="">Status Name</th>
                                     <th class="th colDescription">Description</th>
+                                    <th class="th colQuantity">Expected Quantity per Month</th>
                                     <th class="th colActive" style="">Active</th>
                                 </tr>
                             </thead>
@@ -30,6 +31,7 @@
                                         <tr class="dnd-moved" id="{{item.id}}" style="cursor: default;">
                                             <td contenteditable="false" class="colStatusName" style="width: 20% !important;">{{item.typename}}</td>
                                             <td contenteditable="false" class="colDescription">{{item.description}}</td>
+                                            <td contenteditable="false" class="colQuantity">{{item.eqpm}}</td>
                                             <td contenteditable="false" class="colActive text-center" style="width: 5% !important;">
                                                 <div class="custom-control custom-checkbox chkBox">
                                                     <input class="custom-control-input chkBox" type="checkbox" id="active-{{item.id}}" checked disabled>

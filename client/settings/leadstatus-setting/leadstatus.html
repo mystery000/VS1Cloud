@@ -176,7 +176,8 @@
                                             <thead>
                                                 <tr class="dnd-moved">
                                                     <th class="th colStatusName" style="width:150px">Status Name</th>
-                                                    <th class="th colDescription" >Description</th>
+                                                    <th class="th colDescription">Description</th>
+                                                    <th class="th colQuantity" style="width:200px;">Expected Quantity per Month</th>
                                                     <th class="th colDelete" style="width:20px;"></th>
                                                 </tr>
                                             </thead>
@@ -186,6 +187,7 @@
                                                     <tr class="dnd-moved" id="{{item.id}}"  style="cursor: default;">
                                                         <td contenteditable="false" class="colStatusName">{{item.typeName}}</td>
                                                         <td contenteditable="false" class="colDescription">{{item.description}}</td>
+                                                        <td contenteditable="false" class="colQuantity" style="text-align: right;">{{item.eqpm}}</td>
                                                         <td contenteditable="false" class="colDelete">
                                                             <span class="table-remove">
                                                                 <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>

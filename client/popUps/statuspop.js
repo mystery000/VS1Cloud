@@ -1,7 +1,9 @@
 import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import {UtilityService} from "../utility-service";
 let sideBarService = new SideBarService();
+let utilityService = new UtilityService();
 
 Template.statuspop.onCreated(function() {
     const templateObject = Template.instance();
@@ -46,9 +48,7 @@ Template.statuspop.onRendered(function() {
                 sideBarService.getAllLeadStatus().then(function(data) {
                     setLeadStatus(data);
                 }).catch(function(err) {
-                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
                     $('.fullScreenSpin').css('display', 'none');
-                    // Meteor._reload.reload();
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -58,22 +58,20 @@ Template.statuspop.onRendered(function() {
             sideBarService.getAllLeadStatus().then(function(data) {
                 setLeadStatus(data);
             }).catch(function(err) {
-                // Bert.alert('<strong>' + err + '</strong>!', 'danger');
                 $('.fullScreenSpin').css('display', 'none');
-                // Meteor._reload.reload();
             });
         });
     }
     function setLeadStatus(data) {
         for (let i = 0; i < data.tleadstatustype.length; i++) {
-            // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
+            let eqpm = Number(data.tleadstatustype[i].KeyValue.replace(/[^0-9.-]+/g, "")) || 1.0;
             const dataList = {
                 id: data.tleadstatustype[i].Id || '',
                 typename: data.tleadstatustype[i].TypeName || '',
-                description: data.tleadstatustype[i].Description || data.tleadstatustype[i].TypeName
+                description: data.tleadstatustype[i].Description || data.tleadstatustype[i].TypeName,
+                eqpm: utilityService.modifynegativeCurrencyFormat(eqpm)
             };
             dataTableList.push(dataList);
-            //}
         }
         templateObject.datatablerecords.set(dataTableList);
         if (templateObject.datatablerecords.get()) {

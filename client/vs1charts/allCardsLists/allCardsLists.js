@@ -8,8 +8,8 @@ import ApiService from "../../js/Api/Module/ApiService";
 import '../../lib/global/indexdbstorage.js';
 
 const employeeId = Session.get("mySessionEmployeeLoggedID");
-const _chartGroup = "";
-const _tabGroup = 0;
+let _chartGroup = "";
+let _tabGroup = 0;
 
 Template.allCardsLists.onRendered(function () {
     _tabGroup = $(".connectedCardSortable").data("tabgroup");
@@ -37,19 +37,18 @@ Template.allCardsLists.onRendered(function () {
         const cardPreferencesEndpointResponse = await cardPreferencesEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (cardPreferencesEndpointResponse.ok == true) {
-            cardPreferencesEndpointJsonResponse = await cardPreferencesEndpointResponse.json();
+            const cardPreferencesEndpointJsonResponse = await cardPreferencesEndpointResponse.json();
             await addVS1Data('Tvs1CardPreference', JSON.stringify(cardPreferencesEndpointJsonResponse))
             return true
         }
     }
-
 
     templateObject.setCardPositions = async () => {
         $(".fullScreenSpin").css("display", "block");
         setTimeout(async function(){
             $('.card-visibility').addClass('hideelement')
             let Tvs1CardPref = await getVS1Data('Tvs1CardPreference');
-            const cardList = [];
+            let cardList = [];
             let employeeID = Session.get("mySessionEmployeeLoggedID");
             if( Tvs1CardPref.length == 0 ){
                 await templateObject.saveCardsLocalDB();
