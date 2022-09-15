@@ -288,7 +288,7 @@ Template._frequencyModal.onRendered(function () {
     if (fxUpdateObject.startDate && fxUpdateObject.startTime) {
       if (moment(fxUpdateObject.getDate()).isBefore(new Date())) {
         LoadingOverlay.hide();
-        handleValidationError("You cannot schedule beofre your current time", "Cron Settings");
+        handleValidationError("You cannot schedule before your current time", "Cron Settings");
         return false;
       }
     }
