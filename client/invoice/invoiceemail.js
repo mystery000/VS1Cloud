@@ -264,7 +264,7 @@ Template.invoiceemail.onRendered(function() {
                       language: { search: "",searchPlaceholder: "Search List..." },
                       "fnInitComplete": function () {
                         this.fnPageChange('last');
-                          $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistemail_filter");
+                          $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistemail_filter");
                           $('.myvarFilterForm').appendTo(".colDateFilter");
                       }
 
@@ -455,7 +455,7 @@ setTimeout(function () {
           language: { search: "",searchPlaceholder: "Search List..." },
           "fnInitComplete": function () {
             this.fnPageChange('last');
-              $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistemail_filter");
+              $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistemail_filter");
               $('.myvarFilterForm').appendTo(".colDateFilter");
           }
 
@@ -641,7 +641,7 @@ templateObject.tableheaderrecords.set(tableHeaderList);
                       language: { search: "",searchPlaceholder: "Search List..." },
                       "fnInitComplete": function () {
                         this.fnPageChange('last');
-                          $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistemail_filter");
+                          $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistemail_filter");
                           $('.myvarFilterForm').appendTo(".colDateFilter");
                       }
 

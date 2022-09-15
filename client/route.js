@@ -761,6 +761,15 @@ authenticatedRoutes.route('/balancetransactionlist', {
     }
 });
 
+authenticatedRoutes.route('/basreturntransactionlist', {
+    name: 'basreturntransactionlist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'basreturntransactionlist'
+        });
+    }
+});
+
 authenticatedRoutes.route('/allreports', {
     name: 'allreports',
     action() {

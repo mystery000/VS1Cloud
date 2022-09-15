@@ -712,9 +712,9 @@ Template.customfieldpop.onRendered(() => {
               responsive: true,
 
               fnInitComplete: function () {
-                $("<button class='btn btn-primary btnAddNewCustField' data-id='" + custFieldNo + "' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus' data-id='" + custFieldNo + "'></i></button>"
+                $("<button class='btn btn-primary btnAddNewCustField' data-id='" + custFieldNo + "' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus' data-id='" + custFieldNo + "'></i></button>"
                 ).insertAfter("#customFieldDropdownTable" + custFieldNo + "_filter");
-                $("<button class='btn btn-primary btnRefreshCustomField' type='button' data-id='" + custFieldNo + "' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' data-id='" + custFieldNo + "' style='margin-right: 5px'></i>Search</button>").insertAfter("#customFieldDropdownTable" + custFieldNo + "_filter");
+                $("<button class='btn btn-primary btnRefreshCustomField' type='button' data-id='" + custFieldNo + "' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' data-id='" + custFieldNo + "' style='margin-right: 5px'></i>Search</button>").insertAfter("#customFieldDropdownTable" + custFieldNo + "_filter");
               },
 
             }).on("page", function () {
