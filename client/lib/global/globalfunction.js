@@ -567,8 +567,27 @@ tableResize = function() {
   setTimeout(function() {
     const tableHandler = new TableHandler();
     $('.dataTables_filter input[type="search"]').attr("placeholder", "Search List...");
+    $('.dataTables_filter label:contains("Search:")').each(function(){
+      $(this).html($(this).html().split("Search:").join(""));
+    });
   }, 2500);
+  setTimeout(function() {
+    $('.dataTables_filter input[type="search"]').attr("placeholder", "Search List...");
+    $('.dataTables_filter label:contains("Search:")').each(function(){
+      $(this).html($(this).html().split("Search:").join(""));
+    });
+  }, 1000);
 };
+
+setupMessagehideshow = function() {
+  let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+    if (setupFinished == true || setupFinished == "true") {
+      $('.setupIncompleatedMsg').show();
+    } else {
+      $('.setupIncompleatedMsg').show();
+    }
+};
+setupMessagehideshow();
 // $(window).load(function() {
 //
 // });
@@ -580,3 +599,19 @@ tableResize = function() {
 //   }
 // });
 //});
+
+
+handleValidationError = async function ( errorMessage, fieldID ) {
+  swal({
+      title: errorMessage,
+      type: 'warning',
+      showCancelButton: false,
+      confirmButtonText: 'OK'
+  }).then((result) => {
+      if (result.value) {
+          if (result.value) {
+              $(`#${fieldID}`).focus();
+          }
+      } 
+  }); 
+}

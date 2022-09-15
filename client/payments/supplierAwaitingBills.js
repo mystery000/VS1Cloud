@@ -178,6 +178,7 @@ Template.supplierawaitingbills.onRendered(function() {
                 action: function () {
                     $('#tblSupplierAwaitingBills').DataTable().ajax.reload();
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
                 "fnDrawCallback": function (oSettings) {
                   setTimeout(function () {
                     MakeNegative();

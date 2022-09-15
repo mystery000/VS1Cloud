@@ -438,6 +438,14 @@ Template.customersummaryreport.events({
 
     LoadingOverlay.hide();
   },
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
+  }
 });
 
 Template.customersummaryreport.helpers({
@@ -449,6 +457,17 @@ Template.customersummaryreport.helpers({
   },
   records: () => {
     return Template.instance().records.get();
+  },
+  redirectionType(value) {
+    if(value.type === 'PO') {
+      return '#noInfoFound';
+      return '/purchaseordercard?id=' + value.SaleID;
+    } else if (value.type === 'Invoice') {
+      return '#noInfoFound';
+      return '/invoicecard?id=' + value.SaleID;
+    } else {
+      return '#noInfoFound';
+    }
   },
   formatPrice( amount ){
     let utilityService = new UtilityService();

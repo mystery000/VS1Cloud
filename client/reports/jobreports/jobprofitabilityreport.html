@@ -195,12 +195,12 @@
                                             <tr class="table-active customDoubleTableHeading">
                                                 <th>Company</th>
                                                 <th>Job Name</th>
-                                                <th class="text-right">Job No</th>
+                                                <th>Job No</th>
                                                 <th class="text-right">Cost (ex)</th>
                                                 <th class="text-right">Income (ex)</th>
                                                 <th class="text-right">Quoted (ex)</th>
                                                 <th class="text-right">Diff Inc Cost</th>
-                                                <th class="text-right">Backorders</th>
+                                                <th>Backorders</th>
                                                 <th class="text-right">Credit</th>
                                                 <th class="text-right">Profit %</th>
                                                 <th class="text-right">Profit</th>
@@ -213,18 +213,18 @@
                                                         <td colspan="8" style="font-weight: 800;">{{ value.CompanyName }}</td>
                                                     </tr>
                                                     {{#each item in value.SubAccounts}}
-                                                        <tr>
+                                                        <tr data-type="{{item.TransactionType}} {{item.SaleID}}">
                                                             <td></td>
-                                                            <td>{{ item.JobName }}</td>
-                                                            <td>{{ item.JobNumber }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.IncomeEx }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.CostEx }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.Quotedex }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.DiffIncome_Cost }}</td>
-                                                            <td>{{ item.Backorders }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.CreditEx }}</td>
-                                                            <td>{{ formatPercent item.ProfitPercent }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.ProfitDollars }}</td>
+                                                            <td> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.JobName }}</a></td>
+                                                            <td> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.JobNumber }}</a></td>
+                                                            <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.IncomeEx }}</a></td>
+                                                            <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.CostEx }}</a></td>
+                                                            <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Quotedex }}</a></td>
+                                                            <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.DiffIncome_Cost }}</a></td>
+                                                            <td> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Backorders }}</a></td>
+                                                            <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.CreditEx }}</a></td>
+                                                            <td class="text-right"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPercent item.ProfitPercent }}</a></td>
+                                                            <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.ProfitDollars }}</a></td>
                                                         </tr>
                                                     {{/each}}
                                                 {{/each}}

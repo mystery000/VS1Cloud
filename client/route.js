@@ -235,6 +235,15 @@ authenticatedRoutes.route('/dashboardsalesmanager', {
     }
 });
 
+authenticatedRoutes.route('/dashboardmy', {
+    name: 'dashboardmy',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'dashboardmy'
+        });
+    }
+});
+
 authenticatedRoutes.route('/appointments', {
     name: 'appointments',
     action() {
@@ -1209,6 +1218,15 @@ authenticatedRoutes.route('/clienttypesettings', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'clienttypesettings'
+        });
+    }
+});
+
+authenticatedRoutes.route('/leadstatussettings', {
+    name: 'leadstatussettings',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'leadstatussettings'
         });
     }
 });

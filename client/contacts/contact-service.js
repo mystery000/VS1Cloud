@@ -453,6 +453,18 @@ export class ContactService extends BaseService {
         return this.POST(this.ERPObjects.TClientType, data);
     }
 
+    getLeadStatusData() {
+        let options = {
+            PropertyList: "ID,TypeName,Description,TypeCode",
+            select: "[Active]=true"
+        };
+        return this.getList(this.ERPObjects.TLeadStatusType, options);
+    }
+
+    saveLeadStatusData(data) {
+        return this.POST(this.ERPObjects.TLeadStatusType, data);
+    }
+
     getTaxCodes() {
         let options = {
             PropertyList: "CodeName,Rate,Description",

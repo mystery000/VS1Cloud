@@ -1,5 +1,4 @@
 <template name="newstatuspop">
-
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="max-width: 400px;">
         <div class="modal-content">
             <form id="newstatus" name="newstatus">
@@ -15,6 +14,18 @@
                                 <input type="text" id="newStatus" name="newStatus" class="form-control">
                             </div>
                         </div>
+                        <div class="col-12">
+                            <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                <label>Description</label>
+                                <input type="text" id="description" name="description" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                <label>Expected Quantity per Month</label>
+                                <input type="text" id="quantity" name="quantity" class="form-control text-right">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -24,5 +35,4 @@
             </form>
         </div>
     </div>
-
 </template>

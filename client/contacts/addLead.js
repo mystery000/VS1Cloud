@@ -984,12 +984,9 @@ Template.leadscard.onRendered(function () {
         // $('#addLetterTemplateModal').modal('toggle');
     })
 
-
-
     $(document).on("click", "#tblStatusPopList tbody tr", function(e) {
         $('#leadStatus').val($(this).find(".colStatusName").text());
         $('#statusPopModal').modal('toggle');
-
         $('#tblStatusPopList_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshStatus').trigger('click');
@@ -999,57 +996,28 @@ Template.leadscard.onRendered(function () {
 
     $(document).on('click', '#tblEmployeelist tbody tr', function (event) {
         let value = $(this).find('.colEmployeeName').text();
-            $('#leadRep').val(value);
-            $('#employeeListPOPModal').modal('hide');
-            $('#leadRep').val($('#leadRep').val().replace(/\s/g, ''));
+        $('#leadRep').val(value);
+        $('#employeeListPOPModal').modal('hide');
+        $('#leadRep').val($('#leadRep').val().replace(/\s/g, ''));
     })
     $(document).on('click', '#leadStatus', function(e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            $('#statusId').val('');
-            var statusDataName = e.target.value || '';
-            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        const $earch = $(this);
+        const offset = $earch.offset();
+        $('#statusId').val('');
+        const statusDataName = e.target.value || '';
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
                 $('#statusPopModal').modal('toggle');
-            } else {
-                if (statusDataName.replace(/\s/g, '') != '') {
-                    $('#newStatusHeader').text('Edit Status');
-                    $('#newStatus').val(statusDataName);
-
-                    getVS1Data('TLeadStatusType').then(function(dataObject) {
-                        if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            sideBarService.getAllLeadStatus().then(function(data) {
-                                for (let i in data.tleadstatustype) {
-                                    if (data.tleadstatustype[i].TypeName === statusDataName) {
-                                        $('#statusId').val(data.tleadstatustype[i].Id);
-                                    }
-                                }
-                                setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                    $('#newStatusPopModal').modal('toggle');
-                                }, 200);
-                            });
-                        } else {
-                            let data = JSON.parse(dataObject[0].data);
-                            let useData = data.tleadstatustype;
-                            for (let i in useData) {
-                                if (useData[i].TypeName === statusDataName) {
-                                    $('#statusId').val(useData[i].Id);
-
-                                }
-                            }
-                            setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
-                                $('#newStatusPopModal').modal('toggle');
-                            }, 200);
-                        }
-                    }).catch(function(err) {
+        } else {
+            if (statusDataName.replace(/\s/g, '') != '') {
+                $('#newStatusHeader').text('Edit Status');
+                $('#newStatus').val(statusDataName);
+                getVS1Data('TLeadStatusType').then(function(dataObject) {
+                    if (dataObject.length == 0) {
                         $('.fullScreenSpin').css('display', 'inline-block');
                         sideBarService.getAllLeadStatus().then(function(data) {
                             for (let i in data.tleadstatustype) {
                                 if (data.tleadstatustype[i].TypeName === statusDataName) {
                                     $('#statusId').val(data.tleadstatustype[i].Id);
-
                                 }
                             }
                             setTimeout(function() {
@@ -1057,34 +1025,59 @@ Template.leadscard.onRendered(function () {
                                 $('#newStatusPopModal').modal('toggle');
                             }, 200);
                         });
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.tleadstatustype;
+                        for (let i in useData) {
+                            if (useData[i].TypeName === statusDataName) {
+                                $('#statusId').val(useData[i].Id);
+                            }
+                        }
+                        setTimeout(function() {
+                            $('.fullScreenSpin').css('display', 'none');
+                            $('#newStatusPopModal').modal('toggle');
+                        }, 200);
+                    }
+                }).catch(function(err) {
+                    $('.fullScreenSpin').css('display', 'inline-block');
+                    sideBarService.getAllLeadStatus().then(function(data) {
+                        for (let i in data.tleadstatustype) {
+                            if (data.tleadstatustype.hasOwnProperty(i)) {
+                                if (data.tleadstatustype[i].TypeName === statusDataName) {
+                                    $('#statusId').val(data.tleadstatustype[i].Id);
+                                }
+                            }
+                        }
+                        setTimeout(function() {
+                            $('.fullScreenSpin').css('display', 'none');
+                            $('#newStatusPopModal').modal('toggle');
+                        }, 200);
                     });
-                    setTimeout(function() {
-                        $('.fullScreenSpin').css('display', 'none');
-                        $('#newStatusPopModal').modal('toggle');
-                    }, 200);
+                });
+                setTimeout(function() {
+                    $('.fullScreenSpin').css('display', 'none');
+                    $('#newStatusPopModal').modal('toggle');
+                }, 200);
 
-                } else {
-                    $('#statusPopModal').modal();
-                    setTimeout(function() {
-                        $('#tblStatusPopList_filter .form-control-sm').focus();
-                        $('#tblStatusPopList_filter .form-control-sm').val('');
-                        $('#tblStatusPopList_filter .form-control-sm').trigger("input");
-                        var datatable = $('#tblStatusPopList').DataTable();
-
-                        datatable.draw();
-                        $('#tblStatusPopList_filter .form-control-sm').trigger("input");
-
-                    }, 500);
-                }
+            } else {
+                $('#statusPopModal').modal();
+                setTimeout(function() {
+                    $('#tblStatusPopList_filter .form-control-sm').focus();
+                    $('#tblStatusPopList_filter .form-control-sm').val('');
+                    $('#tblStatusPopList_filter .form-control-sm').trigger("input");
+                    const datatable = $('#tblStatusPopList').DataTable();
+                    datatable.draw();
+                    $('#tblStatusPopList_filter .form-control-sm').trigger("input");
+                }, 500);
             }
-        });
-
+        }
+    });
     $(document).on('click', '#leadRep', function(e, li){
         $('#employeeListPOPModal').modal('show');
     })
 
     setTimeout(() => $('#leadStatus').editableSelect(), 500);
-    setTimeout(() => $('#leadStatus').editableSelect(), 3500);
+    // setTimeout(() => $('#leadStatus').editableSelect(), 3500);
 });
 
 Template.leadscard.events({
@@ -1103,7 +1096,6 @@ Template.leadscard.events({
         $('#leadStatus').select();
         $('#leadStatus').editableSelect();
     },
-
     'click #leadRep': function(event) {
         $('#leadRep').select();
         $('#leadRep').editableSelect();
@@ -1156,7 +1148,7 @@ Template.leadscard.events({
         let lastname = $('#edtLastName').val();
         let phone = $('#edtLeadPhone').val();
         let mobile = $('#edtLeadMobile').val();
-        if(mobile != '') {
+        if (mobile != '') {
             mobile = contactService.changeMobileFormat(mobile)
         }
         let fax = $('#edtLeadFax').val();
@@ -1185,22 +1177,18 @@ Template.leadscard.events({
             e.preventDefault();
             return false;
         }
-
         if (firstname == '') {
             swal('Please provide the first name !', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');
             e.preventDefault();
             return false;
         }
-
-
         if (lastname == '') {
             swal('Please provide the last name !', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');
             e.preventDefault();
             return false;
         }
-
         if ($('#chkSameAsShipping2').is(':checked')) {
             bstreetAddress = streetAddress;
             bcity = city;
@@ -1796,7 +1784,7 @@ Template.leadscard.events({
             $('#referenceLetterModal').modal('toggle');
             $('.fullScreenSpin').css('display', 'none');
         } else {
-          $('.fullScreenSpin').css('display', 'none');
+            $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnAppointment': function (event) {
@@ -1821,21 +1809,18 @@ Template.leadscard.events({
     'click .btnRefund': function (event) {
         convertToCustomer('refundcard');
     },
-
     // add to custom field
-  "click #edtSaleCustField1": function (e) {
-    $("#clickedControl").val("one");
-  },
-
-  // add to custom field
-  "click #edtSaleCustField2": function (e) {
-    $("#clickedControl").val("two");
-  },
-
-  // add to custom field
-  "click #edtSaleCustField3": function (e) {
-    $("#clickedControl").val("three");
-  },
+    "click #edtSaleCustField1": function (e) {
+        $("#clickedControl").val("one");
+    },
+    // add to custom field
+    "click #edtSaleCustField2": function (e) {
+        $("#clickedControl").val("two");
+    },
+    // add to custom field
+    "click #edtSaleCustField3": function (e) {
+        $("#clickedControl").val("three");
+    },
 });
 
 Template.leadscard.helpers({
@@ -1887,7 +1872,6 @@ Template.leadscard.helpers({
     uploadedFile: () => {
         return Template.instance().uploadedFile.get();
     },
-
     correspondences: () => {
         return Template.instance().correspondences.get();
     },

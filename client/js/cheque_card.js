@@ -3858,6 +3858,7 @@ Template.chequecard.onRendered(function () {
                 fnDrawCallback: function (oSettings) {
                   // $('.dataTables_paginate').css('display', 'none');
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
                     "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -3928,6 +3929,7 @@ Template.chequecard.onRendered(function () {
               fnDrawCallback: function (oSettings) {
                 // $('.dataTables_paginate').css('display', 'none');
               },
+              language: { search: "",searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
                   "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -3999,6 +4001,7 @@ Template.chequecard.onRendered(function () {
               fnDrawCallback: function (oSettings) {
                 // $('.dataTables_paginate').css('display', 'none');
               },
+              language: { search: "",searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
                   "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"

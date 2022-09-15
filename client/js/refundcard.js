@@ -1067,7 +1067,7 @@ Template.refundcard.onRendered(() => {
             }
 
             if (object_invoce[0]["taxItems"]) {
-                
+
                 let taxItems = object_invoce[0]["taxItems"];
                 if(taxItems && Object.keys(taxItems).length>0) {
                     $("#templatePreviewModal #tax_list_print").html("");
@@ -5055,6 +5055,7 @@ Template.refundcard.onRendered(function() {
                             ],
                             info: true,
                             responsive: true,
+                            language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function() {
                                 $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventory_filter");
                             }
@@ -5154,6 +5155,7 @@ Template.refundcard.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                             $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventory_filter");
                         }
@@ -5240,6 +5242,7 @@ Template.refundcard.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                             $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventory_filter");
                         }
@@ -5329,6 +5332,7 @@ Template.refundcard.onRendered(function() {
                             ],
                             info: true,
                             responsive: true,
+                            language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function() {
                               $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                               $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
@@ -5411,6 +5415,7 @@ Template.refundcard.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                           $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                           $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
@@ -5492,6 +5497,7 @@ Template.refundcard.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                           $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                           $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
@@ -5566,10 +5572,10 @@ Template.refundcard.onRendered(function() {
     };
 
     tempObj.getSubTaxCodes();
- 
+
     function initCustomFieldDisplaySettings(data, listType) {
       let custFields = [];
-      let customData = {}; 
+      let customData = {};
 
       let reset_data = [
         { label: 'Product Name', class: 'colProductName', active: true },
@@ -5587,7 +5593,7 @@ Template.refundcard.onRendered(function() {
         { label: 'Disc %', class: 'colDiscount', active: true },
         { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
       ];
-      let customFieldCount = reset_data.length; 
+      let customFieldCount = reset_data.length;
 
       // tempcode
       for (let r = 0; r < customFieldCount; r++) {
@@ -6676,9 +6682,9 @@ Template.refundcard.events({
             taxDetail.CodeName,
             `${taxDetail.Rate * 100}%`,
             "Selling Price",
-            `$${priceTotal}`,
-            `$${taxTotal}`,
-            `$${priceTotal + taxTotal}`,
+            `$${priceTotal.toFixed(3)}`,
+            `$${taxTotal.toFixed(3)}`,
+            `$${(priceTotal + taxTotal).toFixed(3)}`,
         ]);
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
@@ -6697,7 +6703,7 @@ Template.refundcard.events({
                     `${line.Percentage}%`,
                     line.PercentageOn,
                     "",
-                    `$${priceTotal * line.Percentage / 100}`,
+                    `$${(priceTotal * line.Percentage / 100).toFixed(3)}`,
                     ""
                 ]);
             });
@@ -6744,6 +6750,7 @@ Template.refundcard.events({
                     "fnDrawCallback": function (oSettings) {
 
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     "fnInitComplete": function () {
                         $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxDetail_filter");
                         $("<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxDetail_filter");
@@ -7502,7 +7509,7 @@ Template.refundcard.events({
                             const tpqaObject = {
                                 type: "PQABatch",
                                 fields: {
-                                    Active: true,   
+                                    Active: true,
                                     BatchExpiryDate: new Date(parseInt(dates[2]), parseInt(dates[1]) - 1, parseInt(dates[0])).toISOString(),
                                     Qty: 1,
                                     BatchNo: lotNumbers[i],

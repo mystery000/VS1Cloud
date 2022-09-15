@@ -6378,7 +6378,7 @@ Template.new_salesorder.onRendered(() => {
 
 
         exportSalesToPdf1 = function() {
-          
+
             let margins = {
                 top: 0,
                 bottom: 0,
@@ -6452,7 +6452,7 @@ Template.new_salesorder.onRendered(() => {
 
                 lineItems.push(lineItemObj);
             });
-         
+
             $("#html-2-pdfwrapper #subtotal_totalPrint").html(subtotal);
             $("#html-2-pdfwrapper #grandTotalPrint").html(grandTotal);
             $("#html-2-pdfwrapper #totalpaidamount").html(totalPaidAmt);
@@ -6497,7 +6497,7 @@ Template.new_salesorder.onRendered(() => {
             }
 
             var source = document.getElementById('html-2-pdfwrapper');
-         
+
             let file = "Sales Order.pdf";
             if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
                 file = 'Sales Order-' + id + '.pdf';
@@ -6529,7 +6529,7 @@ Template.new_salesorder.onRendered(() => {
                     $('.fullScreenSpin').css('display', 'none');
                 }
             });
-         
+
             // pdf.addHTML(source, function () {
 
             //     pdf.setFontSize(10);
@@ -6836,6 +6836,7 @@ Template.new_salesorder.onRendered(function() {
                             ],
                             info: true,
                             responsive: true,
+                            language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function() {
                                 $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventory_filter");
                                 $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventory_filter");
@@ -6921,6 +6922,7 @@ Template.new_salesorder.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                             $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventory_filter");
                             $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventory_filter");
@@ -6989,6 +6991,7 @@ Template.new_salesorder.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                             $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventory_filter");
                             $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventory_filter");
@@ -7069,6 +7072,7 @@ Template.new_salesorder.onRendered(function() {
                             ],
                             info: true,
                             responsive: true,
+                            language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function() {
                               $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                               $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
@@ -7147,6 +7151,7 @@ Template.new_salesorder.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                           $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                           $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
@@ -7224,6 +7229,7 @@ Template.new_salesorder.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
                           $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                           $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
@@ -7302,7 +7308,7 @@ Template.new_salesorder.onRendered(function() {
     // custom field displaysettings
     function initCustomFieldDisplaySettings(data, listType) {
       let custFields = [];
-      let customData = {}; 
+      let customData = {};
 
       let reset_data = [
         { label: 'Product Name', class: 'colProductName', active: true },
@@ -7320,7 +7326,7 @@ Template.new_salesorder.onRendered(function() {
         { label: 'Disc %', class: 'colDiscount', active: true },
         { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
       ];
-      let customFieldCount = reset_data.length; 
+      let customFieldCount = reset_data.length;
 
       // tempcode
       for (let r = 0; r < customFieldCount; r++) {
@@ -7337,7 +7343,7 @@ Template.new_salesorder.onRendered(function() {
       tempObj.displayfields.set(custFields);
       return;
       // tempcode
-      
+
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
           customData = {
@@ -8444,9 +8450,9 @@ Template.new_salesorder.events({
             taxDetail.CodeName,
             `${taxDetail.Rate * 100}%`,
             "Selling Price",
-            `$${priceTotal}`,
-            `$${taxTotal}`,
-            `$${priceTotal + taxTotal}`,
+            `$${priceTotal.toFixed(3)}`,
+            `$${taxTotal.toFixed(3)}`,
+            `$${(priceTotal + taxTotal).toFixed(3)}`,
         ]);
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
@@ -8465,7 +8471,7 @@ Template.new_salesorder.events({
                     `${line.Percentage}%`,
                     line.PercentageOn,
                     "",
-                    `$${priceTotal * line.Percentage / 100}`,
+                    `$${(priceTotal * line.Percentage / 100).toFixed(3)}`,
                     ""
                 ]);
             });
@@ -8512,6 +8518,7 @@ Template.new_salesorder.events({
                     "fnDrawCallback": function (oSettings) {
 
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     "fnInitComplete": function () {
                         $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxDetail_filter");
                         $("<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxDetail_filter");
@@ -12185,7 +12192,7 @@ Template.new_salesorder.events({
                             isAvailable = false;
                         }
                     })
-    
+
                     if(isExisting == false) {
                         FlowRouter.go('/workordercard?salesorderid='+FlowRouter.current().queryParams.id + '&lineId='+ i);
                         return;
@@ -12196,7 +12203,7 @@ Template.new_salesorder.events({
             if(isAvailable == false) {
                 swal('No available data to make work order!', '', 'warning');
             }
-           
+
         }
     },
 

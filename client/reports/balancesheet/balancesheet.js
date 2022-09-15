@@ -96,7 +96,7 @@ Template.balancesheetreport.onRendered(() => {
         $(".nav-tabs").hide();
     }
 
-    templateObject.getBalanceSheetReports = async(dateAsOf) => {
+    templateObject.getBalanceSheetReports = async(dateAsOf, ignoreDate=false ) => {
         LoadingOverlay.show();
 
         let data = !localStorage.getItem("VS1BalanceSheet_Report1") ?
@@ -110,7 +110,11 @@ Template.balancesheetreport.onRendered(() => {
             let Balancedatedisplay = moment(dateAsOf).format("DD/MM/YYYY");
             let lastdatemonthdisplay = moment(dateAsOf).format("DD MMM") + " " + previousYear;
             templateObject.dateAsAtAYear.set(lastdatemonthdisplay);
-            templateObject.dateAsAt.set(Balancedatedisplay);
+            // if( ignoreDate == true ){
+            //     templateObject.dateAsAt.set("Current Date");
+            // }else {
+            //     templateObject.dateAsAt.set(moment(Balancedatedisplay).format("DD/MM/YYYY"));
+            // }
             setTimeout(function() {
                 $("#balanceData tbody tr:first td .SubHeading").html(
                     "As at " + moment(dateAsOf).format("DD/MM/YYYY")
@@ -1121,12 +1125,11 @@ Template.balancesheetreport.events({
             .clone()
             .subtract({ months: 2 })
             .startOf("month");
-
         var lastQuarterStartDateFormat =
             moment(lastQuarterStartDate).format("DD/MM/YYYY");
-        var lastQuarterEndDateFormat =
+            var lastQuarterEndDateFormat =
             moment(lastQuarterEndDate).format("DD/MM/YYYY");
-
+            
         templateObject.dateAsAt.set(lastQuarterStartDateFormat);
         $("#balancedate").val(lastQuarterStartDateFormat);
 
@@ -1144,40 +1147,25 @@ Template.balancesheetreport.events({
         LoadingOverlay.show();
         localStorage.setItem("VS1BalanceSheet_Report", "");
         $("#balancedate").attr("readonly", false);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-        let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-        let fromDateDay = currentDate.getDate();
-        if (currentDate.getMonth() + 1 < 10) {
-            fromDateMonth = "0" + (currentDate.getMonth() + 1);
-        }
-        if (currentDate.getDate() < 10) {
-            fromDateDay = "0" + currentDate.getDate();
-        }
-        var quarterAdjustment = (moment().month() % 3) + 1;
-        var lastQuarterEndDate = moment()
-            .subtract({ months: quarterAdjustment })
-            .endOf("month");
-        var lastQuarterStartDate = lastQuarterEndDate
-            .clone()
-            .subtract({ months: 2 })
-            .startOf("month");
-        var lastQuarterStartDateFormat =
-            moment(lastQuarterStartDate).format("DD/MM/YYYY");
-        var lastQuarterEndDateFormat =
-            moment(lastQuarterEndDate).format("DD/MM/YYYY");
-
-        templateObject.dateAsAt.set(lastQuarterStartDateFormat);
-        $("#balancedate").val(lastQuarterStartDateFormat);
-        var fromDate =
-            fromDateDay +
-            "/" +
-            fromDateMonth +
-            "/" +
-            Math.floor(currentDate.getFullYear() - 1);
-        templateObject.dateAsAt.set(begunDate);
-        $("#balancedate").val(lastQuarterStartDateFormat);
+        let fromDate = null;
+        let endDate = null;
+        if (moment().quarter() == 4) {
+            fromDate = moment().subtract(1, "year").month("July").startOf("month").format("YYYY-MM-DD");
+            endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
+          } else {
+            fromDate = moment().subtract(2, "year").month("July").startOf("month").format("YYYY-MM-DD");
+            endDate = moment().subtract(1, "year").month("June").endOf("month").format("YYYY-MM-DD");
+          }
+        templateObject.dateAsAt.set(endDate);
+        $("#balancedate").val(endDate);
+        // var fromDate =
+        //     fromDateDay +
+        //     "/" +
+        //     fromDateMonth +
+        //     "/" +
+        //     Math.floor(currentDate.getFullYear() - 1);
+        // templateObject.dateAsAt.set(begunDate);
+        // $("#balancedate").val(lastQuarterStartDateFormat);
 
         var currentDate2 = new Date();
         var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
@@ -1195,9 +1183,9 @@ Template.balancesheetreport.events({
         LoadingOverlay.show();
         localStorage.setItem("VS1BalanceSheet_Report", "");
         $("#balancedate").attr("readonly", true);
-        templateObject.dateAsAt.set("Current Date");
-        templateObject.getBalanceSheetReports("", "", true);
+        templateObject.getBalanceSheetReports("", true);
         LoadingOverlay.hide();
+        templateObject.dateAsAt.set("Current Date");
     },
     "click .sales-tab-item": function(event) {
         let tempInstance = Template.instance();

@@ -1869,6 +1869,7 @@ Template.supplierpaymentcard.onRendered(() => {
               action: function () {
                 $("#tblSupplierAwaitingCard").DataTable().ajax.reload();
               },
+              language: { search: "",searchPlaceholder: "Search List..." },
               fnDrawCallback: function (oSettings) {
                 setTimeout(function () {
                   MakeNegative();

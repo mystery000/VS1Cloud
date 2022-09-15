@@ -46,4 +46,10 @@ export default class GlobalFunctions {
     let newDate = _date[2] + replace + _date[1] +  replace + _date[0];
     return newDate;
   }
+
+  static async asyncForEach(array, callback = async (element, index, array = []) => {}) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
+  }
 }

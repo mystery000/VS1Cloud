@@ -120,7 +120,7 @@
                             </div>
                             <div class="col-12 col-md-5">
                                 <div class="row no-gutters justify-content-end">
-                                    <!-- <div class="dropdown" style="margin: 8px;">
+                                    <div class="dropdown" style="margin: 8px;">
                                         <style>
                                             .dropdown-toggle::after {
                                                 display: none;
@@ -134,8 +134,8 @@
                                             <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="javascript:void(0);">Last 12 Months</a>
                                             <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="javascript:void(0);">Ignore Date</a>
                                         </div>
-                                    </div> -->
-                                    <!-- <div class="form-group" style="margin: 8px;">
+                                    </div> 
+                                     <div class="form-group" style="margin: 8px;">
                                         <label>From</label>
                                         <div class="input-group date" style="width: 160px;">
                                             <input type="text" class="form-control edtReportDates" id="dateFrom" name="dateFrom">
@@ -152,7 +152,7 @@
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
                                         </div>
-                                    </div> -->
+                                    </div> 
                                 </div>
                                 <div class="row no-gutters justify-content-end">
                                     <button class="btn btn-primary btnExportReport" type="button" style="margin: 8px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
@@ -306,31 +306,31 @@
                                                             <tr>
                                                                 <td></td>
                                                                 <td></td>
-                                                                <td>{{ item.Type }}</td>
+                                                                <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Type }}</a></td>
                                                                 {{#if isOnlyDefaultActive }}
                                                                     {{#if currencyList}}
                                                                         {{#each c in currencyList }}
                                                                             {{# if c.active}}
-                                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success">{{ convertAmount item.Total_Amount_Ex c}}</td>
+                                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Total_Amount_Ex c}}</a></td>
                                                                             {{/if}}
                                                                         {{/each}}
                                                                         {{#each c in currencyList }}
                                                                             {{# if c.active}}
-                                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success">{{ convertAmount item.Total_Amount_Inc c}}</td>
+                                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Total_Amount_Inc c}}</a></td>
                                                                             {{/if}}
                                                                         {{/each}}
                                                                         {{#each c in currencyList }}
                                                                             {{# if c.active}}
-                                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success">{{ convertAmount item.Gross_Profit c}}</td>
+                                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Gross_Profit c}}</a></td>
                                                                             {{/if}}
                                                                         {{/each}}
                                                                     {{/if}}
                                                                 {{else}}
-                                                                    <td class="text-right text-success">{{ formatPrice item.Total_Amount_Ex }}</td>
-                                                                    <td class="text-right text-success">{{ formatPrice item.Total_Amount_Inc }}</td>
-                                                                    <td class="text-right text-success">{{ formatPrice item.Gross_Profit }}</td>
+                                                                    <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Total_Amount_Ex }}</a></td>
+                                                                    <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Total_Amount_Inc }}</a></td>
+                                                                    <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Gross_Profit }}</a></td>
                                                                 {{/if}}
-                                                                <td class="text-right text-success">0</td>
+                                                                <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">0</a></td>
                                                                 <td></td>
                                                                 <td></td>
                                                                 <td></td>

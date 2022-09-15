@@ -77,6 +77,59 @@ Template.new_invoice.onCreated(() => {
 });
 
 Template.new_invoice.onRendered(() => {
+  ///////////////////////////
+  sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), 'table1').then(function (data) {
+                console.log('new custom get.......', data)
+              }).catch(function (err) {
+                console.log('new custom get.......', err)
+              });
+
+    var erpGet = erpDb();
+
+  let test_data = {
+      Name: "VS1_Customize",
+      Params:
+      {
+          TableName: "table1",
+          EmployeeId: parseInt(Session.get('mySessionEmployeeLoggedID'))||0,
+          Columns: [
+              {
+                  Index: 1,
+                  Header: "modifieddddd",
+                  Width: 30,
+                  Hidden: true
+              },
+              {
+                  index: 2,
+                  header: "modified",
+                  width: 30,
+                  hidden: false
+              }
+          ],
+          ERPUserName:erpGet.ERPUsername,
+          ERPPassword:erpGet.ERPPassword
+      }
+  };
+  var myCustomizeString = '"JsonIn"'+':'+JSON.stringify(test_data);
+  console.log(myCustomizeString);
+  var oPost = new XMLHttpRequest();
+  oPost.open("POST",URLRequest +erpGet.ERPIPAddress +":" +erpGet.ERPPort +"/" +'erpapi/VS1_Cloud_Task/Method',true);
+  oPost.setRequestHeader("database", erpGet.ERPDatabase);
+  oPost.setRequestHeader("username", erpGet.ERPUsername);
+  oPost.setRequestHeader("password", erpGet.ERPPassword);
+  oPost.setRequestHeader("Accept", "application/json");
+  oPost.setRequestHeader("Accept", "application/html");
+  oPost.setRequestHeader("Content-type", "application/json");
+  // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
+  oPost.send(myCustomizeString);
+  // sideBarService.saveNewCustomFields(myCustomizeString).then(function (data) {
+  //   console.log('new custom add.......', data)
+  // }).catch(function (err) {
+  //   console.log('new custom add.......', err)
+  // });
+  ///////////////////////////
+
+
   // $('#lotNumberModal .btnSelect').removeClass('d-none');
   // $('#lotNumberModal .btnAutoFill').addClass('d-none');
   $("#serialNumberModal .btnSelect").removeClass("d-none");
@@ -4279,7 +4332,7 @@ Template.new_invoice.onRendered(() => {
                       cust_data.customername == useData[d].fields.ClientName
                     );
                   });
-                  
+
                   getVS1Data("TAppointment").then(function (dataObject) {
                     let appointments = JSON.parse(dataObject[0].data);
                     let allAppointments = appointments.tappointmentex;
@@ -4295,7 +4348,7 @@ Template.new_invoice.onRendered(() => {
                             appointmentAttachments
                           );
                     }
-                   
+
                   });
                   templateObject.singleInvoiceData.set(useData[d]);
                   let lineItems = [];
@@ -12653,6 +12706,7 @@ Template.new_invoice.onRendered(function () {
                   fnDrawCallback: function (oSettings) {
                     // $('.dataTables_paginate').css('display', 'none');
                   },
+                  language: { search: "",searchPlaceholder: "Search List..." },
                   fnInitComplete: function () {
                     $(
                       "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -12761,6 +12815,7 @@ Template.new_invoice.onRendered(function () {
                 fnDrawCallback: function (oSettings) {
                   // $('.dataTables_paginate').css('display', 'none');
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
                     "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -12946,6 +13001,7 @@ Template.new_invoice.onRendered(function () {
                 fnDrawCallback: function (oSettings) {
                   // $('.dataTables_paginate').css('display', 'none');
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
                     "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -13028,6 +13084,7 @@ Template.new_invoice.onRendered(function () {
                 fnDrawCallback: function (oSettings) {
                   // $('.dataTables_paginate').css('display', 'none');
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
                     "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -13100,6 +13157,7 @@ Template.new_invoice.onRendered(function () {
               fnDrawCallback: function (oSettings) {
                 // $('.dataTables_paginate').css('display', 'none');
               },
+              language: { search: "",searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
                   "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -13173,6 +13231,7 @@ Template.new_invoice.onRendered(function () {
               fnDrawCallback: function (oSettings) {
                 // $('.dataTables_paginate').css('display', 'none');
               },
+              language: { search: "",searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
                   "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -15839,9 +15898,9 @@ Template.new_invoice.events({
       taxDetail.CodeName,
       `${taxDetail.Rate * 100}%`,
       "Selling Price",
-      `$${priceTotal}`,
-      `$${taxTotal}`,
-      `$${priceTotal + taxTotal}`,
+      `$${priceTotal.toFixed(3)}`,
+      `$${taxTotal.toFixed(3)}`,
+      `$${(priceTotal + taxTotal).toFixed(3)}`,
     ]);
     if (taxDetail.Lines) {
       taxDetail.Lines.map((line) => {
@@ -15852,7 +15911,9 @@ Template.new_invoice.events({
           lineDescription = subTaxCodes.find(
             (v) => v.codename === line.SubTaxCode
           );
-          lineDescription = lineDescription.description;
+          if(lineDescription) {
+            lineDescription = lineDescription.description;
+          }
         }
 
         taxDetailTableData.push([
@@ -15862,7 +15923,7 @@ Template.new_invoice.events({
           `${line.Percentage}%`,
           line.PercentageOn,
           "",
-          `$${(priceTotal * line.Percentage) / 100}`,
+          `$${((priceTotal * line.Percentage) / 100).toFixed(3)}`,
           "",
         ]);
       });
@@ -15917,6 +15978,7 @@ Template.new_invoice.events({
           info: true,
           responsive: true,
           fnDrawCallback: function (oSettings) {},
+          language: { search: "",searchPlaceholder: "Search List..." },
           fnInitComplete: function () {
             $(
               "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"

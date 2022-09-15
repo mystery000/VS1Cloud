@@ -152,11 +152,37 @@
                                         border-top: 2px #858999 solid;
                                         border-bottom: 2px #858999 solid;
                                     }
+                                    .table th,
+                                    .table td {
+                                        /* text-align: right; */
+                                        min-width: 150px;
+                                    }
+                                    .table td.text-left {
+                                        text-align: left !important;
+                                    }
+                                    .table th:first-child,
+                                    .table td:first-child {
+                                        text-align: left;
+                                    }
+                                    table tr .text-danger,
+                                    table tr .text-danger a {
+                                        color: #e74a3b !important;
+                                    }
+                                    .customDoubleTableHeading + tr th {
+                                        border-right: 1px solid #cbcbcb !important;
+                                    }
+                                    .customDoubleTableHeading + tr th:last-child {
+                                        border-right: none !important;
+                                    }
+                                    .text-center1,
+                                    .text-center0 {
+                                        text-align: right !important;
+                                    }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table table-sm" id="tableExport" name="tableExport">
                                         <thead>
-                                            <tr class="table-active">
+                                            <tr class="table-active customDoubleTableHeading">
                                                 <th>Company</th>
                                                 <th style="width: 130px;">Type</th>
                                                 <th>Payment #</th>
@@ -165,13 +191,13 @@
                                                 <th>Bill Street</th>
                                                 <th>Bill Place</th>
 
-                                                <th colspan="{{countActive currencyList}}">Card Amount</th>
-                                                <th colspan="{{countActive currencyList}}">Non Card Amount</th>
+                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Card Amount</th>
+                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Non Card Amount</th>
 
                                             </tr>
 
                                             {{#if isOnlyDefaultActive equal "false" }}
-                                                <tr class="table-active tblAvoid customDoubleTableHeading">
+                                                <tr class="table-active tblAvoid">
                                                 <th></th>
                                                 <th></th>
                                                 <th></th>
@@ -183,7 +209,7 @@
                                                 {{#if currencyList}}
                                                     {{#each c in currencyList }}
                                                     {{# if c.active}}
-                                                        <th active="{{ c.active }}">{{ c.code }}</th>
+                                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                                                     {{/if}}
                                                     {{/each}}
                                                 {{/if}}
@@ -191,7 +217,7 @@
                                                 {{#if currencyList}}
                                                     {{#each c in currencyList }}
                                                     {{# if c.active}}
-                                                        <th active="{{ c.active }}">{{ c.code }}</th>
+                                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                                                     {{/if}}
                                                     {{/each}}
                                                 {{/if}}
@@ -255,7 +281,7 @@
 
                                                                     {{#each c in currencyList }}
                                                                         {{#if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1">
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap  Indent1">
                                                                                 <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries.CardAmount c}}</a>
                                                                             </td>
                                                                         {{/if}}

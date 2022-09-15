@@ -2534,7 +2534,7 @@ export class SideBarService extends BaseService {
 
   getAllLeadStatus() {
     let options = {
-      PropertyList: "ID,TypeName",
+      PropertyList: "ID,TypeName,Description,TypeCode",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TLeadStatusType, options);
@@ -3413,6 +3413,26 @@ export class SideBarService extends BaseService {
   saveCorrespondence(data)
   {
       return this.POST(this.ERPObjects.TCorrespondence,data);
+  }
+
+  getNewCustomFieldsWithQuery(employeeID='', tableName='') {
+    let options = {
+      EmployeeID: employeeID,
+    };
+
+    if(tableName) {
+      options = {
+        EmployeeID: employeeID,
+        TableName: tableName,
+      };
+    }
+
+    return this.getList(this.ERPObjects.VS1_Customize, options);
+  }
+
+  saveNewCustomFields(data)
+  {
+      return this.POST('VS1_Cloud_Task/method', data);
   }
 
 }

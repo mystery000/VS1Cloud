@@ -37,6 +37,7 @@ openDb = function(dbName) {
             let db = event.target.result;
             db.createObjectStore("vscloudlogininfo", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TProductVS1", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TProductList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TCustomerVS1", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TSupplierVS1", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TAccountVS1", { keyPath: "EmployeeEmail" });
@@ -300,6 +301,7 @@ openDb = function(dbName) {
             db.createObjectStore('TCorrespondence', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TEftOptions', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TBasReturn', { keyPath: "EmployeeEmail" });
+            db.createObjectStore('VS1_Customize', { keyPath: "EmployeeEmail" });
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });

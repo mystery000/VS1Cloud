@@ -556,7 +556,7 @@ Template.statementlist.onRendered(function () {
                                     MakeNegative();
                                 }, 100);
                             },
-
+                            language: { search: "",searchPlaceholder: "Search List..." },
                         }).on('page', function () {
                             setTimeout(function () {
                                 MakeNegative();
@@ -768,7 +768,7 @@ Template.statementlist.onRendered(function () {
                                 MakeNegative();
                             }, 100);
                         },
-
+                        language: { search: "",searchPlaceholder: "Search List..." },
                     }).on('page', function () {
                         setTimeout(function () {
                             MakeNegative();

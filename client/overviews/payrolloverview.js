@@ -15,6 +15,7 @@ import ChartsEditor from "../js/Charts/ChartsEditor";
 import Tvs1ChartDashboardPreferenceField from "../js/Api/Model/Tvs1ChartDashboardPreferenceField";
 import ApiService from "../js/Api/Module/ApiService";
 import LoadingOverlay from "../LoadingOverlay";
+import PayRun from "../js/Api/Model/PayRun";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -43,8 +44,8 @@ Template.payrolloverview.onCreated(function () {
   templateObject.deptrecords = new ReactiveVar();
 
 
-  templateObject.draftPayRunRecords = new ReactiveVar();
-  templateObject.payRunHistoryRecords = new ReactiveVar();
+  templateObject.draftPayRunRecords = new ReactiveVar([]);
+  templateObject.payRunHistoryRecords = new ReactiveVar([]);
 });
 
 Template.payrolloverview.onRendered(function () {
@@ -65,153 +66,171 @@ Template.payrolloverview.onRendered(function () {
 
 
   templateObject.loadDraftPayrun = async () => {
-    $("#tblPayRunHistory").DataTable({
-      columnDefs: [
-        {
-          orderable: false,
-          targets: -1
-        }
-      ],
-      sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-      buttons: [
-        {
-          extend: "excelHtml5",
-          text: "",
-          download: "open",
-          className: "btntabletocsv hiddenColumn",
-          filename: "taxratelist_" + moment().format(),
-          orientation: "portrait",
-          exportOptions: {
-            columns: ":visible"
+
+    let payRunsHistory = JSON.parse(localStorage.getItem('TPayRunHistory')) || [];
+    payRunsHistory = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
+  
+    templateObject.draftPayRunRecords.set(payRunsHistory);
+
+    setTimeout(() => {
+      $("#tblPayRunHistory").DataTable({
+        columnDefs: [
+          {
+            orderable: false,
+            targets: -1
           }
-        }, {
-          extend: "print",
-          download: "open",
-          className: "btntabletopdf hiddenColumn",
-          text: "",
-          title: "Tax Rate List",
-          filename: "taxratelist_" + moment().format(),
-          exportOptions: {
-            columns: ":visible"
-          }
-        }
-      ],
-      select: true,
-      destroy: true,
-      colReorder: true,
-      colReorder: {
-        fixedColumnsRight: 1
-      },
-      lengthMenu: [
-        [
-          25, -1
         ],
-        [
-          25, "All"
-        ]
-      ],
-      // bStateSave: true,
-      // rowId: 0,
-      paging: true,
-      info: true,
-      responsive: true,
-      order: [
-        [0, "asc"]
-      ],
-      action: function () {
-        $("#tblPayRunHistory").DataTable().ajax.reload();
-      },
-      fnDrawCallback: function (oSettings) {
+        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        buttons: [
+          {
+            extend: "excelHtml5",
+            text: "",
+            download: "open",
+            className: "btntabletocsv hiddenColumn",
+            filename: "taxratelist_" + moment().format(),
+            orientation: "portrait",
+            exportOptions: {
+              columns: ":visible"
+            }
+          }, {
+            extend: "print",
+            download: "open",
+            className: "btntabletopdf hiddenColumn",
+            text: "",
+            title: "Tax Rate List",
+            filename: "taxratelist_" + moment().format(),
+            exportOptions: {
+              columns: ":visible"
+            }
+          }
+        ],
+        select: true,
+        destroy: true,
+        colReorder: true,
+        colReorder: {
+          fixedColumnsRight: 1
+        },
+        lengthMenu: [
+          [
+            25, -1
+          ],
+          [
+            25, "All"
+          ]
+        ],
+        // bStateSave: true,
+        // rowId: 0,
+        paging: true,
+        info: true,
+        responsive: true,
+        order: [
+          [0, "asc"]
+        ],
+        action: function () {
+          $("#tblPayRunHistory").DataTable().ajax.reload();
+        },
+        fnDrawCallback: function (oSettings) {
+          setTimeout(function () {
+            MakeNegative();
+          }, 100);
+        }
+      }).on("page", function () {
         setTimeout(function () {
           MakeNegative();
         }, 100);
-      }
-    }).on("page", function () {
-      setTimeout(function () {
-        MakeNegative();
-      }, 100);
-      let draftRecord = templateObject.datatablerecords.get();
-      templateObject.datatablerecords.set(draftRecord);
-    }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
-      setTimeout(function () {
-        MakeNegative();
-      }, 100);
-    });
+        let draftRecord = templateObject.datatablerecords.get();
+        templateObject.datatablerecords.set(draftRecord);
+      }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+      });
+    }, 500);
+
+   
   };
 
   templateObject.loadPayRunList = async () => {
-    $("#tblPayRunList").DataTable({
-      columnDefs: [
-        {
-          orderable: false,
-          targets: -1
-        }
-      ],
-      sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-      buttons: [
-        {
-          extend: "excelHtml5",
-          text: "",
-          download: "open",
-          className: "btntabletocsv hiddenColumn",
-          filename: "taxratelist_" + moment().format(),
-          orientation: "portrait",
-          exportOptions: {
-            columns: ":visible"
+    let payRunsHistory = JSON.parse(localStorage.getItem('TPayRunHistory')) || [];
+    payRunsHistory = payRunsHistory.filter(p => p.stpFilling != PayRun.STPFilling.draft);
+   
+    templateObject.payRunHistoryRecords.set(payRunsHistory);
+
+    setTimeout(() => {
+
+      $("#tblPayRunList").DataTable({
+        columnDefs: [
+          {
+            orderable: false,
+            targets: -1
           }
-        }, {
-          extend: "print",
-          download: "open",
-          className: "btntabletopdf hiddenColumn",
-          text: "",
-          title: "Tax Rate List",
-          filename: "taxratelist_" + moment().format(),
-          exportOptions: {
-            columns: ":visible"
-          }
-        }
-      ],
-      select: true,
-      destroy: true,
-      colReorder: true,
-      colReorder: {
-        fixedColumnsRight: 1
-      },
-      lengthMenu: [
-        [
-          25, -1
         ],
-        [
-          25, "All"
-        ]
-      ],
-      // bStateSave: true,
-      // rowId: 0,
-      paging: true,
-      info: true,
-      responsive: true,
-      order: [
-        [0, "asc"]
-      ],
-      action: function () {
-        $("#tblPayRunList").DataTable().ajax.reload();
-      },
-      fnDrawCallback: function (oSettings) {
+        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        buttons: [
+          {
+            extend: "excelHtml5",
+            text: "",
+            download: "open",
+            className: "btntabletocsv hiddenColumn",
+            filename: "taxratelist_" + moment().format(),
+            orientation: "portrait",
+            exportOptions: {
+              columns: ":visible"
+            }
+          }, {
+            extend: "print",
+            download: "open",
+            className: "btntabletopdf hiddenColumn",
+            text: "",
+            title: "Tax Rate List",
+            filename: "taxratelist_" + moment().format(),
+            exportOptions: {
+              columns: ":visible"
+            }
+          }
+        ],
+        select: true,
+        destroy: true,
+        colReorder: true,
+        colReorder: {
+          fixedColumnsRight: 1
+        },
+        lengthMenu: [
+          [
+            25, -1
+          ],
+          [
+            25, "All"
+          ]
+        ],
+        // bStateSave: true,
+        // rowId: 0,
+        paging: true,
+        info: true,
+        responsive: true,
+        order: [
+          [0, "asc"]
+        ],
+        action: function () {
+          $("#tblPayRunList").DataTable().ajax.reload();
+        },
+        fnDrawCallback: function (oSettings) {
+          setTimeout(function () {
+            MakeNegative();
+          }, 100);
+        }
+      }).on("page", function () {
         setTimeout(function () {
           MakeNegative();
         }, 100);
-      }
-    }).on("page", function () {
-      setTimeout(function () {
-        MakeNegative();
-      }, 100);
-      let draftRecord = templateObject.datatablerecords.get();
-      templateObject.datatablerecords.set(draftRecord);
-    }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
-      setTimeout(function () {
-        MakeNegative();
-      }, 100);
-    });
+        let draftRecord = templateObject.datatablerecords.get();
+        templateObject.datatablerecords.set(draftRecord);
+      }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+      });
+    }, 500);
   };
 
   $(".formClassDate").datepicker({
@@ -637,6 +656,7 @@ Template.payrolloverview.onRendered(function () {
                         MakeNegative();
                       }, 100);
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     fnInitComplete: function () {
                       let urlParametersPage =
                         FlowRouter.current().queryParams.page;
@@ -930,6 +950,7 @@ Template.payrolloverview.onRendered(function () {
                     MakeNegative();
                   }, 100);
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   let urlParametersPage = FlowRouter.current().queryParams.page;
                   if (urlParametersPage) {
@@ -1220,6 +1241,7 @@ Template.payrolloverview.onRendered(function () {
                       MakeNegative();
                     }, 100);
                   },
+                  language: { search: "",searchPlaceholder: "Search List..." },
                   fnInitComplete: function () {
                     let urlParametersPage =
                       FlowRouter.current().queryParams.page;
@@ -1731,6 +1753,7 @@ Template.payrolloverview.onRendered(function () {
                           });
                       });
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     fnInitComplete: function () {
                       $(
                         "<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>"
@@ -1978,6 +2001,7 @@ Template.payrolloverview.onRendered(function () {
                       });
                   });
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
                     "<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>"
@@ -2231,6 +2255,7 @@ Template.payrolloverview.onRendered(function () {
                         });
                     });
                   },
+                  language: { search: "",searchPlaceholder: "Search List..." },
                   fnInitComplete: function () {
                     $(
                       "<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>"
@@ -6033,6 +6058,11 @@ Template.payrolloverview.events({
   "mouseleave .card-header": (e) => {
     $(e.currentTarget).parent(".card").removeClass("hovered");
   },
+
+  "click .redirect-to-payrun-details": (e, ui) => {
+    const id = $(e.currentTarget).attr('calendar-id');
+    window.location.href = `/payrundetails?cid=${id}`;
+  }
 });
 
 Template.payrolloverview.helpers({
@@ -6140,5 +6170,22 @@ Template.payrolloverview.helpers({
   },
   draftPayRunRecords: () => {
     return Template.instance().draftPayRunRecords.get();
+  },
+
+  PayRunStatus: status => {
+    if (status == PayRun.STPFilling.notfilled) {
+      return "Not filled";
+    } else if (status == PayRun.STPFilling.draft) {
+      return "Draft";
+    } else if (status == PayRun.STPFilling.overdue) {
+      return "Overdue";
+    }
+  },
+  PaymentDateFormat: data => {
+    if (data) {
+      return moment(data).format("Do MMM YYYY");
+    }
   }
+
+ 
 });

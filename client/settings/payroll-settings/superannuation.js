@@ -252,7 +252,7 @@ templateObject.getSuperannuationData = async function(){
                     MakeNegative();
                 }, 100);
             });
-        }, 0);
+        }, 1000);
     } catch (error) {
         $('.fullScreenSpin').css('display', 'none');
     }
@@ -265,6 +265,7 @@ $('.superannuationDropDown').editableSelect()
     .on('click.editable-select', async function (e, li) {
         let $search = $(this);
         let dropDownID = $search.attr('id')
+        $('#edtSuperAnnuationDropDownID').val(dropDownID);
         templateObject.currentDrpDownID.set(dropDownID);
         let offset = $search.offset();
         let searchName = e.target.value || '';
@@ -437,11 +438,7 @@ Template.superannuationSettings.events({
         let fundtypeid = $('#fundtypeid').val();
 
         if(fundName == ''){
-            swal({
-                title: "Warning",
-                text: "Please select Superannuation Name",
-                type: 'warning',
-            })
+            handleValidationError('Please select Superannuation Name!', 'edtFundName');
             return false;
         }
 
@@ -467,39 +464,55 @@ Template.superannuationSettings.events({
                 Allclasses:true,
             }
         };
-
-        const ApiResponse = await apiEndpoint.fetch(null, {
-            method: "POST",
-            headers: ApiService.getPostHeaders(),
-            body: JSON.stringify(superannuationRateSettings),
-        });
-
-
-        if (ApiResponse.ok == true) {
-            const jsonResponse = await ApiResponse.json();
-            $('#superannuationRateForm')[0].reset();
-            await templateObject.saveDataLocalDB();
-            await templateObject.getSuperannuationData();
-            $('#newSuperannuationFundModal').modal('hide');
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Success",
-                text: "Superannuation has been saved",
-                type: 'success',   
-                showCancelButton: false,
-                confirmButtonText: 'Done'             
-            }).then((result) => {
-                if (result.value) {                    
-                    window.location.reload();
-                }
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(superannuationRateSettings),
             });
-        }else{
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                $('#superannuationRateForm')[0].reset();
+                await templateObject.saveDataLocalDB();
+                await templateObject.getSuperannuationData();
+                let drpDownID = $('#edtSuperAnnuationDropDownID').val();
+                $('#' + drpDownID).val(fundName);
+                $('#newSuperannuationFundModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');            
+                swal({
+                    title: 'Superannuation has been saved',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) { }
+                    } 
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: ApiResponse.headers.get('errormessage'),
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
+            }
+        } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
             swal({
-                title: "Error",
-                text: "Failed to add deduction",
+                title: 'Oooops...',
+                text: error,
                 type: 'error',
-            })
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });
         }
     },
 });

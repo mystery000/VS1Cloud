@@ -1,25 +1,10 @@
-import {
-    SalesBoardService
-} from '../js/sales-service';
-import {
-    ReactiveVar
-} from 'meteor/reactive-var';
-import {
-    CoreService
-} from '../js/core-service';
-import {
-    UtilityService
-} from "../utility-service";
+import { SalesBoardService } from '../js/sales-service';
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
-import {
-    SideBarService
-} from '../js/sidebar-service';
+import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
-var times = 0;
 Template.newstatuspop.onCreated(() => {});
 Template.newstatuspop.onRendered(() => {});
 Template.newstatuspop.helpers({});
@@ -27,32 +12,40 @@ Template.newstatuspop.events({
     'click .btnSaveStatus': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         let clientService = new SalesBoardService()
-        let status = $('#newStatus').val();
-        let statusid = $('#statusId').val();
+        let statusName = $('#newStatus').val();
+        let statusId = $('#statusId').val();
+        let statusDesc = $('#description').val();
+        let statusEQPM = $('#quantity').val();
+        statusEQPM = Number(statusEQPM.replace(/[^0-9.-]+/g, "")) || 1.0
+        statusEQPM = statusEQPM.toString();
         let leadData = '';
-        if (statusid == "") {
+        if (statusId == "") {
             leadData = {
                 type: 'TLeadStatusType',
                 fields: {
-                    TypeName: status,
-                    KeyValue: status
+                    TypeName: statusName,
+                    Description: statusDesc,
+                    KeyValue: statusEQPM,
+                    Active: true
                 }
             };
         } else {
             leadData = {
                 type: 'TLeadStatusType',
                 fields: {
-                    ID: parseInt(statusid),
-                    TypeName: status,
-                    KeyValue: status
+                    ID: parseInt(statusId),
+                    TypeName: statusName,
+                    Description: statusDesc,
+                    KeyValue: statusEQPM,
+                    Active: true
                 }
             };
         }
 
-        if (status != "") {
+        if (statusName != "") {
             clientService.saveLeadStatus(leadData).then(function(objDetails) {
                 sideBarService.getAllLeadStatus().then(function(dataUpdate) {
-                    $('#sltStatus').val(status);
+                    $('#sltStatus').val(statusName);
                     $('#newStatusPopModal').modal('toggle');
                     $('.fullScreenSpin').css('display', 'none');
                     addVS1Data('TLeadStatusType', JSON.stringify(dataUpdate)).then(function(datareturn) {
@@ -89,5 +82,25 @@ Template.newstatuspop.events({
                 else if (result.dismiss === 'cancel') {}
             });
         }
-    }
+    },
+    'keydown #quantity': function (event) {
+        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) != -1 ||
+            (event.keyCode == 65 && (event.ctrlKey == true || event.metaKey == true)) ||
+            (event.keyCode >= 35 && event.keyCode <= 40)) {
+            return;
+        }
+        if (event.shiftKey == true) {
+            event.preventDefault();
+        }
+        if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+            (event.keyCode >= 96 && event.keyCode <= 105) ||
+            event.keyCode == 8 || event.keyCode == 9 ||
+            event.keyCode == 37 || event.keyCode == 39 ||
+            event.keyCode == 46 || event.keyCode == 190 || event.keyCode == 189 || event.keyCode == 109) {
+
+        }
+        else {
+            event.preventDefault();
+        }
+    },
 });

@@ -1129,6 +1129,7 @@ Template.taxsummaryreport.onRendered(() => {
         templateObject.records.set(records);
         templateObject.grandrecords.set('');
         LoadingOverlay.hide();
+
       }
 
     }
@@ -1173,7 +1174,7 @@ Template.taxsummaryreport.onRendered(() => {
     false);
 
   templateObject.getDepartments = function () {
-    let deptrecordObj = [];
+    let deptrecords = [];
     reportService.getDepartment().then(function (data) {
       for (let i in data.tdeptclass) {
 
@@ -1458,6 +1459,8 @@ Template.taxsummaryreport.events({
     LoadingOverlay.show();
     localStorage.setItem('VS1TaxSummary_Report', '');
     let templateObject = Template.instance();
+    $("#dateFrom").attr("readonly", true);
+    $("#dateTo").attr("readonly", true);
     templateObject.dateAsAt.set("Current Date");
     await templateObject.setReportOptions(true);
     LoadingOverlay.hide();

@@ -2435,6 +2435,7 @@ Template.setup.onRendered(function () {
             action: function () {
               $("#employeeListTable").DataTable().ajax.reload();
             },
+            language: { search: "",searchPlaceholder: "Search List..." },
             fnInitComplete: function () {
               $(
                 "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
@@ -2779,6 +2780,7 @@ Template.setup.onRendered(function () {
                 paging: false,
                 info: true,
                 responsive: true,
+                language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
                     "<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -2928,6 +2930,7 @@ Template.setup.onRendered(function () {
               paging: false,
               info: true,
               responsive: true,
+              language: { search: "",searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
                   "<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -3077,6 +3080,7 @@ Template.setup.onRendered(function () {
               paging: false,
               info: true,
               responsive: true,
+              language: { search: "",searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
                   "<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -3170,6 +3174,7 @@ Template.setup.onRendered(function () {
         fnDrawCallback: function (oSettings) {
           // $('.dataTables_paginate').css('display', 'none');
         },
+        language: { search: "",searchPlaceholder: "Search List..." },
         fnInitComplete: function () {
           $(
             "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
@@ -3466,6 +3471,7 @@ Template.setup.onRendered(function () {
                 MakeNegative();
               }, 100);
             },
+            language: { search: "",searchPlaceholder: "Search List..." },
             fnInitComplete: function () {
               $(
                 "<button class='btn btn-primary btnRefreshCustomers' type='button' id='btnRefreshCustomers' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
@@ -3774,6 +3780,7 @@ Template.setup.onRendered(function () {
                 MakeNegative();
               }, 100);
             },
+            language: { search: "",searchPlaceholder: "Search List..." },
             fnInitComplete: function () {
               // let urlParametersPage = FlowRouter.current().queryParams.page;
               // if (urlParametersPage) {
@@ -4208,6 +4215,7 @@ Template.setup.onRendered(function () {
             //     MakeNegative();
             //   }, 100);
             // },
+            language: { search: "",searchPlaceholder: "Search List..." },
             fnInitComplete: function () {
               $(
                 "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
@@ -9429,7 +9437,14 @@ Template.setup.helpers({
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
   },
-
+  setupFinished: () => {
+    let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+    if (setupFinished == true || setupFinished == "true") {
+      return true;
+    } else {
+      return false;
+    }
+  },
   // Step 3 helpers
   paymentmethoddatatablerecords: () => {
     return Template.instance().paymentmethoddatatablerecords.get()
