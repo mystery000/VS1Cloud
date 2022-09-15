@@ -1,9 +1,14 @@
 import { ReportService } from "../report-service";
 import 'jQuery.print/jQuery.print.js';
 import {UtilityService} from "../../utility-service";
+import GlobalFunctions from "../../GlobalFunctions";
+import LoadingOverlay from "../../LoadingOverlay";
+import { TaxRateService } from "../../settings/settings-service";
 let _ = require('lodash');
-
+let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
+let reportService = new ReportService();
 let utilityService = new UtilityService();
+let taxRateService = new TaxRateService();
 
 Template.executivesummaryreport.onCreated(function () {
   const templateObject = Template.instance();
@@ -37,12 +42,14 @@ Template.executivesummaryreport.onCreated(function () {
   templateObject.currentAsset = new ReactiveVar();
   templateObject.termAsset = new ReactiveVar();
 
+  templateObject.currencyRecord = new ReactiveVar([]);
+  templateObject.currencyList = new ReactiveVar([]);
+  templateObject.activeCurrencyList = new ReactiveVar([]);
+  templateObject.tcurrencyratehistory = new ReactiveVar([]);
 });
 
 Template.executivesummaryreport.onRendered(() => {
   const templateObject = Template.instance();
-  let reportService = new ReportService();
-  let utilityService = new UtilityService();
 
   var currentDate = new Date();
   const monSml = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -179,10 +186,42 @@ Template.executivesummaryreport.onRendered(() => {
   var curDate = new Date();
   var getLoadDate = moment(curDate).format("YYYY-MM-DD");
   templateObject.getBalanceSheetReports(getLoadDate);
+
+  templateObject.loadCurrency = async() => {
+    await loadCurrency();
+  };
+  //templateObject.loadCurrency();
+
+  templateObject.loadCurrencyHistory = async() => {
+    await loadCurrencyHistory();
+  };
+  //templateObject.loadCurrencyHistory();
 });
 
 Template.executivesummaryreport.events({
+  "click .btnPrintReport": function(event) {
+    $("a").attr("href", "/");
+    document.title = "Executive Summary Report";
+    $(".printReport").print({
+        title: document.title + " | ExecutiveSummary | " + loggedCompany,
+        noPrintSelector: ".addSummaryEditor",
+        mediaPrint: false,
+    });
 
+    setTimeout(function() {
+        $("a").attr("href", "#");
+    }, 100);
+  },
+  "click .btnExportReport": function() {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let utilityService = new UtilityService();
+    const filename = loggedCompany + "-ExecutiveSummary" + ".csv";
+    utilityService.exportReportToCsvTable("tableExport", filename, "csv");
+  },
+  "click .fx-rate-btn": async(e) => {
+    await loadCurrency();
+    //loadCurrencyHistory();
+},
 });
 
 Template.executivesummaryreport.helpers({
@@ -248,7 +287,22 @@ Template.executivesummaryreport.helpers({
   },
   termAsset: () =>{
       return Template.instance().termAsset.get() || 0;
-  }
+  },
+  currencyList: () => {
+    return Template.instance().currencyList.get();
+  },
+  isCurrencyListActive() {
+    const array = Template.instance().currencyList.get();
+    let activeArray = array.filter((c) => c.active == true);
+
+    return activeArray.length > 0;
+  },
+  currency: () => {
+    return Currency;
+  },
+  currencyRecord: () => {
+    return Template.instance().currencyRecord.get();
+  },
 });
 Template.registerHelper('equals', function (a, b) {
     return a === b;
@@ -261,3 +315,59 @@ Template.registerHelper('notEquals', function (a, b) {
 Template.registerHelper('containsequals', function (a, b) {
     return (a.indexOf(b) >= 0 );
 });
+
+async function loadCurrency() {
+  let templateObject = Template.instance();
+
+  if ((await templateObject.currencyList.get().length) == 0) {
+      LoadingOverlay.show();
+
+      let _currencyList = [];
+      const result = await taxRateService.getCurrencies();
+
+      //taxRateService.getCurrencies().then((result) => {
+
+      const data = result.tcurrency;
+
+      for (let i = 0; i < data.length; i++) {
+          // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+          var dataList = {
+              id: data[i].Id || "",
+              code: data[i].Code || "-",
+              currency: data[i].Currency || "NA",
+              symbol: data[i].CurrencySymbol || "NA",
+              buyrate: data[i].BuyRate || "-",
+              sellrate: data[i].SellRate || "-",
+              country: data[i].Country || "NA",
+              description: data[i].CurrencyDesc || "-",
+              ratelastmodified: data[i].RateLastModified || "-",
+              active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
+              //active: false,
+              // createdAt: new Date(data[i].MsTimeStamp) || "-",
+              // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+          };
+
+          _currencyList.push(dataList);
+          //}
+      }
+      _currencyList = _currencyList.sort((a, b) => {
+          return a.currency
+              .split("")[0]
+              .toLowerCase()
+              .localeCompare(b.currency.split("")[0].toLowerCase());
+      });
+
+      templateObject.currencyList.set(_currencyList);
+
+      await loadCurrencyHistory(templateObject);
+      LoadingOverlay.hide();
+      //});
+  }
+}
+
+async function loadCurrencyHistory(templateObject) {
+  let result = await taxRateService.getCurrencyHistory();
+  const data = result.tcurrencyratehistory;
+  templateObject.tcurrencyratehistory.set(data);
+  LoadingOverlay.hide();
+}
