@@ -275,7 +275,8 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colTaskProjects openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[8]);
-            $(td).css('background', rowData[12])
+            $(td).css('background', rowData[12]);
+            $(td).css('color', '#ffffff');
           },
         },
         {
