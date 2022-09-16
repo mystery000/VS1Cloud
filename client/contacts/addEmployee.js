@@ -129,7 +129,9 @@ Template.employeescard.onCreated(function () {
 
 Template.employeescard.onRendered(function () {
 
-    var erpGet = erpDb();
+    let begunDate;
+    let currentDate;
+    const erpGet = erpDb();
     LoadingOverlay.show();
 
 
@@ -138,7 +140,7 @@ Template.employeescard.onRendered(function () {
     //var splashArrayRepServiceList = new Array();
     let templateObject = Template.instance();
     let contactService = new ContactService();
-    var countryService = new CountryService();
+    const countryService = new CountryService();
     let paymentService = new PaymentsService();
     let productService = new ProductService();
     let appointmentService = new AppointmentService();
@@ -403,7 +405,7 @@ Template.employeescard.onRendered(function () {
 
     }, 500);
 
-    var CloudUserPass = Session.get('CloudUserPass');
+    const CloudUserPass = Session.get('CloudUserPass');
     if (CloudUserPass) {
         templateObject.isCloudUserPass.set(true);
     }
@@ -435,8 +437,7 @@ Template.employeescard.onRendered(function () {
             if ($(this).text().indexOf('-' + Currency) >= 0)
                 $(this).addClass('text-danger')
         });
-    };
-
+    }
 
     setTimeout(function () {
     if (currentId.transTab == 'prod') {
@@ -666,7 +667,6 @@ Template.employeescard.onRendered(function () {
             });
     }
 
-
     templateObject.getAllProductData = function () {
         let productList = [];
         getVS1Data('TProductVS1').then(function (dataObject) {
@@ -727,7 +727,7 @@ Template.employeescard.onRendered(function () {
                     employeePriority.push(data.temployee[x].CustFld5);
                 }
             }
-            var result = employeePriority.map(function (x) {
+            const result = employeePriority.map(function (x) {
                 return parseInt(x, 10);
             });
             templateObject.empPriorities.set(result);
@@ -1237,37 +1237,36 @@ Template.employeescard.onRendered(function () {
     }
 
     templateObject.getCountryData = function () {
-      getVS1Data('TCountries').then(function (dataObject) {
-          if (dataObject.length == 0) {
-              sideBarService.getCountry().then((data) => {
-                  for (let i = 0; i < data.tcountries.length; i++) {
-                      countries.push(data.tcountries[i].Country)
-                  }
-                  countries.sort((a, b) => a.localeCompare(b));
-                  templateObject.countryData.set(countries);
-              });
-          } else {
-               let data = JSON.parse(dataObject[0].data);
-              let useData = data.tcountries;
-              for (let i = 0; i < useData.length; i++) {
-                  countries.push(useData[i].Country)
-              }
-              countries.sort((a, b) => a.localeCompare(b));
-              templateObject.countryData.set(countries);
-
-          }
-      }).catch(function (err) {
-          sideBarService.getCountry().then((data) => {
-              for (let i = 0; i < data.tcountries.length; i++) {
-                  countries.push(data.tcountries[i].Country)
-              }
-              countries.sort((a, b) => a.localeCompare(b));
-              templateObject.countryData.set(countries);
-          });
-      });
-            let countriesPhone = [];
-            let dataPhone = countryService.getCountryJeyhun();
-            templateObject.phoneCodeData.set(dataPhone);
+        getVS1Data('TCountries').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getCountry().then((data) => {
+                    for (let i = 0; i < data.tcountries.length; i++) {
+                        countries.push(data.tcountries[i].Country)
+                    }
+                    countries.sort((a, b) => a.localeCompare(b));
+                    templateObject.countryData.set(countries);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tcountries;
+                for (let i = 0; i < useData.length; i++) {
+                    countries.push(useData[i].Country)
+                }
+                countries.sort((a, b) => a.localeCompare(b));
+                templateObject.countryData.set(countries);
+            }
+        }).catch(function (err) {
+            sideBarService.getCountry().then((data) => {
+                for (let i = 0; i < data.tcountries.length; i++) {
+                    countries.push(data.tcountries[i].Country)
+                }
+                countries.sort((a, b) => a.localeCompare(b));
+                templateObject.countryData.set(countries);
+            });
+        });
+        let countriesPhone = [];
+        let dataPhone = countryService.getCountryJeyhun();
+        templateObject.phoneCodeData.set(dataPhone);
     };
     templateObject.getCountryData();
 
@@ -1284,10 +1283,11 @@ Template.employeescard.onRendered(function () {
             }
         });
     }
+
     if (currentId.id == "undefined") {
-        var currentDate = new Date();
+        currentDate = new Date();
         $('.fullScreenSpin').css('display', 'none');
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+        begunDate = moment(currentDate).format("DD/MM/YYYY");
         let lineItemObj = {
             id: '',
             lid: 'Add Employee',
@@ -1317,13 +1317,12 @@ Template.employeescard.onRendered(function () {
             custFld1: '',
             custFld2: '',
             dashboardOptions: '',
-            salesQuota: '',
+            salesQuota: 5000,
             website: ''
         }
 
         templateObject.records.set(lineItemObj);
         setTimeout(function () {
-
             $('#tblTransactionlist').DataTable();
             $('.employeeTab').trigger('click');
             $('.fullScreenSpin').css('display', 'none');
@@ -1350,11 +1349,9 @@ Template.employeescard.onRendered(function () {
             templateObject.getAllSelectedProducts(employeeID);
             templateObject.getEmployeeData = function () {
                 getVS1Data('TEmployee').then(function (dataObject) {
-
                     if (dataObject.length == 0) {
                         contactService.getOneEmployeeDataEx(employeeID).then(function (data) {
                             $('.fullScreenSpin').css('display', 'none');
-
                             let lineItems = [];
                             let empEmail = '';
                             let overideset = data.fields.User.fields.CustFld14;
@@ -1368,7 +1365,6 @@ Template.employeescard.onRendered(function () {
                             } else {
                                 $("#overridesettings").prop('checked', false);
                             }
-
                             if (data.fields.Email.replace(/\s/g, '') == '') {
                                 if (data.fields.User != null) {
                                     let emplineItems = [];
@@ -1554,7 +1550,7 @@ Template.employeescard.onRendered(function () {
                     } else {
                         let data = JSON.parse(dataObject[0].data);
                         let useData = data.temployee;
-                        var added = false;
+                        let added = false;
                         for (let i = 0; i < useData.length; i++) {
                             if (parseInt(useData[i].fields.ID) === parseInt(employeeID)) {
                                 added = true;
@@ -1685,21 +1681,21 @@ Template.employeescard.onRendered(function () {
 
                                 }, 1000);
 
-                              setTimeout(function () {
-                                if(useData[i].fields.CustFld7 == "true"){
-                                  $("#productCostPayRate").prop("checked", true);
-                                }else{
-                                  $("#productCostPayRate").prop("checked", false);
-                                }
+                                setTimeout(function () {
+                                    if(useData[i].fields.CustFld7 == "true"){
+                                        $("#productCostPayRate").prop("checked", true);
+                                    } else {
+                                        $("#productCostPayRate").prop("checked", false);
+                                    }
 
-                                if(useData[i].fields.CustFld8 == "true" || useData[i].fields.CustFld8 == ""){
-                                  $("#addAllProducts").prop("checked", true);
-                                  $('.activeProductEmployee').css('display', 'none');
-                                }else{
-                                  $("#addAllProducts").prop("checked", false);
-                                  $('.activeProductEmployee').css('display', 'block');
-                                }
-                              }, 500);
+                                    if(useData[i].fields.CustFld8 == "true" || useData[i].fields.CustFld8 == ""){
+                                        $("#addAllProducts").prop("checked", true);
+                                        $('.activeProductEmployee').css('display', 'none');
+                                    } else {
+                                        $("#addAllProducts").prop("checked", false);
+                                        $('.activeProductEmployee').css('display', 'block');
+                                    }
+                                }, 500);
                                 if ((currentId.addvs1user == "true") && (currentId.id)) {
                                     // swal("Please ensure the employee has a email and password.", "", "info");
 
@@ -1750,7 +1746,7 @@ Template.employeescard.onRendered(function () {
                                 //templateObject.getAllProductRecentTransactions(useData[i].fields.EmployeeName);
                                 // $('.fullScreenSpin').css('display','none');
                                 setTimeout(function () {
-                                    var rowCount = $('.results tbody tr').length;
+                                    const rowCount = $('.results tbody tr').length;
                                     $('.counter').text(rowCount + ' items');
                                     $('#cloudEmpName').val(useData[i].fields.EmployeeName);
                                     $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
@@ -2133,15 +2129,12 @@ Template.employeescard.onRendered(function () {
                         }, 500);
                     });
                 });
-
             }
-
             templateObject.getEmployeeData();
-
         } else {
             $('.fullScreenSpin').css('display', 'none');
-            var currentDate = new Date();
-            var begunDate = moment(currentDate).format("DD/MM/YYYY");
+            currentDate = new Date();
+            begunDate = moment(currentDate).format("DD/MM/YYYY");
             let lineItemObj = {
                 id: '',
                 lid: 'Add Employee',
@@ -2171,7 +2164,7 @@ Template.employeescard.onRendered(function () {
                 custFld2: '',
                 website: '',
                 dashboardOptions: '',
-                salesQuota: ''
+                salesQuota: 5000
             }
 
             templateObject.records.set(lineItemObj);
@@ -2216,7 +2209,6 @@ Template.employeescard.onRendered(function () {
                     $('.employeeTab').trigger('click');
                 }, 100);
             }
-
             setTimeout(function () {
                 $('#cloudEmpName').val('');
                 $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
@@ -2233,7 +2225,6 @@ Template.employeescard.onRendered(function () {
                 });
                 $("#addAllProducts").prop("checked", false);
                 $('.activeProductEmployee').css('display', 'block');
-
                 $('.fullScreenSpin').css('display', 'none');
             }, 100);
         }
@@ -2472,18 +2463,14 @@ Template.employeescard.onRendered(function () {
     }
     templateObject.getEmployeesList();
 
-
     $(document).ready(function () {
         setTimeout(function () {
-
             $('#product-list').editableSelect();
-
-
             $('#product-list').editableSelect()
             .on('click.editable-select', function(e, li) {
-                var $earch = $(this);
-                var offset = $earch.offset();
-                var productDataName =  e.target.value || '';
+                const $earch = $(this);
+                const offset = $earch.offset();
+                const productDataName = e.target.value || '';
                 //var productDataID = el.context.value || '';
                 // if(el){
                 //   var productCostData = el.context.id || 0;
@@ -2692,14 +2679,13 @@ Template.employeescard.onRendered(function () {
                                     $('#newProductModal').modal('show');
                                 }, 500);
                             }).catch(function (err) {
-
                                 $('.fullScreenSpin').css('display', 'none');
                             });
 
                         });
 
                         setTimeout(function () {
-                            var begin_day_value = $('#event_begin_day').attr('value');
+                            const begin_day_value = $('#event_begin_day').attr('value');
                             $("#dtDateTo").datepicker({
                                 showOn: 'button',
                                 buttonText: 'Show Date',
@@ -2742,7 +2728,6 @@ Template.employeescard.onRendered(function () {
                         }, 1000);
                         //}
 
-
                         templateObject.getProductClassQtyData = function () {
                             productService.getOneProductClassQtyData(currentProductID).then(function (data) {
                                 $('.fullScreenSpin').css('display', 'none');
@@ -2780,7 +2765,7 @@ Template.employeescard.onRendered(function () {
                             $('#tblInventoryPayrollService_filter .form-control-sm').val('');
                             $('#tblInventoryPayrollService_filter .form-control-sm').trigger("input");
 
-                            var datatable = $('#tblInventoryPayrollService').DataTable();
+                            const datatable = $('#tblInventoryPayrollService').DataTable();
                             datatable.draw();
                             $('#tblInventoryPayrollService_filter .form-control-sm').trigger("input");
 
@@ -2793,7 +2778,7 @@ Template.employeescard.onRendered(function () {
 
         //On Click Client Type List
         $(document).on("click", "#tblInventoryService tbody tr", function (e) {
-            var table = $(this);
+            const table = $(this);
             if(edtProductSelect == "appointment") {
                 let productName = table.find(".productName").text()||'';
                 let productID = table.find(".colProuctPOPID").text()||'';
@@ -2801,10 +2786,9 @@ Template.employeescard.onRendered(function () {
                 $('#product-listID').val(productID);
                 $('#productListModal').modal('toggle');
             }
-
         });
     });
-    var prefObject = "";
+    let prefObject = "";
     if (currentId.id != undefined) {
         setTimeout(function () {
             appointmentService.getEmployeeCalendarSettings(currentId.id).then(function (data) {
@@ -2817,26 +2801,21 @@ Template.employeescard.onRendered(function () {
                         showSun: data.tappointmentpreferences[data.tappointmentpreferences.length - 1].ShowSundayinApptCalendar || false,
                         defaultApptDuration: data.tappointmentpreferences[data.tappointmentpreferences.length - 1].DefaultApptDuration || '',
                     }
-
                     $("#showSaturday").prop('checked', prefObject.showSat);
                     $("#showSunday").prop('checked', prefObject.showSun);
-
                     if (prefObject.defaultProduct) {
                         //$('#product-list').prepend('<option selected value=' + prefObject.id + '>' + prefObject.defaultProduct + '</option>');
                           $('#product-list').val(prefObject.defaultProduct);
                           $('#product-listID').val(prefObject.id);
                     }
-
                     if (prefObject.defaultApptDuration) {
                         if (prefObject.defaultApptDuration == "120") {
                             $('#defaultTime').prepend('<option selected>' + 2 + ' Hour</option>');
                         } else {
                             $('#defaultTime').prepend('<option selected>' + prefObject.defaultApptDuration + ' Hour</option>');
                         }
-
                     }
                 }
-
                 templateObject.calendarOptions.set(prefObject);
             }).catch(function (err) {});
         }, 1000);
@@ -2909,7 +2888,6 @@ Template.employeescard.onRendered(function () {
         }
         return '';
     };
-
 
     templateObject.getLeaveRequests = async () => {
         let data = []
@@ -4016,7 +3994,6 @@ Template.employeescard.onRendered(function () {
             await templateObject.leaveTypesDrpDown.set(data.tleavetypes);
         }
     }
-
     templateObject.getTLeaveTypes();
 
     templateObject.getTBankAccounts = function() {
@@ -4268,11 +4245,7 @@ Template.employeescard.onRendered(function () {
         }
 
     };
-
-
     templateObject.getPaySlips();
-
-
 
     // Display pay template tab inputs
     templateObject.displayPayTempEarningLines = function() {
@@ -5440,8 +5413,8 @@ Template.employeescard.events({
                     return false;
                 }
             }
-        };
-        var objDetails = '';
+        }
+        let objDetails = '';
 
         let imageData = '';
         if (templateObject.imageFileData.get()) {
@@ -9655,11 +9628,7 @@ Template.employeescard.events({
             var colWidth = $tblrow.find(".custom-range").val() || 0;
             var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
             var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(':checked')) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
+            colHidden = !$tblrow.find(".custom-control-input").is(':checked');
             let lineItemObj = {
                 index: index,
                 label: colTitle,
@@ -9753,7 +9722,7 @@ Template.employeescard.events({
 
         function isEmailValid(emailData) {
             return /^[A-Z0-9'.1234z_%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(emailData);
-        };
+        }
 
         // if (emailData != '') {
         //     if (!isEmailValid(emailData)) {
@@ -10087,16 +10056,11 @@ Template.employeescard.events({
             previewFile.class = 'default-class';
         }
 
-        if (type.split('/')[0] === 'image') {
-            previewFile.image = true
-        } else {
-            previewFile.image = false
-        }
+        previewFile.image = type.split('/')[0] === 'image';
         templateObj.uploadedFile.set(previewFile);
 
         $('#files_view').modal('show');
 
-        return;
     },
     'click .confirm-delete-attachment': function (event, ui) {
         let tempObj = Template.instance();
@@ -10293,15 +10257,6 @@ Template.employeescard.events({
     "click #edtSaleCustField3": function (e) {
         $("#clickedControl").val("three");
     },
-      // add to custom field
-  "click #edtSaleCustField2": function (e) {
-    $("#clickedControl").val("two");
-  },
-
-  // add to custom field
-  "click #edtSaleCustField3": function (e) {
-    $("#clickedControl").val("three");
-  },
     "click .btnDeletePayslip": function (e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id') || '';
@@ -10935,7 +10890,7 @@ Template.employeescard.helpers({
         return Template.instance().deliveryMethodList.get();
     },
     dashboardOptionsList: () => {
-        return ['All', 'Accounts', 'Executive', 'Marketing', 'Sales', 'Sales Manager', 'My'];
+        return ['All', 'Accounts', 'Executive', 'Marketing', 'Sales', 'Sales Manager'];
     },
     taxCodeList: () => {
         return Template.instance().taxCodeList.get();
