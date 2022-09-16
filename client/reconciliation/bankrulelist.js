@@ -339,7 +339,7 @@ Template.bankrulelist.onRendered(function() {
                 },
                 "fnInitComplete": function () {
                     this.fnPageChange('last');
-                    $("<button class='btn btn-primary btnRefreshReconn' type='button' id='btnRefreshReconn' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblbankrulelist_filter");
+                    $("<button class='btn btn-primary btnRefreshReconn' type='button' id='btnRefreshReconn' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblbankrulelist_filter");
 
                     $('.myvarFilterForm').appendTo(".colDateFilter");
                 },
