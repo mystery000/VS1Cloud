@@ -15594,30 +15594,30 @@ Template.appointments.events({
       let employeeName = $("#employee_name").val().trim() || "";
       let id = "0";
 
-      let selectedProduct;
-      let isAnySelected = $("input[name='appointment-products-checks']")
-        .map(function () {
-          return this.checked;
-        })
-        .toArray()
-        .some((value) => value === true);
-      if (isAnySelected) {
-        const selectedProducts = $(
-          "input[name='appointment-products-checks']:checked"
-        )
-          .map(function () {
-            return $(this).attr("id");
-          })
-          .toArray();
-        if (selectedProducts.length !== 0) {
-          selectedProduct.push($("#product-list").val());
-          selectedProducts.map((item) => {
-            selectedProduct.push(item.split("x")[0]);
-          });
-        }
-      } else {
-        selectedProduct = $("#product-list").val() || "";
-      }
+      // let selectedProduct;
+      // let isAnySelected = $("input[name='appointment-products-checks']")
+      //   .map(function () {
+      //     return this.checked;
+      //   })
+      //   .toArray()
+      //   .some((value) => value === true);
+      // if (isAnySelected) {
+      //   const selectedProducts = $(
+      //     "input[name='appointment-products-checks']:checked"
+      //   )
+      //     .map(function () {
+      //       return $(this).attr("id");
+      //     })
+      //     .toArray();
+      //   if (selectedProducts.length !== 0) {
+      //     selectedProduct.push($("#product-list").val());
+      //     selectedProducts.map((item) => {
+      //       selectedProduct.push(item.split("x")[0]);
+      //     });
+      //   }
+    //  } else {
+        let selectedProduct = $("#product-list").val() || "";
+      //}
 
       let notes = $("#txtNotes").val() || " ";
       let status = "Not Converted";
@@ -15754,30 +15754,31 @@ Template.appointments.events({
     let employeeName = formData.get("employee_name").trim() || "";
     let id = formData.get("updateID") || "0";
     let notes = formData.get("txtNotes") || " ";
-    let selectedProduct = [];
-    let isAnySelected = $("input[name='appointment-products-checks']")
-      .map(function () {
-        return this.checked;
-      })
-      .toArray()
-      .some((value) => value === true);
-    if (isAnySelected) {
-      const selectedProducts = $(
-        "input[name='appointment-products-checks']:checked"
-      )
-        .map(function () {
-          return $(this).attr("id");
-        })
-        .toArray();
-      if (selectedProducts.length !== 0) {
-        selectedProduct.push($("#product-list").val());
-        selectedProducts.map((item) => {
-          selectedProduct.push(item.split("x")[1]);
-        });
-      }
-    } else {
-      selectedProduct.push($("#product-list").val());
-    }
+    // let selectedProduct = [];
+    // let isAnySelected = $("input[name='appointment-products-checks']")
+    //   .map(function () {
+    //     return this.checked;
+    //   })
+    //   .toArray()
+    //   .some((value) => value === true);
+    // if (isAnySelected) {
+    //   const selectedProducts = $(
+    //     "input[name='appointment-products-checks']:checked"
+    //   )
+    //     .map(function () {
+    //       return $(this).attr("id");
+    //     })
+    //     .toArray();
+    //   if (selectedProducts.length !== 0) {
+    //     selectedProduct.push($("#product-list").val());
+    //     selectedProducts.map((item) => {
+    //       selectedProduct.push(item.split("x")[1]);
+    //     });
+    //   }
+    // } else {
+    //   selectedProduct.push($("#product-list").val());
+    // }
+    let selectedProduct= selectedProduct.push($("#product-list").val());
     let hourlyRate = "";
     let status = "Not Converted";
     let uploadedItems = templateObject.uploadedFiles.get();
