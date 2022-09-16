@@ -73,63 +73,11 @@ Template.new_invoice.onCreated(() => {
   templateObject.invoice_data = new ReactiveVar([]);
 
   templateObject.displayfields = new ReactiveVar([]);
+  templateObject.reset_data = new ReactiveVar([]);
   templateObject.subtaxcodes = new ReactiveVar([]);
 });
 
 Template.new_invoice.onRendered(() => {
-  ///////////////////////////
-  sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), 'table1').then(function (data) {
-                console.log('new custom get.......', data)
-              }).catch(function (err) {
-                console.log('new custom get.......', err)
-              });
-
-    var erpGet = erpDb();
-
-  let test_data = {
-      Name: "VS1_Customize",
-      Params:
-      {
-          TableName: "table1",
-          EmployeeId: parseInt(Session.get('mySessionEmployeeLoggedID'))||0,
-          Columns: [
-              {
-                  Index: 1,
-                  Header: "modifieddddd",
-                  Width: 30,
-                  Hidden: true
-              },
-              {
-                  index: 2,
-                  header: "modified",
-                  width: 30,
-                  hidden: false
-              }
-          ],
-          ERPUserName:erpGet.ERPUsername,
-          ERPPassword:erpGet.ERPPassword
-      }
-  };
-  var myCustomizeString = '"JsonIn"'+':'+JSON.stringify(test_data);
-  console.log(myCustomizeString);
-  var oPost = new XMLHttpRequest();
-  oPost.open("POST",URLRequest +erpGet.ERPIPAddress +":" +erpGet.ERPPort +"/" +'erpapi/VS1_Cloud_Task/Method',true);
-  oPost.setRequestHeader("database", erpGet.ERPDatabase);
-  oPost.setRequestHeader("username", erpGet.ERPUsername);
-  oPost.setRequestHeader("password", erpGet.ERPPassword);
-  oPost.setRequestHeader("Accept", "application/json");
-  oPost.setRequestHeader("Accept", "application/html");
-  oPost.setRequestHeader("Content-type", "application/json");
-  // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
-  oPost.send(myCustomizeString);
-  // sideBarService.saveNewCustomFields(myCustomizeString).then(function (data) {
-  //   console.log('new custom add.......', data)
-  // }).catch(function (err) {
-  //   console.log('new custom add.......', err)
-  // });
-  ///////////////////////////
-
-
   // $('#lotNumberModal .btnSelect').removeClass('d-none');
   // $('#lotNumberModal .btnAutoFill').addClass('d-none');
   $("#serialNumberModal .btnSelect").removeClass("d-none");
@@ -155,6 +103,54 @@ Template.new_invoice.onRendered(() => {
   }
 
   let templateObject = Template.instance();
+
+  // set initial table rest_data
+  function init_reset_data() {
+    let reset_data = [
+      { index: 0, label: "Product Name", class: "ProductName", inputclass: "lineProductName", active: true, display: true },
+      { index: 1, label: "Description", class: "Description", inputclass: "lineProductDesc", active: true, display: true },
+      { index: 2, label: "Qty", class: "Qty", inputclass: "lineQty", active: true, display: true },
+      { index: 3, label: "Ordered", class: "Ordered", inputclass: "lineOrdered", active: false, display: true },
+      { index: 4, label: "Shipped", class: "Shipped", inputclass: "lineShipped", active: false, display: true },
+      { index: 5, label: "BO", class: "BackOrder", inputclass: "lineBo", active: false, display: true },
+      { index: 6, label: "Unit Price (Ex)", class: "UnitPrice", inputclass: "lineUnitPrice", active: true, display: true },
+      { index: 7, label: "Unit Price (Inc)", class: "UnitPriceInc", inputclass: "lineUnitPrice", active: false, display: true },
+      { index: 8, label: "Disc %", class: "Discount", inputclass: "lineDiscount", active: true, display: true },
+      { index: 9, label: "Cost Price", class: "CostPrice", inputclass: "lineCostPrice", active: false, display: true },
+      { index: 10, label: "SalesLines CustField1", class: "SalesLinesCustField1", inputclass: "lineSalesLinesCustField1", active: false, display: true },
+      { index: 11, label: "Tax Rate", class: "TaxRate", inputclass: "lineTaxRate", active: false, display: true },
+      { index: 12, label: "Tax Code", class: "TaxCode", inputclass: "lineTaxCode", active: true, display: true },
+      { index: 13, label: "Tax Amt", class: "TaxAmount", inputclass: "lineTaxAmount", active: true, display: true },
+      { index: 14, label: "Serial/Lot No", class: "SerialNo", inputclass: "", active: true, display: true },
+      { index: 15, label: "Amount (Ex)", class: "Amount", inputclass: "lineAmt", active: true, display: true },
+      { index: 16, label: "Amount (Inc)", class: "AmountInc", inputclass: "lineAmt", active: false, display: true },
+      { index: 17, label: "Units", class: "Units", inputclass: "lineUOM", active: false, display: true },
+    ];
+
+    let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+    let isBOnShippedQty = Session.get("CloudSalesQtyOnly");
+    if (isBOnShippedQty) {
+      reset_data[2].display = true; 
+      reset_data[3].display = false;
+      reset_data[4].display = false;
+      reset_data[5].display = false;
+    } else {
+      reset_data[2].display = false; 
+      reset_data[3].display = true;
+      reset_data[4].display = true;
+      reset_data[5].display = true;
+    }
+    if(isBatchSerialNoTracking) {
+      reset_data[14].display = true; 
+    } else {
+      reset_data[14].display = false; 
+    }
+
+    let templateObject = Template.instance();
+    templateObject.reset_data.set(reset_data);
+  }
+  init_reset_data();
+  // set initial table rest_data
 
   templateObject.getTemplateInfoNew = function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -13306,127 +13302,46 @@ Template.new_invoice.onRendered(function () {
 
   // custom field displaysettings
   function initCustomFieldDisplaySettings(data, listType) {
+    listType = "tblInvoiceLine";
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    showCustomFieldDisplaySettings(reset_data);
+
+    try {
+      sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+        reset_data = data.ProcessLog.CustomLayout.Columns;
+        showCustomFieldDisplaySettings(reset_data);
+      }).catch(function (err) {
+        // showCustomFieldDisplaySettings(reset_data);
+      });
+    } catch (error) {
+      // showCustomFieldDisplaySettings(reset_data);
+    } 
+    return; 
+  }
+
+  function showCustomFieldDisplaySettings(reset_data) {
+
     let custFields = [];
     let customData = {};
-    let reset_data = [];
-
-    if (Session.get("CloudSalesQtyOnly")) {
-      reset_data = [
-        { label: "Product Name", class: "colProductName", active: true },
-        { label: "Description", class: "colDescription", active: true },
-        { label: "Qty", class: "colQty", active: true },
-        { label: "Ordered", class: "colOrdered", active: false },
-        { label: "Shipped", class: "colShipped", active: false },
-        { label: "BO", class: "colBO", active: false },
-        { label: "Unit Price (Ex)", class: "colUnitPrice", active: true },
-        { label: "Unit Price (Inc)", class: "colUnitPriceInc", active: false },
-        { label: "Disc %", class: "colDiscount", active: true },
-        { label: "Cost Price", class: "colCostPrice", active: false },
-        {
-          label: "SalesLines CustField1",
-          class: "colSalesLinesCustField1",
-          active: false,
-        },
-        { label: "Tax Rate", class: "colTaxRate", active: false },
-        { label: "Tax Code", class: "colTaxCode", active: true },
-        { label: "Tax Amt", class: "colTaxAmount", active: true },
-        { label: "Serial/Lot No", class: "colSerialNo", active: true },
-        { label: "Amount (Ex)", class: "colAmount", active: true },
-        { label: "Amount (Inc)", class: "colAmountInc", active: false },
-        { label: "Units", class: "colUOM", active: false },
-      ];
-    } else {
-      reset_data = [
-        { label: "Product Name", class: "colProductName", active: true },
-        { label: "Description", class: "colDescription", active: true },
-        { label: "Qty", class: "colQty", active: false },
-        { label: "Ordered", class: "colOrdered", active: true },
-        { label: "Shipped", class: "colShipped", active: true },
-        { label: "BO", class: "colBO", active: true },
-        { label: "Unit Price (Ex)", class: "colUnitPrice", active: true },
-        { label: "Unit Price (Inc)", class: "colUnitPriceInc", active: false },
-        { label: "Disc %", class: "colDiscount", active: true },
-        { label: "Cost Price", class: "colCostPrice", active: false },
-        {
-          label: "SalesLines CustField1",
-          class: "colSalesLinesCustField1",
-          active: false,
-        },
-        { label: "Tax Rate", class: "colTaxRate", active: false },
-        { label: "Tax Code", class: "colTaxCode", active: true },
-        { label: "Tax Amt", class: "colTaxAmount", active: true },
-        { label: "Serial/Lot No", class: "colSerialNo", active: true },
-        { label: "Amount (Ex)", class: "colAmount", active: true },
-        { label: "Amount (Inc)", class: "colAmountInc", active: false },
-        { label: "Units", class: "colUOM", active: false },
-      ];
-    }
     let customFieldCount = reset_data.length;
 
-    // tempcode
     for (let r = 0; r < customFieldCount; r++) {
       customData = {
         active: reset_data[r].active,
-        id: "",
-        custfieldlabel: reset_data[r].label,
-        datatype: "",
-        isempty: true,
-        iscombo: false,
+        id: reset_data[r].index,
+        custfieldlabel: reset_data[r].label, 
+        class: reset_data[r].class,
+        display: reset_data[r].display,
+        width: reset_data[r].width ? reset_data[r].width : ''
       };
       custFields.push(customData);
     }
     tempObj.displayfields.set(custFields);
-    return;
-    // tempcode
-
-    /*
-      for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-        if (data.tcustomfieldlist[x].fields.ListType == listType) {
-          customData = {
-            active: data.tcustomfieldlist[x].fields.Active || false,
-            id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-            custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-            datatype: data.tcustomfieldlist[x].fields.DataType || "",
-            isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-            iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-            dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-          };
-          custFields.push(customData);
-        }
-      }
-
-      let remainder = customFieldCount - data.tcustomfieldlist.length;
-      for (let r = 0; r < remainder; r++) {
-        customData = {
-          active: reset_data[data.tcustomfieldlist.length + r ].active,
-          id: 0,
-          custfieldlabel: reset_data[data.tcustomfieldlist.length + r ].label,
-          datatype: "",
-          isempty: false,
-          iscombo: false,
-          dropdown: null,
-        };
-        custFields.push(customData);
-      }
-
-      if (custFields.length < customFieldCount) {
-        let remainder = customFieldCount - custFields.length;
-        for (let r = 0; r < remainder; r++) {
-          customData = {
-            active: false,
-            id: "",
-            custfieldlabel: "",
-            datatype: "",
-            isempty: true,
-            iscombo: false,
-          };
-          custFields.push(customData);
-        }
-      }
-      */
-    tempObj.displayfields.set(custFields);
   }
+
   initCustomFieldDisplaySettings("", "ltSaleslines");
+
   tempObj.getAllCustomFieldDisplaySettings = function () {
     let listType = "ltSaleslines"; // tempcode until InvoiceLines is added on backend
     try {
@@ -13435,7 +13350,7 @@ Template.new_invoice.onRendered(function () {
           sideBarService
             .getAllCustomFieldsWithQuery(listType)
             .then(function (data) {
-              initCustomFieldDisplaySettings(data, listType);
+              // initCustomFieldDisplaySettings(data, listType);
               addVS1Data("TltSaleslines", JSON.stringify(data));
             });
         } else {
@@ -13444,11 +13359,11 @@ Template.new_invoice.onRendered(function () {
             sideBarService
               .getAllCustomFieldsWithQuery(listType)
               .then(function (data) {
-                initCustomFieldDisplaySettings(data, listType);
+                // initCustomFieldDisplaySettings(data, listType);
                 addVS1Data("TltSaleslines", JSON.stringify(data));
               });
           } else {
-            initCustomFieldDisplaySettings(data, listType);
+            // initCustomFieldDisplaySettings(data, listType);
             sideBarService
               .getAllCustomFieldsWithQuery(listType)
               .then(function (data) {
@@ -18522,11 +18437,11 @@ Template.new_invoice.events({
   },
   "click .chkBackOrder": function (event) {
     if ($(event.target).is(":checked")) {
-      $(".colBO").css("display", "table-cell");
-      $(".colBO").css("padding", ".75rem");
-      $(".colBO").css("vertical-align", "top");
+      $(".colBackOrder").css("display", "table-cell");
+      $(".colBackOrder").css("padding", ".75rem");
+      $(".colBackOrder").css("vertical-align", "top");
     } else {
-      $(".colBO").css("display", "none");
+      $(".colBackOrder").css("display", "none");
     }
   },
   "click .chkShipped": function (event) {
@@ -18577,11 +18492,11 @@ Template.new_invoice.events({
   },
   "click .chkUnits": function (event) {
     if ($(event.target).is(":checked")) {
-      $(".colUOM").css("display", "table-cell");
-      $(".colUOM").css("padding", ".75rem");
-      $(".colUOM").css("vertical-align", "top");
+      $(".colUnits").css("display", "table-cell");
+      $(".colUnits").css("padding", ".75rem");
+      $(".colUnits").css("vertical-align", "top");
     } else {
-      $(".colUOM").css("display", "none");
+      $(".colUnits").css("display", "none");
     }
   },
   "click .chkTaxCode": function (event) {
@@ -18759,7 +18674,7 @@ Template.new_invoice.events({
   "change .rngRangeUnits": function (event) {
     let range = $(event.target).val();
     // $(".spWidthAmount").html(range + '%');
-    $(".colUOM").css("width", range + "%");
+    $(".colUnits").css("width", range + "%");
   },
   "blur .divcolumn": function (event) {
     let columData = $(event.target).html();
@@ -18770,8 +18685,6 @@ Template.new_invoice.events({
   // custom field displaysettings
   "click .btnSaveGridSettings": function (event) {
     let lineItems = [];
-    let organisationService = new OrganisationService();
-
     $(".fullScreenSpin").css("display", "inline-block");
 
     $(".displaySettings").each(function (index) {
@@ -18787,150 +18700,66 @@ Template.new_invoice.events({
         colHidden = false;
       }
       let lineItemObj = {
-        index: index,
+        index: parseInt(fieldID),
         label: colTitle,
-        hidden: colHidden,
-        width: colWidth,
-        thclass: colthClass,
+        active: colHidden,
+        width: parseInt(colWidth),
+        class: colthClass,
+        display: true
       };
 
-      lineItems.push(lineItemObj);
-
-      if (fieldID) {
-        objDetails1 = {
-          type: "TCustomFieldList",
-          fields: {
-            Active: colHidden,
-            ID: parseInt(fieldID),
-            Description: colTitle,
-          },
-        };
-      } else {
-        objDetails1 = {
-          type: "TCustomFieldList",
-          fields: {
-            Active: colHidden,
-            DataType: "ftString",
-            Description: colTitle,
-            ListType: "ltSalesLines", // tempcode until InvoiceLines is added on backend
-          },
-        };
-      }
-
-      organisationService
-        .saveCustomField(objDetails1)
-        .then(function (objDetails) {
-          $(".fullScreenSpin").css("display", "none");
-          $("#myModal2").modal("hide");
-        })
-        .catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
-          $("#myModal2").modal("hide");
-        });
+      lineItems.push(lineItemObj); 
     });
 
-    setTimeout(() => {
-      // tempcode until InvoiceLines is added on backend
-      sideBarService
-        .getAllCustomFieldsWithQuery("ltSalesLines")
-        .then(function (data) {
-          addVS1Data("TltSaleslines", JSON.stringify(data));
-        });
-    }, 8000);
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    reset_data = reset_data.filter(redata => redata.display == false);
+    lineItems.push(...reset_data);
+    lineItems.sort((a,b) => a.index - b.index); 
+
+    try {
+      let erpGet = erpDb();
+      let tableName = "tblInvoiceLine";
+      let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+      let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+      $(".fullScreenSpin").css("display", "none");
+      if(added) {
+        swal("Display settings is updated!", "", "success");
+      } else {
+        swal("Something went wrong!", "", "error");
+      }
+    } catch (error) {
+      $(".fullScreenSpin").css("display", "none");
+      swal("Something went wrong!", "", "error");
+    } 
   },
 
   // custom field displaysettings
   "click .btnResetGridSettings": async function (event) {
     let templateObject = Template.instance();
     let checkBackOrder = templateObject.includeBOnShippedQty.get();
-    let reset_data = [];
-    if (Session.get("CloudSalesQtyOnly")) {
-      reset_data = [
-        { label: "Product Name", class: "colProductName", active: true },
-        { label: "Description", class: "colDescription", active: true },
-        { label: "Qty", class: "colQty", active: true },
-        // { label: 'Ordered', class: 'colOrdered', active: false },
-        // { label: 'Shipped', class: 'colShipped', active: false },
-        // { label: 'BO', class: 'colBO', active: false },
-        { label: "Unit Price (Ex)", class: "colUnitPrice", active: true },
-        { label: "Unit Price (Inc)", class: "colUnitPriceInc", active: false },
-        { label: "Disc %", class: "colDiscount", active: true },
-        { label: "Cost Price", class: "colCostPrice", active: false },
-        {
-          label: "SalesLines CustField1",
-          class: "colSalesLinesCustField1",
-          active: false,
-        },
-        { label: "Tax Rate", class: "colTaxRate", active: false },
-        { label: "Tax Code", class: "colTaxCode", active: true },
-        { label: "Tax Amt", class: "colTaxAmount", active: true },
-        { label: "Serial/Lot No", class: "colSerialNo", active: true },
-        { label: "Amount (Ex)", class: "colAmount", active: true },
-        { label: "Amount (Inc)", class: "colAmountInc", active: false },
-        { label: "Units", class: "colUOM", active: false },
-      ];
-    } else {
-      reset_data = [
-        { label: "Product Name", class: "colProductName", active: true },
-        { label: "Description", class: "colDescription", active: true },
-        // { label: 'Qty', class: 'colQty', active: false },
-        { label: "Ordered", class: "colOrdered", active: true },
-        { label: "Shipped", class: "colShipped", active: true },
-        { label: "BO", class: "colBO", active: true },
-        { label: "Unit Price (Ex)", class: "colUnitPrice", active: true },
-        { label: "Unit Price (Inc)", class: "colUnitPriceInc", active: false },
-        { label: "Disc %", class: "colDiscount", active: true },
-        { label: "Cost Price", class: "colCostPrice", active: false },
-        {
-          label: "SalesLines CustField1",
-          class: "colSalesLinesCustField1",
-          active: false,
-        },
-        { label: "Tax Rate", class: "colTaxRate", active: false },
-        { label: "Tax Code", class: "colTaxCode", active: true },
-        { label: "Tax Amt", class: "colTaxAmount", active: true },
-        { label: "Serial/Lot No", class: "colSerialNo", active: true },
-        { label: "Amount (Ex)", class: "colAmount", active: true },
-        { label: "Amount (Inc)", class: "colAmountInc", active: false },
-        { label: "Units", class: "colUOM", active: false },
-      ];
-    }
-    // var datable = $('#tblInvoiceLine');
-    // var datable = $('#tblInvoiceLine').DataTable();
-
-    // for (let r = 0; r < reset_data.length; r++) {
-    //   customData = {
-    //     active: reset_data[r].active,
-    //     id: 0,
-    //     custfieldlabel: reset_data[r].label,
-    //     datatype: "",
-    //     isempty: false,
-    //     iscombo: false,
-    //     dropdown: null,
-    //   };
-    //   custFields.push(customData);
-    // }
+    let reset_data = templateObject.reset_data.get(); 
+    reset_data = reset_data.filter(redata => redata.display);
+ 
     $(".displaySettings").each(function (index) {
-      var $tblrow = $(this);
+      let $tblrow = $(this);
       $tblrow.find(".divcolumn").text(reset_data[index].label);
       $tblrow
         .find(".custom-control-input")
         .prop("checked", reset_data[index].active);
 
-      // var title = datable.column( index ).header();
-      var title = $("#tblInvoiceLine").find("th").eq(index);
+      let title = $("#tblInvoiceLine").find("th").eq(index);
       $(title).html(reset_data[index].label);
 
       if (reset_data[index].active) {
-        $("." + reset_data[index].class).css("display", "table-cell");
-        $("." + reset_data[index].class).css("padding", ".75rem");
-        $("." + reset_data[index].class).css("vertical-align", "top");
+        $(".col" + reset_data[index].class).css("display", "table-cell");
+        $(".col" + reset_data[index].class).css("padding", ".75rem");
+        $(".col" + reset_data[index].class).css("vertical-align", "top");
       } else {
-        $("." + reset_data[index].class).css("display", "none");
+        $(".col" + reset_data[index].class).css("display", "none");
       }
+      $(".rngRange" + reset_data[index].class).val('');
     });
-
-    //tempObj.displayfields.set(custFields);
   },
 
   "click .btnResetSettings": function (event) {
