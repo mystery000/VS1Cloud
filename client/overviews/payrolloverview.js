@@ -664,7 +664,7 @@ Template.payrolloverview.onRendered(function () {
                         this.fnPageChange("last");
                       }
                       $(
-                        "<button class='btn btn-primary btnRefreshPayRunList' type='button' id='btnRefreshPayRunList' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                        "<button class='btn btn-primary btnRefreshPayRunList' type='button' id='btnRefreshPayRunList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                       ).insertAfter("#tblPayHistorylist_filter");
                     },
                   })
@@ -957,7 +957,7 @@ Template.payrolloverview.onRendered(function () {
                     this.fnPageChange("last");
                   }
                   $(
-                    "<button class='btn btn-primary btnRefreshPayRunList' type='button' id='btnRefreshPayRunList' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                    "<button class='btn btn-primary btnRefreshPayRunList' type='button' id='btnRefreshPayRunList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                   ).insertAfter("#tblPayHistorylist_filter");
                 },
               })
@@ -1249,7 +1249,7 @@ Template.payrolloverview.onRendered(function () {
                       this.fnPageChange("last");
                     }
                     $(
-                      "<button class='btn btn-primary btnRefreshPayRunList' type='button' id='btnRefreshPayRunList' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                      "<button class='btn btn-primary btnRefreshPayRunList' type='button' id='btnRefreshPayRunList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                     ).insertAfter("#tblPayHistorylist_filter");
                   },
                 })
@@ -1759,10 +1759,10 @@ Template.payrolloverview.onRendered(function () {
                         "<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>"
                       ).insertAfter("#tblInventoryPayrollService_filter");
                       $(
-                        "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+                        "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                       ).insertAfter("#tblInventoryPayrollService_filter");
                       $(
-                        "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                        "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                       ).insertAfter("#tblInventoryPayrollService_filter");
                     },
                   })
@@ -2007,10 +2007,10 @@ Template.payrolloverview.onRendered(function () {
                     "<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>"
                   ).insertAfter("#tblInventoryPayrollService_filter");
                   $(
-                    "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+                    "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                   ).insertAfter("#tblInventoryPayrollService_filter");
                   $(
-                    "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                    "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                   ).insertAfter("#tblInventoryPayrollService_filter");
                 },
               })
@@ -2261,10 +2261,10 @@ Template.payrolloverview.onRendered(function () {
                       "<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>"
                     ).insertAfter("#tblInventoryPayrollService_filter");
                     $(
-                      "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+                      "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                     ).insertAfter("#tblInventoryPayrollService_filter");
                     $(
-                      "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                      "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                     ).insertAfter("#tblInventoryPayrollService_filter");
                   },
                 })
