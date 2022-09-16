@@ -370,4 +370,11 @@ export class ProductService extends BaseService {
         }
         return this.getList(this.ERPObjects.TInvoiceEx, options);
     }
+
+    getAllBOMProducts() {
+        let options = {
+            ListType: 'detail'
+        }
+        return this.getList(this.ERPObjects.TProcTree, options);
+    }
 }

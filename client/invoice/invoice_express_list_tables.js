@@ -549,7 +549,7 @@ Template.invoicelist.onRendered(function () {
                         ).insertAfter("#tblInvoicelist_filter");
                       }
                       $(
-                        "<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                        "<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                       ).insertAfter("#tblInvoicelist_filter");
                       $(".myvarFilterForm").appendTo(".colDateFilter");
                     },
@@ -999,7 +999,7 @@ Template.invoicelist.onRendered(function () {
                     ).insertAfter("#tblInvoicelist_filter");
                   }
                   $(
-                    "<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                    "<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                   ).insertAfter("#tblInvoicelist_filter");
                   $(".myvarFilterForm").appendTo(".colDateFilter");
                 },
@@ -1439,7 +1439,7 @@ Template.invoicelist.onRendered(function () {
                       ).insertAfter("#tblInvoicelist_filter");
                     }
                     $(
-                      "<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                      "<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                     ).insertAfter("#tblInvoicelist_filter");
                     $(".myvarFilterForm").appendTo(".colDateFilter");
                   },

@@ -105,6 +105,10 @@
                                                 }
                                             </style>
                                             <style>
+					    	#tblEssentialAutomatedEmails.table th, #tblEssentialAutomatedEmails.table td {
+                                                    min-width: 0px
+                                                }
+					    
                                                 .arrow {
                                                     cursor: default !important;
                                                 }
@@ -157,26 +161,30 @@
                                                         {{#if checkIfEssentials item.formID}}
                                                             <tr class="dnd-moved" id="automated{{item.formID}}" data-id="{{item.formID}}" style="cursor: pointer;">
                                                                 <td contenteditable="false" class="arrow" id="{{#if equals item.formID 1}}groupedReports{{/if}}" data-ids="{{item.formIDs}}">{{item.formname}}</td>
-                                                                {{#if equals item.frequency "M"}}
+                                                                {{#if equals item.frequencyType "M"}}
                                                                     <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
                                                                         data-monthdate="{{item.monthDays}}" data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Monthly{{item.basedOnTypeText}}</td>
                                                                 {{else}}
-                                                                    {{#if equals item.frequency "W"}}
+                                                                    {{#if equals item.frequencyType "W"}}
                                                                         <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
                                                                             data-selectdays="{{item.weekDay}}" data-everyweeks="{{item.every}}"
                                                                             data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Weekly{{item.basedOnTypeText}}</td>
                                                                     {{else}}
-                                                                        {{#if equals item.frequency "D"}}
+                                                                        {{#if equals item.frequencyType "D"}}
                                                                             <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
                                                                                 data-sataction="{{item.satAction}}" data-sunaction="{{item.sunAction}}" data-everydays="{{item.every}}"
                                                                                 data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Daily{{item.basedOnTypeText}}</td>
                                                                         {{else}}
-                                                                            {{#unless equals item.startDate ""}}
-                                                                                <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
-                                                                                    data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">One Time Only{{item.basedOnTypeText}}</td>
+                                                                            {{#if equals item.frequencyType "O"}}
+                                                                                {{#unless equals item.startDate ""}}
+                                                                                    <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
+                                                                                        data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">One Time Only{{item.basedOnTypeText}}</td>
+                                                                                {{else}}
+                                                                                    <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"></td>
+                                                                                {{/unless}}
                                                                             {{else}}
-                                                                                <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"></td>
-                                                                            {{/unless}}
+                                                                                <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}">{{item.basedOnTypeText}}</td>
+                                                                            {{/if}}
                                                                         {{/if}}
                                                                     {{/if}}
                                                                 {{/if}}
@@ -321,6 +329,9 @@
                                                 }
                                             </style>
                                             <style>
+                                                #tblAutomatedEmails.table th, #tblAutomatedEmails.table td {
+                                                    min-width: 0px;
+                                                }
                                                 #tblAutomatedEmails .arrow {
                                                     cursor: default !important;
                                                 }
@@ -367,16 +378,16 @@
                                                         {{#if checkIfNotEssentials item.formID}}
                                                             <tr class="dnd-moved" id="automated{{item.formID}}" data-id="{{item.formID}}" style="cursor: pointer;">
                                                                 <td contenteditable="false" class="arrow">{{item.formname}}</td>
-                                                                {{#if equals item.frequency "M"}}
+                                                                {{#if equals item.frequencyType "M"}}
                                                                     <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
                                                                         data-monthdate="{{item.monthDays}}" data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Monthly{{item.basedOnTypeText}}</td>
                                                                 {{else}}
-                                                                    {{#if equals item.frequency "W"}}
+                                                                    {{#if equals item.frequencyType "W"}}
                                                                         <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
                                                                             data-selectdays="{{item.weekDay}}" data-everyweeks="{{item.every}}"
                                                                             data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Weekly{{item.basedOnTypeText}}</td>
                                                                     {{else}}
-                                                                        {{#if equals item.frequency "D"}}
+                                                                        {{#if equals item.frequencyType "D"}}
                                                                             <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
                                                                                 data-sataction="{{item.satAction}}" data-sunaction="{{item.sunAction}}" data-everydays="{{item.every}}"
                                                                                 data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Daily{{item.basedOnTypeText}}</td>
@@ -561,7 +572,7 @@
                                                                     }
                                                                 }
                                                             </style>
-                                                            <div class="row">
+                                                            <div class="row" id="edtFrequencyDetail">
                                                                 <div class="col-12 col-lg-3">
                                                                     <h5 style="margin-bottom: 8px;">Frequency</h5>
                                                                     <div class="form-check">
@@ -1214,8 +1225,17 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div style="border-top: 1px solid #e3e6f0; padding: 1rem 1rem 0.5rem 1rem; margin: 0 -1rem"><h5 style="margin: 0;">Based On</h5></div>
+                                                            <div style="border-top: 1px solid #e3e6f0; padding: 1rem 1rem 0.5rem 1rem; margin: 0 -1rem" id="basedOnSettingsTitle"><h5 style="margin: 0;">Based On</h5></div>
                                                             <div class="row px-3" id="basedOnSettings">
+                                                                <div class="col-12 custom-control custom-switch d-xl-flex align-items-xl-center">
+                                                                    <div class="form-group d-xl-flex justify-content-xl-start align-items-xl-center" style="margin: 0; Width:50%;">
+                                                                        <input class="custom-control-input basedOnSettings" type="checkbox"
+                                                                            name="basedOnFrequency" id="basedOnFrequency">
+                                                                        <label class="custom-control-label" for="basedOnFrequency">
+                                                                            On Frequency
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
                                                                 <div class="col-12 col-lg-6 custom-control custom-switch d-xl-flex align-items-xl-center">
                                                                     <div class="form-group d-xl-flex justify-content-xl-start align-items-xl-center" style="margin: 0; Width:50%;">
                                                                         <input class="custom-control-input basedOnSettings" type="checkbox"

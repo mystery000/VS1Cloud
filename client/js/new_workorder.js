@@ -42,33 +42,10 @@ Template.new_workorder.onRendered(function(){
     const templateObject = Template.instance();
     let salesorderid = FlowRouter.current().queryParams.salesorderid;
     let lineId = FlowRouter.current().queryParams.lineId;
-    if(lineId) {
-        templateObject.workOrderLineId.set(lineId);
-    }
-    if(salesorderid){
-        templateObject.salesOrderId.set(salesorderid);
-    }
-    if(!salesorderid) {
-        setTimeout(()=>{
-            $('#salesOrderListModal').modal('toggle')
-        }, 500)
-    } else {
-        templateObject.getWorkorderRecord();
-    }
-
-    setTimeout(()=>{
-        $("#edtCustomerName").editableSelect();
-    }, 500)
-
-  
-    //get all work orders 
-    let temp = localStorage.getItem('TWorkorders');
-    templateObject.workOrderRecords.set(temp?JSON.parse(temp):[]);
-
-    //end getting work orders
-
     templateObject.getWorkorderRecord = function() {
-        $('.fullScreenSpin').css('display', 'inline-block')
+        setTimeout(()=>{
+            $('.fullScreenSpin.fullScreenSpin_workorder').css('display', 'inline-block')
+        }, 200)
         //check if there is any workorder which order number is matched to salesorderid.
         let workordersCount = 0;
         let workorders = templateObject.workOrderRecords.get().filter(order=>{
@@ -82,7 +59,6 @@ Template.new_workorder.onRendered(function(){
             getVS1Data('TSalesOrderEx').then(function(dataObject){
                 if(dataObject.length == 0) {
                     accountService.getOneSalesOrderdataEx(templateObject.salesOrderId.get()).then(function(data){
-                        $('.fullScreenSpin').css('display', 'none');
                         let currencySymbol = Currency;
                         let record = {
                             id: data.fields.ID + "_"+(workordersCount + 1).toString(),
@@ -107,8 +83,8 @@ Template.new_workorder.onRendered(function(){
                     for(let d = 0; d< useData.length; d++) {
                         if(parseInt(useData[d].fields.ID) == templateObject.salesOrderId.get()) {
                             let record = {
-                                id: data.fields.ID + "_"+(workordersCount + 1).toString(),
-                                salesorderid: data.fields.ID,
+                                id: useData[d].fields.ID + "_"+(workordersCount + 1).toString(),
+                                salesorderid: useData[d].fields.fields.ID,
                                 lid: 'Edit Work Order' + ' ' + useData[d].fields.ID + ' - ' + (workordersCount+1).toString(),
                                 customer: useData[d].fields.CustomerName,
                                 orderTo: useData[d].fields.InvoiceToDesc,
@@ -121,7 +97,9 @@ Template.new_workorder.onRendered(function(){
 
                             templateObject.workorderrecord.set(record);
                             $('#edtCustomerName').val(record.customer)
-                            $('.fullScreenSpin').css('display', 'none');
+                            setTimeout(()=>{
+                                $('.fullScreenSpin').css('display', 'none');
+                            }, 2000)
                         }
                     }
                 }
@@ -147,6 +125,32 @@ Template.new_workorder.onRendered(function(){
             })
         }
     }
+    if(lineId) {
+        templateObject.workOrderLineId.set(lineId);
+    }
+    if(salesorderid){
+        templateObject.salesOrderId.set(salesorderid);
+    }
+    if(!salesorderid) {
+        setTimeout(()=>{
+            $('#salesOrderListModal').modal('toggle')
+        }, 500)
+    } else {
+        templateObject.getWorkorderRecord();
+    }
+
+    setTimeout(()=>{
+        $("#edtCustomerName").editableSelect();
+    }, 500)
+
+  
+    //get all work orders 
+    let temp = localStorage.getItem('TWorkorders');
+    templateObject.workOrderRecords.set(temp?JSON.parse(temp):[]);
+
+    //end getting work orders
+
+  
 
 })
 
@@ -310,6 +314,12 @@ Template.new_workorder.events({
             FlowRouter.go('/workorderlist')
         })
         
+    },
+
+    'click #tblWorkOrderLine tbody tr': function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        $('#BOMSetupModal').modal('toggle')
     }
 })
 

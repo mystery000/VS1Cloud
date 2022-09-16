@@ -652,6 +652,7 @@ export class UtilityService {
                      });
                  })
              }
+            await loadAttachment()
         }
         let dataObj = {
             totalAttachments: totalAttachments,

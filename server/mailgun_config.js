@@ -73,7 +73,7 @@ Meteor.methods({
     if (details.Frequency === 'M') frequencyType = 'Monthly';
     else if (details.Frequency === 'W') frequencyType = 'Weekly';
     else if (details.Frequency === 'D') frequencyType = 'Daily';
-    else if (details.Frequency === '' && details.Active) frequencyType = 'One Time Only';
+    else if (details.Frequency === 'O' && details.Active) frequencyType = 'One Time Only';
 
     SSR.compileTemplate("emailtemplate", Assets.getText('email/templates/reportemail.html'));
     const groupedReports = Meteor.call('groupedReports', details.FormID, details.FormIDs ? details.FormIDs.split(',') : [], details.HostURL);
@@ -131,7 +131,7 @@ Meteor.methods({
       else startDate = new Date();
     }
     startDate = startDate.getTime() + (details.Offset - startDate.getTimezoneOffset()) * 60 * 1000;
-    if (details.Frequency === "M") {
+    if (details.FrequencyType === "M") {
       let months = '0,1,2,3,4,5,6,7,8,9,10,11';
       const monthDate = details.MonthDays;
       months = months.replace('january', 0).replace('february', 1).replace('march', 2)
@@ -149,7 +149,7 @@ Meteor.methods({
       }
 
       return suggestedNextDate.format('YYYY-MM-DD HH:mm');
-    } else if (details.Frequency === "W") {
+    } else if (details.FrequencyType === "W") {
       const selectedDay = details.WeekDay;
       const everyWeeks = details.Every === -1 ? 1 : details.Every;
       let suggestedNextDate = moment(startDate).day(selectedDay);
@@ -158,7 +158,7 @@ Meteor.methods({
       }
 
       return suggestedNextDate.format('YYYY-MM-DD HH:mm');
-    } else if (details.Frequency === "D") {
+    } else if (details.FrequencyType === "D") {
       const satAction = details.SatAction;
       const sunAction = details.SunAction;
       const everyDays = details.Every;
@@ -173,11 +173,11 @@ Meteor.methods({
       }
 
       return suggestedNextDate.format('YYYY-MM-DD HH:mm');
-    } else if (details.Frequency === "" && details.StartDate === details.EndDate) {
+    } else if (details.FrequencyType === "O" && details.StartDate === details.EndDate) {
       const suggestedNextDate = moment(startDate);
       if (moment().valueOf()> suggestedNextDate.valueOf() + 3*60*1000) return '';
       else return suggestedNextDate.format('YYYY-MM-DD HH:mm');
-    } else if (!details.Frequency) {
+    } else if (!details.FrequencyType || details.FrequencyType === "") {
       return '';
     }
   },

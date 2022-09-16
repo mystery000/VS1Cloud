@@ -482,6 +482,7 @@ Template.emailsettings.onRendered(function () {
                                 basedOnType: basedOnType,
                                 basedOnTypeText: basedOnTypeText,
                                 frequency: empData[i].fields.Frequency || '',
+                                frequencyType: empData[i].fields.FrequencyType || '',
                                 id: empData[i].fields.ID || '',
                                 monthDays: empData[i].fields.MonthDays || '',
                                 nextDueDate: empData[i].fields.NextDueDate || '',
@@ -506,6 +507,7 @@ Template.emailsettings.onRendered(function () {
                         formID: n.id || '',
                         formname: n.name || '',
                         frequency: '',
+                        frequencyType: '',
                         monthDays: '',
                         nextDueDate: '',
                         startDate: '',
@@ -709,7 +711,8 @@ Template.emailsettings.onRendered(function () {
                                     if (basedOnType.split(',').includes('EN')) basedOnTypeText += 'On Event(On Logon), ';
                                     if (basedOnType.split(',').includes('EU')) basedOnTypeText += 'On Event(On Logout), ';
                                 }
-                                if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
+                                // if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
+                                if (basedOnTypeText != '') basedOnTypeText = basedOnTypeText.slice(0, -2);
         
                                 empDataCurr = {
                                     employeeid: recipientIds.join('; ') || '',
@@ -720,6 +723,7 @@ Template.emailsettings.onRendered(function () {
                                     basedOnType: basedOnType,
                                     basedOnTypeText: basedOnTypeText,
                                     frequency: empData[i].fields.Frequency || '',
+                                    frequencyType: empData[i].fields.FrequencyType || '',
                                     id: empData[i].fields.ID || '',
                                     monthDays: empData[i].fields.MonthDays || '',
                                     nextDueDate: empData[i].fields.NextDueDate || '',
@@ -744,6 +748,7 @@ Template.emailsettings.onRendered(function () {
                             formID: n.id || '',
                             formname: n.name || '',
                             frequency: '',
+                            frequencyType: '',
                             monthDays: '',
                             nextDueDate: '',
                             startDate: '',
@@ -963,7 +968,8 @@ Template.emailsettings.onRendered(function () {
                                 if (basedOnType.split(',').includes('EN')) basedOnTypeText += 'On Event(On Logon), ';
                                 if (basedOnType.split(',').includes('EU')) basedOnTypeText += 'On Event(On Logout), ';
                             }
-                            if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
+                            if (basedOnTypeText != '') basedOnTypeText = basedOnTypeText.slice(0, -2);
+                            // if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
     
                             empDataCurr = {
                                 employeeid: recipientIds.join('; ') || '',
@@ -974,6 +980,7 @@ Template.emailsettings.onRendered(function () {
                                 basedOnType: basedOnType,
                                 basedOnTypeText: basedOnTypeText,
                                 frequency: empData[i].fields.Frequency || '',
+                                frequencyType: empData[i].fields.Frequency || '',
                                 id: empData[i].fields.ID || '',
                                 monthDays: empData[i].fields.MonthDays || '',
                                 nextDueDate: empData[i].fields.NextDueDate || '',
@@ -998,6 +1005,7 @@ Template.emailsettings.onRendered(function () {
                         formID: n.id || '',
                         formname: n.name || '',
                         frequency: '',
+                        frequencyType: '',
                         monthDays: '',
                         nextDueDate: '',
                         startDate: '',
@@ -1582,6 +1590,7 @@ Template.emailsettings.onRendered(function () {
                                             StartDate: sDate,
                                             WeekDay: 1,
                                             NextDueDate: '',
+                                            FrequencyType: '',
                                             Frequency: '',
                                             attachments: attaches,
                                             FormName: formName,
@@ -1641,14 +1650,17 @@ Template.emailsettings.onRendered(function () {
                                 // objDetail.fields.ExtraOption = ofMonths;
                                 objDetail.fields.MonthDays = monthDate;
                                 objDetail.fields.Frequency = "M";
+                                objDetail.fields.FrequencyType  = 'M';
                             } else if (frequencyName === "Weekly") {
                                 const selectdays = frequencyEl.attr("data-selectdays");
                                 const everyweeks = frequencyEl.attr("data-everyweeks");
                                 objDetail.fields.Frequency = "W";
+                                objDetail.fields.FrequencyType = 'W';
                                 objDetail.fields.WeekDay = parseInt(selectdays);
                                 if (everyweeks) objDetail.fields.Every = parseInt(everyweeks);
                             } else if (frequencyName === "Daily") {
                                 objDetail.fields.Frequency = "D";
+                                objDetail.fields.FrequencyType = 'D';
                                 const dailyradiooption = frequencyEl.attr("data-dailyradiooption");
                                 const everydays = frequencyEl.attr("data-everydays");
                                 // objDetail.fields.ExtraOption = dailyradiooption;
@@ -1663,7 +1675,9 @@ Template.emailsettings.onRendered(function () {
                             } else if (frequencyName === "One Time Only") {
                                 objDetail.fields.EndDate = sDate;
                                 objDetail.fields.Frequency = "";
+                                objDetail.fields.FrequencyType = 'O';
                             } else {
+                                objDetail.fields.FrequencyType = '';
                                 objDetail.fields.Active = false;
                             }
 
@@ -1834,14 +1848,17 @@ Template.emailsettings.onRendered(function () {
                         // objDetail.fields.ExtraOption = ofMonths;
                         objDetail.fields.MonthDays = monthDate;
                         objDetail.fields.Frequency = "M";
+                        objDetail.fields.FrequencyType = "M";
                     } else if (frequencyName === "Weekly") {
                         const selectdays = frequencyEl.attr("data-selectdays");
                         const everyweeks = frequencyEl.attr("data-everyweeks");
                         objDetail.fields.Frequency = "W";
+                        objDetail.fields.FrequencyType = "W";
                         objDetail.fields.WeekDay = parseInt(selectdays);
                         if (everyweeks) objDetail.fields.Every = parseInt(everyweeks);
                     } else if (frequencyName === "Daily") {
                         objDetail.fields.Frequency = "D";
+                        objDetail.fields.FrequencyType = "D";
                         const dailyradiooption = frequencyEl.attr("data-dailyradiooption");
                         const everydays = frequencyEl.attr("data-everydays");
                         // objDetail.fields.ExtraOption = dailyradiooption;
@@ -1856,7 +1873,9 @@ Template.emailsettings.onRendered(function () {
                     } else if (frequencyName === "One Time Only") {
                         objDetail.fields.EndDate = sDate;
                         objDetail.fields.Frequency = "";
+                        objDetail.fields.FrequencyType = "O";
                     } else {
+                        objDetail.fields.FrequencyType = '';
                         objDetail.fields.Active = false;
                     }
                     let promises = groupedReports.map(async (groupedReport) => {
@@ -2051,6 +2070,7 @@ Template.emailsettings.events({
         basedOnTypes.each(function () {
             if ($(this).prop('checked')) {
                 const selectedType = $(this).attr('id');
+                if (selectedType === "basedOnFrequency") { basedOnTypeAttr += 'F,'}
                 if (selectedType === "basedOnPrint") { basedOnTypeTexts += 'On Print, '; basedOnTypeAttr += 'P,'; }
                 if (selectedType === "basedOnSave") { basedOnTypeTexts += 'On Save, '; basedOnTypeAttr += 'S,'; }
                 if (selectedType === "basedOnTransactionDate") { basedOnTypeTexts += 'On Transaction Date, '; basedOnTypeAttr += 'T,'; }
@@ -2070,70 +2090,77 @@ Template.emailsettings.events({
 
         $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-basedontype', basedOnTypeAttr);
 
-        if (radioFrequency == "frequencyMonthly") {
-            const monthDate = $("#sltDay").val().replace('day', '');
-            const ofMonths = '';
-            let isFirst = true;
-            $(".ofMonthList input[type=checkbox]:checked").each(function () {
-                ofMonths += isFirst ? $(this).val() : ',' + $(this).val();
-                isFirst = false;
-            });
-            const startTime = $('#edtMonthlyStartTime').val();
-            const startDate = $('#edtMonthlyStartDate').val();
-
-            setTimeout(function () {
-                if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Monthly, " + basedOnTypeTexts);
-                else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Monthly");
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-monthDate', monthDate);
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-ofMonths', ofMonths);
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
+        const values = basedOnTypeAttr.split(',');
+        if(values.includes('F')) {
+            if (radioFrequency == "frequencyMonthly") {
+                const monthDate = $("#sltDay").val().replace('day', '');
+                const ofMonths = '';
+                let isFirst = true;
+                $(".ofMonthList input[type=checkbox]:checked").each(function () {
+                    ofMonths += isFirst ? $(this).val() : ',' + $(this).val();
+                    isFirst = false;
+                });
+                const startTime = $('#edtMonthlyStartTime').val();
+                const startDate = $('#edtMonthlyStartDate').val();
+    
+                setTimeout(function () {
+                    if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Monthly, " + basedOnTypeTexts);
+                    else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Monthly");
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-monthDate', monthDate);
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-ofMonths', ofMonths);
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
+                    $("#frequencyModal").modal('toggle');
+                }, 100);
+            } else if (radioFrequency == "frequencyWeekly") {
+                const everyWeeks = $("#weeklyEveryXWeeks").val();
+                const selectDays = $(".selectDays input[type=checkbox]:checked").val();
+                selectDays = templateObject.getDayNumber(selectDays);
+                const startTime = $('#edtWeeklyStartTime').val();
+                const startDate = $('#edtWeeklyStartDate').val();
+                setTimeout(function () {
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-selectDays', selectDays);
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-everyWeeks', everyWeeks);
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
+                    if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Weekly, " + basedOnTypeTexts);
+                    else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Weekly");
+                    $("#frequencyModal").modal('toggle');
+                }, 100);
+            } else if (radioFrequency == "frequencyDaily") {
+                const dailyRadioOption = $('#dailySettings input[type=radio]:checked').attr('id');
+                const everyDays = $("#dailyEveryXDays").val();
+                const startTime = $('#edtDailyStartTime').val();
+                const startDate = $('#edtDailyStartDate').val();
+                setTimeout(function () {
+                    if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Daily, " + basedOnTypeTexts);
+                    else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Daily");
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-dailyRadioOption', dailyRadioOption);
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-everydays', everyDays);
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
+                    $("#frequencyModal").modal('toggle');
+                }, 100);
+            } else if (radioFrequency == "frequencyOnetimeonly") {
+                const startTime = $('#edtOneTimeOnlyTime').val();
+                const startDate = $('#edtOneTimeOnlyDate').val();
+    
+                $('#edtOneTimeOnlyTimeError').css('display', 'none');
+                $('#edtOneTimeOnlyDateError').css('display', 'none');
+                setTimeout(function () {
+                    if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("One Time Only, " + basedOnTypeTexts);
+                    else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("One Time Only");
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
+                    $("#frequencyModal").modal('toggle');
+                }, 100);
+            } else {
                 $("#frequencyModal").modal('toggle');
-            }, 100);
-        } else if (radioFrequency == "frequencyWeekly") {
-            const everyWeeks = $("#weeklyEveryXWeeks").val();
-            const selectDays = $(".selectDays input[type=checkbox]:checked").val();
-            selectDays = templateObject.getDayNumber(selectDays);
-            const startTime = $('#edtWeeklyStartTime').val();
-            const startDate = $('#edtWeeklyStartDate').val();
-            setTimeout(function () {
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-selectDays', selectDays);
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-everyWeeks', everyWeeks);
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
-                if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Weekly, " + basedOnTypeTexts);
-                else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Weekly");
-                $("#frequencyModal").modal('toggle');
-            }, 100);
-        } else if (radioFrequency == "frequencyDaily") {
-            const dailyRadioOption = $('#dailySettings input[type=radio]:checked').attr('id');
-            const everyDays = $("#dailyEveryXDays").val();
-            const startTime = $('#edtDailyStartTime').val();
-            const startDate = $('#edtDailyStartDate').val();
-            setTimeout(function () {
-                if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Daily, " + basedOnTypeTexts);
-                else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Daily");
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-dailyRadioOption', dailyRadioOption);
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-everydays', everyDays);
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
-                $("#frequencyModal").modal('toggle');
-            }, 100);
-        } else if (radioFrequency == "frequencyOnetimeonly") {
-            const startTime = $('#edtOneTimeOnlyTime').val();
-            const startDate = $('#edtOneTimeOnlyDate').val();
-
-            $('#edtOneTimeOnlyTimeError').css('display', 'none');
-            $('#edtOneTimeOnlyDateError').css('display', 'none');
-            setTimeout(function () {
-                if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("One Time Only, " + basedOnTypeTexts);
-                else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("One Time Only");
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
-                $("#frequencyModal").modal('toggle');
-            }, 100);
-        } else {
-            $("#frequencyModal").modal('toggle');
+            }
+        }else {
+            if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text(basedOnTypeTexts);
+            else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text('')
+            $('#frequencyModal').modal('toggle');
         }
     },
     'click .dnd-moved': (e) => {
@@ -2235,7 +2262,10 @@ Template.emailsettings.events({
 
         $('.colSettings').css('display', 'none'); // Hide all left-settings part
 
-        const frequencyType = $(event.target).html();
+        $('#edtFrequencyDetail').css('display', 'none');
+        $('#basedOnSettingsTitle').css('border-top-width', '0px');
+
+        const frequencyType = $(event.target).html().split(',')[0];
         const startDate = $(event.target).attr('data-startdate') ? $(event.target).attr('data-startdate') : '';
         const startTime = $(event.target).attr('data-starttime') ? $(event.target).attr('data-starttime') : '';
         if (frequencyType === 'Monthly') {
@@ -2302,6 +2332,14 @@ Template.emailsettings.events({
         if (basedOnTypeData && basedOnTypeData != '') {
             const values = basedOnTypeData.split(',');
             $('#onEventSettings').css('display', 'none');
+            $('#edtFrequencyDetail').css('display', 'none');
+            $('#basedOnFrequency').prop('checked', false);
+            $('#basedOnPrint').prop('checked', false);
+            $('#basedOnSave').prop('checked', false);
+            $('#basedOnTransactionDate').prop('checked', false);
+            $('#basedOnDueDate').prop('checked', false);
+            $('#basedOnEvent').prop('checked', false)
+            if (values.includes('F')) {$('#basedOnFrequency').prop('checked', true); $('#edtFrequencyDetail').css('display', 'flex'); $('#basedOnSettingTitle').css('border-top')}
             if (values.includes('P')) $('#basedOnPrint').prop('checked', true);
             if (values.includes('S')) $('#basedOnSave').prop('checked', true);
             if (values.includes('T')) $('#basedOnTransactionDate').prop('checked', true);
@@ -2452,6 +2490,15 @@ Template.emailsettings.events({
                 $('#onEventSettings').css('display', 'none');
                 $('#settingsOnEvents').prop('checked', false);
                 $('#settingsOnLogout').prop('checked', false);
+            }
+        } else if (event.target.id == 'basedOnFrequency') {
+            const value = $(event.target).prop('checked');
+            if(value) {
+                $('#edtFrequencyDetail').css('display', 'flex');
+                $('#basedOnSettingsTitle').css('border-top-width', '1px');
+            }else {
+                $('#edtFrequencyDetail').css('display', 'none');
+                $('#basedOnSettingsTitle').css('border-top-width', '0px');
             }
         }
     },

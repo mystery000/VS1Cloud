@@ -2,18 +2,19 @@ import { ReportService } from "../../reports/report-service";
 import {VS1ChartService} from "../vs1charts-service";
 import 'jQuery.print/jQuery.print.js';
 import {UtilityService} from "../../utility-service";
-import { template } from "lodash";
 let _ = require('lodash');
-let vs1chartService = new VS1ChartService();
-let utilityService = new UtilityService();
+
 Template.performancechart.onCreated(()=>{
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
   templateObject.dateAsAt = new ReactiveVar();
   
-  templateObject.grossProfitMargin = new ReactiveVar();
-  templateObject.netProfitMargin = new ReactiveVar();
-  templateObject.returnOnInvestment = new ReactiveVar();
+  templateObject.grossProfitMarginPerc1 = new ReactiveVar();
+  templateObject.netProfitMarginPerc1 = new ReactiveVar();
+  templateObject.returnOnInvestmentPerc1 = new ReactiveVar();
+  templateObject.grossProfitMarginPerc2 = new ReactiveVar();
+  templateObject.netProfitMarginPerc2 = new ReactiveVar();
+  templateObject.returnOnInvestmentPerc2 = new ReactiveVar();
   templateObject.titleMonth1 = new ReactiveVar();
   templateObject.titleMonth2 = new ReactiveVar();
 });
@@ -39,49 +40,235 @@ Template.performancechart.onRendered(()=>{
   templateObject.titleMonth1.set(currMonth1);
   templateObject.titleMonth2.set(currMonth2);
 
-  let totalExpense = localStorage.getItem('VS1ProfitandLoss_ExpEx_dash') || 0;
-  let totalCOGS = localStorage.getItem('VS1ProfitandLoss_COGSEx_dash') || 0;
-  let totalSales = localStorage.getItem('VS1ProfitandLoss_IncomeEx_dash') || 0;
-  let totalNetIncome = localStorage.getItem('VS1ProfitandLoss_netIncomeEx_dash') || 0;
+  let totalExpense = [];
+  let totalCOGS = [];
+  let totalSales = [];
+  let totalNetIncome = [];
+  let grossProfit = [];
 
-  let grossProfitMg = (Number(totalSales) - Number(totalCOGS)) || 0;
-  let netProfitMg = (Number(totalSales) - Number(totalExpense)) || 0;
-  let totalEq = 0;
-  let investReturn = 0;
+  let grossProfitMarginPerc1 = 0;
+  let netProfitMarginPerc1 = 0;
+  let returnOnInvestmentPerc1 = 0;
+  let grossProfitMarginPerc2 = 0;
+  let netProfitMarginPerc2 = 0;
+  let returnOnInvestmentPerc2 = 0;
 
-  templateObject.getBalanceSheetReports = async (dateAsOf) => {
-    let data = !localStorage.getItem("VS1BalanceSheet_Report1")
-      ? await reportService.getBalanceSheetReport(dateAsOf)
-      : JSON.parse(localStorage.getItem("VS1BalanceSheet_Report"));
+  let grossProfitMg = [0, 0];
+  let netProfitMg = [0, 0];
+  let investReturns = [0, 0];
 
+  let varianceRed = "#ff420e";
+  let varianceGreen = "#579D1C;";
+
+  templateObject.calculatePercent = function(pgrossProfitMg, pnetProfitMg, pinvestReturns) {
+    var rgrossProfitMgPerc = 0;
+    var rnetProfitMgPerc = 0;
+    var rinvestReturnsPerc = 0;
+    var maxValue = Math.max(Math.abs(pgrossProfitMg), Math.abs(pnetProfitMg), Math.abs(pinvestReturns));
+    if (maxValue > 0) {
+      rgrossProfitMgPerc = Math.round(Math.abs(pgrossProfitMg) / maxValue * 100);
+      if (rgrossProfitMgPerc < 40)
+        rgrossProfitMgPerc = 40;
+      rnetProfitMgPerc = Math.round(Math.abs(pnetProfitMg) / maxValue * 100);
+      if (rnetProfitMgPerc < 40)
+        rnetProfitMgPerc = 40;
+      rinvestReturnsPerc = Math.round(Math.abs(pinvestReturns) / maxValue * 100);
+      if (rinvestReturnsPerc < 40)
+        rinvestReturnsPerc = 40;
+    }
+    return [rgrossProfitMgPerc, rnetProfitMgPerc, rinvestReturnsPerc];
+  }
+
+  templateObject.setFieldValue = function(fieldVal, fieldSelector) {
+    if (fieldVal >= 0) {
+      if (fieldSelector == "spnReturnInvest" || fieldSelector == "spnReturnInvest2")
+        $('.' + fieldSelector).html(fieldVal);
+      else
+        $('.' + fieldSelector).html(utilityService.modifynegativeCurrencyFormat(fieldVal));
+    } else {
+      if (fieldSelector == "spnReturnInvest" || fieldSelector == "spnReturnInvest2")
+        $('.' + fieldSelector).html(Math.abs(fieldVal));
+      else
+        $('.' + fieldSelector).html('{' + utilityService.modifynegativeCurrencyFormat(Math.abs(fieldVal)) + '}');
+      $('.' + fieldSelector).css('color', 'red');
+    }
+  }
+
+  templateObject.setFieldVariance = function(fieldVal1, fieldVal2, fieldSelector, parentSelector) {
+    var fieldVariance = 0;
+    if (fieldVal1 == 0) {
+      if (fieldVal2 > 0) {
+        fieldVariance = 100;
+        $('.' + parentSelector).css("backgroundColor", varianceGreen);
+      } else if (fieldVal2 == 0) {
+        fieldVariance = 0;
+        $('.' + parentSelector).css("backgroundColor", varianceGreen);
+      } else {
+        fieldVariance = -100;
+        $('.' + parentSelector).css("backgroundColor", varianceRed);
+      }
+    } else {
+      if (fieldVal1 > 0)
+      fieldVariance = (fieldVal2 - fieldVal1) / fieldVal1 * 100;
+      else
+        fieldVariance = (fieldVal2 - fieldVal1) / Math.abs(fieldVal1) * 100;
+      if (fieldVariance >= 0)
+        $('.' + parentSelector).css("backgroundColor", varianceGreen);
+      else
+        $('.' + parentSelector).css("backgroundColor", varianceRed);
+    }
+    $('.' + fieldSelector).html(fieldVariance.toFixed(1));
+  }
+
+  templateObject.getPerformanceReports = async () => {
+    var curDate = new Date();
+    var dateFrom = new Date();
+    var dateTo = new Date();
+    dateFrom.setMonth(curDate.getMonth() - 2);
+    var pDateFrom = dateFrom.getFullYear() + '-' + ("0" + (dateFrom.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateFrom.getDate())).slice(-2);
+    dateTo.setMonth(curDate.getMonth());
+    var pDateTo = dateTo.getFullYear() + '-' + ("0" + (dateTo.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateTo.getDate())).slice(-2);
+    let periodMonths = `1 Month`;
+    let data = await reportService.getProfitandLossCompare(
+      pDateFrom,
+      pDateTo,
+      false,
+      periodMonths
+    );
     let records = [];
-    if (data.balancesheetreport) {
-      for (let i = 0, len = data.balancesheetreport.length; i < len; i++) {
-        let TotalCurrentAsset_Liability = data.balancesheetreport[i]["Total Current Asset & Liability"];
-        let AccountTree = data.balancesheetreport[i]["Account Tree"];
-        
-        if (AccountTree.replace(/\s/g, "") == "TotalCapital/Equity") {
-          totalEq = TotalCurrentAsset_Liability;
-          break;
+    if (data.tprofitandlossperiodcomparereport) {
+      let accountData = data.tprofitandlossperiodcomparereport;
+      let accountType = "";
+      let arrAccountTypes = ["TotalIncome", "GrossProfit", "NetIncome", "TotalCOGS"];
+      var dataList = "";
+      for (let i = 0; i < accountData.length; i++) {
+        let accountTypeDesc = accountData[i]["AccountTypeDesc"].replace(/\s/g, "");
+        if (arrAccountTypes.includes(accountTypeDesc)) {
+          accountType = accountTypeDesc;
+          let compPeriod = 2;
+          let periodAmounts = [];
+          let totalAmount = 0;
+          for (let counter = 1; counter <= compPeriod; counter++) {
+            totalAmount += accountData[i]["Amount_" + counter];
+            let AmountEx = utilityService.modifynegativeCurrencyFormat(accountData[i]["Amount_" + counter]) || 0.0;
+            let RealAmount = accountData[i]["Amount_" + counter] || 0;
+            periodAmounts.push({
+              decimalAmt: AmountEx,
+              roundAmt: RealAmount,
+            });
+          }
+          let totalAmountEx = utilityService.modifynegativeCurrencyFormat(totalAmount) || 0.0;
+          let totalRealAmount = totalAmount || 0;
+          if (accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" && accountType != "") {
+            dataList = {
+              id: accountData[i]["AccountID"] || "",
+              accounttype: accountType || "",
+              accounttypeshort: accountData[i]["AccountType"] || "",
+              accountname: accountData[i]["AccountName"] || "",
+              accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+              accountno: accountData[i]["AccountNo"] || "",
+              totalamountex: "",
+              totalRealAmountex: "",
+              periodAmounts: "",
+              name: $.trim(accountData[i]["AccountName"])
+                .split(" ")
+                .join("_"),
+            };
+          } else {
+            dataList = {
+              id: accountData[i]["AccountID"] || "",
+              accounttype: accountType || "",
+              accounttypeshort: accountData[i]["AccountType"] || "",
+              accountname: accountData[i]["AccountName"] || "",
+              accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+              accountno: accountData[i]["AccountNo"] || "",
+              totalamountex: totalAmountEx || 0.0,
+              periodAmounts: periodAmounts,
+              totalRealAmountex: totalRealAmount,
+              name: $.trim(accountData[i]["AccountName"])
+                .split(" ")
+                .join("_"),
+              // totaltax: totalTax || 0.00
+            };
+          }
+
+          if (accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "") {
+          } else {
+            if (dataList.totalRealAmountex !== 0) {
+              records.push(dataList);
+            }
+          }
         }
       }
-      if (totalEq != 0) {
-        investReturn = totalNetIncome / totalEq;
+      var i=0;
+      for (i=0; i<2; i++) {
+        totalSales.push(records[0].periodAmounts[i].roundAmt);
+        grossProfit.push(records[1].periodAmounts[i].roundAmt);
+        totalExpense.push(records[0].periodAmounts[i].roundAmt - records[1].periodAmounts[i].roundAmt);
+        totalNetIncome.push(records[2].periodAmounts[i].roundAmt);
+        totalCOGS.push(records[3].periodAmounts[i].roundAmt);
       }
-      investReturn = investReturn.toFixed(2);
-      templateObject.grossProfitMargin.set(grossProfitMg);
-      templateObject.netProfitMargin.set(netProfitMg);
-      templateObject.returnOnInvestment.set(investReturn);
-      $(".spnGrossProfitMargin").html(utilityService.modifynegativeCurrencyFormat(grossProfitMg));
-      $(".spnNetProfitMargin").html(utilityService.modifynegativeCurrencyFormat(netProfitMg));
-      $(".spnReturnInvest").html(investReturn);
+      for (i=0; i<2; i++) {
+        grossProfitMg[i] = totalSales[i] - totalCOGS[i];
+        netProfitMg[i] = totalSales[i] - totalExpense[i];
+      }      
+      templateObject.records.set(records);
     }
+
+    
+    var dateTo1 = new Date(curDate.getFullYear(), curDate.getMonth() - 1, 0);
+    var dateTo2 = new Date(curDate.getFullYear(), curDate.getMonth(), 0);
+    var loadDate1 = moment(dateTo1).format("YYYY-MM-DD");
+    var loadDate2 = moment(dateTo2).format("YYYY-MM-DD");
+    var loadDates = [];
+    loadDates.push(loadDate1);
+    loadDates.push(loadDate2);
+
+    let TotalCurrentAsset_Liability = 0;
+    let AccountTree = "";
+    let totalEq = 0;
+    let investRet = 0;
+
+    for (var k=0; k<2; k++) {
+      let data = await reportService.getBalanceSheetReport(loadDates[k]);
+      if (data.balancesheetreport) {
+        for (let i = 0, len = data.balancesheetreport.length; i < len; i++) {
+          TotalCurrentAsset_Liability = data.balancesheetreport[i]["Total Current Asset & Liability"];
+          AccountTree = data.balancesheetreport[i]["Account Tree"];
+          
+          if (AccountTree.replace(/\s/g, "") == "TotalCapital/Equity") {
+            totalEq = TotalCurrentAsset_Liability;
+            break;
+          }
+        }
+        if (totalEq != 0) {
+          investRet = totalNetIncome[k] / totalEq;
+        }
+        investRet = investRet.toFixed(2);
+        investReturns[k] = investRet;
+      }
+    }
+    [grossProfitMarginPerc1, netProfitMarginPerc1, returnOnInvestmentPerc1] = templateObject.calculatePercent(grossProfitMg[0], netProfitMg[0], investReturns[0]);
+    [grossProfitMarginPerc2, netProfitMarginPerc2, returnOnInvestmentPerc2] = templateObject.calculatePercent(grossProfitMg[1], netProfitMg[1], investReturns[1]);
+    templateObject.grossProfitMarginPerc1.set(grossProfitMarginPerc1);
+    templateObject.netProfitMarginPerc1.set(netProfitMarginPerc1);
+    templateObject.returnOnInvestmentPerc1.set(returnOnInvestmentPerc1);
+    templateObject.grossProfitMarginPerc2.set(grossProfitMarginPerc2);
+    templateObject.netProfitMarginPerc2.set(netProfitMarginPerc2);
+    templateObject.returnOnInvestmentPerc2.set(returnOnInvestmentPerc2);
+
+    templateObject.setFieldValue(grossProfitMg[0], "spnGrossProfitMargin");
+    templateObject.setFieldValue(netProfitMg[0], "spnNetProfitMargin");
+    templateObject.setFieldValue(investReturns[0], "spnReturnInvest");
+    templateObject.setFieldValue(grossProfitMg[1], "spnGrossProfitMargin2");
+    templateObject.setFieldValue(netProfitMg[1], "spnNetProfitMargin2");
+    templateObject.setFieldValue(investReturns[1], "spnReturnInvest2");
+
+    templateObject.setFieldVariance(grossProfitMg[0], grossProfitMg[1], "spnGrossProfitMarginVariance", "divGrossProfitMarginVariance");
+    templateObject.setFieldVariance(netProfitMg[0], netProfitMg[1], "spnNetProfitMarginVariance", "divNetProfitMarginVariance");
+    templateObject.setFieldVariance(investReturns[0], investReturns[1], "spnReturnInvestVariance", "divReturnInvestVariance");
   };
-
-  var curDate = new Date();
-  var getLoadDate = moment(curDate).format("YYYY-MM-DD");
-  templateObject.getBalanceSheetReports(getLoadDate);
-
+  templateObject.getPerformanceReports();
 });
 
 Template.performancechart.events({
@@ -97,14 +284,23 @@ Template.performancechart.helpers({
   titleMonth2: () =>{
       return Template.instance().titleMonth2.get();
   },
-  grossProfitMargin: () =>{
-      return Template.instance().grossProfitMargin.get() || 0;
+  grossProfitMarginPerc1: () =>{
+      return Template.instance().grossProfitMarginPerc1.get() || 0;
   },
-  netProfitMargin: () =>{
-      return Template.instance().netProfitMargin.get() || 0;
+  netProfitMarginPerc1: () =>{
+      return Template.instance().netProfitMarginPerc1.get() || 0;
   },
-  returnOnInvestment: () =>{
-      return Template.instance().returnOnInvestment.get() || 0;
+  returnOnInvestmentPerc1: () =>{
+      return Template.instance().returnOnInvestmentPerc1.get() || 0;
+  },
+  grossProfitMarginPerc2: () =>{
+    return Template.instance().grossProfitMarginPerc2.get() || 0;
+  },
+  netProfitMarginPerc2: () =>{
+    return Template.instance().netProfitMarginPerc2.get() || 0;
+  },
+  returnOnInvestmentPerc2: () =>{
+    return Template.instance().returnOnInvestmentPerc2.get() || 0;
   }
 });
 
