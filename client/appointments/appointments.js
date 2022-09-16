@@ -15778,7 +15778,7 @@ Template.appointments.events({
     // } else {
     //   selectedProduct.push($("#product-list").val());
     // }
-    let selectedProduct= selectedProduct.push($("#product-list").val());
+    let selectedProduct = $("#product-list").val() || "";
     let hourlyRate = "";
     let status = "Not Converted";
     let uploadedItems = templateObject.uploadedFiles.get();
@@ -15894,9 +15894,9 @@ Template.appointments.events({
           type: "TAppointmentEx",
           fields: {
             Id: parseInt(id),
-            // ClientName: clientname,
-            // Mobile: clientmobile,
-            // Phone: contact,
+            ClientName: clientname,
+            Mobile: clientmobile,
+            Phone: contact,
             StartTime: startDate + " " + startTime,
             EndTime: endDate + " " + endTime,
             FeedbackNotes: notes,
@@ -15909,7 +15909,7 @@ Template.appointments.events({
             Actual_EndTime: aEndDate,
             // TrainerName: employeeName,
             Notes: notes,
-            // ProductDesc: selectedProduct,
+            ProductDesc: selectedProduct,
             Attachments: uploadedItems,
             Status: status,
             CUSTFLD12: messageSid || "",
