@@ -563,8 +563,8 @@ Template.employeescard.onRendered(function () {
                             }, 100);
                         },
                         "fnInitComplete": function () {
-                            $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#productListModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpServiceList_filter");
-                            $("<button class='btn btn-primary btnRefreshProductService' type='button' id='btnRefreshProductService' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpServiceList_filter");
+                            $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#productListModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpServiceList_filter");
+                            $("<button class='btn btn-primary btnRefreshProductService' type='button' id='btnRefreshProductService' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpServiceList_filter");
                         }
 
               }).on('page', function () {
@@ -651,8 +651,8 @@ Template.employeescard.onRendered(function () {
                             }, 100);
                         },
                         "fnInitComplete": function () {
-                            $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#productListModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpServiceList_filter");
-                            $("<button class='btn btn-primary btnRefreshProductService' type='button' id='btnRefreshProductService' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpServiceList_filter");
+                            $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#productListModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpServiceList_filter");
+                            $("<button class='btn btn-primary btnRefreshProductService' type='button' id='btnRefreshProductService' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpServiceList_filter");
                         }
 
               }).on('page', function () {
@@ -3018,8 +3018,8 @@ Template.employeescard.onRendered(function () {
                     }, 100);
                 },
                 "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnLeaveRequestBtn' data-dismiss='modal' data-toggle='modal' data-target='#newLeaveRequestModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblLeaveRequests_filter");
-                    $("<button class='btn btn-primary btnRefreshLeaveRequest' type='button' id='btnRefreshLeaveRequest' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeaveRequests_filter");
+                    $("<button class='btn btn-primary btnLeaveRequestBtn' data-dismiss='modal' data-toggle='modal' data-target='#newLeaveRequestModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblLeaveRequests_filter");
+                    $("<button class='btn btn-primary btnRefreshLeaveRequest' type='button' id='btnRefreshLeaveRequest' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeaveRequests_filter");
                 }
 
             }).on('page', function () {
@@ -3206,8 +3206,8 @@ Template.employeescard.onRendered(function () {
                     }, 100);
                 },
                 "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnAddNewNotes' data-dismiss='modal' data-toggle='modal' data-target='#newNoteModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpPayrollNotes_filter");
-                    $("<button class='btn btn-primary btnRefreshPayNotes' type='button' id='btnRefreshPayNotes' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpPayrollNotes_filter");
+                    $("<button class='btn btn-primary btnAddNewNotes' data-dismiss='modal' data-toggle='modal' data-target='#newNoteModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpPayrollNotes_filter");
+                    $("<button class='btn btn-primary btnRefreshPayNotes' type='button' id='btnRefreshPayNotes' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpPayrollNotes_filter");
                 }
 
             }).on('page', function () {
@@ -3736,8 +3736,8 @@ Template.employeescard.onRendered(function () {
                     }, 100);
                 },
                 "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnAssignLeaveType' data-dismiss='modal' data-toggle='modal' data-target='#assignLeaveTypeModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAssignLeaveTypes_filter");
-                    $("<button class='btn btn-primary btnRefreshAssignLeave' type='button' id='btnRefreshAssignLeave' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAssignLeaveTypes_filter");
+                    $("<button class='btn btn-primary btnAssignLeaveType' data-dismiss='modal' data-toggle='modal' data-target='#assignLeaveTypeModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAssignLeaveTypes_filter");
+                    $("<button class='btn btn-primary btnRefreshAssignLeave' type='button' id='btnRefreshAssignLeave' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAssignLeaveTypes_filter");
                 }
 
             }).on('page', function () {
@@ -4198,8 +4198,8 @@ Template.employeescard.onRendered(function () {
                         }, 100);
                     },
                     "fnInitComplete": function () {
-                        $("<button class='btn btn-primary addNewSlip' data-dismiss='modal' data-toggle='modal' data-target='#paySlipModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayslipHistory_filter");
-                        $("<button class='btn btn-primary btnRefreshPaySlip' type='button' id='btnRefreshPaySlip' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayslipHistory_filter");
+                        $("<button class='btn btn-primary addNewSlip' data-dismiss='modal' data-toggle='modal' data-target='#paySlipModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayslipHistory_filter");
+                        $("<button class='btn btn-primary btnRefreshPaySlip' type='button' id='btnRefreshPaySlip' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayslipHistory_filter");
                     }
 
                 }).on('page', function () {

@@ -203,7 +203,7 @@ Template.stocktransferlist.onRendered(function() {
                             },
                             language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnRefreshStockAdjustment' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblStockTransferList_filter");
+                            $("<button class='btn btn-primary btnRefreshStockAdjustment' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblStockTransferList_filter");
                         }
 
                         }).on('page', function () {
@@ -460,7 +460,7 @@ Template.stocktransferlist.onRendered(function() {
                           if(urlParametersPage){
                             this.fnPageChange('last');
                           }
-                            $("<button class='btn btn-primary btnRefreshStockAdjustment' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblStockTransferList_filter");
+                            $("<button class='btn btn-primary btnRefreshStockAdjustment' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblStockTransferList_filter");
                          }
 
                     }).on('page', function () {
