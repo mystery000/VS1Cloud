@@ -319,10 +319,10 @@
                                             <td class="colPayRunDetailsLastName" contenteditable="false">{{ item.fields.EmployeeName }}</td>
                                             <td class="colPayRunDetailsEmployeeGroup" contenteditable="false"></td>
                                             <td class="colPayRunDetailsLastEdited" contenteditable="false"></td>
-                                            <td class="colPayRunDetailsEarnings" contenteditable="false"></td>
-                                            <td class="colPayRunDetailsTax" contenteditable="false"></td>
-                                            <td class="colPayRunDetailsSuper" contenteditable="false"></td>
-                                            <td class="colPayRunDetailsNetPay" contenteditable="false"></td>
+                                            <td class="colPayRunDetailsEarnings" contenteditable="false">{{ item.fields.earnings }}</td>
+                                            <td class="colPayRunDetailsTax" contenteditable="false">{{ item.fields.tax }}</td>
+                                            <td class="colPayRunDetailsSuper" contenteditable="false">{{ item.fields.superAnnuation }}</td>
+                                            <td class="colPayRunDetailsNetPay" contenteditable="false">{{ item.fields.netPay }}</td>
                                             <td class="colPayRunDetailsDropdown" contenteditable="false">
                                                 <div class="custom-control custom-switch" style="display: inline-flex !important; margin-left: 74px;">
                                                     <input class="custom-control-input" type="checkbox" name="payrundetailsDropdown" id="payrundetailsDropdown" checked>
@@ -373,7 +373,7 @@
             </div>
 
             <div class="col-4">
-                <button type="button" class="btn btn-danger btnFooter" style="margin: 16px;"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i> Delete Pay Run</button>
+                <button type="button" class="btn btn-danger btnFooter delete-payrun" style="margin: 16px;"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i> Delete Pay Run</button>
                 <button type="button" class="btn btn-warning btnFooter" style="margin: 16px;"><i class="fas fa-undo" style="margin-right: 5px;"></i> Reset Pay Run</button>
             </div>
             <div class="col-6">
