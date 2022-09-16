@@ -124,7 +124,6 @@ Template.allCardsLists.onRendered(function () {
             }).disableSelection();
         }, 500)
     };
-
     templateObject.activateDraggable();
 
     templateObject.saveCards = async () => {

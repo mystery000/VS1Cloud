@@ -69,8 +69,8 @@ Template.fundtypelistpop.onRendered(function() {
                             info: true,
                             responsive: true,
                             "fnInitComplete": function () {
-                              $("<button class='btn btn-primary btnAddFundType' data-dismiss='modal' data-toggle='modal' data-target='#addFundModel' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblfundtypelist_filter");
-                              $("<button class='btn btn-primary btnRefreshFundType' type='button' id='btnRefreshFundType' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblfundtypelist_filter");
+                              $("<button class='btn btn-primary btnAddFundType' data-dismiss='modal' data-toggle='modal' data-target='#addFundModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblfundtypelist_filter");
+                              $("<button class='btn btn-primary btnRefreshFundType' type='button' id='btnRefreshFundType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblfundtypelist_filter");
                             }
 
                         });
@@ -119,8 +119,8 @@ Template.fundtypelistpop.onRendered(function() {
                         info: true,
                         responsive: true,
                         "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddFundType' data-dismiss='modal' data-toggle='modal' data-target='#addFundModel' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblfundtypelist_filter");
-                            $("<button class='btn btn-primary btnRefreshFundType' type='button' id='btnRefreshFundType' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblfundtypelist_filter");
+                            $("<button class='btn btn-primary btnAddFundType' data-dismiss='modal' data-toggle='modal' data-target='#addFundModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblfundtypelist_filter");
+                            $("<button class='btn btn-primary btnRefreshFundType' type='button' id='btnRefreshFundType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblfundtypelist_filter");
                         }
 
                     });
@@ -175,8 +175,8 @@ Template.fundtypelistpop.onRendered(function() {
                         info: true,
                         responsive: true,
                         "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddFundType' data-dismiss='modal' data-toggle='modal' data-target='#addFundModel' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblfundtypelist_filter");
-                            $("<button class='btn btn-primary btnRefreshFundType' type='button' id='btnRefreshFundType' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblfundtypelist_filter");
+                            $("<button class='btn btn-primary btnAddFundType' data-dismiss='modal' data-toggle='modal' data-target='#addFundModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblfundtypelist_filter");
+                            $("<button class='btn btn-primary btnRefreshFundType' type='button' id='btnRefreshFundType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblfundtypelist_filter");
                         }
 
                     });

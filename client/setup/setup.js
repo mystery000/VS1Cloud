@@ -2438,7 +2438,7 @@ Template.setup.onRendered(function () {
             language: { search: "",searchPlaceholder: "Search List..." },
             fnInitComplete: function () {
               $(
-                "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
               ).insertAfter("#employeeListTable_filter");
             },
           })
@@ -2783,10 +2783,10 @@ Template.setup.onRendered(function () {
                 language: { search: "",searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
-                    "<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+                    "<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                   ).insertAfter("#tblAccount_filter");
                   $(
-                    "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                    "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                   ).insertAfter("#tblAccount_filter");
                 },
               });
@@ -2933,10 +2933,10 @@ Template.setup.onRendered(function () {
               language: { search: "",searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
-                  "<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+                  "<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                 ).insertAfter("#tblAccount_filter");
                 $(
-                  "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                  "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                 ).insertAfter("#tblAccount_filter");
               },
             });
@@ -3083,10 +3083,10 @@ Template.setup.onRendered(function () {
               language: { search: "",searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
-                  "<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+                  "<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                 ).insertAfter("#tblAccount_filter");
                 $(
-                  "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                  "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                 ).insertAfter("#tblAccount_filter");
               },
             });
@@ -3177,10 +3177,10 @@ Template.setup.onRendered(function () {
         language: { search: "",searchPlaceholder: "Search List..." },
         fnInitComplete: function () {
           $(
-            "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+            "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
           ).insertAfter("#tblTaxRate_filter");
           $(
-            "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+            "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
           ).insertAfter("#tblTaxRate_filter");
         },
       });
@@ -3474,7 +3474,7 @@ Template.setup.onRendered(function () {
             language: { search: "",searchPlaceholder: "Search List..." },
             fnInitComplete: function () {
               $(
-                "<button class='btn btn-primary btnRefreshCustomers' type='button' id='btnRefreshCustomers' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                "<button class='btn btn-primary btnRefreshCustomers' type='button' id='btnRefreshCustomers' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
               ).insertAfter("#tblCustomerlist_filter");
             },
           })
@@ -3787,7 +3787,7 @@ Template.setup.onRendered(function () {
               //   this.fnPageChange("last");
               // }
               $(
-                "<button class='btn btn-primary btnRefreshSuppliers' type='button' id='btnRefreshSuppliers' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                "<button class='btn btn-primary btnRefreshSuppliers' type='button' id='btnRefreshSuppliers' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
               ).insertAfter("#tblSupplierlist_filter");
             },
           })
@@ -4218,7 +4218,7 @@ Template.setup.onRendered(function () {
             language: { search: "",searchPlaceholder: "Search List..." },
             fnInitComplete: function () {
               $(
-                "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
               ).insertAfter("#tblInventory_filter");
             },
           })

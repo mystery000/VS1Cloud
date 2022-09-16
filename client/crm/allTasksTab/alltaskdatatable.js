@@ -189,7 +189,7 @@ Template.alltaskdatatable.onRendered(function () {
         sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
         select: true,
         destroy: true,
-        colReorder: true,
+        // colReorder: true,
         pageLength: initialDatatableLoad,
         lengthMenu: [
           [initialDatatableLoad, -1],
@@ -275,7 +275,8 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colTaskProjects openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[8]);
-            $(td).css('background', rowData[12])
+            $(td).css('background', rowData[12]);
+            $(td).css('color', '#ffffff');
           },
         },
         {
@@ -362,7 +363,7 @@ Template.alltaskdatatable.onRendered(function () {
       ],
       select: true,
       destroy: true,
-      colReorder: true,
+      // colReorder: true,
       pageLength: initialDatatableLoad,
       lengthMenu: [
         [initialDatatableLoad, -1],
@@ -384,7 +385,7 @@ Template.alltaskdatatable.onRendered(function () {
       language: { search: "",searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnSearchCrm btnSearchAllTaskDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>" +
+          "<button class='btn btn-primary btnSearchCrm btnSearchAllTaskDatatable' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>" +
           btnFilterName +
           "</span></button>"
         ).insertAfter("#tblAllTaskDatatable_filter");
@@ -438,7 +439,7 @@ Template.alltaskdatatable.onRendered(function () {
   templateObject.initTodayTasksTable = function (search = null) {
     let todayTaskArray = templateObject.makeTaskTableRows(templateObject.todayRecords.get());
     let view_today_task_completed = templateObject.view_today_task_completed.get();
-    btnFilterName = view_today_task_completed == "NO" ? "View Completed" : "Hide Completed";
+    let btnFilterName = view_today_task_completed == "NO" ? "View Completed" : "Hide Completed";
 
     $("#tblTodayTaskDatatable").DataTable({
       data: todayTaskArray,
@@ -585,7 +586,7 @@ Template.alltaskdatatable.onRendered(function () {
       ],
       select: true,
       destroy: true,
-      colReorder: true,
+      // colReorder: true,
       pageLength: initialDatatableLoad,
       lengthMenu: [
         [initialDatatableLoad, -1],
@@ -607,7 +608,7 @@ Template.alltaskdatatable.onRendered(function () {
       language: { search: "",searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnSearchCrm btnSearchTodayTaskDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewTodayCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewTodayCompleted'>" +
+          "<button class='btn btn-primary btnSearchCrm btnSearchTodayTaskDatatable' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewTodayCompleted' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewTodayCompleted'>" +
           btnFilterName +
           "</span></button>"
         ).insertAfter("#tblTodayTaskDatatable_filter");
@@ -619,7 +620,7 @@ Template.alltaskdatatable.onRendered(function () {
   templateObject.initUpcomingTasksTable = function (search = null) {
     let upcomingTaskArray = templateObject.makeTaskTableRows(templateObject.upcomingRecords.get());
     let view_uncoming_task_completed = templateObject.view_uncoming_task_completed.get();
-    btnFilterName = view_uncoming_task_completed == "NO" ? "View Completed" : "Hide Completed";
+    let btnFilterName = view_uncoming_task_completed == "NO" ? "View Completed" : "Hide Completed";
 
     $("#tblUpcomingTaskDatatable").DataTable({
       data: upcomingTaskArray,
@@ -767,7 +768,7 @@ Template.alltaskdatatable.onRendered(function () {
       ],
       select: true,
       destroy: true,
-      colReorder: true,
+      // colReorder: true,
       pageLength: initialDatatableLoad,
       lengthMenu: [
         [initialDatatableLoad, -1],
@@ -789,7 +790,7 @@ Template.alltaskdatatable.onRendered(function () {
       language: { search: "",searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnSearchCrm btnSearchUpcomingTaskDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewUpcomingCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewUpcomingCompleted'>" +
+          "<button class='btn btn-primary btnSearchCrm btnSearchUpcomingTaskDatatable' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewUpcomingCompleted' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewUpcomingCompleted'>" +
           btnFilterName +
           "</span></button>"
         ).insertAfter("#tblUpcomingTaskDatatable_filter");
@@ -893,7 +894,7 @@ Template.alltaskdatatable.onRendered(function () {
 
   templateObject.makeTaskTableRows = function (task_array) {
     let taskRows = new Array();
-    let td0 = (td1 = tflag = td11 = td2 = td3 = td4 = td5 = "");
+    let td0, td1, tflag, td11, td2, td3, td4, td5 = "";
     let projectName = "";
     let labelsForExcel = "";
     let color_num = '100'
@@ -902,7 +903,7 @@ Template.alltaskdatatable.onRendered(function () {
     let tomorrowDay = moment().add(1, "day").format("ddd");
     let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
 
-    let chk_complete = (completed = "");
+    let chk_complete, completed = "";
     let completed_style = "";
     task_array.forEach((item) => {
       if (item.fields.Completed) {
@@ -1317,10 +1318,10 @@ Template.alltaskdatatable.onRendered(function () {
       language: { search: "",searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnNewLabel' type='button' id='btnNewLabel' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus' style='margin-right: 5px'></i>New Label</button>"
+          "<button class='btn btn-primary btnNewLabel' type='button' id='btnNewLabel' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus' style='margin-right: 5px'></i>New Label</button>"
         ).insertAfter("#tblLabels_filter");
         $(
-          "<button class='btn btn-primary btnSearchCrm btnSearchLabelsDatatable' type='button' id='btnRefreshLabels' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+          "<button class='btn btn-primary btnSearchCrm btnSearchLabelsDatatable' type='button' id='btnRefreshLabels' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
         ).insertAfter("#tblLabels_filter");
       },
     });
@@ -1331,7 +1332,7 @@ Template.alltaskdatatable.onRendered(function () {
 
   templateObject.makeLabelTableRows = function (task_array) {
     let taskRows = new Array();
-    let td0 = (td1 = td2 = "");
+    let td0, td1, td2 = "";
 
     task_array.forEach((item) => {
       td0 = moment(item.fields.MsTimeStamp).format("DD/MM/YYYY");
@@ -1408,7 +1409,7 @@ Template.alltaskdatatable.onRendered(function () {
   templateObject.getTProjectList = function () {
     var url = FlowRouter.current().path;
     url = new URL(window.location.href);
-    employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+    let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
 
     crmService.getTProjectList(employeeID).then(function (data) {
       if (data.tprojectlist && data.tprojectlist.length > 0) {
@@ -1455,7 +1456,7 @@ Template.alltaskdatatable.onRendered(function () {
       templateObject.active_projects.get()
     );
     let view_project_completed = templateObject.view_project_completed.get();
-    btnFilterName = view_project_completed == "NO" ? "View All" : "Hide Deleted";
+    let btnFilterName = view_project_completed == "NO" ? "View All" : "Hide Deleted";
 
     $("#tblNewProjectsDatatable").DataTable({
       data: projectArray,
@@ -1558,7 +1559,7 @@ Template.alltaskdatatable.onRendered(function () {
       language: { search: "",searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnSearchCrm btnSearchProjectsDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewProjectCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewProjectCompleted'>" +
+          "<button class='btn btn-primary btnSearchCrm btnSearchProjectsDatatable' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewProjectCompleted' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewProjectCompleted'>" +
           btnFilterName +
           "</span></button>"
         ).insertAfter("#tblNewProjectsDatatable_filter");
@@ -1571,7 +1572,7 @@ Template.alltaskdatatable.onRendered(function () {
 
   templateObject.makeProjectTableRows = function (task_array) {
     let taskRows = new Array();
-    let td0 = (td1 = td2 = td3 = td4 = "");
+    let td0, td1, td2, td3, td4 = "";
     let projectStatus = "";
     let taskCount = "";
 
@@ -1612,7 +1613,7 @@ Template.alltaskdatatable.onRendered(function () {
   templateObject.initProjectTasksTable = function () {
     let splashArrayTaskList = templateObject.makeTaskTableRows(templateObject.active_projecttasks.get());
     let view_projecttasks_completed = templateObject.view_projecttasks_completed.get();
-    btnFilterName = view_projecttasks_completed == "NO" ? "Show Completed Tasks" : "Hide Completed Tasks";
+    let btnFilterName = view_projecttasks_completed == "NO" ? "Show Completed Tasks" : "Hide Completed Tasks";
 
     $(".lblShowCompletedTaskOnProject").html(btnFilterName);
 
@@ -1732,7 +1733,7 @@ Template.alltaskdatatable.onRendered(function () {
       ],
       select: true,
       destroy: true,
-      colReorder: true,
+      // colReorder: true,
       pageLength: initialDatatableLoad,
       lengthMenu: [
         [initialDatatableLoad, -1],
@@ -1749,7 +1750,7 @@ Template.alltaskdatatable.onRendered(function () {
       language: { search: "",searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnSearchCrm btnSearchProjectTasksDatatable' type='button' id='btnRefreshProjectTasks' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+          "<button class='btn btn-primary btnSearchCrm btnSearchProjectTasksDatatable' type='button' id='btnRefreshProjectTasks' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
         ).insertAfter("#tblProjectTasks_filter");
       },
     });
@@ -2816,7 +2817,7 @@ Template.alltaskdatatable.events({
 
       let filterRecord2 = allCompletedRecords.filter((item) => Array.isArray(item.fields.TaskLabel) == true);
       filterRecord2 = filterRecord2.filter((item) => {
-        lbls = item.fields.TaskLabel;
+        let lbls = item.fields.TaskLabel;
         return lbls.filter((lbl) => lbl.fields.ID == 14).length > 0;
       });
 
@@ -3632,7 +3633,6 @@ function setContactDataToDetail(data, contactType) {
   $('#contactID').val(data.fields.ID)
   $('#contactType').val(contactType)
 }
-
 
 function openEditTaskModal(id, type) {
   // let catg = e.target.dataset.catg;

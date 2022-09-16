@@ -16,6 +16,7 @@ import LoadingOverlay from "../../LoadingOverlay";
 let sideBarService = new SideBarService();
 let reportService = new ReportService();
 let utilityService = new UtilityService();
+let organisationService = new OrganisationService();
 
 Template.accountant_company.onCreated(() => {
     const templateObject = Template.instance();
@@ -32,6 +33,7 @@ Template.accountant_company.onCreated(() => {
     templateObject.endMonth = new ReactiveVar();
     templateObject.fromDate = new ReactiveVar();
     templateObject.endDate = new ReactiveVar();
+    templateObject.orgDetails = new ReactiveVar();
 
     templateObject.balancesheetList = new ReactiveVar([]);
     templateObject.profitList = new ReactiveVar([]);
@@ -188,7 +190,7 @@ Template.accountant_company.onRendered(() => {
     let categories = [];
     let categoryAccountList = [];
 
-    templateObject.getReceiptCategoryList = function() {
+    templateObject.getReceiptCategoryList = async function() {
         getVS1Data('TReceiptCategory').then(function(dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getReceiptCategory().then(function(data) {
@@ -218,6 +220,11 @@ Template.accountant_company.onRendered(() => {
         // templateObject.getAccountLists();
     }
     templateObject.getReceiptCategoryList();
+
+    organisationService.getOrganisationDetail().then(function(data) {
+        let mainData = data.tcompanyinfo[0];
+        $("#pageTitle").html(mainData.CompanyName + " trading as " + mainData.TradingName);
+    });
 
     templateObject.accountPanList.set([{
         no: 2,
@@ -1240,7 +1247,6 @@ Template.accountant_company.onRendered(() => {
             };
         }
         await templateObject.reportOptions.set(defaultOptions);
-
         await templateObject.getProfitandLossReports();
     };
 
@@ -1495,8 +1501,9 @@ Template.accountant_company.events({
         fromDate = fromDate[2] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[0];
         endDate = endDate[2] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[0];
 
-        Template.instance().fromDate.set(fromDate);
-        Template.instance().endDate.set(endDate);
+        templateObject.fromDate.set(fromDate);
+        templateObject.endDate.set(endDate);
+        templateObject.fiscalYearEnding.set(endDate);
 
         $("#dispEndDate").html("Dated: " + templateObject.endDate.get());
     },
@@ -1538,13 +1545,16 @@ Template.accountant_company.events({
         templateObject.getBalanceSheetReports(endDate);
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        fromDate = fromDate.split("/");
-        endDate = endDate.split("/");
+        fromDate = fromDate.split("-");
+        endDate = endDate.split("-");
         fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
         endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
+        // console.log(endDate);
 
         Template.instance().fromDate.set(fromDate);
         Template.instance().endDate.set(endDate);
+        templateObject.fiscalYearEnding.set(endDate);
+        $("#dispEndDate").html("Dated: " + endDate);
     },
 
     "click #thisQuarter": function() {
@@ -1556,13 +1566,15 @@ Template.accountant_company.events({
         templateObject.getBalanceSheetReports(endDate);
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        fromDate = fromDate.split("/");
-        endDate = endDate.split("/");
+        fromDate = fromDate.split("-");
+        endDate = endDate.split("-");
         fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
         endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
 
         Template.instance().fromDate.set(fromDate);
         Template.instance().endDate.set(endDate);
+        templateObject.fiscalYearEnding.set(endDate);
+        $("#dispEndDate").html("Dated: " + endDate);
     },
 
     "click #thisFinYear": function() {
@@ -1589,13 +1601,15 @@ Template.accountant_company.events({
         templateObject.getBalanceSheetReports(endDate);
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        fromDate = fromDate.split("/");
-        endDate = endDate.split("/");
+        fromDate = fromDate.split("-");
+        endDate = endDate.split("-");
         fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
         endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
 
         Template.instance().fromDate.set(fromDate);
         Template.instance().endDate.set(endDate);
+        templateObject.fiscalYearEnding.set(endDate);
+        $("#dispEndDate").html("Dated: " + endDate);
     },
 
     "click #lastMonth": function() {
@@ -1613,13 +1627,15 @@ Template.accountant_company.events({
         templateObject.getBalanceSheetReports(endDate);
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        fromDate = fromDate.split("/");
-        endDate = endDate.split("/");
+        fromDate = fromDate.split("-");
+        endDate = endDate.split("-");
         fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
         endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
 
         Template.instance().fromDate.set(fromDate);
         Template.instance().endDate.set(endDate);
+        templateObject.fiscalYearEnding.set(endDate);
+        $("#dispEndDate").html("Dated: " + endDate);
     },
 
     "click #lastQuarter": function() {
@@ -1631,13 +1647,15 @@ Template.accountant_company.events({
         templateObject.getBalanceSheetReports(endDate);
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        fromDate = fromDate.split("/");
-        endDate = endDate.split("/");
+        fromDate = fromDate.split("-");
+        endDate = endDate.split("-");
         fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
         endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
 
         Template.instance().fromDate.set(fromDate);
         Template.instance().endDate.set(endDate);
+        templateObject.fiscalYearEnding.set(endDate);
+        $("#dispEndDate").html("Dated: " + endDate);
     },
 
     "click #lastFinYear": function() {
@@ -1668,13 +1686,15 @@ Template.accountant_company.events({
         templateObject.getBalanceSheetReports(endDate);
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        fromDate = fromDate.split("/");
-        endDate = endDate.split("/");
+        fromDate = fromDate.split("-");
+        endDate = endDate.split("-");
         fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
         endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
 
         Template.instance().fromDate.set(fromDate);
         Template.instance().endDate.set(endDate);
+        templateObject.fiscalYearEnding.set(endDate);
+        $("#dispEndDate").html("Dated: " + endDate);
     },
 
     "click #monthToDate": function() {
@@ -1686,13 +1706,15 @@ Template.accountant_company.events({
         templateObject.getBalanceSheetReports(endDate);
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        fromDate = fromDate.split("/");
-        endDate = endDate.split("/");
+        fromDate = fromDate.split("-");
+        endDate = endDate.split("-");
         fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
         endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
 
         Template.instance().fromDate.set(fromDate);
         Template.instance().endDate.set(endDate);
+        templateObject.fiscalYearEnding.set(endDate);
+        $("#dispEndDate").html("Dated: " + endDate);
     },
 
     "click #quarterToDate": function() {
@@ -1704,13 +1726,15 @@ Template.accountant_company.events({
         templateObject.getBalanceSheetReports(endDate);
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        fromDate = fromDate.split("/");
-        endDate = endDate.split("/");
+        fromDate = fromDate.split("-");
+        endDate = endDate.split("-");
         fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
         endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
 
         Template.instance().fromDate.set(fromDate);
         Template.instance().endDate.set(endDate);
+        templateObject.fiscalYearEnding.set(endDate);
+        $("#dispEndDate").html("Dated: " + endDate);
     },
 
     "click #finYearToDate": function() {
@@ -1725,13 +1749,15 @@ Template.accountant_company.events({
         templateObject.getBalanceSheetReports(endDate);
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        fromDate = fromDate.split("/");
-        endDate = endDate.split("/");
+        fromDate = fromDate.split("-");
+        endDate = endDate.split("-");
         fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
         endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
 
         Template.instance().fromDate.set(fromDate);
         Template.instance().endDate.set(endDate);
+        templateObject.fiscalYearEnding.set(endDate);
+        $("#dispEndDate").html("Dated: " + endDate);
     },
 
     "click .accountingBasisDropdown": function(e) {
@@ -2458,7 +2484,7 @@ Template.accountant_company.helpers({
     },
 
     companyname: () => {
-        let tradingname = localStorage.getItem("tradingName") || "";
+        let tradingname = (localStorage.getItem("tradingName"));
         return loggedCompany + " trading as " + tradingname;
     },
 

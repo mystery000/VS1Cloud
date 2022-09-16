@@ -68,8 +68,8 @@ Template.ratetypelistpop.onRendered(function() {
                             info: true,
                             responsive: true,
                             "fnInitComplete": function () {
-                              $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
-                              $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
+                              $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
+                              $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
                             }
 
                         });
@@ -119,8 +119,8 @@ Template.ratetypelistpop.onRendered(function() {
                         info: true,
                         responsive: true,
                         "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
-                            $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
+                            $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
+                            $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
                         }
 
                     });
@@ -175,8 +175,8 @@ Template.ratetypelistpop.onRendered(function() {
                         info: true,
                         responsive: true,
                         "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
-                            $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 14px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
+                            $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
+                            $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
                         }
 
                     });
