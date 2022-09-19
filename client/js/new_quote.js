@@ -9594,8 +9594,10 @@ Template.new_quote.events({
           .prop("checked", reset_data[index].active);
 
         let title = $("#tblQuoteLine").find("th").eq(index);
-        if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceEx' || reset_data[index].class === 'UnitPriceInc') {
+        if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
           $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
+        } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
+          $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
         } else {
           $(title).html(reset_data[index].label);
         }
