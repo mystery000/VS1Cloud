@@ -97,20 +97,20 @@ Template.new_quote.onRendered(() => {
     function init_reset_data() { 
 
       let reset_data = [
-        { index: 0, label: "Product Name", class: "ProductName", inputclass: "lineProductName", active: true, display: true },
-        { index: 1, label: "Description", class: "Description", inputclass: "lineProductDesc", active: true, display: true },
-        { index: 2, label: "Qty", class: "Qty", inputclass: "lineQty", active: true, display: true },
-        { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", inputclass: "lineUnitPrice", active: true, display: true },
-        { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", inputclass: "lineUnitPrice", active: false, display: true },
-        { index: 5, label: "Disc %", class: "Discount", inputclass: "lineDiscount", active: true, display: true },
-        { index: 6, label: "Cost Price", class: "CostPrice", inputclass: "lineCostPrice", active: false, display: true },
-        { index: 7, label: "SalesLines CustField1", class: "SalesLinesCustField1", inputclass: "lineSalesLinesCustField1", active: false, display: true },
-        { index: 8, label: "Tax Rate", class: "TaxRate", inputclass: "lineTaxRate", active: false, display: true },
-        { index: 9, label: "Tax Code", class: "TaxCode", inputclass: "lineTaxCode", active: true, display: true },
-        { index: 10, label: "Tax Amt", class: "TaxAmount", inputclass: "lineTaxAmount", active: true, display: true },
-        { index: 11, label: "Serial/Lot No", class: "SerialNo", inputclass: "", active: true, display: true },
-        { index: 12, label: "Amount (Ex)", class: "AmountEx", inputclass: "lineAmt", active: true, display: true },
-        { index: 13, label: "Amount (Inc)", class: "AmountInc", inputclass: "lineAmt", active: false, display: true },
+        { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
+        { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
+        { index: 2, label: "Qty", class: "Qty", width: "75", active: true, display: true },
+        { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "160", active: true, display: true },
+        { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "160", active: false, display: true },
+        { index: 5, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
+        { index: 6, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
+        { index: 7, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
+        { index: 8, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
+        { index: 9, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
+        { index: 10, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
+        { index: 11, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
+        { index: 12, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
+        { index: 13, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
       ];
 
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
@@ -9433,86 +9433,70 @@ Template.new_quote.events({
     // display settings
 
     'change .rngRangeProductName': function(event) {
-
         let range = $(event.target).val();
         $(".spWidthProductName").html(range);
         $('.colProductName').css('width', range);
-
     },
     'change .rngRangeDescription': function(event) {
-
         let range = $(event.target).val();
         $(".spWidthDescription").html(range);
         $('.colDescription').css('width', range);
-
     },
     'change .rngRangeQty': function(event) {
-
         let range = $(event.target).val();
         $(".spWidthQty").html(range);
         $('.colQty').css('width', range);
-
     },
-    'change .rngRangeUnitPrice': function(event) {
-
+    'change .rngRangeUnitPriceInc': function(event) {
         let range = $(event.target).val();
         $(".spWidthUnitPrice").html(range);
-        $('.colUnitPrice').css('width', range);
-
+        $('.colUnitPriceInc').css('width', range);
+    },
+    'change .rngRangeUnitPriceEx': function(event) {
+        let range = $(event.target).val();
+        $('.colUnitPriceEx').css('width', range);
     },
     'change .rngRangeTaxRate': function(event) {
-
         let range = $(event.target).val();
         $(".spWidthTaxRate").html(range);
         $('.colTaxRate').css('width', range);
-
     },
     'change .rngRangeAmountInc': function (event) {
-
         let range = $(event.target).val();
-        //$(".spWidthAmount").html(range + '%');
-        $('.colAmountInc').css('width', range + '%');
-
+        //$(".spWidthAmount").html(range);
+        $('.colAmountInc').css('width', range);
     },
     'change .rngRangeAmountEx': function (event) {
-
         let range = $(event.target).val();
-        //$(".spWidthAmount").html(range + '%');
-        $('.colAmountEx').css('width', range + '%');
-
+        //$(".spWidthAmount").html(range);
+        $('.colAmountEx').css('width', range);
     },
     'change .rngRangeTaxAmount': function (event) {
-
         let range = $(event.target).val();
-        //$(".spWidthAmount").html(range + '%');
-        $('.colTaxAmount').css('width', range + '%');
-
+        //$(".spWidthAmount").html(range);
+        $('.colTaxAmount').css('width', range);
     },
     'change .rngRangeDiscount': function (event) {
         let range = $(event.target).val();
-        $('.colDiscount').css('width', range + '%');
+        $('.colDiscount').css('width', range);
     },
-    'change .rngRangeSerialLot': function (event) {
+    'change .rngRangeSerialNo': function (event) {
         let range = $(event.target).val();
-        $('.colSerialNo').css('width', range + '%');
+        $('.colSerialNo').css('width', range);
     },
     'change .rngRangeTaxCode': function (event) {
         let range = $(event.target).val();
-        $('.colTaxCode').css('width', range + '%');
+        $('.colTaxCode').css('width', range);
     },
     'change .rngRangeCostPrice': function(event) {
-
         let range = $(event.target).val();
         $(".spWidthCostPrice").html(range);
         $('.colCostPrice').css('width', range);
-
     },
     'change .rngRangeSalesLinesCustField1': function(event) {
-
         let range = $(event.target).val();
         $(".spWidthSalesLinesCustField1").html(range);
         $('.colSalesLinesCustField1').css('width', range);
-
     },
     'blur .divcolumn': function(event) {
         let columData = $(event.target).html();

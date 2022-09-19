@@ -739,7 +739,7 @@
                               <tr class="dnd-moved"> 
                                 {{#each displayfield in displayfields}}
                                   {{#if displayfield.display}}
-                                  <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}">
+                                  <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
                                     {{displayfield.custfieldlabel}}
                                     {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>
                                       {{else}}
