@@ -13300,20 +13300,24 @@ Template.new_invoice.onRendered(function () {
 
   // custom field displaysettings
   function initCustomFieldDisplaySettings(data, listType) {
-    listType = "tblInvoiceLine";
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
 
     try {
-      sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-        reset_data = data.ProcessLog.CustomLayout.Columns;
-        showCustomFieldDisplaySettings(reset_data);
-      }).catch(function (err) {
-        // showCustomFieldDisplaySettings(reset_data);
+      getVS1Data("VS1_Customize").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+            reset_data = data.ProcessLog.CustomLayout.Columns;
+            showCustomFieldDisplaySettings(reset_data);
+          }).catch(function (err) {
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data); 
+          // handle process here
+        }
       });
     } catch (error) {
-      // showCustomFieldDisplaySettings(reset_data);
     } 
     return; 
   }
@@ -13338,40 +13342,40 @@ Template.new_invoice.onRendered(function () {
     tempObj.displayfields.set(custFields);
   }
 
-  initCustomFieldDisplaySettings("", "ltSaleslines");
+  initCustomFieldDisplaySettings("", "tblInvoiceLine");
 
-  tempObj.getAllCustomFieldDisplaySettings = function () {
-    let listType = "ltSaleslines"; // tempcode until InvoiceLines is added on backend
-    try {
-      getVS1Data("TltSaleslines").then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService
-            .getAllCustomFieldsWithQuery(listType)
-            .then(function (data) {
-              // initCustomFieldDisplaySettings(data, listType);
-              addVS1Data("TltSaleslines", JSON.stringify(data));
-            });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          if (data.tcustomfieldlist.length == 0) {
-            sideBarService
-              .getAllCustomFieldsWithQuery(listType)
-              .then(function (data) {
-                // initCustomFieldDisplaySettings(data, listType);
-                addVS1Data("TltSaleslines", JSON.stringify(data));
-              });
-          } else {
-            // initCustomFieldDisplaySettings(data, listType);
-            sideBarService
-              .getAllCustomFieldsWithQuery(listType)
-              .then(function (data) {
-                addVS1Data("TltSaleslines", JSON.stringify(data));
-              });
-          }
-        }
-      });
-    } catch (error) {}
-  };
+  // tempObj.getAllCustomFieldDisplaySettings = function () {
+  //   let listType = "ltSaleslines"; // tempcode until InvoiceLines is added on backend
+  //   try {
+  //     getVS1Data("TltSaleslines").then(function (dataObject) {
+  //       if (dataObject.length == 0) {
+  //         sideBarService
+  //           .getAllCustomFieldsWithQuery(listType)
+  //           .then(function (data) {
+  //             // initCustomFieldDisplaySettings(data, listType);
+  //             addVS1Data("TltSaleslines", JSON.stringify(data));
+  //           });
+  //       } else {
+  //         let data = JSON.parse(dataObject[0].data);
+  //         if (data.tcustomfieldlist.length == 0) {
+  //           sideBarService
+  //             .getAllCustomFieldsWithQuery(listType)
+  //             .then(function (data) {
+  //               // initCustomFieldDisplaySettings(data, listType);
+  //               addVS1Data("TltSaleslines", JSON.stringify(data));
+  //             });
+  //         } else {
+  //           // initCustomFieldDisplaySettings(data, listType);
+  //           sideBarService
+  //             .getAllCustomFieldsWithQuery(listType)
+  //             .then(function (data) {
+  //               addVS1Data("TltSaleslines", JSON.stringify(data));
+  //             });
+  //         }
+  //       }
+  //     });
+  //   } catch (error) {}
+  // };
 
   //tempObj.getAllCustomFieldDisplaySettings();
 });
@@ -18679,7 +18683,7 @@ Template.new_invoice.events({
   "blur .divcolumn": function (event) {
     let columData = $(event.target).html();
     let columHeaderUpdate = $(event.target).attr("valueupdate");
-    $("" + columHeaderUpdate + "").html(columData);
+    $("th.col" + columHeaderUpdate + "").html(columData);
   },
 
   // custom field displaysettings
