@@ -1282,10 +1282,10 @@ export class UtilityService {
     }
 
     modifynegativeCurrencyFormat = function (price) {
-      if(Session.get('ERPLoggedCountry') === "United Arab Emirates"){
+      if (Session.get('ERPLoggedCountry') === "United Arab Emirates"){
             return ((parseFloat(price).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}))+ ' '+Currency);
-      }else{
-        if(price < 0) {
+      } else {
+        if (price < 0) {
             let currency = price.toString().split('-')[1];
             currency = '-'+Currency+(parseFloat(currency).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}));
             return currency;
@@ -1293,7 +1293,15 @@ export class UtilityService {
             return (Currency+(parseFloat(price).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2})));
         }
       }
-
+    };
+    negativeNumberFormat = function (value) {
+        if (value < 0) {
+            let currency = value.toString().split('-')[1];
+            currency = '-'+(parseFloat(currency).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}));
+            return currency;
+        } else {
+            return parseFloat(value).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2});
+        }
     };
 
     getStartDateWithSpecificFormat = function (date) {
@@ -1352,25 +1360,21 @@ export class UtilityService {
      *
      * @param {string} stringNumber
      * @param {string | false} _currency
-     * @returns {float}
+     * @returns {string}
      */
     removeCurrency(stringNumber = "$10.5", _currency = false) {
         const isNegative = stringNumber.includes("-");
         if(isNegative) {
             stringNumber = stringNumber.replace('-', "");
         }
-
         if(_currency) {
             stringNumber = stringNumber.replace(_currency, '');
         } else {
             const currency = stringNumber.split('')[0];
             stringNumber = stringNumber.replace(currency, '');
         }
-
-        const value = parseFloat(stringNumber).toFixed(2);
-        if(isNegative) value = value * -1;
-
-
+        let value = parseFloat(stringNumber).toFixed(2);
+        if (isNegative) value = value * -1;
         return value;
     }
 

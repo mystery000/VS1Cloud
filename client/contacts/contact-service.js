@@ -465,6 +465,15 @@ export class ContactService extends BaseService {
         return this.POST(this.ERPObjects.TLeadStatusType, data);
     }
 
+    getOneLeadStatusExByName(dataSearchName) {
+        let options = '';
+        options = {
+            ListType: "Detail",
+            select: '[TypeName]="'+dataSearchName+'"'
+        };
+        return this.getList(this.ERPObjects.TLeadStatusType, options);
+    }
+
     getTaxCodes() {
         let options = {
             PropertyList: "CodeName,Rate,Description",
