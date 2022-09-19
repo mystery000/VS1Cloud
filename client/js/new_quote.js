@@ -99,9 +99,9 @@ Template.new_quote.onRendered(() => {
       let reset_data = [
         { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
         { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
-        { index: 2, label: "Qty", class: "Qty", width: "75", active: true, display: true },
-        { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "160", active: true, display: true },
-        { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "160", active: false, display: true },
+        { index: 2, label: "Qty", class: "Qty", width: "55", active: true, display: true },
+        { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
+        { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
         { index: 5, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
         { index: 6, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
         { index: 7, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
