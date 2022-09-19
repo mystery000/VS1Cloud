@@ -55,7 +55,7 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
     let ERPPassword = localStorage.getItem('EPassword');
     let ERPDatabase = localStorage.getItem('EDatabase');
     let ERPPort = localStorage.getItem('EPort');
-    const apiUrl = `https://${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID,IsSetUpWizard`;
+    const apiUrl = `${URLRequest}${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID,IsSetUpWizard`;
     const _headers = {
         database: ERPDatabase,
         username: ERPUsername,

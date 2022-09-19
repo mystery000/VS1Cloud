@@ -11,7 +11,7 @@ import XLSX from "xlsx";
 import { ReceiptService } from "../receipts/receipt-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
-
+let receiptService = new ReceiptService();
 Template.accountsoverview.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
