@@ -100,7 +100,7 @@ Template.new_quote.onRendered(() => {
         { index: 0, label: "Product Name", class: "ProductName", inputclass: "lineProductName", active: true, display: true },
         { index: 1, label: "Description", class: "Description", inputclass: "lineProductDesc", active: true, display: true },
         { index: 2, label: "Qty", class: "Qty", inputclass: "lineQty", active: true, display: true },
-        { index: 3, label: "Unit Price (Ex)", class: "UnitPrice", inputclass: "lineUnitPrice", active: true, display: true },
+        { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", inputclass: "lineUnitPrice", active: true, display: true },
         { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", inputclass: "lineUnitPrice", active: false, display: true },
         { index: 5, label: "Disc %", class: "Discount", inputclass: "lineDiscount", active: true, display: true },
         { index: 6, label: "Cost Price", class: "CostPrice", inputclass: "lineCostPrice", active: false, display: true },
@@ -109,7 +109,7 @@ Template.new_quote.onRendered(() => {
         { index: 9, label: "Tax Code", class: "TaxCode", inputclass: "lineTaxCode", active: true, display: true },
         { index: 10, label: "Tax Amt", class: "TaxAmount", inputclass: "lineTaxAmount", active: true, display: true },
         { index: 11, label: "Serial/Lot No", class: "SerialNo", inputclass: "", active: true, display: true },
-        { index: 12, label: "Amount (Ex)", class: "Amount", inputclass: "lineAmt", active: true, display: true },
+        { index: 12, label: "Amount (Ex)", class: "AmountEx", inputclass: "lineAmt", active: true, display: true },
         { index: 13, label: "Amount (Inc)", class: "AmountInc", inputclass: "lineAmt", active: false, display: true },
       ];
 
@@ -7220,6 +7220,9 @@ Template.new_quote.events({
 
         $('.colAmountInc').addClass('showColumn');
         $('.colAmountInc').removeClass('hiddenColumn');
+
+        $('.chkAmountEx').prop("checked", false);
+        $('.chkAmountInc').prop("checked", true);
     },
     'click .th.colAmountInc': function(event) {
         $('.colAmountInc').addClass('hiddenColumn');
@@ -7227,6 +7230,9 @@ Template.new_quote.events({
 
         $('.colAmountEx').addClass('showColumn');
         $('.colAmountEx').removeClass('hiddenColumn');
+
+        $('.chkAmountEx').prop("checked", true);
+        $('.chkAmountInc').prop("checked", false);
     },
     'click .th.colUnitPriceEx': function(event) {
         $('.colUnitPriceEx').addClass('hiddenColumn');
@@ -7234,6 +7240,9 @@ Template.new_quote.events({
 
         $('.colUnitPriceInc').addClass('showColumn');
         $('.colUnitPriceInc').removeClass('hiddenColumn');
+
+        $('.chkUnitPriceEx').prop("checked", false);
+        $('.chkUnitPriceInc').prop("checked", true);
     },
     'click .th.colUnitPriceInc': function(event) {
         $('.colUnitPriceInc').addClass('hiddenColumn');
@@ -7241,6 +7250,10 @@ Template.new_quote.events({
 
         $('.colUnitPriceEx').addClass('showColumn');
         $('.colUnitPriceEx').removeClass('hiddenColumn');
+
+        $('.chkUnitPriceEx').prop("checked", true);
+        $('.chkUnitPriceInc').prop("checked", false);
+
     },
     'click #btnCustomFileds': function(event) {
         var x = document.getElementById("divCustomFields");
@@ -9320,73 +9333,82 @@ Template.new_quote.events({
         }
     },
 
-    'click .chkAmount': function (event) {
-      if ($(event.target).is(':checked')) {
-          $('.colAmount').css('display', 'table-cell');
-          $('.colAmount').css('padding', '.75rem');
-          $('.colAmount').css('vertical-align', 'top');
+    'click .chkAmountEx': function (event) {
+      if ($(event.target).is(':checked')) {  
+          $('.chkAmountInc').prop("checked", false); 
 
-          $('.chkAmountInc').prop("checked", false);
-          $('.colAmountInc').css('display', 'none');
-        } else {
-          $('.colAmount').css('display', 'none');
+          $('.colAmountInc').addClass('hiddenColumn');
+          $('.colAmountInc').removeClass('showColumn');
 
-          $('.chkAmountInc').prop("checked", true);
-          $('.colAmountInc').css('display', 'table-cell');
-          $('.colAmountInc').css('padding', '.75rem');
-          $('.colAmountInc').css('vertical-align', 'top');
+          $('.colAmountEx').addClass('showColumn');
+          $('.colAmountEx').removeClass('hiddenColumn');
+        } else { 
+          $('.chkAmountInc').prop("checked", true); 
+
+          $('.colAmountEx').addClass('hiddenColumn');
+          $('.colAmountEx').removeClass('showColumn');
+
+          $('.colAmountInc').addClass('showColumn');
+          $('.colAmountInc').removeClass('hiddenColumn');
       }
     },
     'click .chkAmountInc': function(event) {
-      if ($(event.target).is(':checked')) {
-          $('.colAmountInc').css('display', 'table-cell');
-          $('.colAmountInc').css('padding', '.75rem');
-          $('.colAmountInc').css('vertical-align', 'top');
+      if ($(event.target).is(':checked')) { 
+          $('.chkAmountEx').prop("checked", false); 
 
-          $('.chkAmount').prop("checked", false);
-          $('.colAmount').css('display', 'none');
-      } else {
-          $('.colAmountInc').css('display', 'none');
+          $('.colAmountEx').addClass('hiddenColumn');
+          $('.colAmountEx').removeClass('showColumn');
 
-          $('.chkAmount').prop("checked", true);
-          $('.colAmount').css('display', 'table-cell');
-          $('.colAmount').css('padding', '.75rem');
-          $('.colAmount').css('vertical-align', 'top');
+          $('.colAmountInc').addClass('showColumn');
+          $('.colAmountInc').removeClass('hiddenColumn');
+      } else { 
+          $('.chkAmountEx').prop("checked", true); 
+
+          $('.colAmountInc').addClass('hiddenColumn');
+          $('.colAmountInc').removeClass('showColumn');
+
+          $('.colAmountEx').addClass('showColumn');
+          $('.colAmountEx').removeClass('hiddenColumn');
       }
     },
 
-    'click .chkUnitPrice': function (event) {
-      if ($(event.target).is(':checked')) {
-          $('.colUnitPrice').css('display', 'table-cell');
-          $('.colUnitPrice').css('padding', '.75rem');
-          $('.colUnitPrice').css('vertical-align', 'top');
+    'click .chkUnitPriceEx': function (event) {
+      if ($(event.target).is(':checked')) { 
+          $('.chkUnitPriceInc').prop("checked", false); 
 
-          $('.chkUnitPriceInc').prop("checked", false);
-          $('.colUnitPriceInc').css('display', 'none');
-      } else {
-          $('.colUnitPrice').css('display', 'none');
+          $('.colUnitPriceInc').addClass('hiddenColumn');
+          $('.colUnitPriceInc').removeClass('showColumn');
 
-          $('.chkUnitPriceInc').prop("checked", true);
-          $('.colUnitPriceInc').css('display', 'table-cell');
-          $('.colUnitPriceInc').css('padding', '.75rem');
-          $('.colUnitPriceInc').css('vertical-align', 'top');
+          $('.colUnitPriceEx').addClass('showColumn');
+          $('.colUnitPriceEx').removeClass('hiddenColumn');
+          
+      } else { 
+          $('.chkUnitPriceInc').prop("checked", true); 
+
+          $('.colUnitPriceEx').addClass('hiddenColumn');
+          $('.colUnitPriceEx').removeClass('showColumn');
+
+          $('.colUnitPriceInc').addClass('showColumn');
+          $('.colUnitPriceInc').removeClass('hiddenColumn');
       }
     },
     'click .chkUnitPriceInc': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colUnitPriceInc').css('display', 'table-cell');
-            $('.colUnitPriceInc').css('padding', '.75rem');
-            $('.colUnitPriceInc').css('vertical-align', 'top');
+        if ($(event.target).is(':checked')) { 
+          $('.chkUnitPriceEx').prop("checked", false); 
 
-          $('.chkUnitPrice').prop("checked", false);
-          $('.colUnitPrice').css('display', 'none');
-        } else {
-            $('.colUnitPriceInc').css('display', 'none');
+          $('.colUnitPriceEx').addClass('hiddenColumn');
+          $('.colUnitPriceEx').removeClass('showColumn');
 
-          $('.chkUnitPrice').prop("checked", true);
-          $('.colUnitPrice').css('display', 'table-cell');
-          $('.colUnitPrice').css('padding', '.75rem');
-          $('.colUnitPrice').css('vertical-align', 'top');
+          $('.colUnitPriceInc').addClass('showColumn');
+          $('.colUnitPriceInc').removeClass('hiddenColumn');
+        } else { 
+          $('.chkUnitPriceEx').prop("checked", true); 
+
+          $('.colUnitPriceInc').addClass('hiddenColumn');
+          $('.colUnitPriceInc').removeClass('showColumn');
+
+          $('.colUnitPriceEx').addClass('showColumn');
+          $('.colUnitPriceEx').removeClass('hiddenColumn');
         }
     },
 
@@ -9556,7 +9578,13 @@ Template.new_quote.events({
     'click .btnResetGridSettings': function(event) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get(); 
-      reset_data = reset_data.filter(redata => redata.display);
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+      if(isBatchSerialNoTracking) {
+        reset_data[11].display = true; 
+      } else {
+        reset_data[11].display = false; 
+      }
+      reset_data = reset_data.filter(redata => redata.display); 
   
       $(".displaySettings").each(function (index) {
         let $tblrow = $(this);
@@ -9566,14 +9594,23 @@ Template.new_quote.events({
           .prop("checked", reset_data[index].active);
 
         let title = $("#tblQuoteLine").find("th").eq(index);
-        $(title).html(reset_data[index].label);
+        if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceEx' || reset_data[index].class === 'UnitPriceInc') {
+          $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
+        } else {
+          $(title).html(reset_data[index].label);
+        }
+
 
         if (reset_data[index].active) {
-          $(".col" + reset_data[index].class).css("display", "table-cell");
-          $(".col" + reset_data[index].class).css("padding", ".75rem");
-          $(".col" + reset_data[index].class).css("vertical-align", "top");
+          // $(".col" + reset_data[index].class).css("display", "table-cell");
+          // $(".col" + reset_data[index].class).css("padding", ".75rem");
+          // $(".col" + reset_data[index].class).css("vertical-align", "top");
+          $('.col' + reset_data[index].class).addClass('showColumn');
+          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
         } else {
-          $(".col" + reset_data[index].class).css("display", "none");
+          // $(".col" + reset_data[index].class).css("display", "none");
+          $('.col' + reset_data[index].class).addClass('hiddenColumn');
+          $('.col' + reset_data[index].class).removeClass('showColumn');
         }
         $(".rngRange" + reset_data[index].class).val('');
       });
