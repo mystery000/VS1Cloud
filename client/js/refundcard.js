@@ -173,20 +173,20 @@ Template.refundcard.onRendered(() => {
     function init_reset_data() { 
 
       let reset_data = [
-        { index: 0, label: "Product Name", class: "ProductName", inputclass: "lineProductName", active: true, display: true },
-        { index: 1, label: "Description", class: "Description", inputclass: "lineProductDesc", active: true, display: true },
-        { index: 2, label: "Qty", class: "Qty", inputclass: "lineQty", active: true, display: true },
-        { index: 3, label: "Unit Price (Ex)", class: "UnitPrice", inputclass: "lineUnitPrice", active: true, display: true },
-        { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", inputclass: "lineUnitPrice", active: false, display: true },
-        { index: 5, label: "Disc %", class: "Discount", inputclass: "lineDiscount", active: true, display: true },
-        { index: 6, label: "Cost Price", class: "CostPrice", inputclass: "lineCostPrice", active: false, display: true },
-        { index: 7, label: "SalesLines CustField1", class: "SalesLinesCustField1", inputclass: "lineSalesLinesCustField1", active: false, display: true },
-        { index: 8, label: "Tax Rate", class: "TaxRate", inputclass: "lineTaxRate", active: false, display: true },
-        { index: 9, label: "Tax Code", class: "TaxCode", inputclass: "lineTaxCode", active: true, display: true },
-        { index: 10, label: "Tax Amt", class: "TaxAmount", inputclass: "lineTaxAmount", active: true, display: true },
-        { index: 11, label: "Serial/Lot No", class: "SerialNo", inputclass: "", active: true, display: true },
-        { index: 12, label: "Amount (Ex)", class: "Amount", inputclass: "lineAmt", active: true, display: true },
-        { index: 13, label: "Amount (Inc)", class: "AmountInc", inputclass: "lineAmt", active: false, display: true },
+        { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
+        { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
+        { index: 2, label: "Qty", class: "Qty", width: "55", active: true, display: true },
+        { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
+        { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
+        { index: 5, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
+        { index: 6, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
+        { index: 7, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
+        { index: 8, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
+        { index: 9, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
+        { index: 10, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
+        { index: 11, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
+        { index: 12, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
+        { index: 13, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
       ];
 
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
@@ -6366,33 +6366,46 @@ Template.refundcard.events({
         //}
     },
     'click .th.colAmountEx': function(event) {
-        $('.colAmountEx').addClass('hiddenColumn');
-        $('.colAmountEx').removeClass('showColumn');
+      $('.colAmountEx').addClass('hiddenColumn');
+      $('.colAmountEx').removeClass('showColumn');
 
-        $('.colAmountInc').addClass('showColumn');
-        $('.colAmountInc').removeClass('hiddenColumn');
-    },
-    'click .th.colAmountInc': function(event) {
-        $('.colAmountInc').addClass('hiddenColumn');
-        $('.colAmountInc').removeClass('showColumn');
+      $('.colAmountInc').addClass('showColumn');
+      $('.colAmountInc').removeClass('hiddenColumn');
 
-        $('.colAmountEx').addClass('showColumn');
-        $('.colAmountEx').removeClass('hiddenColumn');
-    },
-    'click .th.colUnitPriceEx': function(event) {
-        $('.colUnitPriceEx').addClass('hiddenColumn');
-        $('.colUnitPriceEx').removeClass('showColumn');
+      $('.chkAmountEx').prop("checked", false);
+      $('.chkAmountInc').prop("checked", true);
+  },
+  'click .th.colAmountInc': function(event) {
+      $('.colAmountInc').addClass('hiddenColumn');
+      $('.colAmountInc').removeClass('showColumn');
 
-        $('.colUnitPriceInc').addClass('showColumn');
-        $('.colUnitPriceInc').removeClass('hiddenColumn');
-    },
-    'click .th.colUnitPriceInc': function(event) {
-        $('.colUnitPriceInc').addClass('hiddenColumn');
-        $('.colUnitPriceInc').removeClass('showColumn');
+      $('.colAmountEx').addClass('showColumn');
+      $('.colAmountEx').removeClass('hiddenColumn');
 
-        $('.colUnitPriceEx').addClass('showColumn');
-        $('.colUnitPriceEx').removeClass('hiddenColumn');
-    },
+      $('.chkAmountEx').prop("checked", true);
+      $('.chkAmountInc').prop("checked", false);
+  },
+  'click .th.colUnitPriceEx': function(event) {
+      $('.colUnitPriceEx').addClass('hiddenColumn');
+      $('.colUnitPriceEx').removeClass('showColumn');
+
+      $('.colUnitPriceInc').addClass('showColumn');
+      $('.colUnitPriceInc').removeClass('hiddenColumn');
+
+      $('.chkUnitPriceEx').prop("checked", false);
+      $('.chkUnitPriceInc').prop("checked", true);
+  },
+  'click .th.colUnitPriceInc': function(event) {
+      $('.colUnitPriceInc').addClass('hiddenColumn');
+      $('.colUnitPriceInc').removeClass('showColumn');
+
+      $('.colUnitPriceEx').addClass('showColumn');
+      $('.colUnitPriceEx').removeClass('hiddenColumn');
+
+      $('.chkUnitPriceEx').prop("checked", true);
+      $('.chkUnitPriceInc').prop("checked", false);
+
+  },
     'click #btnCustomFileds': function(event) {
         var x = document.getElementById("divCustomFields");
         if (x.style.display === "none") {
@@ -8098,226 +8111,250 @@ Template.refundcard.events({
         }
 
     },
+    
     'click .chkProductName': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colProductName').css('display', 'table-cell');
-            $('.colProductName').css('padding', '.75rem');
-            $('.colProductName').css('vertical-align', 'top');
-        } else {
-            $('.colProductName').css('display', 'none');
-        }
+      if ($(event.target).is(':checked')) {
+        $('.colProductName').addClass('showColumn');
+        $('.colProductName').removeClass('hiddenColumn');
+      } else {
+        $('.colProductName').addClass('hiddenColumn');
+        $('.colProductName').removeClass('showColumn');
+      }
     },
-    'click .chkDescription': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colDescription').css('display', 'table-cell');
-            $('.colDescription').css('padding', '.75rem');
-            $('.colDescription').css('vertical-align', 'top');
-        } else {
-            $('.colDescription').css('display', 'none');
-        }
+    'click .chkDescription': function(event) { 
+      if ($(event.target).is(':checked')) {
+        $('.colDescription').addClass('showColumn');
+        $('.colDescription').removeClass('hiddenColumn');
+      } else {
+        $('.colDescription').addClass('hiddenColumn');
+        $('.colDescription').removeClass('showColumn');
+      }
     },
     'click .chkQty': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colQty').css('display', 'table-cell');
-            $('.colQty').css('padding', '.75rem');
-            $('.colQty').css('vertical-align', 'top');
-        } else {
-            $('.colQty').css('display', 'none');
-        }
+      if ($(event.target).is(':checked')) {
+        $('.colQty').addClass('showColumn');
+        $('.colQty').removeClass('hiddenColumn');
+      } else {
+        $('.colQty').addClass('hiddenColumn');
+        $('.colQty').removeClass('showColumn');
+      }
     },
     'click .chkCostPrice': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colCostPrice').css('display', 'table-cell');
-            $('.colCostPrice').css('padding', '.75rem');
-            $('.colCostPrice').css('vertical-align', 'top');
-        } else {
-            $('.colCostPrice').css('display', 'none');
-        }
+      if ($(event.target).is(':checked')) {
+        $('.colCostPrice').addClass('showColumn');
+        $('.colCostPrice').removeClass('hiddenColumn');
+      } else {
+        $('.colCostPrice').addClass('hiddenColumn');
+        $('.colCostPrice').removeClass('showColumn');
+      }
     },
     'click .chkSalesLinesCustField1': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colSalesLinesCustField1').css('display', 'table-cell');
-            $('.colSalesLinesCustField1').css('padding', '.75rem');
-            $('.colSalesLinesCustField1').css('vertical-align', 'top');
-        } else {
-            $('.colSalesLinesCustField1').css('display', 'none');
-        }
+      if ($(event.target).is(':checked')) {
+        $('.colSalesLinesCustField1').addClass('showColumn');
+        $('.colSalesLinesCustField1').removeClass('hiddenColumn');
+      } else {
+        $('.colSalesLinesCustField1').addClass('hiddenColumn');
+        $('.colSalesLinesCustField1').removeClass('showColumn');
+      }
     },
     'click .chkTaxRate': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colTaxRate').css('display', 'table-cell');
-            $('.colTaxRate').css('padding', '.75rem');
-            $('.colTaxRate').css('vertical-align', 'top');
-        } else {
-            $('.colTaxRate').css('display', 'none');
-        }
+      if ($(event.target).is(':checked')) {
+        $('.colTaxRate').addClass('showColumn');
+        $('.colTaxRate').removeClass('hiddenColumn');
+      } else {
+        $('.colTaxRate').addClass('hiddenColumn');
+        $('.colTaxRate').removeClass('showColumn');
+      }
     },
+    // displaysettings
     'click .chkTaxCode': function(event) {
       if ($(event.target).is(':checked')) {
-          $('.colTaxCode').css('display', 'table-cell');
-          $('.colTaxCode').css('padding', '.75rem');
-          $('.colTaxCode').css('vertical-align', 'top');
+        $('.colTaxCode').addClass('showColumn');
+        $('.colTaxCode').removeClass('hiddenColumn');
       } else {
-          $('.colTaxCode').css('display', 'none');
+        $('.colTaxCode').addClass('hiddenColumn');
+        $('.colTaxCode').removeClass('showColumn');
+      }
+    },
+    'click .chkTaxAmount': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colTaxAmount').addClass('showColumn');
+        $('.colTaxAmount').removeClass('hiddenColumn');
+      } else {
+        $('.colTaxAmount').addClass('hiddenColumn');
+        $('.colTaxAmount').removeClass('showColumn');
       }
     },
 
-    'click .chkTaxAmount': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colTaxAmount').css('display', 'table-cell');
-            $('.colTaxAmount').css('padding', '.75rem');
-            $('.colTaxAmount').css('vertical-align', 'top');
-        } else {
-            $('.colTaxAmount').css('display', 'none');
-        }
-    },
+    'click .chkAmountEx': function (event) {
+      if ($(event.target).is(':checked')) {  
+          $('.chkAmountInc').prop("checked", false); 
 
-    'click .chkAmount': function (event) {
-      if ($(event.target).is(':checked')) {
-          $('.colAmount').css('display', 'table-cell');
-          $('.colAmount').css('padding', '.75rem');
-          $('.colAmount').css('vertical-align', 'top');
+          $('.colAmountInc').addClass('hiddenColumn');
+          $('.colAmountInc').removeClass('showColumn');
 
-          $('.chkAmountInc').prop("checked", false);
-          $('.colAmountInc').css('display', 'none');
-        } else {
-          $('.colAmount').css('display', 'none');
+          $('.colAmountEx').addClass('showColumn');
+          $('.colAmountEx').removeClass('hiddenColumn');
+        } else { 
+          $('.chkAmountInc').prop("checked", true); 
 
-          $('.chkAmountInc').prop("checked", true);
-          $('.colAmountInc').css('display', 'table-cell');
-          $('.colAmountInc').css('padding', '.75rem');
-          $('.colAmountInc').css('vertical-align', 'top');
+          $('.colAmountEx').addClass('hiddenColumn');
+          $('.colAmountEx').removeClass('showColumn');
+
+          $('.colAmountInc').addClass('showColumn');
+          $('.colAmountInc').removeClass('hiddenColumn');
       }
     },
     'click .chkAmountInc': function(event) {
-      if ($(event.target).is(':checked')) {
-          $('.colAmountInc').css('display', 'table-cell');
-          $('.colAmountInc').css('padding', '.75rem');
-          $('.colAmountInc').css('vertical-align', 'top');
+      if ($(event.target).is(':checked')) { 
+          $('.chkAmountEx').prop("checked", false); 
 
-          $('.chkAmount').prop("checked", false);
-          $('.colAmount').css('display', 'none');
-      } else {
-          $('.colAmountInc').css('display', 'none');
+          $('.colAmountEx').addClass('hiddenColumn');
+          $('.colAmountEx').removeClass('showColumn');
 
-          $('.chkAmount').prop("checked", true);
-          $('.colAmount').css('display', 'table-cell');
-          $('.colAmount').css('padding', '.75rem');
-          $('.colAmount').css('vertical-align', 'top');
+          $('.colAmountInc').addClass('showColumn');
+          $('.colAmountInc').removeClass('hiddenColumn');
+      } else { 
+          $('.chkAmountEx').prop("checked", true); 
+
+          $('.colAmountInc').addClass('hiddenColumn');
+          $('.colAmountInc').removeClass('showColumn');
+
+          $('.colAmountEx').addClass('showColumn');
+          $('.colAmountEx').removeClass('hiddenColumn');
       }
     },
 
-    'click .chkUnitPrice': function (event) {
-      if ($(event.target).is(':checked')) {
-          $('.colUnitPrice').css('display', 'table-cell');
-          $('.colUnitPrice').css('padding', '.75rem');
-          $('.colUnitPrice').css('vertical-align', 'top');
+    'click .chkUnitPriceEx': function (event) {
+      if ($(event.target).is(':checked')) { 
+          $('.chkUnitPriceInc').prop("checked", false); 
 
-          $('.chkUnitPriceInc').prop("checked", false);
-          $('.colUnitPriceInc').css('display', 'none');
-      } else {
-          $('.colUnitPrice').css('display', 'none');
+          $('.colUnitPriceInc').addClass('hiddenColumn');
+          $('.colUnitPriceInc').removeClass('showColumn');
 
-          $('.chkUnitPriceInc').prop("checked", true);
-          $('.colUnitPriceInc').css('display', 'table-cell');
-          $('.colUnitPriceInc').css('padding', '.75rem');
-          $('.colUnitPriceInc').css('vertical-align', 'top');
+          $('.colUnitPriceEx').addClass('showColumn');
+          $('.colUnitPriceEx').removeClass('hiddenColumn');
+          
+      } else { 
+          $('.chkUnitPriceInc').prop("checked", true); 
+
+          $('.colUnitPriceEx').addClass('hiddenColumn');
+          $('.colUnitPriceEx').removeClass('showColumn');
+
+          $('.colUnitPriceInc').addClass('showColumn');
+          $('.colUnitPriceInc').removeClass('hiddenColumn');
       }
     },
     'click .chkUnitPriceInc': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colUnitPriceInc').css('display', 'table-cell');
-            $('.colUnitPriceInc').css('padding', '.75rem');
-            $('.colUnitPriceInc').css('vertical-align', 'top');
+        if ($(event.target).is(':checked')) { 
+          $('.chkUnitPriceEx').prop("checked", false); 
 
-          $('.chkUnitPrice').prop("checked", false);
-          $('.colUnitPrice').css('display', 'none');
-        } else {
-            $('.colUnitPriceInc').css('display', 'none');
+          $('.colUnitPriceEx').addClass('hiddenColumn');
+          $('.colUnitPriceEx').removeClass('showColumn');
 
-          $('.chkUnitPrice').prop("checked", true);
-          $('.colUnitPrice').css('display', 'table-cell');
-          $('.colUnitPrice').css('padding', '.75rem');
-          $('.colUnitPrice').css('vertical-align', 'top');
+          $('.colUnitPriceInc').addClass('showColumn');
+          $('.colUnitPriceInc').removeClass('hiddenColumn');
+        } else { 
+          $('.chkUnitPriceEx').prop("checked", true); 
+
+          $('.colUnitPriceInc').addClass('hiddenColumn');
+          $('.colUnitPriceInc').removeClass('showColumn');
+
+          $('.colUnitPriceEx').addClass('showColumn');
+          $('.colUnitPriceEx').removeClass('hiddenColumn');
         }
     },
 
     'click .chkDiscount': function(event) {
       if ($(event.target).is(':checked')) {
-          $('.colDiscount').css('display', 'table-cell');
-          $('.colDiscount').css('padding', '.75rem');
-          $('.colDiscount').css('vertical-align', 'top');
+          // $('.colDiscount').css('display', 'table-cell');
+          // $('.colDiscount').css('padding', '.75rem');
+          // $('.colDiscount').css('vertical-align', 'top');
+        $('.colDiscount').addClass('showColumn');
+        $('.colDiscount').removeClass('hiddenColumn');
       } else {
-          $('.colDiscount').css('display', 'none');
+          // $('.colDiscount').css('display', 'none');
+          $('.colDiscount').addClass('hiddenColumn');
+          $('.colDiscount').removeClass('showColumn');
       }
     },
     'click .chkSerialNo': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colSerialNo').css('display', 'table-cell');
-            $('.colSerialNo').css('padding', '.75rem');
-            $('.colSerialNo').css('vertical-align', 'top');
-        } else {
-            $('.colSerialNo').css('display', 'none');
-        }
+      if ($(event.target).is(':checked')) {
+        $('.colSerialNo').addClass('showColumn');
+        $('.colSerialNo').removeClass('hiddenColumn');
+      } else {
+        $('.colSerialNo').addClass('hiddenColumn');
+        $('.colSerialNo').removeClass('showColumn');
+      }
     },
     // display settings
 
     'change .rngRangeProductName': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthProductName").html(range + '%');
-        $('.colProductName').css('width', range + '%');
-
-    },
-    'change .rngRangeDescription': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthDescription").html(range + '%');
-        $('.colDescription').css('width', range + '%');
-
-    },
-    'change .rngRangeQty': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthQty").html(range + '%');
-        $('.colQty').css('width', range + '%');
-
-    },
-    'change .rngRangeUnitPrice': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthUnitPrice").html(range + '%');
-        $('.colUnitPrice').css('width', range + '%');
-
-    },
-    'change .rngRangeTaxRate': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthTaxRate").html(range + '%');
-        $('.colTaxRate').css('width', range + '%');
-
-    },
-    'change .rngRangeAmount': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthAmount").html(range + '%');
-        $('.colAmount').css('width', range + '%');
-
-    },
-    'change .rngRangeCostPrice': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthCostPrice").html(range + '%');
-        $('.colCostPrice').css('width', range + '%');
-
-     },
-    'change .rngRangeSalesLinesCustField1': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthSalesLinesCustField1").html(range + '%');
-        $('.colSalesLinesCustField1').css('width', range + '%');
-
-     },
+      let range = $(event.target).val();
+      $(".spWidthProductName").html(range);
+      $('.colProductName').css('width', range);
+  },
+  'change .rngRangeDescription': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthDescription").html(range);
+      $('.colDescription').css('width', range);
+  },
+  'change .rngRangeQty': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthQty").html(range);
+      $('.colQty').css('width', range);
+  },
+  'change .rngRangeUnitPriceInc': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthUnitPrice").html(range);
+      $('.colUnitPriceInc').css('width', range);
+  },
+  'change .rngRangeUnitPriceEx': function(event) {
+      let range = $(event.target).val();
+      $('.colUnitPriceEx').css('width', range);
+  },
+  'change .rngRangeTaxRate': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthTaxRate").html(range);
+      $('.colTaxRate').css('width', range);
+  },
+  'change .rngRangeAmountInc': function (event) {
+      let range = $(event.target).val();
+      //$(".spWidthAmount").html(range);
+      $('.colAmountInc').css('width', range);
+  },
+  'change .rngRangeAmountEx': function (event) {
+      let range = $(event.target).val();
+      //$(".spWidthAmount").html(range);
+      $('.colAmountEx').css('width', range);
+  },
+  'change .rngRangeTaxAmount': function (event) {
+      let range = $(event.target).val();
+      //$(".spWidthAmount").html(range);
+      $('.colTaxAmount').css('width', range);
+  },
+  'change .rngRangeDiscount': function (event) {
+      let range = $(event.target).val();
+      $('.colDiscount').css('width', range);
+  },
+  'change .rngRangeSerialNo': function (event) {
+      let range = $(event.target).val();
+      $('.colSerialNo').css('width', range);
+  },
+  'change .rngRangeTaxCode': function (event) {
+      let range = $(event.target).val();
+      $('.colTaxCode').css('width', range);
+  },
+  'change .rngRangeCostPrice': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthCostPrice").html(range);
+      $('.colCostPrice').css('width', range);
+  },
+  'change .rngRangeSalesLinesCustField1': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthSalesLinesCustField1").html(range);
+      $('.colSalesLinesCustField1').css('width', range);
+  },
     'blur .divcolumn': function(event) {
         let columData = $(event.target).html();
         let columHeaderUpdate = $(event.target).attr("valueupdate");
@@ -8366,8 +8403,18 @@ Template.refundcard.events({
         let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
         let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
-        if(added) {
-          swal("Display settings is updated!", "", "success");
+        if(added) { 
+          swal({
+            title: 'SUCCESS',
+            text: "Display settings is updated!",
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonText: 'OK'
+          }).then((result) => {
+              if (result.value) {
+                 $('#myModal2').modal('hide');
+              }  
+          });
         } else {
           swal("Something went wrong!", "", "error");
         }
@@ -8381,7 +8428,13 @@ Template.refundcard.events({
     'click .btnResetGridSettings': function(event) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get(); 
-      reset_data = reset_data.filter(redata => redata.display);
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+      if(isBatchSerialNoTracking) {
+        reset_data[11].display = true; 
+      } else {
+        reset_data[11].display = false; 
+      }
+      reset_data = reset_data.filter(redata => redata.display); 
   
       $(".displaySettings").each(function (index) {
         let $tblrow = $(this);
@@ -8390,16 +8443,22 @@ Template.refundcard.events({
           .find(".custom-control-input")
           .prop("checked", reset_data[index].active);
 
-        //
         let title = $("#tblInvoiceLine").find("th").eq(index);
-        $(title).html(reset_data[index].label);
+        if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
+          $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
+        } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
+          $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
+        } else {
+          $(title).html(reset_data[index].label);
+        }
+
 
         if (reset_data[index].active) {
-          $(".col" + reset_data[index].class).css("display", "table-cell");
-          $(".col" + reset_data[index].class).css("padding", ".75rem");
-          $(".col" + reset_data[index].class).css("vertical-align", "top");
+          $('.col' + reset_data[index].class).addClass('showColumn');
+          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
         } else {
-          $(".col" + reset_data[index].class).css("display", "none");
+          $('.col' + reset_data[index].class).addClass('hiddenColumn');
+          $('.col' + reset_data[index].class).removeClass('showColumn');
         }
         $(".rngRange" + reset_data[index].class).val('');
       });

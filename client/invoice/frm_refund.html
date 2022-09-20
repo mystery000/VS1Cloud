@@ -23,6 +23,9 @@
             #tblInvoiceLine_length, #tblInvoiceLine_filter {
               display: none;
             }
+            .colUnitPriceEx, .colUnitPriceInc, .colAmountEx, .colAmountInc {
+              cursor: pointer;
+            }
         </style>
         {{#if invoicerecord}}
             <form>
@@ -776,8 +779,19 @@
                                   <tr class="dnd-moved">
                                     {{#each displayfield in displayfields}}
                                       {{#if displayfield.display}}
-                                      <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}">
+                                      <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
                                         {{displayfield.custfieldlabel}}
+                                        {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>
+                                          {{else}}
+                                          {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>  
+                                            {{else}}
+                                            {{#if equals displayfield.class 'UnitPriceEx'}} <i class="fas fa-random"></i> 
+                                              {{else}}
+                                              {{#if equals displayfield.class 'UnitPriceInc'}} <i class="fas fa-random fa-trans"></i> 
+                                              {{/if}}
+                                            {{/if}}
+                                          {{/if}}
+                                        {{/if}}
                                       </th>
                                       {{/if}}
                                     {{/each}}
@@ -795,7 +809,7 @@
                                       <td class="colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input
                                           class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
                                       <td class="colUnitPriceEx colUnitPrice {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input
-                                          class="lineUnitPrice colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}">
+                                          class="lineUnitPrice colUnitPriceEx colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}">
                                       </td>
                                       <td class="colUnitPriceInc {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
                                         class="lineUnitPrice colUnitPriceInc highlightInput colUnitPriceIncChange" type="text"

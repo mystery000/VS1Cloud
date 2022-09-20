@@ -107,24 +107,24 @@ Template.new_invoice.onRendered(() => {
   // set initial table rest_data
   function init_reset_data() {
     let reset_data = [
-      { index: 0, label: "Product Name", class: "ProductName", inputclass: "lineProductName", active: true, display: true },
-      { index: 1, label: "Description", class: "Description", inputclass: "lineProductDesc", active: true, display: true },
-      { index: 2, label: "Qty", class: "Qty", inputclass: "lineQty", active: true, display: true },
-      { index: 3, label: "Ordered", class: "Ordered", inputclass: "lineOrdered", active: false, display: true },
-      { index: 4, label: "Shipped", class: "Shipped", inputclass: "lineShipped", active: false, display: true },
-      { index: 5, label: "BO", class: "BackOrder", inputclass: "lineBo", active: false, display: true },
-      { index: 6, label: "Unit Price (Ex)", class: "UnitPrice", inputclass: "lineUnitPrice", active: true, display: true },
-      { index: 7, label: "Unit Price (Inc)", class: "UnitPriceInc", inputclass: "lineUnitPrice", active: false, display: true },
-      { index: 8, label: "Disc %", class: "Discount", inputclass: "lineDiscount", active: true, display: true },
-      { index: 9, label: "Cost Price", class: "CostPrice", inputclass: "lineCostPrice", active: false, display: true },
-      { index: 10, label: "SalesLines CustField1", class: "SalesLinesCustField1", inputclass: "lineSalesLinesCustField1", active: false, display: true },
-      { index: 11, label: "Tax Rate", class: "TaxRate", inputclass: "lineTaxRate", active: false, display: true },
-      { index: 12, label: "Tax Code", class: "TaxCode", inputclass: "lineTaxCode", active: true, display: true },
-      { index: 13, label: "Tax Amt", class: "TaxAmount", inputclass: "lineTaxAmount", active: true, display: true },
-      { index: 14, label: "Serial/Lot No", class: "SerialNo", inputclass: "", active: true, display: true },
-      { index: 15, label: "Amount (Ex)", class: "Amount", inputclass: "lineAmt", active: true, display: true },
-      { index: 16, label: "Amount (Inc)", class: "AmountInc", inputclass: "lineAmt", active: false, display: true },
-      { index: 17, label: "Units", class: "Units", inputclass: "lineUOM", active: false, display: true },
+      { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
+      { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
+      { index: 2, label: "Qty", class: "Qty", width: "50", active: true, display: true },
+      { index: 3, label: "Ordered", class: "Ordered", width: "75", active: false, display: true },
+      { index: 4, label: "Shipped", class: "Shipped", width: "75", active: false, display: true },
+      { index: 5, label: "BO", class: "BackOrder", width: "75", active: false, display: true },
+      { index: 6, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
+      { index: 7, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
+      { index: 8, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
+      { index: 9, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
+      { index: 10, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
+      { index: 11, label: "Tax Rate", class: "TaxRate", width: "91", active: false, display: true },
+      { index: 12, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
+      { index: 13, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
+      { index: 14, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
+      { index: 15, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
+      { index: 16, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
+      { index: 17, label: "Units", class: "Units", width: "95", active: false, display: true },
     ];
 
     let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
@@ -15349,34 +15349,47 @@ Template.new_invoice.events({
     });
     //}
   },
-  "click .th.colAmountEx": function (event) {
-    $(".colAmountEx").addClass("hiddenColumn");
-    $(".colAmountEx").removeClass("showColumn");
+  'click .th.colAmountEx': function(event) {
+    $('.colAmountEx').addClass('hiddenColumn');
+    $('.colAmountEx').removeClass('showColumn');
 
-    $(".colAmountInc").addClass("showColumn");
-    $(".colAmountInc").removeClass("hiddenColumn");
-  },
-  "click .th.colAmountInc": function (event) {
-    $(".colAmountInc").addClass("hiddenColumn");
-    $(".colAmountInc").removeClass("showColumn");
+    $('.colAmountInc').addClass('showColumn');
+    $('.colAmountInc').removeClass('hiddenColumn');
 
-    $(".colAmountEx").addClass("showColumn");
-    $(".colAmountEx").removeClass("hiddenColumn");
-  },
-  "click .th.colUnitPriceEx": function (event) {
-    $(".colUnitPriceEx").addClass("hiddenColumn");
-    $(".colUnitPriceEx").removeClass("showColumn");
+    $('.chkAmountEx').prop("checked", false);
+    $('.chkAmountInc').prop("checked", true);
+},
+'click .th.colAmountInc': function(event) {
+    $('.colAmountInc').addClass('hiddenColumn');
+    $('.colAmountInc').removeClass('showColumn');
 
-    $(".colUnitPriceInc").addClass("showColumn");
-    $(".colUnitPriceInc").removeClass("hiddenColumn");
-  },
-  "click .th.colUnitPriceInc": function (event) {
-    $(".colUnitPriceInc").addClass("hiddenColumn");
-    $(".colUnitPriceInc").removeClass("showColumn");
+    $('.colAmountEx').addClass('showColumn');
+    $('.colAmountEx').removeClass('hiddenColumn');
 
-    $(".colUnitPriceEx").addClass("showColumn");
-    $(".colUnitPriceEx").removeClass("hiddenColumn");
-  },
+    $('.chkAmountEx').prop("checked", true);
+    $('.chkAmountInc').prop("checked", false);
+},
+'click .th.colUnitPriceEx': function(event) {
+    $('.colUnitPriceEx').addClass('hiddenColumn');
+    $('.colUnitPriceEx').removeClass('showColumn');
+
+    $('.colUnitPriceInc').addClass('showColumn');
+    $('.colUnitPriceInc').removeClass('hiddenColumn');
+
+    $('.chkUnitPriceEx').prop("checked", false);
+    $('.chkUnitPriceInc').prop("checked", true);
+},
+'click .th.colUnitPriceInc': function(event) {
+    $('.colUnitPriceInc').addClass('hiddenColumn');
+    $('.colUnitPriceInc').removeClass('showColumn');
+
+    $('.colUnitPriceEx').addClass('showColumn');
+    $('.colUnitPriceEx').removeClass('hiddenColumn');
+
+    $('.chkUnitPriceEx').prop("checked", true);
+    $('.chkUnitPriceInc').prop("checked", false);
+
+},
   "click #btnCustomFileds": function (event) {
     var x = document.getElementById("divCustomFields");
     if (x.style.display === "none") {
@@ -18412,274 +18425,301 @@ Template.new_invoice.events({
     }
   },
   // display settings
-  "click .chkProductName": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colProductName").css("display", "table-cell");
-      $(".colProductName").css("padding", ".75rem");
-      $(".colProductName").css("vertical-align", "top");
+  'click .chkProductName': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colProductName').addClass('showColumn');
+      $('.colProductName').removeClass('hiddenColumn');
     } else {
-      $(".colProductName").css("display", "none");
+      $('.colProductName').addClass('hiddenColumn');
+      $('.colProductName').removeClass('showColumn');
     }
   },
-  "click .chkDescription": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colDescription").css("display", "table-cell");
-      $(".colDescription").css("padding", ".75rem");
-      $(".colDescription").css("vertical-align", "top");
+  'click .chkDescription': function(event) { 
+    if ($(event.target).is(':checked')) {
+      $('.colDescription').addClass('showColumn');
+      $('.colDescription').removeClass('hiddenColumn');
     } else {
-      $(".colDescription").css("display", "none");
+      $('.colDescription').addClass('hiddenColumn');
+      $('.colDescription').removeClass('showColumn');
     }
   },
-  "click .chkQty": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colQty").css("display", "table-cell");
-      $(".colQty").css("padding", ".75rem");
-      $(".colQty").css("vertical-align", "top");
+  'click .chkQty': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colQty').addClass('showColumn');
+      $('.colQty').removeClass('hiddenColumn');
     } else {
-      $(".colQty").css("display", "none");
+      $('.colQty').addClass('hiddenColumn');
+      $('.colQty').removeClass('showColumn');
     }
   },
-  "click .chkBackOrder": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colBackOrder").css("display", "table-cell");
-      $(".colBackOrder").css("padding", ".75rem");
-      $(".colBackOrder").css("vertical-align", "top");
+  'click .chkCostPrice': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colCostPrice').addClass('showColumn');
+      $('.colCostPrice').removeClass('hiddenColumn');
     } else {
-      $(".colBackOrder").css("display", "none");
+      $('.colCostPrice').addClass('hiddenColumn');
+      $('.colCostPrice').removeClass('showColumn');
     }
   },
-  "click .chkShipped": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colShipped").css("display", "table-cell");
-      $(".colShipped").css("padding", ".75rem");
-      $(".colShipped").css("vertical-align", "top");
+  'click .chkSalesLinesCustField1': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colSalesLinesCustField1').addClass('showColumn');
+      $('.colSalesLinesCustField1').removeClass('hiddenColumn');
     } else {
-      $(".colShipped").css("display", "none");
+      $('.colSalesLinesCustField1').addClass('hiddenColumn');
+      $('.colSalesLinesCustField1').removeClass('showColumn');
     }
   },
-  "click .chkOrdered": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colOrdered").css("display", "table-cell");
-      $(".colOrdered").css("padding", ".75rem");
-      $(".colOrdered").css("vertical-align", "top");
+  'click .chkTaxRate': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colTaxRate').addClass('showColumn');
+      $('.colTaxRate').removeClass('hiddenColumn');
     } else {
-      $(".colOrdered").css("display", "none");
+      $('.colTaxRate').addClass('hiddenColumn');
+      $('.colTaxRate').removeClass('showColumn');
     }
   },
-
-  "click .chkCostPrice": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colCostPrice").css("display", "table-cell");
-      $(".colCostPrice").css("padding", ".75rem");
-      $(".colCostPrice").css("vertical-align", "top");
+  // displaysettings
+  'click .chkTaxCode': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colTaxCode').addClass('showColumn');
+      $('.colTaxCode').removeClass('hiddenColumn');
     } else {
-      $(".colCostPrice").css("display", "none");
+      $('.colTaxCode').addClass('hiddenColumn');
+      $('.colTaxCode').removeClass('showColumn');
     }
   },
-  "click .chkSalesLinesCustField1": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colSalesLinesCustField1").css("display", "table-cell");
-      $(".colSalesLinesCustField1").css("padding", ".75rem");
-      $(".colSalesLinesCustField1").css("vertical-align", "top");
+  'click .chkTaxAmount': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colTaxAmount').addClass('showColumn');
+      $('.colTaxAmount').removeClass('hiddenColumn');
     } else {
-      $(".colSalesLinesCustField1").css("display", "none");
-    }
-  },
-  "click .chkTaxRate": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colTaxRate").css("display", "table-cell");
-      $(".colTaxRate").css("padding", ".75rem");
-      $(".colTaxRate").css("vertical-align", "top");
-    } else {
-      $(".colTaxRate").css("display", "none");
-    }
-  },
-  "click .chkUnits": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colUnits").css("display", "table-cell");
-      $(".colUnits").css("padding", ".75rem");
-      $(".colUnits").css("vertical-align", "top");
-    } else {
-      $(".colUnits").css("display", "none");
-    }
-  },
-  "click .chkTaxCode": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colTaxCode").css("display", "table-cell");
-      $(".colTaxCode").css("padding", ".75rem");
-      $(".colTaxCode").css("vertical-align", "top");
-    } else {
-      $(".colTaxCode").css("display", "none");
+      $('.colTaxAmount').addClass('hiddenColumn');
+      $('.colTaxAmount').removeClass('showColumn');
     }
   },
 
-  "click .chkTaxAmount": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colTaxAmount").css("display", "table-cell");
-      $(".colTaxAmount").css("padding", ".75rem");
-      $(".colTaxAmount").css("vertical-align", "top");
-    } else {
-      $(".colTaxAmount").css("display", "none");
+  'click .chkAmountEx': function (event) {
+    if ($(event.target).is(':checked')) {  
+        $('.chkAmountInc').prop("checked", false); 
+
+        $('.colAmountInc').addClass('hiddenColumn');
+        $('.colAmountInc').removeClass('showColumn');
+
+        $('.colAmountEx').addClass('showColumn');
+        $('.colAmountEx').removeClass('hiddenColumn');
+      } else { 
+        $('.chkAmountInc').prop("checked", true); 
+
+        $('.colAmountEx').addClass('hiddenColumn');
+        $('.colAmountEx').removeClass('showColumn');
+
+        $('.colAmountInc').addClass('showColumn');
+        $('.colAmountInc').removeClass('hiddenColumn');
+    }
+  },
+  'click .chkAmountInc': function(event) {
+    if ($(event.target).is(':checked')) { 
+        $('.chkAmountEx').prop("checked", false); 
+
+        $('.colAmountEx').addClass('hiddenColumn');
+        $('.colAmountEx').removeClass('showColumn');
+
+        $('.colAmountInc').addClass('showColumn');
+        $('.colAmountInc').removeClass('hiddenColumn');
+    } else { 
+        $('.chkAmountEx').prop("checked", true); 
+
+        $('.colAmountInc').addClass('hiddenColumn');
+        $('.colAmountInc').removeClass('showColumn');
+
+        $('.colAmountEx').addClass('showColumn');
+        $('.colAmountEx').removeClass('hiddenColumn');
     }
   },
 
-  "click .chkAmount": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colAmount").css("display", "table-cell");
-      $(".colAmount").css("padding", ".75rem");
-      $(".colAmount").css("vertical-align", "top");
+  'click .chkUnitPriceEx': function (event) {
+    if ($(event.target).is(':checked')) { 
+        $('.chkUnitPriceInc').prop("checked", false); 
 
-      $(".chkAmountInc").prop("checked", false);
-      $(".colAmountInc").css("display", "none");
-    } else {
-      $(".colAmount").css("display", "none");
+        $('.colUnitPriceInc').addClass('hiddenColumn');
+        $('.colUnitPriceInc').removeClass('showColumn');
 
-      $(".chkAmountInc").prop("checked", true);
-      $(".colAmountInc").css("display", "table-cell");
-      $(".colAmountInc").css("padding", ".75rem");
-      $(".colAmountInc").css("vertical-align", "top");
+        $('.colUnitPriceEx').addClass('showColumn');
+        $('.colUnitPriceEx').removeClass('hiddenColumn');
+        
+    } else { 
+        $('.chkUnitPriceInc').prop("checked", true); 
+
+        $('.colUnitPriceEx').addClass('hiddenColumn');
+        $('.colUnitPriceEx').removeClass('showColumn');
+
+        $('.colUnitPriceInc').addClass('showColumn');
+        $('.colUnitPriceInc').removeClass('hiddenColumn');
     }
   },
-  "click .chkAmountInc": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colAmountInc").css("display", "table-cell");
-      $(".colAmountInc").css("padding", ".75rem");
-      $(".colAmountInc").css("vertical-align", "top");
+  'click .chkUnitPriceInc': function(event) {
+      if ($(event.target).is(':checked')) { 
+        $('.chkUnitPriceEx').prop("checked", false); 
 
-      $(".chkAmount").prop("checked", false);
-      $(".colAmount").css("display", "none");
-    } else {
-      $(".colAmountInc").css("display", "none");
+        $('.colUnitPriceEx').addClass('hiddenColumn');
+        $('.colUnitPriceEx').removeClass('showColumn');
 
-      $(".chkAmount").prop("checked", true);
-      $(".colAmount").css("display", "table-cell");
-      $(".colAmount").css("padding", ".75rem");
-      $(".colAmount").css("vertical-align", "top");
-    }
+        $('.colUnitPriceInc').addClass('showColumn');
+        $('.colUnitPriceInc').removeClass('hiddenColumn');
+      } else { 
+        $('.chkUnitPriceEx').prop("checked", true); 
+
+        $('.colUnitPriceInc').addClass('hiddenColumn');
+        $('.colUnitPriceInc').removeClass('showColumn');
+
+        $('.colUnitPriceEx').addClass('showColumn');
+        $('.colUnitPriceEx').removeClass('hiddenColumn');
+      }
   },
 
-  "click .chkUnitPrice": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colUnitPrice").css("display", "table-cell");
-      $(".colUnitPrice").css("padding", ".75rem");
-      $(".colUnitPrice").css("vertical-align", "top");
-
-      $(".chkUnitPriceInc").prop("checked", false);
-      $(".colUnitPriceInc").css("display", "none");
+  'click .chkDiscount': function(event) {
+    if ($(event.target).is(':checked')) {
+        // $('.colDiscount').css('display', 'table-cell');
+        // $('.colDiscount').css('padding', '.75rem');
+        // $('.colDiscount').css('vertical-align', 'top');
+      $('.colDiscount').addClass('showColumn');
+      $('.colDiscount').removeClass('hiddenColumn');
     } else {
-      $(".colUnitPrice").css("display", "none");
-
-      $(".chkUnitPriceInc").prop("checked", true);
-      $(".colUnitPriceInc").css("display", "table-cell");
-      $(".colUnitPriceInc").css("padding", ".75rem");
-      $(".colUnitPriceInc").css("vertical-align", "top");
+        // $('.colDiscount').css('display', 'none');
+        $('.colDiscount').addClass('hiddenColumn');
+        $('.colDiscount').removeClass('showColumn');
     }
   },
-  "click .chkUnitPriceInc": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colUnitPriceInc").css("display", "table-cell");
-      $(".colUnitPriceInc").css("padding", ".75rem");
-      $(".colUnitPriceInc").css("vertical-align", "top");
-
-      $(".chkUnitPrice").prop("checked", false);
-      $(".colUnitPrice").css("display", "none");
+  'click .chkSerialNo': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colSerialNo').addClass('showColumn');
+      $('.colSerialNo').removeClass('hiddenColumn');
     } else {
-      $(".colUnitPriceInc").css("display", "none");
-
-      $(".chkUnitPrice").prop("checked", true);
-      $(".colUnitPrice").css("display", "table-cell");
-      $(".colUnitPrice").css("padding", ".75rem");
-      $(".colUnitPrice").css("vertical-align", "top");
+      $('.colSerialNo').addClass('hiddenColumn');
+      $('.colSerialNo').removeClass('showColumn');
     }
   },
-
-  "click .chkDiscount": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colDiscount").css("display", "table-cell");
-      $(".colDiscount").css("padding", ".75rem");
-      $(".colDiscount").css("vertical-align", "top");
+  "click .chkBackOrder": function (event) { 
+    if ($(event.target).is(':checked')) {
+      $('.colBackOrder').addClass('showColumn');
+      $('.colBackOrder').removeClass('hiddenColumn');
     } else {
-      $(".colDiscount").css("display", "none");
+      $('.colBackOrder').addClass('hiddenColumn');
+      $('.colBackOrder').removeClass('showColumn');
     }
   },
-  "click .chkSerialNo": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colSerialNo").css("display", "table-cell");
-      $(".colSerialNo").css("padding", ".75rem");
-      $(".colSerialNo").css("vertical-align", "top");
+  "click .chkShipped": function (event) { 
+    if ($(event.target).is(':checked')) {
+      $('.colShipped').addClass('showColumn');
+      $('.colShipped').removeClass('hiddenColumn');
     } else {
-      $(".colSerialNo").css("display", "none");
+      $('.colShipped').addClass('hiddenColumn');
+      $('.colShipped').removeClass('showColumn');
+    }
+  },
+  "click .chkOrdered": function (event) { 
+    if ($(event.target).is(':checked')) {
+      $('.colOrdered').addClass('showColumn');
+      $('.colOrdered').removeClass('hiddenColumn');
+    } else {
+      $('.colOrdered').addClass('hiddenColumn');
+      $('.colOrdered').removeClass('showColumn');
+    }
+  },
+  "click .chkUnits": function (event) { 
+    if ($(event.target).is(':checked')) {
+      $('.colUnits').addClass('showColumn');
+      $('.colUnits').removeClass('hiddenColumn');
+    } else {
+      $('.colUnits').addClass('hiddenColumn');
+      $('.colUnits').removeClass('showColumn');
     }
   },
   // display settings
 
-  "change .rngRangeProductName": function (event) {
+  'change .rngRangeProductName': function(event) {
     let range = $(event.target).val();
-    $(".spWidthProductName").html(range + "%");
-    $(".colProductName").css("width", range + "%");
-  },
-  "change .rngRangeDescription": function (event) {
+    $(".spWidthProductName").html(range);
+    $('.colProductName').css('width', range);
+},
+'change .rngRangeDescription': function(event) {
     let range = $(event.target).val();
-    $(".spWidthDescription").html(range + "%");
-    $(".colDescription").css("width", range + "%");
-  },
-  "change .rngRangeQty": function (event) {
+    $(".spWidthDescription").html(range);
+    $('.colDescription').css('width', range);
+},
+'change .rngRangeQty': function(event) {
     let range = $(event.target).val();
-    $(".spWidthQty").html(range + "%");
-    $(".colQty").css("width", range + "%");
-  },
-  "change .rngRangeUnitPrice": function (event) {
+    $(".spWidthQty").html(range);
+    $('.colQty').css('width', range);
+},
+'change .rngRangeUnitPriceInc': function(event) {
     let range = $(event.target).val();
-    $(".spWidthUnitPrice").html(range + "%");
-    $(".colUnitPrice").css("width", range + "%");
-  },
-  "change .rngRangeTaxRate": function (event) {
+    $(".spWidthUnitPrice").html(range);
+    $('.colUnitPriceInc').css('width', range);
+},
+'change .rngRangeUnitPriceEx': function(event) {
     let range = $(event.target).val();
-    $(".spWidthTaxRate").html(range + "%");
-    $(".colTaxRate").css("width", range + "%");
-  },
-  "change .rngRangeAmountInc": function (event) {
+    $('.colUnitPriceEx').css('width', range);
+},
+'change .rngRangeTaxRate': function(event) {
     let range = $(event.target).val();
-    //$(".spWidthAmount").html(range + '%');
-    $(".colAmountInc").css("width", range + "%");
-  },
-  "change .rngRangeAmountEx": function (event) {
+    $(".spWidthTaxRate").html(range);
+    $('.colTaxRate').css('width', range);
+},
+'change .rngRangeAmountInc': function (event) {
     let range = $(event.target).val();
-    //$(".spWidthAmount").html(range + '%');
-    $(".colAmountEx").css("width", range + "%");
-  },
-  "change .rngRangeTaxAmount": function (event) {
+    //$(".spWidthAmount").html(range);
+    $('.colAmountInc').css('width', range);
+},
+'change .rngRangeAmountEx': function (event) {
     let range = $(event.target).val();
-    //$(".spWidthAmount").html(range + '%');
-    $(".colTaxAmount").css("width", range + "%");
-  },
-  "change .rngRangeDiscount": function (event) {
+    //$(".spWidthAmount").html(range);
+    $('.colAmountEx').css('width', range);
+},
+'change .rngRangeTaxAmount': function (event) {
     let range = $(event.target).val();
-    $(".colDiscount").css("width", range + "%");
-  },
-  "change .rngRangeSerialLot": function (event) {
+    //$(".spWidthAmount").html(range);
+    $('.colTaxAmount').css('width', range);
+},
+'change .rngRangeDiscount': function (event) {
     let range = $(event.target).val();
-    $(".colSerialNo").css("width", range + "%");
-  },
-  "change .rngRangeTaxCode": function (event) {
+    $('.colDiscount').css('width', range);
+},
+'change .rngRangeSerialNo': function (event) {
     let range = $(event.target).val();
-    $(".colTaxCode").css("width", range + "%");
-  },
-  "change .rngRangeCostPrice": function (event) {
+    $('.colSerialNo').css('width', range);
+},
+'change .rngRangeTaxCode': function (event) {
     let range = $(event.target).val();
-    $(".spWidthCostPrice").html(range + "%");
-    $(".colCostPrice").css("width", range + "%");
-  },
-  "change .rngRangeSalesLinesCustField1": function (event) {
+    $('.colTaxCode').css('width', range);
+},
+'change .rngRangeCostPrice': function(event) {
     let range = $(event.target).val();
-    $(".spWidthSalesLinesCustField1").html(range + "%");
-    $(".colSalesLinesCustField1").css("width", range + "%");
-  },
-  "change .rngRangeUnits": function (event) {
-    let range = $(event.target).val();
-    // $(".spWidthAmount").html(range + '%');
-    $(".colUnits").css("width", range + "%");
-  },
+    // $(".spWidthCostPrice").html(range);
+    $('.colCostPrice').css('width', range);
+},
+'change .rngRangeSalesLinesCustField1': function(event) {
+    let range = $(event.target).val(); 
+    $('.colSalesLinesCustField1').css('width', range);
+},
+
+'change .rngRangeUnits': function(event) {
+    let range = $(event.target).val(); 
+    $('.colUnits').css('width', range);
+},
+'change .rngRangeOrdered': function(event) {
+    let range = $(event.target).val(); 
+    $('.colOrdered').css('width', range);
+},
+'change .rngRangeShipped': function(event) {
+    let range = $(event.target).val(); 
+    $('.colShipped').css('width', range);
+},
+'change .rngRangeBackOrder': function(event) {
+    let range = $(event.target).val(); 
+    $('.colBackOrder').css('width', range);
+},
   "blur .divcolumn": function (event) {
     let columData = $(event.target).html();
     let columHeaderUpdate = $(event.target).attr("valueupdate");
@@ -18728,7 +18768,17 @@ Template.new_invoice.events({
       let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
       if(added) {
-        swal("Display settings is updated!", "", "success");
+        swal({
+          title: 'SUCCESS',
+          text: "Display settings is updated!",
+          type: 'success',
+          showCancelButton: false,
+          confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.value) {
+               $('#myModal2').modal('hide');
+            }  
+        });
       } else {
         swal("Something went wrong!", "", "error");
       }
@@ -18741,10 +18791,15 @@ Template.new_invoice.events({
   // custom field displaysettings
   "click .btnResetGridSettings": async function (event) {
     let templateObject = Template.instance();
-    let checkBackOrder = templateObject.includeBOnShippedQty.get();
     let reset_data = templateObject.reset_data.get(); 
-    reset_data = reset_data.filter(redata => redata.display);
- 
+    let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+    if(isBatchSerialNoTracking) {
+      reset_data[11].display = true; 
+    } else {
+      reset_data[11].display = false; 
+    }
+    reset_data = reset_data.filter(redata => redata.display); 
+
     $(".displaySettings").each(function (index) {
       let $tblrow = $(this);
       $tblrow.find(".divcolumn").text(reset_data[index].label);
@@ -18753,14 +18808,20 @@ Template.new_invoice.events({
         .prop("checked", reset_data[index].active);
 
       let title = $("#tblInvoiceLine").find("th").eq(index);
-      $(title).html(reset_data[index].label);
+      if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
+        $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
+      } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
+        $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
+      } else {
+        $(title).html(reset_data[index].label);
+      }
 
       if (reset_data[index].active) {
-        $(".col" + reset_data[index].class).css("display", "table-cell");
-        $(".col" + reset_data[index].class).css("padding", ".75rem");
-        $(".col" + reset_data[index].class).css("vertical-align", "top");
+        $('.col' + reset_data[index].class).addClass('showColumn');
+        $('.col' + reset_data[index].class).removeClass('hiddenColumn');
       } else {
-        $(".col" + reset_data[index].class).css("display", "none");
+        $('.col' + reset_data[index].class).addClass('hiddenColumn');
+        $('.col' + reset_data[index].class).removeClass('showColumn');
       }
       $(".rngRange" + reset_data[index].class).val('');
     });
