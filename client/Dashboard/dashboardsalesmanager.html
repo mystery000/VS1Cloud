@@ -6,33 +6,27 @@
         .small-heading {
             font-size: 14px;
         }
-
         .my-tasks {
             display: flex;
             flex-direction: column;
             padding: 20px 10px;
-            background-color: #9ed5f5;
+            background-color: #ededed;
             border-radius: 14px;
-            color: black;
             margin-left: -4px;
             max-height: 350px;
             overflow-y: auto;
             overflow-x: hidden;
         }
-
         .highcharts-credits {
             display: none !important;
         }
-
         .currency-value {
             font-size: 28px;
-            color: rgb(221,223,235);
+            color: rgb(133 135 150);
         }
-
         .fs-18 {
             font-size: 18px !important;
         }
-
         .fs-24 {
             font-size: 24px !important;
         }
@@ -57,18 +51,13 @@
                     </div>
                 </div>
             </div>
-
             <hr>
-
-            <div class="row align-items-center pt-3 pb-3">
-                {{> allChartLists  tabGroupID="10" chartGroup="DSMCharts" }}
-            </div>
-            <hr>
-            <div class="row align-items-center pt-3 pb-3">
-                <div class="col-md-6 no-gutters">
-                    {{> appointmentsWidget}}
+            <div class="row pt-3 pb-3">
+                <div class="col-md-8">
+                    {{> allChartLists  tabGroupID="10" chartGroup="DSCharts" }}
                 </div>
-                <div class="col-md-6 no-gutters">
+                <div class="col-md-4">
+                    {{> appointmentsWidget}}
                 </div>
             </div>
             <hr>

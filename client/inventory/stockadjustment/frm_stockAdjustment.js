@@ -3523,6 +3523,7 @@ Template.stockadjustmentcard.events({
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
         let selectedunit = $(target).closest('tr').find('.colAdjustQty').val();
         localStorage.setItem('productItem', selectedunit);
+        localStorage.setItem("selectedProductName", selectedProductName);
         let productService = new ProductService();
         let StockAdjustmentRecord = templateObject.originrecord.get();
         let existingSerialNumbers = [];
@@ -3554,7 +3555,7 @@ Template.stockadjustmentcard.events({
                 } else {
                     let shtml = '';
                     shtml += `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
-                    <tr><td class="text-start">#</td><td class="text-start">Lot number</td><td class="text-start">Expiry Date</td></tr>
+                    <tr><td class="text-start">#</td><td class="text-start">Lot Number</td><td class="text-start">Expiry Date</td></tr>
                     `;
                     for (let k = 0; k < existingLotNumbers.length; k++) {
                         shtml += `

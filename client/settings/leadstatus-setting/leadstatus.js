@@ -1,8 +1,12 @@
 import { ContactService } from "../../contacts/contact-service";
 import { SideBarService } from '../../js/sidebar-service';
 import { ReactiveVar } from 'meteor/reactive-var';
+import {UtilityService} from "../../utility-service";
 
 let sideBarService = new SideBarService();
+let utilityService = new UtilityService();
+let contactService = new ContactService();
+
 Template.leadstatussettings.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -15,6 +19,10 @@ Template.leadstatussettings.onRendered(function () {
     let templateObject = Template.instance();
     const dataTableList = [];
     const tableHeaderList = [];
+    let needAddUnqualified = true;
+    let needAddOpportunity = true;
+    let needAddQuoted = true;
+    let needAddInvoiced = true;
 
     Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'leadStatusList', function (error, result) {
         if (error) {
@@ -34,6 +42,7 @@ Template.leadstatussettings.onRendered(function () {
             }
         }
     });
+
     function MakeNegative() {
         $('td').each(function () {
             if ($(this).text().indexOf('-' + Currency) >= 0)
@@ -59,13 +68,28 @@ Template.leadstatussettings.onRendered(function () {
     }
     function setLeadStatusList(data) {
         for (let i = 0; i < data.tleadstatustype.length; i++) {
+            let eqpm = Number(data.tleadstatustype[i].KeyValue.replace(/[^0-9.-]+/g, "")) || 10;
             const dataList = {
                 id: data.tleadstatustype[i].Id || '',
                 typeName: data.tleadstatustype[i].TypeName || '',
-                description: data.tleadstatustype[i].Description || data.tleadstatustype[i].TypeName
+                description: data.tleadstatustype[i].Description || data.tleadstatustype[i].TypeName,
+                eqpm: utilityService.negativeNumberFormat(eqpm)
             };
+            if (data.tleadstatustype[i].TypeName == "Unqualified") {
+                needAddUnqualified = false;
+            }
+            if (data.tleadstatustype[i].TypeName == "Opportunity") {
+                needAddOpportunity = false;
+            }
+            if (data.tleadstatustype[i].TypeName == "Quoted") {
+                needAddQuoted = false;
+            }
+            if (data.tleadstatustype[i].TypeName == "Invoiced") {
+                needAddInvoiced = false;
+            }
             dataTableList.push(dataList);
         }
+        addDefaultValue();
         templateObject.datatablerecords.set(dataTableList);
         if (templateObject.datatablerecords.get()) {
             Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'leadStatusList', function (error, result) {
@@ -167,31 +191,165 @@ Template.leadstatussettings.onRendered(function () {
         }, 0);
 
         const columns = $('#leadStatusList th');
-        let sTible = "";
         let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
+        let columnVisible = false;
         $.each(columns, function (i, v) {
             if (v.hidden == false) {
-                columVisible = true;
+                columnVisible = true;
             }
             if ((v.className.includes("hiddenColumn"))) {
-                columVisible = false;
+                columnVisible = false;
             }
             sWidth = v.style.width.replace('px', "");
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
                 sIndex: v.cellIndex || '',
-                sVisible: columVisible || false,
+                sVisible: columnVisible || false,
                 sClass: v.className || ''
             };
             tableHeaderList.push(datatablerecordObj);
         });
         templateObject.tableheaderrecords.set(tableHeaderList);
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+    function addDefaultValue() {
+        let needAddDefault = true;
+        if (!needAddUnqualified && !needAddOpportunity && !needAddQuoted && !needAddInvoiced) {
+            needAddDefault = false;
+        }
+        if (needAddDefault) {
+            let isSaved = false;
+            if (needAddUnqualified) {
+                contactService.getOneLeadStatusExByName("Quoted").then(function (leadStatus) {
+                    let objUnqualified;
+                    if (leadStatus.tleadstatustype.length == 0) {
+                        objUnqualified = {
+                            type: "TLeadStatusType",
+                            fields: {
+                                TypeName: "Unqualified",
+                                Description: "Default Value",
+                                KeyValue: 10,
+                                Active: true
+                            }
+                        }
+                    } else {
+                        let statusID = leadStatus.tleadstatustype[0].fields.ID;
+                        objUnqualified = {
+                            type: "TLeadStatusType",
+                            fields: {
+                                Id: statusID,
+                                Active: true
+                            }
+                        }
+                    }
+                    contactService.saveLeadStatusData(objUnqualified).then(function (result) {
+                        isSaved = true;
+                    }).catch(function (err) {
+                    });
+                })
+            }
+            if (needAddOpportunity) {
+                contactService.getOneLeadStatusExByName("Quoted").then(function (leadStatus) {
+                    let objOpportunity;
+                    if (leadStatus.tleadstatustype.length == 0) {
+                        objOpportunity = {
+                            type: "TLeadStatusType",
+                            fields: {
+                                TypeName: "Opportunity",
+                                Description: "Default Value",
+                                KeyValue: 10,
+                                Active: true
+                            }
+                        }
+                    } else {
+                        let statusID = leadStatus.tleadstatustype[0].fields.ID;
+                        objOpportunity = {
+                            type: "TLeadStatusType",
+                            fields: {
+                                Id: statusID,
+                                Active: true
+                            }
+                        }
+                    }
+                    contactService.saveLeadStatusData(objOpportunity).then(function (result) {
+                        isSaved = true;
+                    }).catch(function (err) {
+                    });
+                })
+            }
+            if (needAddQuoted) {
+                contactService.getOneLeadStatusExByName("Quoted").then(function (leadStatus) {
+                    let objQuoted;
+                    if (leadStatus.tleadstatustype.length == 0) {
+                        objQuoted = {
+                            type: "TLeadStatusType",
+                            fields: {
+                                TypeName: "Quoted",
+                                Description: "Default Value",
+                                KeyValue: 10,
+                                Active: true
+                            }
+                        }
+                    } else {
+                        let statusID = leadStatus.tleadstatustype[0].fields.ID;
+                        objQuoted = {
+                            type: "TLeadStatusType",
+                            fields: {
+                                Id: statusID,
+                                Active: true
+                            }
+                        }
+                    }
+                    contactService.saveLeadStatusData(objQuoted).then(function (result) {
+                        isSaved = true;
+                    }).catch(function (err) {
+                    });
+                })
+            }
+            if (needAddInvoiced) {
+                contactService.getOneLeadStatusExByName("Invoiced").then(function (leadStatus) {
+                    let objInvoiced;
+                    if (leadStatus.tleadstatustype.length == 0) {
+                        objInvoiced = {
+                            type: "TLeadStatusType",
+                            fields: {
+                                TypeName: "Invoiced",
+                                Description: "Default Value",
+                                KeyValue: 10,
+                                Active: true
+                            }
+                        }
+                    } else {
+                        let statusID = leadStatus.tleadstatustype[0].fields.ID;
+                        objInvoiced = {
+                            type: "TLeadStatusType",
+                            fields: {
+                                Id: statusID,
+                                Active: true
+                            }
+                        }
+                    }
+                    contactService.saveLeadStatusData(objInvoiced).then(function (result) {
+                        isSaved = true;
+                    }).catch(function (err) {
+                    });
+                })
+            }
+            setTimeout(function () {
+                if (isSaved) {
+                    sideBarService.getAllLeadStatus().then(function (dataReload) {
+                        addVS1Data('TLeadStatusType', JSON.stringify(dataReload)).then(function (datareturn) {
+                            Meteor._reload.reload();
+                        }).catch(function (err) {
+                            Meteor._reload.reload();
+                        });
+                    }).catch(function (err) {
+                        Meteor._reload.reload();
+                    });
+                }
+            }, 5000);
+        }
     }
     templateObject.getLeadStatusData();
 
@@ -201,14 +359,16 @@ Template.leadstatussettings.onRendered(function () {
         $('#deleteLineModal').modal('toggle');
     });
 
-    $('#leadStatusList tbody').on('click', 'tr .colStatusName, tr .colDescription', function(event) {
+    $('#leadStatusList tbody').on('click', 'tr .colStatusName, tr .colDescription, tr .colQuantity', function(event) {
         $('#add-leadstatus-title').text('Edit Lead Status');
         let targetID = $(event.target).closest('tr').attr('id');
         let description = $(event.target).closest('tr').find('.colDescription').text();
         let statusName = $(event.target).closest('tr').find('.colStatusName').text();
+        let quantity = $(event.target).closest('tr').find('.colQuantity').text();
         $('#statusID').val(targetID);
         $('#edtLeadStatusName').val(statusName);
         $('#statusDescription').val(description);
+        $('#statusQuantity').val(quantity);
         $('#myModalLeadStatus').modal('show');
     });
 });
@@ -439,11 +599,12 @@ Template.leadstatussettings.events({
     },
     'click .btnSaveLeadStatus': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
-        const url = FlowRouter.current().path;
-        let contactService = new ContactService();
-        let objDetails ={};
+        let objDetails = {};
         let statusName = $('#edtLeadStatusName').val() || '';
         let statusDesc = $('#statusDescription').val() || '';
+        let statusEQPM = $('#statusQuantity').val() || '';
+        statusEQPM = Number(statusEQPM.replace(/[^0-9.-]+/g, "")) || 1.0
+        statusEQPM = statusEQPM.toString();
         let id = $('#statusID').val() || '';
         if (statusName === '') {
             swal('Lead Status name cannot be blank!', '', 'warning');
@@ -456,6 +617,7 @@ Template.leadstatussettings.events({
                     fields: {
                         TypeName: statusName,
                         Description: statusDesc,
+                        KeyValue: statusEQPM,
                         Active: true
                     }
                 }
@@ -466,6 +628,7 @@ Template.leadstatussettings.events({
                         Id: id,
                         TypeName: statusName,
                         Description: statusDesc,
+                        KeyValue: statusEQPM,
                         Active: true
                     }
                 }

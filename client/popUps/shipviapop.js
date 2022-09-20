@@ -110,8 +110,8 @@ Template.shipviapop.onRendered(function() {
                             responsive: true,
                             language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function () {
-                                $("<button class='btn btn-primary btnAddNewShipVia' data-dismiss='modal' data-toggle='modal' data-target='#newShipViaModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblShipViaPopList_filter");
-                                $("<button class='btn btn-primary btnRefreshVia' type='button' id='btnRefreshVia' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblShipViaPopList_filter");
+                                $("<button class='btn btn-primary btnAddNewShipVia' data-dismiss='modal' data-toggle='modal' data-target='#newShipViaModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblShipViaPopList_filter");
+                                $("<button class='btn btn-primary btnRefreshVia' type='button' id='btnRefreshVia' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblShipViaPopList_filter");
                             },
 
                         });
@@ -157,8 +157,8 @@ Template.shipviapop.onRendered(function() {
                         responsive: true,
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddNewShipVia' data-dismiss='modal' data-toggle='modal' data-target='#newShipViaModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblShipViaPopList_filter");
-                            $("<button class='btn btn-primary btnRefreshVia' type='button' id='btnRefreshVia' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblShipViaPopList_filter");
+                            $("<button class='btn btn-primary btnAddNewShipVia' data-dismiss='modal' data-toggle='modal' data-target='#newShipViaModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblShipViaPopList_filter");
+                            $("<button class='btn btn-primary btnRefreshVia' type='button' id='btnRefreshVia' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblShipViaPopList_filter");
                         },
 
                     });
@@ -204,8 +204,8 @@ Template.shipviapop.onRendered(function() {
                       responsive: true,
                       language: { search: "",searchPlaceholder: "Search List..." },
                       "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddNewShipVia' data-dismiss='modal' data-toggle='modal' data-target='#newShipViaModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblShipViaPopList_filter");
-                          $("<button class='btn btn-primary btnRefreshVia' type='button' id='btnRefreshVia' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblShipViaPopList_filter");
+                          $("<button class='btn btn-primary btnAddNewShipVia' data-dismiss='modal' data-toggle='modal' data-target='#newShipViaModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblShipViaPopList_filter");
+                          $("<button class='btn btn-primary btnRefreshVia' type='button' id='btnRefreshVia' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblShipViaPopList_filter");
                       },
 
                   });

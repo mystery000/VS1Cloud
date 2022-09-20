@@ -25,7 +25,7 @@ Template.combinedContactsModal.onRendered(function () {
     info: true,
     responsive: true,
     "fnInitComplete": function () { 
-      $("<button class='btn btn-primary btnRefreshCombinedContacts' type='button' id='btnRefreshCombinedContacts' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCombinedContacts_filter");
+      $("<button class='btn btn-primary btnRefreshCombinedContacts' type='button' id='btnRefreshCombinedContacts' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCombinedContacts_filter");
     }
   });
 

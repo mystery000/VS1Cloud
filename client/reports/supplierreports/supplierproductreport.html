@@ -204,7 +204,7 @@
                                                 <th>Supplier</th>
                                                 <th>PO No</th>
                                                 <th>Trans Type</th>
-                                                <th>Product Name</th>
+                                                <th>Product ID</th>
                                                 <th>Product Desc</th>
                                                 <th class="text-right">Cost (ex)</th>
                                                 <th class="text-right">Tax</th>
@@ -225,22 +225,22 @@
                                                         <td colspan="15" style="font-weight: 800;">{{ value.Supplier_Name }}</td>
                                                     </tr>
                                                     {{#each item in value.SubAccounts}}
-                                                    <tr>
+                                                    <tr data-type="{{item.Transaction_Type}}">
                                                         <td></td>
-                                                        <td>{{ item.Purchase_Order_Number }}</td>
-                                                        <td>{{ item.Transaction_Type }}</td>
-                                                        <td>{{ item.Product_Name }}</td>
-                                                        <td>{{ item.Product_Description }}</td>
-                                                        <td class="text-right text-success">{{ formatPrice item.Line_Cost_Ex }}</td>
-                                                        <td class="text-right text-success">{{ formatPrice item.Line_Tax }}</td>
-                                                        <td class="text-right text-success">{{ formatPrice item.Line_Cost_Inc }}</td>
-                                                        <td class="text-right">{{ item.Tax_Code }}</td>
-                                                        <td class="text-right">{{ item.Ordered }}</td>
-                                                        <td class="text-right">{{ item.BackOrder }}</td>
-                                                        <td class="text-right">{{ item.BackOrder }}</td>
-                                                        <td>{{ formatDate item.ETADate }}</td>
-                                                        <td>{{ formatDate item.Order_Date }}</td>
-                                                        <td>{{ formatDate item.ReceivedDate }}</td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Purchase_Order_Number }}</a></td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Transaction_Type }}</a></td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.ProductID }}</a></td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Product_Description }}</a></td>
+                                                        <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Line_Cost_Ex }}</a></td>
+                                                        <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Line_Tax }}</a></td>
+                                                        <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Line_Cost_Inc }}</a></td>
+                                                        <td class="text-right"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Tax_Code }}</a></td>
+                                                        <td class="text-right"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Ordered }}</a></td>
+                                                        <td class="text-right"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.BackOrder }}</a></td>
+                                                        <td class="text-right"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.BackOrder }}</a></td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatDate item.ETADate }}</a></td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatDate item.Order_Date }}</a></td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatDate item.ReceivedDate }}</a></td>
                                                     </tr>
                                                     {{/each}}
                                                     <tr>

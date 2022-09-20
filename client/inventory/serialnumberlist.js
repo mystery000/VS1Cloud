@@ -61,6 +61,9 @@ Template.serialnumberlist.onRendered(function() {
     }
     templateObject.getAllSerialNumberData = function() {
         getVS1Data('TSerialNumberListCurrentReport').then(function(dataObject) {
+            sideBarService.getAllSerialNumber().then(function(data) {
+                console.log(data);
+            })
             if (dataObject.length === 0) {
                 sideBarService.getAllSerialNumber().then(function(data) {
                     addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
@@ -251,7 +254,7 @@ Template.serialnumberlist.onRendered(function() {
                                 if (urlParametersPage) {
                                     this.fnPageChange('last');
                                 }
-                                $("<button class='btn btn-primary btnRefreshStockAdjustment' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSerialNumberList_filter");
+                                $("<button class='btn btn-primary btnRefreshStockAdjustment' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSerialNumberList_filter");
                             }
 
                         }).on('page', function() {
@@ -719,7 +722,7 @@ Template.serialnumberlist.onRendered(function() {
                             if (urlParametersPage) {
                                 this.fnPageChange('last');
                             }
-                            $("<button class='btn btn-primary btnRefreshStockAdjustment' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSerialNumberList_filter");
+                            $("<button class='btn btn-primary btnRefreshStockAdjustment' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSerialNumberList_filter");
                         }
 
                     }).on('page', function() {

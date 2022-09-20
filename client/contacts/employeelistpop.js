@@ -334,8 +334,8 @@ Template.employeelistpop.onRendered(function () {
                             },
                             language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function (oSettings) {
-                                $("<button class='btn btn-primary btnAddNewEmployee' data-dismiss='modal' data-toggle='modal' data-target='#addEmployeeModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmployeelist_filter");
-                                $("<button class='btn btn-primary btnRefreshEmployee' type='button' id='btnRefreshEmployee' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
+                                $("<button class='btn btn-primary btnAddNewEmployee' data-dismiss='modal' data-toggle='modal' data-target='#addEmployeeModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmployeelist_filter");
+                                $("<button class='btn btn-primary btnRefreshEmployee' type='button' id='btnRefreshEmployee' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
 
                                 let urlParametersPage = FlowRouter.current().queryParams.page;
                                 if (urlParametersPage) {
@@ -751,8 +751,8 @@ Template.employeelistpop.onRendered(function () {
                         },
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function (oSettings) {
-                            $("<button class='btn btn-primary btnAddNewEmployee' data-dismiss='modal' data-toggle='modal' data-target='#addEmployeeModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmployeelist_filter");
-                            $("<button class='btn btn-primary btnRefreshEmployee' type='button' id='btnRefreshEmployee' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
+                            $("<button class='btn btn-primary btnAddNewEmployee' data-dismiss='modal' data-toggle='modal' data-target='#addEmployeeModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmployeelist_filter");
+                            $("<button class='btn btn-primary btnRefreshEmployee' type='button' id='btnRefreshEmployee' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
 
                             let urlParametersPage = FlowRouter.current().queryParams.page;
                             if (urlParametersPage) {
@@ -1205,8 +1205,8 @@ Template.employeelistpop.onRendered(function () {
                         },
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function (oSettings) {
-                            $("<button class='btn btn-primary btnAddNewEmployee' data-dismiss='modal' data-toggle='modal' data-target='#addEmployeeModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmployeelist_filter");
-                            $("<button class='btn btn-primary btnRefreshEmployee' type='button' id='btnRefreshEmployee' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
+                            $("<button class='btn btn-primary btnAddNewEmployee' data-dismiss='modal' data-toggle='modal' data-target='#addEmployeeModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmployeelist_filter");
+                            $("<button class='btn btn-primary btnRefreshEmployee' type='button' id='btnRefreshEmployee' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
 
                             let urlParametersPage = FlowRouter.current().queryParams.page;
                             if (urlParametersPage) {

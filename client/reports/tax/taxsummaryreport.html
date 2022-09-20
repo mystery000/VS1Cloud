@@ -213,6 +213,11 @@
                   }
                   th {
                     background: #fff;
+                    min-width: 170px !important; 
+                  }
+                  .text-center0,
+                  .text-center1 {
+                    text-align: right !important;
                   }
                 </style>
                 <div class="table-responsive">
@@ -223,13 +228,13 @@
                         {{#if isSub}}
                           <th>Sub Tax Code</th>
                         {{/if}}
-                        <th class="text-center" colspan="{{countActive currencyList}}">Inputs Ex (Purchases)</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Inputs Ex (Purchases)</th>
                         <!-- <th>INPUTS Inc (Purchases)</th> -->
-                        <th cclass="text-center" colspan="{{countActive currencyList}}">Outputs Ex (Sales)</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Outputs Ex (Sales)</th>
                         <!-- <th>OUTPUTS Inc (Sales)</th> -->
-                        <th class="text-center" colspan="{{countActive currencyList}}">Total Net</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total Net</th>
                         <th class="text-right">Tax Rate</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">Total Tax</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total Tax</th>
 
                         <!-- <th>Total Taxt1</th> -->
                         <!-- <th>ID</th> -->
@@ -245,7 +250,7 @@
                               {{#if currencyList}}
                                   {{#each c in currencyList }}
                                       {{# if c.active}}
-                                          <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                          <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                                       {{/if}}
                                   {{/each}}
                               {{/if}}
@@ -253,7 +258,7 @@
                               {{#if currencyList}}
                                   {{#each c in currencyList }}
                                       {{# if c.active}}
-                                          <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                          <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                                       {{/if}}
                                   {{/each}}
                               {{/if}}
@@ -261,7 +266,7 @@
                               {{#if currencyList}}
                                   {{#each c in currencyList }}
                                       {{# if c.active}}
-                                          <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                          <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                                       {{/if}}
                                   {{/each}}
                               {{/if}}
@@ -269,7 +274,7 @@
                               {{#if currencyList}}
                                   {{#each c in currencyList }}
                                       {{# if c.active}}
-                                          <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                          <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                                       {{/if}}
                                   {{/each}}
                               {{/if}}
@@ -298,7 +303,7 @@
                                     {{#each c in currencyList }}
                                         {{# if c.active}}
 
-                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.inputsexpurchases}} text-danger {{else}} text-success {{/if}}">
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-right TotalField {{#if isNegativeAmount items.inputsexpurchases}} text-danger {{else}} text-success {{/if}}">
                                                 <span class="table-cells">
                                                     <strong>
                                                         <a href="#" style="text-decoration:none!important;">{{ convertAmount items.inputsexpurchases c}}</a>
@@ -312,7 +317,7 @@
                                     {{#each c in currencyList }}
                                         {{# if c.active}}
                                         
-                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.outputexsales}} text-danger {{else}} text-success {{/if}}">
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-right TotalField {{#if isNegativeAmount items.outputexsales}} text-danger {{else}} text-success {{/if}}">
                                                 <span class="table-cells">
                                                     <strong>
                                                         <a href="#" style="text-decoration:none!important;">{{ convertAmount items.outputexsales c}}</a>
@@ -327,7 +332,7 @@
                                     {{#each c in currencyList }}
                                         {{# if c.active}}
                                     
-                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.totalnet}} text-danger {{else}} text-success {{/if}}">
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-right TotalField {{#if isNegativeAmount items.totalnet}} text-danger {{else}} text-success {{/if}}">
                                                 <span class="table-cells">
                                                     <strong>
                                                         <a href="/agedpayables?contact={{items.contact}}" style="text-decoration:none!important;">{{ convertAmount items.totalnet c}}</a>
@@ -344,7 +349,7 @@
                                     {{#each c in currencyList }}
                                         {{# if c.active}}
                                     
-                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.totaltax}} text-danger {{else}} text-success {{/if}}">
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-right TotalField {{#if isNegativeAmount items.totaltax}} text-danger {{else}} text-success {{/if}}">
                                                 <span class="table-cells">
                                                     <strong>
                                                         <a href="/agedpayables?contact={{items.contact}}" style="text-decoration:none!important;">{{ convertAmount items.totaltax c}}</a>

@@ -567,11 +567,11 @@ Template.paymentoverview.onRendered(function() {
                           "fnInitComplete": function() {
                               this.fnPageChange('last');
                               if(data.Params.Search.replace(/\s/g, "") == ""){
-                                $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                                $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
                               }else{
-                                $("<button class='btn btn-primary btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                                $("<button class='btn btn-primary btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
                               }
-                              $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
+                              $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
 
                               $('.myvarFilterForm').appendTo(".colDateFilter");
                           },
@@ -932,12 +932,12 @@ Template.paymentoverview.onRendered(function() {
                         "fnInitComplete": function() {
                             this.fnPageChange('last');
                             if(data.Params.Search.replace(/\s/g, "") == ""){
-                              $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                              $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
                             }else{
-                              $("<button class='btn btn-primary btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                              $("<button class='btn btn-primary btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
                             }
 
-                            $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
+                            $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
 
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
@@ -1296,11 +1296,11 @@ Template.paymentoverview.onRendered(function() {
                       "fnInitComplete": function() {
                           this.fnPageChange('last');
                           if(data.Params.Search.replace(/\s/g, "") == ""){
-                            $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                            $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
                           }else{
-                            $("<button class='btn btn-primary btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                            $("<button class='btn btn-primary btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
                           }
-                          $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
+                          $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
 
                           $('.myvarFilterForm').appendTo(".colDateFilter");
                       },

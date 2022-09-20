@@ -73,63 +73,11 @@ Template.new_invoice.onCreated(() => {
   templateObject.invoice_data = new ReactiveVar([]);
 
   templateObject.displayfields = new ReactiveVar([]);
+  templateObject.reset_data = new ReactiveVar([]);
   templateObject.subtaxcodes = new ReactiveVar([]);
 });
 
 Template.new_invoice.onRendered(() => {
-  ///////////////////////////
-  sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), 'table1').then(function (data) {
-                console.log('new custom get.......', data)
-              }).catch(function (err) {
-                console.log('new custom get.......', err)
-              });
-
-    var erpGet = erpDb();
-
-  let test_data = {
-      Name: "VS1_Customize",
-      Params:
-      {
-          TableName: "table1",
-          EmployeeId: parseInt(Session.get('mySessionEmployeeLoggedID'))||0,
-          Columns: [
-              {
-                  Index: 1,
-                  Header: "modifieddddd",
-                  Width: 30,
-                  Hidden: true
-              },
-              {
-                  index: 2,
-                  header: "modified",
-                  width: 30,
-                  hidden: false
-              }
-          ],
-          ERPUserName:erpGet.ERPUsername,
-          ERPPassword:erpGet.ERPPassword
-      }
-  };
-  var myCustomizeString = '"JsonIn"'+':'+JSON.stringify(test_data);
-  console.log(myCustomizeString);
-  var oPost = new XMLHttpRequest();
-  oPost.open("POST",URLRequest +erpGet.ERPIPAddress +":" +erpGet.ERPPort +"/" +'erpapi/VS1_Cloud_Task/Method',true);
-  oPost.setRequestHeader("database", erpGet.ERPDatabase);
-  oPost.setRequestHeader("username", erpGet.ERPUsername);
-  oPost.setRequestHeader("password", erpGet.ERPPassword);
-  oPost.setRequestHeader("Accept", "application/json");
-  oPost.setRequestHeader("Accept", "application/html");
-  oPost.setRequestHeader("Content-type", "application/json");
-  // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
-  oPost.send(myCustomizeString);
-  // sideBarService.saveNewCustomFields(myCustomizeString).then(function (data) {
-  //   console.log('new custom add.......', data)
-  // }).catch(function (err) {
-  //   console.log('new custom add.......', err)
-  // });
-  ///////////////////////////
-
-
   // $('#lotNumberModal .btnSelect').removeClass('d-none');
   // $('#lotNumberModal .btnAutoFill').addClass('d-none');
   $("#serialNumberModal .btnSelect").removeClass("d-none");
@@ -155,6 +103,54 @@ Template.new_invoice.onRendered(() => {
   }
 
   let templateObject = Template.instance();
+
+  // set initial table rest_data
+  function init_reset_data() {
+    let reset_data = [
+      { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
+      { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
+      { index: 2, label: "Qty", class: "Qty", width: "50", active: true, display: true },
+      { index: 3, label: "Ordered", class: "Ordered", width: "75", active: false, display: true },
+      { index: 4, label: "Shipped", class: "Shipped", width: "75", active: false, display: true },
+      { index: 5, label: "BO", class: "BackOrder", width: "75", active: false, display: true },
+      { index: 6, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
+      { index: 7, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
+      { index: 8, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
+      { index: 9, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
+      { index: 10, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
+      { index: 11, label: "Tax Rate", class: "TaxRate", width: "91", active: false, display: true },
+      { index: 12, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
+      { index: 13, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
+      { index: 14, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
+      { index: 15, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
+      { index: 16, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
+      { index: 17, label: "Units", class: "Units", width: "95", active: false, display: true },
+    ];
+
+    let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+    let isBOnShippedQty = Session.get("CloudSalesQtyOnly");
+    if (isBOnShippedQty) {
+      reset_data[2].display = true; 
+      reset_data[3].display = false;
+      reset_data[4].display = false;
+      reset_data[5].display = false;
+    } else {
+      reset_data[2].display = false; 
+      reset_data[3].display = true;
+      reset_data[4].display = true;
+      reset_data[5].display = true;
+    }
+    if(isBatchSerialNoTracking) {
+      reset_data[14].display = true; 
+    } else {
+      reset_data[14].display = false; 
+    }
+
+    let templateObject = Template.instance();
+    templateObject.reset_data.set(reset_data);
+  }
+  init_reset_data();
+  // set initial table rest_data
 
   templateObject.getTemplateInfoNew = function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -4337,18 +4333,16 @@ Template.new_invoice.onRendered(() => {
                     let appointments = JSON.parse(dataObject[0].data);
                     let allAppointments = appointments.tappointmentex;
                     let apptId = FlowRouter.current().queryParams.apptId;
-                    let appointmentAttachments= appointmentAttachments = allAppointments.find(
-                      (x) => x.fields.ID === parseInt(apptId)
-                    ).fields.Attachments;
-                    if(appointmentAttachments.length >0){
-                        templateObject.attachmentCount.set(
-                            appointmentAttachments.length
-                          );
-                          templateObject.uploadedFiles.set(
-                            appointmentAttachments
-                          );
+                    let appointmentAttachments = (appointmentAttachments =
+                      allAppointments.find(
+                        (x) => x.fields.ID === parseInt(apptId)
+                      ).fields.Attachments);
+                    if (appointmentAttachments.length > 0) {
+                      templateObject.attachmentCount.set(
+                        appointmentAttachments.length
+                      );
+                      templateObject.uploadedFiles.set(appointmentAttachments);
                     }
-
                   });
                   templateObject.singleInvoiceData.set(useData[d]);
                   let lineItems = [];
@@ -12706,13 +12700,13 @@ Template.new_invoice.onRendered(function () {
                   fnDrawCallback: function (oSettings) {
                     // $('.dataTables_paginate').css('display', 'none');
                   },
-                  language: { search: "",searchPlaceholder: "Search List..." },
+                  language: { search: "", searchPlaceholder: "Search List..." },
                   fnInitComplete: function () {
                     $(
-                      "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+                      "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                     ).insertAfter("#tblInventory_filter");
                     $(
-                      "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                      "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                     ).insertAfter("#tblInventory_filter");
                   },
                 });
@@ -12815,13 +12809,13 @@ Template.new_invoice.onRendered(function () {
                 fnDrawCallback: function (oSettings) {
                   // $('.dataTables_paginate').css('display', 'none');
                 },
-                language: { search: "",searchPlaceholder: "Search List..." },
+                language: { search: "", searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
-                    "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+                    "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                   ).insertAfter("#tblInventory_filter");
                   $(
-                    "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                    "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                   ).insertAfter("#tblInventory_filter");
                 },
               })
@@ -13001,13 +12995,13 @@ Template.new_invoice.onRendered(function () {
                 fnDrawCallback: function (oSettings) {
                   // $('.dataTables_paginate').css('display', 'none');
                 },
-                language: { search: "",searchPlaceholder: "Search List..." },
+                language: { search: "", searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
-                    "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+                    "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                   ).insertAfter("#tblInventory_filter");
                   $(
-                    "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                    "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                   ).insertAfter("#tblInventory_filter");
                 },
               });
@@ -13084,13 +13078,13 @@ Template.new_invoice.onRendered(function () {
                 fnDrawCallback: function (oSettings) {
                   // $('.dataTables_paginate').css('display', 'none');
                 },
-                language: { search: "",searchPlaceholder: "Search List..." },
+                language: { search: "", searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
-                    "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+                    "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                   ).insertAfter("#tblTaxRate_filter");
                   $(
-                    "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                    "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                   ).insertAfter("#tblTaxRate_filter");
                 },
               });
@@ -13157,13 +13151,13 @@ Template.new_invoice.onRendered(function () {
               fnDrawCallback: function (oSettings) {
                 // $('.dataTables_paginate').css('display', 'none');
               },
-              language: { search: "",searchPlaceholder: "Search List..." },
+              language: { search: "", searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
-                  "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+                  "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                 ).insertAfter("#tblTaxRate_filter");
                 $(
-                  "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                  "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                 ).insertAfter("#tblTaxRate_filter");
               },
             });
@@ -13231,13 +13225,13 @@ Template.new_invoice.onRendered(function () {
               fnDrawCallback: function (oSettings) {
                 // $('.dataTables_paginate').css('display', 'none');
               },
-              language: { search: "",searchPlaceholder: "Search List..." },
+              language: { search: "", searchPlaceholder: "Search List..." },
               fnInitComplete: function () {
                 $(
-                  "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+                  "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                 ).insertAfter("#tblTaxRate_filter");
                 $(
-                  "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                  "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                 ).insertAfter("#tblTaxRate_filter");
               },
             });
@@ -13306,159 +13300,82 @@ Template.new_invoice.onRendered(function () {
 
   // custom field displaysettings
   function initCustomFieldDisplaySettings(data, listType) {
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    showCustomFieldDisplaySettings(reset_data);
+
+    try {
+      getVS1Data("VS1_Customize").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+            reset_data = data.ProcessLog.CustomLayout.Columns;
+            showCustomFieldDisplaySettings(reset_data);
+          }).catch(function (err) {
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data); 
+          // handle process here
+        }
+      });
+    } catch (error) {
+    } 
+    return; 
+  }
+
+  function showCustomFieldDisplaySettings(reset_data) {
+
     let custFields = [];
     let customData = {};
-    let reset_data = [];
-
-    if (Session.get("CloudSalesQtyOnly")) {
-      reset_data = [
-        { label: "Product Name", class: "colProductName", active: true },
-        { label: "Description", class: "colDescription", active: true },
-        { label: "Qty", class: "colQty", active: true },
-        { label: "Ordered", class: "colOrdered", active: false },
-        { label: "Shipped", class: "colShipped", active: false },
-        { label: "BO", class: "colBO", active: false },
-        { label: "Unit Price (Ex)", class: "colUnitPrice", active: true },
-        { label: "Unit Price (Inc)", class: "colUnitPriceInc", active: false },
-        { label: "Disc %", class: "colDiscount", active: true },
-        { label: "Cost Price", class: "colCostPrice", active: false },
-        {
-          label: "SalesLines CustField1",
-          class: "colSalesLinesCustField1",
-          active: false,
-        },
-        { label: "Tax Rate", class: "colTaxRate", active: false },
-        { label: "Tax Code", class: "colTaxCode", active: true },
-        { label: "Tax Amt", class: "colTaxAmount", active: true },
-        { label: "Serial/Lot No", class: "colSerialNo", active: true },
-        { label: "Amount (Ex)", class: "colAmount", active: true },
-        { label: "Amount (Inc)", class: "colAmountInc", active: false },
-        { label: "Units", class: "colUOM", active: false },
-      ];
-    } else {
-      reset_data = [
-        { label: "Product Name", class: "colProductName", active: true },
-        { label: "Description", class: "colDescription", active: true },
-        { label: "Qty", class: "colQty", active: false },
-        { label: "Ordered", class: "colOrdered", active: true },
-        { label: "Shipped", class: "colShipped", active: true },
-        { label: "BO", class: "colBO", active: true },
-        { label: "Unit Price (Ex)", class: "colUnitPrice", active: true },
-        { label: "Unit Price (Inc)", class: "colUnitPriceInc", active: false },
-        { label: "Disc %", class: "colDiscount", active: true },
-        { label: "Cost Price", class: "colCostPrice", active: false },
-        {
-          label: "SalesLines CustField1",
-          class: "colSalesLinesCustField1",
-          active: false,
-        },
-        { label: "Tax Rate", class: "colTaxRate", active: false },
-        { label: "Tax Code", class: "colTaxCode", active: true },
-        { label: "Tax Amt", class: "colTaxAmount", active: true },
-        { label: "Serial/Lot No", class: "colSerialNo", active: true },
-        { label: "Amount (Ex)", class: "colAmount", active: true },
-        { label: "Amount (Inc)", class: "colAmountInc", active: false },
-        { label: "Units", class: "colUOM", active: false },
-      ];
-    }
     let customFieldCount = reset_data.length;
 
-    // tempcode
     for (let r = 0; r < customFieldCount; r++) {
       customData = {
         active: reset_data[r].active,
-        id: "",
-        custfieldlabel: reset_data[r].label,
-        datatype: "",
-        isempty: true,
-        iscombo: false,
+        id: reset_data[r].index,
+        custfieldlabel: reset_data[r].label, 
+        class: reset_data[r].class,
+        display: reset_data[r].display,
+        width: reset_data[r].width ? reset_data[r].width : ''
       };
       custFields.push(customData);
     }
     tempObj.displayfields.set(custFields);
-    return;
-    // tempcode
-
-    /*
-      for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-        if (data.tcustomfieldlist[x].fields.ListType == listType) {
-          customData = {
-            active: data.tcustomfieldlist[x].fields.Active || false,
-            id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-            custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-            datatype: data.tcustomfieldlist[x].fields.DataType || "",
-            isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-            iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-            dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-          };
-          custFields.push(customData);
-        }
-      }
-
-      let remainder = customFieldCount - data.tcustomfieldlist.length;
-      for (let r = 0; r < remainder; r++) {
-        customData = {
-          active: reset_data[data.tcustomfieldlist.length + r ].active,
-          id: 0,
-          custfieldlabel: reset_data[data.tcustomfieldlist.length + r ].label,
-          datatype: "",
-          isempty: false,
-          iscombo: false,
-          dropdown: null,
-        };
-        custFields.push(customData);
-      }
-
-      if (custFields.length < customFieldCount) {
-        let remainder = customFieldCount - custFields.length;
-        for (let r = 0; r < remainder; r++) {
-          customData = {
-            active: false,
-            id: "",
-            custfieldlabel: "",
-            datatype: "",
-            isempty: true,
-            iscombo: false,
-          };
-          custFields.push(customData);
-        }
-      }
-      */
-    tempObj.displayfields.set(custFields);
   }
-  initCustomFieldDisplaySettings("", "ltSaleslines");
-  tempObj.getAllCustomFieldDisplaySettings = function () {
-    let listType = "ltSaleslines"; // tempcode until InvoiceLines is added on backend
-    try {
-      getVS1Data("TltSaleslines").then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService
-            .getAllCustomFieldsWithQuery(listType)
-            .then(function (data) {
-              initCustomFieldDisplaySettings(data, listType);
-              addVS1Data("TltSaleslines", JSON.stringify(data));
-            });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          if (data.tcustomfieldlist.length == 0) {
-            sideBarService
-              .getAllCustomFieldsWithQuery(listType)
-              .then(function (data) {
-                initCustomFieldDisplaySettings(data, listType);
-                addVS1Data("TltSaleslines", JSON.stringify(data));
-              });
-          } else {
-            initCustomFieldDisplaySettings(data, listType);
-            sideBarService
-              .getAllCustomFieldsWithQuery(listType)
-              .then(function (data) {
-                addVS1Data("TltSaleslines", JSON.stringify(data));
-              });
-          }
-        }
-      });
-    } catch (error) {}
-  };
+
+  initCustomFieldDisplaySettings("", "tblInvoiceLine");
+
+  // tempObj.getAllCustomFieldDisplaySettings = function () {
+  //   let listType = "ltSaleslines"; // tempcode until InvoiceLines is added on backend
+  //   try {
+  //     getVS1Data("TltSaleslines").then(function (dataObject) {
+  //       if (dataObject.length == 0) {
+  //         sideBarService
+  //           .getAllCustomFieldsWithQuery(listType)
+  //           .then(function (data) {
+  //             // initCustomFieldDisplaySettings(data, listType);
+  //             addVS1Data("TltSaleslines", JSON.stringify(data));
+  //           });
+  //       } else {
+  //         let data = JSON.parse(dataObject[0].data);
+  //         if (data.tcustomfieldlist.length == 0) {
+  //           sideBarService
+  //             .getAllCustomFieldsWithQuery(listType)
+  //             .then(function (data) {
+  //               // initCustomFieldDisplaySettings(data, listType);
+  //               addVS1Data("TltSaleslines", JSON.stringify(data));
+  //             });
+  //         } else {
+  //           // initCustomFieldDisplaySettings(data, listType);
+  //           sideBarService
+  //             .getAllCustomFieldsWithQuery(listType)
+  //             .then(function (data) {
+  //               addVS1Data("TltSaleslines", JSON.stringify(data));
+  //             });
+  //         }
+  //       }
+  //     });
+  //   } catch (error) {}
+  // };
 
   //tempObj.getAllCustomFieldDisplaySettings();
 });
@@ -15432,34 +15349,47 @@ Template.new_invoice.events({
     });
     //}
   },
-  "click .th.colAmountEx": function (event) {
-    $(".colAmountEx").addClass("hiddenColumn");
-    $(".colAmountEx").removeClass("showColumn");
+  'click .th.colAmountEx': function(event) {
+    $('.colAmountEx').addClass('hiddenColumn');
+    $('.colAmountEx').removeClass('showColumn');
 
-    $(".colAmountInc").addClass("showColumn");
-    $(".colAmountInc").removeClass("hiddenColumn");
-  },
-  "click .th.colAmountInc": function (event) {
-    $(".colAmountInc").addClass("hiddenColumn");
-    $(".colAmountInc").removeClass("showColumn");
+    $('.colAmountInc').addClass('showColumn');
+    $('.colAmountInc').removeClass('hiddenColumn');
 
-    $(".colAmountEx").addClass("showColumn");
-    $(".colAmountEx").removeClass("hiddenColumn");
-  },
-  "click .th.colUnitPriceEx": function (event) {
-    $(".colUnitPriceEx").addClass("hiddenColumn");
-    $(".colUnitPriceEx").removeClass("showColumn");
+    $('.chkAmountEx').prop("checked", false);
+    $('.chkAmountInc').prop("checked", true);
+},
+'click .th.colAmountInc': function(event) {
+    $('.colAmountInc').addClass('hiddenColumn');
+    $('.colAmountInc').removeClass('showColumn');
 
-    $(".colUnitPriceInc").addClass("showColumn");
-    $(".colUnitPriceInc").removeClass("hiddenColumn");
-  },
-  "click .th.colUnitPriceInc": function (event) {
-    $(".colUnitPriceInc").addClass("hiddenColumn");
-    $(".colUnitPriceInc").removeClass("showColumn");
+    $('.colAmountEx').addClass('showColumn');
+    $('.colAmountEx').removeClass('hiddenColumn');
 
-    $(".colUnitPriceEx").addClass("showColumn");
-    $(".colUnitPriceEx").removeClass("hiddenColumn");
-  },
+    $('.chkAmountEx').prop("checked", true);
+    $('.chkAmountInc').prop("checked", false);
+},
+'click .th.colUnitPriceEx': function(event) {
+    $('.colUnitPriceEx').addClass('hiddenColumn');
+    $('.colUnitPriceEx').removeClass('showColumn');
+
+    $('.colUnitPriceInc').addClass('showColumn');
+    $('.colUnitPriceInc').removeClass('hiddenColumn');
+
+    $('.chkUnitPriceEx').prop("checked", false);
+    $('.chkUnitPriceInc').prop("checked", true);
+},
+'click .th.colUnitPriceInc': function(event) {
+    $('.colUnitPriceInc').addClass('hiddenColumn');
+    $('.colUnitPriceInc').removeClass('showColumn');
+
+    $('.colUnitPriceEx').addClass('showColumn');
+    $('.colUnitPriceEx').removeClass('hiddenColumn');
+
+    $('.chkUnitPriceEx').prop("checked", true);
+    $('.chkUnitPriceInc').prop("checked", false);
+
+},
   "click #btnCustomFileds": function (event) {
     var x = document.getElementById("divCustomFields");
     if (x.style.display === "none") {
@@ -15898,9 +15828,9 @@ Template.new_invoice.events({
       taxDetail.CodeName,
       `${taxDetail.Rate * 100}%`,
       "Selling Price",
-      `$${priceTotal}`,
-      `$${taxTotal}`,
-      `$${priceTotal + taxTotal}`,
+      `$${priceTotal.toFixed(3)}`,
+      `$${taxTotal.toFixed(3)}`,
+      `$${(priceTotal + taxTotal).toFixed(3)}`,
     ]);
     if (taxDetail.Lines) {
       taxDetail.Lines.map((line) => {
@@ -15911,7 +15841,9 @@ Template.new_invoice.events({
           lineDescription = subTaxCodes.find(
             (v) => v.codename === line.SubTaxCode
           );
-          lineDescription = lineDescription.description;
+          if(lineDescription) {
+            lineDescription = lineDescription.description;
+          }
         }
 
         taxDetailTableData.push([
@@ -15921,7 +15853,7 @@ Template.new_invoice.events({
           `${line.Percentage}%`,
           line.PercentageOn,
           "",
-          `$${(priceTotal * line.Percentage) / 100}`,
+          `$${((priceTotal * line.Percentage) / 100).toFixed(3)}`,
           "",
         ]);
       });
@@ -15976,13 +15908,13 @@ Template.new_invoice.events({
           info: true,
           responsive: true,
           fnDrawCallback: function (oSettings) {},
-          language: { search: "",searchPlaceholder: "Search List..." },
+          language: { search: "", searchPlaceholder: "Search List..." },
           fnInitComplete: function () {
             $(
-              "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+              "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
             ).insertAfter("#tblTaxDetail_filter");
             $(
-              "<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+              "<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
             ).insertAfter("#tblTaxDetail_filter");
           },
         });
@@ -18493,285 +18425,310 @@ Template.new_invoice.events({
     }
   },
   // display settings
-  "click .chkProductName": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colProductName").css("display", "table-cell");
-      $(".colProductName").css("padding", ".75rem");
-      $(".colProductName").css("vertical-align", "top");
+  'click .chkProductName': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colProductName').addClass('showColumn');
+      $('.colProductName').removeClass('hiddenColumn');
     } else {
-      $(".colProductName").css("display", "none");
+      $('.colProductName').addClass('hiddenColumn');
+      $('.colProductName').removeClass('showColumn');
     }
   },
-  "click .chkDescription": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colDescription").css("display", "table-cell");
-      $(".colDescription").css("padding", ".75rem");
-      $(".colDescription").css("vertical-align", "top");
+  'click .chkDescription': function(event) { 
+    if ($(event.target).is(':checked')) {
+      $('.colDescription').addClass('showColumn');
+      $('.colDescription').removeClass('hiddenColumn');
     } else {
-      $(".colDescription").css("display", "none");
+      $('.colDescription').addClass('hiddenColumn');
+      $('.colDescription').removeClass('showColumn');
     }
   },
-  "click .chkQty": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colQty").css("display", "table-cell");
-      $(".colQty").css("padding", ".75rem");
-      $(".colQty").css("vertical-align", "top");
+  'click .chkQty': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colQty').addClass('showColumn');
+      $('.colQty').removeClass('hiddenColumn');
     } else {
-      $(".colQty").css("display", "none");
+      $('.colQty').addClass('hiddenColumn');
+      $('.colQty').removeClass('showColumn');
     }
   },
-  "click .chkBackOrder": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colBO").css("display", "table-cell");
-      $(".colBO").css("padding", ".75rem");
-      $(".colBO").css("vertical-align", "top");
+  'click .chkCostPrice': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colCostPrice').addClass('showColumn');
+      $('.colCostPrice').removeClass('hiddenColumn');
     } else {
-      $(".colBO").css("display", "none");
+      $('.colCostPrice').addClass('hiddenColumn');
+      $('.colCostPrice').removeClass('showColumn');
     }
   },
-  "click .chkShipped": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colShipped").css("display", "table-cell");
-      $(".colShipped").css("padding", ".75rem");
-      $(".colShipped").css("vertical-align", "top");
+  'click .chkSalesLinesCustField1': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colSalesLinesCustField1').addClass('showColumn');
+      $('.colSalesLinesCustField1').removeClass('hiddenColumn');
     } else {
-      $(".colShipped").css("display", "none");
+      $('.colSalesLinesCustField1').addClass('hiddenColumn');
+      $('.colSalesLinesCustField1').removeClass('showColumn');
     }
   },
-  "click .chkOrdered": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colOrdered").css("display", "table-cell");
-      $(".colOrdered").css("padding", ".75rem");
-      $(".colOrdered").css("vertical-align", "top");
+  'click .chkTaxRate': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colTaxRate').addClass('showColumn');
+      $('.colTaxRate').removeClass('hiddenColumn');
     } else {
-      $(".colOrdered").css("display", "none");
+      $('.colTaxRate').addClass('hiddenColumn');
+      $('.colTaxRate').removeClass('showColumn');
     }
   },
-
-  "click .chkCostPrice": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colCostPrice").css("display", "table-cell");
-      $(".colCostPrice").css("padding", ".75rem");
-      $(".colCostPrice").css("vertical-align", "top");
+  // displaysettings
+  'click .chkTaxCode': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colTaxCode').addClass('showColumn');
+      $('.colTaxCode').removeClass('hiddenColumn');
     } else {
-      $(".colCostPrice").css("display", "none");
+      $('.colTaxCode').addClass('hiddenColumn');
+      $('.colTaxCode').removeClass('showColumn');
     }
   },
-  "click .chkSalesLinesCustField1": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colSalesLinesCustField1").css("display", "table-cell");
-      $(".colSalesLinesCustField1").css("padding", ".75rem");
-      $(".colSalesLinesCustField1").css("vertical-align", "top");
+  'click .chkTaxAmount': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colTaxAmount').addClass('showColumn');
+      $('.colTaxAmount').removeClass('hiddenColumn');
     } else {
-      $(".colSalesLinesCustField1").css("display", "none");
-    }
-  },
-  "click .chkTaxRate": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colTaxRate").css("display", "table-cell");
-      $(".colTaxRate").css("padding", ".75rem");
-      $(".colTaxRate").css("vertical-align", "top");
-    } else {
-      $(".colTaxRate").css("display", "none");
-    }
-  },
-  "click .chkUnits": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colUOM").css("display", "table-cell");
-      $(".colUOM").css("padding", ".75rem");
-      $(".colUOM").css("vertical-align", "top");
-    } else {
-      $(".colUOM").css("display", "none");
-    }
-  },
-  "click .chkTaxCode": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colTaxCode").css("display", "table-cell");
-      $(".colTaxCode").css("padding", ".75rem");
-      $(".colTaxCode").css("vertical-align", "top");
-    } else {
-      $(".colTaxCode").css("display", "none");
+      $('.colTaxAmount').addClass('hiddenColumn');
+      $('.colTaxAmount').removeClass('showColumn');
     }
   },
 
-  "click .chkTaxAmount": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colTaxAmount").css("display", "table-cell");
-      $(".colTaxAmount").css("padding", ".75rem");
-      $(".colTaxAmount").css("vertical-align", "top");
-    } else {
-      $(".colTaxAmount").css("display", "none");
+  'click .chkAmountEx': function (event) {
+    if ($(event.target).is(':checked')) {  
+        $('.chkAmountInc').prop("checked", false); 
+
+        $('.colAmountInc').addClass('hiddenColumn');
+        $('.colAmountInc').removeClass('showColumn');
+
+        $('.colAmountEx').addClass('showColumn');
+        $('.colAmountEx').removeClass('hiddenColumn');
+      } else { 
+        $('.chkAmountInc').prop("checked", true); 
+
+        $('.colAmountEx').addClass('hiddenColumn');
+        $('.colAmountEx').removeClass('showColumn');
+
+        $('.colAmountInc').addClass('showColumn');
+        $('.colAmountInc').removeClass('hiddenColumn');
+    }
+  },
+  'click .chkAmountInc': function(event) {
+    if ($(event.target).is(':checked')) { 
+        $('.chkAmountEx').prop("checked", false); 
+
+        $('.colAmountEx').addClass('hiddenColumn');
+        $('.colAmountEx').removeClass('showColumn');
+
+        $('.colAmountInc').addClass('showColumn');
+        $('.colAmountInc').removeClass('hiddenColumn');
+    } else { 
+        $('.chkAmountEx').prop("checked", true); 
+
+        $('.colAmountInc').addClass('hiddenColumn');
+        $('.colAmountInc').removeClass('showColumn');
+
+        $('.colAmountEx').addClass('showColumn');
+        $('.colAmountEx').removeClass('hiddenColumn');
     }
   },
 
-  "click .chkAmount": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colAmount").css("display", "table-cell");
-      $(".colAmount").css("padding", ".75rem");
-      $(".colAmount").css("vertical-align", "top");
+  'click .chkUnitPriceEx': function (event) {
+    if ($(event.target).is(':checked')) { 
+        $('.chkUnitPriceInc').prop("checked", false); 
 
-      $(".chkAmountInc").prop("checked", false);
-      $(".colAmountInc").css("display", "none");
-    } else {
-      $(".colAmount").css("display", "none");
+        $('.colUnitPriceInc').addClass('hiddenColumn');
+        $('.colUnitPriceInc').removeClass('showColumn');
 
-      $(".chkAmountInc").prop("checked", true);
-      $(".colAmountInc").css("display", "table-cell");
-      $(".colAmountInc").css("padding", ".75rem");
-      $(".colAmountInc").css("vertical-align", "top");
+        $('.colUnitPriceEx').addClass('showColumn');
+        $('.colUnitPriceEx').removeClass('hiddenColumn');
+        
+    } else { 
+        $('.chkUnitPriceInc').prop("checked", true); 
+
+        $('.colUnitPriceEx').addClass('hiddenColumn');
+        $('.colUnitPriceEx').removeClass('showColumn');
+
+        $('.colUnitPriceInc').addClass('showColumn');
+        $('.colUnitPriceInc').removeClass('hiddenColumn');
     }
   },
-  "click .chkAmountInc": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colAmountInc").css("display", "table-cell");
-      $(".colAmountInc").css("padding", ".75rem");
-      $(".colAmountInc").css("vertical-align", "top");
+  'click .chkUnitPriceInc': function(event) {
+      if ($(event.target).is(':checked')) { 
+        $('.chkUnitPriceEx').prop("checked", false); 
 
-      $(".chkAmount").prop("checked", false);
-      $(".colAmount").css("display", "none");
-    } else {
-      $(".colAmountInc").css("display", "none");
+        $('.colUnitPriceEx').addClass('hiddenColumn');
+        $('.colUnitPriceEx').removeClass('showColumn');
 
-      $(".chkAmount").prop("checked", true);
-      $(".colAmount").css("display", "table-cell");
-      $(".colAmount").css("padding", ".75rem");
-      $(".colAmount").css("vertical-align", "top");
-    }
+        $('.colUnitPriceInc').addClass('showColumn');
+        $('.colUnitPriceInc').removeClass('hiddenColumn');
+      } else { 
+        $('.chkUnitPriceEx').prop("checked", true); 
+
+        $('.colUnitPriceInc').addClass('hiddenColumn');
+        $('.colUnitPriceInc').removeClass('showColumn');
+
+        $('.colUnitPriceEx').addClass('showColumn');
+        $('.colUnitPriceEx').removeClass('hiddenColumn');
+      }
   },
 
-  "click .chkUnitPrice": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colUnitPrice").css("display", "table-cell");
-      $(".colUnitPrice").css("padding", ".75rem");
-      $(".colUnitPrice").css("vertical-align", "top");
-
-      $(".chkUnitPriceInc").prop("checked", false);
-      $(".colUnitPriceInc").css("display", "none");
+  'click .chkDiscount': function(event) {
+    if ($(event.target).is(':checked')) {
+        // $('.colDiscount').css('display', 'table-cell');
+        // $('.colDiscount').css('padding', '.75rem');
+        // $('.colDiscount').css('vertical-align', 'top');
+      $('.colDiscount').addClass('showColumn');
+      $('.colDiscount').removeClass('hiddenColumn');
     } else {
-      $(".colUnitPrice").css("display", "none");
-
-      $(".chkUnitPriceInc").prop("checked", true);
-      $(".colUnitPriceInc").css("display", "table-cell");
-      $(".colUnitPriceInc").css("padding", ".75rem");
-      $(".colUnitPriceInc").css("vertical-align", "top");
+        // $('.colDiscount').css('display', 'none');
+        $('.colDiscount').addClass('hiddenColumn');
+        $('.colDiscount').removeClass('showColumn');
     }
   },
-  "click .chkUnitPriceInc": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colUnitPriceInc").css("display", "table-cell");
-      $(".colUnitPriceInc").css("padding", ".75rem");
-      $(".colUnitPriceInc").css("vertical-align", "top");
-
-      $(".chkUnitPrice").prop("checked", false);
-      $(".colUnitPrice").css("display", "none");
+  'click .chkSerialNo': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colSerialNo').addClass('showColumn');
+      $('.colSerialNo').removeClass('hiddenColumn');
     } else {
-      $(".colUnitPriceInc").css("display", "none");
-
-      $(".chkUnitPrice").prop("checked", true);
-      $(".colUnitPrice").css("display", "table-cell");
-      $(".colUnitPrice").css("padding", ".75rem");
-      $(".colUnitPrice").css("vertical-align", "top");
+      $('.colSerialNo').addClass('hiddenColumn');
+      $('.colSerialNo').removeClass('showColumn');
     }
   },
-
-  "click .chkDiscount": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colDiscount").css("display", "table-cell");
-      $(".colDiscount").css("padding", ".75rem");
-      $(".colDiscount").css("vertical-align", "top");
+  "click .chkBackOrder": function (event) { 
+    if ($(event.target).is(':checked')) {
+      $('.colBackOrder').addClass('showColumn');
+      $('.colBackOrder').removeClass('hiddenColumn');
     } else {
-      $(".colDiscount").css("display", "none");
+      $('.colBackOrder').addClass('hiddenColumn');
+      $('.colBackOrder').removeClass('showColumn');
     }
   },
-  "click .chkSerialNo": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colSerialNo").css("display", "table-cell");
-      $(".colSerialNo").css("padding", ".75rem");
-      $(".colSerialNo").css("vertical-align", "top");
+  "click .chkShipped": function (event) { 
+    if ($(event.target).is(':checked')) {
+      $('.colShipped').addClass('showColumn');
+      $('.colShipped').removeClass('hiddenColumn');
     } else {
-      $(".colSerialNo").css("display", "none");
+      $('.colShipped').addClass('hiddenColumn');
+      $('.colShipped').removeClass('showColumn');
+    }
+  },
+  "click .chkOrdered": function (event) { 
+    if ($(event.target).is(':checked')) {
+      $('.colOrdered').addClass('showColumn');
+      $('.colOrdered').removeClass('hiddenColumn');
+    } else {
+      $('.colOrdered').addClass('hiddenColumn');
+      $('.colOrdered').removeClass('showColumn');
+    }
+  },
+  "click .chkUnits": function (event) { 
+    if ($(event.target).is(':checked')) {
+      $('.colUnits').addClass('showColumn');
+      $('.colUnits').removeClass('hiddenColumn');
+    } else {
+      $('.colUnits').addClass('hiddenColumn');
+      $('.colUnits').removeClass('showColumn');
     }
   },
   // display settings
 
-  "change .rngRangeProductName": function (event) {
+  'change .rngRangeProductName': function(event) {
     let range = $(event.target).val();
-    $(".spWidthProductName").html(range + "%");
-    $(".colProductName").css("width", range + "%");
-  },
-  "change .rngRangeDescription": function (event) {
+    $(".spWidthProductName").html(range);
+    $('.colProductName').css('width', range);
+},
+'change .rngRangeDescription': function(event) {
     let range = $(event.target).val();
-    $(".spWidthDescription").html(range + "%");
-    $(".colDescription").css("width", range + "%");
-  },
-  "change .rngRangeQty": function (event) {
+    $(".spWidthDescription").html(range);
+    $('.colDescription').css('width', range);
+},
+'change .rngRangeQty': function(event) {
     let range = $(event.target).val();
-    $(".spWidthQty").html(range + "%");
-    $(".colQty").css("width", range + "%");
-  },
-  "change .rngRangeUnitPrice": function (event) {
+    $(".spWidthQty").html(range);
+    $('.colQty').css('width', range);
+},
+'change .rngRangeUnitPriceInc': function(event) {
     let range = $(event.target).val();
-    $(".spWidthUnitPrice").html(range + "%");
-    $(".colUnitPrice").css("width", range + "%");
-  },
-  "change .rngRangeTaxRate": function (event) {
+    $(".spWidthUnitPrice").html(range);
+    $('.colUnitPriceInc').css('width', range);
+},
+'change .rngRangeUnitPriceEx': function(event) {
     let range = $(event.target).val();
-    $(".spWidthTaxRate").html(range + "%");
-    $(".colTaxRate").css("width", range + "%");
-  },
-  "change .rngRangeAmountInc": function (event) {
+    $('.colUnitPriceEx').css('width', range);
+},
+'change .rngRangeTaxRate': function(event) {
     let range = $(event.target).val();
-    //$(".spWidthAmount").html(range + '%');
-    $(".colAmountInc").css("width", range + "%");
-  },
-  "change .rngRangeAmountEx": function (event) {
+    $(".spWidthTaxRate").html(range);
+    $('.colTaxRate').css('width', range);
+},
+'change .rngRangeAmountInc': function (event) {
     let range = $(event.target).val();
-    //$(".spWidthAmount").html(range + '%');
-    $(".colAmountEx").css("width", range + "%");
-  },
-  "change .rngRangeTaxAmount": function (event) {
+    //$(".spWidthAmount").html(range);
+    $('.colAmountInc').css('width', range);
+},
+'change .rngRangeAmountEx': function (event) {
     let range = $(event.target).val();
-    //$(".spWidthAmount").html(range + '%');
-    $(".colTaxAmount").css("width", range + "%");
-  },
-  "change .rngRangeDiscount": function (event) {
+    //$(".spWidthAmount").html(range);
+    $('.colAmountEx').css('width', range);
+},
+'change .rngRangeTaxAmount': function (event) {
     let range = $(event.target).val();
-    $(".colDiscount").css("width", range + "%");
-  },
-  "change .rngRangeSerialLot": function (event) {
+    //$(".spWidthAmount").html(range);
+    $('.colTaxAmount').css('width', range);
+},
+'change .rngRangeDiscount': function (event) {
     let range = $(event.target).val();
-    $(".colSerialNo").css("width", range + "%");
-  },
-  "change .rngRangeTaxCode": function (event) {
+    $('.colDiscount').css('width', range);
+},
+'change .rngRangeSerialNo': function (event) {
     let range = $(event.target).val();
-    $(".colTaxCode").css("width", range + "%");
-  },
-  "change .rngRangeCostPrice": function (event) {
+    $('.colSerialNo').css('width', range);
+},
+'change .rngRangeTaxCode': function (event) {
     let range = $(event.target).val();
-    $(".spWidthCostPrice").html(range + "%");
-    $(".colCostPrice").css("width", range + "%");
-  },
-  "change .rngRangeSalesLinesCustField1": function (event) {
+    $('.colTaxCode').css('width', range);
+},
+'change .rngRangeCostPrice': function(event) {
     let range = $(event.target).val();
-    $(".spWidthSalesLinesCustField1").html(range + "%");
-    $(".colSalesLinesCustField1").css("width", range + "%");
-  },
-  "change .rngRangeUnits": function (event) {
-    let range = $(event.target).val();
-    // $(".spWidthAmount").html(range + '%');
-    $(".colUOM").css("width", range + "%");
-  },
+    // $(".spWidthCostPrice").html(range);
+    $('.colCostPrice').css('width', range);
+},
+'change .rngRangeSalesLinesCustField1': function(event) {
+    let range = $(event.target).val(); 
+    $('.colSalesLinesCustField1').css('width', range);
+},
+
+'change .rngRangeUnits': function(event) {
+    let range = $(event.target).val(); 
+    $('.colUnits').css('width', range);
+},
+'change .rngRangeOrdered': function(event) {
+    let range = $(event.target).val(); 
+    $('.colOrdered').css('width', range);
+},
+'change .rngRangeShipped': function(event) {
+    let range = $(event.target).val(); 
+    $('.colShipped').css('width', range);
+},
+'change .rngRangeBackOrder': function(event) {
+    let range = $(event.target).val(); 
+    $('.colBackOrder').css('width', range);
+},
   "blur .divcolumn": function (event) {
     let columData = $(event.target).html();
     let columHeaderUpdate = $(event.target).attr("valueupdate");
-    $("" + columHeaderUpdate + "").html(columData);
+    $("th.col" + columHeaderUpdate + "").html(columData);
   },
 
   // custom field displaysettings
   "click .btnSaveGridSettings": function (event) {
     let lineItems = [];
-    let organisationService = new OrganisationService();
-
     $(".fullScreenSpin").css("display", "inline-block");
 
     $(".displaySettings").each(function (index) {
@@ -18787,150 +18744,87 @@ Template.new_invoice.events({
         colHidden = false;
       }
       let lineItemObj = {
-        index: index,
+        index: parseInt(fieldID),
         label: colTitle,
-        hidden: colHidden,
-        width: colWidth,
-        thclass: colthClass,
+        active: colHidden,
+        width: parseInt(colWidth),
+        class: colthClass,
+        display: true
       };
 
-      lineItems.push(lineItemObj);
-
-      if (fieldID) {
-        objDetails1 = {
-          type: "TCustomFieldList",
-          fields: {
-            Active: colHidden,
-            ID: parseInt(fieldID),
-            Description: colTitle,
-          },
-        };
-      } else {
-        objDetails1 = {
-          type: "TCustomFieldList",
-          fields: {
-            Active: colHidden,
-            DataType: "ftString",
-            Description: colTitle,
-            ListType: "ltSalesLines", // tempcode until InvoiceLines is added on backend
-          },
-        };
-      }
-
-      organisationService
-        .saveCustomField(objDetails1)
-        .then(function (objDetails) {
-          $(".fullScreenSpin").css("display", "none");
-          $("#myModal2").modal("hide");
-        })
-        .catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
-          $("#myModal2").modal("hide");
-        });
+      lineItems.push(lineItemObj); 
     });
 
-    setTimeout(() => {
-      // tempcode until InvoiceLines is added on backend
-      sideBarService
-        .getAllCustomFieldsWithQuery("ltSalesLines")
-        .then(function (data) {
-          addVS1Data("TltSaleslines", JSON.stringify(data));
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    reset_data = reset_data.filter(redata => redata.display == false);
+    lineItems.push(...reset_data);
+    lineItems.sort((a,b) => a.index - b.index); 
+
+    try {
+      let erpGet = erpDb();
+      let tableName = "tblInvoiceLine";
+      let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+      let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+      $(".fullScreenSpin").css("display", "none");
+      if(added) {
+        swal({
+          title: 'SUCCESS',
+          text: "Display settings is updated!",
+          type: 'success',
+          showCancelButton: false,
+          confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.value) {
+               $('#myModal2').modal('hide');
+            }  
         });
-    }, 8000);
+      } else {
+        swal("Something went wrong!", "", "error");
+      }
+    } catch (error) {
+      $(".fullScreenSpin").css("display", "none");
+      swal("Something went wrong!", "", "error");
+    } 
   },
 
   // custom field displaysettings
   "click .btnResetGridSettings": async function (event) {
     let templateObject = Template.instance();
-    let checkBackOrder = templateObject.includeBOnShippedQty.get();
-    let reset_data = [];
-    if (Session.get("CloudSalesQtyOnly")) {
-      reset_data = [
-        { label: "Product Name", class: "colProductName", active: true },
-        { label: "Description", class: "colDescription", active: true },
-        { label: "Qty", class: "colQty", active: true },
-        // { label: 'Ordered', class: 'colOrdered', active: false },
-        // { label: 'Shipped', class: 'colShipped', active: false },
-        // { label: 'BO', class: 'colBO', active: false },
-        { label: "Unit Price (Ex)", class: "colUnitPrice", active: true },
-        { label: "Unit Price (Inc)", class: "colUnitPriceInc", active: false },
-        { label: "Disc %", class: "colDiscount", active: true },
-        { label: "Cost Price", class: "colCostPrice", active: false },
-        {
-          label: "SalesLines CustField1",
-          class: "colSalesLinesCustField1",
-          active: false,
-        },
-        { label: "Tax Rate", class: "colTaxRate", active: false },
-        { label: "Tax Code", class: "colTaxCode", active: true },
-        { label: "Tax Amt", class: "colTaxAmount", active: true },
-        { label: "Serial/Lot No", class: "colSerialNo", active: true },
-        { label: "Amount (Ex)", class: "colAmount", active: true },
-        { label: "Amount (Inc)", class: "colAmountInc", active: false },
-        { label: "Units", class: "colUOM", active: false },
-      ];
+    let reset_data = templateObject.reset_data.get(); 
+    let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+    if(isBatchSerialNoTracking) {
+      reset_data[11].display = true; 
     } else {
-      reset_data = [
-        { label: "Product Name", class: "colProductName", active: true },
-        { label: "Description", class: "colDescription", active: true },
-        // { label: 'Qty', class: 'colQty', active: false },
-        { label: "Ordered", class: "colOrdered", active: true },
-        { label: "Shipped", class: "colShipped", active: true },
-        { label: "BO", class: "colBO", active: true },
-        { label: "Unit Price (Ex)", class: "colUnitPrice", active: true },
-        { label: "Unit Price (Inc)", class: "colUnitPriceInc", active: false },
-        { label: "Disc %", class: "colDiscount", active: true },
-        { label: "Cost Price", class: "colCostPrice", active: false },
-        {
-          label: "SalesLines CustField1",
-          class: "colSalesLinesCustField1",
-          active: false,
-        },
-        { label: "Tax Rate", class: "colTaxRate", active: false },
-        { label: "Tax Code", class: "colTaxCode", active: true },
-        { label: "Tax Amt", class: "colTaxAmount", active: true },
-        { label: "Serial/Lot No", class: "colSerialNo", active: true },
-        { label: "Amount (Ex)", class: "colAmount", active: true },
-        { label: "Amount (Inc)", class: "colAmountInc", active: false },
-        { label: "Units", class: "colUOM", active: false },
-      ];
+      reset_data[11].display = false; 
     }
-    // var datable = $('#tblInvoiceLine');
-    // var datable = $('#tblInvoiceLine').DataTable();
+    reset_data = reset_data.filter(redata => redata.display); 
 
-    // for (let r = 0; r < reset_data.length; r++) {
-    //   customData = {
-    //     active: reset_data[r].active,
-    //     id: 0,
-    //     custfieldlabel: reset_data[r].label,
-    //     datatype: "",
-    //     isempty: false,
-    //     iscombo: false,
-    //     dropdown: null,
-    //   };
-    //   custFields.push(customData);
-    // }
     $(".displaySettings").each(function (index) {
-      var $tblrow = $(this);
+      let $tblrow = $(this);
       $tblrow.find(".divcolumn").text(reset_data[index].label);
       $tblrow
         .find(".custom-control-input")
         .prop("checked", reset_data[index].active);
 
-      // var title = datable.column( index ).header();
-      var title = $("#tblInvoiceLine").find("th").eq(index);
-      $(title).html(reset_data[index].label);
+      let title = $("#tblInvoiceLine").find("th").eq(index);
+      if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
+        $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
+      } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
+        $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
+      } else {
+        $(title).html(reset_data[index].label);
+      }
 
       if (reset_data[index].active) {
-        $("." + reset_data[index].class).css("display", "table-cell");
-        $("." + reset_data[index].class).css("padding", ".75rem");
-        $("." + reset_data[index].class).css("vertical-align", "top");
+        $('.col' + reset_data[index].class).addClass('showColumn');
+        $('.col' + reset_data[index].class).removeClass('hiddenColumn');
       } else {
-        $("." + reset_data[index].class).css("display", "none");
+        $('.col' + reset_data[index].class).addClass('hiddenColumn');
+        $('.col' + reset_data[index].class).removeClass('showColumn');
       }
+      $(".rngRange" + reset_data[index].class).val('');
     });
-
-    //tempObj.displayfields.set(custFields);
   },
 
   "click .btnResetSettings": function (event) {
@@ -20246,12 +20140,9 @@ Template.new_invoice.events({
   "click .btnSnLotmodal": function (event) {
     $(".fullScreenSpin").css("display", "inline-block");
     var target = event.target;
-    let selectedProductName = $(target)
-      .closest("tr")
-      .find(".lineProductName")
-      .val();
     let selectedunit = $(target).closest("tr").find(".lineOrdered").val();
     localStorage.setItem("productItem", selectedunit);
+    let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
     localStorage.setItem("selectedProductName", selectedProductName);
     let productService = new ProductService();
     const templateObject = Template.instance();
@@ -20260,33 +20151,14 @@ Template.new_invoice.events({
     InvoiceData.LineItems.forEach((element) => {
       if (element.item == selectedProductName) {
         existProduct = true;
-        productService
-          .getProductStatus(selectedProductName)
-          .then(function (data) {
+        productService.getProductStatus(selectedProductName).then(function (data) {
             $(".fullScreenSpin").css("display", "none");
-            if (
-              data.tproductvs1[0].Batch == false &&
-              data.tproductvs1[0].SNTracking == false
-            ) {
-              swal(
-                "",
-                'The product "' +
-                  selectedProductName +
-                  '" does not track Lot Number, Bin Location or Serial Number',
-                "info"
-              );
+            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+              swal("", 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', "info");
               event.preventDefault();
               return false;
-            } else if (
-              data.tproductvs1[0].Batch == true &&
-              data.tproductvs1[0].SNTracking == false
-            ) {
-              var row = $(target)
-                .parent()
-                .parent()
-                .parent()
-                .children()
-                .index($(target).parent().parent());
+            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
               $("#lotNumberModal").attr("data-row", row + 1);
               $("#lotNumberModal").modal("show");
               if (element.pqaseriallotdata == "null") {
@@ -20298,48 +20170,26 @@ Template.new_invoice.events({
                     let shtml = "";
                     let i = 0;
                     shtml += `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
-                                    <tr><td class="text-start">#</td><td class="text-start">Lot number</td><td class="text-start">Expiry Date</td></tr>
-                                    `;
-                    for (
-                      let k = 0;
-                      k < element.pqaseriallotdata.fields.PQABatch.length;
-                      k++
-                    ) {
-                      const dates =
-                        element.pqaseriallotdata.fields.PQABatch[
-                          k
-                        ].fields.BatchExpiryDate.split(" ")[0].split("-") || "";
-                      if (
-                        element.pqaseriallotdata.fields.PQABatch[k].fields
-                          .BatchNo == "null"
-                      ) {
+                      <tr><td class="text-start">#</td><td class="text-start">Lot Number</td><td class="text-start">Expiry Date</td></tr>`;
+                    for (let k = 0; k < element.pqaseriallotdata.fields.PQABatch.length; k++) {
+                      const dates = element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate.split(" ")[0].split("-") || "";
+                      if (element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo == "null") {
                       } else {
                         i++;
-                        shtml += `
-                                            <tr>
-                                                <td></td>
-                                                <td>${Number(
-                                                  i
-                                                )}</td><td contenteditable="true" class="lineLotnumbers">${
-                          element.pqaseriallotdata.fields.PQABatch[k].fields
-                            .BatchNo
-                        }</td>
-                                                <td class="lotExpiryDate">
-                                                    <div class="form-group m-0">
-                                                        <div class="input-group date" style="cursor: pointer;">
-                                                            <input type="text" class="form-control" style="height: 25px;" value="${
-                                                              dates[2]
-                                                            }/${dates[1]}/${
-                          dates[0]
-                        }">
-                                                            <div class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            `;
+                        shtml += `<tr>
+                          <td></td>
+                          <td>${Number(i)}</td><td contenteditable="true" class="lineLotnumbers">${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo}</td>
+                          <td class="lotExpiryDate">
+                              <div class="form-group m-0">
+                                <div class="input-group date" style="cursor: pointer;">
+                                  <input type="text" class="form-control" style="height: 25px;" value="${dates[2]}/${dates[1]}/${dates[0]}">
+                                  <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                        </tr>`;
                       }
                     }
                     $("#tblLotlist tbody").html(shtml);
@@ -20360,12 +20210,7 @@ Template.new_invoice.events({
               data.tproductvs1[0].Batch == false &&
               data.tproductvs1[0].SNTracking == true
             ) {
-              var row = $(target)
-                .parent()
-                .parent()
-                .parent()
-                .children()
-                .index($(target).parent().parent());
+              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
               $("#serialNumberModal").attr("data-row", row + 1);
               $("#serialNumberModal").modal("show");
               if (element.pqaseriallotdata == "null") {
@@ -20376,27 +20221,13 @@ Template.new_invoice.events({
                   } else {
                     let shtml = "";
                     let i = 0;
-                    shtml += `
-                                    <tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
-                                    <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>
-                                    `;
-                    for (
-                      let k = 0;
-                      k < element.pqaseriallotdata.fields.PQASN.length;
-                      k++
-                    ) {
-                      if (
-                        element.pqaseriallotdata.fields.PQASN[k].fields
-                          .SerialNumber == "null"
-                      ) {
+                    shtml += `<tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
+                      <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>`;
+                    for (let k = 0;k < element.pqaseriallotdata.fields.PQASN.length;k++) {
+                      if (element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber == "null") {
                       } else {
                         i++;
-                        shtml += `
-                                            <tr><td></td><td class="lineNo">${i}</td><td contenteditable="true" class="lineSerialnumbers">${Number(
-                          element.pqaseriallotdata.fields.PQASN[k].fields
-                            .SerialNumber
-                        )}</td></tr>
-                                            `;
+                        shtml += `<tr><td></td><td class="lineNo">${i}</td><td contenteditable="true" class="lineSerialnumbers">${Number(element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber)}</td></tr>`;
                       }
                     }
                     $("#tblSeriallist tbody").html(shtml);
@@ -20414,45 +20245,18 @@ Template.new_invoice.events({
         event.preventDefault();
         return false;
       } else {
-        productService
-          .getProductStatus(selectedProductName)
-          .then(function (data) {
+        productService.getProductStatus(selectedProductName).then(function (data) {
             $(".fullScreenSpin").css("display", "none");
-            if (
-              data.tproductvs1[0].Batch == false &&
-              data.tproductvs1[0].SNTracking == false
-            ) {
-              swal(
-                "",
-                "The product " +
-                  selectedProductName +
-                  " does not track Lot Number, Bin Location or Serial Number",
-                "info"
-              );
+            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+              swal("", "The product " + selectedProductName + " does not track Lot Number, Bin Location or Serial Number", "info");
               event.preventDefault();
               return false;
-            } else if (
-              data.tproductvs1[0].Batch == true &&
-              data.tproductvs1[0].SNTracking == false
-            ) {
-              var row = $(target)
-                .parent()
-                .parent()
-                .parent()
-                .children()
-                .index($(target).parent().parent());
+            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
               $("#lotNumberModal").attr("data-row", row + 1);
               $("#lotNumberModal").modal("show");
-            } else if (
-              data.tproductvs1[0].Batch == false &&
-              data.tproductvs1[0].SNTracking == true
-            ) {
-              var row = $(target)
-                .parent()
-                .parent()
-                .parent()
-                .children()
-                .index($(target).parent().parent());
+            } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
               $("#serialNumberModal").attr("data-row", row + 1);
               $("#serialNumberModal").modal("show");
             }

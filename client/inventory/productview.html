@@ -473,7 +473,7 @@
                                         <label class="custom-control-label position-relative {{#if includeInventory}}inventorytracking{{else}}inventorynottracking{{/if}}" for="chkTrack">I Track This Product</label>
                                     </div>
                                     <div class="custom-control custom-switch d-flex">
-                                        <input class="custom-control-input" type="checkbox" id="chkBOM" name="chkBOM" checked="{{isManufactured}}">
+                                        <input class="custom-control-input" type="checkbox" id="chkBOM" name="chkBOM" checked="{{productrecord.isManufactured}}">
                                         <label class="custom-control-label position-relative" for="chkBOM">Bill Of Materials</label>
                                     </div>
                                 </div>
@@ -721,7 +721,7 @@
                             </div>
                             <div class="row mt-3">
                                 <div class="col-4">
-                                    {{#if isManufactured}}
+                                    {{#if productrecord.isManufactured}}
                                         <button class="btn btn-primary showBOMBtn" type="button" id="showBOMBtn" name="showBOMBtn">Show BOM</button>
                                     {{/if}}
                                 </div>

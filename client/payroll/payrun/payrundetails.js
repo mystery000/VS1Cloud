@@ -15,6 +15,26 @@ import GlobalFunctions from "../../GlobalFunctions";
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
+
+/**
+ * 
+ * @returns {Array} []
+ */
+const getPayRuns = () => {
+  return JSON.parse(localStorage.getItem("TPayRunHistory")) || [];
+}
+const setPayRuns = (items) => {
+  return localStorage.setItem("TPayRunHistory", JSON.stringify(items))
+}
+
+const setPayRun = () => {
+
+}
+
+const addPayRun = () => {
+
+}
+
 Template.payrundetails.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.calendarPeriod = new ReactiveVar([]);
@@ -194,6 +214,22 @@ Template.payrundetails.onRendered(function () {
      * Supernnuation
      */
 
+  templateObject.loadSuperAnnuationPerEmployee = async (employee) => {
+    let superAnnuation = 123.0;
+
+    return superAnnuation
+  }
+
+  templateObject.loadSuperAnnuations = async () => {
+    let payRunDetails  =  templateObject.payRunDetails.get();
+
+    payRunDetails.employees.forEach((e, index) => {
+      payRunDetails.employees[index].superAnnuation = templateObject.loadSuperAnnuationPerEmployee(e);
+    });
+
+    templateObject.payRunDetails.set(payRunDetails)
+  }
+
   /**
      * earnings
      */
@@ -211,7 +247,6 @@ Template.payrundetails.onRendered(function () {
       payRunDetails = payRunsHistory.find(p => p.calendar.ID == urlParams.get("cid"));
 
       if (!payRunDetails) {
-       
         const calendar = await templateObject.loadCalendar(urlParams.get("cid")); // single calendar
         const employees = await templateObject.loadEmployees();
 
@@ -232,6 +267,7 @@ Template.payrundetails.onRendered(function () {
     }
 
     templateObject.payRunDetails.set(payRunDetails);
+    templateObject.loadSuperAnnuations();
 
     LoadingOverlay.hide();
   };
@@ -243,6 +279,43 @@ Template.payrundetails.onRendered(function () {
   /**
      * Save to history function
      */
+
+  templateObject.postPayRun = async () => {
+    let newPayRunDetails = new PayRun(templateObject.payRunDetails.get());
+
+    const toggleStatus = () => {
+      return PayRun.STPFilling.overdue; // this should automatically done
+    };
+
+    newPayRunDetails.stpFilling = toggleStatus();
+
+    templateObject.payRunDetails.set(newPayRunDetails);
+
+    // Get from the list
+    let payRunsHistory = getPayRuns(); // we get the list and find
+    // let payRunDetails = payRunsHistory.find(p => p.calendar.ID == urlParams.get("cid"));
+
+    const index = payRunsHistory.findIndex(p => p.calendar.ID == urlParams.get("cid"));
+    payRunsHistory[index] = newPayRunDetails;
+
+    localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
+
+    window.location.href = "/payrolloverview";
+  };
+
+  /**
+   * Delete the currency payrun
+   */
+  templateObject.deletePayRun = async () => {
+    let payRuns = getPayRuns();
+    const index = payRuns.findIndex(p => p.calendar.ID == urlParams.get("cid"));
+    payRuns.splice(index, 1);
+
+    setPayRuns(payRuns);
+
+    window.location.href = "/payrolloverview";
+
+  } 
 
   templateObject.loadPayRunData();
 });
@@ -259,6 +332,12 @@ Template.payrundetails.events({
     } else {
       $("#eftExportModal").modal("hide");
     }
+  },
+  "click .post-pay-run": (e, ui) => {
+    ui.postPayRun();
+  },
+  'click .delete-payrun': (e, ui) => {
+    ui.deletePayRun();
   }
 });
 

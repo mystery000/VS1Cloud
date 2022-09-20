@@ -11,7 +11,7 @@ import XLSX from "xlsx";
 import { ReceiptService } from "../receipts/receipt-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
-
+let receiptService = new ReceiptService();
 Template.accountsoverview.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -36,6 +36,11 @@ Template.accountsoverview.onRendered(function() {
     let categories = [];
     let usedCategories = [];
     let categoryAccountList = [];
+    let needAddMaterials = true;
+    let needAddMealsEntertainment = true;
+    let needAddOfficeSupplies = true;
+    let needAddTravel = true;
+    let needAddVehicle = true;
 
     templateObject.getReceiptCategoryList = function() {
         getVS1Data('TReceiptCategory').then(function(dataObject) {
@@ -65,10 +70,188 @@ Template.accountsoverview.onRendered(function() {
                 if (data.treceiptcategory[i].CategoryName != "") {
                     categories.push(data.treceiptcategory[i].CategoryName);
                 }
+                if (data.treceiptcategory[i].CategoryName == "Materials") {
+                    needAddMaterials = false;
+                }
+                if (data.treceiptcategory[i].CategoryName == "Meals & Entertainment") {
+                    needAddMealsEntertainment = false;
+                }
+                if (data.treceiptcategory[i].CategoryName == "Office Supplies") {
+                    needAddOfficeSupplies = false;
+                }
+                if (data.treceiptcategory[i].CategoryName == "Travel") {
+                    needAddTravel = false;
+                }
+                if (data.treceiptcategory[i].CategoryName == "Vehicle") {
+                    needAddVehicle = false;
+                }
             }
         }
+        addDefaultCategoryValue();
         $('.fullScreenSpin').css('display', 'none');
         templateObject.getAccountLists();
+    }
+    function addDefaultCategoryValue() {
+        let needAddDefault = true;
+        if (!needAddMaterials && !needAddMealsEntertainment && !needAddOfficeSupplies && !needAddTravel && !needAddVehicle ) {
+            needAddDefault = false;
+        }
+        if (needAddDefault) {
+            let isSaved = false;
+            if (needAddMaterials) {
+                receiptService.getOneReceiptCategoryDataExByName("Materials").then(function (receiptCategory) {
+                    let objMaterials;
+                    if (receiptCategory.treceiptcategory.length == 0) {
+                        objMaterials = {
+                            type: "TReceiptCategory",
+                            fields: {
+                                Active: true,
+                                CategoryName: "Materials",
+                                CategoryDesc: "Default Value"
+                            }
+                        }
+                    } else {
+                        let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
+                        objMaterials = {
+                            type: "TReceiptCategory",
+                            fields: {
+                                Id: categoryID,
+                                Active: true
+                            }
+                        }
+                    }
+                    receiptService.saveReceiptCategory(objMaterials).then(function (result) {
+                        isSaved = true;
+                    }).catch(function (err) {
+                    });
+                })
+            }
+            if (needAddMealsEntertainment) {
+                receiptService.getOneReceiptCategoryDataExByName("Meals & Entertainment").then(function (receiptCategory) {
+                    let objMealsEntertainment;
+                    if (receiptCategory.treceiptcategory.length == 0) {
+                        objMealsEntertainment = {
+                            type: "TReceiptCategory",
+                            fields: {
+                                Active: true,
+                                CategoryName: "Meals & Entertainment",
+                                CategoryDesc: "Default Value"
+                            }
+                        }
+                    } else {
+                        let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
+                        objMealsEntertainment = {
+                            type: "TReceiptCategory",
+                            fields: {
+                                Id: categoryID,
+                                Active: true
+                            }
+                        }
+                    }
+                    receiptService.saveReceiptCategory(objMealsEntertainment).then(function (result) {
+                        isSaved = true;
+                    }).catch(function (err) {
+                    });
+                })
+            }
+            if (needAddOfficeSupplies) {
+                receiptService.getOneReceiptCategoryDataExByName("Office Supplies").then(function (receiptCategory) {
+                    let objOfficeSupplies;
+                    if (receiptCategory.treceiptcategory.length == 0) {
+                        objOfficeSupplies = {
+                            type: "TReceiptCategory",
+                            fields: {
+                                Active: true,
+                                CategoryName: "Office Supplies",
+                                CategoryDesc: "Default Value"
+                            }
+                        }
+                    } else {
+                        let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
+                        objOfficeSupplies = {
+                            type: "TReceiptCategory",
+                            fields: {
+                                Id: categoryID,
+                                Active: true
+                            }
+                        }
+                    }
+                    receiptService.saveReceiptCategory(objOfficeSupplies).then(function (result) {
+                        isSaved = true;
+                    }).catch(function (err) {
+                    });
+                })
+            }
+            if (needAddTravel) {
+                receiptService.getOneReceiptCategoryDataExByName("Travel").then(function (receiptCategory) {
+                    let objTravel;
+                    if (receiptCategory.treceiptcategory.length == 0) {
+                        objTravel = {
+                            type: "TReceiptCategory",
+                            fields: {
+                                Active: true,
+                                CategoryName: "Travel",
+                                CategoryDesc: "Default Value"
+                            }
+                        }
+                    } else {
+                        let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
+                        objTravel = {
+                            type: "TReceiptCategory",
+                            fields: {
+                                Id: categoryID,
+                                Active: true
+                            }
+                        }
+                    }
+                    receiptService.saveReceiptCategory(objTravel).then(function (result) {
+                        isSaved = true;
+                    }).catch(function (err) {
+                    });
+                })
+            }
+            if (needAddVehicle) {
+                receiptService.getOneReceiptCategoryDataExByName("Vehicle").then(function (receiptCategory) {
+                    let objVehicle;
+                    if (receiptCategory.treceiptcategory.length == 0) {
+                        objVehicle = {
+                            type: "TReceiptCategory",
+                            fields: {
+                                Active: true,
+                                CategoryName: "Vehicle",
+                                CategoryDesc: "Default Value"
+                            }
+                        }
+                    } else {
+                        let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
+                        objVehicle = {
+                            type: "TReceiptCategory",
+                            fields: {
+                                Id: categoryID,
+                                Active: true
+                            }
+                        }
+                    }
+                    receiptService.saveReceiptCategory(objVehicle).then(function (result) {
+                        isSaved = true;
+                    }).catch(function (err) {
+                    });
+                })
+            }
+            setTimeout(function () {
+                if (isSaved) {
+                    receiptService.getAllReceiptCategorys().then(function (dataReload) {
+                        addVS1Data('TReceiptCategory', JSON.stringify(dataReload)).then(function (datareturn) {
+                            Meteor._reload.reload();
+                        }).catch(function (err) {
+                            Meteor._reload.reload();
+                        });
+                    }).catch(function (err) {
+                        Meteor._reload.reload();
+                    });
+                }
+            }, 5000);
+        }
     }
     templateObject.getReceiptCategoryList();
 
@@ -164,10 +347,10 @@ Template.accountsoverview.onRendered(function() {
                             language: { search: "",searchPlaceholder: "Search List..." },
                             fnInitComplete: function() {
                                 $(
-                                    "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+                                    "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                                 ).insertAfter("#tblTaxRate_filter");
                                 $(
-                                    "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                                    "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                                 ).insertAfter("#tblTaxRate_filter");
                             },
                         });
@@ -234,10 +417,10 @@ Template.accountsoverview.onRendered(function() {
                         language: { search: "",searchPlaceholder: "Search List..." },
                         fnInitComplete: function() {
                             $(
-                                "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+                                "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                             ).insertAfter("#tblTaxRate_filter");
                             $(
-                                "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                                "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                             ).insertAfter("#tblTaxRate_filter");
                         },
                     });
@@ -304,10 +487,10 @@ Template.accountsoverview.onRendered(function() {
                         language: { search: "",searchPlaceholder: "Search List..." },
                         fnInitComplete: function() {
                             $(
-                                "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+                                "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
                             ).insertAfter("#tblTaxRate_filter");
                             $(
-                                "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                                "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                             ).insertAfter("#tblTaxRate_filter");
                         },
                     });
@@ -717,8 +900,8 @@ Template.accountsoverview.onRendered(function() {
                 info: true,
                 responsive: true,
                 "fnInitComplete": function() {
-                    $("<button class='btn btn-primary btnAddNewReceiptCategory' data-dismiss='modal' data-toggle='modal' data-target='#addReceiptCategoryModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCategory_filter");
-                    $("<button class='btn btn-primary btnRefreshCategoryAccount' type='button' id='btnRefreshCategoryAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCategory_filter");
+                    $("<button class='btn btn-primary btnAddNewReceiptCategory' data-dismiss='modal' data-toggle='modal' data-target='#addReceiptCategoryModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCategory_filter");
+                    $("<button class='btn btn-primary btnRefreshCategoryAccount' type='button' id='btnRefreshCategoryAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCategory_filter");
                 }
             });
             // //$.fn.dataTable.moment('DD/MM/YY');
@@ -790,10 +973,9 @@ Template.accountsoverview.onRendered(function() {
                             MakeNegative();
                         }, 100);
                     },
-                    language: { search: "",searchPlaceholder: "Search List..." },
                     fnInitComplete: function() {
                         $(
-                            "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                            "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                         ).insertAfter("#tblAccountOverview_filter");
                     },
                 })

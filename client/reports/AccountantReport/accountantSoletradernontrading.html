@@ -231,7 +231,7 @@
                 <div class="row">
                     <div class="col">
                         <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Reports Accountant Sheet</p>
-                        <p class="text-center" style="margin-bottom: 0px;">{{companyname}}</p>
+                        <p class="text-center" style="margin-bottom: 0px;" id="pageTitle">{{companyname}}</p>
                         <p class="text-center dateAdOf" style="margin-bottom: 8px;">{{fiscalYearEnding}}</p>
                     </div>
                 </div>
@@ -681,7 +681,7 @@
                                 </div>
                 
                                 <div class="modal fade" role="dialog" tabindex="-1" id="accountList_{{pan.no}}">
-                                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+                                    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">Account List</h5>
@@ -720,7 +720,7 @@
                                                             {{#each item in datatablerecords}}
                                                                 <tr class="dnd-moved" style="cursor: pointer;">
                                                                     <td contenteditable="false" class="colAccountId">
-                                                                        <div class="custom-control custom-checkbox pointer" style="width:15px;">
+                                                                        <div class="custom-control custom-checkbox pointer" style="width:15px; margin:auto">
                                                                             <input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-{{pan.no}}-{{item.id}}" name="f-{{pan.no}}-{{item.id}}" value="{{item.id}}">
                                                                             <label class="custom-control-label" for="f-{{pan.no}}-{{item.id}}"></label>
                                                                         </div>
@@ -804,7 +804,7 @@
                                             </div>
                                         </div>
                                         <div class="modal fade" role="dialog" tabindex="-1" id="accountList_15">
-                                            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+                                            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="exampleModalLabel">Account List</h5>
@@ -843,7 +843,7 @@
                                                                     {{#each item in datatablerecords}}
                                                                         <tr class="dnd-moved" style="cursor: pointer;">
                                                                             <td contenteditable="false" class="colAccountId">
-                                                                                <div class="custom-control custom-checkbox pointer" style="width:15px;">
+                                                                                <div class="custom-control custom-checkbox pointer" style="width:15px; margin:auto">
                                                                                     <input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-15-{{item.id}}" name="f-15-{{item.id}}" value="{{item.id}}">
                                                                                     <label class="custom-control-label" for="f-15-{{item.id}}"></label>
                                                                                 </div>

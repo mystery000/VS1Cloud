@@ -3,26 +3,21 @@
         .dimmedChart>div {
             background-color: #dddfeb !important;
         }
-
         .card.hovered {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
             cursor: move;
             transition-duration: 300ms;
         }
-
         .hideelement {
             display: none !important;
         }
-
         .showelement {
             display: block;
         }
-
         .customCardMainDiv {
             position: relative;
             padding-top: 15px !important;
         }
-
         .hideShowDiv {
             display: inline-block;
             width: 100%;
@@ -34,7 +29,6 @@
             left: 0;
             z-index: 2;
         }
-
         a.cardSettingBtn {
             display: inline-flex;
             width: 22px;
@@ -48,14 +42,12 @@
             text-decoration: none;
             margin-left: 3px;
         }
-
         a.editCardBtn :hover {
             background: #dddfeb;
             color: #6e6e6e;
             padding: 4px;
             border-radius: 3px;
         }
-
         a.cardHideBtn,
         a.cardShowBtn {
             display: inline-flex;
@@ -83,23 +75,19 @@
             background: #00a3d3;
             color: #fff;
         }
-
         a.cardHideBtn i,
         a.cardShowBtn i {
             pointer-events: none;
         }
-
         .dimmedChart a.cardHideBtn,
         .dimmedChart a.cardShowBtn,
         .dimmedChart a.cardSettingBtn {
             background: #f1f1f1 !important;
             color: #6e6e6e;
         }
-
         .dimmedChart a.editCardBtn :hover {
             background: rgba(0, 0, 0, 0) !important;
         }
-
         .dimmedChart .cardSettingBtn {
             background: #fff;
         }
@@ -139,7 +127,7 @@
         <div class="row connectedCardSortable" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}">
             {{#if equals type "dashboardSales"}}
                 {{> dashboardSalesCards }}
-                {{else}}
+            {{else}}
                 {{#if equals type "dashboardSalesManager"}}
                     {{> dashboardManagerCards }}
                 {{else}}

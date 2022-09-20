@@ -11,9 +11,9 @@ export default class ApiService {
    * @returns {URL}
    */
    static getBaseUrl({ endpoint = null, isUrl = true}) {
-    let _url = `https://${_IPADDRESS}:${_PORT}/${_ERP_BASE_API}/`;
+    let _url = `${URLRequest}${_IPADDRESS}:${_PORT}/${_ERP_BASE_API}/`;
     if(endpoint != null) {
-      _url = `https://${_IPADDRESS}:${_PORT}/${_ERP_BASE_API}/${endpoint}`;
+      _url = `${URLRequest}${_IPADDRESS}:${_PORT}/${_ERP_BASE_API}/${endpoint}`;
     }
 
     if(isUrl == true) return new URL(_url);

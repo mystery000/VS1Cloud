@@ -110,6 +110,7 @@ Template.supplierproductreport.onRendered(() => {
       data = JSON.parse(localStorage.getItem('VS1SupplierProduct_Report'));
     }
     let reportSummary = data.tsupplierproduct.map(el => {
+      console.log('tsupplierproduct', data.tsupplierproduct);
       let resultobj = {};
       Object.entries(el).map(([key, val]) => {      
           resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
@@ -435,6 +436,14 @@ Template.supplierproductreport.events({
 
     LoadingOverlay.hide();
   },
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
+  }
 });
 
 Template.supplierproductreport.helpers({
@@ -457,6 +466,17 @@ Template.supplierproductreport.helpers({
   },
   formatDate: ( date ) => {
     return ( date )? moment(date).format("YYYY/MM/DD") : '';
+  },
+  redirectionType(item) {
+    if(item.Transaction_Type === 'Purchase Order') {
+      return '#noInfoFound';
+      return '/purchaseordercard?id=' + item.PurchaseOrderID;
+    } else if (item.Transaction_Type === 'Bill') {
+      return '#noInfoFound';
+      return '/billcard?id=' + item.PurchaseOrderID;
+    } else {
+      return '#noInfoFound';
+    }
   },
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory

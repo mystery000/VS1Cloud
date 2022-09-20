@@ -303,8 +303,8 @@ Template.departmentpop.onRendered(function() {
                       },
                       language: { search: "",searchPlaceholder: "Search List..." },
                       "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddNewDept' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#departmentList_filter");
-                          $("<button class='btn btn-primary btnRefreshDept' type='button' id='btnRefreshDept' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#departmentList_filter");
+                          $("<button class='btn btn-primary btnAddNewDept' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#departmentList_filter");
+                          $("<button class='btn btn-primary btnRefreshDept' type='button' id='btnRefreshDept' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#departmentList_filter");
                       },
 
                   }).on('page', function () {
@@ -485,8 +485,8 @@ Template.departmentpop.onRendered(function() {
                 },
                 language: { search: "",searchPlaceholder: "Search List..." },
                 "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnAddNewDept' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#departmentList_filter");
-                    $("<button class='btn btn-primary btnRefreshDept' type='button' id='btnRefreshDept' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#departmentList_filter");
+                    $("<button class='btn btn-primary btnAddNewDept' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#departmentList_filter");
+                    $("<button class='btn btn-primary btnRefreshDept' type='button' id='btnRefreshDept' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#departmentList_filter");
                 },
 
             }).on('page', function () {
@@ -649,8 +649,8 @@ Template.departmentpop.onRendered(function() {
                     },
                     language: { search: "",searchPlaceholder: "Search List..." },
                     "fnInitComplete": function () {
-                        $("<button class='btn btn-primary btnAddNewDept' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#departmentList_filter");
-                        $("<button class='btn btn-primary btnRefreshDept' type='button' id='btnRefreshDept' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#departmentList_filter");
+                        $("<button class='btn btn-primary btnAddNewDept' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#departmentList_filter");
+                        $("<button class='btn btn-primary btnRefreshDept' type='button' id='btnRefreshDept' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#departmentList_filter");
                     },
 
                 }).on('page', function () {

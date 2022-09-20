@@ -31,6 +31,25 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
+  getProductListVS1(limitcount, limitfrom) {
+    let options = "";
+    if (limitcount == "All") {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+      };
+    } else {
+      options = {
+        orderby: '"PARTSID desc"',
+        ListType: "Detail",
+        select: "[Active]=true",
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TProductList, options);
+  }
+
 
 
   getNewGroupListVS1(limitcount, limitfrom) {
@@ -2534,7 +2553,7 @@ export class SideBarService extends BaseService {
 
   getAllLeadStatus() {
     let options = {
-      PropertyList: "ID,TypeName,Description",
+      PropertyList: "ID,TypeName,Description,TypeCode",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TLeadStatusType, options);
@@ -3430,9 +3449,37 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.VS1_Customize, options);
   }
 
-  saveNewCustomFields(data)
+  saveNewCustomFields(erpGet, tableName, employeeId, columns)
   {
-      return this.POST('VS1_Cloud_Task/method', data);
+    try {
+      let data = {
+        Name: "VS1_Customize",
+        Params:
+        {
+            TableName: tableName,
+            EmployeeId: employeeId,
+            Columns: columns,
+            ERPUserName:erpGet.ERPUsername,
+            ERPPassword:erpGet.ERPPassword
+        }
+      };
+
+      let myCustomizeString = '"JsonIn"'+':'+JSON.stringify(data);
+      let oPost = new XMLHttpRequest();
+      oPost.open("POST",URLRequest +erpGet.ERPIPAddress +":" +erpGet.ERPPort +"/" +'erpapi/VS1_Cloud_Task/Method',true);
+      oPost.setRequestHeader("database", erpGet.ERPDatabase);
+      oPost.setRequestHeader("username", erpGet.ERPUsername);
+      oPost.setRequestHeader("password", erpGet.ERPPassword);
+      oPost.setRequestHeader("Accept", "application/json");
+      oPost.setRequestHeader("Accept", "application/html");
+      oPost.setRequestHeader("Content-type", "application/json");
+      oPost.send(myCustomizeString);
+
+      return true;
+    } catch (error) {
+
+      return false
+    }
   }
 
 }

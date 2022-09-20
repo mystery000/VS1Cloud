@@ -113,7 +113,7 @@ Template.generalledger.onRendered(() => {
   };
 
   templateObject.getGeneralLedgerReports = function (dateFrom,dateTo,ignoreDate) {
-    if (!localStorage.getItem("VS1GeneralLedger_Report1")) {
+    if (!localStorage.getItem("VS1GeneralLedger_Report")) {
       reportService.getGeneralLedgerDetailsData(dateFrom, dateTo, ignoreDate).then(function (data) {
           let totalRecord = [];
           let grandtotalRecord = [];
@@ -131,7 +131,6 @@ Template.generalledger.onRendered(() => {
             let expArr = [];
             let accountData = data.tgeneralledgerreport;
             let accountType = "";
-
             for (let i = 0; i < accountData.length; i++) {
               let recordObj = {};
               recordObj.Id = data.tgeneralledgerreport[i].PURCHASEORDERID;
@@ -143,10 +142,10 @@ Template.generalledger.onRendered(() => {
               recordObj.dataArr = [
                 "",
                 data.tgeneralledgerreport[i].TYPE,
-                data.tgeneralledgerreport[i].ID,
+                data.tgeneralledgerreport[i].ACCOUNTNUMBER,
 
                 data.tgeneralledgerreport[i]["CLIENT NAME"],
-                data.tgeneralledgerreport[i].MEMO || "-",
+                // data.tgeneralledgerreport[i].MEMO || "-",
                 // moment(data.tgeneralledgerreport[i].DATE).format("DD MMM YYYY") || '-',
                 data.tgeneralledgerreport[i].DATE != ""? moment(data.tgeneralledgerreport[i].DATE).format("DD/MM/YYYY"): data.tgeneralledgerreport[i].DATE,
                 // utilityService.modifynegativeCurrencyFormat(
@@ -209,9 +208,9 @@ Template.generalledger.onRendered(() => {
               const currencyLength = Currency.length;
               for (let k = 0; k < allRecords[i][1].data.length; k++) {
                 // amountduetotal = amountduetotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[4]);
-                Currenttotal = Currenttotal +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6].value);
-                oneMonth = oneMonth +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7].value);
-                twoMonth =twoMonth +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8].value);
+                Currenttotal = Currenttotal +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5].value);
+                oneMonth = oneMonth +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6].value);
+                twoMonth =twoMonth +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7].value);
               }
               let val = [
                 "Total " + allRecords[i][0].key + "",
@@ -219,7 +218,7 @@ Template.generalledger.onRendered(() => {
                 "",
                 "",
                 "",
-                "",
+                // "",
 
                 // utilityService.modifynegativeCurrencyFormat(Currenttotal),
                 // utilityService.modifynegativeCurrencyFormat(oneMonth),
@@ -242,9 +241,9 @@ Template.generalledger.onRendered(() => {
 
             for (let n = 0; n < current.length; n++) {
               const grandcurrencyLength = Currency.length;
-              grandtwoMonth =grandtwoMonth +utilityService.convertSubstringParseFloat(current[n][6].value);
-              grandthreeMonth =grandthreeMonth +utilityService.convertSubstringParseFloat(current[n][7].value);
-              grandOlder =grandOlder +utilityService.convertSubstringParseFloat(current[n][8].value);
+              grandtwoMonth =grandtwoMonth +utilityService.convertSubstringParseFloat(current[n][5].value);
+              grandthreeMonth =grandthreeMonth +utilityService.convertSubstringParseFloat(current[n][6].value);
+              grandOlder =grandOlder +utilityService.convertSubstringParseFloat(current[n][7].value);
             }
 
             let grandval = [
@@ -253,7 +252,7 @@ Template.generalledger.onRendered(() => {
               "",
               "",
               "",
-              "",
+              // "",
               // utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
               // utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
               // utilityService.modifynegativeCurrencyFormat(grandOlder),
@@ -347,7 +346,7 @@ Template.generalledger.onRendered(() => {
               "-",
               "-",
               "-",
-              "-",
+              // "-",
             ];
 
             records.push(recordObj);
@@ -377,20 +376,22 @@ Template.generalledger.onRendered(() => {
         let expArr = [];
         let accountData = data.tgeneralledgerreport;
         let accountType = "";
-
         for (let i = 0; i < accountData.length; i++) {
           let recordObj = {};
           recordObj.Id = data.tgeneralledgerreport[i].PURCHASEORDERID;
           recordObj.type = data.tgeneralledgerreport[i].TYPE;
+          recordObj.paymentId = data.tgeneralledgerreport[i].PAYMENTID;
+          recordObj.saleId = data.tgeneralledgerreport[i].SALEID;
+          recordObj.cheqNumber = data.tgeneralledgerreport[i].CHEQUENUMBER;
           recordObj.AccountName = data.tgeneralledgerreport[i].ACCOUNTNAME;
 
           recordObj.dataArr = [
             "",
             data.tgeneralledgerreport[i].TYPE,
-            data.tgeneralledgerreport[i].ID,
+            data.tgeneralledgerreport[i].ACCOUNTNUMBER,
 
             data.tgeneralledgerreport[i]["CLIENT NAME"],
-            data.tgeneralledgerreport[i].MEMO || "-",
+            // data.tgeneralledgerreport[i].MEMO || "-",
             // moment(data.tgeneralledgerreport[i].DATE).format("DD MMM YYYY") || '-',
             data.tgeneralledgerreport[i].DATE != ""
               ? moment(data.tgeneralledgerreport[i].DATE).format("DD/MM/YYYY")
@@ -456,9 +457,9 @@ Template.generalledger.onRendered(() => {
           const currencyLength = Currency.length;
           for (let k = 0; k < allRecords[i][1].data.length; k++) {
             // amountduetotal = amountduetotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[4]);
-            Currenttotal = Currenttotal +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6].value);
-            oneMonth = oneMonth +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7].value);
-            twoMonth =twoMonth +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8].value);
+            Currenttotal = Currenttotal +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5].value);
+            oneMonth = oneMonth +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6].value);
+            twoMonth =twoMonth +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7].value);
           }
           let val = [
             "Total " + allRecords[i][0].key + "",
@@ -466,7 +467,7 @@ Template.generalledger.onRendered(() => {
             "",
             "",
             "",
-            "",
+            // "",
 
             {
               type: "amount",
@@ -498,9 +499,9 @@ Template.generalledger.onRendered(() => {
 
         for (let n = 0; n < current.length; n++) {
           const grandcurrencyLength = Currency.length;
-          grandtwoMonth =grandtwoMonth +utilityService.convertSubstringParseFloat(current[n][6].value);
-          grandthreeMonth =grandthreeMonth +utilityService.convertSubstringParseFloat(current[n][7].value);
-          grandOlder =grandOlder +utilityService.convertSubstringParseFloat(current[n][8].value);
+          grandtwoMonth =grandtwoMonth +utilityService.convertSubstringParseFloat(current[n][5].value);
+          grandthreeMonth =grandthreeMonth +utilityService.convertSubstringParseFloat(current[n][6].value);
+          grandOlder =grandOlder +utilityService.convertSubstringParseFloat(current[n][7].value);
         }
 
         let grandval = [
@@ -509,7 +510,7 @@ Template.generalledger.onRendered(() => {
           "",
           "",
           "",
-          "",
+          // "",
 
           {
             type: "amount",
@@ -589,7 +590,7 @@ Template.generalledger.onRendered(() => {
         recordObj.Id = "";
         recordObj.type = "";
         recordObj.AccountName = " ";
-        recordObj.dataArr = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-"];
+        recordObj.dataArr = [ "-", "-", "-", "-", "-", "-", "-", "-", "-"];
 
         records.push(recordObj);
         templateObject.records.set(records);
@@ -703,31 +704,31 @@ Template.generalledger.events({
 
     LoadingOverlay.hide();
   },
-  "click td a": async function (event) {
-    let id = $(event.target).closest("tr").attr("id").split("item-value-");
-    var accountName = id[1].split("_").join(" ");
-    let toDate = moment($("#dateTo").val())
-      .clone()
-      .endOf("month")
-      .format("YYYY-MM-DD");
-    let fromDate = moment($("#dateFrom").val())
-      .clone()
-      .startOf("year")
-      .format("YYYY-MM-DD");
-    //Session.setPersistent('showHeader',true);
-    await clearData("TAccountRunningBalanceReport");
-    window.open(
-      "/balancetransactionlist?accountName=" +
-        accountName +
-        "&toDate=" +
-        toDate +
-        "&fromDate=" +
-        fromDate +
-        "&isTabItem=" +
-        false,
-      "_self"
-    );
-  },
+  // "click td a": async function (event) {
+  //   let id = $(event.target).closest("tr").attr("id").split("item-value-");
+  //   var accountName = id[1].split("_").join(" ");
+  //   let toDate = moment($("#dateTo").val())
+  //     .clone()
+  //     .endOf("month")
+  //     .format("YYYY-MM-DD");
+  //   let fromDate = moment($("#dateFrom").val())
+  //     .clone()
+  //     .startOf("year")
+  //     .format("YYYY-MM-DD");
+  //   //Session.setPersistent('showHeader',true);
+  //   await clearData("TAccountRunningBalanceReport");
+  //   window.open(
+  //     "/balancetransactionlist?accountName=" +
+  //       accountName +
+  //       "&toDate=" +
+  //       toDate +
+  //       "&fromDate=" +
+  //       fromDate +
+  //       "&isTabItem=" +
+  //       false,
+  //     "_self"
+  //   );
+  // },
   "change #dateTo": function () {
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");

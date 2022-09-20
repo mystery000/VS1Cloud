@@ -5,15 +5,15 @@
   </div>
   <div style="margin-top: -24px;">
   <header style="padding: 16px;background-color: #ededed;" class="row">
-  <h1 style="margin: 16px;">Employee List <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a></h1>
+  <h1 style="margin: 16px;">Employee List {{> helpbutton}}</h1>
   </header>
 
       <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 20px; background-color: #ededed;">
 
            <div class="col float-left flex-grow-1 mb-4">
-                <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                <button id="btnNewEmployee" name="btnNewEmployee" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Employee</button>
-                <!-- <button class="btn btn-success btnAddVS1User" type="button" style="margin: 16px;"><i class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button> -->
+                <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                <button id="btnNewEmployee" name="btnNewEmployee" class="btn btn-primary" type="button" style="margin: 12px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Employee</button>
+                <!-- <button class="btn btn-success btnAddVS1User" type="button" style="margin: 12px;"><i class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button> -->
            </div>
 
             <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
@@ -25,7 +25,7 @@
                       <a role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
                   </div>
               </div>
-               <!-- <button class="btn btn-primary export" type="button" style="margin: 16px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button> -->
+               <!-- <button class="btn btn-primary export" type="button" style="margin: 12px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button> -->
              <div>
              <button style="margin: 16px;" class="btn btn-primary" role="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
              <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
@@ -79,7 +79,7 @@
                      }
                  </style>
                  <div id="row1">
-                     <div id="column1"></div><button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 16px;" ><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
+                     <div id="column1"></div><button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 12px;" ><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
                      <div class="file-name" id="column2"></div>
                  </div>
              </div>
@@ -91,8 +91,8 @@
              </div>
              </div>
 
-                <!-- <button class="btn btn-primary float-right" type="button" style="margin: 16px;" id="" name=""><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button> -->
-                <button class="btn btn-primary printConfirm" type="button" style="margin: 16px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+                <!-- <button class="btn btn-primary float-right" type="button" style="margin: 12px;" id="" name=""><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button> -->
+                <button class="btn btn-primary printConfirm" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
            </div>
 
       </div>

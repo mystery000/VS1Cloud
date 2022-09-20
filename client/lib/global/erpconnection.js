@@ -8,6 +8,9 @@ var d = new Date();
 var month = d.getMonth()+1;
 var day = d.getDate();
 
+// IPAddress = "59.154.69.210";
+// Port = "4433";
+
 export const _IPADDRESS = IPAddress;
 export const _USERNAME = UserName;
 export const _PASSWORD = Password;
@@ -60,7 +63,6 @@ var erpConnection = {
     ERPSalesOrderCard: "TSalesOrder",
     ERPSalesOrderCardEx: "TSalesOrderEx",
     ERPBillCard: "TBill",
-    ERPSalesOrderCard: "TSalesOrder",
     ERPPurchaseOrderSend: "TPurchaseOrder",
     ERPFittingCard: "TFunc_Manufacture",
     ERPPrintShippingCard: "TFunc_Print",

@@ -1129,6 +1129,7 @@ Template.taxsummaryreport.onRendered(() => {
         templateObject.records.set(records);
         templateObject.grandrecords.set('');
         LoadingOverlay.hide();
+
       }
 
     }
@@ -1173,7 +1174,7 @@ Template.taxsummaryreport.onRendered(() => {
     false);
 
   templateObject.getDepartments = function () {
-    let deptrecordObj = [];
+    let deptrecords = [];
     reportService.getDepartment().then(function (data) {
       for (let i in data.tdeptclass) {
 

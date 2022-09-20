@@ -15,6 +15,9 @@ Template.newstatuspop.events({
         let statusName = $('#newStatus').val();
         let statusId = $('#statusId').val();
         let statusDesc = $('#description').val();
+        let statusEQPM = $('#quantity').val();
+        statusEQPM = Number(statusEQPM.replace(/[^0-9.-]+/g, "")) || 1.0
+        statusEQPM = statusEQPM.toString();
         let leadData = '';
         if (statusId == "") {
             leadData = {
@@ -22,6 +25,7 @@ Template.newstatuspop.events({
                 fields: {
                     TypeName: statusName,
                     Description: statusDesc,
+                    KeyValue: statusEQPM,
                     Active: true
                 }
             };
@@ -32,6 +36,7 @@ Template.newstatuspop.events({
                     ID: parseInt(statusId),
                     TypeName: statusName,
                     Description: statusDesc,
+                    KeyValue: statusEQPM,
                     Active: true
                 }
             };
@@ -77,5 +82,25 @@ Template.newstatuspop.events({
                 else if (result.dismiss === 'cancel') {}
             });
         }
-    }
+    },
+    'keydown #quantity': function (event) {
+        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) != -1 ||
+            (event.keyCode == 65 && (event.ctrlKey == true || event.metaKey == true)) ||
+            (event.keyCode >= 35 && event.keyCode <= 40)) {
+            return;
+        }
+        if (event.shiftKey == true) {
+            event.preventDefault();
+        }
+        if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+            (event.keyCode >= 96 && event.keyCode <= 105) ||
+            event.keyCode == 8 || event.keyCode == 9 ||
+            event.keyCode == 37 || event.keyCode == 39 ||
+            event.keyCode == 46 || event.keyCode == 190 || event.keyCode == 189 || event.keyCode == 109) {
+
+        }
+        else {
+            event.preventDefault();
+        }
+    },
 });

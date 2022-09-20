@@ -1,31 +1,30 @@
-import { ReactiveVar } from "meteor/reactive-var";
+import {ReactiveVar} from "meteor/reactive-var";
 
 Template.dashboardmy.onCreated(function () {
-  this.loggedDb = new ReactiveVar("");
-  const templateObject = Template.instance();
-  templateObject.includeDashboard = new ReactiveVar();
-  templateObject.includeDashboard.set(false);
+    this.loggedDb = new ReactiveVar("");
+    const templateObject = Template.instance();
+    templateObject.includeDashboard = new ReactiveVar();
+    templateObject.includeDashboard.set(false);
 });
 
 Template.dashboardmy.onRendered(function () {
-  let templateObject = Template.instance();
-  let isDashboard = Session.get("CloudDashboardModule");
-  if (isDashboard) {
-    templateObject.includeDashboard.set(true);
-  }
+    let templateObject = Template.instance();
+    let isDashboard = Session.get("CloudDashboardModule");
+    if (isDashboard) {
+        templateObject.includeDashboard.set(true);
+    }
 });
 
 Template.dashboardmy.helpers({
-  includeDashboard: () => {
-    const res = Template.instance().includeDashboard.get();
-    return res;
-  },
-  loggedDb: function () {
-    return Template.instance().loggedDb.get();
-  },
-  loggedCompany: () => {
-    return localStorage.getItem("mySession") || "";
-  },
+    includeDashboard: () => {
+        return Template.instance().includeDashboard.get();
+    },
+    loggedDb: function () {
+        return Template.instance().loggedDb.get();
+    },
+    loggedCompany: () => {
+        return localStorage.getItem("mySession") || "";
+    },
 });
 
 // Listen to event to update reactive variable

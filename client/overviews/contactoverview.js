@@ -144,9 +144,7 @@ Template.contactoverview.onRendered(function () {
                   clienttype = "Customer / Supplier";
                 } else if (iscustomer == true) {
                   if (
-                    data.terpcombinedcontactsvs1[i].name
-                      .toLowerCase()
-                      .indexOf("^") >= 0
+                    data.terpcombinedcontactsvs1[i].name.toLowerCase().indexOf("^") >= 0
                   ) {
                     clienttype = "Job";
                   } else {
@@ -237,39 +235,7 @@ Template.contactoverview.onRendered(function () {
               templateObject.datatablerecords.set(dataTableList);
 
               if (templateObject.datatablerecords.get()) {
-                Meteor.call(
-                  "readPrefMethod",
-                  Session.get("mycloudLogonID"),
-                  "tblcontactoverview",
-                  function (error, result) {
-                    if (error) {
-                    } else {
-                      if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                          let customcolumn = result.customFields;
-                          let columData = customcolumn[i].label;
-                          let columHeaderUpdate = customcolumn[
-                            i
-                          ].thclass.replace(/ /g, ".");
-                          let hiddenColumn = customcolumn[i].hidden;
-                          let columnClass = columHeaderUpdate.split(".")[1];
-                          let columnWidth = customcolumn[i].width;
-                          let columnindex = customcolumn[i].index + 1;
 
-                          if (hiddenColumn == true) {
-                            $("." + columnClass + "").addClass("hiddenColumn");
-                            $("." + columnClass + "").removeClass("showColumn");
-                          } else if (hiddenColumn == false) {
-                            $("." + columnClass + "").removeClass(
-                              "hiddenColumn"
-                            );
-                            $("." + columnClass + "").addClass("showColumn");
-                          }
-                        }
-                      }
-                    }
-                  }
-                );
 
                 setTimeout(function () {
                   MakeNegative();
@@ -335,7 +301,7 @@ Template.contactoverview.onRendered(function () {
                         this.fnPageChange("last");
                       }
                       $(
-                        "<button class='btn btn-primary btnRefreshContact' type='button' id='btnRefreshContact' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                        "<button class='btn btn-primary btnRefreshContact' type='button' id='btnRefreshContact' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                       ).insertAfter("#tblcontactoverview_filter");
                     },
                   })
@@ -893,7 +859,7 @@ Template.contactoverview.onRendered(function () {
                     this.fnPageChange("last");
                   }
                   $(
-                    "<button class='btn btn-primary btnRefreshContact' type='button' id='btnRefreshContact' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                    "<button class='btn btn-primary btnRefreshContact' type='button' id='btnRefreshContact' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                   ).insertAfter("#tblcontactoverview_filter");
                 },
               })
@@ -1115,19 +1081,9 @@ Template.contactoverview.onRendered(function () {
             }
 
             if (data.terpcombinedcontactsvs1.length > 0) {
-              $("#tblcontactoverview_info").html(
-                "Showing 1 to " +
-                  data.terpcombinedcontactsvs1.length +
-                  " of " +
-                  countTableData +
-                  " entries"
-              );
+              $("#tblcontactoverview_info").html("Showing 1 to " +data.terpcombinedcontactsvs1.length +" of " +countTableData +" entries");
             } else {
-              $("#tblcontactoverview_info").html(
-                "Showing 0 to " +
-                  data.terpcombinedcontactsvs1.length +
-                  " of 0 entries"
-              );
+              $("#tblcontactoverview_info").html("Showing 0 to " +data.terpcombinedcontactsvs1.length + " of 0 entries");
             }
             /* End Add count functionality to table */
           }, 0);

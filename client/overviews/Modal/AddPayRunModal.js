@@ -154,8 +154,8 @@ Template.AddPayRunModal.onRendered(() => {
           // }, 100);
         },
         fnInitComplete: function () {
-          $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
-          $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
+          $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
+          $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
         }
       }).on("page", function () {
         // setTimeout(function () {
@@ -242,7 +242,8 @@ Template.AddPayRunModal.events({
   "click .btnPayRunNext": event => {
     $(".modal-backdrop").css("display", "none");
     const id = $("#selectAPayRun").attr("calendar-id");
-    FlowRouter.go(`/payrundetails?cid=${id}`);
+    // FlowRouter.go(`/payrundetails?cid=${id}`);
+    window.location.href = `/payrundetails?cid=${id}`;
   },
 
   "click .btnAddNewPayCalender": (e, ui) => {

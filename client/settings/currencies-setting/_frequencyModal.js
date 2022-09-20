@@ -11,6 +11,7 @@ import LoadingOverlay from "../../LoadingOverlay";
 import {updateAllCurrencies} from "./currencies";
 import CronSetting from "../../CronSetting";
 import FormFrequencyModel from "./Model/FormFrequencyModel";
+import moment from "moment";
 
 let sideBarService = new SideBarService();
 let taxRateService = new TaxRateService();
@@ -154,12 +155,13 @@ Template._frequencyModal.onRendered(function () {
       cronSetting.months = checkedMonths;
       cronSetting.dayNumberOfMonth = convertDayNumberToString(fxUpdateObject.everyDay);
 
-      _formFequencyModal = new FormFrequencyModel({
-        MonthlyEveryDay: $("#sltDay").val(),
-        MonthlyOfMonths: checkedMonths,
-        MonthlyStartDate: $("#edtMonthlyStartDate").val(),
-        MonthlyStartTime: $("#edtMonthlyStartTime").val(),
-      })
+      if ($(".months-input-js input.chkBox:checked").length == 0) {
+        LoadingOverlay.hide();
+        handleValidationError("You must select at least one month", "Cron Settings");
+        return false;
+      }
+
+      _formFequencyModal = new FormFrequencyModel({MonthlyEveryDay: $("#sltDay").val(), MonthlyOfMonths: checkedMonths, MonthlyStartDate: $("#edtMonthlyStartDate").val(), MonthlyStartTime: $("#edtMonthlyStartTime").val()});
 
       //cronSetting.parsed = later.recur()
     } else if (fxUpdateObject instanceof WeeklyFrequencyModel) {
@@ -181,15 +183,13 @@ Template._frequencyModal.onRendered(function () {
       cronSetting.every = fxUpdateObject.everyWeeks;
       cronSetting.startAt = fxUpdateObject.getDate();
 
-      _formFequencyModal = new FormFrequencyModel({
-        WeeklyEvery: fxUpdateObject.everyWeeks,
-        WeeklyStartDate: $("#edtWeeklyStartDate").val(),
-        WeeklyStartTime: $("#edtWeeklyStartTime").val(),
-        WeeklySelectDays: fxUpdateObject.selectedDays,
-      });
+      if ($(".weekly-input-js input.chkBoxDays:checked").length == 0) {
+        LoadingOverlay.hide();
+        handleValidationError("You must select at least one day", "Cron Settings");
+        return false;
+      }
 
-
-
+      _formFequencyModal = new FormFrequencyModel({WeeklyEvery: fxUpdateObject.everyWeeks, WeeklyStartDate: $("#edtWeeklyStartDate").val(), WeeklyStartTime: $("#edtWeeklyStartTime").val(), WeeklySelectDays: fxUpdateObject.selectedDays});
     } else if (fxUpdateObject instanceof DailyFrequencyModel) {
       reportSchedule.fields.Frequency = "D";
 
@@ -213,11 +213,23 @@ Template._frequencyModal.onRendered(function () {
 
         cronSetting.days = selectedDays;
 
-        _formFequencyModal = new FormFrequencyModel({
-          DailyWeekDays: selectedDays,
-        });
+        if ($(".daily-input-js input.chkBoxDays:checked").length == 0) {
+          LoadingOverlay.hide();
+          handleValidationError("You must select at least one day", "Cron Settings");
+          return false;
+        }
+
+        _formFequencyModal = new FormFrequencyModel({DailyWeekDays: selectedDays});
       } else if ($("#dailyEveryDay").prop("checked")) {
-        cronSetting.dayInNumbers = [1,2,3,4,5,6,7];
+        cronSetting.dayInNumbers = [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ];
         fxUpdateObject.weekDays = [
           "monday",
           "tuesday",
@@ -234,11 +246,7 @@ Template._frequencyModal.onRendered(function () {
         cronSetting.every = 1;
         cronSetting.days = fxUpdateObject.weekDays;
 
-        _formFequencyModal = new FormFrequencyModel({
-          DailyEvery: fxUpdateObject.every, 
-          DailyWeekDays: fxUpdateObject.weekDays,
-          DailyEveryDay: true
-        });
+        _formFequencyModal = new FormFrequencyModel({DailyEvery: fxUpdateObject.every, DailyWeekDays: fxUpdateObject.weekDays, DailyEveryDay: true});
       } else if ($("#dailyEvery").prop("checked")) {
         fxUpdateObject.weekDays = null;
         fxUpdateObject.every = parseInt($("#dailyEveryXDays").val());
@@ -247,9 +255,7 @@ Template._frequencyModal.onRendered(function () {
 
         cronSetting.every = fxUpdateObject.every;
 
-        _formFequencyModal = new FormFrequencyModel({
-          DailyEvery: fxUpdateObject.every, 
-        });
+        _formFequencyModal = new FormFrequencyModel({DailyEvery: fxUpdateObject.every});
       }
 
       fxUpdateObject.startDate = $("#edtDailyStartDate").val();
@@ -261,7 +267,6 @@ Template._frequencyModal.onRendered(function () {
 
       _formFequencyModal.DailyStartDate = $("#edtDailyStartDate").val();
       _formFequencyModal.DailyStartTime = $("#edtDailyStartTime").val();
-
     } else if (fxUpdateObject instanceof OneTimeOnlyFrequencyModel) {
       fxUpdateObject.startDate = $("#edtOneTimeOnlyDate").val();
       fxUpdateObject.startTime = $("#edtOneTimeOnlyTime").val();
@@ -269,25 +274,26 @@ Template._frequencyModal.onRendered(function () {
       reportSchedule.fields.Frequency = "";
       reportSchedule.fields.EndDate = fxUpdateObject.getDate();
 
-    
       cronSetting.startAt = fxUpdateObject.getDate();
 
-      _formFequencyModal = new FormFrequencyModel({
-        OneTimeStartDate: fxUpdateObject.startDate,
-        OneTimeStartTime: fxUpdateObject.startTime
-      });
+      _formFequencyModal = new FormFrequencyModel({OneTimeStartDate: fxUpdateObject.startDate, OneTimeStartTime: fxUpdateObject.startTime});
     } else if (fxUpdateObject instanceof OnEventFrequencyModel) {
       fxUpdateObject.onLogin = $("#settingsOnLogon").prop("checked");
       fxUpdateObject.onLogout = $("#settingsOnLogout").prop("checked");
       reportSchedule.fields.Frequency = "";
 
-      _formFequencyModal = new FormFrequencyModel({
-        OnEventLogIn: fxUpdateObject.onLogin,
-        OnEventLogOut: fxUpdateObject.onLogout
-      });
+      _formFequencyModal = new FormFrequencyModel({OnEventLogIn: fxUpdateObject.onLogin, OnEventLogOut: fxUpdateObject.onLogout});
     }
 
-    _formFequencyModal.EmployeeId = employeeId
+    if (fxUpdateObject.startDate && fxUpdateObject.startTime) {
+      if (moment(fxUpdateObject.getDate()).isBefore(new Date())) {
+        LoadingOverlay.hide();
+        handleValidationError("You cannot schedule before your current time", "Cron Settings");
+        return false;
+      }
+    }
+
+    _formFequencyModal.EmployeeId = employeeId;
 
     cronSetting.isProcessed = 1;
 
@@ -311,7 +317,7 @@ Template._frequencyModal.onRendered(function () {
       });
     }
 
-    addVS1Data("TCurrencyFrequencySettings", JSON.stringify(fxUpdateObject)).then(function (datareturn) {
+    addVS1Data("TCurrencyFrequencySettings", JSON.stringify(_formFequencyModal)).then(function (datareturn) {
       //location.reload(true);
       $("#frequencyModal").modal("hide");
     }).catch(function (err) {
@@ -320,8 +326,79 @@ Template._frequencyModal.onRendered(function () {
     LoadingOverlay.hide();
   };
 
+  templateObject.loadDefault = async () => {
+    let defaultForm = await getVS1Data("TCurrencyFrequencySettings");
+    if (!defaultForm) {
+      document.querySelector("#frequencyDaily").click(); // this is the default
+      return;
+    }
+    let defaultFormFrequency = new FormFrequencyModel(JSON.parse(defaultForm[0].data));
 
+    if (defaultFormFrequency.MonthlyStartDate) {
+      // it is montly
+      const monthly = $("#monthlySettings");
+      document.querySelector("#frequencyMonthly").click();
+      monthly.find("#sltDay").val(defaultFormFrequency.MonthlyEveryDay);
+      monthly.find(".months-input-js input.chkBox").each((index, el) => {
+        const value = $(el).attr("value");
+        // if (defaultFormFrequency.MonthlyOfMonths.includes(value)) {
+        //   $(el).prop("checked",defaultFormFrequency.MonthlyOfMonths.includes(value));
+        // }
+        $(el).prop("checked", defaultFormFrequency.MonthlyOfMonths.includes(value));
+      });
+      monthly.find("#edtMonthlyStartTime").val(defaultFormFrequency.MonthlyStartTime);
+      monthly.find("#edtMonthlyStartDate").val(defaultFormFrequency.MonthlyStartDate);
+    } else if (defaultFormFrequency.WeeklyStartDate) {
+      const weekly = $("#weeklySettings");
+      document.querySelector("#frequencyWeekly").click();
 
+      weekly.find("#weeklyEveryXWeeks").val(defaultFormFrequency.WeeklyEvery);
+      weekly.find(".weekly-input-js input.chkBoxDays").each((index, el) => {
+        const value = $(el).attr("value");
+        // if (value == defaultFormFrequency.WeeklySelectDays) {
+        //    $(el).prop("checked", value == defaultFormFrequency.WeeklySelectDays);
+        //   $(el).trigger('click');
+
+        // }
+        $(el).prop("checked", value == defaultFormFrequency.WeeklySelectDays);
+      });
+
+      weekly.find("#edtWeeklyStartTime").val(defaultFormFrequency.WeeklyStartTime);
+      weekly.find("#edtWeeklyStartDate").val(defaultFormFrequency.WeeklyStartDate);
+    } else if (defaultFormFrequency.DailyStartDate) {
+      const daily = $("#dailySettings");
+      document.querySelector("#frequencyDaily").click();
+
+      if (defaultFormFrequency.DailyEveryDay) {
+        daily.find("#dailyEveryDay").trigger("click");
+      } else if (defaultFormFrequency.DailyEveryDay == null && defaultFormFrequency.DailyEvery == null && defaultFormFrequency.DailyWeekDays.length < 7) {
+        document.querySelector("#dailyWeekdays").click();
+        daily.find(".week-days-js input.chkBoxDays").each((index, el) => {
+          const value = $(el).attr("value");
+          $(el).prop("checked", defaultFormFrequency.DailyWeekDays.includes(value));
+        });
+      } else if (defaultFormFrequency.DailyEvery && defaultFormFrequency.DailyEveryDay == null && defaultFormFrequency.DailyWeekDays == null) {
+        document.querySelector("#dailyEvery").click();
+        daily.find("#dailyEveryXDays").val(defaultFormFrequency.DailyEvery);
+      }
+      daily.find("#edtDailyStartTime").val(defaultFormFrequency.DailyStartTime);
+      daily.find("#edtDailyStartDate").val(defaultFormFrequency.DailyStartDate);
+    } else if (defaultFormFrequency.OneTimeStartDate) {
+      document.querySelector("#frequencyOnetimeonly").click();
+      $("#edtOneTimeOnlyTime").val(defaultFormFrequency.OneTimeStartTime);
+      $("#edtOneTimeOnlyDate").val(defaultFormFrequency.OneTimeStartDate);
+    } else if (defaultFormFrequency.OnEventLogIn || defaultFormFrequency.OnEventLogOut) {
+      document.querySelector("#frequencyOnevent").click();
+
+      if (defaultFormFrequency.OnEventLogIn) {
+        $("#settingsOnLogon").trigger("click");
+      } else if (defaultFormFrequency.OnEventLogOut) {
+        $("#settingsOnLogout").trigger("click");
+      }
+    }
+  };
+
+  // templateObject.loadDefault();
 });
 
 Template._frequencyModal.events({
@@ -331,9 +408,8 @@ Template._frequencyModal.events({
       ? false
       : true);
   },
-  "shown.bs.modal #frequencyModal": e => {
-    let templateObject = Template.instance();
-    document.querySelector("#frequencyDaily").click();
+  "shown.bs.modal #frequencyModal": (e, ui) => {
+    ui.loadDefault();
   },
   "click .btnSaveFrequency": (e, ui) => {
     ui.saveShedule();

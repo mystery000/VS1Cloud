@@ -455,7 +455,7 @@ export class ContactService extends BaseService {
 
     getLeadStatusData() {
         let options = {
-            PropertyList: "ID,TypeName,Description",
+            PropertyList: "ID,TypeName,Description,TypeCode",
             select: "[Active]=true"
         };
         return this.getList(this.ERPObjects.TLeadStatusType, options);
@@ -463,6 +463,15 @@ export class ContactService extends BaseService {
 
     saveLeadStatusData(data) {
         return this.POST(this.ERPObjects.TLeadStatusType, data);
+    }
+
+    getOneLeadStatusExByName(dataSearchName) {
+        let options = '';
+        options = {
+            ListType: "Detail",
+            select: '[TypeName]="'+dataSearchName+'"'
+        };
+        return this.getList(this.ERPObjects.TLeadStatusType, options);
     }
 
     getTaxCodes() {

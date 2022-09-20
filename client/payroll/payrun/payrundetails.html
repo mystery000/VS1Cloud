@@ -48,12 +48,12 @@
 
         <div class="row" style="background-color: #ededed; padding-top: 0px; padding: 24px;">
             <div class="col-6">
-                <button class="btn btn-primary btnRefreshOne btnNav" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh </button>
+                <button class="btn btn-primary btnRefreshOne btnNav" type="button" style="margin: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh </button>
             </div>
             <div class="col-6">
                 <a class="btn btnOpenSettings float-right btnNav" style="margin: 16px;" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
-                <button class="btn btn-primary float-right printConfirm btnNav" type="button" style="margin: 16px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                <button class="btn btn-primary float-right export exportbtn btnNav" type="button" style="margin: 16px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
+                <button class="btn btn-primary float-right printConfirm btnNav" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+                <button class="btn btn-primary float-right export exportbtn btnNav" type="button" style="margin: 12px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
                 <a class="btn btnOpenSettings float-right btnOpenSettingsMobile" style="margin: 16px; display: none;" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
         </div>
@@ -319,10 +319,16 @@
                                             <td class="colPayRunDetailsLastName" contenteditable="false">{{ item.fields.EmployeeName }}</td>
                                             <td class="colPayRunDetailsEmployeeGroup" contenteditable="false"></td>
                                             <td class="colPayRunDetailsLastEdited" contenteditable="false"></td>
-                                            <td class="colPayRunDetailsEarnings" contenteditable="false"></td>
-                                            <td class="colPayRunDetailsTax" contenteditable="false"></td>
-                                            <td class="colPayRunDetailsSuper" contenteditable="false"></td>
-                                            <td class="colPayRunDetailsNetPay" contenteditable="false"></td>
+                                            <td class="colPayRunDetailsEarnings" contenteditable="false">{{ item.fields.earnings }}</td>
+                                            <td class="colPayRunDetailsTax" contenteditable="false">{{ item.fields.tax }}</td>
+                                            <td class="colPayRunDetailsSuper" contenteditable="false">{{ item.fields.superAnnuation }}</td>
+                                            <td class="colPayRunDetailsNetPay" contenteditable="false">{{ item.fields.netPay }}</td>
+                                            <td class="colPayRunDetailsDropdown" contenteditable="false">
+                                                <div class="custom-control custom-switch" style="display: inline-flex !important; margin-left: 74px;">
+                                                    <input class="custom-control-input" type="checkbox" name="payrundetailsDropdown" id="payrundetailsDropdown" checked>
+                                                    <label class="custom-control-label" style="position: absolute; margin-top: 5px;" for="payrundetailsDropdown"></label>
+                                                </div>
+                                            </td>
                                         </tr>
                                     {{/each}}
                                 {{/if}}
@@ -367,12 +373,12 @@
             </div>
 
             <div class="col-4">
-                <button type="button" class="btn btn-danger btnFooter" style="margin: 16px;"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i> Delete Pay Run</button>
+                <button type="button" class="btn btn-danger btnFooter delete-payrun" style="margin: 16px;"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i> Delete Pay Run</button>
                 <button type="button" class="btn btn-warning btnFooter" style="margin: 16px;"><i class="fas fa-undo" style="margin-right: 5px;"></i> Reset Pay Run</button>
             </div>
             <div class="col-6">
-                <button class="btn btn-secondary float-right btnFooter" data-dismiss="modal" type="button" style="margin: 16px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
-                <button type="button" class="btn btn-success float-right btnFooter" style="margin: 16px;"><i class="fas fa-check" style="margin-right: 5px;"></i> Post Pay Run</button>
+                <button class="btn btn-secondary float-right btnFooter" data-dismiss="modal" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                <button type="button" class="btn btn-success float-right btnFooter post-pay-run" style="margin: 16px;"><i class="fas fa-check" style="margin-right: 5px;"></i> Post Pay Run</button>
                 <div class="btn-group float-right btnFooter" style="margin: 16px;">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-chart-area" style="margin-right: 5px;"></i> View Reports

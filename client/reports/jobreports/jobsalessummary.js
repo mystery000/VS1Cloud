@@ -487,15 +487,29 @@ Template.jobsalessummary.events({
 
     LoadingOverlay.hide();
   },
+  
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
+  }
 });
 
 Template.jobsalessummary.helpers({
+  
+  redirectionType(item) {
+    return '#noInfoFound';
+  },
   reportRecords: () => {
     return Template.instance().reportRecords.get();
   },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },
+
    // FX Module //
    convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
