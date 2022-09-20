@@ -59,60 +59,7 @@
                                             <a class="btn btn-primary float-left  synbutton" role="button" data-toggle="modal"  style="margin: 12px 12px 12px 0px;color:white;"><i class="fas fa-coins"></i> Currency Update<br></a>
                                             <a class="btn btn-primary float-left  btn-fx-history" role="button"  style="margin: 12px 12px 12px 0px;color:white;"><i class="fas fa-comment-dollar" style="margin-right: 5px"></i> FX History<br></a>
                                             <a class="btn btn-primary float-left "  href="https://accounts.xe.com/login?client_id=hoqkluj0h25d805a6ru8n3t4n&redirect_uri=https%3A%2F%2Fxecd-account-api.xe.com%2Foauth2%2Fidpresponse&response_type=code&scope=openid%20email&state=s%2BUkvTCXxsFy2c4nox%2BRaqhKQ%2Bdhnb9msxB3N7RJhJKgtzXrY4A%2FKBNW3BFUqc3I5%2BYljo14kJcAsrd%2Bwq4FnTgSsNDFjh4wwbIIY7WJRgfd3bjdVk6TJITt7A6EZJ7ugtEO6KsrR1QznOA2A9niWnvO8xGSCwbwIv8UvxaXKrSz%2FC%2FR07LPAbvv5MZurqrUJJYsIoBiibeebgFe8Q%3D%3D" target="_blank" style="margin: 12px 12px 12px 0px;color:white;"><i class="fas fa-exchange-alt" style="margin-right: 5px"></i>  XE Currencies<br></a>
-                                            <!-- <div class="modal fade" role="dialog"
-                                                 tabindex="-1" id="myModal">
-                                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4 id="add-currency-title" name="add-currency-title">Add New Currency</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                        <div class="modal-body" style="background-color: #ededed;">
-                                                            <input type="hidden" class="form-control" id="edtCurrencyID" name="edtCurrencyID" style="display:none;">
-                                                            <div class="row no-gutters">
-                                                                <div class="col d-xl-flex align-items-xl-end">
-
-                                                                    <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Country</label>
-                                                                        <select class="form-control" id="sedtCountry" name="sedtCountry" style="cursor: pointer;">
-                                                                            {{#each item in countryList}}
-                                                                            {{#if equals item record.scountry }}
-                                                                            <option value="{{record.scountry}}" selected="">{{record.scountry}}</option>
-                                                                            {{else}}
-                                                                            <option value="{{item}}">{{item}}</option>
-                                                                            {{/if}}
-                                                                            {{/each}}
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Code</label>
-                                                                        <input type="text" class="form-control"  id="currencyCode" name="currencyCode" style="width: 110px;">
-                                                                    </div>
-                                                                    <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Symbol</label>
-                                                                        <input type="text" class="form-control" id="currencySymbol" name="currencySymbol" style="width: 110px;">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row no-gutters">
-                                                                <div class="col d-xl-flex align-items-xl-end">
-                                                                    <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Currency Name</label>
-                                                                        <input type="text" class="form-control" id="edtCurrencyName" name="edtCurrencyName"></div>
-                                                                    <div class="form-group flex-grow-1" style="margin: 8px;"><label>Description</label>
-                                                                        <input type="text" class="form-control" id="edtCurrencyDesc" name="edtCurrencyDesc"></div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row no-gutters">
-                                                                <div class="col d-xl-flex align-items-xl-end">
-                                                                    <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Buy Rate</label>
-                                                                        <input type="text" class="form-control" id="edtBuyRate" name="edtBuyRate"></div>
-                                                                    <div class="form-group flex-grow-1" style="margin: 8px;"><label>Sell Rate</label>
-                                                                        <input type="text" class="form-control" id="edtSellRate" name="edtSellRate"></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer" style="background-color: #ededed;">
-                                                            <button class="btn btn-success btnSaveCurrency" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
-                                                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> -->
+                                          
                                         </div>
                                     </div>
                                     <div class="row no-gutters" style="display: none;">
@@ -317,7 +264,19 @@
                                                     <td contenteditable="false" class="colCountry">{{item.country}}</td>
                                                     <td contenteditable="false" class="colRateLastModified hiddenColumn">{{item.ratelastmodified}}</td>
                                                     <td contenteditable="false" class="colDescription">{{item.description}}</td>
-                                                    <td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
+                                                    <td contenteditable="false" class="colDelete">
+                                                        <span class="table-remove">
+                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 remove-currency">
+                                                            <i class="fa fa-remove"></i>
+                                                            </button>
+                                                        </span>
+
+                                                        <span class="table-edit">
+                                                            <button type="button" class="btn btn-rounded btn-light btn-sm my-0 edit-currency">
+                                                                <i class="fa fa-edit"></i>
+                                                            </button>
+                                                        </span>
+                                                    </td>
                                                 </tr>
                                                 {{/each}}
                                                 {{/if}}
