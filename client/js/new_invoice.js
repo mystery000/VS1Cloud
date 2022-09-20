@@ -18768,7 +18768,17 @@ Template.new_invoice.events({
       let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
       if(added) {
-        swal("Display settings is updated!", "", "success");
+        swal({
+          title: 'SUCCESS',
+          text: "Display settings is updated!",
+          type: 'success',
+          showCancelButton: false,
+          confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.value) {
+               $('#myModal2').modal('hide');
+            }  
+        });
       } else {
         swal("Something went wrong!", "", "error");
       }
@@ -18781,10 +18791,15 @@ Template.new_invoice.events({
   // custom field displaysettings
   "click .btnResetGridSettings": async function (event) {
     let templateObject = Template.instance();
-    let checkBackOrder = templateObject.includeBOnShippedQty.get();
     let reset_data = templateObject.reset_data.get(); 
-    reset_data = reset_data.filter(redata => redata.display);
- 
+    let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+    if(isBatchSerialNoTracking) {
+      reset_data[11].display = true; 
+    } else {
+      reset_data[11].display = false; 
+    }
+    reset_data = reset_data.filter(redata => redata.display); 
+
     $(".displaySettings").each(function (index) {
       let $tblrow = $(this);
       $tblrow.find(".divcolumn").text(reset_data[index].label);
@@ -18793,14 +18808,20 @@ Template.new_invoice.events({
         .prop("checked", reset_data[index].active);
 
       let title = $("#tblInvoiceLine").find("th").eq(index);
-      $(title).html(reset_data[index].label);
+      if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
+        $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
+      } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
+        $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
+      } else {
+        $(title).html(reset_data[index].label);
+      }
 
       if (reset_data[index].active) {
-        $(".col" + reset_data[index].class).css("display", "table-cell");
-        $(".col" + reset_data[index].class).css("padding", ".75rem");
-        $(".col" + reset_data[index].class).css("vertical-align", "top");
+        $('.col' + reset_data[index].class).addClass('showColumn');
+        $('.col' + reset_data[index].class).removeClass('hiddenColumn');
       } else {
-        $(".col" + reset_data[index].class).css("display", "none");
+        $('.col' + reset_data[index].class).addClass('hiddenColumn');
+        $('.col' + reset_data[index].class).removeClass('showColumn');
       }
       $(".rngRange" + reset_data[index].class).val('');
     });
