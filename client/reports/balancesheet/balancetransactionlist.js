@@ -12,6 +12,7 @@ Template.balancetransactionlist.onCreated(function(){
 
 Template.balancetransactionlist.onRendered(function() {
     $('.fullScreenSpin').css('display','inline-block');
+    $(".modal-backdrop").css("display", "none");
     let templateObject = Template.instance();
     // let accountService = new AccountService();
     // let salesService = new SalesBoardService();
@@ -55,6 +56,8 @@ Template.balancetransactionlist.onRendered(function() {
           }else if((childArray.Type === "Bank Deposit") || (childArray.Type === "Customer Payment")
           ||(childArray.Type === "Deposit Entry")||(childArray.Type === "Supplier Payment")){
             transactionNo = childArray.PaymentID;
+          }else if((childArray.Type === "Supplier Prepayment")){
+            transactionNo = childArray.PrepaymentID;
           }
 
           if(childArray.Type === "Cheque"){
@@ -169,30 +172,6 @@ Template.balancetransactionlist.onRendered(function() {
               $('.fullScreenSpin').css('display','none');
           }, 0);
 
-      $('#tblBalanceTransactionList tbody').on( 'click', 'tr', function () {
-          var listData = $(this).closest('tr').attr('id');
-          var transactiontype = $(event.target).closest("tr").find(".transactiontype").text();
-
-          if((listData) && (transactiontype)){
-            if(transactiontype === 'Quote' ){
-              window.open('/quotecard?id=' + listData,'_self');
-            }else if(transactiontype === 'Sales Order'){
-              window.open('/salesordercard?id=' + listData,'_self');
-            }else if(transactiontype === 'Invoice'){
-              window.open('/invoicecard?id=' + listData,'_self');
-            }else if(transactiontype === 'PO'){
-              window.open('/purchaseordercard?id=' + listData,'_self');
-            }else if(transactiontype === 'Bill'){
-              //window.open('/billcard?id=' + listData,'_self');
-            }else if(transactiontype === 'Credit'){
-              //window.open('/creditcard?id=' + listData,'_self');
-            }else if(transactiontype === 'Customer Payment'){
-              window.open('/paymentcard?id=' + listData,'_self');
-            }
-
-          }
-        });
-
           var columns = $('#tblBalanceTransactionList th');
           let sTible = "";
           let sWidth = "";
@@ -249,6 +228,8 @@ Template.balancetransactionlist.onRendered(function() {
         }else if((childArray.Type === "Bank Deposit") || (childArray.Type === "Customer Payment")
         ||(childArray.Type === "Deposit Entry")||(childArray.Type === "Supplier Payment")){
           transactionNo = childArray.PaymentID;
+        }else if((childArray.Type === "Supplier Prepayment")){
+          transactionNo = childArray.PrepaymentID;
         }
 
         if(childArray.Type === "Cheque"){
@@ -394,29 +375,6 @@ Template.balancetransactionlist.onRendered(function() {
             $('.fullScreenSpin').css('display','none');
         }, 0);
 
-    $('#tblBalanceTransactionList tbody').on( 'click', 'tr', function () {
-        var listData = $(this).closest('tr').attr('id');
-        var transactiontype = $(event.target).closest("tr").find(".transactiontype").text();
-
-        if((listData) && (transactiontype)){
-          if(transactiontype === 'Quote' ){
-            window.open('/quotecard?id=' + listData,'_self');
-          }else if(transactiontype === 'Sales Order'){
-            window.open('/salesordercard?id=' + listData,'_self');
-          }else if(transactiontype === 'Invoice'){
-            window.open('/invoicecard?id=' + listData,'_self');
-          }else if(transactiontype === 'PO'){
-            window.open('/purchaseordercard?id=' + listData,'_self');
-          }else if(transactiontype === 'Bill'){
-            //window.open('/billcard?id=' + listData,'_self');
-          }else if(transactiontype === 'Credit'){
-            //window.open('/creditcard?id=' + listData,'_self');
-          }else if(transactiontype === 'Customer Payment'){
-            window.open('/paymentcard?id=' + listData,'_self');
-          }
-
-        }
-      });
 
         var columns = $('#tblBalanceTransactionList th');
         let sTible = "";
@@ -478,6 +436,8 @@ Template.balancetransactionlist.onRendered(function() {
                 }else if((childArray.Type === "Bank Deposit") || (childArray.Type === "Customer Payment")
                 ||(childArray.Type === "Deposit Entry")||(childArray.Type === "Supplier Payment")){
                   transactionNo = childArray.PaymentID;
+                }else if((childArray.Type === "Supplier Prepayment")){
+                  transactionNo = childArray.PrepaymentID;
                 }
                 if(childArray.Type === "Cheque"){
                   if (Session.get('ERPLoggedCountry') == "Australia") {
@@ -619,6 +579,7 @@ Template.balancetransactionlist.onRendered(function() {
                             MakeNegative();
                           }, 100);
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         fnInitComplete: function () {
                           this.fnPageChange("last");
                           $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBalanceTransactionList_filter");
@@ -706,6 +667,8 @@ Template.balancetransactionlist.onRendered(function() {
               }else if((childArray.Type === "Bank Deposit") || (childArray.Type === "Customer Payment")
               ||(childArray.Type === "Deposit Entry")||(childArray.Type === "Supplier Payment")){
                 transactionNo = childArray.PaymentID;
+              }else if((childArray.Type === "Supplier Prepayment")){
+                transactionNo = childArray.PrepaymentID;
               }
 
               if(childArray.Type === "Cheque"){
@@ -855,6 +818,7 @@ Template.balancetransactionlist.onRendered(function() {
                           MakeNegative();
                         }, 100);
                       },
+                      language: { search: "",searchPlaceholder: "Search List..." },
                       fnInitComplete: function () {
                         this.fnPageChange("last");
                         $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBalanceTransactionList_filter");
@@ -941,6 +905,8 @@ Template.balancetransactionlist.onRendered(function() {
             }else if((childArray.Type === "Bank Deposit") || (childArray.Type === "Customer Payment")
             ||(childArray.Type === "Deposit Entry")||(childArray.Type === "Supplier Payment")){
               transactionNo = childArray.PaymentID;
+            }else if((childArray.Type === "Supplier Prepayment")){
+              transactionNo = childArray.PrepaymentID;
             }
 
             if(childArray.Type === "Cheque"){
@@ -1084,6 +1050,7 @@ Template.balancetransactionlist.onRendered(function() {
                         MakeNegative();
                       }, 100);
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
                     fnInitComplete: function () {
                       this.fnPageChange("last");
                       $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBalanceTransactionList_filter");
@@ -1153,18 +1120,10 @@ Template.balancetransactionlist.onRendered(function() {
     }
 
 
-    $('#tblBalanceTransactionList tbody').on( 'click', 'tr', function () {
-    var listData = $(this).closest('tr').attr('id');
-    if(listData){
-      // window.open('/invoicecard?id=' + listData,'_self');
-    }
-
-  });
-
 
   $('#tblBalanceTransactionList tbody').on( 'click', 'tr', function () {
       var listData = $(this).closest('tr').attr('id');
-      var transactiontype = $(event.target).closest("tr").find(".transactiontype").text();
+      var transactiontype = $(event.target).closest("tr").find(".transactiontype").text()||'';
 
       if((listData) && (transactiontype)){
         if(transactiontype === 'Quote' ){
@@ -1176,15 +1135,41 @@ Template.balancetransactionlist.onRendered(function() {
         }else if(transactiontype === 'PO'){
           window.open('/purchaseordercard?id=' + listData,'_self');
         }else if(transactiontype === 'Bill'){
-          //window.open('/billcard?id=' + listData,'_self');
+          window.open('/billcard?id=' + listData,'_self');
         }else if(transactiontype === 'Credit'){
-          //window.open('/creditcard?id=' + listData,'_self');
+          window.open('/creditcard?id=' + listData,'_self');
         }else if(transactiontype === 'Customer Payment'){
           window.open('/paymentcard?id=' + listData,'_self');
-        }else if(transactiontype === 'Cheque'){
+        }else if(transactiontype === 'Cheque' || transactiontype === 'Check'){
           window.open('/chequecard?id=' + listData,'_self');
+        }else if(transactiontype === 'Supplier Payment'){
+          window.open('/supplierpaymentcard?id=' + listData,'_self');
+        }else if(transactiontype === 'Supplier Prepayment'){
+          swal({title: 'Information', text: "No further information available on this column", type: 'warning',confirmButtonText: 'Ok'});
+        }else if(transactiontype === 'Journal Entry'){
+          window.open('/journalentrycard?id=' + listData,'_self');
+        }else if(transactiontype === 'Un-Invoiced PO'){
+          window.open('/purchaseordercard?id=' + listData,'_self');
+        }else if(transactiontype === 'Cash Sale'){
+          swal({title: 'Information', text: "No further information available on this column", type: 'warning',confirmButtonText: 'Ok'});
+        }else if(transactiontype === 'Payroll'){
+          window.open('/payrolloverview?id=' + listData,'_self');
+        }else if(transactiontype === 'POS'){
+          swal({title: 'Information', text: "No further information available on this column", type: 'warning',confirmButtonText: 'Ok'});
+        }else if(transactiontype === 'Refund'){
+          window.open('/refundcard?id=' + listData,'_self');
+        }else if(transactiontype === 'UnInvoiced SO'){
+          window.open('/salesordercard?id=' + listData,'_self');
+        }else if(transactiontype === 'Bank Deposit'){
+          window.open('/depositcard?id=' + listData,'_self');
+        }else if(transactiontype === 'Deposit Entry'){
+          window.open('/depositcard?id=' + listData,'_self');
+        }else{
+          swal({title: 'Information', text: "No further information available on this column", type: 'warning',confirmButtonText: 'Ok'});
         }
 
+      }else{
+        swal({title: 'Information', text: "No further information available on this column", type: 'warning',confirmButtonText: 'Ok'});
       }
     });
 

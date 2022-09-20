@@ -1,9 +1,7 @@
-
 Template.dashboardSalesCards.onRendered(function () {
-  let templateObject = Template.instance();
-
-  templateObject.getDashboardData = function () {
-    getVS1Data('TProspectEx').then(function (dataObject) {
+    let templateObject = Template.instance();
+    templateObject.getDashboardData = function () {
+        getVS1Data('TProspectEx').then(function (dataObject) {
         if(dataObject.length) {
             let {tprospect = []} = JSON.parse(dataObject[0].data);
             let myLeadsLast3Months = 0;
@@ -34,9 +32,8 @@ Template.dashboardSalesCards.onRendered(function () {
             $('#new-opptertunties-team-avg').text(teamNewOppertunityLast3Months);
         }
     }).catch(function (err) {
-    });
-
-    getVS1Data('TInvoiceList').then(function (dataObject) {
+        });
+        getVS1Data('TInvoiceList').then(function (dataObject) {
         let totalInvoiceValueLast3Months = 0;
         let totalQuoteValueLast3Months = 0;
         if(dataObject.length) {
@@ -83,9 +80,8 @@ Template.dashboardSalesCards.onRendered(function () {
         }).catch(function (err) {
         });
     }).catch(function (err) {
-    });
-
-    getVS1Data('TQuoteList').then(function (dataObject) {
+        });
+        getVS1Data('TQuoteList').then(function (dataObject) {
         if(dataObject.length) {
             let {tquotelist = []} = JSON.parse(dataObject[0].data);
             const momentUnix =  moment().subtract(3, 'months').unix();
@@ -119,7 +115,7 @@ Template.dashboardSalesCards.onRendered(function () {
             $('#win-rate-my-metric').text(`${myWinRate} %`);
             $('#win-rate-team-avg').text(`${teamWinRate} %`);
 
-            const myAvgSalesCycle = myConvertedQuotesAmount ? myConvertedQuotesAmount/30 : myConvertedQuotesAmount; 
+            const myAvgSalesCycle = myConvertedQuotesAmount ? myConvertedQuotesAmount/30 : myConvertedQuotesAmount;
             const teamAvgSalesCycle = convertedQuotesAmount ? convertedQuotesAmount/30 : convertedQuotesAmount;
             $('#avg-sales-cycle-my-metric').text(`${parseInt(myAvgSalesCycle)} day(s)`);
             $('#avg-sales-cycle-team-avg').text(`${parseInt(teamAvgSalesCycle)} day(s)`);
@@ -128,10 +124,9 @@ Template.dashboardSalesCards.onRendered(function () {
             $('#pipeline-amount-team-avg').text(`$ ${teamPipeLineAmount.toFixed(2)}`);
         }
     }).catch(function (err) {
-    });
-
-  }
-  templateObject.getDashboardData();
+        });
+    }
+    templateObject.getDashboardData();
 });
 
 // Listen to event to update reactive variable

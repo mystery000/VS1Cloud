@@ -31,6 +31,25 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
+  getProductListVS1(limitcount, limitfrom) {
+    let options = "";
+    if (limitcount == "All") {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+      };
+    } else {
+      options = {
+        orderby: '"PARTSID desc"',
+        ListType: "Detail",
+        select: "[Active]=true",
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TProductList, options);
+  }
+
 
 
   getNewGroupListVS1(limitcount, limitfrom) {
@@ -3458,7 +3477,7 @@ export class SideBarService extends BaseService {
 
       return true;
     } catch (error) {
-      
+
       return false
     }
   }
