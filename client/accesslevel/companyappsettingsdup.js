@@ -275,10 +275,12 @@ Template.companyappsettingsdup.onRendered(function () {
                 var matchingItemsMonth = $.grep(monthResult, function (itemMonth) {
                     return itemMonth.moduleName === e.moduleName;
                 });
+                e.isPurchased = false
                 if (matchingItemsMonth.length === 0) {
                     if( purchaedAdModuleList.includes(monthArr[i].moduleName) == false ){
-                        monthResult.push(e);
+                        e.isPurchased = true                        
                     }
+                    monthResult.push(e);
                 }
             });
             templateObject.monthArr.set(monthResult);

@@ -444,9 +444,12 @@ font-weight: 500 !important;
                                                 <td style="min-width: 332px;">
 
                                                     <div class="custom-control custom-switch" style="cursor: pointer;">
-                                                        <input class="custom-control-input additionalModule" type="checkbox" value="{{itemMonth.pricenocurrency}}" id="formCheck-Additional{{itemMonth.moduleId}}" name="Additional"
-                                                            style="cursor: pointer;" additionalqty="1" readonly>
-                                                        <label class="custom-control-label" for="formCheck-Additional{{itemMonth.moduleId}}" style="cursor: pointer; max-width: 200px;">{{itemMonth.moduleName}}</label>
+                                                        {{#if itemMonth.isPurchased }}
+                                                            <input class="custom-control-input additionalModule" checked="true" disabled="disabled" type="checkbox" value="{{itemMonth.pricenocurrency}}" id="formCheck-Additional{{removeBlankSpace itemMonth.moduleName}}" name="Additional" style="cursor: pointer;" additionalqty="1" />
+                                                        {{else}}
+                                                            <input class="custom-control-input additionalModule" type="checkbox" value="{{itemMonth.pricenocurrency}}" id="formCheck-Additional{{removeBlankSpace itemMonth.moduleName}}" name="Additional" style="cursor: pointer;" additionalqty="1" />
+                                                        {{/if}}
+                                                        <label class="custom-control-label" for="formCheck-Additional{{removeBlankSpace itemMonth.moduleName}}" style="cursor: pointer; max-width: 200px;">{{itemMonth.moduleName}}</label>
                                                         <div class="lblPricing" style="float: right; color:#1cc88a;">
                                                             <b>+ {{itemMonth.price}}</b>
                                                             <a role="button" data-toggle="modal" href="#Modal-{{itemMonth.moduleId}}" class="float-right" style="margin-left: 6px;"><i class="fas fa-question-circle" style=" color:#1cc88a;"></i></a>
