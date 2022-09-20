@@ -1097,6 +1097,8 @@ Template.taxRatesSettings.events({
     else {
       subTaxLines = subTaxLines.map((v) => v.RowId === edtSubTaxLineId ? ({
         RowId: v.RowId,
+        Id: v.Id,
+        ID: v.ID,
         SubTaxCode: subTaxCode.codename,
         Percentage: subTaxPercent,
         PercentageOn: subTaxPercentageOn,
@@ -1133,6 +1135,8 @@ Template.taxRatesSettings.events({
       return {
         type: "TTaxCodeLines",
         fields: {
+          ID: v.ID,
+          Id: v.Id,
           SubTaxCode: v.SubTaxCode,
           Percentage: v.Percentage,
           PercentageOn: v.PercentageOn,
@@ -1462,6 +1466,7 @@ export const TaxRatesEditListener = (e) => {
 
       let subTaxLines = tax.lines.map((v, index) => ({
         RowId: `subtax_${index}`,
+        ID: v.ID,
         SubTaxCode: v.SubTaxCode,
         Percentage: v.Percentage,
         PercentageOn: v.PercentageOn,
