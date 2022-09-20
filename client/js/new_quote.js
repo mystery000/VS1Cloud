@@ -15,6 +15,8 @@ import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
+import LoadingOverlay from '../LoadingOverlay';
+import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -123,7 +125,7 @@ Template.new_quote.onRendered(() => {
     };
 
     templateObject.getTemplateInfoNew = function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
+       LoadingOverlay.show();
         getVS1Data('TTemplateSettings').then(function(dataObject) {
           if (dataObject.length == 0) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
@@ -167,9 +169,9 @@ Template.new_quote.onRendered(() => {
                  }
 
 
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
               }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
               });
           }else{
                   let data = JSON.parse(dataObject[0].data);
@@ -211,7 +213,7 @@ Template.new_quote.onRendered(() => {
 
 
                  }
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
           }
         }).catch(function(err) {
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
@@ -253,9 +255,9 @@ Template.new_quote.onRendered(() => {
                   }
 
 
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
         }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
         });
       });
 
@@ -1486,7 +1488,7 @@ Template.new_quote.onRendered(() => {
             $('.lblCustomField2').text(inputValue2);
         });
     });
-    $('.fullScreenSpin').css('display', 'inline-block');
+   LoadingOverlay.show();
 
     templateObject.getAllClients = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
@@ -1629,7 +1631,7 @@ Template.new_quote.onRendered(() => {
             }
         }).catch(function (err) {
             contactService.getOneCustomerDataEx(customerID).then(function (data) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 setCustomerByID(data);
             });
         });
@@ -1789,7 +1791,7 @@ Template.new_quote.onRendered(() => {
                             let cust_result = customerData.filter(cust_data => {
                                 return cust_data.customername === data.fields.CustomerName
                             });
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             let lineItemObj = {};
                             let lineItemsTable = [];
@@ -2121,7 +2123,7 @@ Template.new_quote.onRendered(() => {
 
                                 }
                             });
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
 
                         });
                     } else {
@@ -2647,7 +2649,7 @@ Template.new_quote.onRendered(() => {
 
                                     }
                                 });
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
 
                             });
                         }
@@ -2699,7 +2701,7 @@ Template.new_quote.onRendered(() => {
                 }).catch(function(err) {
 
                     accountService.getOneQuotedataEx(currentQuote).then(function(data) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         let lineItems = [];
                         let lineItemObj = {};
                         let lineItemsTable = [];
@@ -2987,7 +2989,7 @@ Template.new_quote.onRendered(() => {
 
                             }
                         });
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
 
                     });
                 });
@@ -3137,7 +3139,7 @@ Template.new_quote.onRendered(() => {
                                   };
                                 }
                             });
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         }
                     });
 
@@ -3183,7 +3185,7 @@ Template.new_quote.onRendered(() => {
                         let cust_result = customerData.filter(cust_data => {
                             return cust_data.customername == data.fields.CustomerName
                         });
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         let lineItems = [];
                         let lineItemObj = {};
                         let lineItemsTable = [];
@@ -3475,7 +3477,7 @@ Template.new_quote.onRendered(() => {
 
                             }
                         });
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
 
                     });
                 } else {
@@ -3488,7 +3490,7 @@ Template.new_quote.onRendered(() => {
                                 return cust_data.customername == useData[d].fields.ClientName
                             });
                             added = true;
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             let lineItemObj = {};
                             let lineItemsTable = [];
@@ -3769,7 +3771,7 @@ Template.new_quote.onRendered(() => {
 
                     if (!added) {
                         accountService.getOneQuotedataEx(currentQuote).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             let lineItemObj = {};
                             let lineItemsTable = [];
@@ -4058,7 +4060,7 @@ Template.new_quote.onRendered(() => {
 
                                 }
                             });
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
 
                         });
                     }
@@ -4071,7 +4073,7 @@ Template.new_quote.onRendered(() => {
                     let cust_result = customerData.filter(cust_data => {
                         return cust_data.customername == data.fields.CustomerName
                     });
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     let lineItems = [];
                     let lineItemObj = {};
                     let lineItemsTable = [];
@@ -4361,7 +4363,7 @@ Template.new_quote.onRendered(() => {
 
                         }
                     });
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
 
                 });
             });
@@ -4369,7 +4371,7 @@ Template.new_quote.onRendered(() => {
         };
         templateObject.getQuoteData();
     } else {
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
         let lineItems = [];
         let lineItemsTable = [];
         let lineItemObj = {};
@@ -4486,7 +4488,7 @@ Template.new_quote.onRendered(() => {
         $('#tblStatusPopList_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshStatus').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
     // $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
@@ -4496,7 +4498,7 @@ Template.new_quote.onRendered(() => {
     //     $('#tblCurrencyPopList_filter .form-control-sm').val('');
     //     setTimeout(function () {
     //         $('.btnRefreshCurrency').trigger('click');
-    //         $('.fullScreenSpin').css('display', 'none');
+    //         LoadingOverlay.hide();
     //     }, 1000);
     // });
     $(document).on("click", "#custListType tbody tr", function(e) {;
@@ -4513,7 +4515,7 @@ Template.new_quote.onRendered(() => {
         // $('#tblStatusPopList_filter .form-control-sm').val('');
         // setTimeout(function () {
         //     $('.btnRefreshStatus').trigger('click');
-        //     $('.fullScreenSpin').css('display', 'none');
+        //     LoadingOverlay.hide();
         // }, 1000);
     });
 
@@ -5136,7 +5138,7 @@ Template.new_quote.onRendered(() => {
         setTimeout(function() {
             //$('#tblCustomerlist_filter .form-control-sm').focus();
             $('.btnRefreshCustomer').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
         // }
     }
@@ -5155,7 +5157,7 @@ Template.new_quote.onRendered(() => {
     //                 $('#sedtCountry').prop('readonly', true);
     //                 getVS1Data('TCurrency').then(function(dataObject) {
     //                     if (dataObject.length == 0) {
-    //                         $('.fullScreenSpin').css('display', 'inline-block');
+    //                        LoadingOverlay.show();
     //                         sideBarService.getCurrencies().then(function(data) {
     //                             for (let i in data.tcurrency) {
     //                                 if (data.tcurrency[i].Code === currencyDataName) {
@@ -5173,7 +5175,7 @@ Template.new_quote.onRendered(() => {
     //                                 }
     //                             }
     //                             setTimeout(function() {
-    //                                 $('.fullScreenSpin').css('display', 'none');
+    //                                 LoadingOverlay.hide();
     //                                 $('#newCurrencyModal').modal('toggle');
     //                                 $('#sedtCountry').attr('readonly', true);
     //                             }, 200);
@@ -5194,13 +5196,13 @@ Template.new_quote.onRendered(() => {
     //                             }
     //                         }
     //                         setTimeout(function() {
-    //                             $('.fullScreenSpin').css('display', 'none');
+    //                             LoadingOverlay.hide();
     //                             $('#newCurrencyModal').modal('toggle');
     //                         }, 200);
     //                     }
 
     //                 }).catch(function(err) {
-    //                     $('.fullScreenSpin').css('display', 'inline-block');
+    //                    LoadingOverlay.show();
     //                     sideBarService.getCurrencies().then(function(data) {
     //                         for (let i in data.tcurrency) {
     //                             if (data.tcurrency[i].Code === currencyDataName) {
@@ -5218,7 +5220,7 @@ Template.new_quote.onRendered(() => {
     //                             }
     //                         }
     //                         setTimeout(function() {
-    //                             $('.fullScreenSpin').css('display', 'none');
+    //                             LoadingOverlay.hide();
     //                             $('#newCurrencyModal').modal('toggle');
     //                             $('#sedtCountry').attr('readonly', true);
     //                         }, 200);
@@ -5254,7 +5256,7 @@ Template.new_quote.onRendered(() => {
 
                     getVS1Data('TLeadStatusType').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                           LoadingOverlay.show();
                             sideBarService.getAllLeadStatus().then(function(data) {
                                 for (let i in data.tleadstatustype) {
                                     if (data.tleadstatustype[i].TypeName === statusDataName) {
@@ -5262,7 +5264,7 @@ Template.new_quote.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newStatusPopModal').modal('toggle');
                                 }, 200);
                             });
@@ -5276,12 +5278,12 @@ Template.new_quote.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newStatusPopModal').modal('toggle');
                             }, 200);
                         }
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                       LoadingOverlay.show();
                         sideBarService.getAllLeadStatus().then(function(data) {
                             for (let i in data.tleadstatustype) {
                                 if (data.tleadstatustype[i].TypeName === statusDataName) {
@@ -5289,13 +5291,13 @@ Template.new_quote.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newStatusPopModal').modal('toggle');
                             }, 200);
                         });
                     });
                     setTimeout(function() {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         $('#newStatusPopModal').modal('toggle');
                     }, 200);
 
@@ -5329,11 +5331,11 @@ Template.new_quote.onRendered(() => {
                 $('#edtCustomerPOPID').val('');
                 getVS1Data('TCustomerVS1').then(function(dataObject) {
                     if (dataObject.length === 0) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                       LoadingOverlay.show();
                         sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
                             setCustomerDataExByName(data);
                         }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
@@ -5346,11 +5348,11 @@ Template.new_quote.onRendered(() => {
                             }
                         }
                         if (!added) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                           LoadingOverlay.show();
                             sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
                                 setCustomerDataExByName(data);
                             }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }
                     }
@@ -5358,7 +5360,7 @@ Template.new_quote.onRendered(() => {
                     sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
                         setCustomerDataExByName(data);
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                     });
                 });
             } else {
@@ -5367,7 +5369,7 @@ Template.new_quote.onRendered(() => {
         }
     });
     function setCustomerDataExByName(data) {
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
         let lineItems = [];
         $('#add-customer-title').text('Edit Customer');
         let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -5573,11 +5575,11 @@ Template.new_quote.onRendered(() => {
                         if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                             //$(".btnSave").trigger("click");
                             $('#html-2-pdfwrapper_new').css('display', 'none');
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         } else {
                             document.getElementById('html-2-pdfwrapper_new').style.display="none";
                             $('#html-2-pdfwrapper_new').css('display', 'none');
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         }
                     });
                 })
@@ -5743,7 +5745,7 @@ Template.new_quote.onRendered(() => {
                 $(".btnSave").trigger("click");
             } else {
                 $('#html-2-pdfwrapper').css('display', 'none');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             }
         });
 
@@ -5753,7 +5755,7 @@ Template.new_quote.onRendered(() => {
         //     pdf.textWithLink('Pay Now', 482, 113, { url: 'https://www.depot.vs1cloud.com/stripe/' + stringQuery });
         //     pdf.save('Quote-' + id + '.pdf');
         //     $('#html-2-pdfwrapper').css('display', 'none');
-        //      $('.fullScreenSpin').css('display', 'none');
+        //      LoadingOverlay.hide();
         // });
 
 
@@ -6709,7 +6711,7 @@ Template.new_quote.helpers({
 Template.new_quote.events({
 
   'click .btnRefreshCustomField': function (event) {
-      $('.fullScreenSpin').css('display', 'inline-block');
+     LoadingOverlay.show();
       let templateObject = Template.instance();
       sideBarService.getAllCustomFields().then(function (data) {
         addVS1Data('TCustomFieldList', JSON.stringify(data)).then(function (datareturn) {
@@ -6718,9 +6720,9 @@ Template.new_quote.events({
             Meteor._reload.reload();
         });
             templateObject.getSalesCustomFieldsList();
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
       }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
       });
     },
     'click #edtSaleCustField1': function(event) {
@@ -6745,7 +6747,7 @@ Template.new_quote.events({
         else
         {
 
-            $('.fullScreenSpin').css('display', 'inline-block');
+           LoadingOverlay.show();
             $('#html-2-pdfwrapper').css('display', 'block');
             if ($('.edtCustomerEmail').val() != "") {
                 $('.pdfCustomerName').html($('#edtCustomerName').val());
@@ -7286,11 +7288,11 @@ Template.new_quote.events({
                     //FlowRouter.go('/productview?prodname=' +  $(event.target).text());
                     let lineExtaSellItems = [];
                     let lineExtaSellObj = {};
-                    $('.fullScreenSpin').css('display', 'inline-block');
+                   LoadingOverlay.show();
                     getVS1Data('TProductVS1').then(function(dataObject) {
                         if (dataObject.length == 0) {
                             sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 let lineItemObj = {};
                                 let currencySymbol = Currency;
@@ -7330,7 +7332,7 @@ Template.new_quote.events({
                                 }, 500);
                             }).catch(function(err) {
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         } else {
                             let data = JSON.parse(dataObject[0].data);
@@ -7340,7 +7342,7 @@ Template.new_quote.events({
                             for (let i = 0; i < data.tproductvs1.length; i++) {
                                 if (data.tproductvs1[i].fields.ProductName === productDataName) {
                                     added = true;
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     let lineItems = [];
                                     let lineItemObj = {};
                                     let currencySymbol = Currency;
@@ -7383,7 +7385,7 @@ Template.new_quote.events({
                             }
                             if (!added) {
                                 sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     let lineItems = [];
                                     let lineItemObj = {};
                                     let currencySymbol = Currency;
@@ -7423,14 +7425,14 @@ Template.new_quote.events({
                                     }, 500);
                                 }).catch(function(err) {
 
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }
                         }
                     }).catch(function(err) {
 
                         sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             let lineItemObj = {};
                             let currencySymbol = Currency;
@@ -7470,7 +7472,7 @@ Template.new_quote.events({
                             }, 500);
                         }).catch(function(err) {
 
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
 
                     });
@@ -7494,7 +7496,7 @@ Template.new_quote.events({
         }
     },
     'click #productListModal #refreshpagelist': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
+       LoadingOverlay.show();
         localStorage.setItem('VS1SalesProductList', '');
         let templateObject = Template.instance();
         Meteor._reload.reload();
@@ -7669,7 +7671,7 @@ Template.new_quote.events({
 
                         }).catch(function (err) {
                             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             // Meteor._reload.reload();
                         });
                     } else {
@@ -7720,7 +7722,7 @@ Template.new_quote.events({
 
                     }).catch(function (err) {
                         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         // Meteor._reload.reload();
                     });
                 });
@@ -7747,7 +7749,7 @@ Template.new_quote.events({
     'click .printConfirm':async function (event) {
 
         var printTemplate = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
+       LoadingOverlay.show();
 
         var quotes = $('input[name="Quotes"]:checked').val();
         let emid = Session.get('mySessionEmployeeLoggedID');
@@ -7982,7 +7984,7 @@ Template.new_quote.events({
         }
     },
     // 'click .printConfirm': function(event) {
-    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //    LoadingOverlay.show();
     //     let templateObject = Template.instance();
     //     let quoteData = templateObject.quoterecord.get();
     //     $('#html-2-pdfwrapper').css('display', 'block');
@@ -8156,7 +8158,7 @@ Template.new_quote.events({
         }
     },
     'click .btnDeleteQuote': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+       LoadingOverlay.show();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         var url = FlowRouter.current().path;
@@ -8192,7 +8194,7 @@ Template.new_quote.events({
 
                     }
                 });
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         } else {
           if(FlowRouter.current().queryParams.trans){
@@ -8359,9 +8361,10 @@ Template.new_quote.events({
     // 'click .btnSaveSettings': function(event) {
     //     $('#myModal4').modal('toggle');
     // },
-    'click .btnSave': function(event) {
+    'click .btnSave': (event, templateObject) => {
+        saveCurrencyHistory();
 
-        let templateObject = Template.instance();
+        //let templateObject = Template.instance();
         let quoteData = templateObject.quoterecord.get();
         let stripe_id = templateObject.accountID.get() || '';
         let stripe_fee_method = templateObject.stripe_fee_method.get();
@@ -8381,7 +8384,7 @@ Template.new_quote.events({
             e.preventDefault();
         } else {
 
-            $('.fullScreenSpin').css('display', 'inline-block');
+           LoadingOverlay.show();
             var splashLineArray = new Array();
             let lineItemsForm = [];
             let lineItemObjForm = {};
@@ -8930,7 +8933,7 @@ Template.new_quote.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -8999,7 +9002,7 @@ Template.new_quote.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -9066,7 +9069,7 @@ Template.new_quote.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -9247,7 +9250,7 @@ Template.new_quote.events({
                     }
                 });
 
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         }
 
@@ -9847,7 +9850,7 @@ Template.new_quote.events({
                     e.preventDefault();
                 } else {
 
-                    $('.fullScreenSpin').css('display', 'inline-block');
+                   LoadingOverlay.show();
                     var splashLineArray = new Array();
                     let lineItemsForm = [];
                     let lineItemObjForm = {};
@@ -10335,7 +10338,7 @@ Template.new_quote.events({
                                             }
                                         });
 
-                                        $('.fullScreenSpin').css('display', 'none');
+                                        LoadingOverlay.hide();
                                     }
                                 });
 
@@ -10373,7 +10376,7 @@ Template.new_quote.events({
                                             }
                                         });
 
-                                        $('.fullScreenSpin').css('display', 'none');
+                                        LoadingOverlay.hide();
                                     }
                                 });
 
@@ -10409,7 +10412,7 @@ Template.new_quote.events({
                                             }
                                         });
 
-                                        $('.fullScreenSpin').css('display', 'none');
+                                        LoadingOverlay.hide();
                                     }
                                 });
 
@@ -10442,7 +10445,7 @@ Template.new_quote.events({
                             }
                         });
 
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                     });
                 }
 
@@ -10480,7 +10483,7 @@ Template.new_quote.events({
             e.preventDefault();
         } else {
 
-            $('.fullScreenSpin').css('display', 'inline-block');
+           LoadingOverlay.show();
             var splashLineArray = new Array();
             let lineItemsForm = [];
             let lineItemObjForm = {};
@@ -10712,7 +10715,7 @@ Template.new_quote.events({
                     }
                 });
 
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         }
 
@@ -10726,7 +10729,7 @@ Template.new_quote.events({
         };
     },
     'click #btnCopyToOrder': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
+       LoadingOverlay.show();
         var url = FlowRouter.current().path;
         if (url.indexOf('?id=') > 0) {
             let templateObject = Template.instance();
@@ -10743,7 +10746,7 @@ Template.new_quote.events({
                 e.preventDefault();
             } else {
 
-                $('.fullScreenSpin').css('display', 'inline-block');
+               LoadingOverlay.show();
                 var splashLineArray = new Array();
                 let lineItemsForm = [];
                 let lineItemObjForm = {};
@@ -10978,7 +10981,7 @@ Template.new_quote.events({
                         }
                     });
 
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                 });
             }
         } else {
@@ -10986,7 +10989,7 @@ Template.new_quote.events({
         }
     },
     'click #btnCopyToInvoice': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
+       LoadingOverlay.show();
         var url = FlowRouter.current().path;
         if (url.indexOf('?id=') > 0) {
             let templateObject = Template.instance();
@@ -11004,7 +11007,7 @@ Template.new_quote.events({
                 e.preventDefault();
             } else {
 
-                $('.fullScreenSpin').css('display', 'inline-block');
+               LoadingOverlay.show();
                 var splashLineArray = new Array();
                 let lineItemsForm = [];
                 let lineItemObjForm = {};
@@ -11241,7 +11244,7 @@ Template.new_quote.events({
                         }
                     });
 
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                 });
             }
         } else {
@@ -11275,20 +11278,20 @@ Template.new_quote.events({
         }
     },
     'click .btnSnLotmodal': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+       LoadingOverlay.show();
         var target=event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
         let selectedunit = $(target).closest('tr').find('.lineQty').val();
         localStorage.setItem('productItem', selectedunit);
         let productService = new ProductService();
         if (selectedProductName == '') {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
             swal('You have to select Product.', '', 'info');
             event.preventDefault();
             return false;
         } else {
             productService.getProductStatus(selectedProductName).then(function(data) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                     swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
                     event.preventDefault();

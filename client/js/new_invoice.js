@@ -15,6 +15,7 @@ import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
 import { ContactService } from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
+import { saveCurrencyHistory } from "../packages/currency/CurrencyWidget";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -77,7 +78,7 @@ Template.new_invoice.onCreated(() => {
   templateObject.subtaxcodes = new ReactiveVar([]);
 });
 
-Template.new_invoice.onRendered(() => {
+Template.new_invoice.onRendered(function() {
   // $('#lotNumberModal .btnSelect').removeClass('d-none');
   // $('#lotNumberModal .btnAutoFill').addClass('d-none');
   $("#serialNumberModal .btnSelect").removeClass("d-none");
@@ -17343,8 +17344,9 @@ Template.new_invoice.events({
   //     localStorage.setItem('custfield3',custfield3);
   //     $('#myModal4').modal('toggle');
   // },
-  "click .btnSave": function (event) {
-    let templateObject = Template.instance();
+  "click .btnSave":  (event, templateObject) => {
+    saveCurrencyHistory();
+    // let templateObject = Template.instance();
     let stripe_id = templateObject.accountID.get();
     let stripe_fee_method = templateObject.stripe_fee_method.get();
     let lineItems = [];

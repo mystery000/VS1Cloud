@@ -15,6 +15,8 @@ import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { OrganisationService } from '../js/organisation-service';
 import { TaxRateService } from "../settings/settings-service";
+import LoadingOverlay from '../LoadingOverlay';
+import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -170,7 +172,7 @@ Template.refundcard.onRendered(() => {
 
 
         templateObject.getTemplateInfoNew = function(){
-            $('.fullScreenSpin').css('display', 'inline-block');
+            LoadingOverlay.show();
             getVS1Data('TTemplateSettings').then(function(dataObject) {
               if (dataObject.length == 0) {
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
@@ -215,9 +217,9 @@ Template.refundcard.onRendered(() => {
                      }
 
 
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
                   }).catch(function (err) {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                   });
               }else{
                       let data = JSON.parse(dataObject[0].data);
@@ -260,7 +262,7 @@ Template.refundcard.onRendered(() => {
 
 
                      }
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
               }
             }).catch(function(err) {
             sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
@@ -308,9 +310,9 @@ Template.refundcard.onRendered(() => {
 
 
                       }
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
             }).catch(function (err) {
-              $('.fullScreenSpin').css('display', 'none');
+              LoadingOverlay.hide();
             });
           });
 
@@ -1517,7 +1519,7 @@ Template.refundcard.onRendered(() => {
         });
     });
 
-    $('.fullScreenSpin').css('display', 'inline-block');
+    LoadingOverlay.show();
     templateObject.getAllClients = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
             if (dataObject.length === 0) {
@@ -1758,7 +1760,7 @@ Template.refundcard.onRendered(() => {
             }
         }).catch(function (err) {
             contactService.getOneCustomerDataEx(customerID).then(function (data) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 setCustomerByID(data);
             });
         });
@@ -1804,7 +1806,7 @@ Template.refundcard.onRendered(() => {
                         if (dataObject.length == 0) {
                             let customerData = templateObject.clientrecords.get();
                       accountService.getRefundSales(currentInvoice).then(function(data) {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     let lineItems = [];
                     let lineItemObj = {};
                     let lineItemsTable = [];
@@ -2106,7 +2108,7 @@ Template.refundcard.onRendered(() => {
 
                         }
                     });
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
 
                 });
                         } else {
@@ -2118,7 +2120,7 @@ Template.refundcard.onRendered(() => {
                             for (let d = 0; d < useData.length; d++) {
                                 if (parseInt(useData[d].fields.ID) === currentInvoice) {
                                     added = true;
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     let lineItems = [];
                                     let lineItemObj = {};
                                     let lineItemsTable = [];
@@ -2427,7 +2429,7 @@ Template.refundcard.onRendered(() => {
                             }
                             if (!added) {
                       accountService.getRefundSales(currentInvoice).then(function(data) {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     let lineItems = [];
                     let lineItemObj = {};
                     let lineItemsTable = [];
@@ -2736,7 +2738,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
 
                         }
                     });
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
 
                 });
                             }
@@ -2745,7 +2747,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     }).catch(function (err) {
                         let customerData = templateObject.clientrecords.get();
                       accountService.getRefundSales(currentInvoice).then(function(data) {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     let lineItems = [];
                     let lineItemObj = {};
                     let lineItemsTable = [];
@@ -3056,7 +3058,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
 
                         }
                     });
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
 
                 });
               });
@@ -3064,7 +3066,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
             templateObject.getInvoiceData();
         }
     } else {
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
         let lineItems = [];
         let lineItemsTable = [];
         let lineItemObj = {};
@@ -3592,7 +3594,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
         $('#tblCurrencyPopList_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshCurrency').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
     $(document).on("click", "#departmentList tbody tr", function(e) {
@@ -3610,7 +3612,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
         $('#tblStatusPopList_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshStatus').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
     $(document).on("click", "#custListType tbody tr", function(e) {;
@@ -3627,7 +3629,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
        // $('#tblStatusPopList_filter .form-control-sm').val('');
        // setTimeout(function () {
        //     $('.btnRefreshStatus').trigger('click');
-       //     $('.fullScreenSpin').css('display', 'none');
+       //     LoadingOverlay.hide();
        // }, 1000);
    });
     /* On click Customer List */
@@ -3831,7 +3833,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
         setTimeout(function() {
             //$('#tblCustomerlist_filter .form-control-sm').focus();
             $('.btnRefreshCustomer').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
         // }
     }
@@ -3850,7 +3852,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     $('#termModalHeader').text('Edit Terms');
                     getVS1Data('TTermsVS1').then(function(dataObject) { //edit to test indexdb
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getTermsVS1().then(function(data) {
                                 for (let i in data.ttermsvs1) {
                                     if (data.ttermsvs1[i].TermsName === termsDataName) {
@@ -3881,7 +3883,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newTermsModal').modal('toggle');
                                 }, 200);
                             });
@@ -3917,12 +3919,12 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newTermsModal').modal('toggle');
                             }, 200);
                         }
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        LoadingOverlay.show();
                         sideBarService.getTermsVS1().then(function(data) {
                             for (let i in data.ttermsvs1) {
                                 if (data.ttermsvs1[i].TermsName === termsDataName) {
@@ -3953,7 +3955,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newTermsModal').modal('toggle');
                             }, 200);
                         });
@@ -3986,7 +3988,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
 
                     getVS1Data('TDeptClass').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getDepartment().then(function(data) {
                                 for (let i = 0; i < data.tdeptclass.length; i++) {
                                     if (data.tdeptclass[i].DeptClassName === deptDataName) {
@@ -3997,7 +3999,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newDepartmentModal').modal('toggle');
                                 }, 200);
                             });
@@ -4013,12 +4015,12 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newDepartmentModal').modal('toggle');
                             }, 200);
                         }
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        LoadingOverlay.show();
                         sideBarService.getDepartment().then(function(data) {
                             for (let i = 0; i < data.tdeptclass.length; i++) {
                                 if (data.tdeptclass[i].DeptClassName === deptDataName) {
@@ -4029,7 +4031,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newDepartmentModal').modal('toggle');
                             }, 200);
                         });
@@ -4063,7 +4065,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
 
                     getVS1Data('TLeadStatusType').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getAllLeadStatus().then(function(data) {
                                 for (let i in data.tleadstatustype) {
                                     if (data.tleadstatustype[i].TypeName === statusDataName) {
@@ -4071,7 +4073,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newStatusPopModal').modal('toggle');
                                 }, 200);
                             });
@@ -4085,12 +4087,12 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newStatusPopModal').modal('toggle');
                             }, 200);
                         }
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        LoadingOverlay.show();
                         sideBarService.getAllLeadStatus().then(function(data) {
                             for (let i in data.tleadstatustype) {
                                 if (data.tleadstatustype[i].TypeName === statusDataName) {
@@ -4099,13 +4101,13 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newStatusPopModal').modal('toggle');
                             }, 200);
                         });
                     });
                     setTimeout(function() {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         $('#newStatusPopModal').modal('toggle');
                     }, 200);
 
@@ -4139,7 +4141,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     $('#sedtCountry').prop('readonly', true);
                     getVS1Data('TCurrency').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getCurrencies().then(function(data) {
                                 for (let i in data.tcurrency) {
                                     if (data.tcurrency[i].Code === currencyDataName) {
@@ -4157,7 +4159,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newCurrencyModal').modal('toggle');
                                     $('#sedtCountry').attr('readonly', true);
                                 }, 200);
@@ -4178,13 +4180,13 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newCurrencyModal').modal('toggle');
                             }, 200);
                         }
 
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        LoadingOverlay.show();
                         sideBarService.getCurrencies().then(function(data) {
                             for (let i in data.tcurrency) {
                                 if (data.tcurrency[i].Code === currencyDataName) {
@@ -4202,7 +4204,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newCurrencyModal').modal('toggle');
                                 $('#sedtCountry').attr('readonly', true);
                             }, 200);
@@ -4249,9 +4251,9 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     $('#edtCustomerPOPID').val('');
                     getVS1Data('TCustomerVS1').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 $('#add-customer-title').text('Edit Customer');
                                 let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -4338,7 +4340,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                     $('#addCustomerModal').modal('show');
                                 }, 200);
                             }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         } else {
                             let data = JSON.parse(dataObject[0].data);
@@ -4349,7 +4351,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                 if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
                                     let lineItems = [];
                                     added = true;
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#add-customer-title').text('Edit Customer');
                                     let popCustomerID = data.tcustomervs1[i].fields.ID || '';
                                     let popCustomerName = data.tcustomervs1[i].fields.ClientName || '';
@@ -4438,9 +4440,9 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                 }
                             }
                             if (!added) {
-                                $('.fullScreenSpin').css('display', 'inline-block');
+                                LoadingOverlay.show();
                                 sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     let lineItems = [];
                                     $('#add-customer-title').text('Edit Customer');
                                     let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -4527,13 +4529,13 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                         $('#addCustomerModal').modal('show');
                                     }, 200);
                                 }).catch(function(err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }
                         }
                     }).catch(function(err) {
                         sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             $('#add-customer-title').text('Edit Customer');
                             let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -4620,7 +4622,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                 $('#addCustomerModal').modal('show');
                             }, 200);
                         }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     });
                 } else {
@@ -4659,7 +4661,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
 
                    getVS1Data('TPaymentMethod').then(function(dataObject) {
                        if (dataObject.length == 0) {
-                           $('.fullScreenSpin').css('display', 'inline-block');
+                           LoadingOverlay.show();
                            sideBarService.getPaymentMethodDataVS1().then(function(data) {
                                for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                                    if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
@@ -4673,7 +4675,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                    }
                                }
                                setTimeout(function() {
-                                   $('.fullScreenSpin').css('display', 'none');
+                                   LoadingOverlay.hide();
                                    $('#newPaymentMethodModal').modal('toggle');
                                }, 200);
                            });
@@ -4693,12 +4695,12 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                }
                            }
                            setTimeout(function() {
-                               $('.fullScreenSpin').css('display', 'none');
+                               LoadingOverlay.hide();
                                $('#newPaymentMethodModal').modal('toggle');
                            }, 200);
                        }
                    }).catch(function(err) {
-                       $('.fullScreenSpin').css('display', 'inline-block');
+                       LoadingOverlay.show();
                        sideBarService.getPaymentMethodDataVS1().then(function(data) {
                            for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                                if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
@@ -4712,7 +4714,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                                }
                            }
                            setTimeout(function() {
-                               $('.fullScreenSpin').css('display', 'none');
+                               LoadingOverlay.hide();
                                $('#newPaymentMethodModal').modal('toggle');
                            }, 200);
                        });
@@ -4826,11 +4828,11 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
             if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                 //$(".btnSave").trigger("click");
                 $('#html-2-pdfwrapper').css('display', 'none');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             } else {
                 document.getElementById('html-2-pdfwrapper').style.display="none";
                 $('#html-2-pdfwrapper').css('display', 'none');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             }
         });
 
@@ -4943,19 +4945,19 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                 html2pdf().set(opt).from(source).save().then(function (dataObject) {
                     if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                         $('#html-2-pdfwrapper_new').css('display', 'none');
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         //$(".btnSave").trigger("click");
                     } else {
                         document.getElementById('html-2-pdfwrapper_new').style.display="none";
                         $('#html-2-pdfwrapper_new').css('display', 'none');
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                     }
                 });
             })
 
 
 
-           // $('.fullScreenSpin').css('display', 'none');
+           // LoadingOverlay.hide();
 
             return true;
 
@@ -5866,7 +5868,7 @@ Template.refundcard.helpers({
 
 Template.refundcard.events({
   'click .btnRefreshCustomField': function (event) {
-      $('.fullScreenSpin').css('display', 'inline-block');
+      LoadingOverlay.show();
       let templateObject = Template.instance();
       sideBarService.getAllCustomFields().then(function (data) {
         addVS1Data('TCustomFieldList', JSON.stringify(data)).then(function (datareturn) {
@@ -5875,9 +5877,9 @@ Template.refundcard.events({
             Meteor._reload.reload();
         });
             templateObject.getSalesCustomFieldsList();
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
       }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
       });
     },
 
@@ -5890,7 +5892,7 @@ Template.refundcard.events({
         else
         {
 
-            $('.fullScreenSpin').css('display', 'inline-block');
+            LoadingOverlay.show();
             $('#html-2-pdfwrapper').css('display', 'block');
             if ($('.edtCustomerEmail').val() != "") {
                 $('.pdfCustomerName').html($('#edtCustomerName').val());
@@ -5997,7 +5999,7 @@ Template.refundcard.events({
     //     }
     // },
     // 'click .btnSaveStatus': function() {
-    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     LoadingOverlay.show();
     //     let clientService = new SalesBoardService()
     //     let status = $('#status').val();
     //     let leadData = {
@@ -6012,7 +6014,7 @@ Template.refundcard.events({
     //         clientService.saveLeadStatus(leadData).then(function(objDetails) {
     //             sideBarService.getAllLeadStatus().then(function(dataUpdate) {
     //                 addVS1Data('TLeadStatusType', JSON.stringify(dataUpdate)).then(function(datareturn) {
-    //                     $('.fullScreenSpin').css('display', 'none');
+    //                     LoadingOverlay.hide();
     //                     let id = $('.printID').attr("id");
     //                     window.open("/refundcard");
     //                 }).catch(function(err) {
@@ -6023,7 +6025,7 @@ Template.refundcard.events({
     //                 window.open('/refundcard', '_self');
     //             });
     //         }).catch(function(err) {
-    //             $('.fullScreenSpin').css('display', 'none');
+    //             LoadingOverlay.hide();
     //
     //             swal({
     //                 title: 'Oooops...',
@@ -6039,10 +6041,10 @@ Template.refundcard.events({
     //                 }
     //             });
     //
-    //             $('.fullScreenSpin').css('display', 'none');
+    //             LoadingOverlay.hide();
     //         });
     //     } else {
-    //         $('.fullScreenSpin').css('display', 'none');
+    //         LoadingOverlay.hide();
     //         swal({
     //             title: 'Please Enter Status',
     //             text: "Status field cannot be empty",
@@ -6438,11 +6440,11 @@ Template.refundcard.events({
                     //FlowRouter.go('/productview?prodname=' +  $(event.target).text());
                     let lineExtaSellItems = [];
                     let lineExtaSellObj = {};
-                    $('.fullScreenSpin').css('display', 'inline-block');
+                    LoadingOverlay.show();
                     getVS1Data('TProductVS1').then(function(dataObject) {
                         if (dataObject.length == 0) {
                             sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 let lineItemObj = {};
                                 let currencySymbol = Currency;
@@ -6482,7 +6484,7 @@ Template.refundcard.events({
                                 }, 500);
                             }).catch(function(err) {
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         } else {
                             let data = JSON.parse(dataObject[0].data);
@@ -6492,7 +6494,7 @@ Template.refundcard.events({
                             for (let i = 0; i < data.tproductvs1.length; i++) {
                                 if (data.tproductvs1[i].fields.ProductName === productDataName) {
                                     added = true;
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     let lineItems = [];
                                     let lineItemObj = {};
                                     let currencySymbol = Currency;
@@ -6535,7 +6537,7 @@ Template.refundcard.events({
                             }
                             if (!added) {
                                 sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     let lineItems = [];
                                     let lineItemObj = {};
                                     let currencySymbol = Currency;
@@ -6575,14 +6577,14 @@ Template.refundcard.events({
                                     }, 500);
                                 }).catch(function(err) {
 
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }
                         }
                     }).catch(function(err) {
 
                         sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             let lineItemObj = {};
                             let currencySymbol = Currency;
@@ -6622,7 +6624,7 @@ Template.refundcard.events({
                             }, 500);
                         }).catch(function(err) {
 
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
 
                     });
@@ -6645,7 +6647,7 @@ Template.refundcard.events({
         }
     },
     'click #productListModal #refreshpagelist': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         localStorage.setItem('VS1SalesProductList', '');
         let templateObject = Template.instance();
         Meteor._reload.reload();
@@ -6820,7 +6822,7 @@ Template.refundcard.events({
 
                         }).catch(function (err) {
                             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             // Meteor._reload.reload();
                         });
                     } else {
@@ -6871,7 +6873,7 @@ Template.refundcard.events({
 
                     }).catch(function (err) {
                         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         // Meteor._reload.reload();
                     });
                 });
@@ -6898,7 +6900,7 @@ Template.refundcard.events({
     'click .printConfirm':async function (event) {
 
         var printTemplate = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
 
         var refunds = $('input[name="Refunds"]:checked').val();
         let emid = Session.get('mySessionEmployeeLoggedID');
@@ -7256,7 +7258,7 @@ Template.refundcard.events({
         }
     },
     'click .btnDeleteRefund': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         var url = FlowRouter.current().path;
@@ -7288,7 +7290,7 @@ Template.refundcard.events({
 
                     }
                 });
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         } else {
             window.open('/refundlist', '_self');
@@ -7414,8 +7416,9 @@ Template.refundcard.events({
 
         $('#myModal4').modal('toggle');
     },
-    'click .btnSave': function(event) {
-        let templateObject = Template.instance();
+    'click .btnSave':(event, templateObject) => {
+        saveCurrencyHistory();
+        //let templateObject = Template.instance();
         let customername = $('#edtCustomerName');
         let salesService = new SalesBoardService();
         let termname = $('#sltTerms').val() || '';
@@ -7432,7 +7435,7 @@ Template.refundcard.events({
             e.preventDefault();
         } else {
 
-            $('.fullScreenSpin').css('display', 'inline-block');
+            LoadingOverlay.show();
             var splashLineArray = new Array();
             let lineItemsForm = [];
             let lineItemObjForm = {};
@@ -7772,7 +7775,7 @@ Template.refundcard.events({
                                         }
                                     });
 
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }
                             });
 
@@ -7839,7 +7842,7 @@ Template.refundcard.events({
                                         }
                                     });
 
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }
                             });
 
@@ -7905,7 +7908,7 @@ Template.refundcard.events({
                                         }
                                     });
 
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }
                             });
 
@@ -8100,7 +8103,7 @@ Template.refundcard.events({
                     }
                 });
 
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         }
 
@@ -8614,7 +8617,7 @@ Template.refundcard.events({
             e.preventDefault();
         } else {
 
-            $('.fullScreenSpin').css('display', 'inline-block');
+            LoadingOverlay.show();
             var splashLineArray = new Array();
             let lineItemsForm = [];
             let lineItemObjForm = {};
@@ -8842,7 +8845,7 @@ Template.refundcard.events({
                     }
                 });
 
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         }
 
@@ -8892,7 +8895,7 @@ Template.refundcard.events({
      },
 
     'click .btnSnLotmodal': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         const templateObject = Template.instance();
         var target=event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
@@ -8906,7 +8909,7 @@ Template.refundcard.events({
             if (element.item == selectedProductName) {
                 existProduct = true;
                 productService.getProductStatus(selectedProductName).then(function(data) {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                         swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
                         event.preventDefault();
@@ -8999,13 +9002,13 @@ Template.refundcard.events({
         });
         if (!existProduct) {
             if (selectedProductName == '') {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 swal('You have to select Product.', '', 'info');
                 event.preventDefault();
                 return false;
             } else {
                 productService.getProductStatus(selectedProductName).then(function(data) {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                         swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
                         event.preventDefault();

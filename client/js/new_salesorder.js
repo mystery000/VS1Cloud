@@ -15,6 +15,8 @@ import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
+import LoadingOverlay from '../LoadingOverlay';
+import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -129,7 +131,7 @@ Template.new_salesorder.onRendered(() => {
 
 
     templateObject.getTemplateInfoNew = function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         getVS1Data('TTemplateSettings').then(function(dataObject) {
           if (dataObject.length == 0) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
@@ -205,9 +207,9 @@ Template.new_salesorder.onRendered(() => {
                  }
 
 
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
               }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
               });
           }else{
                   let data = JSON.parse(dataObject[0].data);
@@ -283,7 +285,7 @@ Template.new_salesorder.onRendered(() => {
 
 
                   }
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
           }
         }).catch(function(err) {
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
@@ -354,9 +356,9 @@ Template.new_salesorder.onRendered(() => {
 
 
                   }
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
         }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
         });
       });
 
@@ -2070,7 +2072,7 @@ Template.new_salesorder.onRendered(() => {
 
 
     });
-    $('.fullScreenSpin').css('display', 'inline-block');
+    LoadingOverlay.show();
 
     templateObject.getAllClients = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
@@ -2213,7 +2215,7 @@ Template.new_salesorder.onRendered(() => {
             }
         }).catch(function (err) {
             contactService.getOneCustomerDataEx(customerID).then(function (data) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 setCustomerByID(data);
             });
         });
@@ -2582,7 +2584,7 @@ Template.new_salesorder.onRendered(() => {
 
                                 }
                             });
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
 
                         });
                     } else {
@@ -3093,7 +3095,7 @@ Template.new_salesorder.onRendered(() => {
 
                                         }
                                     });
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
 
                                 });
                             } catch (err) {
@@ -3146,7 +3148,7 @@ Template.new_salesorder.onRendered(() => {
                 }).catch(function(err) {
 
                     accountService.getOneSalesOrderdataEx(currentQuote).then(function(data) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         let lineItems = [];
                         let lineItemObj = {};
                         let lineItemsTable = [];
@@ -3428,7 +3430,7 @@ Template.new_salesorder.onRendered(() => {
 
                             }
                         });
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
 
                     });
                 });
@@ -3562,7 +3564,7 @@ Template.new_salesorder.onRendered(() => {
                                   };
                                 }
                             });
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         }
                     });
 
@@ -3596,7 +3598,7 @@ Template.new_salesorder.onRendered(() => {
             currentSalesOrder = parseInt(currentSalesOrder);
             templateObject.getSalesOrderData = function() {
                 accountService.getOneQuotedataEx(currentSalesOrder).then(function(data) {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     let lineItems = [];
                     let lineItemObj = {};
                     let lineItemsTable = [];
@@ -3874,7 +3876,7 @@ Template.new_salesorder.onRendered(() => {
 
                         }
                     });
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
 
                 });
             };
@@ -3891,7 +3893,7 @@ Template.new_salesorder.onRendered(() => {
                 getVS1Data('TSalesOrderEx').then(function(dataObject) {
                     if (dataObject.length == 0) {
                         accountService.getOneSalesOrderdataEx(currentSalesOrder).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             let lineItemObj = {};
                             let lineItemsTable = [];
@@ -4167,7 +4169,7 @@ Template.new_salesorder.onRendered(() => {
 
                                 }
                             });
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
@@ -4177,7 +4179,7 @@ Template.new_salesorder.onRendered(() => {
                             if (parseInt(useData[d].fields.ID) === currentSalesOrder) {
 
                                 added = true;
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 let lineItemObj = {};
                                 let lineItemsTable = [];
@@ -4447,7 +4449,7 @@ Template.new_salesorder.onRendered(() => {
                 }).catch(function(err) {
 
                     accountService.getOneSalesOrderdataEx(currentSalesOrder).then(function(data) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         let lineItems = [];
                         let lineItemObj = {};
                         let lineItemsTable = [];
@@ -4669,7 +4671,7 @@ Template.new_salesorder.onRendered(() => {
 
                             }
                         });
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
 
                     });
                 });
@@ -4679,7 +4681,7 @@ Template.new_salesorder.onRendered(() => {
             templateObject.getSalesOrderData();
         }
     } else {
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
         let lineItems = [];
         let lineItemsTable = [];
         let lineItemObj = {};
@@ -4912,7 +4914,7 @@ Template.new_salesorder.onRendered(() => {
         $('#tblStatusPopList_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshStatus').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
     $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
@@ -4922,7 +4924,7 @@ Template.new_salesorder.onRendered(() => {
         $('#tblCurrencyPopList_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshCurrency').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
     $(document).on("click", "#departmentList tbody tr", function(e) {
@@ -4947,7 +4949,7 @@ Template.new_salesorder.onRendered(() => {
         // $('#tblStatusPopList_filter .form-control-sm').val('');
         // setTimeout(function () {
         //     $('.btnRefreshStatus').trigger('click');
-        //     $('.fullScreenSpin').css('display', 'none');
+        //     LoadingOverlay.hide();
         // }, 1000);
     });
 
@@ -5564,7 +5566,7 @@ Template.new_salesorder.onRendered(() => {
         setTimeout(function() {
             //$('#tblCustomerlist_filter .form-control-sm').focus();
             // $('.btnRefreshCustomer').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
         // }
     }
@@ -5582,7 +5584,7 @@ Template.new_salesorder.onRendered(() => {
                     $('#termModalHeader').text('Edit Terms');
                     getVS1Data('TTermsVS1').then(function(dataObject) { //edit to test indexdb
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getTermsVS1().then(function(data) {
                                 for (let i in data.ttermsvs1) {
                                     if (data.ttermsvs1[i].TermsName === termsDataName) {
@@ -5613,7 +5615,7 @@ Template.new_salesorder.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newTermsModal').modal('toggle');
                                 }, 200);
                             });
@@ -5649,12 +5651,12 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newTermsModal').modal('toggle');
                             }, 200);
                         }
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        LoadingOverlay.show();
                         sideBarService.getTermsVS1().then(function(data) {
                             for (let i in data.ttermsvs1) {
                                 if (data.ttermsvs1[i].TermsName === termsDataName) {
@@ -5685,7 +5687,7 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newTermsModal').modal('toggle');
                             }, 200);
                         });
@@ -5718,7 +5720,7 @@ Template.new_salesorder.onRendered(() => {
 
                     getVS1Data('TDeptClass').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getDepartment().then(function(data) {
                                 for (let i = 0; i < data.tdeptclass.length; i++) {
                                     if (data.tdeptclass[i].DeptClassName === deptDataName) {
@@ -5729,7 +5731,7 @@ Template.new_salesorder.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newDepartmentModal').modal('toggle');
                                 }, 200);
                             });
@@ -5745,12 +5747,12 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newDepartmentModal').modal('toggle');
                             }, 200);
                         }
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        LoadingOverlay.show();
                         sideBarService.getDepartment().then(function(data) {
                             for (let i = 0; i < data.tdeptclass.length; i++) {
                                 if (data.tdeptclass[i].DeptClassName === deptDataName) {
@@ -5761,7 +5763,7 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newDepartmentModal').modal('toggle');
                             }, 200);
                         });
@@ -5795,7 +5797,7 @@ Template.new_salesorder.onRendered(() => {
 
                     getVS1Data('TLeadStatusType').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getAllLeadStatus().then(function(data) {
                                 for (let i in data.tleadstatustype) {
                                     if (data.tleadstatustype[i].TypeName === statusDataName) {
@@ -5803,7 +5805,7 @@ Template.new_salesorder.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newStatusPopModal').modal('toggle');
                                 }, 200);
                             });
@@ -5817,12 +5819,12 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newStatusPopModal').modal('toggle');
                             }, 200);
                         }
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        LoadingOverlay.show();
                         sideBarService.getAllLeadStatus().then(function(data) {
                             for (let i in data.tleadstatustype) {
                                 if (data.tleadstatustype[i].TypeName === statusDataName) {
@@ -5830,13 +5832,13 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newStatusPopModal').modal('toggle');
                             }, 200);
                         });
                     });
                     setTimeout(function() {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         $('#newStatusPopModal').modal('toggle');
                     }, 200);
 
@@ -5870,7 +5872,7 @@ Template.new_salesorder.onRendered(() => {
                     $('#sedtCountry').prop('readonly', true);
                     getVS1Data('TCurrency').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getCurrencies().then(function(data) {
                                 for (let i in data.tcurrency) {
                                     if (data.tcurrency[i].Code === currencyDataName) {
@@ -5888,7 +5890,7 @@ Template.new_salesorder.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newCurrencyModal').modal('toggle');
                                     $('#sedtCountry').attr('readonly', true);
                                 }, 200);
@@ -5909,13 +5911,13 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newCurrencyModal').modal('toggle');
                             }, 200);
                         }
 
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        LoadingOverlay.show();
                         sideBarService.getCurrencies().then(function(data) {
                             for (let i in data.tcurrency) {
                                 if (data.tcurrency[i].Code === currencyDataName) {
@@ -5933,7 +5935,7 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newCurrencyModal').modal('toggle');
                                 $('#sedtCountry').attr('readonly', true);
                             }, 200);
@@ -5979,9 +5981,9 @@ Template.new_salesorder.onRendered(() => {
                     $('#edtCustomerPOPID').val('');
                     getVS1Data('TCustomerVS1').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 $('#add-customer-title').text('Edit Customer');
                                 let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -6068,7 +6070,7 @@ Template.new_salesorder.onRendered(() => {
                                     $('#addCustomerModal').modal('show');
                                 }, 200);
                             }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         } else {
                             let data = JSON.parse(dataObject[0].data);
@@ -6079,7 +6081,7 @@ Template.new_salesorder.onRendered(() => {
                                 if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
                                     let lineItems = [];
                                     added = true;
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#add-customer-title').text('Edit Customer');
                                     let popCustomerID = data.tcustomervs1[i].fields.ID || '';
                                     let popCustomerName = data.tcustomervs1[i].fields.ClientName || '';
@@ -6168,9 +6170,9 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             if (!added) {
-                                $('.fullScreenSpin').css('display', 'inline-block');
+                                LoadingOverlay.show();
                                 sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     let lineItems = [];
                                     $('#add-customer-title').text('Edit Customer');
                                     let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -6257,13 +6259,13 @@ Template.new_salesorder.onRendered(() => {
                                         $('#addCustomerModal').modal('show');
                                     }, 200);
                                 }).catch(function(err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }
                         }
                     }).catch(function(err) {
                         sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             $('#add-customer-title').text('Edit Customer');
                             let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -6351,7 +6353,7 @@ Template.new_salesorder.onRendered(() => {
                             }, 200);
                         }).catch(function(err) {
 
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     });
                 } else {
@@ -6526,7 +6528,7 @@ Template.new_salesorder.onRendered(() => {
                     $(".btnSave").trigger("click");
                 } else {
                     $('#html-2-pdfwrapper').css('display', 'none');
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                 }
             });
 
@@ -6542,7 +6544,7 @@ Template.new_salesorder.onRendered(() => {
             //         pdf.save('Sales Order.pdf');
             //     }
             //     $('#html-2-pdfwrapper').css('display', 'none');
-            //     $('.fullScreenSpin').css('display', 'none');
+            //     LoadingOverlay.hide();
             // });
 
         };
@@ -6615,11 +6617,11 @@ Template.new_salesorder.onRendered(() => {
                                 if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                                     //$(".btnSave").trigger("click");
                                     $('#html-2-pdfwrapper_new').css('display', 'none');
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 } else {
                                     document.getElementById('html-2-pdfwrapper_new').style.display="none";
                                     $('#html-2-pdfwrapper_new').css('display', 'none');
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }
                            });
                             // html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data =>{
@@ -6673,11 +6675,11 @@ Template.new_salesorder.onRendered(() => {
                             //         if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                             //             //$(".btnSave").trigger("click");
                             //             $('#html-2-pdfwrapper_new').css('display', 'none');
-                            //             $('.fullScreenSpin').css('display', 'none');
+                            //             LoadingOverlay.hide();
                             //         } else {
                             //             document.getElementById('html-2-pdfwrapper_new').style.display="none";
                             //             $('#html-2-pdfwrapper_new').css('display', 'none');
-                            //             $('.fullScreenSpin').css('display', 'none');
+                            //             LoadingOverlay.hide();
                             //         }
                             // });
 
@@ -7612,7 +7614,7 @@ Template.new_salesorder.events({
             else
             {
 
-                $('.fullScreenSpin').css('display', 'inline-block');
+                LoadingOverlay.show();
                 $('#html-2-pdfwrapper').css('display', 'block');
                 if ($('.edtCustomerEmail').val() != "") {
                     $('.pdfCustomerName').html($('#edtCustomerName').val());
@@ -7645,7 +7647,7 @@ Template.new_salesorder.events({
         },
 
     'click .btnRefreshCustomField': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         let templateObject = Template.instance();
         sideBarService.getAllCustomFields().then(function (data) {
             addVS1Data('TCustomFieldList', JSON.stringify(data)).then(function (datareturn) {
@@ -7654,9 +7656,9 @@ Template.new_salesorder.events({
                 Meteor._reload.reload();
             });
             templateObject.getSalesCustomFieldsList();
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         });
     },
     'click #edtSaleCustField1': function(event) {
@@ -7682,7 +7684,7 @@ Template.new_salesorder.events({
         }
     },
     // 'click .btnSaveStatus': function() {
-    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     LoadingOverlay.show();
     //     let clientService = new SalesBoardService()
     //     let status = $('#status').val();
     //     let leadData = {
@@ -7697,7 +7699,7 @@ Template.new_salesorder.events({
     //         clientService.saveLeadStatus(leadData).then(function(objDetails) {
     //             sideBarService.getAllLeadStatus().then(function(dataUpdate) {
     //                 addVS1Data('TLeadStatusType', JSON.stringify(dataUpdate)).then(function(datareturn) {
-    //                     $('.fullScreenSpin').css('display', 'none');
+    //                     LoadingOverlay.hide();
     //                     let id = $('.printID').attr("id");
     //                     if (id != "") {
     //                         window.open("/salesordercard?id=" + id);
@@ -7711,7 +7713,7 @@ Template.new_salesorder.events({
     //                 window.open('/salesordercard', '_self');
     //             });
     //         }).catch(function(err) {
-    //             $('.fullScreenSpin').css('display', 'none');
+    //             LoadingOverlay.hide();
     //             swal({
     //                 title: 'Oooops...',
     //                 text: err,
@@ -7726,10 +7728,10 @@ Template.new_salesorder.events({
     //                 }
     //             });
     //             //$('.loginSpinner').css('display','none');
-    //             $('.fullScreenSpin').css('display', 'none');
+    //             LoadingOverlay.hide();
     //         });
     //     } else {
-    //         $('.fullScreenSpin').css('display', 'none');
+    //         LoadingOverlay.hide();
     //         swal({
     //             title: 'Please Enter Status',
     //             text: "Status field cannot be empty",
@@ -8206,11 +8208,11 @@ Template.new_salesorder.events({
                     //FlowRouter.go('/productview?prodname=' + $(event.target).text());
                     let lineExtaSellItems = [];
                     let lineExtaSellObj = {};
-                    $('.fullScreenSpin').css('display', 'inline-block');
+                    LoadingOverlay.show();
                     getVS1Data('TProductVS1').then(function(dataObject) {
                         if (dataObject.length == 0) {
                             sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 let lineItemObj = {};
                                 let currencySymbol = Currency;
@@ -8250,7 +8252,7 @@ Template.new_salesorder.events({
                                 }, 500);
                             }).catch(function(err) {
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         } else {
                             let data = JSON.parse(dataObject[0].data);
@@ -8260,7 +8262,7 @@ Template.new_salesorder.events({
                             for (let i = 0; i < data.tproductvs1.length; i++) {
                                 if (data.tproductvs1[i].fields.ProductName === productDataName) {
                                     added = true;
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     let lineItems = [];
                                     let lineItemObj = {};
                                     let currencySymbol = Currency;
@@ -8303,7 +8305,7 @@ Template.new_salesorder.events({
                             }
                             if (!added) {
                                 sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     let lineItems = [];
                                     let lineItemObj = {};
                                     let currencySymbol = Currency;
@@ -8343,14 +8345,14 @@ Template.new_salesorder.events({
                                     }, 500);
                                 }).catch(function(err) {
 
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }
                         }
                     }).catch(function(err) {
 
                         sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             let lineItemObj = {};
                             let currencySymbol = Currency;
@@ -8390,7 +8392,7 @@ Template.new_salesorder.events({
                             }, 500);
                         }).catch(function(err) {
 
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
 
                     });
@@ -8413,7 +8415,7 @@ Template.new_salesorder.events({
         }
     },
     'click #productListModal #refreshpagelist': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         localStorage.setItem('VS1SalesProductList', '');
         let templateObject = Template.instance();
         Meteor._reload.reload();
@@ -8588,7 +8590,7 @@ Template.new_salesorder.events({
 
                         }).catch(function (err) {
                             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             // Meteor._reload.reload();
                         });
                     } else {
@@ -8639,7 +8641,7 @@ Template.new_salesorder.events({
 
                     }).catch(function (err) {
                         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         // Meteor._reload.reload();
                     });
                 });
@@ -8666,7 +8668,7 @@ Template.new_salesorder.events({
     'click .printConfirm':async function (event) {
 
           var printTemplate = [];
-          $('.fullScreenSpin').css('display', 'inline-block');
+          LoadingOverlay.show();
           var sales_orders = $('input[name="Sales Order"]:checked').val();
           let emid = Session.get('mySessionEmployeeLoggedID');
           var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
@@ -9082,7 +9084,7 @@ Template.new_salesorder.events({
         }
     },
     // 'click .printConfirm': function(event) {
-    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     LoadingOverlay.show();
     //     $('#html-2-pdfwrapper').css('display', 'block');
     //     $('.pdfCustomerName').html($('#edtCustomerName').val());
     //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
@@ -9255,7 +9257,7 @@ Template.new_salesorder.events({
         }
     },
     'click .btnDeleteSO': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         var url = FlowRouter.current().path;
@@ -9287,7 +9289,7 @@ Template.new_salesorder.events({
 
                     }
                 });
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         } else {
             FlowRouter.go('/salesorderslist?success=true');
@@ -9450,8 +9452,9 @@ Template.new_salesorder.events({
 
         $('#myModal4').modal('toggle');
     },
-    'click .btnSave': function(event) {
-        let templateObject = Template.instance();
+    'click .btnSave': (event, templateObject) => {
+        saveCurrencyHistory();
+       // let templateObject = Template.instance();
         let stripe_id = templateObject.accountID.get();
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         let customername = $('#edtCustomerName');
@@ -9470,7 +9473,7 @@ Template.new_salesorder.events({
             e.preventDefault();
         } else {
             //$('.loginSpinner').css('display','inline-block');
-            $('.fullScreenSpin').css('display', 'inline-block');
+            LoadingOverlay.show();
             var splashLineArray = new Array();
             var erpGet = erpDb();
             let lineItemsForm = [];
@@ -9988,7 +9991,7 @@ Template.new_salesorder.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -10051,7 +10054,7 @@ Template.new_salesorder.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -10117,7 +10120,7 @@ Template.new_salesorder.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -10331,7 +10334,7 @@ Template.new_salesorder.events({
                     }
                 });
                 //$('.loginSpinner').css('display','none');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         }
 
@@ -10881,7 +10884,7 @@ Template.new_salesorder.events({
                     e.preventDefault();
                 } else {
                     //$('.loginSpinner').css('display','inline-block');
-                    $('.fullScreenSpin').css('display', 'inline-block');
+                    LoadingOverlay.show();
                     var splashLineArray = new Array();
                     var erpGet = erpDb();
                     let lineItemsForm = [];
@@ -11323,7 +11326,7 @@ Template.new_salesorder.events({
                                                     }
                                                 });
 
-                                                $('.fullScreenSpin').css('display', 'none');
+                                                LoadingOverlay.hide();
                                             }
                                         });
 
@@ -11355,7 +11358,7 @@ Template.new_salesorder.events({
                                                     }
                                                 });
 
-                                                $('.fullScreenSpin').css('display', 'none');
+                                                LoadingOverlay.hide();
                                             }
                                         });
 
@@ -11386,7 +11389,7 @@ Template.new_salesorder.events({
                                                     }
                                                 });
 
-                                                $('.fullScreenSpin').css('display', 'none');
+                                                LoadingOverlay.hide();
                                             }
                                         });
 
@@ -11533,7 +11536,7 @@ Template.new_salesorder.events({
                                 }
                             });
                             //$('.loginSpinner').css('display','none');
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     }, 500);
                 }
@@ -11570,7 +11573,7 @@ Template.new_salesorder.events({
             e.preventDefault();
         } else {
             //$('.loginSpinner').css('display','inline-block');
-            $('.fullScreenSpin').css('display', 'inline-block');
+            LoadingOverlay.show();
             var splashLineArray = new Array();
             let lineItemsForm = [];
             let lineItemObjForm = {};
@@ -11796,7 +11799,7 @@ Template.new_salesorder.events({
                     }
                 });
                 //$('.loginSpinner').css('display','none');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         }
 
@@ -11812,7 +11815,7 @@ Template.new_salesorder.events({
     'click #btnCopyToInvoice': function() {
         //FlowRouter.go('/salesorderslist');
         //window.open('/invoicelist','_self');
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         var url = FlowRouter.current().path;
         //if ((url.indexOf('?id=') > 0) || (url.indexOf('?copyquid=') > 0)) {
         let templateObject = Template.instance();
@@ -11830,7 +11833,7 @@ Template.new_salesorder.events({
             e.preventDefault();
         } else {
             //$('.loginSpinner').css('display','inline-block');
-            $('.fullScreenSpin').css('display', 'inline-block');
+            LoadingOverlay.show();
             var splashLineArray = new Array();
             let lineItemsForm = [];
             let lineItemObjForm = {};
@@ -11987,7 +11990,7 @@ Template.new_salesorder.events({
                     }
                 });
                 //$('.loginSpinner').css('display','none');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         }
         // } else {
@@ -12021,7 +12024,7 @@ Template.new_salesorder.events({
         }
     },
     'click .btnSnLotmodal': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         var target=event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
         let selectedunit = $(target).closest('tr').find('.lineQty').val();
@@ -12035,7 +12038,7 @@ Template.new_salesorder.events({
             if (element.item == selectedProductName) {
                 existProduct = true;
                 productService.getProductStatus(selectedProductName).then(function(data) {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                         swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
                         event.preventDefault();
@@ -12128,13 +12131,13 @@ Template.new_salesorder.events({
         });
         if (!existProduct) {
             if (selectedProductName == '') {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 swal('You have to select Product.', '', 'info');
                 event.preventDefault();
                 return false;
             } else {
                 productService.getProductStatus(selectedProductName).then(function(data) {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                         swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
                         event.preventDefault();
