@@ -37,6 +37,7 @@ import '../lib/global/indexdbstorage.js';
 import { functionsIn } from "lodash";
 import moment from "moment";
 import LoadingOverlay from '../LoadingOverlay';
+import { jsPDF } from "jspdf";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -2935,7 +2936,7 @@ Template.employeescard.onRendered(function () {
                     useData[i].fields.PayPeriod || '',
                     useData[i].fields.LeaveMethod || '',
                     useData[i].fields.Status || '',
-                    `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${useData[i].fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
+                    ( useData[i].fields.Status == 'Deleted' )? '': `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${useData[i].fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
                 ];
                 splashArrayList.push(dataListAllowance);
             }
@@ -3013,7 +3014,7 @@ Template.employeescard.onRendered(function () {
                                         useData[i].fields.PayPeriod || '',
                                         useData[i].fields.LeaveMethod || '',
                                         useData[i].fields.Status || '',
-                                        `<button type="button" class="btn btn-danger btn-rounded btn-sm removeLeaveRequest" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`
+                                        ( useData[i].fields.Status == 'Deleted' )? '':`<button type="button" class="btn btn-danger btn-rounded btn-sm removeLeaveRequest" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`
                                     ];
                                     splashArrayList.push(dataListAllowance);
                                 }
@@ -5992,6 +5993,25 @@ Template.employeescard.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
+    },
+    'click .btnDownloadPayslip': async function(event){
+        // $('.fullScreenSpin').css('display', 'block');
+        let PayPeriod = $(event.target).parents('tr').find('.colPayslipPeriod').text();
+        let PaymentDate = $(event.target).parents('tr').find('.colPayslipPaymentDate').text();
+        let TotalPay = $(event.target).parents('tr').find('.colPayslipTotalPay').text();
+        let EmployeeName = $('#edtCustomerCompany').val();    
+        let EmployeeEmail = $('#edtEmailAddress').val();    
+        let FirstName = $('#edtFirstName').val();    
+        let LastName = $('#edtLastName').val();    
+        let Phone = $('#edtPhone').val();    
+        let DOB = $('#dtDOB').val(); 
+        let doc = new jsPDF();
+        doc.setFontSize(16);
+        doc.text(PayPeriod, 20,40);
+        doc.text(PaymentDate, 30,40);
+        doc.text(TotalPay, 40,40);
+        doc.setFontType('bold');
+        doc.save("Payslip.pdf");
     },
     'click #btnPayslip': async function(event) {
         let templateObject = Template.instance();
@@ -10501,7 +10521,7 @@ Template.employeescard.events({
                         type: "TLeavRequest",
                         fields: new LeaveRequestFields({
                             ID: parseInt( deleteID ),
-                            Active: false
+                            Status: 'Deleted'
                         }),
                     })
 
@@ -10517,7 +10537,7 @@ Template.employeescard.events({
                             if( data.tleavrequest.length > 0 ){
                                 let updatedLeaveRequest = data.tleavrequest.map( (item) => {
                                     if( deleteID == item.fields.ID ){
-                                        item.fields.Active = false;
+                                        item.fields.Status = 'Deleted';
                                     }
                                     return item;
                                 });

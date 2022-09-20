@@ -170,7 +170,7 @@ Template.companyappsettingsdup.onRendered(function () {
         });
     } else {
         //$.get("VS1Modules.json").success(function(data){
-        $.get("MasterVS1Pricing.json").success(function (data) {
+        $.get("MasterVS1Pricing.json").success( async function (data) {
             for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
 
                 if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
@@ -236,6 +236,24 @@ Template.companyappsettingsdup.onRendered(function () {
             $(".essentialsTextVal").html(essentailPrice.replace(/[^0-9.-]+/g, ""));
             $(".plusTextVal").html(plusPrice.replace(/[^0-9.-]+/g, ""));
 
+            let purchaedAdModuleList = []
+            let additionModuleSettings = await getVS1Data('vscloudlogininfo');
+            if( additionModuleSettings.length > 0 ){
+                let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
+                if( additionModules.length > 0 ){
+                    let adModulesList = additionModules.filter((item) => {
+                        if( item.ExtraModules == true && item.ModuleActive == true ){
+                            return item;
+                        }
+                    });
+                    if( adModulesList.length > 0 ){
+                        for (const item of adModulesList) {
+                            purchaedAdModuleList.push(item.ModuleName)
+                        }
+                    }
+                }
+            }
+
             templateObject.simplestartArr.set(simplestartArr);
             templateObject.essentailsArr.set(essentailsArr);
             templateObject.plusArr.set(plusArr);
@@ -246,7 +264,9 @@ Template.companyappsettingsdup.onRendered(function () {
                     return item.moduleName === e.moduleName;
                 });
                 if (matchingItems.length === 0) {
-                    result.push(e);
+                    if( purchaedAdModuleList.includes(extraArr[i].moduleName) == false || extraArr[i].moduleName == 'Add Extra User'){
+                        result.push(e);
+                    }
                 }
             });
             templateObject.extraArr.set(result);
@@ -256,7 +276,9 @@ Template.companyappsettingsdup.onRendered(function () {
                     return itemMonth.moduleName === e.moduleName;
                 });
                 if (matchingItemsMonth.length === 0) {
-                    monthResult.push(e);
+                    if( purchaedAdModuleList.includes(monthArr[i].moduleName) == false ){
+                        monthResult.push(e);
+                    }
                 }
             });
             templateObject.monthArr.set(monthResult);
@@ -383,7 +405,7 @@ Template.companyappsettingsdup.onRendered(function () {
         }
         mediaQuery(x)
         x.addListener(mediaQuery)
-    }, 250);
+    }, 250);    
 
 });
 Template.companyappsettingsdup.events({
@@ -495,7 +517,7 @@ Template.companyappsettingsdup.events({
         var splashLineArray = new Array();
         let getCurrenUserPack = templateObject.recordpackType.get();
         if( cloudPackageCheck != 'PLUS' ){
-            if ((checkEssentials.checked == true) && (checkPlus.checked == false)) {
+            if ((checkEssentials.checked == true) && (checkPlus.checked == false) && checkEssentials.disabled == false ) {
                 if (cloudPackageCheck == "Essentials") {
                     paymentAmount = 0;
                     accessLevelCheck = 2;
@@ -522,7 +544,7 @@ Template.companyappsettingsdup.events({
                     lineItemsForm1.push(lineItemObjForm);
                 }
                 accessLevel = 2;
-            } else if ((checkPlus.checked == true)) {
+            } else if ((checkPlus.checked == true) && checkPlus.disabled == false ) {
                 if (cloudPackageCheck == "Essentials") {
                     if (getCurrenUserPack == "trialPack") {
                         paymentAmount = 95;
@@ -659,8 +681,6 @@ Template.companyappsettingsdup.events({
             stringQuery = stringQuery + "product" + l + "=" + lineItemsForm1[l].ModuleName + "&price" + l + "=" + Currency + lineItemsForm1[l].Price + "&qty" + l + "=" + lineItemsForm1[l].RenewDiscountDesc + "&";
         }
         stringQuery = stringQuery + "tax=0" + "&total=" + Currency + grandTotal + "&customer=" + Session.get('vs1companyName') + "&name=" + name + "&surname=" + surname + "&company=" + Session.get('vs1companyName') + "&customeremail=" + localStorage.getItem('mySession') + "&type=VS1 Modules Purchase&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
-        newStripePrice = grandTotal.toFixed(2);
-        // return false
         var oPost = new XMLHttpRequest();
         oPost.open("POST", URLRequest + loggedserverIP + ':' + loggedserverPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_AddModules"', true);
         oPost.setRequestHeader("database", vs1loggedDatatbase);
@@ -672,7 +692,7 @@ Template.companyappsettingsdup.events({
 
         var myString = '"JsonIn"' + ':' + JSON.stringify(objDetailsUser);
         oPost.send(myString);
-        // let newStripePrice = grandTotal.toFixed(2);
+        let newStripePrice = grandTotal.toFixed(2);
         oPost.onreadystatechange = function () {
             if (oPost.readyState == 4 && oPost.status == 200) {
                 //Meteor.call('braintreeChargeCard', Session.get('VS1AdminUserName'), parseFloat(grandTotal));
@@ -1372,6 +1392,9 @@ Template.companyappsettingsdup.helpers({
             }
             return (a.moduleName.toUpperCase() > b.moduleName.toUpperCase()) ? 1 : -1;
         });
+    },
+    removeBlankSpace( text ){
+        return text.replace(/\s/g,'')
     },
     monthArr: () => {
         return Template.instance().monthArr.get().sort(function (a, b) {

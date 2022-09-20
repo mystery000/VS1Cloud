@@ -387,7 +387,7 @@ font-weight: 500 !important;
                                     </thead>
                                     <tbody>
                                         {{#each itemExtra in extraArr}}
-                                            <tr id="Additional{{itemExtra.moduleId}}" name="Additional{{itemExtra.moduleId}}" class="Additional{{itemExtra.moduleId}}">
+                                            <tr id="Additional{{itemExtra.moduleId}}" name="Additional{{itemExtra.moduleId}}" class="Additional{{itemExtra.moduleId}} AdditionalModule-{{ removeBlankSpace itemExtra.moduleName}}">
                                                 <td style="min-width: 332px;">
 
                                                     <div class="custom-control custom-switch" style="cursor: pointer;">

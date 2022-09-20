@@ -35,6 +35,7 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#edtLeavePayStatus').editableSelect('add','Awaiting');
         $('#edtLeavePayStatus').editableSelect('add','Approved');
         $('#edtLeavePayStatus').editableSelect('add','Denied');
+        $('#edtLeavePayStatus').editableSelect('add','Deleted');
 
         $('#period').editableSelect('add','Weekly');
         $('#period').editableSelect('add','Fortnightly');
