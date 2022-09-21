@@ -28,6 +28,8 @@ var template_list = [
 
 Template.purchaseordercard.onCreated(() => {
     const templateObject = Template.instance();
+    templateObject.isForeignEnabled = new ReactiveVar(false);
+    
     templateObject.records = new ReactiveVar();
     templateObject.CleintName = new ReactiveVar();
     templateObject.Department = new ReactiveVar();
