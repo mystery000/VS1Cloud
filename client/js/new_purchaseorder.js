@@ -28,6 +28,8 @@ var template_list = [
     "Purchase Orders",
 ];
 
+let defaultCurrencyCode = CountryAbbr;
+
 Template.purchaseordercard.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.isForeignEnabled = new ReactiveVar(false);
