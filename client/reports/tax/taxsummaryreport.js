@@ -209,6 +209,8 @@ Template.taxsummaryreport.onRendered(() => {
         let records = [];
         let mainReportRecords = [];
         let subReportRecords = [];
+        let netsubtotal = 0;
+        let taxsubtotal = 0;
         let allRecords = [];
         let current = [];
 
@@ -260,6 +262,8 @@ Template.taxsummaryreport.onRendered(() => {
           const taxDetail = taxCodesDetail.find((v) => v.CodeName === account.TaxCode);
         
           if (taxDetail && taxDetail.Lines) {
+            netsubtotal = netsubtotal + parseFloat(totalnet);
+            taxsubtotal = taxsubtotal + parseFloat(totaltax);
 
             taxDetail.Lines.forEach((line) => {
               const tax = (parseFloat(inputsexpurchases) - parseFloat(outputexsales)) * line.Percentage / 100.0;
@@ -280,8 +284,6 @@ Template.taxsummaryreport.onRendered(() => {
                 taxrate2: (line.Percentage).toFixed(2) || 0
               };
               subReportRecords.push(subReportData);
-
-
             })
 
             // for (let j = 0; j < taxDetail.Lines.length; j++) {
@@ -476,8 +478,8 @@ Template.taxsummaryreport.onRendered(() => {
         const subGrandval = {
           title: "Grand Total ",
           total: {
-            net: utilityService.modifynegativeCurrencyFormat(nettotal),
-            tax: utilityService.modifynegativeCurrencyFormat(taxtotal)
+            net: utilityService.modifynegativeCurrencyFormat(netsubtotal),
+            tax: utilityService.modifynegativeCurrencyFormat(taxsubtotal)
           }
         };
 
@@ -584,6 +586,8 @@ Template.taxsummaryreport.onRendered(() => {
             let records = [];
             let mainReportRecords = [];
             let subReportRecords = [];
+            let netsubtotal = 0;
+            let taxsubtotal = 0;
             let allRecords = [];
             let current = [];
 
@@ -634,6 +638,8 @@ Template.taxsummaryreport.onRendered(() => {
 
               const taxDetail = taxCodesDetail.find((v) => v.CodeName === data.TaxCode);
               if (taxDetail && taxDetail.Lines) {
+                netsubtotal = netsubtotal + parseFloat(totalnet);
+                taxsubtotal = taxsubtotal + parseFloat(totaltax);
 
                 taxDetail.Lines.forEach((line) => {
                   const tax = (utilityService.convertSubstringParseFloat(inputsexpurchases) - utilityService.convertSubstringParseFloat(outputexsales)) * taxDetail.Lines[j].Percentage / 100.0;
@@ -849,8 +855,8 @@ Template.taxsummaryreport.onRendered(() => {
             const subGrandval = {
               title: "Grand Total ",
               total: {
-                net: utilityService.modifynegativeCurrencyFormat(nettotal),
-                tax: utilityService.modifynegativeCurrencyFormat(taxtotal)
+                net: utilityService.modifynegativeCurrencyFormat(netsubtotal),
+                tax: utilityService.modifynegativeCurrencyFormat(taxsubtotal)
               }
             };
 

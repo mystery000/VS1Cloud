@@ -11,9 +11,13 @@ import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
 import LoadingOverlay from "../../LoadingOverlay";
+import { TaxRateService } from "../../settings/settings-service";
+import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import { saveCurrencyHistory } from "./paymentcard";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+const taxRateService = new TaxRateService();
 var times = 0;
 let clickedTableID = 0;
 
@@ -92,20 +96,12 @@ Template.supplierpaymentcard.onRendered(() => {
   });
 
 
-  /**
-   * Lets load the default currency
-   */
-  templateObject.loadDefaultCurrency = () => {
-    const currencyCode = defaultCurrencyCode;
-    const currencySymbol = "$";
-    const currencyRate = 1; // We can make this dynamic
+  // /**
+  //  * Lets load the default currency
+  //  */
+  // templateObject.loadDefaultCurrency = async (c) => FxGlobalFunctions.loadDefaultCurrencyForReport(c);
 
-    $('#sltCurrency').val(currencyCode);
-    $('#sltCurrency').attr('currency-symbol', currencySymbol);
-    $('#exchange_rate').val(currencyRate);
-  }
-
-  templateObject.loadDefaultCurrency();
+  // templateObject.loadDefaultCurrency(defaultCurrencyCode);
 
   templateObject.getOrganisationDetails = function () {
       let account_id = Session.get('vs1companyStripeID') || '';
@@ -8459,7 +8455,8 @@ Template.supplierpaymentcard.events({
       calculateApplied();
     }, 300);
   },
-  "click .btnSave": function () {
+  "click .btnSave": (e, ui) => {
+    
     LoadingOverlay.show();
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
@@ -8510,6 +8507,12 @@ Template.supplierpaymentcard.events({
     let foreignAppliedAmount = templateObject.isForeignEnabled.get() == true ? utilityService.removeCurrency(
       $("#finalAppliedAmount").text(), $('#sltCurrency').attr('currency-symbol')
       || getCurrentCurrencySymbol()) : null; // this is the foreign final amount
+
+    /**
+     * We need to save it
+     */
+    saveCurrencyHistory();
+
 
 
     let checkSuppInvoiceNo = templateObject.isInvoiceNo.get();
@@ -12959,6 +12962,12 @@ export function onExchangeRateChange(e) {
   const rate = parseFloat($("#exchange_rate").val());
   const currency = getCurrentCurrencySymbol();
 
+  // if(e.type =='keyup' || e.type == 'change') {
+  //   $(e.currentTarget).attr('hand-edited', true);
+  // } else {
+  //   $(e.currentTarget).attr('hand-edited', false);
+  // }
+
   let foreignAmount = (rate * mainValue).toFixed(2);
   let appliedAmount = (rate * mainValue).toFixed(2);
   // data.applied = rate * applied;
@@ -13029,3 +13038,4 @@ export function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol 
   return convert;
 
 }
+

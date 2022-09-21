@@ -316,6 +316,8 @@ Template.leadscard.onRendered(function () {
             phone: '',
             mobile: '',
             fax: '',
+            skype: '',
+            website: '',
             shippingaddress: '',
             scity: '',
             sstate: '',
@@ -328,8 +330,13 @@ Template.leadscard.onRendered(function () {
             bpostalcode: '',
             bcountry: LoggedCountry || '',
             bsuburb: '',
-            custFld1: '',
-            custFld2: ''
+            custfield1: '',
+            custfield2: '',
+            custfield3: '',
+            custfield4: '',
+            status: '',
+            rep: '',
+            source: '',
         };
         templateObject.isSameAddress.set(true);
         templateObject.records.set(lineItemObj);
@@ -808,12 +815,9 @@ Template.leadscard.onRendered(function () {
             }
         }
     });
-
     $(document).on('click', '#referenceLetterModal .btnAddLetter', function (e) {
         $('#addLetterTemplateModal').modal('toggle')
     })
-
-
     $(document).on('click','#addLetterTemplateModal #save-correspondence', function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         // let correspondenceData = localStorage.getItem('correspondence');
@@ -838,9 +842,7 @@ Template.leadscard.onRendered(function () {
                 });
                 $('.fullScreenSpin').css('display', 'none');
             } else {
-
                 sideBarService.getCorrespondences().then(dObject =>{
-
                     let temp = {
                         Active: true,
                         EmployeeId: Session.get('mySessionEmployeeLoggedID'),
@@ -977,13 +979,11 @@ Template.leadscard.onRendered(function () {
                     });
                 })
             })
-
         }
         // localStorage.setItem('correspondence', JSON.stringify(correspondenceTemp));
         // templateObject.correspondences.set(correspondenceTemp);
         // $('#addLetterTemplateModal').modal('toggle');
     })
-
     $(document).on("click", "#tblStatusPopList tbody tr", function(e) {
         $('#leadStatus').val($(this).find(".colStatusName").text());
         $('#statusPopModal').modal('toggle');
@@ -993,12 +993,11 @@ Template.leadscard.onRendered(function () {
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
     });
-
     $(document).on('click', '#tblEmployeelist tbody tr', function (event) {
         let value = $(this).find('.colEmployeeName').text();
         $('#leadRep').val(value);
         $('#employeeListPOPModal').modal('hide');
-        $('#leadRep').val($('#leadRep').val().replace(/\s/g, ''));
+        // $('#leadRep').val($('#leadRep').val().replace(/\s/g, ''));
     })
     $(document).on('click', '#leadStatus', function(e, li) {
         const $earch = $(this);
@@ -1860,7 +1859,7 @@ Template.leadscard.helpers({
         return Template.instance().crmTableheaderRecords.get();
     },
     currentdate: () => {
-        var currentDate = new Date();
+        const currentDate = new Date();
         return moment(currentDate).format("DD/MM/YYYY");
     },
     uploadedFiles: () => {

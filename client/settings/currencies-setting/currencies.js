@@ -9,6 +9,7 @@ import FxApi from "./FxApi";
 import LoadingOverlay from "../../LoadingOverlay";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
+
 let sideBarService = new SideBarService();
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
@@ -295,7 +296,7 @@ Template.currenciessettings.onRendered(function () {
             }, 100);
           }
 
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
           setTimeout(function () {
             $("#currencyLists").DataTable({
               columnDefs: [
@@ -369,7 +370,7 @@ Template.currenciessettings.onRendered(function () {
             });
 
             // $('#currencyLists').DataTable().column( 0 ).visible( true );
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
           }, 300);
 
           var columns = $("#currencyLists th");
@@ -401,7 +402,7 @@ Template.currenciessettings.onRendered(function () {
           $("div.dataTables_filter input").addClass("form-control form-control-sm");
         }).catch(function (err) {
           // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
           // Meteor._reload.reload();
         });
       } else {
@@ -461,7 +462,7 @@ Template.currenciessettings.onRendered(function () {
           }, 100);
         }
 
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         setTimeout(function () {
           $("#currencyLists").DataTable({
             columnDefs: [
@@ -542,7 +543,7 @@ Template.currenciessettings.onRendered(function () {
           });
 
           // $('#currencyLists').DataTable().column( 0 ).visible( true );
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         }, 0);
 
         var columns = $("#currencyLists th");
@@ -627,7 +628,7 @@ Template.currenciessettings.onRendered(function () {
           }, 100);
         }
 
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         setTimeout(function () {
           $("#currencyLists").DataTable({
             columnDefs: [
@@ -700,7 +701,7 @@ Template.currenciessettings.onRendered(function () {
           });
 
           // $('#currencyLists').DataTable().column( 0 ).visible( true );
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         }, 0);
 
         var columns = $("#currencyLists th");
@@ -732,7 +733,7 @@ Template.currenciessettings.onRendered(function () {
         $("div.dataTables_filter input").addClass("form-control form-control-sm");
       }).catch(function (err) {
         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         // Meteor._reload.reload();
       });
     });
@@ -773,50 +774,50 @@ Template.currenciessettings.onRendered(function () {
   };
   templateObject.getCountryData();
 
-  $(document).on("click", ".table-remove", function () {
-    event.stopPropagation();
-    event.stopPropagation();
-    var targetID = $(event.target).closest("tr").attr("id"); // table row ID
-    $("#selectDeleteLineID").val(targetID);
-    $("#deleteLineModal").modal("toggle");
-  });
+  // $(document).on("click", ".table-remove", function () {
+  //   event.stopPropagation();
+  //   event.stopPropagation();
+  //   var targetID = $(event.target).closest("tr").attr("id"); // table row ID
+  //   $("#selectDeleteLineID").val(targetID);
+  //   $("#deleteLineModal").modal("toggle");
+  // });
 
-  $("#currencyLists tbody").on("click", "tr .colCode, tr .colCurrency, tr .colSymbol, tr .colBuyRate, tr .colSellRate, tr .colCountry, tr .colRateLastModified, tr .colDescription", function () {
-    var listData = $(this).closest("tr").attr("id");
-    if (listData) {
-      $("#add-currency-title").text("Edit Currency");
-      $("#sedtCountry").prop("readonly", true);
-      if (listData !== "") {
-        listData = Number(listData);
-        //taxRateService.getOneCurrency(listData).then(function (data) {
+  // $("#currencyLists tbody").on("click", "tr .colCode, tr .colCurrency, tr .colSymbol, tr .colBuyRate, tr .colSellRate, tr .colCountry, tr .colRateLastModified, tr .colDescription", function () {
+  //   var listData = $(this).closest("tr").attr("id");
+  //   if (listData) {
+  //     $("#add-currency-title").text("Edit Currency");
+  //     $("#sedtCountry").prop("readonly", true);
+  //     if (listData !== "") {
+  //       listData = Number(listData);
+  //       //taxRateService.getOneCurrency(listData).then(function (data) {
 
-        var currencyid = listData || "";
-        var country = $(event.target).closest("tr").find(".colCountry").text() || "";
-        var currencyCode = $(event.target).closest("tr").find(".colCode").text() || "";
-        var currencySymbol = $(event.target).closest("tr").find(".colSymbol").text() || "";
-        var currencyName = $(event.target).closest("tr").find(".colCurrency").text() || "";
-        var currencyDesc = $(event.target).closest("tr").find(".colDescription").text() || "";
-        var currencyBuyRate = $(event.target).closest("tr").find(".colBuyRate").text() || 0;
-        var currencySellRate = $(event.target).closest("tr").find(".colSellRate").text() || 0;
-        //data.fields.Rate || '';
-        $("#edtCurrencyID").val(currencyid);
-        $("#sedtCountry").val(country);
-        $("#sedtCountry").attr("readonly", true);
-        $("#sedtCountry").attr("disabled", "disabled");
-        $("#currencyCode").val(currencyCode);
-        $("#currencySymbol").val(currencySymbol);
-        $("#edtCurrencyName").val(currencyName);
-        $("#edtCurrencyDesc").val(currencyDesc);
-        $("#edtBuyRate").val(currencyBuyRate);
-        $("#edtSellRate").val(currencySellRate);
+  //       var currencyid = listData || "";
+  //       var country = $(event.target).closest("tr").find(".colCountry").text() || "";
+  //       var currencyCode = $(event.target).closest("tr").find(".colCode").text() || "";
+  //       var currencySymbol = $(event.target).closest("tr").find(".colSymbol").text() || "";
+  //       var currencyName = $(event.target).closest("tr").find(".colCurrency").text() || "";
+  //       var currencyDesc = $(event.target).closest("tr").find(".colDescription").text() || "";
+  //       var currencyBuyRate = $(event.target).closest("tr").find(".colBuyRate").text() || 0;
+  //       var currencySellRate = $(event.target).closest("tr").find(".colSellRate").text() || 0;
+  //       //data.fields.Rate || '';
+  //       $("#edtCurrencyID").val(currencyid);
+  //       $("#sedtCountry").val(country);
+  //       $("#sedtCountry").attr("readonly", true);
+  //       $("#sedtCountry").attr("disabled", "disabled");
+  //       $("#currencyCode").val(currencyCode);
+  //       $("#currencySymbol").val(currencySymbol);
+  //       $("#edtCurrencyName").val(currencyName);
+  //       $("#edtCurrencyDesc").val(currencyDesc);
+  //       $("#edtBuyRate").val(currencyBuyRate);
+  //       $("#edtSellRate").val(currencySellRate);
 
-        //});
+  //       //});
 
-        $(this).closest("tr").attr("data-target", "#myModal");
-        $(this).closest("tr").attr("data-toggle", "modal");
-      }
-    }
-  });
+  //       $(this).closest("tr").attr("data-target", "#myModal");
+  //       $(this).closest("tr").attr("data-toggle", "modal");
+  //     }
+  //   }
+  // });
 });
 
 Template.currenciessettings.events({
@@ -826,7 +827,7 @@ Template.currenciessettings.events({
     // Meteor._reload.reload();
   },
   "click #currencyLists tbody tr": e => {
-    const currency = $(e.currentTarget).find(".colCurrency").text();
+    const currency = $(e.currentTarget).find(".colCode").text();
 
     // FlowRouter.go(`/fx-currency-history?currency=${currency}`);
     window.location.href = `/fx-currency-history?currency=${currency}`;
@@ -1008,7 +1009,7 @@ Template.currenciessettings.events({
   "click #exportbtn": function () {
     LoadingOverlay.show();
     jQuery("#currencyLists_wrapper .dt-buttons .btntabletocsv").click();
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
   },
   "click .btnRefresh":  (e, ui) => {
     // LoadingOverlay.show();
@@ -1245,7 +1246,7 @@ Template.currenciessettings.events({
           Meteor._reload.reload();
         } else if (result.dismiss === "cancel") {}
       });
-      $(".fullScreenSpin").css("display", "none");
+      LoadingOverlay.hide();
     });
   },
   "click .btnAddCurrency": function () {
@@ -1314,7 +1315,7 @@ Template.currenciessettings.events({
   //       }
   //     }
   //   }
-  //   $(".fullScreenSpin").css("display", "none");
+  //   LoadingOverlay.hide();
   // },
   "click .btnSaveCurrency": e => {
     let taxRateService = new TaxRateService();
@@ -1331,7 +1332,7 @@ Template.currenciessettings.events({
     let objDetails = "";
     if (currencyName === "") {
       Bert.alert("<strong>WARNING:</strong> Currency Name cannot be blank!", "warning");
-      $(".fullScreenSpin").css("display", "none");
+      LoadingOverlay.hide();
       e.preventDefault();
     }
 
@@ -1382,7 +1383,7 @@ Template.currenciessettings.events({
           Meteor._reload.reload();
         } else if (result.dismiss === "cancel") {}
       });
-      $(".fullScreenSpin").css("display", "none");
+      LoadingOverlay.hide();
     });
   },
   // "click .btnSaveFrequency": (e) => {
@@ -1391,7 +1392,53 @@ Template.currenciessettings.events({
 
   "click .synbutton": e => {
     updateAllCurrencies();
-  }
+  },
+
+  "click .edit-currency": (event, ui) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const tr = $(event.currentTarget).parents("tr")[0];
+    const id = Number($(tr).attr("id"));
+
+    if (id) {
+   
+    
+        var currencyid = id;
+        var country = $(tr).find(".colCountry").text() || "N/A";
+        var currencyCode = $(tr).find(".colCode").text() || "N/A";
+        var currencySymbol = $(tr).find(".colSymbol").text() || "N/A";
+        var currencyName = $(tr).find(".colCurrency").text() || "N/A";
+        var currencyDesc = $(tr).find(".colDescription").text() || "N/A";
+        var currencyBuyRate = $(tr).find(".colBuyRate").text() || 0;
+        var currencySellRate = $(tr).find(".colSellRate").text() || 0;
+
+        $(".btnAddCurrency").trigger('click');
+
+       setTimeout(() => {
+        $("#add-currency-title").text("Edit Currency");
+        $("#sedtCountry").prop("readonly", true);
+
+        $("#edtCurrencyID").val(currencyid);
+        $("#sedtCountry").val(country);
+        $("#sedtCountry").attr("readonly", true);
+        $("#sedtCountry").attr("disabled", "disabled");
+        $("#currencyCode").val(currencyCode);
+        $("#currencySymbol").val(currencySymbol);
+        
+        $("#edtCurrencyName").val(currencyName);
+        $("#edtCurrencyDesc").val(currencyDesc);
+        $("#edtBuyRate").val(currencyBuyRate);
+        $("#edtSellRate").val(currencySellRate);
+       }, 100);
+    }
+  },
+  "click .remove-currency": (e, ui) => {
+    e.preventDefault();
+    e.stopPropagation();
+    var targetID = $(e.target).closest("tr").attr("id"); // table row ID
+    $("#selectDeleteLineID").val(targetID);
+    $("#deleteLineModal").modal("toggle");
+  },
 });
 
 Template.currenciessettings.helpers({

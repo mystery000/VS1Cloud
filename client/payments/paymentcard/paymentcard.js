@@ -23,6 +23,10 @@ import {
 import '../../lib/global/indexdbstorage.js';
 import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
 import { calculateApplied, calculateAppliedWithForeign, convertToForeignAmount, onExchangeRateChange, onForeignTableInputChange, _setTmpAppliedAmount } from "./supplierPaymentcard";
+import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import LoadingOverlay from "../../LoadingOverlay";
+import { TaxRateService } from "../../settings/settings-service";
+import { saveCurrencyHistory } from "../../packages/currency/CurrencyWidget";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -65,26 +69,18 @@ Template.paymentcard.onRendered(() => {
         $('#choosetemplate').attr('checked', true);
         const dataTableList = [];
         const tableHeaderList = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
+       LoadingOverlay.show();
         let imageData = (localStorage.getItem("Image"));
         if (imageData) {
             $('.uploadedImage').attr('src', imageData);
         };
 
-        /**
-         * Lets load the default currency
-         */
-        templateObject.loadDefaultCurrency = () => {
-            const currencyCode = defaultCurrencyCode;
-            const currencySymbol = "$";
-            const currencyRate = 1; // We can make this dynamic
+        // /**
+        //  * Lets load the default currency
+        //  */
+        // templateObject.loadDefaultCurrency = async (c) => FxGlobalFunctions.loadDefaultCurrencyForReport(c);
 
-            $('#sltCurrency').val(currencyCode);
-            $('#sltCurrency').attr('currency-symbol', currencySymbol);
-            $('#exchange_rate').val(currencyRate);
-        }
-
-        templateObject.loadDefaultCurrency();
+        // templateObject.loadDefaultCurrency(defaultCurrencyCode);
 
 
         $('#edtCustomerName').attr('readonly', true);
@@ -134,7 +130,7 @@ Template.paymentcard.onRendered(() => {
 
 
         templateObject.getTemplateInfoNew = function(){
-            $('.fullScreenSpin').css('display', 'inline-block');
+           LoadingOverlay.show();
             getVS1Data('TTemplateSettings').then(function(dataObject) {
               if (dataObject.length == 0) {
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
@@ -2058,7 +2054,7 @@ Template.paymentcard.onRendered(() => {
 
                     getVS1Data('TPaymentMethod').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                           LoadingOverlay.show();
                             sideBarService.getPaymentMethodDataVS1().then(function(data) {
                                 for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                                     if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
@@ -2097,7 +2093,7 @@ Template.paymentcard.onRendered(() => {
                             }, 200);
                         }
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                       LoadingOverlay.show();
                         sideBarService.getPaymentMethodDataVS1().then(function(data) {
                             for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                                 if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
@@ -2145,7 +2141,7 @@ Template.paymentcard.onRendered(() => {
 
                     getVS1Data('TDeptClass').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                           LoadingOverlay.show();
                             sideBarService.getDepartment().then(function(data) {
                                 for (let i = 0; i < data.tdeptclass.length; i++) {
                                     if (data.tdeptclass[i].DeptClassName === deptDataName) {
@@ -2177,7 +2173,7 @@ Template.paymentcard.onRendered(() => {
                             }, 200);
                         }
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                       LoadingOverlay.show();
                         sideBarService.getDepartment().then(function(data) {
                             for (let i = 0; i < data.tdeptclass.length; i++) {
                                 if (data.tdeptclass[i].DeptClassName === deptDataName) {
@@ -2604,7 +2600,7 @@ Template.paymentcard.onRendered(() => {
                     $('#edtCustomerPOPID').val('');
                     getVS1Data('TCustomerVS1').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                           LoadingOverlay.show();
                             sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
                                 $('.fullScreenSpin').css('display', 'none');
                                 let lineItems = [];
@@ -2793,7 +2789,7 @@ Template.paymentcard.onRendered(() => {
                                 }
                             }
                             if (!added) {
-                                $('.fullScreenSpin').css('display', 'inline-block');
+                               LoadingOverlay.show();
                                 sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
                                     $('.fullScreenSpin').css('display', 'none');
                                     let lineItems = [];
@@ -4791,7 +4787,7 @@ Template.paymentcard.onRendered(() => {
                 });
 
                 setTimeout(function() {
-                    $('.fullScreenSpin').css('display', 'inline-block');
+                   LoadingOverlay.show();
                     templateObject.getAllCustomerPaymentData(custname);
                 }, 500);
 
@@ -4802,7 +4798,7 @@ Template.paymentcard.onRendered(() => {
                     id = geturl.searchParams.get("invid") || geturl.searchParams.get("selectcust");
                 }
                 let $tblrows = $("#tblPaymentcard tbody tr");
-                $('.fullScreenSpin').css('display', 'inline-block');
+               LoadingOverlay.show();
                 let paymentData = templateObject.datatablerecords1.get();
                 let paymentDataList = [];
                 if (jQuery.isEmptyObject(FlowRouter.current().queryParams) == true) {
@@ -5053,9 +5049,13 @@ Template.paymentcard.events({
     // 'click #sltDept': function(event) {
     //     $('#departmentModal').modal('toggle');
     // },
-    'click .btnSave': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let templateObject = Template.instance();
+    'click .btnSave': (e, templateObject) => {
+       LoadingOverlay.show();
+
+        /**
+         * We need to save it
+         */
+        saveCurrencyHistory();
 
         let paymentService = new PaymentsService();
         let customer = $("#edtCustomerName").val();
@@ -5090,6 +5090,8 @@ Template.paymentcard.events({
         let foreignAppliedAmount = templateObject.isForeignEnabled.get() == true ? utilityService.removeCurrency(
         $("#finalAppliedAmount").text(), $('#sltCurrency').attr('currency-symbol')
         || getCurrentCurrencySymbol()) : null; // this is the foreign final amount
+
+       
 
         Session.setPersistent('paymentmethod', payMethod);
         Session.setPersistent('bankaccount', bankAccount);
@@ -8959,7 +8961,7 @@ Template.paymentcard.events({
                     id = geturl.searchParams.get("invid") || geturl.searchParams.get("selectcust");
                 }
                 let $tblrows = $("#tblPaymentcard tbody tr");
-                $('.fullScreenSpin').css('display', 'inline-block');
+               LoadingOverlay.show();
                 let paymentData = templateObject.datatablerecords1.get();
 
                 let paymentDataList = [];
@@ -9259,7 +9261,7 @@ Template.paymentcard.events({
     'click .printConfirm':async function (event) {
 
          var printTemplate = [];
-         $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
          var customer_payment = $('input[name="Customer Payments"]:checked').val();
          let emid = Session.get('mySessionEmployeeLoggedID');
 
@@ -9481,7 +9483,7 @@ Template.paymentcard.events({
         else
         {
 
-            $('.fullScreenSpin').css('display', 'inline-block');
+           LoadingOverlay.show();
             $('#html-2-pdfwrapper').css('display', 'block');
             if ($('.edtCustomerEmail').val() != "") {
                 $('.pdfCustomerName').html($('#edtCustomerName').val());
@@ -9583,7 +9585,7 @@ Template.paymentcard.events({
             confirmButtonText: 'Yes'
         }).then((result) => {
             if (result.value) {
-            $('.fullScreenSpin').css('display', 'inline-block');
+           LoadingOverlay.show();
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var objDetails = {
@@ -9620,7 +9622,7 @@ Template.paymentcard.events({
         // $('#deleteLineModal').modal('toggle');
     },
     'click .btnRecoverPayment': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+       LoadingOverlay.show();
         let templateObject = Template.instance();
         let paymentService = new PaymentsService();
         var url = FlowRouter.current().path;
@@ -10023,6 +10025,54 @@ Template.paymentcard.events({
         const currency = getCurrentCurrencySymbol();
         $('.appliedAmount').text(currency + $(e.currentTarget).val());
       },
+      "change .exchange-rate-js": (e, ui) => {
+
+        if(ui.isForeignEnabled.get() == true) {
+
+            const targetCurrency = $('#sltCurrency').attr('currency-symbol') || getCurrentCurrencySymbol();
+            const trs = $('.dynamic-converter-js');
+
+            $(trs).each((index, tr) => {
+
+                  // convert to forign payment amount
+                const valueToConvert = $(tr).find("input.linePaymentamount.convert-from").val();
+                const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+
+                $(tr).find('.linePaymentamount.convert-to').text(convertedValue);
+
+
+
+                // Convert oustanding to foriegn oustanding
+                const oustandingValueToConvert = $(tr).find('.lineOutstandingAmount.convert-from').text();
+                const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+                $(tr).find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
+
+
+            });
+
+            // setTimeout(() => {
+
+            //     const targetCurrency = $('#sltCurrency').attr('currency-symbol') || getCurrentCurrencySymbol();
+            //     // convert to forign payment amount
+            //     const valueToConvert = $(e.currentTarget).val();
+            //     const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+
+            //     $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').text(convertedValue);
+
+            //     // Convert oustanding to foriegn oustanding
+            //     const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
+            //     const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+            //     $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
+
+            //     const appliedValue = calculateAppliedWithForeign("#tblPaymentcard .linePaymentamount.convert-to.foreign");
+            //     $('#edtApplied').val(targetCurrency +  appliedValue)
+            //     $('.appliedAmount').text(targetCurrency + appliedValue);
+            //     $('#edtForeignAmount').val(targetCurrency + appliedValue);
+            //   }, 500);
+
+        }
+
+      },
       "change .dynamic-converter-js input.linePaymentamount.convert-from": (e, ui) => {
 
         if(ui.isForeignEnabled.get() == true) {
@@ -10064,3 +10114,5 @@ Template.paymentcard.events({
     //     }, 500)
     // }
 });
+
+

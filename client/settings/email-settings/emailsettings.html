@@ -106,7 +106,7 @@
                                             </style>
                                             <style>
 					    	#tblEssentialAutomatedEmails.table th, #tblEssentialAutomatedEmails.table td {
-                                                    min-width: 0px
+                                                    min-width: 0px!important
                                                 }
 					    
                                                 .arrow {
@@ -330,7 +330,7 @@
                                             </style>
                                             <style>
                                                 #tblAutomatedEmails.table th, #tblAutomatedEmails.table td {
-                                                    min-width: 0px;
+                                                    min-width: 0px !important;
                                                 }
                                                 #tblAutomatedEmails .arrow {
                                                     cursor: default !important;
@@ -1536,6 +1536,9 @@
                                     </div>
                                     <div class="table-responsive">
                                         <style>
+                                            #tblCorrespondence.table tr th, #tblCorrespondence.table tr td {
+                                                min-width: 0px !important;
+                                            } 
                                             .colLabel {
                                                 width: 20%!important;
                                             }
@@ -1565,7 +1568,7 @@
                                                         <td class="colSubject">{{correspondence.ReferenceTxt}}</td>
                                                         <td class="colTemplateContent">{{correspondence.MessageAsString}}</td>
                                                         <td class="colID hiddenColumn">{{correspondence.MessageId}}</td>
-                                                        <td class="colDelete d-flex align-items-center justify-content-center"><i class='fas fa-window-close btn-remove-raw' style='color: red; font-size: 16px; cursor: pointer'></i></td>
+                                                        <td class="colDelete d-flex align-items-center justify-content-center"><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></td>
                                                     </tr>
                                                 {{/each}}
                                             </tbody>

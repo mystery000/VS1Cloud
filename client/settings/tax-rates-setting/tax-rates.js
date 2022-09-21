@@ -1097,6 +1097,8 @@ Template.taxRatesSettings.events({
     else {
       subTaxLines = subTaxLines.map((v) => v.RowId === edtSubTaxLineId ? ({
         RowId: v.RowId,
+        Id: v.Id,
+        ID: v.ID,
         SubTaxCode: subTaxCode.codename,
         Percentage: subTaxPercent,
         PercentageOn: subTaxPercentageOn,
@@ -1133,6 +1135,8 @@ Template.taxRatesSettings.events({
       return {
         type: "TTaxCodeLines",
         fields: {
+          ID: v.ID,
+          Id: v.Id,
           SubTaxCode: v.SubTaxCode,
           Percentage: v.Percentage,
           PercentageOn: v.PercentageOn,
@@ -1299,12 +1303,52 @@ Template.taxRatesSettings.events({
   'click .btnAddTaxRate': function () {
     $('#add-tax-title').text('Add New Tax Rate');
     $('#edtTaxID').val('');
-    $('#edtTaxName').val('');
+    $('#edtTaxName').val('S');
     $('#edtTaxName').prop('readonly', false);
-    $('#edtTaxRate').val('');
-    $('#edtTaxDesc').val('');
+    $('#edtTaxRate').val('4');
+    $('#edtTaxDesc').val('Sales Tax Default');
     let templateObject = Template.instance();
-    templateObject.subtaxlines.set([]);
+
+    console.log('adding tax rate dialog');
+    if (templateObject.isChkUSRegionTax.get()) {
+      let newSubTaxLines = [{
+        RowId: `subtax_0`,
+        SubTaxCode: 'STRT',
+        Percentage: 1,
+        PercentageOn: 'Selling Price',
+        CapAmount: 0,
+        ThresholdAmount: 0,
+        Description: ''
+      }, {
+        RowId: `subtax_1`,
+        SubTaxCode: 'CTRT',
+        Percentage: 1,
+        PercentageOn: 'Selling Price',
+        CapAmount: 0,
+        ThresholdAmount: 0,
+        Description: ''
+      }, {
+        RowId: `subtax_2`,
+        SubTaxCode: 'SPRT',
+        Percentage: 1,
+        PercentageOn: 'Selling Price',
+        CapAmount: 0,
+        ThresholdAmount: 0,
+        Description: ''
+      }, {
+        RowId: `subtax_3`,
+        SubTaxCode: 'CONRT',
+        Percentage: 1,
+        PercentageOn: 'Selling Price',
+        CapAmount: 0,
+        ThresholdAmount: 0,
+        Description: ''
+      }];
+      templateObject.subtaxlines.set(newSubTaxLines);
+    } else {
+      templateObject.subtaxlines.set([]);
+    }
+    
   },
   "click #subTaxList td.clickable": (e) => SubTaxEditListener(e),
   "click #subTaxList .table-remove": (e) => {
@@ -1462,6 +1506,7 @@ export const TaxRatesEditListener = (e) => {
 
       let subTaxLines = tax.lines.map((v, index) => ({
         RowId: `subtax_${index}`,
+        ID: v.ID,
         SubTaxCode: v.SubTaxCode,
         Percentage: v.Percentage,
         PercentageOn: v.PercentageOn,

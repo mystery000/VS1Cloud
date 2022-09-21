@@ -2175,7 +2175,7 @@ Template.productview.onRendered(function() {
                                         "<div class='colAttachment form-group'></div>" 
                                     }
                                     
-                                    html += "<div class='colDelete d-flex align-items-center justify-content-center'><i class='fas fa-window-close btn-remove-raw' style='color: red; font-size: 16px; cursor: pointer'></i></div>" +
+                                    html += "<div class='colDelete d-flex align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>" +
                                 "</div>"+
                             "</div>"
                             
@@ -4839,7 +4839,7 @@ Template.productview.events({
                 let edtRaw = colProduct.find('.edtProductName')
                 $(event.target).remove();
                 $(colDelete).addClass('d-flex align-items-center justify-content-center')
-                $(colDelete).append("<i class='fas fa-window-close btn-remove-raw' style='color: red; font-size: 16px; cursor: pointer'></i>")
+                $(colDelete).append("<button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button>")
                 let parent = row.parent();
                 let grandParent = parent.parent();
                 let modalElement = $(row).closest('.modal#BOMSetupModal');
@@ -4971,7 +4971,6 @@ Template.productview.events({
             return product.fields.productName == productName;
         })
         if(index > -1) {
-
             $(event.target).remove()
               for (let i = 0; i < bomProducts[index].fields.subs.length; i++) {
                             $(row).append("<div class='d-flex productRow'>" +
@@ -4985,7 +4984,7 @@ Template.productview.events({
                                 "<div class='colProcess form-group'></div>" +
                                 "<div class='colNote form-group'></div>" +
                                 "<div class='colAttachment'></div>" +
-                                "<div class='d-flex colDelete align-items-center justify-content-center'><i class='fas fa-window-close btn-remove-raw' style='color: red; font-size: 16px; cursor: pointer'></i></div>" +
+                                "<div class='d-flex colDelete align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>" +
                                 "</div>")
                             let elements = $(row).find('.edtProductName')
                             $(elements[elements.length - 1]).editableSelect();
@@ -5131,7 +5130,8 @@ Template.productview.events({
 
         localStorage.setItem('TProcTree', JSON.stringify(bomProducts));
         swal('BOM Settings Successfully Saved', '', 'success');
-        templateObject.bomProducts.set(JSON.stringify(JSON.parse(localStorage.getItem('TProcTree'))))
+        tempObject.bomProducts.set(JSON.stringify(JSON.parse(localStorage.getItem('TProcTree'))))
+        $('#BOMSetupModal').modal('toggle');
         tempObject.getProductData();
     },
 

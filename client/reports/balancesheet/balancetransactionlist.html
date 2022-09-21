@@ -4,8 +4,7 @@
             <div class="spinner"></div>
         </div>
         <header style="padding: 16px;background-color: #ededed;padding-bottom: 0px;">
-            <h1 style="margin: 16px;margin-bottom: 0px;">Balance Transaction List <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"
-                        style="font-size: 20px;"></i></a></h1>
+            <h1 style="margin: 16px;margin-bottom: 0px;">Balance Transaction List {{> helpbutton}}</h1>
         </header>
         <div class="d-flex flex-row align-items-xl-center" style="background-color: #ededed;padding: 16px;padding-bottom: 0px;">
             <div class="d-xl-flex flex-grow-1 align-items-xl-center">
@@ -192,9 +191,9 @@
                                         <td contenteditable="false" class="colAccountName">{{item.accountname}}</td>
                                         <td contenteditable="false" class="colType transactiontype" id="transactiontype">{{item.type}}</td>
                                         <td contenteditable="false" class="colClientName">{{item.clientname}}</td>
-                                        <td contenteditable="false" class="colDebit">{{item.debit}}</td>
-                                        <td contenteditable="false" class="colCredit">{{item.credit}}</td>
-                                        <td contenteditable="false" class="colBalance">{{item.balance}}</td>
+                                        <td contenteditable="false" class="colDebit" style="text-align: right!important;">{{item.debit}}</td>
+                                        <td contenteditable="false" class="colCredit" style="text-align: right!important;">{{item.credit}}</td>
+                                        <td contenteditable="false" class="colBalance" style="text-align: right!important;">{{item.balance}}</td>
                                         <td contenteditable="false" class="colAccountType">{{item.accounttype}}</td>
                                         <!-- <td contenteditable="false" class="colProduct hiddenColumn">{{item.product}}</td> -->
                                         <td contenteditable="false" class="colOpeningBalance hiddenColumn">{{item.openingbalance}}</td>

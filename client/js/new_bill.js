@@ -18,6 +18,8 @@ import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
+import LoadingOverlay from '../LoadingOverlay';
+import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 
 var template_list = [
     "Bills",
@@ -70,11 +72,81 @@ Template.billcard.onCreated(() => {
     templateObject.stripe_fee_method = new ReactiveVar();
     templateObject.statusrecords = new ReactiveVar([]);
     templateObject.subtaxcodes = new ReactiveVar([]);
+
+    templateObject.displayfields = new ReactiveVar([]);
+    templateObject.reset_data = new ReactiveVar([]);
 });
 Template.billcard.onRendered(() => {
 
     const templateObject = Template.instance();
     $('#choosetemplate').attr('checked', true);
+
+    // set initial table rest_data
+    function init_reset_data() { 
+
+      let reset_data = [
+        { index: 0, label: "Account Name", class: "AccountName", width: "300", active: true, display: true },
+        { index: 1, label: "Memo", class: "Memo", width: "", active: true, display: true },
+        { index: 2, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
+        { index: 3, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
+        { index: 4, label: "Customer/Job", class: "CustomerJob", width: "155", active: true, display: true },
+        { index: 5, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
+        { index: 6, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
+        { index: 7, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
+        { index: 8, label: "Custom Field 1", class: "CustomField1", width: "124", active: false, display: true },
+        { index: 9, label: "Custom Field 2", class: "CustomField2", width: "124", active: false, display: true },
+      ]; 
+
+      let templateObject = Template.instance();
+      templateObject.reset_data.set(reset_data);
+    }
+    init_reset_data();
+    // set initial table rest_data
+    // custom field displaysettings
+    function initCustomFieldDisplaySettings(data, listType) {
+      let templateObject = Template.instance();
+      let reset_data = templateObject.reset_data.get();
+      showCustomFieldDisplaySettings(reset_data);
+
+      try {
+        getVS1Data("VS1_Customize").then(function (dataObject) {
+          if (dataObject.length == 0) {
+            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              showCustomFieldDisplaySettings(reset_data);
+            }).catch(function (err) {
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data); 
+            // handle process here
+          }
+        });
+      } catch (error) {
+      } 
+      return; 
+    }
+
+    function showCustomFieldDisplaySettings(reset_data) {
+
+      let custFields = [];
+      let customData = {};
+      let customFieldCount = reset_data.length;
+
+      for (let r = 0; r < customFieldCount; r++) {
+        customData = {
+          active: reset_data[r].active,
+          id: reset_data[r].index,
+          custfieldlabel: reset_data[r].label, 
+          class: reset_data[r].class,
+          display: reset_data[r].display,
+          width: reset_data[r].width ? reset_data[r].width : ''
+        };
+        custFields.push(customData);
+      }
+      templateObject.displayfields.set(custFields);
+    }
+    initCustomFieldDisplaySettings("", "tblBillLine");
+
 
     templateObject.getTemplateInfoNew = function(){
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -122,9 +194,9 @@ Template.billcard.onRendered(() => {
                   }
 
 
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
               }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
               });
           }else{
                   let data = JSON.parse(dataObject[0].data);
@@ -167,7 +239,7 @@ Template.billcard.onRendered(() => {
 
 
                  }
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
           }
         }).catch(function(err) {
            sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
@@ -209,9 +281,9 @@ Template.billcard.onRendered(() => {
 
 
                   }
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
         }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
         });
         });
 
@@ -1029,7 +1101,7 @@ Template.billcard.onRendered(() => {
             }
         }).catch(function (err) {
             contactService.getOneSupplierDataEx(supplierID).then(function (data) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 setSupplierByID(data);
             });
         });
@@ -1061,7 +1133,7 @@ Template.billcard.onRendered(() => {
                 getVS1Data('TBillEx').then(function(dataObject) {
                     if (dataObject.length == 0) {
                         purchaseService.getOneBillData(currentBill).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             let lineItemObj = {};
                             let lineItemsTable = [];
@@ -1286,7 +1358,7 @@ Template.billcard.onRendered(() => {
 
                                 }
                             });
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
 
                         });
                     } else {
@@ -1296,7 +1368,7 @@ Template.billcard.onRendered(() => {
                         for (let d = 0; d < useData.length; d++) {
                             if (parseInt(useData[d].fields.ID) === currentBill) {
                                 added = true;
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 let lineItemObj = {};
                                 let lineItemsTable = [];
@@ -1508,7 +1580,7 @@ Template.billcard.onRendered(() => {
 
                         if (!added) {
                             purchaseService.getOneBillData(currentBill).then(function(data) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 let lineItemObj = {};
                                 let lineItemsTable = [];
@@ -1723,7 +1795,7 @@ Template.billcard.onRendered(() => {
 
                                     }
                                 });
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
 
                             });
                         }
@@ -1731,7 +1803,7 @@ Template.billcard.onRendered(() => {
 
                 }).catch(function(err) {
                     purchaseService.getOneBillData(currentBill).then(function(data) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         let lineItems = [];
                         let lineItemObj = {};
                         let lineItemsTable = [];
@@ -1964,7 +2036,7 @@ Template.billcard.onRendered(() => {
 
                             }
                         });
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
 
                     });
                 });
@@ -1973,7 +2045,7 @@ Template.billcard.onRendered(() => {
             templateObject.getBillData();
         }
     } else {
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
         let lineItems = [];
         let lineItemsTable = [];
         let lineItemObj = {};
@@ -2964,11 +3036,11 @@ Template.billcard.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newShipViaModal').modal('toggle');
                                 }, 200);
                             }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         } else {
                             let data = JSON.parse(dataObject[0].data);
@@ -2980,7 +3052,7 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newShipViaModal').modal('toggle');
                             }, 200);
                         }
@@ -2994,12 +3066,12 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#edtShipVia').attr('readonly', false);
                                 $('#newShipViaModal').modal('toggle');
                             }, 200);
                         }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     });
                 } else {
@@ -3023,7 +3095,7 @@ Template.billcard.onRendered(() => {
             $('#tblShipViaPopList_filter .form-control-sm').val('');
             setTimeout(function () {
                 $('.btnRefreshVia').trigger('click');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             }, 1000);
         });
     $(document).on("click", "#tblAccount tbody tr", function(e) {
@@ -3149,7 +3221,7 @@ Template.billcard.onRendered(() => {
         $('#tblAccount_filter .form-control-sm').val('');
         setTimeout(function() {
             $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
     $(document).on("click", "#tblTaxRate tbody tr", function(e) {
@@ -3286,7 +3358,7 @@ Template.billcard.onRendered(() => {
     //     $('#tblCurrencyPopList_filter .form-control-sm').val('');
     //     setTimeout(function () {
     //         $('.btnRefreshCurrency').trigger('click');
-    //         $('.fullScreenSpin').css('display', 'none');
+    //         LoadingOverlay.hide();
     //     }, 1000);
     // });
 
@@ -3305,7 +3377,7 @@ Template.billcard.onRendered(() => {
         $('#tblStatusPopList_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshStatus').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
 
@@ -3353,7 +3425,7 @@ Template.billcard.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newTermsModal').modal('toggle');
                                 }, 200);
                             });
@@ -3389,7 +3461,7 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newTermsModal').modal('toggle');
                             }, 200);
                         }
@@ -3425,7 +3497,7 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newTermsModal').modal('toggle');
                             }, 200);
                         });
@@ -3467,7 +3539,7 @@ Template.billcard.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newStatusPopModal').modal('toggle');
                                 }, 200);
                             });
@@ -3481,7 +3553,7 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newStatusPopModal').modal('toggle');
                             }, 200);
                         }
@@ -3494,13 +3566,13 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newStatusPopModal').modal('toggle');
                             }, 200);
                         });
                     });
                     setTimeout(function() {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         $('#newStatusPopModal').modal('toggle');
                     }, 200);
 
@@ -3552,7 +3624,7 @@ Template.billcard.onRendered(() => {
     //                                 }
     //                             }
     //                             setTimeout(function() {
-    //                                 $('.fullScreenSpin').css('display', 'none');
+    //                                 LoadingOverlay.hide();
     //                                 $('#newCurrencyModal').modal('toggle');
     //                                 $('#sedtCountry').attr('readonly', true);
     //                             }, 200);
@@ -3573,7 +3645,7 @@ Template.billcard.onRendered(() => {
     //                             }
     //                         }
     //                         setTimeout(function() {
-    //                             $('.fullScreenSpin').css('display', 'none');
+    //                             LoadingOverlay.hide();
     //                             $('#newCurrencyModal').modal('toggle');
     //                         }, 200);
     //                     }
@@ -3597,7 +3669,7 @@ Template.billcard.onRendered(() => {
     //                             }
     //                         }
     //                         setTimeout(function() {
-    //                             $('.fullScreenSpin').css('display', 'none');
+    //                             LoadingOverlay.hide();
     //                             $('#newCurrencyModal').modal('toggle');
     //                             $('#sedtCountry').attr('readonly', true);
     //                         }, 200);
@@ -3643,7 +3715,7 @@ Template.billcard.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newDepartmentModal').modal('toggle');
                                 }, 200);
                             });
@@ -3659,7 +3731,7 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newDepartmentModal').modal('toggle');
                             }, 200);
                         }
@@ -3675,7 +3747,7 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newDepartmentModal').modal('toggle');
                             }, 200);
                         });
@@ -3716,7 +3788,7 @@ Template.billcard.onRendered(() => {
                     if (dataObject.length == 0) {
                         $('.fullScreenSpin').css('display', 'inline-block');
                         sideBarService.getOneSupplierDataExByName(supplierDataName).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
 
                             $('#add-supplier-title').text('Edit Supplier');
@@ -3803,7 +3875,7 @@ Template.billcard.onRendered(() => {
 
                         }).catch(function(err) {
 
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
@@ -3812,7 +3884,7 @@ Template.billcard.onRendered(() => {
                         for (let i = 0; i < data.tsuppliervs1.length; i++) {
                             if ((data.tsuppliervs1[i].fields.ClientName) === supplierDataName) {
                                 added = true;
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 $('#add-supplier-title').text('Edit Supplier');
                                 let popSupplierID = data.tsuppliervs1[i].fields.ID || '';
@@ -3899,7 +3971,7 @@ Template.billcard.onRendered(() => {
                         if (!added) {
                             $('.fullScreenSpin').css('display', 'inline-block');
                             sideBarService.getOneSupplierDataExByName(supplierDataName).then(function(data) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
 
                                 $('#add-supplier-title').text('Edit Supplier');
@@ -3983,14 +4055,14 @@ Template.billcard.onRendered(() => {
                                 }, 200);
                             }).catch(function(err) {
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }
                     }
                 }).catch(function(err) {
 
                     sideBarService.getOneSupplierDataExByName(supplierDataName).then(function(data) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         let lineItems = [];
 
                         $('#add-supplier-title').text('Edit Supplier');
@@ -4076,7 +4148,7 @@ Template.billcard.onRendered(() => {
 
                     }).catch(function(err) {
 
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                     });
                 });
                 //FlowRouter.go('/supplierscard?name=' + e.target.value);
@@ -4168,7 +4240,7 @@ Template.billcard.onRendered(() => {
         $('#tblSupplierlist_filter .form-control-sm').val('');
         setTimeout(function() {
             $('.btnRefreshSupplier').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     }
 
@@ -4228,12 +4300,12 @@ Template.billcard.onRendered(() => {
                 if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                    // $(".btnSave").trigger("click");
                    $('#html-2-pdfwrapper').css('display', 'none');
-                   $('.fullScreenSpin').css('display', 'none');
+                   LoadingOverlay.hide();
                    document.getElementById('html-2-pdfwrapper_new').style.display="none";
                 } else {
                     document.getElementById('html-2-pdfwrapper_new').style.display="none";
                     $('#html-2-pdfwrapper').css('display', 'none');
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                 }
             });
 
@@ -4352,7 +4424,7 @@ Template.billcard.onRendered(() => {
 
         html2pdf().set(opt).from(source).save().then(function(dataObject) {
             $('#html-2-pdfwrapper').css('display', 'none');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         });
 
 
@@ -5129,7 +5201,12 @@ Template.billcard.helpers({
     },
     isCurrencyEnable: () => {
         return Session.get('CloudUseForeignLicence');
-    }
+    },
+
+    // custom field displaysettings
+    displayfields: () => {
+      return Template.instance().displayfields.get();
+    },
 });
 
 Template.billcard.events({
@@ -5228,19 +5305,25 @@ Template.billcard.events({
         $('#edtSupplierName').editableSelect();
     },
     'click .th.colAmountEx': function(event) {
-        $('.colAmountEx').addClass('hiddenColumn');
-        $('.colAmountEx').removeClass('showColumn');
+      $('.colAmountEx').addClass('hiddenColumn');
+      $('.colAmountEx').removeClass('showColumn');
 
-        $('.colAmountInc').addClass('showColumn');
-        $('.colAmountInc').removeClass('hiddenColumn');
-    },
-    'click .th.colAmountInc': function(event) {
-        $('.colAmountInc').addClass('hiddenColumn');
-        $('.colAmountInc').removeClass('showColumn');
+      $('.colAmountInc').addClass('showColumn');
+      $('.colAmountInc').removeClass('hiddenColumn');
 
-        $('.colAmountEx').addClass('showColumn');
-        $('.colAmountEx').removeClass('hiddenColumn');
-    },
+      $('.chkAmountEx').prop("checked", false);
+      $('.chkAmountInc').prop("checked", true);
+  },
+  'click .th.colAmountInc': function(event) {
+      $('.colAmountInc').addClass('hiddenColumn');
+      $('.colAmountInc').removeClass('showColumn');
+
+      $('.colAmountEx').addClass('showColumn');
+      $('.colAmountEx').removeClass('hiddenColumn');
+
+      $('.chkAmountEx').prop("checked", true);
+      $('.chkAmountInc').prop("checked", false);
+  },
     'change #sltStatus': function() {
         let status = $('#sltStatus').find(":selected").val();
         if (status == "newstatus") {
@@ -5587,7 +5670,7 @@ Template.billcard.events({
                                 }, 500);
 
                             }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         } else {
                             let data = JSON.parse(dataObject[0].data);
@@ -5760,7 +5843,7 @@ Template.billcard.events({
                                     }, 500);
 
                                 }).catch(function(err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }
 
@@ -5851,7 +5934,7 @@ Template.billcard.events({
                             }, 500);
 
                         }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
 
                     });
@@ -6049,7 +6132,7 @@ Template.billcard.events({
 
                         }).catch(function (err) {
                             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             // Meteor._reload.reload();
                         });
                     } else {
@@ -6100,7 +6183,7 @@ Template.billcard.events({
 
                     }).catch(function (err) {
                         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         // Meteor._reload.reload();
                     });
                 });
@@ -6154,7 +6237,7 @@ Template.billcard.events({
                   if (dataObject.length == 0) {
                       $('.fullScreenSpin').css('display', 'inline-block');
                       sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
-                          $('.fullScreenSpin').css('display', 'none');
+                          LoadingOverlay.hide();
                           let lineItems = [];
                           $('#add-customer-title').text('Edit Customer');
                           let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -6242,7 +6325,7 @@ Template.billcard.events({
                               $('#addCustomerModal').modal('show');
                           }, 200);
                       }).catch(function (err) {
-                          $('.fullScreenSpin').css('display', 'none');
+                          LoadingOverlay.hide();
                       });
                   } else {
                       let data = JSON.parse(dataObject[0].data);
@@ -6253,7 +6336,7 @@ Template.billcard.events({
                           if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
                               let lineItems = [];
                               added = true;
-                              $('.fullScreenSpin').css('display', 'none');
+                              LoadingOverlay.hide();
                               $('#add-customer-title').text('Edit Customer');
                               let popCustomerID = data.tcustomervs1[i].fields.ID || '';
                               let popCustomerName = data.tcustomervs1[i].fields.ClientName || '';
@@ -6345,7 +6428,7 @@ Template.billcard.events({
                       if (!added) {
                           $('.fullScreenSpin').css('display', 'inline-block');
                           sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
-                              $('.fullScreenSpin').css('display', 'none');
+                              LoadingOverlay.hide();
                               let lineItems = [];
                               $('#add-customer-title').text('Edit Customer');
                               let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -6433,13 +6516,13 @@ Template.billcard.events({
                                   $('#addCustomerModal').modal('show');
                               }, 200);
                           }).catch(function (err) {
-                              $('.fullScreenSpin').css('display', 'none');
+                              LoadingOverlay.hide();
                           });
                       }
                   }
               }).catch(function (err) {
                   sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
                       let lineItems = [];
                       $('#add-customer-title').text('Edit Customer');
                       let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -6527,7 +6610,7 @@ Template.billcard.events({
                           $('#addCustomerModal').modal('show');
                       }, 200);
                   }).catch(function (err) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
                   });
               });
 
@@ -7084,7 +7167,7 @@ Template.billcard.events({
 
                     }
                 });
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         } else {
           if(FlowRouter.current().queryParams.trans){
@@ -7223,8 +7306,9 @@ Template.billcard.events({
 
         $('#myModal4').modal('toggle');
     },
-    'click .btnSave': function(event) {
-        let templateObject = Template.instance();
+    'click .btnSave': (event, templateObject) => {
+        saveCurrencyHistory();
+        //let templateObject = Template.instance();
         let suppliername = $('#edtSupplierName');
         let purchaseService = new PurchaseBoardService();
         let termname = $('#sltTerms').val() || '';
@@ -7310,7 +7394,7 @@ Template.billcard.events({
             var objDetails = '';
             if ($('#sltDept').val() === '') {
                 swal('Department has not been selected!', '', 'warning');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 event.preventDefault();
                 return false;
             }
@@ -7372,7 +7456,7 @@ Template.billcard.events({
 
             }else{
               swal('Account name has not been selected!', '', 'warning');
-              $('.fullScreenSpin').css('display', 'none');
+              LoadingOverlay.hide();
               event.preventDefault();
               return false;
             };
@@ -7513,7 +7597,7 @@ Template.billcard.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -7582,7 +7666,7 @@ Template.billcard.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -7648,7 +7732,7 @@ Template.billcard.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -7852,266 +7936,294 @@ Template.billcard.events({
 
                     }
                 });
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         }
 
     },
     'click .chkAccountName': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colAccountName').css('display', 'table-cell');
-            $('.colAccountName').css('padding', '.75rem');
-            $('.colAccountName').css('vertical-align', 'top');
-        } else {
-            $('.colAccountName').css('display', 'none');
-        }
+      if ($(event.target).is(':checked')) {
+        $('.colAccountName').addClass('showColumn');
+        $('.colAccountName').removeClass('hiddenColumn');
+      } else {
+        $('.colAccountName').addClass('hiddenColumn');
+        $('.colAccountName').removeClass('showColumn');
+      }
     },
-    'click .chkMemo': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colMemo').css('display', 'table-cell');
-            $('.colMemo').css('padding', '.75rem');
-            $('.colMemo').css('vertical-align', 'top');
-        } else {
-            $('.colMemo').css('display', 'none');
-        }
-    },
-    'click .chkAmount': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colAmount').css('display', 'table-cell');
-            $('.colAmount').css('padding', '.75rem');
-            $('.colAmount').css('vertical-align', 'top');
-        } else {
-            $('.colAmount').css('display', 'none');
-        }
+    'click .chkMemo': function(event) { 
+      if ($(event.target).is(':checked')) {
+        $('.colMemo').addClass('showColumn');
+        $('.colMemo').removeClass('hiddenColumn');
+      } else {
+        $('.colMemo').addClass('hiddenColumn');
+        $('.colMemo').removeClass('showColumn');
+      }
     },
     'click .chkCustomerJob': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colCustomerJob').css('display', 'table-cell');
-            $('.colCustomerJob').css('padding', '.75rem');
-            $('.colCustomerJob').css('vertical-align', 'top');
-        } else {
-            $('.colCustomerJob').css('display', 'none');
-        }
-    },
-    'click .chkTaxRate': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colTaxRate').css('display', 'table-cell');
-            $('.colTaxRate').css('padding', '.75rem');
-            $('.colTaxRate').css('vertical-align', 'top');
-        } else {
-            $('.colTaxRate').css('display', 'none');
-        }
-    },
-    'click .chkTaxCode': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colTaxCode').css('display', 'table-cell');
-            $('.colTaxCode').css('padding', '.75rem');
-            $('.colTaxCode').css('vertical-align', 'top');
-        } else {
-            $('.colTaxCode').css('display', 'none');
-        }
-    },
+      if ($(event.target).is(':checked')) {
+        $('.colCustomerJob').addClass('showColumn');
+        $('.colCustomerJob').removeClass('hiddenColumn');
+      } else {
+        $('.colCustomerJob').addClass('hiddenColumn');
+        $('.colCustomerJob').removeClass('showColumn');
+      }
+    }, 
     'click .chkCustomField1': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colCustomField1').css('display', 'table-cell');
-            $('.colCustomField1').css('padding', '.75rem');
-            $('.colCustomField1').css('vertical-align', 'top');
-        } else {
-            $('.colCustomField1').css('display', 'none');
-        }
+      if ($(event.target).is(':checked')) {
+        $('.colCustomField1').addClass('showColumn');
+        $('.colCustomField1').removeClass('hiddenColumn');
+      } else {
+        $('.colCustomField1').addClass('hiddenColumn');
+        $('.colCustomField1').removeClass('showColumn');
+      }
     },
     'click .chkCustomField2': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colCustomField2').css('display', 'table-cell');
-            $('.colCustomField2').css('padding', '.75rem');
-            $('.colCustomField2').css('vertical-align', 'top');
-        } else {
-            $('.colCustomField2').css('display', 'none');
-        }
+      if ($(event.target).is(':checked')) {
+        $('.colCustomField2').addClass('showColumn');
+        $('.colCustomField2').removeClass('hiddenColumn');
+      } else {
+        $('.colCustomField2').addClass('hiddenColumn');
+        $('.colCustomField2').removeClass('showColumn');
+      }
     },
+    'click .chkTaxRate': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colTaxRate').addClass('showColumn');
+        $('.colTaxRate').removeClass('hiddenColumn');
+      } else {
+        $('.colTaxRate').addClass('hiddenColumn');
+        $('.colTaxRate').removeClass('showColumn');
+      }
+    },
+    // displaysettings
+    'click .chkTaxCode': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colTaxCode').addClass('showColumn');
+        $('.colTaxCode').removeClass('hiddenColumn');
+      } else {
+        $('.colTaxCode').addClass('hiddenColumn');
+        $('.colTaxCode').removeClass('showColumn');
+      }
+    },
+    'click .chkTaxAmount': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colTaxAmount').addClass('showColumn');
+        $('.colTaxAmount').removeClass('hiddenColumn');
+      } else {
+        $('.colTaxAmount').addClass('hiddenColumn');
+        $('.colTaxAmount').removeClass('showColumn');
+      }
+    },
+
+    'click .chkAmountEx': function (event) {
+      if ($(event.target).is(':checked')) {  
+          $('.chkAmountInc').prop("checked", false); 
+
+          $('.colAmountInc').addClass('hiddenColumn');
+          $('.colAmountInc').removeClass('showColumn');
+
+          $('.colAmountEx').addClass('showColumn');
+          $('.colAmountEx').removeClass('hiddenColumn');
+        } else { 
+          $('.chkAmountInc').prop("checked", true); 
+
+          $('.colAmountEx').addClass('hiddenColumn');
+          $('.colAmountEx').removeClass('showColumn');
+
+          $('.colAmountInc').addClass('showColumn');
+          $('.colAmountInc').removeClass('hiddenColumn');
+      }
+    },
+    'click .chkAmountInc': function(event) {
+      if ($(event.target).is(':checked')) { 
+          $('.chkAmountEx').prop("checked", false); 
+
+          $('.colAmountEx').addClass('hiddenColumn');
+          $('.colAmountEx').removeClass('showColumn');
+
+          $('.colAmountInc').addClass('showColumn');
+          $('.colAmountInc').removeClass('hiddenColumn');
+      } else { 
+          $('.chkAmountEx').prop("checked", true); 
+
+          $('.colAmountInc').addClass('hiddenColumn');
+          $('.colAmountInc').removeClass('showColumn');
+
+          $('.colAmountEx').addClass('showColumn');
+          $('.colAmountEx').removeClass('hiddenColumn');
+      }
+    },
+
     'change .rngRangeAccountName': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthAccountName").html(range + '%');
-        $('.colAccountName').css('width', range + '%');
+        $(".spWidthAccountName").html(range);
+        $('.colAccountName').css('width', range);
 
     },
     'change .rngRangeMemo': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthMemo").html(range + '%');
-        $('.colMemo').css('width', range + '%');
+        $(".spWidthMemo").html(range);
+        $('.colMemo').css('width', range);
 
     },
-    'change .rngRangeAmount': function(event) {
+    // 'change .rngRangeAmount': function(event) {
 
+    //     let range = $(event.target).val();
+    //     $(".spWidthAmount").html(range);
+    //     $('.colAmount').css('width', range);
+
+    // },
+    'change .rngRangeAmountInc': function (event) {
         let range = $(event.target).val();
-        $(".spWidthAmount").html(range + '%');
-        $('.colAmount').css('width', range + '%');
-
+        //$(".spWidthAmount").html(range);
+        $('.colAmountInc').css('width', range);
+    },
+    'change .rngRangeAmountEx': function (event) {
+        let range = $(event.target).val();
+        //$(".spWidthAmount").html(range);
+        $('.colAmountEx').css('width', range);
     },
     'change .rngRangeTaxRate': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthTaxRate").html(range + '%');
-        $('.colTaxRate').css('width', range + '%');
+        $(".spWidthTaxRate").html(range);
+        $('.colTaxRate').css('width', range);
 
     },
     'change .rngRangeTaxCode': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthTaxCode").html(range + '%');
-        $('.colTaxCode').css('width', range + '%');
+        $(".spWidthTaxCode").html(range);
+        $('.colTaxCode').css('width', range);
 
     },
     'change .rngRangeCustomField1': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthCustomField1").html(range + '%');
-        $('.colCustomField1').css('width', range + '%');
+        $(".spWidthCustomField1").html(range);
+        $('.colCustomField1').css('width', range);
 
     },
     'change .rngRangeCustomField2': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthCustomField2").html(range + '%');
-        $('.colCustomField2').css('width', range + '%');
+        $(".spWidthCustomField2").html(range);
+        $('.colCustomField2').css('width', range);
 
     },
     'change .rngRangeCustomerJob': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthCustomerJob").html(range + '%');
-        $('.colCustomerJob').css('width', range + '%');
+        $(".spWidthCustomerJob").html(range);
+        $('.colCustomerJob').css('width', range);
 
     },
     'blur .divcolumn': function(event) {
         let columData = $(event.target).html();
         let columHeaderUpdate = $(event.target).attr("valueupdate");
-        $("" + columHeaderUpdate + "").html(columData);
+        // $("" + columHeaderUpdate + "").html(columData);
+        $("th.col" + columHeaderUpdate + "").html(columData);
 
     },
     'click .btnSaveGridSettings': function(event) {
-        let lineItems = [];
-
-        $('.columnSettings').each(function(index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || '';
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(':checked')) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
-
-            lineItems.push(lineItemObj);
-
-
-
-        });
-
-
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblBillLine'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.update({
-                        _id: checkPrefDetails._id
-                    }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'purchaseform',
-                            PrefName: 'tblBillLine',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-
-                        }
-                    });
-
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'purchaseform',
-                        PrefName: 'tblBillLine',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-
-                        }
-                    });
-
-                }
-            }
+      let lineItems = [];
+      $(".fullScreenSpin").css("display", "inline-block");
+  
+      $(".displaySettings").each(function (index) {
+        var $tblrow = $(this);
+        var fieldID = $tblrow.attr("custid") || 0;
+        var colTitle = $tblrow.find(".divcolumn").text() || "";
+        var colWidth = $tblrow.find(".custom-range").val() || 0;
+        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+        var colHidden = false;
+        if ($tblrow.find(".custom-control-input").is(":checked")) {
+          colHidden = true;
+        } else {
+          colHidden = false;
         }
-        $('#myModal2').modal('toggle');
+        let lineItemObj = {
+          index: parseInt(fieldID),
+          label: colTitle,
+          active: colHidden,
+          width: parseInt(colWidth),
+          class: colthClass,
+          display: true
+        };
+  
+        lineItems.push(lineItemObj); 
+      });
+  
+      let templateObject = Template.instance();
+      let reset_data = templateObject.reset_data.get();
+      reset_data = reset_data.filter(redata => redata.display == false);
+      lineItems.push(...reset_data);
+      lineItems.sort((a,b) => a.index - b.index); 
+  
+      try {
+        let erpGet = erpDb();
+        let tableName = "tblBillLine";
+        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+        $(".fullScreenSpin").css("display", "none");
+        if(added) {
+            swal({
+              title: 'SUCCESS',
+              text: "Display settings is updated!",
+              type: 'success',
+              showCancelButton: false,
+              confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.value) {
+                   $('#myModal2').modal('hide');
+                }  
+            });
+        } else {
+          swal("Something went wrong!", "", "error");
+        }
+      } catch (error) {
+        $(".fullScreenSpin").css("display", "none");
+        swal("Something went wrong!", "", "error");
+      } 
     },
     'click .btnResetGridSettings': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblBillLine'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function(err, idTag) {
-                        if (err) {
+      let templateObject = Template.instance();
+      let reset_data = templateObject.reset_data.get(); 
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+      if(isBatchSerialNoTracking) {
+        reset_data[11].display = true; 
+      } else {
+        reset_data[11].display = false; 
+      }
+      reset_data = reset_data.filter(redata => redata.display); 
+  
+      $(".displaySettings").each(function (index) {
+        let $tblrow = $(this);
+        $tblrow.find(".divcolumn").text(reset_data[index].label);
+        $tblrow
+          .find(".custom-control-input")
+          .prop("checked", reset_data[index].active);
 
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
+        let title = $("#tblBillLine").find("th").eq(index);
+        if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
+          $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
+        } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
+          $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
+        } else {
+          $(title).html(reset_data[index].label);
         }
+
+
+        if (reset_data[index].active) {
+          $('.col' + reset_data[index].class).addClass('showColumn');
+          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
+        } else {
+          $('.col' + reset_data[index].class).addClass('hiddenColumn');
+          $('.col' + reset_data[index].class).removeClass('showColumn');
+        }
+        $(".rngRange" + reset_data[index].class).val('');
+      });
     },
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
@@ -8408,7 +8520,7 @@ Template.billcard.events({
 
                 }else{
                   swal('Account name has not been selected!', '', 'warning');
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
                   event.preventDefault();
                   return false;
                 }
@@ -8524,7 +8636,7 @@ Template.billcard.events({
                         }
                     });
 
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                 });
             }
 
@@ -8562,7 +8674,7 @@ Template.billcard.events({
           }
 
         }else{
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
         }
 
     },
@@ -8593,7 +8705,7 @@ Template.billcard.events({
         window.open('/supplierpayment?payment=' + selectPayID +'&name=' + suppliername, '_self');
       }, 500);
     }else{
-      $('.fullScreenSpin').css('display', 'none');
+      LoadingOverlay.hide();
     }
     },
     'click .chkEmailCopy': function(event) {

@@ -15,6 +15,8 @@ import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
+import LoadingOverlay from '../LoadingOverlay';
+import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -61,6 +63,7 @@ Template.new_salesorder.onCreated(() => {
     templateObject.uploadedFiles = new ReactiveVar([]);
     templateObject.attachmentCount = new ReactiveVar();
     templateObject.displayfields = new ReactiveVar([]);
+    templateObject.reset_data = new ReactiveVar([]);
 
     templateObject.address = new ReactiveVar();
     templateObject.abn = new ReactiveVar();
@@ -127,9 +130,40 @@ Template.new_salesorder.onRendered(() => {
         yearRange: "-90:+10",
     });
 
+    // set initial table rest_data
+    function init_reset_data() { 
+      let reset_data = [
+        { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
+        { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
+        { index: 2, label: "Qty", class: "Qty", width: "55", active: true, display: true },
+        { index: 3, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
+        { index: 4, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
+        { index: 5, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
+        { index: 6, label: "Cost Price", class: "CostPrice", width: "110", active: false, display: true },
+        { index: 7, label: "SalesLines CustField1", class: "SalesLinesCustField1", width: "110", active: false, display: true },
+        { index: 8, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
+        { index: 9, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
+        { index: 10, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
+        { index: 11, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
+        { index: 12, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
+        { index: 13, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
+      ];
 
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+      if(isBatchSerialNoTracking) {
+        reset_data[11].display = true; 
+      } else {
+        reset_data[11].display = false; 
+      }
+
+      let templateObject = Template.instance();
+      templateObject.reset_data.set(reset_data);
+    }
+    init_reset_data();
+    // set initial table rest_data
+    
     templateObject.getTemplateInfoNew = function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         getVS1Data('TTemplateSettings').then(function(dataObject) {
           if (dataObject.length == 0) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
@@ -205,9 +239,9 @@ Template.new_salesorder.onRendered(() => {
                  }
 
 
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
               }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
               });
           }else{
                   let data = JSON.parse(dataObject[0].data);
@@ -283,7 +317,7 @@ Template.new_salesorder.onRendered(() => {
 
 
                   }
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
           }
         }).catch(function(err) {
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
@@ -354,9 +388,9 @@ Template.new_salesorder.onRendered(() => {
 
 
                   }
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
         }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
         });
       });
 
@@ -2070,7 +2104,7 @@ Template.new_salesorder.onRendered(() => {
 
 
     });
-    $('.fullScreenSpin').css('display', 'inline-block');
+    LoadingOverlay.show();
 
     templateObject.getAllClients = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
@@ -2213,7 +2247,7 @@ Template.new_salesorder.onRendered(() => {
             }
         }).catch(function (err) {
             contactService.getOneCustomerDataEx(customerID).then(function (data) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 setCustomerByID(data);
             });
         });
@@ -2582,7 +2616,7 @@ Template.new_salesorder.onRendered(() => {
 
                                 }
                             });
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
 
                         });
                     } else {
@@ -3093,7 +3127,7 @@ Template.new_salesorder.onRendered(() => {
 
                                         }
                                     });
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
 
                                 });
                             } catch (err) {
@@ -3146,7 +3180,7 @@ Template.new_salesorder.onRendered(() => {
                 }).catch(function(err) {
 
                     accountService.getOneSalesOrderdataEx(currentQuote).then(function(data) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         let lineItems = [];
                         let lineItemObj = {};
                         let lineItemsTable = [];
@@ -3428,7 +3462,7 @@ Template.new_salesorder.onRendered(() => {
 
                             }
                         });
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
 
                     });
                 });
@@ -3562,7 +3596,7 @@ Template.new_salesorder.onRendered(() => {
                                   };
                                 }
                             });
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         }
                     });
 
@@ -3596,7 +3630,7 @@ Template.new_salesorder.onRendered(() => {
             currentSalesOrder = parseInt(currentSalesOrder);
             templateObject.getSalesOrderData = function() {
                 accountService.getOneQuotedataEx(currentSalesOrder).then(function(data) {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     let lineItems = [];
                     let lineItemObj = {};
                     let lineItemsTable = [];
@@ -3874,7 +3908,7 @@ Template.new_salesorder.onRendered(() => {
 
                         }
                     });
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
 
                 });
             };
@@ -3891,7 +3925,7 @@ Template.new_salesorder.onRendered(() => {
                 getVS1Data('TSalesOrderEx').then(function(dataObject) {
                     if (dataObject.length == 0) {
                         accountService.getOneSalesOrderdataEx(currentSalesOrder).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             let lineItemObj = {};
                             let lineItemsTable = [];
@@ -4167,7 +4201,7 @@ Template.new_salesorder.onRendered(() => {
 
                                 }
                             });
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
@@ -4177,7 +4211,7 @@ Template.new_salesorder.onRendered(() => {
                             if (parseInt(useData[d].fields.ID) === currentSalesOrder) {
 
                                 added = true;
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 let lineItemObj = {};
                                 let lineItemsTable = [];
@@ -4447,7 +4481,7 @@ Template.new_salesorder.onRendered(() => {
                 }).catch(function(err) {
 
                     accountService.getOneSalesOrderdataEx(currentSalesOrder).then(function(data) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         let lineItems = [];
                         let lineItemObj = {};
                         let lineItemsTable = [];
@@ -4669,7 +4703,7 @@ Template.new_salesorder.onRendered(() => {
 
                             }
                         });
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
 
                     });
                 });
@@ -4679,7 +4713,7 @@ Template.new_salesorder.onRendered(() => {
             templateObject.getSalesOrderData();
         }
     } else {
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
         let lineItems = [];
         let lineItemsTable = [];
         let lineItemObj = {};
@@ -4912,7 +4946,7 @@ Template.new_salesorder.onRendered(() => {
         $('#tblStatusPopList_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshStatus').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
     $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
@@ -4922,7 +4956,7 @@ Template.new_salesorder.onRendered(() => {
         $('#tblCurrencyPopList_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshCurrency').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
     $(document).on("click", "#departmentList tbody tr", function(e) {
@@ -4947,7 +4981,7 @@ Template.new_salesorder.onRendered(() => {
         // $('#tblStatusPopList_filter .form-control-sm').val('');
         // setTimeout(function () {
         //     $('.btnRefreshStatus').trigger('click');
-        //     $('.fullScreenSpin').css('display', 'none');
+        //     LoadingOverlay.hide();
         // }, 1000);
     });
 
@@ -5564,7 +5598,7 @@ Template.new_salesorder.onRendered(() => {
         setTimeout(function() {
             //$('#tblCustomerlist_filter .form-control-sm').focus();
             // $('.btnRefreshCustomer').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
         // }
     }
@@ -5582,7 +5616,7 @@ Template.new_salesorder.onRendered(() => {
                     $('#termModalHeader').text('Edit Terms');
                     getVS1Data('TTermsVS1').then(function(dataObject) { //edit to test indexdb
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getTermsVS1().then(function(data) {
                                 for (let i in data.ttermsvs1) {
                                     if (data.ttermsvs1[i].TermsName === termsDataName) {
@@ -5613,7 +5647,7 @@ Template.new_salesorder.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newTermsModal').modal('toggle');
                                 }, 200);
                             });
@@ -5649,12 +5683,12 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newTermsModal').modal('toggle');
                             }, 200);
                         }
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        LoadingOverlay.show();
                         sideBarService.getTermsVS1().then(function(data) {
                             for (let i in data.ttermsvs1) {
                                 if (data.ttermsvs1[i].TermsName === termsDataName) {
@@ -5685,7 +5719,7 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newTermsModal').modal('toggle');
                             }, 200);
                         });
@@ -5718,7 +5752,7 @@ Template.new_salesorder.onRendered(() => {
 
                     getVS1Data('TDeptClass').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getDepartment().then(function(data) {
                                 for (let i = 0; i < data.tdeptclass.length; i++) {
                                     if (data.tdeptclass[i].DeptClassName === deptDataName) {
@@ -5729,7 +5763,7 @@ Template.new_salesorder.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newDepartmentModal').modal('toggle');
                                 }, 200);
                             });
@@ -5745,12 +5779,12 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newDepartmentModal').modal('toggle');
                             }, 200);
                         }
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        LoadingOverlay.show();
                         sideBarService.getDepartment().then(function(data) {
                             for (let i = 0; i < data.tdeptclass.length; i++) {
                                 if (data.tdeptclass[i].DeptClassName === deptDataName) {
@@ -5761,7 +5795,7 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newDepartmentModal').modal('toggle');
                             }, 200);
                         });
@@ -5795,7 +5829,7 @@ Template.new_salesorder.onRendered(() => {
 
                     getVS1Data('TLeadStatusType').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getAllLeadStatus().then(function(data) {
                                 for (let i in data.tleadstatustype) {
                                     if (data.tleadstatustype[i].TypeName === statusDataName) {
@@ -5803,7 +5837,7 @@ Template.new_salesorder.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newStatusPopModal').modal('toggle');
                                 }, 200);
                             });
@@ -5817,12 +5851,12 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newStatusPopModal').modal('toggle');
                             }, 200);
                         }
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        LoadingOverlay.show();
                         sideBarService.getAllLeadStatus().then(function(data) {
                             for (let i in data.tleadstatustype) {
                                 if (data.tleadstatustype[i].TypeName === statusDataName) {
@@ -5830,13 +5864,13 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newStatusPopModal').modal('toggle');
                             }, 200);
                         });
                     });
                     setTimeout(function() {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         $('#newStatusPopModal').modal('toggle');
                     }, 200);
 
@@ -5870,7 +5904,7 @@ Template.new_salesorder.onRendered(() => {
                     $('#sedtCountry').prop('readonly', true);
                     getVS1Data('TCurrency').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getCurrencies().then(function(data) {
                                 for (let i in data.tcurrency) {
                                     if (data.tcurrency[i].Code === currencyDataName) {
@@ -5888,7 +5922,7 @@ Template.new_salesorder.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newCurrencyModal').modal('toggle');
                                     $('#sedtCountry').attr('readonly', true);
                                 }, 200);
@@ -5909,13 +5943,13 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newCurrencyModal').modal('toggle');
                             }, 200);
                         }
 
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        LoadingOverlay.show();
                         sideBarService.getCurrencies().then(function(data) {
                             for (let i in data.tcurrency) {
                                 if (data.tcurrency[i].Code === currencyDataName) {
@@ -5933,7 +5967,7 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newCurrencyModal').modal('toggle');
                                 $('#sedtCountry').attr('readonly', true);
                             }, 200);
@@ -5979,9 +6013,9 @@ Template.new_salesorder.onRendered(() => {
                     $('#edtCustomerPOPID').val('');
                     getVS1Data('TCustomerVS1').then(function(dataObject) {
                         if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            LoadingOverlay.show();
                             sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 $('#add-customer-title').text('Edit Customer');
                                 let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -6068,7 +6102,7 @@ Template.new_salesorder.onRendered(() => {
                                     $('#addCustomerModal').modal('show');
                                 }, 200);
                             }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         } else {
                             let data = JSON.parse(dataObject[0].data);
@@ -6079,7 +6113,7 @@ Template.new_salesorder.onRendered(() => {
                                 if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
                                     let lineItems = [];
                                     added = true;
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#add-customer-title').text('Edit Customer');
                                     let popCustomerID = data.tcustomervs1[i].fields.ID || '';
                                     let popCustomerName = data.tcustomervs1[i].fields.ClientName || '';
@@ -6168,9 +6202,9 @@ Template.new_salesorder.onRendered(() => {
                                 }
                             }
                             if (!added) {
-                                $('.fullScreenSpin').css('display', 'inline-block');
+                                LoadingOverlay.show();
                                 sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     let lineItems = [];
                                     $('#add-customer-title').text('Edit Customer');
                                     let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -6257,13 +6291,13 @@ Template.new_salesorder.onRendered(() => {
                                         $('#addCustomerModal').modal('show');
                                     }, 200);
                                 }).catch(function(err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }
                         }
                     }).catch(function(err) {
                         sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             $('#add-customer-title').text('Edit Customer');
                             let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -6351,7 +6385,7 @@ Template.new_salesorder.onRendered(() => {
                             }, 200);
                         }).catch(function(err) {
 
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     });
                 } else {
@@ -6526,7 +6560,7 @@ Template.new_salesorder.onRendered(() => {
                     $(".btnSave").trigger("click");
                 } else {
                     $('#html-2-pdfwrapper').css('display', 'none');
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                 }
             });
 
@@ -6542,7 +6576,7 @@ Template.new_salesorder.onRendered(() => {
             //         pdf.save('Sales Order.pdf');
             //     }
             //     $('#html-2-pdfwrapper').css('display', 'none');
-            //     $('.fullScreenSpin').css('display', 'none');
+            //     LoadingOverlay.hide();
             // });
 
         };
@@ -6615,11 +6649,11 @@ Template.new_salesorder.onRendered(() => {
                                 if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                                     //$(".btnSave").trigger("click");
                                     $('#html-2-pdfwrapper_new').css('display', 'none');
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 } else {
                                     document.getElementById('html-2-pdfwrapper_new').style.display="none";
                                     $('#html-2-pdfwrapper_new').css('display', 'none');
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 }
                            });
                             // html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data =>{
@@ -6673,11 +6707,11 @@ Template.new_salesorder.onRendered(() => {
                             //         if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                             //             //$(".btnSave").trigger("click");
                             //             $('#html-2-pdfwrapper_new').css('display', 'none');
-                            //             $('.fullScreenSpin').css('display', 'none');
+                            //             LoadingOverlay.hide();
                             //         } else {
                             //             document.getElementById('html-2-pdfwrapper_new').style.display="none";
                             //             $('#html-2-pdfwrapper_new').css('display', 'none');
-                            //             $('.fullScreenSpin').css('display', 'none');
+                            //             LoadingOverlay.hide();
                             //         }
                             // });
 
@@ -7307,122 +7341,81 @@ Template.new_salesorder.onRendered(function() {
 
     // custom field displaysettings
     function initCustomFieldDisplaySettings(data, listType) {
+      let templateObject = Template.instance();
+      let reset_data = templateObject.reset_data.get();
+      showCustomFieldDisplaySettings(reset_data);
+
+      try {
+        getVS1Data("VS1_Customize").then(function (dataObject) {
+          if (dataObject.length == 0) {
+            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              showCustomFieldDisplaySettings(reset_data);
+            }).catch(function (err) {
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data); 
+            // handle process here
+          }
+        });
+      } catch (error) {
+      } 
+      return; 
+    }
+
+    function showCustomFieldDisplaySettings(reset_data) {
+
       let custFields = [];
       let customData = {};
-
-      let reset_data = [
-        { label: 'Product Name', class: 'colProductName', active: true },
-        { label: 'Description', class: 'colDescription', active: true },
-        { label: 'Qty', class: 'colQty', active: true },
-        { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
-        { label: 'Cost Price', class: 'colCostPrice', active: false },
-        { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
-        { label: 'Tax Rate', class: 'colTaxRate', active: false },
-        { label: 'Tax Code', class: 'colTaxCode', active: true },
-        { label: 'Amount (Ex)', class: 'colAmount', active: true },
-        { label: 'Tax Amount', class: 'colTaxAmount', active: true },
-        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
-        { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
-        { label: 'Disc %', class: 'colDiscount', active: true },
-        { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
-      ];
       let customFieldCount = reset_data.length;
 
-      // tempcode
       for (let r = 0; r < customFieldCount; r++) {
         customData = {
           active: reset_data[r].active,
-          id: "",
-          custfieldlabel: reset_data[r].label,
-          datatype: "",
-          isempty: true,
-          iscombo: false,
+          id: reset_data[r].index,
+          custfieldlabel: reset_data[r].label, 
+          class: reset_data[r].class,
+          display: reset_data[r].display,
+          width: reset_data[r].width ? reset_data[r].width : ''
         };
         custFields.push(customData);
       }
       tempObj.displayfields.set(custFields);
-      return;
-      // tempcode
-
-      for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-        if (data.tcustomfieldlist[x].fields.ListType == listType) {
-          customData = {
-            active: data.tcustomfieldlist[x].fields.Active || false,
-            id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-            custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-            datatype: data.tcustomfieldlist[x].fields.DataType || "",
-            isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-            iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-            dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-          };
-          custFields.push(customData);
-        }
-      }
-
-      let remainder = customFieldCount - data.tcustomfieldlist.length;
-      for (let r = 0; r < remainder; r++) {
-        customData = {
-          active: reset_data[data.tcustomfieldlist.length + r ].active,
-          id: 0,
-          custfieldlabel: reset_data[data.tcustomfieldlist.length + r ].label,
-          datatype: "",
-          isempty: false,
-          iscombo: false,
-          dropdown: null,
-        };
-        custFields.push(customData);
-      }
-
-      if (custFields.length < customFieldCount) {
-        let remainder = customFieldCount - custFields.length;
-        let getRemCustomFields = parseInt(custFields.length);
-        for (let r = 0; r < remainder; r++) {
-          getRemCustomFields++;
-          customData = {
-            active: false,
-            id: "",
-            custfieldlabel: "",
-            datatype: "",
-            isempty: true,
-            iscombo: false,
-          };
-          custFields.push(customData);
-        }
-      }
-      tempObj.displayfields.set(custFields);
     }
 
-    tempObj.getAllCustomFieldDisplaySettings = function () {
+    initCustomFieldDisplaySettings("", "tblSalesOrderLine");
 
-        let listType = 'ltSaleslines';
-        try {
-            getVS1Data("TltSaleslines").then(function (dataObject) {
-                if (dataObject.length == 0) {
-                    sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-                        initCustomFieldDisplaySettings(data, listType);
-                        addVS1Data("TltSaleslines", JSON.stringify(data));
-                    });
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    if(data.tcustomfieldlist.length == 0){
-                      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-                        initCustomFieldDisplaySettings(data, listType);
-                        addVS1Data("TltSaleslines", JSON.stringify(data));
-                      });
-                    } else {
-                      initCustomFieldDisplaySettings(data, listType);
-                      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-                        addVS1Data("TltSaleslines", JSON.stringify(data));
-                      });
-                    }
-                }
-            })
+    // tempObj.getAllCustomFieldDisplaySettings = function () {
 
-        } catch (error) {
-        }
-    }
+    //     let listType = 'ltSaleslines';
+    //     try {
+    //         getVS1Data("TltSaleslines").then(function (dataObject) {
+    //             if (dataObject.length == 0) {
+    //                 sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+    //                     initCustomFieldDisplaySettings(data, listType);
+    //                     addVS1Data("TltSaleslines", JSON.stringify(data));
+    //                 });
+    //             } else {
+    //                 let data = JSON.parse(dataObject[0].data);
+    //                 if(data.tcustomfieldlist.length == 0){
+    //                   sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+    //                     initCustomFieldDisplaySettings(data, listType);
+    //                     addVS1Data("TltSaleslines", JSON.stringify(data));
+    //                   });
+    //                 } else {
+    //                   initCustomFieldDisplaySettings(data, listType);
+    //                   sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+    //                     addVS1Data("TltSaleslines", JSON.stringify(data));
+    //                   });
+    //                 }
+    //             }
+    //         })
 
-    tempObj.getAllCustomFieldDisplaySettings();
+    //     } catch (error) {
+    //     }
+    // }
+
+    // tempObj.getAllCustomFieldDisplaySettings();
     //$('#tblInventory').DataTable().column( 6 ).visible( false );
 });
 
@@ -7612,7 +7605,7 @@ Template.new_salesorder.events({
             else
             {
 
-                $('.fullScreenSpin').css('display', 'inline-block');
+                LoadingOverlay.show();
                 $('#html-2-pdfwrapper').css('display', 'block');
                 if ($('.edtCustomerEmail').val() != "") {
                     $('.pdfCustomerName').html($('#edtCustomerName').val());
@@ -7645,7 +7638,7 @@ Template.new_salesorder.events({
         },
 
     'click .btnRefreshCustomField': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         let templateObject = Template.instance();
         sideBarService.getAllCustomFields().then(function (data) {
             addVS1Data('TCustomFieldList', JSON.stringify(data)).then(function (datareturn) {
@@ -7654,9 +7647,9 @@ Template.new_salesorder.events({
                 Meteor._reload.reload();
             });
             templateObject.getSalesCustomFieldsList();
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         });
     },
     'click #edtSaleCustField1': function(event) {
@@ -7682,7 +7675,7 @@ Template.new_salesorder.events({
         }
     },
     // 'click .btnSaveStatus': function() {
-    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     LoadingOverlay.show();
     //     let clientService = new SalesBoardService()
     //     let status = $('#status').val();
     //     let leadData = {
@@ -7697,7 +7690,7 @@ Template.new_salesorder.events({
     //         clientService.saveLeadStatus(leadData).then(function(objDetails) {
     //             sideBarService.getAllLeadStatus().then(function(dataUpdate) {
     //                 addVS1Data('TLeadStatusType', JSON.stringify(dataUpdate)).then(function(datareturn) {
-    //                     $('.fullScreenSpin').css('display', 'none');
+    //                     LoadingOverlay.hide();
     //                     let id = $('.printID').attr("id");
     //                     if (id != "") {
     //                         window.open("/salesordercard?id=" + id);
@@ -7711,7 +7704,7 @@ Template.new_salesorder.events({
     //                 window.open('/salesordercard', '_self');
     //             });
     //         }).catch(function(err) {
-    //             $('.fullScreenSpin').css('display', 'none');
+    //             LoadingOverlay.hide();
     //             swal({
     //                 title: 'Oooops...',
     //                 text: err,
@@ -7726,10 +7719,10 @@ Template.new_salesorder.events({
     //                 }
     //             });
     //             //$('.loginSpinner').css('display','none');
-    //             $('.fullScreenSpin').css('display', 'none');
+    //             LoadingOverlay.hide();
     //         });
     //     } else {
-    //         $('.fullScreenSpin').css('display', 'none');
+    //         LoadingOverlay.hide();
     //         swal({
     //             title: 'Please Enter Status',
     //             text: "Status field cannot be empty",
@@ -8142,11 +8135,14 @@ Template.new_salesorder.events({
         //}
     },
     'click .th.colAmountEx': function(event) {
-        $('.colAmountEx').addClass('hiddenColumn');
-        $('.colAmountEx').removeClass('showColumn');
+      $('.colAmountEx').addClass('hiddenColumn');
+      $('.colAmountEx').removeClass('showColumn');
 
-        $('.colAmountInc').addClass('showColumn');
-        $('.colAmountInc').removeClass('hiddenColumn');
+      $('.colAmountInc').addClass('showColumn');
+      $('.colAmountInc').removeClass('hiddenColumn');
+
+      $('.chkAmountEx').prop("checked", false);
+      $('.chkAmountInc').prop("checked", true);
     },
     'click .th.colAmountInc': function(event) {
         $('.colAmountInc').addClass('hiddenColumn');
@@ -8154,6 +8150,9 @@ Template.new_salesorder.events({
 
         $('.colAmountEx').addClass('showColumn');
         $('.colAmountEx').removeClass('hiddenColumn');
+
+        $('.chkAmountEx').prop("checked", true);
+        $('.chkAmountInc').prop("checked", false);
     },
     'click .th.colUnitPriceEx': function(event) {
         $('.colUnitPriceEx').addClass('hiddenColumn');
@@ -8161,6 +8160,9 @@ Template.new_salesorder.events({
 
         $('.colUnitPriceInc').addClass('showColumn');
         $('.colUnitPriceInc').removeClass('hiddenColumn');
+
+        $('.chkUnitPriceEx').prop("checked", false);
+        $('.chkUnitPriceInc').prop("checked", true);
     },
     'click .th.colUnitPriceInc': function(event) {
         $('.colUnitPriceInc').addClass('hiddenColumn');
@@ -8168,6 +8170,10 @@ Template.new_salesorder.events({
 
         $('.colUnitPriceEx').addClass('showColumn');
         $('.colUnitPriceEx').removeClass('hiddenColumn');
+
+        $('.chkUnitPriceEx').prop("checked", true);
+        $('.chkUnitPriceInc').prop("checked", false);
+
     },
     'click #btnCustomFileds': function(event) {
         var x = document.getElementById("divCustomFields");
@@ -8206,11 +8212,11 @@ Template.new_salesorder.events({
                     //FlowRouter.go('/productview?prodname=' + $(event.target).text());
                     let lineExtaSellItems = [];
                     let lineExtaSellObj = {};
-                    $('.fullScreenSpin').css('display', 'inline-block');
+                    LoadingOverlay.show();
                     getVS1Data('TProductVS1').then(function(dataObject) {
                         if (dataObject.length == 0) {
                             sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 let lineItemObj = {};
                                 let currencySymbol = Currency;
@@ -8250,7 +8256,7 @@ Template.new_salesorder.events({
                                 }, 500);
                             }).catch(function(err) {
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         } else {
                             let data = JSON.parse(dataObject[0].data);
@@ -8260,7 +8266,7 @@ Template.new_salesorder.events({
                             for (let i = 0; i < data.tproductvs1.length; i++) {
                                 if (data.tproductvs1[i].fields.ProductName === productDataName) {
                                     added = true;
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     let lineItems = [];
                                     let lineItemObj = {};
                                     let currencySymbol = Currency;
@@ -8303,7 +8309,7 @@ Template.new_salesorder.events({
                             }
                             if (!added) {
                                 sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     let lineItems = [];
                                     let lineItemObj = {};
                                     let currencySymbol = Currency;
@@ -8343,14 +8349,14 @@ Template.new_salesorder.events({
                                     }, 500);
                                 }).catch(function(err) {
 
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }
                         }
                     }).catch(function(err) {
 
                         sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             let lineItemObj = {};
                             let currencySymbol = Currency;
@@ -8390,7 +8396,7 @@ Template.new_salesorder.events({
                             }, 500);
                         }).catch(function(err) {
 
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
 
                     });
@@ -8413,7 +8419,7 @@ Template.new_salesorder.events({
         }
     },
     'click #productListModal #refreshpagelist': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         localStorage.setItem('VS1SalesProductList', '');
         let templateObject = Template.instance();
         Meteor._reload.reload();
@@ -8588,7 +8594,7 @@ Template.new_salesorder.events({
 
                         }).catch(function (err) {
                             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             // Meteor._reload.reload();
                         });
                     } else {
@@ -8639,7 +8645,7 @@ Template.new_salesorder.events({
 
                     }).catch(function (err) {
                         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         // Meteor._reload.reload();
                     });
                 });
@@ -8666,7 +8672,7 @@ Template.new_salesorder.events({
     'click .printConfirm':async function (event) {
 
           var printTemplate = [];
-          $('.fullScreenSpin').css('display', 'inline-block');
+          LoadingOverlay.show();
           var sales_orders = $('input[name="Sales Order"]:checked').val();
           let emid = Session.get('mySessionEmployeeLoggedID');
           var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
@@ -9082,7 +9088,7 @@ Template.new_salesorder.events({
         }
     },
     // 'click .printConfirm': function(event) {
-    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     LoadingOverlay.show();
     //     $('#html-2-pdfwrapper').css('display', 'block');
     //     $('.pdfCustomerName').html($('#edtCustomerName').val());
     //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
@@ -9255,7 +9261,7 @@ Template.new_salesorder.events({
         }
     },
     'click .btnDeleteSO': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         var url = FlowRouter.current().path;
@@ -9287,7 +9293,7 @@ Template.new_salesorder.events({
 
                     }
                 });
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         } else {
             FlowRouter.go('/salesorderslist?success=true');
@@ -9450,8 +9456,9 @@ Template.new_salesorder.events({
 
         $('#myModal4').modal('toggle');
     },
-    'click .btnSave': function(event) {
-        let templateObject = Template.instance();
+    'click .btnSave': (event, templateObject) => {
+        saveCurrencyHistory();
+       // let templateObject = Template.instance();
         let stripe_id = templateObject.accountID.get();
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         let customername = $('#edtCustomerName');
@@ -9470,7 +9477,7 @@ Template.new_salesorder.events({
             e.preventDefault();
         } else {
             //$('.loginSpinner').css('display','inline-block');
-            $('.fullScreenSpin').css('display', 'inline-block');
+            LoadingOverlay.show();
             var splashLineArray = new Array();
             var erpGet = erpDb();
             let lineItemsForm = [];
@@ -9988,7 +9995,7 @@ Template.new_salesorder.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -10051,7 +10058,7 @@ Template.new_salesorder.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -10117,7 +10124,7 @@ Template.new_salesorder.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -10331,347 +10338,365 @@ Template.new_salesorder.events({
                     }
                 });
                 //$('.loginSpinner').css('display','none');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         }
 
     },
 
     // display settings
-    'click .chkProductName': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colProductName').css('display', 'table-cell');
-            $('.colProductName').css('padding', '.75rem');
-            $('.colProductName').css('vertical-align', 'top');
-        } else {
-            $('.colProductName').css('display', 'none');
-        }
-    },
-    'click .chkDescription': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colDescription').css('display', 'table-cell');
-            $('.colDescription').css('padding', '.75rem');
-            $('.colDescription').css('vertical-align', 'top');
-        } else {
-            $('.colDescription').css('display', 'none');
-        }
-    },
-    'click .chkQty': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colQty').css('display', 'table-cell');
-            $('.colQty').css('padding', '.75rem');
-            $('.colQty').css('vertical-align', 'top');
-        } else {
-            $('.colQty').css('display', 'none');
-        }
-    },
-    'click .chkCostPrice': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colCostPrice').css('display', 'table-cell');
-            $('.colCostPrice').css('padding', '.75rem');
-            $('.colCostPrice').css('vertical-align', 'top');
-        } else {
-            $('.colCostPrice').css('display', 'none');
-        }
-    },
-    'click .chkSalesLinesCustField1': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colSalesLinesCustField1').css('display', 'table-cell');
-            $('.colSalesLinesCustField1').css('padding', '.75rem');
-            $('.colSalesLinesCustField1').css('vertical-align', 'top');
-        } else {
-            $('.colSalesLinesCustField1').css('display', 'none');
-        }
-    },
-    'click .chkTaxRate': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colTaxRate').css('display', 'table-cell');
-            $('.colTaxRate').css('padding', '.75rem');
-            $('.colTaxRate').css('vertical-align', 'top');
-        } else {
-            $('.colTaxRate').css('display', 'none');
-        }
-    },
+    
+  'click .chkProductName': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colProductName').addClass('showColumn');
+      $('.colProductName').removeClass('hiddenColumn');
+    } else {
+      $('.colProductName').addClass('hiddenColumn');
+      $('.colProductName').removeClass('showColumn');
+    }
+  },
+  'click .chkDescription': function(event) { 
+    if ($(event.target).is(':checked')) {
+      $('.colDescription').addClass('showColumn');
+      $('.colDescription').removeClass('hiddenColumn');
+    } else {
+      $('.colDescription').addClass('hiddenColumn');
+      $('.colDescription').removeClass('showColumn');
+    }
+  },
+  'click .chkQty': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colQty').addClass('showColumn');
+      $('.colQty').removeClass('hiddenColumn');
+    } else {
+      $('.colQty').addClass('hiddenColumn');
+      $('.colQty').removeClass('showColumn');
+    }
+  },
+  'click .chkCostPrice': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colCostPrice').addClass('showColumn');
+      $('.colCostPrice').removeClass('hiddenColumn');
+    } else {
+      $('.colCostPrice').addClass('hiddenColumn');
+      $('.colCostPrice').removeClass('showColumn');
+    }
+  },
+  'click .chkSalesLinesCustField1': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colSalesLinesCustField1').addClass('showColumn');
+      $('.colSalesLinesCustField1').removeClass('hiddenColumn');
+    } else {
+      $('.colSalesLinesCustField1').addClass('hiddenColumn');
+      $('.colSalesLinesCustField1').removeClass('showColumn');
+    }
+  },
+  'click .chkTaxRate': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colTaxRate').addClass('showColumn');
+      $('.colTaxRate').removeClass('hiddenColumn');
+    } else {
+      $('.colTaxRate').addClass('hiddenColumn');
+      $('.colTaxRate').removeClass('showColumn');
+    }
+  },
+  // displaysettings
+  'click .chkTaxCode': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colTaxCode').addClass('showColumn');
+      $('.colTaxCode').removeClass('hiddenColumn');
+    } else {
+      $('.colTaxCode').addClass('hiddenColumn');
+      $('.colTaxCode').removeClass('showColumn');
+    }
+  },
+  'click .chkTaxAmount': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colTaxAmount').addClass('showColumn');
+      $('.colTaxAmount').removeClass('hiddenColumn');
+    } else {
+      $('.colTaxAmount').addClass('hiddenColumn');
+      $('.colTaxAmount').removeClass('showColumn');
+    }
+  },
 
+  'click .chkAmountEx': function (event) {
+    if ($(event.target).is(':checked')) {  
+        $('.chkAmountInc').prop("checked", false); 
 
-    'click .chkTaxCode': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colTaxCode').css('display', 'table-cell');
-            $('.colTaxCode').css('padding', '.75rem');
-            $('.colTaxCode').css('vertical-align', 'top');
-        } else {
-            $('.colTaxCode').css('display', 'none');
-        }
-    },
+        $('.colAmountInc').addClass('hiddenColumn');
+        $('.colAmountInc').removeClass('showColumn');
 
+        $('.colAmountEx').addClass('showColumn');
+        $('.colAmountEx').removeClass('hiddenColumn');
+      } else { 
+        $('.chkAmountInc').prop("checked", true); 
 
-    'click .chkTaxAmount': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colTaxAmount').css('display', 'table-cell');
-            $('.colTaxAmount').css('padding', '.75rem');
-            $('.colTaxAmount').css('vertical-align', 'top');
-        } else {
-            $('.colTaxAmount').css('display', 'none');
-        }
-    },
+        $('.colAmountEx').addClass('hiddenColumn');
+        $('.colAmountEx').removeClass('showColumn');
 
-    'click .chkAmount': function (event) {
-      if ($(event.target).is(':checked')) {
-          $('.colAmount').css('display', 'table-cell');
-          $('.colAmount').css('padding', '.75rem');
-          $('.colAmount').css('vertical-align', 'top');
+        $('.colAmountInc').addClass('showColumn');
+        $('.colAmountInc').removeClass('hiddenColumn');
+    }
+  },
+  'click .chkAmountInc': function(event) {
+    if ($(event.target).is(':checked')) { 
+        $('.chkAmountEx').prop("checked", false); 
 
-          $('.chkAmountInc').prop("checked", false);
-          $('.colAmountInc').css('display', 'none');
-        } else {
-          $('.colAmount').css('display', 'none');
+        $('.colAmountEx').addClass('hiddenColumn');
+        $('.colAmountEx').removeClass('showColumn');
 
-          $('.chkAmountInc').prop("checked", true);
-          $('.colAmountInc').css('display', 'table-cell');
-          $('.colAmountInc').css('padding', '.75rem');
-          $('.colAmountInc').css('vertical-align', 'top');
+        $('.colAmountInc').addClass('showColumn');
+        $('.colAmountInc').removeClass('hiddenColumn');
+    } else { 
+        $('.chkAmountEx').prop("checked", true); 
+
+        $('.colAmountInc').addClass('hiddenColumn');
+        $('.colAmountInc').removeClass('showColumn');
+
+        $('.colAmountEx').addClass('showColumn');
+        $('.colAmountEx').removeClass('hiddenColumn');
+    }
+  },
+
+  'click .chkUnitPriceEx': function (event) {
+    if ($(event.target).is(':checked')) { 
+        $('.chkUnitPriceInc').prop("checked", false); 
+
+        $('.colUnitPriceInc').addClass('hiddenColumn');
+        $('.colUnitPriceInc').removeClass('showColumn');
+
+        $('.colUnitPriceEx').addClass('showColumn');
+        $('.colUnitPriceEx').removeClass('hiddenColumn');
+        
+    } else { 
+        $('.chkUnitPriceInc').prop("checked", true); 
+
+        $('.colUnitPriceEx').addClass('hiddenColumn');
+        $('.colUnitPriceEx').removeClass('showColumn');
+
+        $('.colUnitPriceInc').addClass('showColumn');
+        $('.colUnitPriceInc').removeClass('hiddenColumn');
+    }
+  },
+  'click .chkUnitPriceInc': function(event) {
+      if ($(event.target).is(':checked')) { 
+        $('.chkUnitPriceEx').prop("checked", false); 
+
+        $('.colUnitPriceEx').addClass('hiddenColumn');
+        $('.colUnitPriceEx').removeClass('showColumn');
+
+        $('.colUnitPriceInc').addClass('showColumn');
+        $('.colUnitPriceInc').removeClass('hiddenColumn');
+      } else { 
+        $('.chkUnitPriceEx').prop("checked", true); 
+
+        $('.colUnitPriceInc').addClass('hiddenColumn');
+        $('.colUnitPriceInc').removeClass('showColumn');
+
+        $('.colUnitPriceEx').addClass('showColumn');
+        $('.colUnitPriceEx').removeClass('hiddenColumn');
       }
-    },
-    'click .chkAmountInc': function(event) {
-      if ($(event.target).is(':checked')) {
-          $('.colAmountInc').css('display', 'table-cell');
-          $('.colAmountInc').css('padding', '.75rem');
-          $('.colAmountInc').css('vertical-align', 'top');
+  },
 
-          $('.chkAmount').prop("checked", false);
-          $('.colAmount').css('display', 'none');
-      } else {
-          $('.colAmountInc').css('display', 'none');
-
-          $('.chkAmount').prop("checked", true);
-          $('.colAmount').css('display', 'table-cell');
-          $('.colAmount').css('padding', '.75rem');
-          $('.colAmount').css('vertical-align', 'top');
-      }
-    },
-
-    'click .chkUnitPrice': function (event) {
-      if ($(event.target).is(':checked')) {
-          $('.colUnitPrice').css('display', 'table-cell');
-          $('.colUnitPrice').css('padding', '.75rem');
-          $('.colUnitPrice').css('vertical-align', 'top');
-
-          $('.chkUnitPriceInc').prop("checked", false);
-          $('.colUnitPriceInc').css('display', 'none');
-      } else {
-          $('.colUnitPrice').css('display', 'none');
-
-          $('.chkUnitPriceInc').prop("checked", true);
-          $('.colUnitPriceInc').css('display', 'table-cell');
-          $('.colUnitPriceInc').css('padding', '.75rem');
-          $('.colUnitPriceInc').css('vertical-align', 'top');
-      }
-    },
-    'click .chkUnitPriceInc': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colUnitPriceInc').css('display', 'table-cell');
-            $('.colUnitPriceInc').css('padding', '.75rem');
-            $('.colUnitPriceInc').css('vertical-align', 'top');
-
-          $('.chkUnitPrice').prop("checked", false);
-          $('.colUnitPrice').css('display', 'none');
-        } else {
-            $('.colUnitPriceInc').css('display', 'none');
-
-          $('.chkUnitPrice').prop("checked", true);
-          $('.colUnitPrice').css('display', 'table-cell');
-          $('.colUnitPrice').css('padding', '.75rem');
-          $('.colUnitPrice').css('vertical-align', 'top');
-        }
-    },
-
-    'click .chkDiscount': function(event) {
-      if ($(event.target).is(':checked')) {
-          $('.colDiscount').css('display', 'table-cell');
-          $('.colDiscount').css('padding', '.75rem');
-          $('.colDiscount').css('vertical-align', 'top');
-      } else {
-          $('.colDiscount').css('display', 'none');
-      }
-    },
-    'click .chkSerialNo': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colSerialNo').css('display', 'table-cell');
-            $('.colSerialNo').css('padding', '.75rem');
-            $('.colSerialNo').css('vertical-align', 'top');
-        } else {
-            $('.colSerialNo').css('display', 'none');
-        }
-    },
-    // display settings
+  'click .chkDiscount': function(event) {
+    if ($(event.target).is(':checked')) {
+        // $('.colDiscount').css('display', 'table-cell');
+        // $('.colDiscount').css('padding', '.75rem');
+        // $('.colDiscount').css('vertical-align', 'top');
+      $('.colDiscount').addClass('showColumn');
+      $('.colDiscount').removeClass('hiddenColumn');
+    } else {
+        // $('.colDiscount').css('display', 'none');
+        $('.colDiscount').addClass('hiddenColumn');
+        $('.colDiscount').removeClass('showColumn');
+    }
+  },
+  'click .chkSerialNo': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colSerialNo').addClass('showColumn');
+      $('.colSerialNo').removeClass('hiddenColumn');
+    } else {
+      $('.colSerialNo').addClass('hiddenColumn');
+      $('.colSerialNo').removeClass('showColumn');
+    }
+  },
+  // display settings
 
 
-    'change .rngRangeProductName': function(event) {
-        let range = $(event.target).val();
-        $(".spWidthProductName").html(range + '%');
-        $('.colProductName').css('width', range + '%');
-    },
-    'change .rngRangeDescription': function(event) {
-        let range = $(event.target).val();
-        $(".spWidthDescription").html(range + '%');
-        $('.colDescription').css('width', range + '%');
-    },
-    'change .rngRangeQty': function(event) {
-        let range = $(event.target).val();
-        $(".spWidthQty").html(range + '%');
-        $('.colQty').css('width', range + '%');
-    },
-    'change .rngRangeUnitPrice': function(event) {
-        let range = $(event.target).val();
-        $(".spWidthUnitPrice").html(range + '%');
-        $('.colUnitPrice').css('width', range + '%');
-    },
-    'change .rngRangeTaxRate': function(event) {
-        let range = $(event.target).val();
-        $(".spWidthTaxRate").html(range + '%');
-        $('.colTaxRate').css('width', range + '%');
-    },
-    'change .rngRangeAmount': function(event) {
-        let range = $(event.target).val();
-        $(".spWidthAmount").html(range + '%');
-        $('.colAmount').css('width', range + '%');
-    },
-    'change .rngRangeCostPrice': function(event) {
-        let range = $(event.target).val();
-        $(".spWidthCostPrice").html(range + '%');
-        $('.colCostPrice').css('width', range + '%');
-    },
-    'change .rngRangeSalesLinesCustField1': function(event) {
-        let range = $(event.target).val();
-        $(".spWidthSalesLinesCustField1").html(range + '%');
-        $('.colSalesLinesCustField1').css('width', range + '%');
-    },
+  'change .rngRangeProductName': function(event) {
+    let range = $(event.target).val();
+    $(".spWidthProductName").html(range);
+    $('.colProductName').css('width', range);
+  },
+  'change .rngRangeDescription': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthDescription").html(range);
+      $('.colDescription').css('width', range);
+  },
+  'change .rngRangeQty': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthQty").html(range);
+      $('.colQty').css('width', range);
+  },
+  'change .rngRangeUnitPriceInc': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthUnitPrice").html(range);
+      $('.colUnitPriceInc').css('width', range);
+  },
+  'change .rngRangeUnitPriceEx': function(event) {
+      let range = $(event.target).val();
+      $('.colUnitPriceEx').css('width', range);
+  },
+  'change .rngRangeTaxRate': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthTaxRate").html(range);
+      $('.colTaxRate').css('width', range);
+  },
+  'change .rngRangeAmountInc': function (event) {
+      let range = $(event.target).val();
+      //$(".spWidthAmount").html(range);
+      $('.colAmountInc').css('width', range);
+  },
+  'change .rngRangeAmountEx': function (event) {
+      let range = $(event.target).val();
+      //$(".spWidthAmount").html(range);
+      $('.colAmountEx').css('width', range);
+  },
+  'change .rngRangeTaxAmount': function (event) {
+      let range = $(event.target).val();
+      //$(".spWidthAmount").html(range);
+      $('.colTaxAmount').css('width', range);
+  },
+  'change .rngRangeDiscount': function (event) {
+      let range = $(event.target).val();
+      $('.colDiscount').css('width', range);
+  },
+  'change .rngRangeSerialNo': function (event) {
+      let range = $(event.target).val();
+      $('.colSerialNo').css('width', range);
+  },
+  'change .rngRangeTaxCode': function (event) {
+      let range = $(event.target).val();
+      $('.colTaxCode').css('width', range);
+  },
+  'change .rngRangeCostPrice': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthCostPrice").html(range);
+      $('.colCostPrice').css('width', range);
+  },
+  'change .rngRangeSalesLinesCustField1': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthSalesLinesCustField1").html(range);
+      $('.colSalesLinesCustField1').css('width', range);
+  },
     'blur .divcolumn': function(event) {
         let columData = $(event.target).html();
         let columHeaderUpdate = $(event.target).attr("valueupdate");
-        $("" + columHeaderUpdate + "").html(columData);
+        $("th.col" + columHeaderUpdate + "").html(columData);
+        // $("" + columHeaderUpdate + "").html(columData);
     },
 
     // custom field displaysettings
     'click .btnSaveGridSettings': function(event) {
-        let lineItems = [];
-        let organisationService = new OrganisationService();
-
-        $(".fullScreenSpin").css("display", "inline-block");
-
-        $('.displaySettings').each(function(index) {
-          var $tblrow = $(this);
-          var fieldID = $tblrow.attr("custid") || 0;
-          var colTitle = $tblrow.find(".divcolumn").text() || '';
-          var colWidth = $tblrow.find(".custom-range").val() || 0;
-          var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-          var colHidden = false;
-          if ($tblrow.find(".custom-control-input").is(':checked')) {
-              colHidden = true;
-          } else {
-              colHidden = false;
-          }
-          let lineItemObj = {
-              index: index,
-              label: colTitle,
-              hidden: colHidden,
-              width: colWidth,
-              thclass: colthClass
-          }
-
-          lineItems.push(lineItemObj);
-
-          if(fieldID){
-            objDetails1 = {
-              type: "TCustomFieldList",
-              fields: {
-                Active: colHidden,
-                ID: parseInt(fieldID),
-                Description: colTitle
-              },
-            };
-          } else {
-            objDetails1 = {
-              type: "TCustomFieldList",
-              fields: {
-                Active: colHidden,
-                DataType: "ftString",
-                Description: colTitle,
-                ListType: 'ltSalesLines'
-              },
-            };
-          }
-
-          organisationService.saveCustomField(objDetails1).then(function (objDetails) {
-            $(".fullScreenSpin").css("display", "none");
-            $('#myModal2').modal('hide');
-          })
-          .catch(function (err) {
-            swal({
-              title: "Oooops...",
-              text: err,
-              type: "error",
-              showCancelButton: false,
-              confirmButtonText: "Try Again",
-            }).then((result) => {
+      let lineItems = [];
+      $(".fullScreenSpin").css("display", "inline-block");
+  
+      $(".displaySettings").each(function (index) {
+        var $tblrow = $(this);
+        var fieldID = $tblrow.attr("custid") || 0;
+        var colTitle = $tblrow.find(".divcolumn").text() || "";
+        var colWidth = $tblrow.find(".custom-range").val() || 0;
+        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+        var colHidden = false;
+        if ($tblrow.find(".custom-control-input").is(":checked")) {
+          colHidden = true;
+        } else {
+          colHidden = false;
+        }
+        let lineItemObj = {
+          index: parseInt(fieldID),
+          label: colTitle,
+          active: colHidden,
+          width: parseInt(colWidth),
+          class: colthClass,
+          display: true
+        };
+  
+        lineItems.push(lineItemObj); 
+      });
+  
+      let templateObject = Template.instance();
+      let reset_data = templateObject.reset_data.get();
+      reset_data = reset_data.filter(redata => redata.display == false);
+      lineItems.push(...reset_data);
+      lineItems.sort((a,b) => a.index - b.index); 
+  
+      try {
+        let erpGet = erpDb();
+        let tableName = "tblSalesOrderLine";
+        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+        $(".fullScreenSpin").css("display", "none");
+        if(added) {
+          swal({
+            title: 'SUCCESS',
+            text: "Display settings is updated!",
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonText: 'OK'
+          }).then((result) => {
               if (result.value) {
-                $(".fullScreenSpin").css("display", "none");
-              } else if (result.dismiss === "cancel") {
-              }
-              $('#myModal2').modal('hide');
-            });
-            $(".fullScreenSpin").css("display", "none");
-            $('#myModal2').modal('hide');
+                 $('#myModal2').modal('hide');
+              }  
           });
-        });
-
-        setTimeout(() => {
-          sideBarService.getAllCustomFieldsWithQuery("ltSalesLines").then(function (data) {
-            addVS1Data("TltSaleslines", JSON.stringify(data));
-          });
-        }, 8000);
+        } else {
+          swal("Something went wrong!", "", "error");
+        }
+      } catch (error) {
+        $(".fullScreenSpin").css("display", "none");
+        swal("Something went wrong!", "", "error");
+      } 
     },
 
     // custom field displaysettings
     'click .btnResetGridSettings': function(event) {
-
-      let reset_data = [
-        { label: 'Product Name', class: 'colProductName', active: true },
-        { label: 'Description', class: 'colDescription', active: true },
-        { label: 'Qty', class: 'colQty', active: true },
-        { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
-        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
-        { label: 'Disc %', class: 'colDiscount', active: true },
-        { label: 'Cost Price', class: 'colCostPrice', active: false },
-        { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
-        { label: 'Tax Rate', class: 'colTaxRate', active: false },
-        { label: 'Tax Code', class: 'colTaxCode', active: true },
-        { label: 'Tax Amount', class: 'colTaxAmount', active: true },
-        { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
-        { label: 'Amount (Ex)', class: 'colAmount', active: true },
-        { label: 'Amount (Inc)', class: 'colAmountInc', active: false }
-      ];
-      // var datable = $('#tblSalesOrderLine').DataTable();
-
-      $('.displaySettings').each(function(index) {
-        var $tblrow = $(this);
+      let templateObject = Template.instance();
+      let reset_data = templateObject.reset_data.get(); 
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+      if(isBatchSerialNoTracking) {
+        reset_data[11].display = true; 
+      } else {
+        reset_data[11].display = false; 
+      }
+      reset_data = reset_data.filter(redata => redata.display); 
+  
+      $(".displaySettings").each(function (index) {
+        let $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
-        $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
+        $tblrow
+          .find(".custom-control-input")
+          .prop("checked", reset_data[index].active);
 
-        // var title = datable.column( index ).header();
-        var title = $('#tblSalesOrderLine').find('th').eq(index);
-        $(title).html(reset_data[index].label);
-
-        if (reset_data[index].active) {
-          $('.' + reset_data[index].class).css('display', 'table-cell');
-          $('.' + reset_data[index].class).css('padding', '.75rem');
-          $('.' + reset_data[index].class).css('vertical-align', 'top');
+        let title = $("#tblSalesOrderLine").find("th").eq(index);
+        if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
+          $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
+        } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
+          $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
         } else {
-          $('.' + reset_data[index].class).css('display', 'none');
+          $(title).html(reset_data[index].label);
         }
 
-      });
 
+        if (reset_data[index].active) {
+          $('.col' + reset_data[index].class).addClass('showColumn');
+          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
+        } else {
+          $('.col' + reset_data[index].class).addClass('hiddenColumn');
+          $('.col' + reset_data[index].class).removeClass('showColumn');
+        }
+        $(".rngRange" + reset_data[index].class).val('');
+      });
     },
 
     'click .btnResetSettings': function(event) {
@@ -10881,7 +10906,7 @@ Template.new_salesorder.events({
                     e.preventDefault();
                 } else {
                     //$('.loginSpinner').css('display','inline-block');
-                    $('.fullScreenSpin').css('display', 'inline-block');
+                    LoadingOverlay.show();
                     var splashLineArray = new Array();
                     var erpGet = erpDb();
                     let lineItemsForm = [];
@@ -11323,7 +11348,7 @@ Template.new_salesorder.events({
                                                     }
                                                 });
 
-                                                $('.fullScreenSpin').css('display', 'none');
+                                                LoadingOverlay.hide();
                                             }
                                         });
 
@@ -11355,7 +11380,7 @@ Template.new_salesorder.events({
                                                     }
                                                 });
 
-                                                $('.fullScreenSpin').css('display', 'none');
+                                                LoadingOverlay.hide();
                                             }
                                         });
 
@@ -11386,7 +11411,7 @@ Template.new_salesorder.events({
                                                     }
                                                 });
 
-                                                $('.fullScreenSpin').css('display', 'none');
+                                                LoadingOverlay.hide();
                                             }
                                         });
 
@@ -11533,7 +11558,7 @@ Template.new_salesorder.events({
                                 }
                             });
                             //$('.loginSpinner').css('display','none');
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     }, 500);
                 }
@@ -11570,7 +11595,7 @@ Template.new_salesorder.events({
             e.preventDefault();
         } else {
             //$('.loginSpinner').css('display','inline-block');
-            $('.fullScreenSpin').css('display', 'inline-block');
+            LoadingOverlay.show();
             var splashLineArray = new Array();
             let lineItemsForm = [];
             let lineItemObjForm = {};
@@ -11796,7 +11821,7 @@ Template.new_salesorder.events({
                     }
                 });
                 //$('.loginSpinner').css('display','none');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         }
 
@@ -11812,7 +11837,7 @@ Template.new_salesorder.events({
     'click #btnCopyToInvoice': function() {
         //FlowRouter.go('/salesorderslist');
         //window.open('/invoicelist','_self');
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         var url = FlowRouter.current().path;
         //if ((url.indexOf('?id=') > 0) || (url.indexOf('?copyquid=') > 0)) {
         let templateObject = Template.instance();
@@ -11830,7 +11855,7 @@ Template.new_salesorder.events({
             e.preventDefault();
         } else {
             //$('.loginSpinner').css('display','inline-block');
-            $('.fullScreenSpin').css('display', 'inline-block');
+            LoadingOverlay.show();
             var splashLineArray = new Array();
             let lineItemsForm = [];
             let lineItemObjForm = {};
@@ -11987,7 +12012,7 @@ Template.new_salesorder.events({
                     }
                 });
                 //$('.loginSpinner').css('display','none');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         }
         // } else {
@@ -12021,7 +12046,7 @@ Template.new_salesorder.events({
         }
     },
     'click .btnSnLotmodal': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         var target=event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
         let selectedunit = $(target).closest('tr').find('.lineQty').val();
@@ -12035,7 +12060,7 @@ Template.new_salesorder.events({
             if (element.item == selectedProductName) {
                 existProduct = true;
                 productService.getProductStatus(selectedProductName).then(function(data) {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                         swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
                         event.preventDefault();
@@ -12128,13 +12153,13 @@ Template.new_salesorder.events({
         });
         if (!existProduct) {
             if (selectedProductName == '') {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 swal('You have to select Product.', '', 'info');
                 event.preventDefault();
                 return false;
             } else {
                 productService.getProductStatus(selectedProductName).then(function(data) {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                         swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
                         event.preventDefault();
