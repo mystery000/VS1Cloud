@@ -18,6 +18,8 @@ import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
+import LoadingOverlay from '../LoadingOverlay';
+import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 
 var template_list = [
     "Bills",
@@ -122,9 +124,9 @@ Template.billcard.onRendered(() => {
                   }
 
 
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
               }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
               });
           }else{
                   let data = JSON.parse(dataObject[0].data);
@@ -167,7 +169,7 @@ Template.billcard.onRendered(() => {
 
 
                  }
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
           }
         }).catch(function(err) {
            sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
@@ -209,9 +211,9 @@ Template.billcard.onRendered(() => {
 
 
                   }
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
         }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
         });
         });
 
@@ -1029,7 +1031,7 @@ Template.billcard.onRendered(() => {
             }
         }).catch(function (err) {
             contactService.getOneSupplierDataEx(supplierID).then(function (data) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 setSupplierByID(data);
             });
         });
@@ -1061,7 +1063,7 @@ Template.billcard.onRendered(() => {
                 getVS1Data('TBillEx').then(function(dataObject) {
                     if (dataObject.length == 0) {
                         purchaseService.getOneBillData(currentBill).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             let lineItemObj = {};
                             let lineItemsTable = [];
@@ -1286,7 +1288,7 @@ Template.billcard.onRendered(() => {
 
                                 }
                             });
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
 
                         });
                     } else {
@@ -1296,7 +1298,7 @@ Template.billcard.onRendered(() => {
                         for (let d = 0; d < useData.length; d++) {
                             if (parseInt(useData[d].fields.ID) === currentBill) {
                                 added = true;
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 let lineItemObj = {};
                                 let lineItemsTable = [];
@@ -1508,7 +1510,7 @@ Template.billcard.onRendered(() => {
 
                         if (!added) {
                             purchaseService.getOneBillData(currentBill).then(function(data) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 let lineItemObj = {};
                                 let lineItemsTable = [];
@@ -1723,7 +1725,7 @@ Template.billcard.onRendered(() => {
 
                                     }
                                 });
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
 
                             });
                         }
@@ -1731,7 +1733,7 @@ Template.billcard.onRendered(() => {
 
                 }).catch(function(err) {
                     purchaseService.getOneBillData(currentBill).then(function(data) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         let lineItems = [];
                         let lineItemObj = {};
                         let lineItemsTable = [];
@@ -1964,7 +1966,7 @@ Template.billcard.onRendered(() => {
 
                             }
                         });
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
 
                     });
                 });
@@ -1973,7 +1975,7 @@ Template.billcard.onRendered(() => {
             templateObject.getBillData();
         }
     } else {
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
         let lineItems = [];
         let lineItemsTable = [];
         let lineItemObj = {};
@@ -2964,11 +2966,11 @@ Template.billcard.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newShipViaModal').modal('toggle');
                                 }, 200);
                             }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         } else {
                             let data = JSON.parse(dataObject[0].data);
@@ -2980,7 +2982,7 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newShipViaModal').modal('toggle');
                             }, 200);
                         }
@@ -2994,12 +2996,12 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#edtShipVia').attr('readonly', false);
                                 $('#newShipViaModal').modal('toggle');
                             }, 200);
                         }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     });
                 } else {
@@ -3023,7 +3025,7 @@ Template.billcard.onRendered(() => {
             $('#tblShipViaPopList_filter .form-control-sm').val('');
             setTimeout(function () {
                 $('.btnRefreshVia').trigger('click');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             }, 1000);
         });
     $(document).on("click", "#tblAccount tbody tr", function(e) {
@@ -3149,7 +3151,7 @@ Template.billcard.onRendered(() => {
         $('#tblAccount_filter .form-control-sm').val('');
         setTimeout(function() {
             $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
     $(document).on("click", "#tblTaxRate tbody tr", function(e) {
@@ -3286,7 +3288,7 @@ Template.billcard.onRendered(() => {
     //     $('#tblCurrencyPopList_filter .form-control-sm').val('');
     //     setTimeout(function () {
     //         $('.btnRefreshCurrency').trigger('click');
-    //         $('.fullScreenSpin').css('display', 'none');
+    //         LoadingOverlay.hide();
     //     }, 1000);
     // });
 
@@ -3305,7 +3307,7 @@ Template.billcard.onRendered(() => {
         $('#tblStatusPopList_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshStatus').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     });
 
@@ -3353,7 +3355,7 @@ Template.billcard.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newTermsModal').modal('toggle');
                                 }, 200);
                             });
@@ -3389,7 +3391,7 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newTermsModal').modal('toggle');
                             }, 200);
                         }
@@ -3425,7 +3427,7 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newTermsModal').modal('toggle');
                             }, 200);
                         });
@@ -3467,7 +3469,7 @@ Template.billcard.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newStatusPopModal').modal('toggle');
                                 }, 200);
                             });
@@ -3481,7 +3483,7 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newStatusPopModal').modal('toggle');
                             }, 200);
                         }
@@ -3494,13 +3496,13 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newStatusPopModal').modal('toggle');
                             }, 200);
                         });
                     });
                     setTimeout(function() {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         $('#newStatusPopModal').modal('toggle');
                     }, 200);
 
@@ -3552,7 +3554,7 @@ Template.billcard.onRendered(() => {
     //                                 }
     //                             }
     //                             setTimeout(function() {
-    //                                 $('.fullScreenSpin').css('display', 'none');
+    //                                 LoadingOverlay.hide();
     //                                 $('#newCurrencyModal').modal('toggle');
     //                                 $('#sedtCountry').attr('readonly', true);
     //                             }, 200);
@@ -3573,7 +3575,7 @@ Template.billcard.onRendered(() => {
     //                             }
     //                         }
     //                         setTimeout(function() {
-    //                             $('.fullScreenSpin').css('display', 'none');
+    //                             LoadingOverlay.hide();
     //                             $('#newCurrencyModal').modal('toggle');
     //                         }, 200);
     //                     }
@@ -3597,7 +3599,7 @@ Template.billcard.onRendered(() => {
     //                             }
     //                         }
     //                         setTimeout(function() {
-    //                             $('.fullScreenSpin').css('display', 'none');
+    //                             LoadingOverlay.hide();
     //                             $('#newCurrencyModal').modal('toggle');
     //                             $('#sedtCountry').attr('readonly', true);
     //                         }, 200);
@@ -3643,7 +3645,7 @@ Template.billcard.onRendered(() => {
                                     }
                                 }
                                 setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                     $('#newDepartmentModal').modal('toggle');
                                 }, 200);
                             });
@@ -3659,7 +3661,7 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newDepartmentModal').modal('toggle');
                             }, 200);
                         }
@@ -3675,7 +3677,7 @@ Template.billcard.onRendered(() => {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 $('#newDepartmentModal').modal('toggle');
                             }, 200);
                         });
@@ -3716,7 +3718,7 @@ Template.billcard.onRendered(() => {
                     if (dataObject.length == 0) {
                         $('.fullScreenSpin').css('display', 'inline-block');
                         sideBarService.getOneSupplierDataExByName(supplierDataName).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
 
                             $('#add-supplier-title').text('Edit Supplier');
@@ -3803,7 +3805,7 @@ Template.billcard.onRendered(() => {
 
                         }).catch(function(err) {
 
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
@@ -3812,7 +3814,7 @@ Template.billcard.onRendered(() => {
                         for (let i = 0; i < data.tsuppliervs1.length; i++) {
                             if ((data.tsuppliervs1[i].fields.ClientName) === supplierDataName) {
                                 added = true;
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 $('#add-supplier-title').text('Edit Supplier');
                                 let popSupplierID = data.tsuppliervs1[i].fields.ID || '';
@@ -3899,7 +3901,7 @@ Template.billcard.onRendered(() => {
                         if (!added) {
                             $('.fullScreenSpin').css('display', 'inline-block');
                             sideBarService.getOneSupplierDataExByName(supplierDataName).then(function(data) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
 
                                 $('#add-supplier-title').text('Edit Supplier');
@@ -3983,14 +3985,14 @@ Template.billcard.onRendered(() => {
                                 }, 200);
                             }).catch(function(err) {
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         }
                     }
                 }).catch(function(err) {
 
                     sideBarService.getOneSupplierDataExByName(supplierDataName).then(function(data) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         let lineItems = [];
 
                         $('#add-supplier-title').text('Edit Supplier');
@@ -4076,7 +4078,7 @@ Template.billcard.onRendered(() => {
 
                     }).catch(function(err) {
 
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                     });
                 });
                 //FlowRouter.go('/supplierscard?name=' + e.target.value);
@@ -4168,7 +4170,7 @@ Template.billcard.onRendered(() => {
         $('#tblSupplierlist_filter .form-control-sm').val('');
         setTimeout(function() {
             $('.btnRefreshSupplier').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 1000);
     }
 
@@ -4228,12 +4230,12 @@ Template.billcard.onRendered(() => {
                 if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                    // $(".btnSave").trigger("click");
                    $('#html-2-pdfwrapper').css('display', 'none');
-                   $('.fullScreenSpin').css('display', 'none');
+                   LoadingOverlay.hide();
                    document.getElementById('html-2-pdfwrapper_new').style.display="none";
                 } else {
                     document.getElementById('html-2-pdfwrapper_new').style.display="none";
                     $('#html-2-pdfwrapper').css('display', 'none');
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                 }
             });
 
@@ -4352,7 +4354,7 @@ Template.billcard.onRendered(() => {
 
         html2pdf().set(opt).from(source).save().then(function(dataObject) {
             $('#html-2-pdfwrapper').css('display', 'none');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         });
 
 
@@ -5587,7 +5589,7 @@ Template.billcard.events({
                                 }, 500);
 
                             }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             });
                         } else {
                             let data = JSON.parse(dataObject[0].data);
@@ -5760,7 +5762,7 @@ Template.billcard.events({
                                     }, 500);
 
                                 }).catch(function(err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    LoadingOverlay.hide();
                                 });
                             }
 
@@ -5851,7 +5853,7 @@ Template.billcard.events({
                             }, 500);
 
                         }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                         });
 
                     });
@@ -6049,7 +6051,7 @@ Template.billcard.events({
 
                         }).catch(function (err) {
                             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             // Meteor._reload.reload();
                         });
                     } else {
@@ -6100,7 +6102,7 @@ Template.billcard.events({
 
                     }).catch(function (err) {
                         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         // Meteor._reload.reload();
                     });
                 });
@@ -6154,7 +6156,7 @@ Template.billcard.events({
                   if (dataObject.length == 0) {
                       $('.fullScreenSpin').css('display', 'inline-block');
                       sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
-                          $('.fullScreenSpin').css('display', 'none');
+                          LoadingOverlay.hide();
                           let lineItems = [];
                           $('#add-customer-title').text('Edit Customer');
                           let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -6242,7 +6244,7 @@ Template.billcard.events({
                               $('#addCustomerModal').modal('show');
                           }, 200);
                       }).catch(function (err) {
-                          $('.fullScreenSpin').css('display', 'none');
+                          LoadingOverlay.hide();
                       });
                   } else {
                       let data = JSON.parse(dataObject[0].data);
@@ -6253,7 +6255,7 @@ Template.billcard.events({
                           if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
                               let lineItems = [];
                               added = true;
-                              $('.fullScreenSpin').css('display', 'none');
+                              LoadingOverlay.hide();
                               $('#add-customer-title').text('Edit Customer');
                               let popCustomerID = data.tcustomervs1[i].fields.ID || '';
                               let popCustomerName = data.tcustomervs1[i].fields.ClientName || '';
@@ -6345,7 +6347,7 @@ Template.billcard.events({
                       if (!added) {
                           $('.fullScreenSpin').css('display', 'inline-block');
                           sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
-                              $('.fullScreenSpin').css('display', 'none');
+                              LoadingOverlay.hide();
                               let lineItems = [];
                               $('#add-customer-title').text('Edit Customer');
                               let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -6433,13 +6435,13 @@ Template.billcard.events({
                                   $('#addCustomerModal').modal('show');
                               }, 200);
                           }).catch(function (err) {
-                              $('.fullScreenSpin').css('display', 'none');
+                              LoadingOverlay.hide();
                           });
                       }
                   }
               }).catch(function (err) {
                   sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
                       let lineItems = [];
                       $('#add-customer-title').text('Edit Customer');
                       let popCustomerID = data.tcustomer[0].fields.ID || '';
@@ -6527,7 +6529,7 @@ Template.billcard.events({
                           $('#addCustomerModal').modal('show');
                       }, 200);
                   }).catch(function (err) {
-                      $('.fullScreenSpin').css('display', 'none');
+                      LoadingOverlay.hide();
                   });
               });
 
@@ -7084,7 +7086,7 @@ Template.billcard.events({
 
                     }
                 });
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         } else {
           if(FlowRouter.current().queryParams.trans){
@@ -7223,8 +7225,9 @@ Template.billcard.events({
 
         $('#myModal4').modal('toggle');
     },
-    'click .btnSave': function(event) {
-        let templateObject = Template.instance();
+    'click .btnSave': (event, templateObject) => {
+        saveCurrencyHistory();
+        //let templateObject = Template.instance();
         let suppliername = $('#edtSupplierName');
         let purchaseService = new PurchaseBoardService();
         let termname = $('#sltTerms').val() || '';
@@ -7310,7 +7313,7 @@ Template.billcard.events({
             var objDetails = '';
             if ($('#sltDept').val() === '') {
                 swal('Department has not been selected!', '', 'warning');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 event.preventDefault();
                 return false;
             }
@@ -7372,7 +7375,7 @@ Template.billcard.events({
 
             }else{
               swal('Account name has not been selected!', '', 'warning');
-              $('.fullScreenSpin').css('display', 'none');
+              LoadingOverlay.hide();
               event.preventDefault();
               return false;
             };
@@ -7513,7 +7516,7 @@ Template.billcard.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -7582,7 +7585,7 @@ Template.billcard.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -7648,7 +7651,7 @@ Template.billcard.events({
                                     }
                                 });
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                             }
                         });
 
@@ -7852,7 +7855,7 @@ Template.billcard.events({
 
                     }
                 });
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         }
 
@@ -8408,7 +8411,7 @@ Template.billcard.events({
 
                 }else{
                   swal('Account name has not been selected!', '', 'warning');
-                  $('.fullScreenSpin').css('display', 'none');
+                  LoadingOverlay.hide();
                   event.preventDefault();
                   return false;
                 }
@@ -8524,7 +8527,7 @@ Template.billcard.events({
                         }
                     });
 
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                 });
             }
 
@@ -8562,7 +8565,7 @@ Template.billcard.events({
           }
 
         }else{
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
         }
 
     },
@@ -8593,7 +8596,7 @@ Template.billcard.events({
         window.open('/supplierpayment?payment=' + selectPayID +'&name=' + suppliername, '_self');
       }, 500);
     }else{
-      $('.fullScreenSpin').css('display', 'none');
+      LoadingOverlay.hide();
     }
     },
     'click .chkEmailCopy': function(event) {

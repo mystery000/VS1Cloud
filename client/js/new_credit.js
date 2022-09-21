@@ -17,6 +17,7 @@ import {autoTable} from 'jspdf-autotable';
 import 'jquery-editable-select';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
+import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -6638,8 +6639,9 @@ Template.creditcard.events({
 
         $('#myModal4').modal('toggle');
     },
-    'click .btnSave': function(event) {
-        let templateObject = Template.instance();
+    'click .btnSave': (event, templateObject) => {
+        saveCurrencyHistory();
+        //let templateObject = Template.instance();
         let suppliername = $('#edtSupplierName');
         let purchaseService = new PurchaseBoardService();
         let termname = $('#sltTerms').val() || '';
