@@ -1492,6 +1492,25 @@
                                   {{/each}}
                                   <th class="th" style="width: 25px;"></th>
                                 </tr>
+                                {{#if isForeignEnabled}}
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>{{ getDefaultCurrency }}</th>
+                                        <th>Foreign</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>{{ getDefaultCurrency }}</th>
+                                        <th>Foreign</th>
+                                        <th></th>
+                                        <th>{{ getDefaultCurrency }}</th>
+                                        <th>Foreign</th>
+                                        <th></th>
+                                    </tr>
+                                {{/if}}
                               </thead>
                               <tbody>
                                   {{#each item in purchaseorderrecord.LineItems}}
