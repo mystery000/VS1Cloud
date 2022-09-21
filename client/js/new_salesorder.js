@@ -7347,7 +7347,7 @@ Template.new_salesorder.onRendered(function() {
         getVS1Data("VS1_Customize").then(function (dataObject) {
           if (dataObject.length == 0) {
             sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              reset_data = data.ProcessLog.CustomLayout.Columns;
+              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
               showCustomFieldDisplaySettings(reset_data);
             }).catch(function (err) {
             });

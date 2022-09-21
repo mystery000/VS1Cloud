@@ -110,9 +110,9 @@ Template.new_invoice.onRendered(() => {
       { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
       { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
       { index: 2, label: "Qty", class: "Qty", width: "50", active: true, display: true },
-      { index: 3, label: "Ordered", class: "Ordered", width: "75", active: false, display: true },
-      { index: 4, label: "Shipped", class: "Shipped", width: "75", active: false, display: true },
-      { index: 5, label: "BO", class: "BackOrder", width: "75", active: false, display: true },
+      { index: 3, label: "Ordered", class: "Ordered", width: "75", active: true, display: true },
+      { index: 4, label: "Shipped", class: "Shipped", width: "75", active: true, display: true },
+      { index: 5, label: "BO", class: "BackOrder", width: "75", active: true, display: true },
       { index: 6, label: "Unit Price (Ex)", class: "UnitPriceEx", width: "152", active: true, display: true },
       { index: 7, label: "Unit Price (Inc)", class: "UnitPriceInc", width: "152", active: false, display: true },
       { index: 8, label: "Disc %", class: "Discount", width: "95", active: true, display: true },
@@ -13308,7 +13308,7 @@ Template.new_invoice.onRendered(function () {
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-            reset_data = data.ProcessLog.CustomLayout.Columns;
+            reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
             showCustomFieldDisplaySettings(reset_data);
           }).catch(function (err) {
           });
