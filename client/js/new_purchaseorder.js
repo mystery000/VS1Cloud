@@ -11369,6 +11369,15 @@ Template.purchaseordercard.events({
     $("#clickedControl").val("three");
   },
 
+  'change #sltCurrency': (e, ui) => {
+    if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
+        $(".foreign-currency-js").css("display", "block");
+        ui.isForeignEnabled.set(true);
+    } else {
+        $(".foreign-currency-js").css("display", "none");
+        ui.isForeignEnabled.set(false);
+    }
+}
 });
 
 Template.registerHelper('equals', function(a, b) {
