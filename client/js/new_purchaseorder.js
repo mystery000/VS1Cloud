@@ -17,6 +17,8 @@ import 'jquery-editable-select';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
 import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
+import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
+import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -26,8 +28,13 @@ var template_list = [
     "Purchase Orders",
 ];
 
+let defaultCurrencyCode = CountryAbbr;
+
 Template.purchaseordercard.onCreated(() => {
     const templateObject = Template.instance();
+    templateObject.isForeignEnabled = new ReactiveVar(false);
+
+
     templateObject.records = new ReactiveVar();
     templateObject.CleintName = new ReactiveVar();
     templateObject.Department = new ReactiveVar();
@@ -5445,7 +5452,17 @@ Template.purchaseordercard.helpers({
     },
     isCurrencyEnable: () => {
         return Session.get('CloudUseForeignLicence');
-    }
+    },
+    isForeignEnabled: () => {
+        return Template.instance().isForeignEnabled.get();
+    },
+
+    getDefaultCurrency: () => {
+        return defaultCurrencyCode;
+    },
+    convertToForeignAmount: (amount) => {
+        return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+    },
 });
 
 Template.purchaseordercard.events({
@@ -11141,6 +11158,22 @@ Template.purchaseordercard.events({
     $("#clickedControl").val("three");
   },
 
+
+  'change #sltCurrency': (e, ui) => {
+    if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
+        $(".foreign-currency-js").css("display", "block");
+
+        ui.isForeignEnabled.set(true);
+    
+        //ui.addExpenseToTable(true);
+      } else {
+        $(".foreign-currency-js").css("display", "none");
+        ui.isForeignEnabled.set(false);
+      
+        //ui.addExpenseToTable(false);
+
+      }
+  }
 });
 
 Template.registerHelper('equals', function(a, b) {

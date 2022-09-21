@@ -1610,25 +1610,61 @@
                                         {{/if}}
                                         <!-- <th class="th colUnitPrice" style="width: 110px; text-align: left!important;">Cost Price</th> -->
 
-                                        <th class="th colUnitPrice colUnitPriceEx" style="width: 115px; text-align: left!important;">Price (Ex) <i class="fas fa-random"></i></th>
-                                        <th class="th colUnitPrice colUnitPriceInc hiddenColumn" style="width: 115px; text-align: left!important;">Price (Inc) <i class="fas fa-random fa-trans"></i></th>
-
+                                        {{#if isForeignEnabled}}
+                                            <th colspan="2" class="th colUnitPrice colUnitPriceEx" style="width: 115px; text-align: left!important;">Price (Ex) <i class="fas fa-random"></i></th>
+                                            <th colspan="2" class="th colUnitPrice colUnitPriceInc hiddenColumn" style="width: 115px; text-align: left!important;">Price (Inc) <i class="fas fa-random fa-trans"></i></th>
+                                        {{else}}
+                                            <th class="th colUnitPrice colUnitPriceEx" style="width: 115px; text-align: left!important;">Price (Ex) <i class="fas fa-random"></i></th>
+                                            <th class="th colUnitPrice colUnitPriceInc hiddenColumn" style="width: 115px; text-align: left!important;">Price (Inc) <i class="fas fa-random fa-trans"></i></th>
+                                        {{/if}}
+                                        
                                         <th class="th colCustomerJob " style="width: 200px;">Customer/Job</th>
                                         <!-- <th class="th colCostPrice thLinceCostPrice hiddenColumn" style="width: 110px; text-align: left!important;">Cost Price</th> -->
                                         <th class="th colCustomField1 thCustomField1 hiddenColumn" style="width: 110px;">CustomField1</th>
                                         <th class="th colTaxRate hiddenColumn" style="width: 91px; text-align: left!important;">Tax Rate</th>
                                         <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Tax Code</th>
-                                        <th class="th colTaxAmount " style="width: 95px; text-align: left!important;">Tax Amt</th>
+                                        {{#if isForeignEnabled}}
+                                            <th colspan="2" class="th colTaxAmount " style="width: 95px; text-align: left!important;">Tax Amt</th>
+                                        {{else}}
+                                            <th class="th colTaxAmount " style="width: 95px; text-align: left!important;">Tax Amt</th>
+                                        {{/if}}
+                                        
                                         {{#if isBatchSerialNoTracking 'true'}}
                                             <th class="th colSerialNo" style="width: 124px;">Serial/Lot No</th>
                                             <!-- <th class="th colLotNo" style="width: 10%;">Lot No</th> -->
                                         {{/if}}
                                         <!-- <th class="th colAmount " style="width: 110px; text-align: left!important;">Amount</th> -->
-                                        <th class="th colAmount colAmountEx" style="width: 140px; text-align: left!important;">Amount (Ex) <i class="fas fa-random"></i></th>
-                                        <th class="th colAmount colAmountInc hiddenColumn" style="width: 140px; text-align: left!important;">Amount (Inc) <i class="fas fa-random fa-trans"></i></th>
+                                        {{#if isForeignEnabled}}
+                                            <th colspan="2" class="th colAmount colAmountEx" style="width: 140px; text-align: left!important;">Amount (Ex) <i class="fas fa-random"></i></th>
+                                            <th colspan="2" class="th colAmount colAmountInc hiddenColumn" style="width: 140px; text-align: left!important;">Amount (Inc) <i class="fas fa-random fa-trans"></i></th>
+                                        {{else}}
+                                            <th class="th colAmount colAmountEx" style="width: 140px; text-align: left!important;">Amount (Ex) <i class="fas fa-random"></i></th>
+                                            <th class="th colAmount colAmountInc hiddenColumn" style="width: 140px; text-align: left!important;">Amount (Inc) <i class="fas fa-random fa-trans"></i></th>
+                                        {{/if}}
+
                                         <!-- <th class="th">Tax Price</th> -->
                                         <th class="th" style="width: 25px;"></th>
                                     </tr>
+
+                                    {{#if isForeignEnabled}}
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>{{ getDefaultCurrency }}</th>
+                                            <th>Foreign</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>{{ getDefaultCurrency }}</th>
+                                            <th>Foreign</th>
+                                            <th></th>
+                                            <th>{{ getDefaultCurrency }}</th>
+                                            <th>Foreign</th>
+                                            <th></th>
+                                        </tr>
+                                    {{/if}}
                                 </thead>
                                 <tbody>
                                     {{#each item in purchaseorderrecord.LineItems}}
@@ -1647,8 +1683,14 @@
                                             {{/if}}
 
                                             <!-- <td><input class="lineUnitPrice colUnitPrice highlightInput" type="text" value="{{item.unitPrice}}"></td> -->
+                                          
+                                           
                                             <td class="colUnitPriceEx"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}"></td>
                                             <td class="colUnitPriceInc hiddenColumn"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text" value="{{item.unitPriceInc}}"></td>
+                                            {{#if isForeignEnabled}}
+                                                <td class="colUnitPriceEx"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{ convertToForeignAmount item.unitPrice}}"></td>
+                                                <td class="colUnitPriceInc hiddenColumn"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text" value="{{ convertToForeignAmount item.unitPriceInc}}"></td>
+                                            {{/if}}
                                             <!-- <td contenteditable="false" class="colCustomerJob td-input" style="cursor: pointer;">{{item.customerJob}}</td> -->
                                             <td contenteditable="false" class="colCustomerJob">
                                               <input class="es-input highlightSelect lineCustomerJob" type="search" value="{{item.customerJob}}">
@@ -1659,13 +1701,27 @@
                                             <td contenteditable="false" class="lineTaxRate colTaxRate pointer hiddenColumn" style="text-align: right!important;">{{item.taxRate}}</td>
                                             <!-- <td contenteditable="false" class="lineTaxCode colTaxCode pointer td-input" style=" ">{{item.taxCode}}</td> -->
                                             <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
+                                            
+                                           
                                             <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer" style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
+                                            {{#if isForeignEnabled}}
+                                                <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer" style="text-align: right!important;cursor: pointer;">{{ convertToForeignAmount item.TaxTotal}}</td>
+                                            {{/if}}
+                                            
                                             {{#if isBatchSerialNoTracking 'true'}}
                                                 <td class="th colSerialNo"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
                                             {{/if}}
-                                            <!-- <td contenteditable="false" class="lineAmt colAmount" style="text-align: right!important;">{{item.TotalAmt}}</td> -->
+
+                                         
                                             <td contenteditable="false" class="lineAmt colAmountEx colAmount" style="text-align: right!important;">{{item.TotalAmt}}</td>
                                             <td contenteditable="false" class="lineAmt colAmountInc colAmount hiddenColumn" style="text-align: right!important;">{{item.TotalAmtInc}}</td>
+                                            {{#if isForeignEnabled}}
+                                                <td contenteditable="false" class="lineAmt colAmountEx colAmount" style="text-align: right!important;">{{convertToForeignAmount item.TotalAmt}}</td>
+                                                <td contenteditable="false" class="lineAmt colAmountInc colAmount hiddenColumn" style="text-align: right!important;">{{convertToForeignAmount item.TotalAmtInc}}</td>
+                                        
+                                            {{/if}}
+                                            <!-- <td contenteditable="false" class="lineAmt colAmount" style="text-align: right!important;">{{item.TotalAmt}}</td> -->
+                                          
                                             <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
                                         </tr>
                                     {{/each}}
