@@ -41,7 +41,6 @@ class CachedHttp {
    * 
    * @param {String} endpoint 
    * @param {CallableFunction} onRemoteCall 
-   * @param {Object} options 
    * @returns 
    */
   async get(endpoint, onRemoteCall = async () => {}, options = {

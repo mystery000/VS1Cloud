@@ -6,7 +6,6 @@
         .small-heading {
             font-size: 0.8rem;
         }
-
         .my-tasks {
             display: flex;
             flex-direction: column;
@@ -17,13 +16,11 @@
             overflow-y: auto;
             overflow-x: hidden;
         }
-
         .highcharts-credits {
             display: none !important;
         }
-
         #calendar {
-            height: 450px;
+            /*height: 450px;*/
         }
     </style>
     <div class="container-fluid">
@@ -38,13 +35,13 @@
             </div>
             <div class="row pt-3 pb-3">
                 <div class="col-md-8">
-                  {{> allCardsLists tabGroupID="11" chartGroup="dashboardSales" type="dashboardSales"}}
+                    {{> allCardsLists tabGroupID="11" chartGroup="dashboardSales" type="dashboardSales"}}
                 </div>
                 <div class="col-md-4">
                     <div class="my-tasks">
                         {{> myTasksWidget}}
                     </div>
-                  </div>
+                </div>
             </div>
             <hr>
             <div class="row pt-3 pb-3">

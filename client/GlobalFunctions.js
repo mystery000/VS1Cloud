@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export default class GlobalFunctions {
   /**
      *
@@ -51,5 +53,9 @@ export default class GlobalFunctions {
     for (let index = 0; index < array.length; index++) {
       await callback(array[index], index, array);
     }
+  }
+
+  static formatDate(date) {
+      return moment(date).format("DD/MM/YYYY");
   }
 }
