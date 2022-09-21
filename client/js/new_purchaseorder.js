@@ -17,6 +17,8 @@ import 'jquery-editable-select';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
 import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
+import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
+import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -5546,6 +5548,16 @@ Template.purchaseordercard.helpers({
     // custom field displaysettings
     displayfields: () => {
       return Template.instance().displayfields.get();
+    },
+
+    isForeignEnabled: () => {
+        return Template.instance().isForeignEnabled.get();
+    },
+    getDefaultCurrency: () => {
+        return defaultCurrencyCode;
+    },
+    convertToForeignAmount: (amount) => {
+        return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
     },
 });
 
