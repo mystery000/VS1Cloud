@@ -363,24 +363,25 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6 col-md-3" style="padding: 0px 8px;">
-                                                    <div class="form-group"><label class="text-nowrap">Website</label><input type="text" class="form-control" id="edtWebsite" name="edtWebsite" value="{{record.website}}">
+                                                    <div class="form-group">
+                                                        <label class="text-nowrap">Website</label>
+                                                        <input type="text" class="form-control" id="edtWebsite" name="edtWebsite" value="{{record.website}}">
                                                     </div>
                                                 </div>
                                                 <div class="col-6 col-md-2" style="padding: 0px 8px;">
                                                     <div class="form-group">
                                                         <label for="leadRep">Rep</label>
-                                                        <select type="search" class="form-control" id="leadRep" name="leadRep" value="{{record.rep}}">
-                                                        </select>
+                                                        <input type="search" class="form-control" id="leadRep" name="leadRep" value="{{record.rep}}">
                                                     </div>
                                                 </div>
                                                 <div class="col-6 col-md-2" style="padding: 0px 8px;">
                                                     <div class="form-group">
                                                         <label for="leadSource">Source</label>
                                                         <select class="form-control" id="leadSource" value="{{record.source}}">
+                                                            <option>Unknown</option>
                                                             <option>Google</option>
                                                             <option>Phone</option>
                                                             <option>Search Engine</option>
-                                                            <option>Unknown</option>
                                                         </select>
                                                     </div>
                                                 </div>

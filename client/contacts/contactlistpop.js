@@ -266,6 +266,7 @@ Template.contactlistpop.onRendered(function () {
                             action: function () {
                                 $('#tblContactlist').DataTable().ajax.reload();
                             },
+                            language: { search: "",searchPlaceholder: "Search List..." },
                             "fnDrawCallback": function (oSettings) {
                                 $('.paginate_button.page-item').removeClass('disabled');
                                 $('#tblContactlist_ellipsis').addClass('disabled');
@@ -772,6 +773,7 @@ Template.contactlistpop.onRendered(function () {
                                 MakeNegative();
                             }, 100);
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function (oSettings) {
                             $("<button class='btn btn-primary btnAddNewCustomer' data-dismiss='modal' data-toggle='modal' data-target='#addCustomerModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblContactlist_filter");
                             $("<button class='btn btn-primary btnRefreshContact' type='button' id='btnRefreshContact' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblContactlist_filter");
@@ -1157,6 +1159,7 @@ Template.contactlistpop.onRendered(function () {
                                 MakeNegative();
                             }, 100);
                         },
+                        language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function (oSettings) {
                             $("<button class='btn btn-primary btnAddNewCustomer' data-dismiss='modal' data-toggle='modal' data-target='#addCustomerModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblContactlist_filter");
                             $("<button class='btn btn-primary btnRefreshContact' type='button' id='btnRefreshContact' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblContactlist_filter");

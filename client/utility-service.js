@@ -1363,6 +1363,7 @@ export class UtilityService {
      * @returns {string}
      */
     removeCurrency(stringNumber = "$10.5", _currency = false) {
+        stringNumber = stringNumber.replace(',', "");
         const isNegative = stringNumber.includes("-");
         if(isNegative) {
             stringNumber = stringNumber.replace('-', "");
