@@ -507,3 +507,18 @@ Template.allChartLists.events({
     $(".fullScreenSpin").css("display", "none");
   },
 });
+
+Template.allChartLists.helpers({
+  isaccountoverview: () => {
+    var currentLoc = FlowRouter.current().route.path;
+    let isAccountOverviewPage = false;
+    if (currentLoc == "/accountsoverview"){
+      isAccountOverviewPage = true;
+    }
+      return isAccountOverviewPage;
+  }
+});
+
+Template.registerHelper('equals', function(a, b) {
+    return a === b;
+});
