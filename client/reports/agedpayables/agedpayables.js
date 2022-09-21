@@ -86,7 +86,7 @@ Template.agedpayables.onRendered(() => {
 
     
 
-  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
   let defaultOptions = templateObject.reportOptions.get();
   if (defaultOptions) {
     defaultOptions.fromDate = formatDateFrom;
@@ -96,7 +96,7 @@ Template.agedpayables.onRendered(() => {
     defaultOptions = {
       fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
       toDate: moment().format("YYYY-MM-DD"),
-      ignoreDate: true
+      ignoreDate: false
     };
   }
   templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
@@ -127,6 +127,7 @@ Template.agedpayables.onRendered(() => {
               $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
               $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
             }
+            console.log('data.tapreport', data.tapreport)
             if (data.tapreport.length) {
                 localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data) || '');
                 // localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data)||'');
@@ -1279,6 +1280,14 @@ Template.agedpayables.events({
         LoadingOverlay.hide();
     },
 
+    "click [href='#noInfoFound']": function () {
+        swal({
+            title: 'Information',
+            text: "No further information available on this column",
+            type: 'warning',
+            confirmButtonText: 'Ok'
+          })
+      }
 });
 
 Template.agedpayables.helpers({
@@ -1294,6 +1303,19 @@ Template.agedpayables.helpers({
     // return (a.accounttype.toUpperCase() > b.accounttype.toUpperCase()) ? 1 : -1;
     // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
     // });
+  },
+  redirectionType(item) {
+    if(item.type === 'PO') {
+      return '/purchaseordercard?id=' + item.Id;
+    } else if (item.type === 'Supplier Payment') {
+      return '/supplierpaymentcard?id=' + item.Id;
+    } else if (item.type === 'Bill') {
+      return '/billcard?id=' + item.Id;
+    } else if (item.type === 'Credit') {
+      return '/creditcard?id=' + item.Id;
+    } else {
+      return '#noInfoFound';
+    }
   },
   grandrecords: () => {
     return Template.instance().grandrecords.get();

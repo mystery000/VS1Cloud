@@ -436,6 +436,14 @@ Template.leaveaccruedreport.events({
 
     LoadingOverlay.hide();
   },
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
+  }
 });
 
 Template.leaveaccruedreport.helpers({
@@ -444,6 +452,13 @@ Template.leaveaccruedreport.helpers({
   },
   records: () => {
     return Template.instance().records.get();
+  },
+  redirectionType(item) {
+    if(item.fields.PayID === 'PO') {
+      return '/purchaseordercard?id=' + item.Id;
+    } else {
+      return '#noInfoFound';
+    }
   },
   calculateHourPriceConvert: (item, currencyData) => {
 

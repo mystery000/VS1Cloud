@@ -96,7 +96,6 @@ Template.agedreceivables.onRendered(() => {
             reportService.getAgedReceivableDetailsData(dateFrom, dateTo, ignoreDate, contactID).then(function (data) {
                 let totalRecord = [];
                 let grandtotalRecord = [];
-
                 if (data.tarreport.length) {
                     localStorage.setItem('VS1AgedReceivables_Report', JSON.stringify(data) || '');
                     let records = [];
@@ -111,7 +110,6 @@ Template.agedreceivables.onRendered(() => {
                     let expArr = [];
                     let accountData = data.tarreport;
                     let accountType = '';
-
                     accountData.forEach((account) => {
 
                         if (account.AmountDue < 0) {
@@ -311,7 +309,6 @@ Template.agedreceivables.onRendered(() => {
                     //     // let val = ['Total ' + allRecords[i][0].key+'', '', '', '', utilityService.modifynegativeCurrencyFormat(Currenttotal), utilityService.modifynegativeCurrencyFormat(lessTnMonth),
                     //     //     utilityService.modifynegativeCurrencyFormat(oneMonth), utilityService.modifynegativeCurrencyFormat(twoMonth), utilityService.modifynegativeCurrencyFormat(threeMonth), utilityService.modifynegativeCurrencyFormat(Older)];
                     //     // current.push(val);
-
                     // }
 
                     // let grandval = ['Grand Total ' + '', '', '', '', utilityService.modifynegativeCurrencyFormat(grandamountduetotal), utilityService.modifynegativeCurrencyFormat(grandCurrenttotal),
@@ -418,7 +415,6 @@ Template.agedreceivables.onRendered(() => {
             let data = JSON.parse(localStorage.getItem('VS1AgedReceivables_Report'));
             let totalRecord = [];
             let grandtotalRecord = [];
-
             if (data.tarreport.length) {
 
                 let records = [];
@@ -1059,8 +1055,16 @@ Template.agedreceivables.events({
     templateObject.currencyList.set(_currencyList);
 
     LoadingOverlay.hide();
+  },
+  
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
   }
-
 });
 
 Template.agedreceivables.helpers({
@@ -1068,6 +1072,13 @@ Template.agedreceivables.helpers({
         return Template.instance().records.get();
     },
 
+    redirectionType(item) {
+       if (item.type === 'Invoice') {
+          return '/invoicecard?id=' + item.entries.InvoiceNumber;
+        } else {
+          return '#noInfoFound';
+        }
+      },
     grandrecords: () => {
         return Template.instance().grandrecords.get();
     },

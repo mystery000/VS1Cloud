@@ -180,6 +180,9 @@
                                     .text-center0 {
                                         text-align: right !important;
                                     }
+                                    .table td a {
+                                        text-decoration: none !important;
+                                    }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table table-sm" id="tableExport" name="tableExport">
@@ -202,8 +205,8 @@
                                                     {{#each item in value.SubAccounts}}
                                                     <tr>
                                                         <td></td>
-                                                        <td>{{ formatDate item.PayDate }}</td>
-                                                        <td>{{ formatDate item.DateTaken }}</td>
+                                                        <td><a href="{{redirectionType item}}">{{ formatDate item.PayDate }}</a></td>
+                                                        <td><a href="{{redirectionType item}}">{{ formatDate item.DateTaken }}</a></td>
                                                         <td class="text-right"></td>
                                                         <td class="text-right"></td>
                                                         <td class="text-right text-success"></td>

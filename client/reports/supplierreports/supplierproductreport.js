@@ -109,8 +109,8 @@ Template.supplierproductreport.onRendered(() => {
     }else{
       data = JSON.parse(localStorage.getItem('VS1SupplierProduct_Report'));
     }
+
     let reportSummary = data.tsupplierproduct.map(el => {
-      console.log('tsupplierproduct', data.tsupplierproduct);
       let resultobj = {};
       Object.entries(el).map(([key, val]) => {      
           resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
@@ -469,7 +469,6 @@ Template.supplierproductreport.helpers({
   },
   redirectionType(item) {
     if(item.Transaction_Type === 'Purchase Order') {
-      return '#noInfoFound';
       return '/purchaseordercard?id=' + item.PurchaseOrderID;
     } else if (item.Transaction_Type === 'Bill') {
       return '#noInfoFound';

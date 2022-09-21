@@ -180,6 +180,9 @@
                                     .text-center0 {
                                         text-align: right !important;
                                     }
+                                    .table td a {
+                                        text-decoration: none !important;
+                                    }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table table-sm" id="tableExport" name="tableExport">
@@ -223,22 +226,22 @@
                                                     {{#each item in value.records}}
                                                     <tr>
                                                         <td></td>
-                                                        <td>{{ formatDate item.fields.Date }}</td>
-                                                        <td>{{ item.fields.LeaveType }}</td>
-                                                        <td>{{ item.fields.PayID }}</td>
-                                                        <td>{{ item.fields.AccrualType }}</td>
-                                                        <td >{{ floatValue item.fields.AccruedHours }}</td>
+                                                        <td><a href="{{redirectionType item}}">{{ formatDate item.fields.Date }}</a></td>
+                                                        <td><a href="{{redirectionType item}}">{{ item.fields.LeaveType }}</a></td>
+                                                        <td><a href="{{redirectionType item}}">{{ item.fields.PayID }}</a></td>
+                                                        <td><a href="{{redirectionType item}}">{{ item.fields.AccrualType }}</a></td>
+                                                        <td><a href="{{redirectionType item}}">{{ floatValue item.fields.AccruedHours }}</a></td>
                                                     
                                                         {{#if isOnlyDefaultActive }}
                                                                 {{#if currencyList}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right ">{{ calculateHourPriceConvert item c }}</td>
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right "><a href="{{redirectionType item}}">{{ calculateHourPriceConvert item c }}</a></td>
                                                                         {{/if}}
                                                                     {{/each}}
                                                                 {{/if}}
                                                         {{else}}
-                                                            <td class="text-right">{{ calculateHourPrice item }}</td>
+                                                            <td class="text-right"><a href="{{redirectionType item}}">{{ calculateHourPrice item }}</a></td>
                                                         {{/if}}
                                                     
                                                     </tr>

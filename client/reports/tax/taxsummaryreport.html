@@ -398,19 +398,19 @@
 
                                   {{#each c in currencyList }}
                                     {{# if c.active}}
-                                        <td currency="{{c.code}}" currency-id="{{c.id}}" ></td>
+                                        <td class="text-right" currency="{{c.code}}" currency-id="{{c.id}}" ></td>
                                     {{/if}}
                                   {{/each}}
 
                                   {{#each c in currencyList }}
                                       {{# if c.active}}
-                                          <td currency="{{c.code}}" currency-id="{{c.id}}" ></td>
+                                          <td class="text-right" currency="{{c.code}}" currency-id="{{c.id}}" ></td>
                                       {{/if}}
                                   {{/each}}
 
                                   {{#each c in currencyList }}
                                       {{# if c.active}}
-                                          <td currency="{{c.code}}" currency-id="{{c.id}}" class="{{#if isNegativeAmount grandRecords.total.net}} text-danger {{else}} text-success {{/if}}">{{ convertAmount grandRecords.total.net c}}</td>
+                                          <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount grandRecords.total.net}} text-danger {{else}} text-success {{/if}}">{{ convertAmount grandRecords.total.net c}}</td>
                                       {{/if}}
                                   {{/each}}
 
@@ -420,7 +420,7 @@
 
                                   {{#each c in currencyList }}
                                       {{# if c.active}}
-                                          <td currency="{{c.code}}" currency-id="{{c.id}}" class="{{#if isNegativeAmount grandRecords.total.tax}} text-danger {{else}} text-success {{/if}}">{{ convertAmount grandRecords.total.tax c}}</td>
+                                          <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount grandRecords.total.tax}} text-danger {{else}} text-success {{/if}}">{{ convertAmount grandRecords.total.tax c}}</td>
                                       {{/if}}
                                   {{/each}}
 
@@ -432,21 +432,14 @@
 
                                 <th></th>
                                 <th></th>
-                                <td>{{ formatPrice grandRecords.total.net}}</td>
+                                <td class="text-right">{{ formatPrice grandRecords.total.net}}</td>
                                 <th></th>
 
-                                <td>{{ formatPrice grandRecords.total.tax}}</td>
+                                <td class="text-right">{{ formatPrice grandRecords.total.tax}}</td>
 
 
                               {{/if}}
 
-
-
-                             
-
-                             
-
-                          
                           </tr>
                         {{/if}}
                       {{else}}

@@ -359,7 +359,7 @@ Template.stockquantitybylocation.events({
     templateObject.dateAsAt.set(fromDate);
     $(".fullScreenSpin").css("display", "none");
 
-    // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+    templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
   },
   "click #lastQuarter": function () {
     let templateObject = Template.instance();
@@ -401,7 +401,7 @@ Template.stockquantitybylocation.events({
 
     var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
     let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
-    // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+    templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
     $(".fullScreenSpin").css("display", "none");
   },
   "click #last12Months": function () {
@@ -440,7 +440,7 @@ Template.stockquantitybylocation.events({
       Math.floor(currentDate2.getMonth() + 1) +
       "-" +
       currentDate2.getDate();
-    // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+    templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
     $(".fullScreenSpin").css("display", "none");
   },
   "click #ignoreDate": function () {
@@ -450,7 +450,7 @@ Template.stockquantitybylocation.events({
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
     templateObject.dateAsAt.set("Current Date");
-    // templateObject.getGeneralLedgerReports("", "", true);
+    templateObject.getGeneralLedgerReports("", "", true);
     $(".fullScreenSpin").css("display", "none");
   },
 
@@ -509,6 +509,15 @@ Template.stockquantitybylocation.events({
 
     LoadingOverlay.hide();
   },
+  
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
+  }
 });
 
 Template.stockquantitybylocation.helpers({
@@ -517,6 +526,15 @@ Template.stockquantitybylocation.helpers({
   },
   records: () => {
     return Template.instance().records.get();
+  },
+  redirectionType(item) {
+    if(item.type === 'PO') {
+      return '#';
+      return '/purchaseordercard?id=' + item.SaleID;
+    } else {
+      return '#';
+      return '#noInfoFound';
+    }
   },
   formatPrice( amount ){
     let utilityService = new UtilityService();

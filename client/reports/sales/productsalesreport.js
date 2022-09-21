@@ -265,7 +265,6 @@ Template.productsalesreport.onRendered(()=>{
           let totalRecord = [];
           let grandtotalRecord = [];
 
-
         if(data.tproductsalesdetailsreport.length){
           localStorage.setItem('VS1ProductSales_Report', JSON.stringify(data)||'');
           let records = [];
@@ -458,7 +457,6 @@ let grandtotalqty = 0;
         let data = JSON.parse(localStorage.getItem('VS1ProductSales_Report'));
         let totalRecord = [];
         let grandtotalRecord = [];
-
       if(data.tproductsalesdetailsreport.length){
         let records = [];
         let allRecords = [];
@@ -638,6 +636,7 @@ let grandtotalqty = 0;
 
       records.push(recordObj);
       templateObject.records.set(records);
+
       templateObject.grandRecords.set('');
         $('.fullScreenSpin').css('display','none');
     }
@@ -649,6 +648,7 @@ let grandtotalqty = 0;
 
     templateObject.getDepartments = function(){
       reportService.getDepartment().then(function(data){
+        let deptrecords = [];
         for(let i in data.tdeptclass){
 
           let deptrecordObj = {
@@ -660,6 +660,7 @@ let grandtotalqty = 0;
           templateObject.deptrecords.set(deptrecords);
 
         }
+
     });
 
     }
@@ -1046,9 +1047,19 @@ let grandtotalqty = 0;
       LoadingOverlay.hide();
     },
 
+    "click [href='#noInfoFound']": function () {
+      swal({
+          title: 'Information',
+          text: "No further information available on this column",
+          type: 'warning',
+          confirmButtonText: 'Ok'
+        })
+    }
   });
   Template.productsalesreport.helpers({
     records : () => {
+      console.log('deptrecords', Template.instance().records.get());
+
        return Template.instance().records.get();
      //   .sort(function(a, b){
      //     if (a.accounttype == 'NA') {
@@ -1062,6 +1073,13 @@ let grandtotalqty = 0;
      // });
     },
 
+    redirectionType(entry) {
+      if (entry.type === 'Invoice') {
+        return '/invoicecard?id=' + entry.Id;
+      } else {
+        return '#noInfoFound';
+      }
+    },
     grandRecords: () => {
        return Template.instance().grandRecords.get();
    },

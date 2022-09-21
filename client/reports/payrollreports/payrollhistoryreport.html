@@ -166,6 +166,9 @@
                                     .table td {
                                         min-width: 150px;
                                     }
+                                    .table td a {
+                                        text-decoration: none !important;
+                                    }
                                     .table th:first-child,
                                     .table td:first-child {
                                         text-align: left;
@@ -253,7 +256,7 @@
                                                     {{#each item in value.SubAccounts}}
                                                         <tr>
                                                             <td></td>
-                                                            <td>{{ formatDate item.fields.PayDate }}</td>
+                                                            <td><a href="{{redirectionType item}}">{{ formatDate item.fields.PayDate }}</a></td>
                                                             <!-- <td class="text-right">{{ formatPrice item.fields.Wages }}</td>
                                                             <td class="text-right">{{ formatPrice item.fields.Tax }}</td>
                                                             <td class="text-right">{{ formatPrice item.fields.Superannuation }}</td>
@@ -264,36 +267,36 @@
                                                                 {{#if currencyList}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.Wages }} text-danger {{else}} text-success {{/if}}">{{ convertAmount item.fields.Wages c}}</td>
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.Wages }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Wages c}}</a></td>
                                                                         {{/if}}
                                                                     {{/each}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.Tax }} text-danger {{else}} text-success {{/if}}">{{ convertAmount item.fields.Tax c}}</td>
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.Tax }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Tax c}}</a></td>
                                                                         {{/if}}
                                                                     {{/each}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.Superannuation }} text-danger {{else}} text-success {{/if}}">{{ convertAmount item.fields.Superannuation c}}</td>
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.Superannuation }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Superannuation c}}</a></td>
                                                                         {{/if}}
                                                                     {{/each}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right  {{#if isNegativeAmount item.fields.Gross }} text-danger {{else}} text-success {{/if}}">{{ convertAmount item.fields.Gross c}}</td>
+                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right  {{#if isNegativeAmount item.fields.Gross }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Gross c}}</a></td>
                                                                         {{/if}}
                                                                     {{/each}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right  {{#if isNegativeAmount item.fields.Net }} text-danger {{else}} text-success {{/if}}">{{ convertAmount item.fields.Net c}}</td>
+                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right  {{#if isNegativeAmount item.fields.Net }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Net c}}</a></td>
                                                                         {{/if}}
                                                                     {{/each}}
                                                                 {{/if}}
                                                             {{else}}
-                                                                <td class="text-right">{{ formatPrice item.fields.Wages }}</td>
-                                                                <td class="text-right">{{ formatPrice item.fields.Tax }}</td>
-                                                                <td class="text-right">{{ formatPrice item.fields.Superannuation }}</td>
-                                                                <td class="text-right">{{ formatPrice item.fields.Gross }}</td>
-                                                                <td class="text-right">{{ formatPrice item.fields.Net }}</td>
+                                                                <td class="text-right"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Wages }}</a></td>
+                                                                <td class="text-right"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Tax }}</a></td>
+                                                                <td class="text-right"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Superannuation }}</a></td>
+                                                                <td class="text-right"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Gross }}</a></td>
+                                                                <td class="text-right"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Net }}</a></td>
 
                                                             {{/if}}
                                                         </tr>

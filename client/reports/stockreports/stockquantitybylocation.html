@@ -182,6 +182,13 @@
                                     table tr .text-danger a {
                                         color: #e74a3b !important;
                                     }
+                                    table tr a {
+                                        text-decoration: none !important;
+                                    }
+                                    table tr .text-success,
+                                    table tr .text-success a {
+                                        color: #1cc88a !important;
+                                    }
                                     .customDoubleTableHeading + tr th {
                                         border-right: 1px solid #cbcbcb !important;
                                     }
@@ -214,15 +221,15 @@
                                                     {{#each item in value.SubAccounts}}
                                                         <tr>
                                                             <td></td>
-                                                            <td>{{ item.ProductName }}</td>
-                                                            <td>{{ item.PartsDescription }}</td>
-                                                            <td>{{ item.UOM }}</td>
-                                                            <td>{{ item.PartType }}</td>
-                                                            <td>{{ item.PartType }}</td>
-                                                            <td>{{ item.PartsDescription }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.Cost }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.Value }}</td>
-                                                            <td class="text-right">{{ item.Qty }}</td>
+                                                            <td><a href="{{redirectionType item}}">{{ item.ProductName }}</a></td>
+                                                            <td><a href="{{redirectionType item}}">{{ item.PartsDescription }}</a></td>
+                                                            <td><a href="{{redirectionType item}}">{{ item.UOM }}</a></td>
+                                                            <td><a href="{{redirectionType item}}">{{ item.PartType }}</a></td>
+                                                            <td><a href="{{redirectionType item}}">{{ item.PartType }}</a></td>
+                                                            <td><a href="{{redirectionType item}}">{{ item.PartsDescription }}</a></td>
+                                                            <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.Cost }}</a></td>
+                                                            <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.Value }}</a></td>
+                                                            <td class="text-right"><a href="{{redirectionType item}}">{{ item.Qty }}</a></td>
                                                         </tr>
                                                     {{/each}}
                                                     <tr>

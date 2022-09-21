@@ -117,6 +117,7 @@ Template.transactionjournallist.onRendered(() => {
       data = JSON.parse(localStorage.getItem('VS1TransactionJournal_Report'));
     }
     let reportGroups = []; 
+    console.log('sad',data.ttransactionlistreport)
     if( data.ttransactionlistreport.length > 0 ){
         for (const item of data.ttransactionlistreport) {   
             let isExist = reportGroups.filter((subitem) => {
@@ -410,6 +411,14 @@ Template.transactionjournallist.events({
 
     LoadingOverlay.hide();
   },
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
+  }
 });
 
 Template.transactionjournallist.helpers({
@@ -418,6 +427,13 @@ Template.transactionjournallist.helpers({
   },
   records: () => {
     return Template.instance().records.get();
+  },
+  redirectionType(item) {
+    if(item.AccountType === 'PO') {
+      return '/purchaseordercard?id=' + item.ACCOUNTID;
+    } else {
+      return '#noInfoFound';
+    }
   },
   isZeroValue(valueZero) {
     if (Math.sign(valueZero) !== 0) {

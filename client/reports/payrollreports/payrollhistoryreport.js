@@ -145,18 +145,18 @@ Template.payrollhistoryreport.onRendered(() => {
     })
     
     data = data.response;
-    // if (!localStorage.getItem('VS1PayrollHistory_Report')) {
-    //   const options = await templateObject.reportOptions.get();
-    //   let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    //   let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    //   let ignoreDate = options.ignoreDate || false;
-    //   data = await reportService.getPayHistory( dateFrom, dateTo, ignoreDate);
-    //   if( data.tpayhistory.length > 0 ){
-    //     localStorage.setItem('VS1PayrollHistory_Report', JSON.stringify(data)||'');
-    //   }
-    // }else{
-    //   data = JSON.parse(localStorage.getItem('VS1PayrollHistory_Report'));
-    // }
+    if (!localStorage.getItem('VS1PayrollHistory_Report')) {
+      const options = await templateObject.reportOptions.get();
+      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let ignoreDate = options.ignoreDate || false;
+      data = await reportService.getPayHistory( dateFrom, dateTo, ignoreDate);
+      if( data.tpayhistory.length > 0 ){
+        localStorage.setItem('VS1PayrollHistory_Report', JSON.stringify(data)||'');
+      }
+    }else{
+      data = JSON.parse(localStorage.getItem('VS1PayrollHistory_Report'));
+    }
     let paySlipReport = [];
     if( data.tpayhistory.length > 0 ){
         let employeeGroups = [];
@@ -496,6 +496,14 @@ Template.payrollhistoryreport.events({
   
       LoadingOverlay.hide();
     },
+    "click [href='#noInfoFound']": function () {
+      swal({
+          title: 'Information',
+          text: "No further information available on this column",
+          type: 'warning',
+          confirmButtonText: 'Ok'
+        })
+    }
 });
 
 Template.payrollhistoryreport.helpers({
@@ -504,6 +512,13 @@ Template.payrollhistoryreport.helpers({
   },
   records: () => {
     return Template.instance().records.get();
+  },
+  redirectionType(item) {
+    if(item.fields.PayID === 'PO') {
+      return '/purchaseordercard?id=' + item.Id;
+    } else {
+      return '#noInfoFound';
+    }
   },
     formatPrice( amount ){
         let utilityService = new UtilityService();

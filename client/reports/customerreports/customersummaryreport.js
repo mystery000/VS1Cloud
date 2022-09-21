@@ -114,7 +114,7 @@ Template.customersummaryreport.onRendered(() => {
   templateObject.initDate();
   templateObject.initUploadedImage();
   LoadingOverlay.hide();
-  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
       defaultOptions.fromDate = formatDateFrom;
@@ -124,12 +124,12 @@ Template.customersummaryreport.onRendered(() => {
       defaultOptions = {
         fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
         toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: true
+        ignoreDate: false
       };
     }
     templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
+    if( defaultOptions.ignoreDate == true ){
       $('.edtReportDates').attr('disabled', true);
       templateObject.dateAsAt.set("Current Date");
     }

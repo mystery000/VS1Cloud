@@ -303,7 +303,7 @@ Debit (Ex)
                                                                                 {{#if currencyList}}
                                                                                     {{#each c in currencyList }}
                                                                                         {{# if c.active}}
-                                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem.value c}} text-danger {{/if}}">
+                                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 text-right 111111 {{#if isNegativeAmount subItem.value c}} text-danger {{/if}}">
                                                                                                 <a href="#" style="text-decoration:none!important;">{{convertAmount subItem.value c}}</a>
                                                                                             </td>
                                                                                         {{/if}}
@@ -312,7 +312,7 @@ Debit (Ex)
 
                                                                             {{else}}
 
-                                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1 222222">
                                                                                     <a href="#" style="text-decoration:none!important;">{{subItem}}</a>
                                                                                 </td>
 
@@ -320,13 +320,13 @@ Debit (Ex)
 
                                                                         {{else}}
                                                                             {{#if isObject subItem}}
-                                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right {{#if isNegativeAmount subItem.value}} text-danger {{/if}}">
+                                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right 333333 {{#if isNegativeAmount subItem.value}} text-danger {{/if}}">
                                                                                     <a href="#" style="text-decoration:none!important;">{{subItem.value}}</a>
                                                                                 </td>
 
                                                                             {{else}}
 
-                                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem}} text-danger {{/if}}">
+                                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1 4444 {{#if isNegativeAmount subItem}} text-danger {{/if}}">
                                                                                     <a href="#" style="text-decoration:none!important;">{{subItem}}</a>
                                                                                 </td>
 
@@ -347,7 +347,7 @@ Debit (Ex)
                                                                             {{#if currencyList}}
                                                                                 {{#each c in currencyList }}
                                                                                     {{# if c.active}}
-                                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem.value c}} text-danger {{/if}}">
+                                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField text-right 555555 {{#if isNegativeAmount subItem.value c}} text-danger {{/if}}">
                                                                                             <span class="table-cells"><strong>{{convertAmount subItem.value c}}</strong></span>
                                                                                         </td>
                                                                                     {{/if}}
@@ -356,7 +356,7 @@ Debit (Ex)
 
                                                                         {{else}}
 
-                                                                            <td class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem}} text-danger {{/if}}">
+                                                                            <td class="Total1Indented MenuLeft TotalField 6666 {{#if isNegativeAmount subItem}} text-danger {{/if}}">
                                                                                 <span class="table-cells"><strong>{{subItem}}</strong></span>
                                                                             </td>
 
@@ -372,7 +372,7 @@ Debit (Ex)
                                                                         {{else}}
 
 
-                                                                            <td class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem}} text-danger {{/if}}">
+                                                                            <td class="Total1Indented MenuLeft TotalField 777 {{#if isNegativeAmount subItem}} text-danger {{/if}}">
                                                                                 <span class="table-cells"><strong>{{subItem}}</strong></span>
                                                                             </td>
 
@@ -396,23 +396,23 @@ Debit (Ex)
                                                                             {{#if currencyList}}
                                                                                 {{#each c in currencyList }}
                                                                                     {{# if c.active}}
-                                                                                        <td class="{{#if isNegativeAmount subItem.value c}} text-danger {{/if}}" currency="{{c.code}}" currency-id="{{c.id}}">{{convertAmount subItem.value c}}</td>
+                                                                                        <td class=" text-right {{#if isNegativeAmount subItem.value c}} text-danger {{/if}}" currency="{{c.code}}" currency-id="{{c.id}}">{{convertAmount subItem.value c}}</td>
 
                                                                                     {{/if}}
                                                                                 {{/each}}
                                                                             {{/if}}
                                                                         {{else}}
-                                                                            <td class="{{#if isNegativeAmount subItem}} text-danger {{/if}}" >{{subItem}}</td>
+                                                                            <td class=" {{#if isNegativeAmount subItem}} text-danger {{/if}}" >{{subItem}}</td>
 
 
                                                                         {{/if}}
 
                                                                 {{else}}
                                                                     {{#if isObject subItem}}
-                                                                        <td class="{{#if isNegativeAmount subItem.value}} text-danger {{/if}}">{{subItem.value}}</td>
+                                                                        <td class=" text-right {{#if isNegativeAmount subItem.value}} text-danger {{/if}}">{{subItem.value}}</td>
 
                                                                     {{else}}
-                                                                        <td class="{{#if isNegativeAmount subItem}} text-danger {{/if}}" >{{subItem}}</td>
+                                                                        <td class=" {{#if isNegativeAmount subItem}} text-danger {{/if}}" >{{subItem}}</td>
 
 
                                                                     {{/if}}

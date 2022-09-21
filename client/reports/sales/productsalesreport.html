@@ -295,23 +295,23 @@
                               <td></td>
 
                               <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
-                                <a href="#" style="text-decoration:none!important;">{{entry.entries.TransactionType}}</a>
+                                <a href="{{redirectionType entry}}" style="text-decoration:none!important;">{{entry.entries.TransactionType}}</a>
                               </td>
 
                               <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
-                                <a href="#" style="text-decoration:none!important;">{{entry.entries.TransactionNo}}</a>
+                                <a href="{{redirectionType entry}}" style="text-decoration:none!important;">{{entry.entries.TransactionNo}}</a>
                               </td>
 
                               <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
-                                <a href="#" style="text-decoration:none!important;">{{ formatDate entry.entries.SaleDate}}</a>
+                                <a href="{{redirectionType entry}}" style="text-decoration:none!important;">{{ formatDate entry.entries.SaleDate}}</a>
                               </td>
 
                               <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
-                                <a href="#" style="text-decoration:none!important;">{{entry.entries.CustomerName}}</a>
+                                <a href="{{redirectionType entry}}" style="text-decoration:none!important;">{{entry.entries.CustomerName}}</a>
                               </td>
 
                               <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
-                                <a href="#" style="text-decoration:none!important;">{{entry.entries.Qty}}</a>
+                                <a href="{{redirectionType entry}}" style="text-decoration:none!important;">{{entry.entries.Qty}}</a>
                               </td>
 
                               {{# if isOnlyDefaultActive}}
@@ -321,7 +321,7 @@
                                     {{# if c.active}}
 
                                       <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1  text-right">
-                                        <a href="#" style="text-decoration:none!important;">{{ convertAmount entry.entries.LineCostEx c}}</a>
+                                        <a href="{{redirectionType entry}}" style="text-decoration:none!important;">{{ convertAmount entry.entries.LineCostEx c}}</a>
                                       </td>
                                     {{/if}}
                                   {{/each}}
@@ -329,7 +329,7 @@
                                   {{#each c in currencyList }}
                                     {{# if c.active}}
                                       <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1  text-right">
-                                        <a href="#" style="text-decoration:none!important;">{{ convertAmount entry.entries.TotalAmountEx c}}</a>
+                                        <a href="{{redirectionType entry}}" style="text-decoration:none!important;">{{ convertAmount entry.entries.TotalAmountEx c}}</a>
                                       </td>
                                     {{/if}}
                                   {{/each}}
@@ -337,7 +337,7 @@
                                   {{#each c in currencyList }}
                                     {{# if c.active}}
                                       <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1  text-right">
-                                        <a href="#" style="text-decoration:none!important;">{{ convertAmount entry.entries.TotalProfitEx c}}</a>
+                                        <a href="{{redirectionType entry}}" style="text-decoration:none!important;">{{ convertAmount entry.entries.TotalProfitEx c}}</a>
                                       </td>
                                     {{/if}}
                                   {{/each}}
@@ -346,15 +346,15 @@
                               {{else}}
 
                                 <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right">
-                                  <a href="#" style="text-decoration:none!important;">{{ formatPrice entry.entries.LineCostEx}}</a>
+                                  <a href="{{redirectionType entry}}" style="text-decoration:none!important;">{{ formatPrice entry.entries.LineCostEx}}</a>
                                 </td>
 
                                 <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right">
-                                  <a href="#" style="text-decoration:none!important;">{{ formatPrice entry.entries.TotalAmountEx}}</a>
+                                  <a href="{{redirectionType entry}}" style="text-decoration:none!important;">{{ formatPrice entry.entries.TotalAmountEx}}</a>
                                 </td>
 
                                 <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right">
-                                  <a href="#" style="text-decoration:none!important;">{{ formatPrice entry.entries.TotalProfitEx}}</a>
+                                  <a href="{{redirectionType entry}}" style="text-decoration:none!important;">{{ formatPrice entry.entries.TotalProfitEx}}</a>
                                 </td>
 
                               {{/if}}

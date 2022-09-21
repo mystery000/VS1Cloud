@@ -162,6 +162,9 @@
                                     .departmentHeader {
                                         border-top: 2px #858999 solid;
                                     }
+                                    .table td a {
+                                        text-decoration: none !important;
+                                    }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table table-sm" id="tableExport" name="tableExport">
@@ -185,12 +188,12 @@
                                                     {{#each item in value.records}}
                                                         <tr>
                                                             <td></td>
-                                                            <td>{{ formatDate item.fields.MsTimeStamp }}</td>
-                                                            <td>{{ item.fields.Hours }}</td>
-                                                            <td>0</td>
-                                                            <td>0</td>
-                                                            <td>0</td>
-                                                            <td>-</td>
+                                                            <td><a href="{{redirectionType item}}">{{ formatDate item.fields.MsTimeStamp }}</a></td>
+                                                            <td><a href="{{redirectionType item}}">{{ item.fields.Hours }}</a></td>
+                                                            <td><a href="{{redirectionType item}}">0</a></td>
+                                                            <td><a href="{{redirectionType item}}">0</a></td>
+                                                            <td><a href="{{redirectionType item}}">0</a></td>
+                                                            <td><a href="{{redirectionType item}}">-</a></td>
                                                         </tr>
                                                     {{/each}}
                                                 {{/each}}

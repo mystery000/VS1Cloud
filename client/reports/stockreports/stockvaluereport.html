@@ -170,6 +170,9 @@
                                     .table td {
                                         min-width: 150px;
                                     }
+                                    .table a {
+                                        text-decoration: none;
+                                    }
                                     .table th:first-child,
                                     .table td:first-child {
                                         text-align: left;
@@ -208,13 +211,13 @@
                                                 {{#each item in value.SubAccounts}}
                                                     <tr>
                                                         <td></td>
-                                                        <td>{{ item.ProductName }}</td>
-                                                        <td>{{ item.transType }}</td>
-                                                        <td>{{ formatDate item.TransDate }}</td>
-                                                        <td class="text-right">{{ item.Qty }}</td>
-                                                        <td class="text-right">{{ item.RQ }}</td>
-                                                        <td class="text-right text-success">{{ formatPrice item.Linecost }}</td>
-                                                        <td class="text-right text-success">{{ formatPrice item.linecostinc }}</td>
+                                                        <td><a href="{{redirectionType item}}">{{ item.ProductName }}</a></td>
+                                                        <td><a href="{{redirectionType item}}">{{ item.transType }}</a></td>
+                                                        <td><a href="{{redirectionType item}}">{{ formatDate item.TransDate }}</a></td>
+                                                        <td class="text-right"><a href="{{redirectionType item}}">{{ item.Qty }}</a></td>
+                                                        <td class="text-right"><a href="{{redirectionType item}}">{{ item.RQ }}</a></td>
+                                                        <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.Linecost }}</a></td>
+                                                        <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.linecostinc }}</a></td>
                                                     </tr>
                                                 {{/each}}
                                                 <tr>

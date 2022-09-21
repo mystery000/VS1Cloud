@@ -88,7 +88,7 @@ Template.stockmovementreport.onRendered(() => {
 
     //--------- END OF DATE ---------------//
   };
-  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
       defaultOptions.fromDate = formatDateFrom;
@@ -98,7 +98,7 @@ Template.stockmovementreport.onRendered(() => {
       defaultOptions = {
         fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
         toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: true
+        ignoreDate: false
       };
     }
     templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
@@ -440,6 +440,15 @@ Template.stockmovementreport.events({
 
     LoadingOverlay.hide();
   },
+  
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
+  }
 });
 
 Template.stockmovementreport.helpers({
@@ -448,6 +457,42 @@ Template.stockmovementreport.helpers({
   },
   records: () => {
     return Template.instance().records.get();
+  },
+  redirectionType(item) {
+    if(item.fields.TranstypeDesc === 'Purchase Order') {
+      return '/purchaseordercard?id=' + item.fields.TransactionNo;
+    } else if (item.fields.TranstypeDesc === 'Invoice') {
+      return '/invoicecard?id=' + item.fields.TransactionNo;
+    } else if (item.fields.TranstypeDesc === 'Refund') {
+      return 'refundcard?id=' + item.fields.TransactionNo;
+    } else if (item.fields.TranstypeDesc === 'Stock Adjustment') {
+      return '#noInfoFound';
+      return '/stockadjustmentcard?id=' + item.fields.TransactionNo;
+    } else if (item.fields.TranstypeDesc === 'Sales Order') {
+      return '/salesordercard?id=' + item.fields.TransactionNo;
+    } else if (item.fields.TranstypeDesc === 'Sales Order (Man)') {
+      return '/salesordercard?id=' + item.fields.TransactionNo;
+    } else if (item.fields.TranstypeDesc === 'Opening Balance') {
+      return '#noInfoFound';
+    } else if (item.fields.TranstypeDesc === 'TMergedSalesLines') {
+      return '#noInfoFound';
+    } else if (item.fields.TranstypeDesc === 'Seed To Sale') {
+      return '#noInfoFound';
+    } else if (item.fields.TranstypeDesc === 'Cash Sale') {
+      return '#noInfoFound';
+    } else if (item.fields.TranstypeDesc === 'POS') {
+      return '#noInfoFound';
+    } else if (item.fields.TranstypeDesc === 'Return Authority') {
+      return '#noInfoFound';
+    } else if (item.fields.TranstypeDesc === 'Stock Transfer') {
+      return '#noInfoFound';
+    } else if (item.fields.TranstypeDesc === 'Repairs') {
+      return '#noInfoFound';
+    } else if (item.fields.TranstypeDesc === 'Layby') {
+      return '#noInfoFound';
+    } else {
+      return '#noInfoFound';
+    }
   },
   formatPrice( amount ){
     let utilityService = new UtilityService();

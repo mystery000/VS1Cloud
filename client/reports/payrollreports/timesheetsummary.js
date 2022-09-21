@@ -332,6 +332,14 @@ Template.timesheetsummary.events({
     // $(".fullScreenSpin").css("display", "none");
   },
 
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
+  }
 });
 
 Template.timesheetsummary.helpers({
@@ -340,6 +348,13 @@ Template.timesheetsummary.helpers({
   },
   records: () => {
     return Template.instance().records.get();
+  },
+  redirectionType(item) {
+    if(item.fields.MsTimeStamp === 'PO') {
+      return '/purchaseordercard?id=' + item.Id;
+    } else {
+      return '#noInfoFound';
+    }
   },
   formatPrice( amount ){
       let utilityService = new UtilityService();

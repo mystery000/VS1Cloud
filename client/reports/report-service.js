@@ -717,12 +717,14 @@ export class ReportService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
+        ListType: "'Detail'"
       };
     } else {
       options = {
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
+        ListType: "'Detail'"
       };
     }
     return this.getList(this.ERPObjects.TJobSalesSummary, options);

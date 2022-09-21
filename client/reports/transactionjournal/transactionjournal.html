@@ -193,6 +193,9 @@
                                     .table td {
                                         min-width: 150px;
                                     }
+                                    .table td a {
+                                        text-decoration: none;
+                                    }
                                     table tr .text-danger,
                                     table tr .text-danger a {
                                         color: #e74a3b !important;
@@ -234,13 +237,13 @@
                                                     {{#each item in value.SubAccounts}}
                                                         <tr>
                                                             <td></td>
-                                                            <td>{{ formatDate item.DATE }}</td>
-                                                            <td>{{ item.PRODUCTNAME }}</td>
-                                                            <td>{{ item.AccountType }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.DEBITSEX }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.CREDITSEX }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.DEBITSINC }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.CREDITSINC }}</td>
+                                                            <td><a href="{{redirectionType item}}">{{ formatDate item.DATE }}</a></td>
+                                                            <td><a href="{{redirectionType item}}">{{ item.PRODUCTNAME }}</a></td>
+                                                            <td><a href="{{redirectionType item}}">{{ item.TYPE }}</a></td>
+                                                            <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.DEBITSEX }}</a></td>
+                                                            <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.CREDITSEX }}</a></td>
+                                                            <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.DEBITSINC }}</a></td>
+                                                            <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.CREDITSINC }}</a></td>
                                                             <td>{{ item.ReferenceNo }}</td>
                                                         </tr>
                                                     {{/each}}

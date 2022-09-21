@@ -206,6 +206,9 @@
                                     tr[data-tr="TMergedSalesLines"] {
                                         display: none !important;
                                     }
+                                    .table tr a {
+                                        text-decoration: none;
+                                    }
                                     .table tr[data-tr="Opening Balance"] td {
                                         font-weight: 800;
                                         color: #858796 !important;
@@ -280,13 +283,13 @@
                                                     {{#each item in value.SubAccounts}}
                                                         <tr data-tr="{{ item.fields.TranstypeDesc }}">
                                                             <td></td>                                                            
-                                                            <td>{{ formatDate item.fields.TransactionDate }}</td>
+                                                            <td><a href="{{redirectionType item}}">{{ formatDate item.fields.TransactionDate }}</a></td>
                                                             
-                                                            <td class="text-left">{{ item.fields.TranstypeDesc }}</td>
-                                                            <td class="text-left">{{ checkZero item.fields.TransactionNo }}</td>
-                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.Qty }}</td>
-                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.Qty }}</td>
-                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.Qty }}</td>
+                                                            <td class="text-left"><a href="{{redirectionType item}}">{{ item.fields.TranstypeDesc }}</a></td>
+                                                            <td class="text-left"><a href="{{redirectionType item}}">{{ checkZero item.fields.TransactionNo }}</a></td>
+                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ checkZero item.fields.Qty }}</a></td>
+                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ checkZero item.fields.Qty }}</a></td>
+                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ checkZero item.fields.Qty }}</a></td>
                                                             <!-- <td class="text-right text-success">{{ formatPrice item.fields.Cost }}</td>
                                                             <td class="text-right text-success">{{ formatPrice item.fields.TotalCost }}</td> -->
 
@@ -294,20 +297,20 @@
                                                                 {{#if currencyList}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.Cost }} text-danger {{else}} text-success {{/if}}">{{ convertAmount item.fields.Cost c}}</td>
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.Cost }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Cost c}}</a></td>
                                                                         {{/if}}
                                                                     {{/each}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.TotalCost }} text-danger {{else}} text-success {{/if}}">{{ convertAmount item.fields.TotalCost c}}</td>
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.TotalCost }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.TotalCost c}}</a></td>
                                                                         {{/if}}
                                                                     {{/each}}
                                                                     
                                                                     
                                                                 {{/if}}
                                                             {{else}}
-                                                                <td class="text-right text-success">{{ formatPrice item.fields.Cost }}</td>
-                                                                <td class="text-right text-success">{{ formatPrice item.fields.TotalCost }}</td>
+                                                                <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Cost }}</a></td>
+                                                                <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.fields.TotalCost }}</a></td>
                                                                 <!-- <td class="text-right text-success">{{ formatPrice item.fields.Cost }}</td>
                                                                 <td class="text-right text-success">{{ formatPrice item.fields.TotalCost }}</td> -->
 

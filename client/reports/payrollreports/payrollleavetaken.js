@@ -499,6 +499,14 @@ Template.payrollleavetaken.events({
     templateObject.getLeaveTakenReportData(null, null, true);
   },
 
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
+  }
   // // CURRENCY MODULE //
   // "click .fx-rate-btn": async (e) => {
   //   await loadCurrency();
@@ -562,6 +570,13 @@ Template.payrollleavetaken.helpers({
   },
   records: () => {
     return Template.instance().records.get();
+  },
+  redirectionType(item) {
+    if(item.PayDate === 'PO') {
+      return '/purchaseordercard?id=' + item.Id;
+    } else {
+      return '#noInfoFound';
+    }
   },
   formatPrice( amount ){
     let utilityService = new UtilityService();
