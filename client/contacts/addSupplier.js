@@ -1751,20 +1751,14 @@ Template.supplierscard.events({
         let sltShippingMethodName =  '';
         let notes =  $('#txaNotes').val()||'';
         let suppaccountno =  $('#suppAccountNo').val()||'';
-        // let bankName = $('#edtBankName').val();
-        // let branchName = $('#edtBranchName').val();
-        // let branchCode = $('#edtBranchCode').val();
-        // let bankAccountNumber = $('#edtBankAccountNumber').val();
-        // let accountName = $('#edtAccountName').val();
-        // let bankAccountType = $('#sltBankAccountType').val();
-        // let vatNumber = $('#edtVatNumber').val();
-        // let swiftCode = $('#edtSwiftCode').val();
+        let BankAccountName = $('#edtBankAccountName').val();
+        let BSB = $('#edtBsb').val();
+        let BankName = $('#edtBankName').val();
+        let BankAccountNo = $('#edtBankAccountNumber').val();
+        let SwiftCode = $('#edtSwiftCode').val();
+        let RoutingNumber = $('#edtRoutingNumber').val();
 
-        // BankAccountName: BankAccountName,
-        // BankCode: branchCode,
-        // BankAccountNo: bankAccountNumber,
-
-// add to custom field
+        // add to custom field
         let custField1 = $('#edtSaleCustField1').val()||'';
         let custField2 = $('#edtSaleCustField2').val()||'';
         let custField3 = $('#edtSaleCustField3').val()||'';
@@ -1849,7 +1843,10 @@ Template.supplierscard.events({
                     CUSTFLD2: custField2,
                     CUSTFLD3: custField3,
                     // CUSTFLD4: custField4,
-                    PublishOnVS1: true
+                    PublishOnVS1: true,
+                    BankAccountName: BankAccountName,
+                    BankAccountBSB: BSB,
+                    BankAccountNo: BankAccountNo,
 
                 }
             };
@@ -1900,8 +1897,10 @@ Template.supplierscard.events({
                         CUSTFLD2: custField2,
                         CUSTFLD3: custField3,
                         // CUSTFLD4: custField4,
-                        PublishOnVS1: true
-
+                        PublishOnVS1: true,
+                        BankAccountName: BankAccountName,
+                        BankAccountBSB: BSB,
+                        BankAccountNo: BankAccountNo,
                     }
                 };
             } else {
@@ -1946,7 +1945,10 @@ Template.supplierscard.events({
                         CUSTFLD2: custField2,
                         CUSTFLD3: custField3,
                         // CUSTFLD4: custField4,
-                        PublishOnVS1: true
+                        PublishOnVS1: true,
+                        BankAccountName: BankAccountName,
+                        BankAccountBSB: BSB,
+                        BankAccountNo: BankAccountNo,
                     }
                 };
             }

@@ -14,6 +14,8 @@ Template.ediintegrations.onRendered(function () {
 
 });
 
-Template.ediintegrations.events({
-  
+Template.ediintegrations.helpers({
+  checkModulePurchased: ( moduleName ) => {
+      return isAdditionalModulePurchased( moduleName );
+  }
 });
