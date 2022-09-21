@@ -70,7 +70,6 @@ Template.employeescard.onCreated(function () {
     templateObject.EmploymentBasisList = new ReactiveVar();
     templateObject.PayPeriodList  = new ReactiveVar();
     templateObject.TFNExemptionList = new ReactiveVar();
-
     templateObject.records = new ReactiveVar();
     templateObject.payTemplateEarningLineInfo = new ReactiveVar();
     templateObject.openingBalanceInfo = new ReactiveVar();
@@ -94,18 +93,12 @@ Template.employeescard.onCreated(function () {
     templateObject.employeerecords = new ReactiveVar([]);
     templateObject.empPriorities = new ReactiveVar([]);
     templateObject.recentTrasactions = new ReactiveVar([]);
-
     templateObject.datatablerecords = new ReactiveVar([]);
-
     templateObject.tableheaderrecords = new ReactiveVar([]);
-
     templateObject.isCloudUserPass = new ReactiveVar();
     templateObject.isCloudUserPass.set(false);
-
     templateObject.selectedproducts = new ReactiveVar([]);
-
     templateObject.selectedemployeeproducts = new ReactiveVar([]);
-
     templateObject.preferedPaymentList = new ReactiveVar();
     templateObject.termsList = new ReactiveVar();
     templateObject.deliveryMethodList = new ReactiveVar();
@@ -117,27 +110,20 @@ Template.employeescard.onCreated(function () {
     templateObject.uploadedFiles = new ReactiveVar([]);
     templateObject.attachmentCount = new ReactiveVar();
     templateObject.currentAttachLineID = new ReactiveVar();
-
     templateObject.imageFileData = new ReactiveVar();
-
     templateObject.countUserCreated = new ReactiveVar();
     templateObject.isUserAddition = new ReactiveVar();
     templateObject.isUserAddition.set(true);
     templateObject.calendarOptions = new ReactiveVar([]);
-
     templateObject.allrepservicedata = new ReactiveVar([]);
 });
 
 Template.employeescard.onRendered(function () {
-
     let begunDate;
     let currentDate;
     const erpGet = erpDb();
     LoadingOverlay.show();
-
-
     Session.setPersistent('cloudCurrentLogonName', '');
-
     //var splashArrayRepServiceList = new Array();
     let templateObject = Template.instance();
     let contactService = new ContactService();
@@ -147,7 +133,6 @@ Template.employeescard.onRendered(function () {
     let appointmentService = new AppointmentService();
     const records = [];
     let countries = [];
-
     let preferedPayments = [];
     let terms = [];
     let deliveryMethods = [];
@@ -383,10 +368,8 @@ Template.employeescard.onRendered(function () {
                     salestaxcode = result.customFields[1].taxvalue || loggedTaxCodeSalesInc;
                     templateObject.defaultsaletaxcode.set(salestaxcode);
                 }
-
             }
         });
-
     }, 500);
 
     setTimeout(function () {
@@ -415,7 +398,6 @@ Template.employeescard.onRendered(function () {
         if (error) {}
         else {
             if (result) {
-
                 for (let i = 0; i < result.customFields.length; i++) {
                     let customcolumn = result.customFields;
                     let columData = customcolumn[i].label;
@@ -426,10 +408,8 @@ Template.employeescard.onRendered(function () {
                     // let columnindex = customcolumn[i].index + 1;
                     $("th." + columnClass + "").html(columData);
                     $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
                 }
             }
-
         }
     });
 
@@ -441,13 +421,13 @@ Template.employeescard.onRendered(function () {
     }
 
     setTimeout(function () {
-    if (currentId.transTab == 'prod') {
-        $('.nav-link').removeClass('active');
-        $('.tabproductsservices').trigger('click');
-        $([document.documentElement, document.body]).animate({
-            scrollTop: $("#tab-productsservices").offset().top
-        }, 1000);
-    }
+        if (currentId.transTab == 'prod') {
+            $('.nav-link').removeClass('active');
+            $('.tabproductsservices').trigger('click');
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#tab-productsservices").offset().top
+            }, 1000);
+        }
     }, 500);
     
     // setTimeout(function () {
@@ -455,8 +435,7 @@ Template.employeescard.onRendered(function () {
     //         $('#mainTabs ul li a').removeClass('active');
     //         $(`.${activeParentTab}`).trigger('click');
     //     }
-    // }, 1000);   
-
+    // }, 1000);
 
     templateObject.getAllSelectedProducts = function (employeeName) {
         let productlist = [];
@@ -667,7 +646,6 @@ Template.employeescard.onRendered(function () {
             }, 0);
             });
     }
-
     templateObject.getAllProductData = function () {
         let productList = [];
         getVS1Data('TProductVS1').then(function (dataObject) {
@@ -721,7 +699,6 @@ Template.employeescard.onRendered(function () {
     templateObject.getAllProductData();
 
     contactService.getAllEmployeesPriority().then(function (data) {
-
         if (data.temployee.length > 0) {
             for (let x = 0; x < data.temployee.length; x++) {
                 if (data.temployee[x].CustFld5 != "" && data.temployee[x].CustFld5 != "0") {
@@ -734,7 +711,6 @@ Template.employeescard.onRendered(function () {
             templateObject.empPriorities.set(result);
         }
     });
-
     templateObject.getAllProductRecentTransactions = function (employeeName) {
         getVS1Data('TInvoiceEx').then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -1078,7 +1054,7 @@ Template.employeescard.onRendered(function () {
                     let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tinvoice[i].TotalAmountInc) || 0.00;
                     let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tinvoice[i].TotalPaid) || 0.00;
                     let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tinvoice[i].TotalBalance) || 0.00;
-                    var dataList = {
+                    const dataList = {
                         id: data.tinvoice[i].Id || '',
                         employee: data.tinvoice[i].EmployeeName || '',
                         sortdate: data.tinvoice[i].SaleDate != '' ? moment(data.tinvoice[i].SaleDate).format("YYYY/MM/DD") : data.tinvoice[i].SaleDate,
@@ -1114,20 +1090,16 @@ Template.employeescard.onRendered(function () {
                                     let columnindex = customcolumn[i].index + 1;
 
                                     if (hiddenColumn == true) {
-
                                         $("." + columnClass + "").addClass('hiddenColumn');
                                         $("." + columnClass + "").removeClass('showColumn');
                                     } else if (hiddenColumn == false) {
                                         $("." + columnClass + "").removeClass('hiddenColumn');
                                         $("." + columnClass + "").addClass('showColumn');
                                     }
-
                                 }
                             }
-
                         }
                     });
-
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
@@ -1352,201 +1324,7 @@ Template.employeescard.onRendered(function () {
                 getVS1Data('TEmployee').then(function (dataObject) {
                     if (dataObject.length == 0) {
                         contactService.getOneEmployeeDataEx(employeeID).then(function (data) {
-                            $('.fullScreenSpin').css('display', 'none');
-                            let lineItems = [];
-                            let empEmail = '';
-                            let overideset = data.fields.User.fields.CustFld14;
-                            if (overideset != "") {
-                                if (overideset = "true") {
-                                    overideset = true;
-                                } else {
-                                    overideset = false;
-                                }
-                                $("#overridesettings").prop('checked', overideset);
-                            } else {
-                                $("#overridesettings").prop('checked', false);
-                            }
-                            if (data.fields.Email.replace(/\s/g, '') == '') {
-                                if (data.fields.User != null) {
-                                    let emplineItems = [];
-                                    let emplineItemObj = {};
-                                    empEmail = data.fields.User.fields.LogonName;
-                                    Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
-                                    emplineItemObj = {
-                                        empID: data.fields.User.fields.EmployeeId || '',
-                                        EmployeeName: data.fields.User.fields.EmployeeName || '',
-                                        LogonName: data.fields.User.fields.LogonName || '',
-                                        PasswordHash: data.fields.User.fields.LogonPassword || ''
-                                    };
-                                    emplineItems.push(emplineItemObj);
-                                    templateObject.empuserrecord.set(emplineItems);
-                                } else {
-                                    let emplineItems = [];
-                                    let emplineItemObj = {};
-                                    emplineItemObj = {
-                                        empID: '',
-                                        EmployeeName: data.fields.EmployeeName,
-                                        LogonName: ''
-                                    };
-                                    emplineItems.push(emplineItemObj);
-                                    templateObject.empuserrecord.set(emplineItems);
-                                }
-
-                            } else {
-                                empEmail = data.fields.Email;
-                                if (data.fields.User != null) {
-                                    let emplineItems = [];
-                                    let emplineItemObj = {};
-                                    Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
-                                    emplineItemObj = {
-                                        empID: data.fields.User.fields.EmployeeId || '',
-                                        EmployeeName: data.fields.User.fields.EmployeeName || '',
-                                        LogonName: data.fields.User.fields.LogonName || '',
-                                        PasswordHash: data.fields.User.fields.LogonPassword || ''
-                                    };
-                                    emplineItems.push(emplineItemObj);
-                                    templateObject.empuserrecord.set(emplineItems);
-                                } else {
-                                    let emplineItems = [];
-                                    let emplineItemObj = {};
-                                    emplineItemObj = {
-                                        empID: '',
-                                        EmployeeName: data.fields.EmployeeName,
-                                        LogonName: ''
-                                    };
-                                    emplineItems.push(emplineItemObj);
-                                    templateObject.empuserrecord.set(emplineItems);
-                                }
-                            }
-
-                            let lineItemObj = {
-                                id: data.fields.ID,
-                                lid: 'Edit Employee',
-                                title: data.fields.Title || '',
-                                firstname: data.fields.FirstName || '',
-                                middlename: data.fields.MiddleName || '',
-                                lastname: data.fields.LastName || '',
-                                company: data.fields.EmployeeName || '',
-                                tfn: data.fields.TFN || '',
-                                priority: data.fields.CustFld5 || 0,
-                                color: data.fields.CustFld6 || "#00a3d3",
-                                email: empEmail || '',
-                                phone: data.fields.Phone || '',
-                                mobile: data.fields.Mobile || '',
-                                fax: data.fields.FaxNumber || '',
-                                skype: data.fields.SkypeName || '',
-                                gender: data.fields.Sex || '',
-                                dob: data.fields.DOB ? moment(data.fields.DOB).format('DD/MM/YYYY') : "",
-                                startdate: data.fields.DateStarted ? moment(data.fields.DateStarted).format('DD/MM/YYYY') : "",
-                                datefinished: data.fields.DateFinished ? moment(data.fields.DateFinished).format('DD/MM/YYYY') : "",
-                                position: data.fields.Position || '',
-                                streetaddress: data.fields.Street || '',
-                                city: data.fields.Street2 || '',
-                                state: data.fields.State || '',
-                                postalcode: data.fields.PostCode || '',
-                                country: data.fields.Country || LoggedCountry,
-                                custfield1: data.fields.CustFld1 || '',
-                                custfield2: data.fields.CustFld2 || '',
-                                custfield3: data.fields.CustFld3 || '',
-                                custfield4: data.fields.CustFld4 || '',
-                                custfield14: data.fields.CustFld14 || '',
-                                website: '',
-                                notes: data.fields.Notes || '',
-                                dashboardOptions: data.fields.CustFld11 || '',
-                                salesQuota: data.fields.CustFld12 || ''
-                            };
-                            templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
-
-                            templateObject.records.set(lineItemObj);
-                            setTimeout(function () {
-                              if(data.fields.CustFld7 == "true"){
-                                $("#productCostPayRate").prop("checked", true);
-                              }else{
-                                $("#productCostPayRate").prop("checked", false);
-                              }
-
-                              if(data.fields.CustFld8 == "true" || data.fields.CustFld8 == ""){
-                                $("#addAllProducts").prop("checked", true);
-                                $('.activeProductEmployee').css('display', 'none');
-                              }else{
-                                $("#addAllProducts").prop("checked", false);
-                                $('.activeProductEmployee').css('display', 'block');
-                              }
-                            }, 500);
-                            if (currentId.addvs1user == "true") {
-                                setTimeout(function () {
-                                    $('.employeeTab').trigger('click');
-                                    $('.addvs1usertab').trigger('click');
-                                    $('#cloudEmpEmailAddress').focus();
-                                }, 100);
-                            }
-
-                            if ((currentId.addvs1user == "true") && (currentId.id)) {
-                                // swal("Please ensure the employee has a email and password.", "", "info");
-                                if (useData[i].fields.User != null) {
-                                    swal({
-                                        title: 'User currently has an Existing Login.',
-                                        text: '',
-                                        type: 'info',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.value) {
-                                            $('#cloudEmpEmailAddress').focus();
-                                            $('.modal-backdrop').css('display', 'none');
-                                        } else if (result.dismiss === 'cancel') {
-                                            $('.modal-backdrop').css('display', 'none');
-                                        }
-                                    });
-                                } else {
-                                    swal({
-                                        title: 'Please ensure the employee has a email and password.',
-                                        text: '',
-                                        type: 'info',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.value) {
-                                            $('#cloudEmpEmailAddress').focus();
-                                            $('.modal-backdrop').css('display', 'none');
-                                        } else if (result.dismiss === 'cancel') {
-                                            $('.modal-backdrop').css('display', 'none');
-                                        }
-                                    });
-                                }
-
-                            }
-                            /* START attachment */
-                            templateObject.attachmentCount.set(0);
-                            if (data.fields.Attachments) {
-                                if (data.fields.Attachments.length) {
-                                    templateObject.attachmentCount.set(data.fields.Attachments.length);
-                                    templateObject.uploadedFiles.set(data.fields.Attachments);
-
-                                }
-                            }
-                            /* END  attachment */
-
-                            //templateObject.getAllProductRecentTransactions(data.fields.EmployeeName);
-                            // $('.fullScreenSpin').css('display','none');
-                            setTimeout(function () {
-                                var rowCount = $('.results tbody tr').length;
-                                $('.counter').text(rowCount + ' items');
-                                $('#cloudEmpName').val(data.fields.EmployeeName);
-                                $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
-                                    showOn: 'button',
-                                    buttonText: 'Show Date',
-                                    buttonImageOnly: true,
-                                    buttonImage: '/img/imgCal2.png',
-                                    dateFormat: 'dd/mm/yy',
-                                    showOtherMonths: true,
-                                    selectOtherMonths: true,
-                                    changeMonth: true,
-                                    changeYear: true,
-                                    yearRange: "-90:+10",
-                                });
-                                // $('.fullScreenSpin').css('display','none');
-                            }, 500);
+                            setEmployeeData(data);
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
@@ -1555,579 +1333,18 @@ Template.employeescard.onRendered(function () {
                         for (let i = 0; i < useData.length; i++) {
                             if (parseInt(useData[i].fields.ID) === parseInt(employeeID)) {
                                 added = true;
-                                $('.fullScreenSpin').css('display', 'none');
-                                let lineItems = [];
-                                let empEmail = '';
-                                let overideset = useData[i].fields.CustFld14;
-
-
-                            // tempcode
-                              //   setTimeout(function () {// add to custom field
-
-                              //     $('#edtSaleCustField1').val(useData[i].fields.CustFld1);
-                              //     $('#edtSaleCustField2').val(useData[i].fields.CustFld2);
-                              //     $('#edtSaleCustField3').val(useData[i].fields.CustFld3);
-                              // }, 5500);
-
-                                if (useData[i].fields.Email.replace(/\s/g, '') == '') {
-                                    if (useData[i].fields.User != null) {
-                                        let emplineItems = [];
-                                        let emplineItemObj = {};
-                                        empEmail = useData[i].fields.User.fields.LogonName;
-                                        Session.setPersistent('cloudCurrentLogonName', useData[i].fields.User.fields.LogonName);
-                                        emplineItemObj = {
-                                            empID: useData[i].fields.User.fields.EmployeeId || '',
-                                            EmployeeName: useData[i].fields.User.fields.EmployeeName || '',
-                                            LogonName: useData[i].fields.User.fields.LogonName || '',
-                                            PasswordHash: useData[i].fields.User.fields.LogonPassword || ''
-                                        };
-                                        emplineItems.push(emplineItemObj);
-                                        templateObject.empuserrecord.set(emplineItems);
-                                    } else {
-                                        let emplineItems = [];
-                                        let emplineItemObj = {};
-                                        emplineItemObj = {
-                                            empID: '',
-                                            EmployeeName: useData[i].fields.EmployeeName,
-                                            LogonName: ''
-                                        };
-                                        emplineItems.push(emplineItemObj);
-                                        templateObject.empuserrecord.set(emplineItems);
-                                    }
-
-                                } else {
-                                    empEmail = useData[i].fields.Email;
-                                    if (useData[i].fields.User != null) {
-                                        let emplineItems = [];
-                                        let emplineItemObj = {};
-                                        Session.setPersistent('cloudCurrentLogonName', useData[i].fields.User.fields.LogonName);
-                                        emplineItemObj = {
-                                            empID: useData[i].fields.User.fields.EmployeeId || '',
-                                            EmployeeName: useData[i].fields.User.fields.EmployeeName || '',
-                                            LogonName: useData[i].fields.User.fields.LogonName || '',
-                                            PasswordHash: useData[i].fields.User.fields.LogonPassword || ''
-                                        };
-                                        emplineItems.push(emplineItemObj);
-                                        // templateObject.empuserrecord.set(emplineItems);
-                                    } else {
-                                        let emplineItems = [];
-                                        let emplineItemObj = {};
-                                        emplineItemObj = {
-                                            empID: '',
-                                            EmployeeName: useData[i].fields.EmployeeName,
-                                            LogonName: ''
-                                        };
-                                        emplineItems.push(emplineItemObj);
-                                        templateObject.empuserrecord.set(emplineItems);
-                                    }
-                                }
-
-                                let lineItemObj = {
-                                    id: useData[i].fields.ID,
-                                    lid: 'Edit Employee',
-                                    title: useData[i].fields.Title || '',
-                                    firstname: useData[i].fields.FirstName || '',
-                                    middlename: useData[i].fields.MiddleName || '',
-                                    lastname: useData[i].fields.LastName || '',
-                                    company: useData[i].fields.EmployeeName || '',
-                                    // company: "BBB",
-                                    tfn: useData[i].fields.TFN || '',
-                                    priority: useData[i].fields.CustFld5 || 0,
-                                    color: useData[i].fields.CustFld6 || "#00a3d3",
-                                    email: empEmail || '',
-                                    phone: useData[i].fields.Phone || '',
-                                    mobile: useData[i].fields.Mobile || '',
-                                    fax: useData[i].fields.FaxNumber || '',
-                                    skype: useData[i].fields.SkypeName || '',
-                                    gender: useData[i].fields.Sex || '',
-                                    dob: useData[i].fields.DOB ? moment(useData[i].fields.DOB).format('DD/MM/YYYY') : "",
-                                    startdate: useData[i].fields.DateStarted ? moment(useData[i].fields.DateStarted).format('DD/MM/YYYY') : "",
-                                    datefinished: useData[i].fields.DateFinished ? moment(useData[i].fields.DateFinished).format('DD/MM/YYYY') : "",
-                                    position: useData[i].fields.Position || '',
-                                    streetaddress: useData[i].fields.Street || '',
-                                    city: useData[i].fields.Street2 || '',
-                                    state: useData[i].fields.State || '',
-                                    postalcode: useData[i].fields.PostCode || '',
-                                    country: useData[i].fields.Country || LoggedCountry,
-                                    custfield1: useData[i].fields.CustFld1 || '',
-                                    custfield2: useData[i].fields.CustFld2 || '',
-                                    custfield3: useData[i].fields.CustFld3 || '',
-                                    custfield4: useData[i].fields.CustFld4 || '',
-                                    custfield14: useData[i].fields.CustFld14 || '',
-                                    website: '',
-                                    notes: useData[i].fields.Notes || '',
-                                    dashboardOptions: useData[i].fields.CustFld11 || '',
-                                    salesQuota: useData[i].fields.CustFld12 || ''
-                                };
-                                templateObject.getEmployeeProfileImageData(useData[i].fields.EmployeeName);
-
-                                templateObject.records.set(lineItemObj);
-                                if (currentId.addvs1user == "true") {
-                                    setTimeout(function () {
-                                        $('.employeeTab').trigger('click');
-                                        $('.addvs1usertab').trigger('click');
-                                        $('#cloudEmpEmailAddress').focus();
-                                    }, 100);
-                                }
-                                setTimeout(function () {
-                                    if (overideset != "") {
-                                        if (overideset == "true") {
-                                            $("#overridesettings").prop('checked', true);
-                                        } else {
-                                            $("#overridesettings").prop('checked', false);
-                                        }
-                                    } else {
-                                        $("#overridesettings").prop('checked', false);
-                                    }
-
-                                }, 1000);
-
-                                setTimeout(function () {
-                                    if(useData[i].fields.CustFld7 == "true"){
-                                        $("#productCostPayRate").prop("checked", true);
-                                    } else {
-                                        $("#productCostPayRate").prop("checked", false);
-                                    }
-
-                                    if(useData[i].fields.CustFld8 == "true" || useData[i].fields.CustFld8 == ""){
-                                        $("#addAllProducts").prop("checked", true);
-                                        $('.activeProductEmployee').css('display', 'none');
-                                    } else {
-                                        $("#addAllProducts").prop("checked", false);
-                                        $('.activeProductEmployee').css('display', 'block');
-                                    }
-                                }, 500);
-                                if ((currentId.addvs1user == "true") && (currentId.id)) {
-                                    // swal("Please ensure the employee has a email and password.", "", "info");
-
-                                    if (useData[i].fields.User != null) {
-                                        swal({
-                                            title: 'User currently has an Existing Login.',
-                                            text: '',
-                                            type: 'info',
-                                            showCancelButton: false,
-                                            confirmButtonText: 'OK'
-                                        }).then((result) => {
-                                            if (result.value) {
-                                                $('#cloudEmpEmailAddress').focus();
-                                                $('.modal-backdrop').css('display', 'none');
-                                            } else if (result.dismiss === 'cancel') {
-                                                $('.modal-backdrop').css('display', 'none');
-                                            }
-                                        });
-                                    } else {
-                                        swal({
-                                            title: 'Please ensure the employee has a email and password.',
-                                            text: '',
-                                            type: 'info',
-                                            showCancelButton: false,
-                                            confirmButtonText: 'OK'
-                                        }).then((result) => {
-                                            if (result.value) {
-                                                $('#cloudEmpEmailAddress').focus();
-                                                $('.modal-backdrop').css('display', 'none');
-                                            } else if (result.dismiss === 'cancel') {
-                                                $('.modal-backdrop').css('display', 'none');
-                                            }
-                                        });
-                                    }
-
-                                }
-                                /* START attachment */
-                                templateObject.attachmentCount.set(0);
-                                if (useData[i].fields.Attachments) {
-                                    if (useData[i].fields.Attachments.length) {
-                                        templateObject.attachmentCount.set(useData[i].fields.Attachments.length);
-                                        templateObject.uploadedFiles.set(useData[i].fields.Attachments);
-
-                                    }
-                                }
-                                /* END  attachment */
-
-                                //templateObject.getAllProductRecentTransactions(useData[i].fields.EmployeeName);
-                                // $('.fullScreenSpin').css('display','none');
-                                setTimeout(function () {
-                                    const rowCount = $('.results tbody tr').length;
-                                    $('.counter').text(rowCount + ' items');
-                                    $('#cloudEmpName').val(useData[i].fields.EmployeeName);
-                                    $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
-                                        showOn: 'button',
-                                        buttonText: 'Show Date',
-                                        buttonImageOnly: true,
-                                        buttonImage: '/img/imgCal2.png',
-                                        dateFormat: 'dd/mm/yy',
-                                        showOtherMonths: true,
-                                        selectOtherMonths: true,
-                                        changeMonth: true,
-                                        changeYear: true,
-                                        yearRange: "-90:+10",
-                                    });
-                                    // $('.fullScreenSpin').css('display','none');
-                                }, 500);
-
+                                setEmployeeData(useData[i]);
                             }
                         }
-
                         if (!added) {
                             contactService.getOneEmployeeDataEx(employeeID).then(function (data) {
-                                $('.fullScreenSpin').css('display', 'none');
-                                let lineItems = [];
-                                let empEmail = '';
-
-                                if (data.fields.Email.replace(/\s/g, '') == '') {
-                                    if (data.fields.User != null) {
-                                        let emplineItems = [];
-                                        let emplineItemObj = {};
-                                        empEmail = data.fields.User.fields.LogonName;
-                                        Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
-                                        emplineItemObj = {
-                                            empID: data.fields.User.fields.EmployeeId || '',
-                                            EmployeeName: data.fields.User.fields.EmployeeName || '',
-                                            LogonName: data.fields.User.fields.LogonName || '',
-                                            PasswordHash: data.fields.User.fields.LogonPassword || ''
-                                        };
-                                        emplineItems.push(emplineItemObj);
-                                        templateObject.empuserrecord.set(emplineItems);
-                                    } else {
-                                        let emplineItems = [];
-                                        let emplineItemObj = {};
-                                        emplineItemObj = {
-                                            empID: '',
-                                            EmployeeName: data.fields.EmployeeName,
-                                            LogonName: ''
-                                        };
-                                        emplineItems.push(emplineItemObj);
-                                        templateObject.empuserrecord.set(emplineItems);
-                                    }
-
-                                } else {
-                                    empEmail = data.fields.Email;
-                                    if (data.fields.User != null) {
-                                        let emplineItems = [];
-                                        let emplineItemObj = {};
-                                        Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
-                                        emplineItemObj = {
-                                            empID: data.fields.User.fields.EmployeeId || '',
-                                            EmployeeName: data.fields.User.fields.EmployeeName || '',
-                                            LogonName: data.fields.User.fields.LogonName || '',
-                                            PasswordHash: data.fields.User.fields.LogonPassword || ''
-                                        };
-                                        emplineItems.push(emplineItemObj);
-                                        templateObject.empuserrecord.set(emplineItems);
-                                    } else {
-                                        let emplineItems = [];
-                                        let emplineItemObj = {};
-                                        emplineItemObj = {
-                                            empID: '',
-                                            EmployeeName: data.fields.EmployeeName,
-                                            LogonName: ''
-                                        };
-                                        emplineItems.push(emplineItemObj);
-                                        templateObject.empuserrecord.set(emplineItems);
-                                    }
-                                }
-
-                                let lineItemObj = {
-                                    id: data.fields.ID,
-                                    lid: 'Edit Employee',
-                                    title: data.fields.Title || '',
-                                    firstname: data.fields.FirstName || '',
-                                    middlename: data.fields.MiddleName || '',
-                                    lastname: data.fields.LastName || '',
-                                    company: data.fields.EmployeeName || '',
-                                    tfn: data.fields.TFN || '',
-                                    priority: data.fields.CustFld5 || 0,
-                                    color: data.fields.CustFld6 || "#00a3d3",
-                                    email: empEmail || '',
-                                    phone: data.fields.Phone || '',
-                                    mobile: data.fields.Mobile || '',
-                                    fax: data.fields.FaxNumber || '',
-                                    skype: data.fields.SkypeName || '',
-                                    gender: data.fields.Sex || '',
-                                    dob: data.fields.DOB ? moment(data.fields.DOB).format('DD/MM/YYYY') : "",
-                                    startdate: data.fields.DateStarted ? moment(data.fields.DateStarted).format('DD/MM/YYYY') : "",
-                                    datefinished: data.fields.DateFinished ? moment(data.fields.DateFinished).format('DD/MM/YYYY') : "",
-                                    position: data.fields.Position || '',
-                                    streetaddress: data.fields.Street || '',
-                                    city: data.fields.Street2 || '',
-                                    state: data.fields.State || '',
-                                    postalcode: data.fields.PostCode || '',
-                                    country: data.fields.Country || LoggedCountry,
-                                    custfield1: data.fields.CustFld1 || '',
-                                    custfield2: data.fields.CustFld2 || '',
-                                    custfield3: data.fields.CustFld3 || '',
-                                    custfield4: data.fields.CustFld4 || '',
-                                    custfield14: data.fields.CustFld14 || '',
-                                    website: '',
-                                    notes: data.fields.Notes || '',
-                                    dashboardOptions: data.fields.CustFld11 || '',
-                                    salesQuota: data.fields.CustFld12 || ''
-
-                                };
-                                templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
-
-                                templateObject.records.set(lineItemObj);
-                                if (currentId.addvs1user == "true") {
-                                    setTimeout(function () {
-                                        $('.employeeTab').trigger('click');
-                                        $('.addvs1usertab').trigger('click');
-                                        $('#cloudEmpEmailAddress').focus();
-                                    }, 100);
-                                }
-
-                                if ((currentId.addvs1user == "true") && (currentId.id)) {
-                                    // swal("Please ensure the employee has a email and password.", "", "info");
-                                    if (useData[i].fields.User != null) {
-                                        swal({
-                                            title: 'User currently has an Existing Login.',
-                                            text: '',
-                                            type: 'info',
-                                            showCancelButton: false,
-                                            confirmButtonText: 'OK'
-                                        }).then((result) => {
-                                            if (result.value) {
-                                                $('#cloudEmpEmailAddress').focus();
-                                                $('.modal-backdrop').css('display', 'none');
-                                            } else if (result.dismiss === 'cancel') {
-                                                $('.modal-backdrop').css('display', 'none');
-                                            }
-                                        });
-                                    } else {
-                                        swal({
-                                            title: 'Please ensure the employee has a email and password.',
-                                            text: '',
-                                            type: 'info',
-                                            showCancelButton: false,
-                                            confirmButtonText: 'OK'
-                                        }).then((result) => {
-                                            if (result.value) {
-                                                $('#cloudEmpEmailAddress').focus();
-                                                $('.modal-backdrop').css('display', 'none');
-                                            } else if (result.dismiss === 'cancel') {
-                                                $('.modal-backdrop').css('display', 'none');
-                                            }
-                                        });
-                                    }
-                                }
-                                /* START attachment */
-                                templateObject.attachmentCount.set(0);
-                                if (data.fields.Attachments) {
-                                    if (data.fields.Attachments.length) {
-                                        templateObject.attachmentCount.set(data.fields.Attachments.length);
-                                        templateObject.uploadedFiles.set(data.fields.Attachments);
-
-                                    }
-                                }
-                                /* END  attachment */
-
-                                //templateObject.getAllProductRecentTransactions(data.fields.EmployeeName);
-                                // $('.fullScreenSpin').css('display','none');
-                                setTimeout(function () {
-                                    var rowCount = $('.results tbody tr').length;
-                                    $('.counter').text(rowCount + ' items');
-                                    $('#cloudEmpName').val(data.fields.EmployeeName);
-                                    $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
-                                        showOn: 'button',
-                                        buttonText: 'Show Date',
-                                        buttonImageOnly: true,
-                                        buttonImage: '/img/imgCal2.png',
-                                        dateFormat: 'dd/mm/yy',
-                                        showOtherMonths: true,
-                                        selectOtherMonths: true,
-                                        changeMonth: true,
-                                        changeYear: true,
-                                        yearRange: "-90:+10",
-                                    });
-                                     $('.fullScreenSpin').css('display','none');
-                                }, 500);
+                                setEmployeeData(data);
                             });
                         }
                     }
                 }).catch(function (err) {
                     contactService.getOneEmployeeDataEx(employeeID).then(function (data) {
-                        $('.fullScreenSpin').css('display', 'none');
-                        let lineItems = [];
-                        let empEmail = '';
-
-                        if (data.fields.Email.replace(/\s/g, '') == '') {
-                            if (data.fields.User != null) {
-                                let emplineItems = [];
-                                let emplineItemObj = {};
-                                empEmail = data.fields.User.fields.LogonName;
-                                Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
-                                emplineItemObj = {
-                                    empID: data.fields.User.fields.EmployeeId || '',
-                                    EmployeeName: data.fields.User.fields.EmployeeName || '',
-                                    LogonName: data.fields.User.fields.LogonName || '',
-                                    PasswordHash: data.fields.User.fields.LogonPassword || ''
-                                };
-                                emplineItems.push(emplineItemObj);
-                                templateObject.empuserrecord.set(emplineItems);
-                            } else {
-                                let emplineItems = [];
-                                let emplineItemObj = {};
-                                emplineItemObj = {
-                                    empID: '',
-                                    EmployeeName: data.fields.EmployeeName,
-                                    LogonName: ''
-                                };
-                                emplineItems.push(emplineItemObj);
-                                templateObject.empuserrecord.set(emplineItems);
-                            }
-
-                        } else {
-                            empEmail = data.fields.Email;
-                            if (data.fields.User != null) {
-                                let emplineItems = [];
-                                let emplineItemObj = {};
-                                Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
-                                emplineItemObj = {
-                                    empID: data.fields.User.fields.EmployeeId || '',
-                                    EmployeeName: data.fields.User.fields.EmployeeName || '',
-                                    LogonName: data.fields.User.fields.LogonName || '',
-                                    PasswordHash: data.fields.User.fields.LogonPassword || ''
-                                };
-                                emplineItems.push(emplineItemObj);
-                                templateObject.empuserrecord.set(emplineItems);
-                            } else {
-                                let emplineItems = [];
-                                let emplineItemObj = {};
-                                emplineItemObj = {
-                                    empID: '',
-                                    EmployeeName: data.fields.EmployeeName,
-                                    LogonName: ''
-                                };
-                                emplineItems.push(emplineItemObj);
-                                templateObject.empuserrecord.set(emplineItems);
-                            }
-                        }
-
-                        let lineItemObj = {
-                            id: data.fields.ID,
-                            lid: 'Edit Employee',
-                            title: data.fields.Title || '',
-                            firstname: data.fields.FirstName || '',
-                            middlename: data.fields.MiddleName || '',
-                            lastname: data.fields.LastName || '',
-                            company: data.fields.EmployeeName || '',
-                            tfn: data.fields.TFN || '',
-                            priority: data.fields.CustFld5 || 0,
-                            color: data.fields.CustFld6 || "#00a3d3",
-                            email: empEmail || '',
-                            phone: data.fields.Phone || '',
-                            mobile: data.fields.Mobile || '',
-                            fax: data.fields.FaxNumber || '',
-                            skype: data.fields.SkypeName || '',
-                            gender: data.fields.Sex || '',
-                            dob: data.fields.DOB ? moment(data.fields.DOB).format('DD/MM/YYYY') : "",
-                            startdate: data.fields.DateStarted ? moment(data.fields.DateStarted).format('DD/MM/YYYY') : "",
-                            datefinished: data.fields.DateFinished ? moment(data.fields.DateFinished).format('DD/MM/YYYY') : "",
-                            position: data.fields.Position || '',
-                            streetaddress: data.fields.Street || '',
-                            city: data.fields.Street2 || '',
-                            state: data.fields.State || '',
-                            postalcode: data.fields.PostCode || '',
-                            country: data.fields.Country || LoggedCountry,
-                            custfield1: data.fields.CustFld1 || '',
-                            custfield2: data.fields.CustFld2 || '',
-                            custfield3: data.fields.CustFld3 || '',
-                            custfield4: data.fields.CustFld4 || '',
-                            website: '',
-                            notes: data.fields.Notes || '',
-                            dashboardOptions: data.fields.CustFld11 || '',
-                            salesQuota: data.fields.CustFld12 || ''
-
-                        };
-                        templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
-                        setTimeout(function () {
-                          if(data.fields.CustFld7 == "true"){
-                            $("#productCostPayRate").prop("checked", true);
-                          }else{
-                            $("#productCostPayRate").prop("checked", false);
-                          }
-
-                          if(data.fields.CustFld8 == "true" || data.fields.CustFld8 == ""){
-                            $("#addAllProducts").prop("checked", true);
-                            $('.activeProductEmployee').css('display', 'none');
-                          }else{
-                            $("#addAllProducts").prop("checked", false);
-                            $('.activeProductEmployee').css('display', 'block');
-                          }
-                        }, 500);
-                        templateObject.records.set(lineItemObj);
-                        if (currentId.addvs1user == "true") {
-                            setTimeout(function () {
-                                $('.employeeTab').trigger('click');
-                                $('.addvs1usertab').trigger('click');
-                                $('#cloudEmpEmailAddress').focus();
-                            }, 100);
-                        }
-
-                        if ((currentId.addvs1user == "true") && (currentId.id)) {
-                            // swal("Please ensure the employee has a email and password.", "", "info");
-                            if (useData[i].fields.User != null) {
-                                swal({
-                                    title: 'User currently has an Existing Login.',
-                                    text: '',
-                                    type: 'info',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'OK'
-                                }).then((result) => {
-                                    if (result.value) {
-                                        $('#cloudEmpEmailAddress').focus();
-                                        $('.modal-backdrop').css('display', 'none');
-                                    } else if (result.dismiss === 'cancel') {
-                                        $('.modal-backdrop').css('display', 'none');
-                                    }
-                                });
-                            } else {
-                                swal({
-                                    title: 'Please ensure the employee has a email and password.',
-                                    text: '',
-                                    type: 'info',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'OK'
-                                }).then((result) => {
-                                    if (result.value) {
-                                        $('#cloudEmpEmailAddress').focus();
-                                        $('.modal-backdrop').css('display', 'none');
-                                    } else if (result.dismiss === 'cancel') {
-                                        $('.modal-backdrop').css('display', 'none');
-                                    }
-                                });
-                            }
-                        }
-                        /* START attachment */
-                        templateObject.attachmentCount.set(0);
-                        if (data.fields.Attachments) {
-                            if (data.fields.Attachments.length) {
-                                templateObject.attachmentCount.set(data.fields.Attachments.length);
-                                templateObject.uploadedFiles.set(data.fields.Attachments);
-
-                            }
-                        }
-                        /* END  attachment */
-
-                        //templateObject.getAllProductRecentTransactions(data.fields.EmployeeName);
-                        // $('.fullScreenSpin').css('display','none');
-                        setTimeout(function () {
-                            var rowCount = $('.results tbody tr').length;
-                            $('.counter').text(rowCount + ' items');
-                            $('#cloudEmpName').val(data.fields.EmployeeName);
-                            $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
-                                showOn: 'button',
-                                buttonText: 'Show Date',
-                                buttonImageOnly: true,
-                                buttonImage: '/img/imgCal2.png',
-                                dateFormat: 'dd/mm/yy',
-                                showOtherMonths: true,
-                                selectOtherMonths: true,
-                                changeMonth: true,
-                                changeYear: true,
-                                yearRange: "-90:+10",
-                            });
-                            $('.fullScreenSpin').css('display','none');
-                        }, 500);
+                        setEmployeeData(data);
                     });
                 });
             }
@@ -2230,6 +1447,197 @@ Template.employeescard.onRendered(function () {
             }, 100);
         }
     }
+    function setEmployeeData(data) {
+        console.log(data);
+        $('.fullScreenSpin').css('display', 'none');
+        let lineItems = [];
+        let empEmail = '';
+        let overideset = data.fields.User.fields.CustFld14;
+        if (overideset != "") {
+            overideset = !!(overideset = "true");
+            $("#overridesettings").prop('checked', overideset);
+        } else {
+            $("#overridesettings").prop('checked', false);
+        }
+        if (data.fields.Email.replace(/\s/g, '') == '') {
+            if (data.fields.User != null) {
+                let emplineItems = [];
+                let emplineItemObj = {};
+                empEmail = data.fields.User.fields.LogonName;
+                Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                emplineItemObj = {
+                    empID: data.fields.User.fields.EmployeeId || '',
+                    EmployeeName: data.fields.User.fields.EmployeeName || '',
+                    LogonName: data.fields.User.fields.LogonName || '',
+                    PasswordHash: data.fields.User.fields.LogonPassword || ''
+                };
+                emplineItems.push(emplineItemObj);
+                templateObject.empuserrecord.set(emplineItems);
+            } else {
+                let emplineItems = [];
+                let emplineItemObj = {};
+                emplineItemObj = {
+                    empID: '',
+                    EmployeeName: data.fields.EmployeeName,
+                    LogonName: ''
+                };
+                emplineItems.push(emplineItemObj);
+                templateObject.empuserrecord.set(emplineItems);
+            }
+        } else {
+            empEmail = data.fields.Email;
+            if (data.fields.User != null) {
+                let emplineItems = [];
+                let emplineItemObj = {};
+                Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
+                emplineItemObj = {
+                    empID: data.fields.User.fields.EmployeeId || '',
+                    EmployeeName: data.fields.User.fields.EmployeeName || '',
+                    LogonName: data.fields.User.fields.LogonName || '',
+                    PasswordHash: data.fields.User.fields.LogonPassword || ''
+                };
+                emplineItems.push(emplineItemObj);
+                templateObject.empuserrecord.set(emplineItems);
+            } else {
+                let emplineItems = [];
+                let emplineItemObj = {};
+                emplineItemObj = {
+                    empID: '',
+                    EmployeeName: data.fields.EmployeeName,
+                    LogonName: ''
+                };
+                emplineItems.push(emplineItemObj);
+                templateObject.empuserrecord.set(emplineItems);
+            }
+        }
+
+        let lineItemObj = {
+            id: data.fields.ID,
+            lid: 'Edit Employee',
+            title: data.fields.Title || '',
+            firstname: data.fields.FirstName || '',
+            middlename: data.fields.MiddleName || '',
+            lastname: data.fields.LastName || '',
+            company: data.fields.EmployeeName || '',
+            tfn: data.fields.TFN || '',
+            priority: data.fields.CustFld5 || 0,
+            color: data.fields.CustFld6 || "#00a3d3",
+            email: empEmail || '',
+            phone: data.fields.Phone || '',
+            mobile: data.fields.Mobile || '',
+            fax: data.fields.FaxNumber || '',
+            skype: data.fields.SkypeName || '',
+            gender: data.fields.Sex || '',
+            dob: data.fields.DOB ? moment(data.fields.DOB).format('DD/MM/YYYY') : "",
+            startdate: data.fields.DateStarted ? moment(data.fields.DateStarted).format('DD/MM/YYYY') : "",
+            datefinished: data.fields.DateFinished ? moment(data.fields.DateFinished).format('DD/MM/YYYY') : "",
+            position: data.fields.Position || '',
+            streetaddress: data.fields.Street || '',
+            city: data.fields.Street2 || '',
+            state: data.fields.State || '',
+            postalcode: data.fields.PostCode || '',
+            country: data.fields.Country || LoggedCountry,
+            custfield1: data.fields.CustFld1 || '',
+            custfield2: data.fields.CustFld2 || '',
+            custfield3: data.fields.CustFld3 || '',
+            custfield4: data.fields.CustFld4 || '',
+            custfield14: data.fields.CustFld14 || '',
+            website: '',
+            notes: data.fields.Notes || '',
+            dashboardOptions: data.fields.CustFld11 || '',
+            salesQuota: data.fields.CustFld12 || ''
+        };
+        templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
+
+        templateObject.records.set(lineItemObj);
+        setTimeout(function () {
+            if (data.fields.CustFld7 == "true") {
+                $("#productCostPayRate").prop("checked", true);
+            } else {
+                $("#productCostPayRate").prop("checked", false);
+            }
+            if (data.fields.CustFld8 == "true" || data.fields.CustFld8 == ""){
+                $("#addAllProducts").prop("checked", true);
+                $('.activeProductEmployee').css('display', 'none');
+            } else {
+                $("#addAllProducts").prop("checked", false);
+                $('.activeProductEmployee').css('display', 'block');
+            }
+        }, 500);
+        if (currentId.addvs1user == "true") {
+            setTimeout(function () {
+                $('.employeeTab').trigger('click');
+                $('.addvs1usertab').trigger('click');
+                $('#cloudEmpEmailAddress').focus();
+            }, 100);
+        }
+
+        if ((currentId.addvs1user == "true") && (currentId.id)) {
+            // swal("Please ensure the employee has a email and password.", "", "info");
+            if (useData[i].fields.User != null) {
+                swal({
+                    title: 'User currently has an Existing Login.',
+                    text: '',
+                    type: 'info',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        $('#cloudEmpEmailAddress').focus();
+                        $('.modal-backdrop').css('display', 'none');
+                    } else if (result.dismiss === 'cancel') {
+                        $('.modal-backdrop').css('display', 'none');
+                    }
+                });
+            } else {
+                swal({
+                    title: 'Please ensure the employee has a email and password.',
+                    text: '',
+                    type: 'info',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        $('#cloudEmpEmailAddress').focus();
+                        $('.modal-backdrop').css('display', 'none');
+                    } else if (result.dismiss === 'cancel') {
+                        $('.modal-backdrop').css('display', 'none');
+                    }
+                });
+            }
+
+        }
+        /* START attachment */
+        templateObject.attachmentCount.set(0);
+        if (data.fields.Attachments) {
+            if (data.fields.Attachments.length) {
+                templateObject.attachmentCount.set(data.fields.Attachments.length);
+                templateObject.uploadedFiles.set(data.fields.Attachments);
+            }
+        }
+        /* END  attachment */
+
+        //templateObject.getAllProductRecentTransactions(data.fields.EmployeeName);
+        // $('.fullScreenSpin').css('display','none');
+        setTimeout(function () {
+            const rowCount = $('.results tbody tr').length;
+            $('.counter').text(rowCount + ' items');
+            $('#cloudEmpName').val(data.fields.EmployeeName);
+            $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
+                showOn: 'button',
+                buttonText: 'Show Date',
+                buttonImageOnly: true,
+                buttonImage: '/img/imgCal2.png',
+                dateFormat: 'dd/mm/yy',
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-90:+10",
+            });
+            // $('.fullScreenSpin').css('display','none');
+        }, 500);
+    }
 
     templateObject.getPreferedPaymentList = function () {
         getVS1Data('TPaymentMethod').then(function (dataObject) {
@@ -2239,7 +1647,6 @@ Template.employeescard.onRendered(function () {
                         preferedPayments.push(data.tpaymentmethodvs1[i].PaymentMethodName)
                     }
                     preferedPayments = _.sortBy(preferedPayments);
-
                     templateObject.preferedPaymentList.set(preferedPayments);
                 });
             } else {
@@ -2257,7 +1664,6 @@ Template.employeescard.onRendered(function () {
                     preferedPayments.push(data.tpaymentmethodvs1[i].PaymentMethodName)
                 }
                 preferedPayments = _.sortBy(preferedPayments);
-
                 templateObject.preferedPaymentList.set(preferedPayments);
             });
         });
@@ -2300,7 +1706,6 @@ Template.employeescard.onRendered(function () {
                     let lineItems = [];
                     let lineItemObj = {};
                     let totalUser = 0;
-
                     for (let i = 0; i < data.temployee.length; i++) {
                         let classname = '';
                         if (!isNaN(currentId.id)) {
@@ -2308,12 +1713,11 @@ Template.employeescard.onRendered(function () {
                                 classname = 'currentSelect';
                             }
                         }
-                        var dataList = {
+                        const dataList = {
                             id: data.temployee[i].fields.ID || '',
                             company: data.temployee[i].fields.EmployeeName || '',
                             classname: classname
                         };
-
                         if (data.temployee[i].fields.User != null) {
                             totalUser = i + 1;
                         }
@@ -2330,13 +1734,11 @@ Template.employeescard.onRendered(function () {
                     } else if ((cloudPackage === "PLUS") && (totalUser < 3)) {
                         templateObject.isUserAddition.set(false);
                     }
-
                     if(localStorage.getItem('EDatabase')){
-                    if(localStorage.getItem('EDatabase') == 'rapp_australia_pty_ltd'){
-                      templateObject.isUserAddition.set(false);
+                        if(localStorage.getItem('EDatabase') == 'rapp_australia_pty_ltd'){
+                          templateObject.isUserAddition.set(false);
+                        }
                     }
-                    };
-
                     templateObject.countUserCreated.set(totalUser);
                     templateObject.employeerecords.set(lineItems);
 
@@ -2355,7 +1757,6 @@ Template.employeescard.onRendered(function () {
                 let lineItems = [];
                 let lineItemObj = {};
                 let totalUser = 0;
-
                 for (let i = 0; i < useData.length; i++) {
                     let classname = '';
                     if (!isNaN(currentId.id)) {
@@ -2363,12 +1764,11 @@ Template.employeescard.onRendered(function () {
                             classname = 'currentSelect';
                         }
                     }
-                    var dataList = {
+                    const dataList = {
                         id: useData[i].fields.ID || '',
                         company: useData[i].fields.EmployeeName || '',
                         classname: classname
                     };
-
                     if (useData[i].fields.User != null) {
                         totalUser = i + 1;
                     }
@@ -2376,7 +1776,6 @@ Template.employeescard.onRendered(function () {
                         lineItems.push(dataList);
                     }
                 }
-
                 let cloudPackage = localStorage.getItem('vs1cloudlicenselevel');
                 if (cloudPackage === "Simple Start") {
                     templateObject.isUserAddition.set(true);
@@ -2387,30 +1786,23 @@ Template.employeescard.onRendered(function () {
                 }
 
                 if(localStorage.getItem('EDatabase')){
-                if(localStorage.getItem('EDatabase') == 'rapp_australia_pty_ltd'){
-                  templateObject.isUserAddition.set(false);
+                    if(localStorage.getItem('EDatabase') == 'rapp_australia_pty_ltd'){
+                      templateObject.isUserAddition.set(false);
+                    }
                 }
-                };
-
                 templateObject.countUserCreated.set(totalUser);
                 templateObject.employeerecords.set(lineItems);
-
                 if (templateObject.employeerecords.get()) {
-
                     setTimeout(function () {
                         $('.counter').text(lineItems.length + ' items');
-
                     }, 100);
                 }
-
             }
         }).catch(function (err) {
-
             contactService.getAllEmployeeSideData().then(function (data) {
                 let lineItems = [];
                 let lineItemObj = {};
                 let totalUser = 0;
-
                 for (let i = 0; i < data.temployee.length; i++) {
                     let classname = '';
                     if (!isNaN(currentId.id)) {
@@ -2418,12 +1810,11 @@ Template.employeescard.onRendered(function () {
                             classname = 'currentSelect';
                         }
                     }
-                    var dataList = {
+                    const dataList = {
                         id: data.temployee[i].fields.ID || '',
                         company: data.temployee[i].fields.EmployeeName || '',
                         classname: classname
                     };
-
                     if (data.temployee[i].fields.User != null) {
                         totalUser = i + 1;
                     }
@@ -2431,7 +1822,6 @@ Template.employeescard.onRendered(function () {
                         lineItems.push(dataList);
                     }
                 }
-
                 let cloudPackage = localStorage.getItem('vs1cloudlicenselevel');
                 if (cloudPackage === "Simple Start") {
                     templateObject.isUserAddition.set(true);
@@ -2440,27 +1830,20 @@ Template.employeescard.onRendered(function () {
                 } else if ((cloudPackage === "PLUS") && (totalUser < 3)) {
                     templateObject.isUserAddition.set(false);
                 }
-
                 if(localStorage.getItem('EDatabase')){
-                if(localStorage.getItem('EDatabase') == 'rapp_australia_pty_ltd'){
-                  templateObject.isUserAddition.set(false);
+                    if(localStorage.getItem('EDatabase') == 'rapp_australia_pty_ltd'){
+                        templateObject.isUserAddition.set(false);
+                    }
                 }
-                };
-
                 templateObject.countUserCreated.set(totalUser);
                 templateObject.employeerecords.set(lineItems);
-
                 if (templateObject.employeerecords.get()) {
-
                     setTimeout(function () {
                         $('.counter').text(lineItems.length + ' items');
-
                     }, 100);
                 }
-
             }).catch(function (err) {});
         });
-
     }
     templateObject.getEmployeesList();
 
@@ -3524,9 +2907,7 @@ Template.employeescard.onRendered(function () {
                     $(`#ptReimbursementAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(item.fields.Amount)|| 0.00 );
                 });
             }, 500);
-
         }
-
     };
 
     templateObject.getPayReiumbursementLines();
@@ -3778,7 +3159,6 @@ Template.employeescard.onRendered(function () {
                 }, 100);
             });
         }, 300);
-
     };
 
     templateObject.getAssignLeaveTypes();
@@ -4244,7 +3624,6 @@ Template.employeescard.onRendered(function () {
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
         }
-
     };
     templateObject.getPaySlips();
 
@@ -4481,7 +3860,7 @@ Template.employeescard.onRendered(function () {
                         }
                         let dataObject = await getVS1Data('TReimbursement');
                         if ( dataObject.length > 0) {
-                            data = JSON.parse(dataObject[0].data);
+                            let data = JSON.parse(dataObject[0].data);
                             let tReimbursement = data.treimbursement.filter((item) => {
                                 if( item.fields.ReimbursementName == searchName ){
                                     return item;
@@ -4507,7 +3886,7 @@ Template.employeescard.onRendered(function () {
 
     //On Click Earnings List
     $(document).on("click", "#tblEarnings tbody tr", function (e) {
-        var table = $(this);
+        const table = $(this);
         let earningsName = table.find(".colEarningsNames").text()||'';
         let earningsID = table.find(".colEarningsID").text()||'';
         let account = table.find(".colEarningsAccounts").text()||'';
@@ -4521,7 +3900,7 @@ Template.employeescard.onRendered(function () {
     });
     //On Click Deduction List
     $(document).on("click", "#tblDeductions tbody tr", function (e) {
-        var table = $(this);
+        const table = $(this);
         let deductionName = table.find(".colDeductionsNames").text()||'';
         let deductionID = table.find(".colDeductionsID").text()||'';
         let account = table.find(".colDeductionsAccounts").text()||'';
@@ -4535,7 +3914,7 @@ Template.employeescard.onRendered(function () {
     });
     //On Click Superannuation List
     $(document).on("click", "#tblSuperannuation tbody tr", function (e) {
-        var table = $(this);
+        const table = $(this);
         let name = table.find(".colSuperannuationName").text()||'';
         let ID = table.find(".colSuperannuationID").text()||'';
         let account = table.find(".colaccountname").text()||'';
@@ -4549,7 +3928,7 @@ Template.employeescard.onRendered(function () {
     });
     //On Click Superannuation List
     $(document).on("click", "#tblReimbursements tbody tr", function (e) {
-        var table = $(this);
+        const table = $(this);
         let name = table.find(".colReimbursementName").text()||'';
         let ID = table.find(".colReimbursementID").text()||'';
         let account = table.find(".colReimbursementAccount").text()||'';
@@ -5336,32 +4715,26 @@ Template.employeescard.events({
         let email = $('#edtEmailAddress').val() || '';
         let phone = $('#edtPhone').val() || '';
         let mobile = $('#edtMobile').val() || '';
-
         let fax = $('#edtFax').val() || '';
         let skype = $('#edtSkype').val() || '';
         let gender = $('#edtGender').val() || '';
         let employeeName = $('#edtCustomerCompany').val() || '';
-
-        var dateofbirthTime = new Date($("#dtDOB").datepicker("getDate"));
-        var startdateTime = new Date($("#dtStartingDate").datepicker("getDate"));
-
+        const dateofbirthTime = new Date($("#dtDOB").datepicker("getDate"));
+        const startdateTime = new Date($("#dtStartingDate").datepicker("getDate"));
         let dateofbirth = dateofbirthTime.getFullYear() + "-" + (dateofbirthTime.getMonth() + 1) + "-" + dateofbirthTime.getDate();
         let startdate = startdateTime.getFullYear() + "-" + (startdateTime.getMonth() + 1) + "-" + startdateTime.getDate();
-
         let employeeID = $('#edtEmployeeID').val();
         let position = $('#edtPosition').val();
         let webiste = $('#edtWebsite').val();
-
         let streetaddress = $('#edtStreetAddress').val();
         let city = $('#edtCity').val();
         let state = $('#edtState').val();
         let postalcode = $('#edtPostalCode').val();
         let country = $('#edtCountry').val();
-        if(mobile != '') {
+        if (mobile != '') {
             mobile = contactService.changeDialFormat(mobile, country);
         }
-
-        if(phone != '') {
+        if (phone != '') {
             phone = contactService.changeDialFormat(phone, country);
         }
 
@@ -5370,16 +4743,13 @@ Template.employeescard.events({
         let custField1 = $('#edtSaleCustField1').val()||'';
         let custField2 = $('#edtSaleCustField2').val()||'';
         let custField3 = $('#edtSaleCustField3').val()||'';
-
         let priorityData = $('#edtPriority').val() || '';
-
         let uploadedItems = templateObject.uploadedFiles.get();
-
         let notes = $('#txaNotes').val();
-        var url = FlowRouter.current().path;
-        var getemp_id = url.split('?id=');
+        const url = FlowRouter.current().path;
+        const getemp_id = url.split('?id=');
         //var currentEmployee = getemp_id[getemp_id.length-1];
-        var currentEmployee = 0;
+        let currentEmployee = 0;
         let overrideGlobalCalendarSet = "false";
         let useProductCostaspayRate = "false";
         let includeAllProducts = "false";
@@ -5387,15 +4757,12 @@ Template.employeescard.events({
         if ($('#overridesettings').is(':checked')) {
             overrideGlobalCalendarSet = "true";
         }
-
         if ($('#productCostPayRate').is(':checked')) {
             useProductCostaspayRate = "true";
         }
-
         if ($('#addAllProducts').is(':checked')) {
             includeAllProducts = "true";
         }
-
         let currentId = FlowRouter.current().queryParams;
 
         if ((priorityData.replace(/\s/g, '') != '') && (priorityData.replace(/\s/g, '') != 0)) {
@@ -5427,7 +4794,6 @@ Template.employeescard.events({
         let edtSalesQuota = $('#edtSalesQuota').val()||'';
         edtSalesQuota = utilityService.removeCurrency(edtSalesQuota);
         if (!isNaN(currentId.id)) {
-
             currentEmployee = parseInt(currentId.id);
             objDetails = {
                 type: "TEmployeeEx",

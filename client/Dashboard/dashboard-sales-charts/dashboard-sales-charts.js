@@ -5,8 +5,6 @@ require('highcharts/modules/exporting')(highCharts);
 require('highcharts/highcharts-more')(highCharts);
 let _ = require("lodash");
 
-
-
 Template.dashboardSalesCharts.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.employees = new ReactiveVar([]);
@@ -50,7 +48,6 @@ Template.dashboardSalesCharts.onRendered(function () {
                 if(moment(tquote.SaleDate).unix() > start2ndLastQuater && moment(tquote.SaleDate).unix() < endSecondLastQuater) {
                     totalQuotesValue2ndLastQuater += tquote.Balance;
                 }
-
                 if(moment(tquote.SaleDate).unix() > startLastQuater && moment(tquote.SaleDate).unix() < endLastQuater) {
                     totalQuotesValueLastQuater += tquote.Balance;
                 }
@@ -70,7 +67,6 @@ Template.dashboardSalesCharts.onRendered(function () {
                 if(moment(tsale.SaleDate).unix() > start2ndLastQuater && moment(tsale.SaleDate).unix() < endSecondLastQuater) {
                     totalSalesValue2ndLastQuater += tsale.Balance;
                 }
-
                 if(moment(tsale.SaleDate).unix() > startLastQuater && moment(tsale.SaleDate).unix() < endLastQuater) {
                     totalSalesValueLastQuater += tsale.Balance;
                 }
@@ -96,18 +92,18 @@ Template.dashboardSalesCharts.onRendered(function () {
                 }
             });
         }
-        let leadsSorcesCount = _.map(_.keys(leadsSources), key => {
+        let leadsSourcesCount = _.map(_.keys(leadsSources), key => {
             return {totalCount: leadsSources[key], sourceName: key};
         });
-        leadsSorcesCount = _.sortBy(leadsSorcesCount, ['totalCount']).reverse().slice(0, 3);
+        leadsSourcesCount = _.sortBy(leadsSourcesCount, ['totalCount']).reverse().slice(0, 3);
         let sources = ['Total Leads'];
         let sourcesValues = [leadsCount6Months];
-        _.each(leadsSorcesCount, (sourceCount) => {
+        _.each(leadsSourcesCount, (sourceCount) => {
             sources.push(sourceCount.sourceName);
             sourcesValues.push(sourceCount.totalCount)
         });
-        renderOppertunitiesChart({sources, sourcesValues});
-    };
+        renderOpportunitiesChart({sources, sourcesValues});
+    }
 
     function renderComparisonChart({categories, quotaAmount, invoiceAmount, closedAmount}) {
         const series = [{
@@ -163,18 +159,17 @@ Template.dashboardSalesCharts.onRendered(function () {
         });
     }
 
-    function renderOppertunitiesChart({sources, sourcesValues}) {
-        highCharts.chart('opens-oppertunities-chart', {
+    function renderOpportunitiesChart({sources, sourcesValues}) {
+        highCharts.chart('opens-opportunities-chart', {
             series: [{
                 name: 'Leads Count',
                 data: sourcesValues
-
             }],
             chart: {
                 type: 'column'
             },
             title: {
-                text: 'Open Oppertunities by Stage'
+                text: 'Open Opportunities by Stage'
             },
             subtitle: {
                 text:''
@@ -196,7 +191,6 @@ Template.dashboardSalesCharts.onRendered(function () {
             }
         });
     }
-
     setTimeout(() => renderCharts(), 500);
 });
 

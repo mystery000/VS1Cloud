@@ -9,6 +9,7 @@ import '../lib/global/indexdbstorage.js';
 import LoadingOverlay from "../LoadingOverlay";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+
 Template.addcustomerpop.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
@@ -17,62 +18,47 @@ Template.addcustomerpop.onCreated(function () {
     templateObject.recentTrasactions = new ReactiveVar([]);
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
-
     templateObject.datatablerecordsjob = new ReactiveVar([]);
     templateObject.tableheaderrecordsjob = new ReactiveVar([]);
-
-
     templateObject.preferedPaymentList = new ReactiveVar();
     templateObject.termsList = new ReactiveVar();
     templateObject.deliveryMethodList = new ReactiveVar();
     templateObject.clienttypeList = new ReactiveVar();
     templateObject.taxCodeList = new ReactiveVar();
     templateObject.defaultsaletaxcode = new ReactiveVar();
-
     templateObject.defaultsaleterm = new ReactiveVar();
-
     templateObject.isJob = new ReactiveVar();
     templateObject.isJob.set(false);
-
     templateObject.isSameAddress = new ReactiveVar();
     templateObject.isSameAddress.set(false);
-
     templateObject.isJobSameAddress = new ReactiveVar();
     templateObject.isJobSameAddress.set(false);
-
     /* Attachments */
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
     templateObject.attachmentCount = new ReactiveVar();
     templateObject.currentAttachLineID = new ReactiveVar();
-
     templateObject.uploadedFileJob = new ReactiveVar();
     templateObject.uploadedFilesJob = new ReactiveVar([]);
     templateObject.attachmentCountJob = new ReactiveVar();
-
     templateObject.uploadedFileJobNoPOP = new ReactiveVar();
     templateObject.uploadedFilesJobNoPOP = new ReactiveVar([]);
     templateObject.attachmentCountJobNoPOP = new ReactiveVar();
-
     templateObject.currentAttachLineIDJob = new ReactiveVar();
 });
-
-
 
 Template.addcustomerpop.onRendered(function () {
     let templateObject = Template.instance();
     let contactService = new ContactService();
-    var countryService = new CountryService();
+    const countryService = new CountryService();
     let paymentService = new PaymentsService();
     const records = [];
     let countries = [];
-
     let preferedPayments = [];
     let terms = [];
     let deliveryMethods = [];
     let clientType = [];
     let taxCodes = [];
-
 
     let currentId = FlowRouter.current().queryParams;
     let customerID = '';
@@ -82,7 +68,6 @@ Template.addcustomerpop.onRendered(function () {
     const dataTableList = [];
     const dataTableListJob = [];
     const tableHeaderList = [];
-
     const tableHeaderListJob = [];
 
     let salestaxcode = '';
@@ -101,11 +86,7 @@ Template.addcustomerpop.onRendered(function () {
             }
         });
     }, 500);
-
-
-
     setTimeout(function () {
-
         $(".addcustomerpop #dtAsOf").datepicker({
             showOn: 'button',
             buttonText: 'Show Date',
@@ -119,6 +100,7 @@ Template.addcustomerpop.onRendered(function () {
             yearRange: "-90:+10",
         });
     }, 100);
+
     Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTransactionlist', function (error, result) {
         if (error) {
 
@@ -146,8 +128,7 @@ Template.addcustomerpop.onRendered(function () {
         $('td').each(function () {
             if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
         });
-    };
-
+    }
 
     templateObject.getCountryData = function () {
         getVS1Data('TCountries').then(function (dataObject) {
@@ -180,7 +161,6 @@ Template.addcustomerpop.onRendered(function () {
         });
     };
     templateObject.getCountryData();
-
 
     templateObject.getPreferedPaymentList = function () {
         getVS1Data('TPaymentMethod').then(function (dataObject) {
@@ -254,7 +234,6 @@ Template.addcustomerpop.onRendered(function () {
             });
         });
     };
-
     templateObject.getDeliveryMethodList = function () {
         getVS1Data('TShippingMethod').then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -285,7 +264,6 @@ Template.addcustomerpop.onRendered(function () {
             });
         });
     };
-
     templateObject.getClientTypeData = function () {
         getVS1Data('TClientType').then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -319,7 +297,6 @@ Template.addcustomerpop.onRendered(function () {
         });
 
     };
-
     templateObject.getTaxCodesList = function () {
         getVS1Data('TTaxcodeVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -350,13 +327,11 @@ Template.addcustomerpop.onRendered(function () {
             });
         });
     };
-
     templateObject.getPreferedPaymentList();
     templateObject.getTermsList();
     templateObject.getDeliveryMethodList();
     templateObject.getTaxCodesList();
     templateObject.getClientTypeData();
-
 
     //$('.addcustomerpop #sltCustomerType').append('<option value="' + lineItemObj.custometype + '">' + lineItemObj.custometype + '</option>');
     //if (currentId.id == "undefined") {
@@ -410,8 +385,6 @@ Template.addcustomerpop.onRendered(function () {
 
         }, 500);
 
-
-
     templateObject.getCustomersList = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -436,19 +409,14 @@ Template.addcustomerpop.onRendered(function () {
                             isslectJob: data.tcustomervs1[i].IsJob || false,
                             classname: classname
                         };
-
                         lineItems.push(dataList);
                     }
-
                     templateObject.customerrecords.set(lineItems);
-
                     if (templateObject.customerrecords.get()) {
-
                         setTimeout(function () {
                             $('.counter').text(lineItems.length + ' items');
                         }, 100);
                     }
-
                 }).catch(function (err) {
                     //Bert.alert('<strong>' + err + '</strong>!', 'danger');
 
@@ -466,31 +434,25 @@ Template.addcustomerpop.onRendered(function () {
                             classname = 'currentSelect';
                         }
                     }
-
                     if (!isNaN(currentId.jobid)) {
                         if (useData[i].fields.ID == parseInt(currentId.jobid)) {
                             classname = 'currentSelect';
                         }
                     }
-                    var dataList = {
+                    const dataList = {
                         id: useData[i].fields.ID || '',
                         company: useData[i].fields.ClientName || '',
                         isslectJob: useData[i].fields.IsJob || false,
                         classname: classname
                     };
-
                     lineItems.push(dataList);
                 }
-
                 templateObject.customerrecords.set(lineItems);
-
                 if (templateObject.customerrecords.get()) {
-
                     setTimeout(function () {
                         $('.counter').text(lineItems.length + ' items');
                     }, 100);
                 }
-
             }
         }).catch(function (err) {
             contactService.getAllCustomerSideDataVS1().then(function (data) {
@@ -508,45 +470,33 @@ Template.addcustomerpop.onRendered(function () {
                             classname = 'currentSelect';
                         }
                     }
-                    var dataList = {
+                    const dataList = {
                         id: data.tcustomervs1[i].Id || '',
                         company: data.tcustomervs1[i].ClientName || '',
                         isslectJob: data.tcustomervs1[i].IsJob || false,
                         classname: classname
                     };
-
                     lineItems.push(dataList);
                 }
-
                 templateObject.customerrecords.set(lineItems);
-
                 if (templateObject.customerrecords.get()) {
-
                     setTimeout(function () {
                         $('.counter').text(lineItems.length + ' items');
                     }, 100);
                 }
-
             }).catch(function (err) {
                 //Bert.alert('<strong>' + err + '</strong>!', 'danger');
-
             });
         });
-
     }
     templateObject.getCustomersList();
 
-
     setTimeout(function () {
-
-        var x = window.matchMedia("(max-width: 1024px)")
-
+        const x = window.matchMedia("(max-width: 1024px)");
         function mediaQuery(x) {
             if (x.matches) {
-
                 $(".addcustomerpop #displayList").removeClass("col-2");
                 $(".addcustomerpop #displayList").addClass("col-3");
-
                 $(".addcustomerpop #displayInfo").removeClass("col-10");
                 $(".addcustomerpop #displayInfo").addClass("col-9");
             }
@@ -554,7 +504,6 @@ Template.addcustomerpop.onRendered(function () {
         mediaQuery(x)
         x.addListener(mediaQuery)
     }, 500);
-
     setTimeout(function () {
 
         var x = window.matchMedia("(max-width: 420px)");
@@ -579,13 +528,11 @@ Template.addcustomerpop.onRendered(function () {
 
     }, 500);
 
-    setTimeout
-
 });
+
 Template.addcustomerpop.events({
     'click .tblJoblist tbody tr': function (event) {
-
-        var listData = $(event.target).closest('tr').attr('id');
+        const listData = $(event.target).closest('tr').attr('id');
         if (listData) {
             window.open('/customerscard?jobid=' + listData, '_self');
         }
@@ -593,7 +540,6 @@ Template.addcustomerpop.events({
     'click #customerShipping-1': function (event) {
         if ($(event.target).is(':checked')) {
             $('.customerShipping-2').css('display', 'none');
-
         } else {
             $('.customerShipping-2').css('display', 'block');
         }
@@ -603,7 +549,7 @@ Template.addcustomerpop.events({
         history.back(1);
         //FlowRouter.go('/customerlist');
     },
-    'click .btnSaveDept': function () {
+    'click .btnSaveDept': function (e) {
         LoadingOverlay.show();
         let contactService = new ContactService();
 
@@ -612,7 +558,6 @@ Template.addcustomerpop.events({
         let typeDesc = $('.addcustomerpop #txaDescription').val() || '';
         if (custType === '') {
             swal('Client Type name cannot be blank!', '', 'warning');
-
             e.preventDefault();
         } else {
             let objDetails = {
@@ -634,7 +579,6 @@ Template.addcustomerpop.events({
                 });
                 // Meteor._reload.reload();
             }).catch(function (err) {
-
                 swal({
                     title: 'Oooops...',
                     text: err,
@@ -648,13 +592,8 @@ Template.addcustomerpop.events({
 
                     }
                 });
-
             });
         }
-
-
-
-
         // if(deptID == ""){
 
         //     taxRateService.checkDepartmentByName(deptName).then(function (data) {
@@ -808,8 +747,6 @@ Template.addcustomerpop.events({
         let skype = $('.addcustomerpop #edtCustomerSkypeID').val();
         let website = $('.addcustomerpop #edtCustomerWebsite').val();
 
-
-
         let streetAddress = $('.addcustomerpop #edtCustomerShippingAddress').val();
         let city = $('.addcustomerpop #edtCustomerShippingCity').val();
         let state = $('.addcustomerpop #edtCustomerShippingState').val();
@@ -821,11 +758,7 @@ Template.addcustomerpop.events({
         let bzipcode = '';
         let bcountry = '';
         let isSupplier = false;
-        if ($('.addcustomerpop #chkCustomerSameAsShipping').is(':checked')) {
-            isSupplier = true;
-        }else{
-            isSupplier = false;
-        }
+        isSupplier = !!$('.addcustomerpop #chkCustomerSameAsShipping').is(':checked');
         if ($('.addcustomerpop #chkCustomerSameAsShipping').is(':checked')) {
             bstreetAddress = streetAddress;
             bcity = city;
@@ -845,13 +778,9 @@ Template.addcustomerpop.events({
         let sltShippingMethodName = '';
         let rewardPointsOpeningBalance = $('.addcustomerpop #custOpeningBalance').val();
         // let sltRewardPointsOpeningDate =  $('.addcustomerpop #dtAsOf').val();
-
-        var sltRewardPointsOpeningDate = new Date($(".addcustomerpop #dtAsOf").datepicker("getDate"));
-
+        const sltRewardPointsOpeningDate = new Date($(".addcustomerpop #dtAsOf").datepicker("getDate"));
         let openingDate = sltRewardPointsOpeningDate.getFullYear() + "-" + (sltRewardPointsOpeningDate.getMonth() + 1) + "-" + sltRewardPointsOpeningDate.getDate();
-
         let sltTaxCodeName = "";
-
         let isChecked = $(".addcustomerpop .chkTaxExempt").is(":checked");
         if (isChecked) {
             sltTaxCodeName = "NT";
@@ -868,12 +797,12 @@ Template.addcustomerpop.events({
         let customerType = $('.addcustomerpop #sltCustomerType').val()||'';
         let uploadedItems = templateObject.uploadedFiles.get();
 
-        var url = FlowRouter.current().path;
-        var getemp_id = url.split('?id=');
-        var currentEmployee = getemp_id[getemp_id.length - 1];
-        var objDetails = '';
+        const url = FlowRouter.current().path;
+        const getemp_id = url.split('?id=');
+        const currentEmployee = getemp_id[getemp_id.length - 1];
+        let objDetails = '';
 
-            let custdupID = 0;
+        let custdupID = 0;
             if(customerPOPID != ''){
               objDetails = {
                   type: "TCustomerEx",
@@ -1330,7 +1259,6 @@ Template.addcustomerpop.events({
         });
 
     },
-
     'keyup .addcustomerpop .search': function (event) {
         var searchTerm = $(".search").val();
         var listItem = $('.results tbody').children('tr');
@@ -1419,7 +1347,6 @@ Template.addcustomerpop.events({
                             Meteor._reload.reload();
                         }
                     });
-
                 }
             }
         }
@@ -1496,13 +1423,10 @@ Template.addcustomerpop.events({
     },
     'blur .addcustomerpop .divcolumn': function (event) {
         let columData = $(event.target).text();
-
         let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-
-        var datable = $('.addcustomerpop #tblTransactionlist').DataTable();
-        var title = datable.column(columnDatanIndex).header();
+        const datable = $('.addcustomerpop #tblTransactionlist').DataTable();
+        const title = datable.column(columnDatanIndex).header();
         $(title).html(columData);
-
     },
     'change .addcustomerpop .rngRange': function (event) {
         let range = $(event.target).val();
@@ -1510,7 +1434,7 @@ Template.addcustomerpop.events({
 
         // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
         let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('.addcustomerpop #tblTransactionlist th');
+        const datable = $('.addcustomerpop #tblTransactionlist th');
         $.each(datable, function (i, v) {
             if (v.innerText == columnDataValue) {
                 let className = v.className;
@@ -1523,7 +1447,7 @@ Template.addcustomerpop.events({
     },
     'click .addcustomerpop .btnOpenSettingsCustomer': function (event) {
         let templateObject = Template.instance();
-        var columns = $('.addcustomerpop #tblTransactionlist th');
+        const columns = $('.addcustomerpop #tblTransactionlist th');
 
         const tableHeaderList = [];
         let sTible = "";
@@ -1556,24 +1480,18 @@ Template.addcustomerpop.events({
     'click .addcustomerpop #exportbtn': function () {
         LoadingOverlay.show();
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletocsv').click();
-
-
     },
     'click .addcustomerpop .printConfirm': function (event) {
-
         LoadingOverlay.show();
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
-
     },
     'click .addcustomerpop #exportbtnJob': function () {
         LoadingOverlay.show();
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletocsv').click();
-
     },
     'click .addcustomerpop .printConfirmJob': function (event) {
         LoadingOverlay.show();
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletopdf').click();
-
     },
     'click .addcustomerpop .btnRefresh': function () {
         Meteor._reload.reload();
@@ -1642,22 +1560,20 @@ Template.addcustomerpop.events({
             }
         });
     },
-    'click .addcustomerpop #formCheck-TaxCode': function () {
+    'click .addcustomerpop #formCheck-TaxCode': function (event) {
         if ($(event.target).is(':checked')) {
             $('.addcustomerpop #autoUpdate').css('display', 'none');
         } else {
             $('.addcustomerpop #autoUpdate').css('display', 'block');
         }
     },
-
-    'click .addcustomerpop #formCheckJob-2': function () {
+    'click .addcustomerpop #formCheckJob-2': function (event) {
         if ($(event.target).is(':checked')) {
             $('.addcustomerpop #autoUpdateJob').css('display', 'none');
         } else {
             $('.addcustomerpop #autoUpdateJob').css('display', 'block');
         }
     },
-
     'click .addcustomerpop #activeChk': function () {
         if ($(event.target).is(':checked')) {
             $('.addcustomerpop #customerInfo').css('color', '#00A3D3');
@@ -1665,9 +1581,8 @@ Template.addcustomerpop.events({
             $('.addcustomerpop #customerInfo').css('color', '#b7b9cc !important');
         }
     },
-
     'click .addcustomerpop #btnNewProject': function (event) {
-        var x2 = document.getElementById("newProject");
+        const x2 = document.getElementById("newProject");
         if (x2.style.display === "none") {
             x2.style.display = "block";
         } else {
@@ -1675,7 +1590,7 @@ Template.addcustomerpop.events({
         }
     },
     'keydown .addcustomerpop #custOpeningBalance, keydown .addcustomerpop #edtJobNumber, keydown .addcustomerpop #edtCustomerCardDiscount': function (event) {
-        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||333
+        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 || 333
             // Allow: Ctrl+A, Command+A
             (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
             // Allow: home, end, left, right, down, up
@@ -1683,11 +1598,9 @@ Template.addcustomerpop.events({
             // let it happen, don't do anything
             return;
         }
-
         if (event.shiftKey == true) {
             event.preventDefault();
         }
-
         if ((event.keyCode >= 48 && event.keyCode <= 57) ||
             (event.keyCode >= 96 && event.keyCode <= 105) ||
             event.keyCode == 8 || event.keyCode == 9 ||
@@ -1696,10 +1609,6 @@ Template.addcustomerpop.events({
         } else {
             event.preventDefault();
         }
-    },
-    'click .addcustomerpop .new_attachment_btn': function (event) {
-        $('.addcustomerpop #attachment-upload').trigger('click');
-
     },
     'click .addcustomerpop #formCheck-one': function (event) {
         if ($(event.target).is(':checked')) {
@@ -1720,7 +1629,6 @@ Template.addcustomerpop.events({
     'click .addcustomerpop #formCheck-three': function (event) {
         if ($(event.target).is(':checked')) {
             $('.addcustomerpop .checkbox3div').css('display', 'block');
-
         } else {
             $('.addcustomerpop .checkbox3div').css('display', 'none');
         }
@@ -1728,7 +1636,6 @@ Template.addcustomerpop.events({
     'click .addcustomerpop #formCheck-four': function (event) {
         if ($(event.target).is(':checked')) {
             $('.addcustomerpop .checkbox4div').css('display', 'block');
-
         } else {
             $('.addcustomerpop .checkbox4div').css('display', 'none');
         }
@@ -1928,19 +1835,14 @@ Template.addcustomerpop.events({
     },
     'click .addcustomerpop .new_attachment_btnJobPOP': function (event) {
         $('.addcustomerpop #attachment-uploadJobPOP').trigger('click');
-
     },
     'change .addcustomerpop #attachment-uploadJobPOP': function (e) {
         let templateObj = Template.instance();
         let saveToTAttachment = false;
         let lineIDForAttachment = false;
         let uploadedFilesArray = templateObj.uploadedFilesJob.get();
-
-
         let myFiles = $('.addcustomerpop #attachment-uploadJobPOP')[0].files;
-
         let uploadData = utilityService.attachmentUploadJob(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
-
         templateObj.uploadedFilesJob.set(uploadData.uploadedFilesArray);
         templateObj.attachmentCountJob.set(uploadData.totalAttachments);
     },
@@ -1955,7 +1857,6 @@ Template.addcustomerpop.events({
             tempObj.$('.addcustomerpop #attachment-nameJobPOP-' + attachmentID).append(actionElement);
         }
         tempObj.$(".addcustomerpop #new-attachment2-tooltipJobPOP").show();
-
     },
     'click .addcustomerpop .file-nameJobPOP': function (event) {
         let attachmentID = parseInt(event.currentTarget.parentNode.id.split('attachment-nameJobPOP-')[1]);
@@ -2034,20 +1935,14 @@ Template.addcustomerpop.events({
     },
     'click .addcustomerpop .new_attachment_btnJobNoPOP': function (event) {
         $('.addcustomerpop #attachment-uploadJobNoPOP').trigger('click');
-
     },
     'change .addcustomerpop #attachment-uploadJobNoPOP': function (e) {
         let templateObj = Template.instance();
         let saveToTAttachment = false;
         let lineIDForAttachment = false;
         let uploadedFilesArrayJob = templateObj.uploadedFilesJobNoPOP.get();
-
-
         let myFiles = $('.addcustomerpop #attachment-uploadJobNoPOP')[0].files;
-
         let uploadData = utilityService.attachmentUploadJobNoPOP(uploadedFilesArrayJob, myFiles, saveToTAttachment, lineIDForAttachment);
-
-
         templateObj.uploadedFilesJobNoPOP.set(uploadData.uploadedFilesArray);
         templateObj.attachmentCountJobNoPOP.set(uploadData.totalAttachments);
     },
@@ -2062,7 +1957,6 @@ Template.addcustomerpop.events({
             tempObj.$('.addcustomerpop #attachment-nameJobNoPOP-' + attachmentID).append(actionElement);
         }
         tempObj.$(".addcustomerpop #new-attachment2-tooltipJobNoPOP").show();
-
     },
     'click .addcustomerpop .file-nameJobNoPOP': function (event) {
         let attachmentID = parseInt(event.currentTarget.parentNode.id.split('attachment-nameJobNoPOP-')[1]);
@@ -2140,7 +2034,7 @@ Template.addcustomerpop.events({
         }
     },
     'change .addcustomerpop .customerTypeSelect': function (event) {
-        var custName = $('.addcustomerpop .customerTypeSelect').children("option:selected").val();
+        const custName = $('.addcustomerpop .customerTypeSelect').children("option:selected").val();
         if (custName == "newCust") {
             $('.addcustomerpop #myModalClientType').modal();
             $(this).prop("selected", false);
@@ -2153,11 +2047,11 @@ Template.addcustomerpop.events({
         window.open('/customerscard', '_self');
     },
     'click .addcustomerpop .btnView': function (e) {
-        var btnView = document.getElementById("btnView");
-        var btnHide = document.getElementById("btnHide");
+        const btnView = document.getElementById("btnView");
+        const btnHide = document.getElementById("btnHide");
 
-        var displayList = document.getElementById("displayList");
-        var displayInfo = document.getElementById("displayInfo");
+        const displayList = document.getElementById("displayList");
+        const displayInfo = document.getElementById("displayInfo");
         if (displayList.style.display === "none") {
             displayList.style.display = "flex";
             $(".addcustomerpop #displayInfo").removeClass("col-12");
@@ -2179,10 +2073,10 @@ Template.addcustomerpop.events({
         let contactService2 = new ContactService();
 
         let currentId = FlowRouter.current().queryParams;
-        var objDetails = '';
+        let objDetails = '';
 
         if (!isNaN(currentId.id)) {
-            currentCustomer = parseInt(currentId.id);
+            const currentCustomer = parseInt(currentId.id);
             objDetails = {
                 type: "TCustomerEx",
                 fields: {
@@ -2190,7 +2084,6 @@ Template.addcustomerpop.events({
                     Active: false
                 }
             };
-
             contactService2.saveCustomerEx(objDetails).then(function (objDetails) {
                 FlowRouter.go('/customerlist?success=true');
             }).catch(function (err) {
@@ -2206,7 +2099,6 @@ Template.addcustomerpop.events({
 
                     }
                 });
-
             });
         } else {
             FlowRouter.go('/customerlist?success=true');
