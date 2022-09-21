@@ -1184,10 +1184,10 @@
                                     {{#if equals includeBOnShippedQty true}}
                                       <td class="colOrdered {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input
                                           class="lineOrdered colOrdered highlightInput" type="number" value="{{item.qtyordered}}"></td>
-                                      <td class="colShipped colQty {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
-                                          class="lineQty colQty highlightInput" type="number" value="{{item.qtyshipped}}"></td>
+                                      <td class="colShipped {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
+                                          class="lineShipped highlightInput" type="number" value="{{item.qtyshipped}}"></td>
                                       <td class="colBackOrder {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}"><input
-                                        class="lineBo colBackOrder highlightInput" type="number" value="{{item.qtybo}}" readonly></td>
+                                        class="lineBackOrder colBackOrder highlightInput" type="number" value="{{item.qtybo}}" readonly></td>
                                     {{else}}
                                       <td class="colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input
                                         class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>

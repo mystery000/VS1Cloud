@@ -106,15 +106,15 @@ Template.chequecard.onRendered(() => {
         }
         // $(".heading").html("New " +chequeSpelling +" #" +newChequeID +<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
         setTimeout(function () {
-          $("#sltBankAccountName").val(lastBankAccount);
+          $("#sltChequeBankAccountName").val(lastBankAccount);
           $("#ponumber").val(newChequeID);
         }, 500);
       })
       .catch(function (err) {
         if (localStorage.getItem("check_acc")) {
-          $("#sltBankAccountName").val(localStorage.getItem("check_acc"));
+          $("#sltChequeBankAccountName").val(localStorage.getItem("check_acc"));
         } else {
-          $("#sltBankAccountName").val(lastBankAccount);
+          $("#sltChequeBankAccountName").val(lastBankAccount);
         }
       });
   };
@@ -607,7 +607,7 @@ Template.chequecard.onRendered(() => {
                   };
 
                   $("#edtSupplierName").val(data.fields.SupplierName);
-                  $("#sltBankAccountName").val(data.fields.GLAccountName);
+                  $("#sltChequeBankAccountName").val(data.fields.GLAccountName);
                   templateObject.CleintName.set(data.fields.SupplierName);
                   $("#sltCurrency").val(data.fields.ForeignExchangeCode);
                   $("#sltStatus").val(data.fields.OrderStatus);
@@ -982,7 +982,7 @@ Template.chequecard.onRendered(() => {
                   };
 
                   $("#edtSupplierName").val(useData[d].fields.SupplierName);
-                  $("#sltBankAccountName").val(useData[d].fields.GLAccountName);
+                  $("#sltChequeBankAccountName").val(useData[d].fields.GLAccountName);
                   templateObject.CleintName.set(useData[d].fields.SupplierName);
                   $("#sltCurrency").val(useData[d].fields.ForeignExchangeCode);
                   $("#sltStatus").val(useData[d].fields.OrderStatus);
@@ -1336,7 +1336,7 @@ Template.chequecard.onRendered(() => {
                     };
 
                     $("#edtSupplierName").val(data.fields.SupplierName);
-                    $("#sltBankAccountName").val(data.fields.GLAccountName);
+                    $("#sltChequeBankAccountName").val(data.fields.GLAccountName);
                     templateObject.CleintName.set(data.fields.SupplierName);
                     $("#sltCurrency").val(data.fields.ForeignExchangeCode);
                     $("#sltStatus").val(data.fields.OrderStatus);
@@ -1700,7 +1700,7 @@ Template.chequecard.onRendered(() => {
                 };
 
                 $("#edtSupplierName").val(data.fields.SupplierName);
-                $("#sltBankAccountName").val(data.fields.GLAccountName);
+                $("#sltChequeBankAccountName").val(data.fields.GLAccountName);
                 templateObject.CleintName.set(data.fields.SupplierName);
                 $("#sltCurrency").val(data.fields.ForeignExchangeCode);
                 $("#sltStatus").val(data.fields.OrderStatus);
@@ -1898,9 +1898,9 @@ Template.chequecard.onRendered(() => {
     $("#edtSupplierName").val("");
     setTimeout(function () {
       if (localStorage.getItem("check_acc")) {
-        $("#sltBankAccountName").val(localStorage.getItem("check_acc"));
+        $("#sltChequeBankAccountName").val(localStorage.getItem("check_acc"));
       } else {
-        // $('#sltBankAccountName').val('Bank');
+        // $('#sltChequeBankAccountName').val('Bank');
       }
     }, 500);
 
@@ -2004,7 +2004,7 @@ Template.chequecard.onRendered(() => {
   let table;
   $(document).ready(function () {
     $("#edtSupplierName").editableSelect();
-    $("#sltBankAccountName").editableSelect();
+    $("#sltChequeBankAccountName").editableSelect();
     $("#sltCurrency").editableSelect();
     $("#sltStatus").editableSelect();
     //$("#shipvia").editableSelect();
@@ -2331,7 +2331,7 @@ Template.chequecard.onRendered(() => {
     } else {
       let accountname = table.find(".productName").text();
       $("#accountListModal").modal("toggle");
-      $("#sltBankAccountName").val(accountname);
+      $("#sltChequeBankAccountName").val(accountname);
     }
 
     $("#tblAccount_filter .form-control-sm").val("");
@@ -3316,7 +3316,7 @@ Template.chequecard.onRendered(() => {
     }, 1000);
   });
 
-  $("#sltBankAccountName")
+  $("#sltChequeBankAccountName")
     .editableSelect()
     .on("click.editable-select", function (e, li) {
       var $earch = $(this);
@@ -5646,7 +5646,7 @@ Template.chequecard.events({
       let saleDate = saledateTime.getFullYear() +"-" +(saledateTime.getMonth() + 1) +"-" +saledateTime.getDate();
       let dueDate =duedateTime.getFullYear() +"-" +(duedateTime.getMonth() + 1) +"-" +duedateTime.getDate();
 
-      let bankAccount = $("#sltBankAccountName").val();
+      let bankAccount = $("#sltChequeBankAccountName").val();
       let poNumber = $("#ponumber").val();
       let reference = $("#edtRef").val();
 

@@ -14,6 +14,7 @@ let _ = require('lodash');
 let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
 let receiptService = new ReceiptService();
+let sideBarService = new SideBarService();
 Template.accountslistchart.onCreated(()=>{
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
@@ -308,7 +309,7 @@ Template.accountslistchart.onRendered(()=>{
                   templateObject.taxraterecords.set(taxCodesList);
 
                   if (splashArrayTaxRateList) {
-                      $("#tblTaxRate").DataTable({
+                      $(".tblDashboardTaxRate").DataTable({
                           data: splashArrayTaxRateList,
                           sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                           columnDefs: [{
@@ -335,6 +336,9 @@ Template.accountslistchart.onRendered(()=>{
                               [initialDatatableLoad, -1],
                               [initialDatatableLoad, "All"],
                           ],
+                          select: true,
+                          destroy: true,
+                          colReorder: true,
                           info: true,
                           responsive: true,
                           fnDrawCallback: function(oSettings) {
@@ -344,10 +348,10 @@ Template.accountslistchart.onRendered(()=>{
                           fnInitComplete: function() {
                               $(
                                   "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
-                              ).insertAfter("#tblTaxRate_filter");
+                              ).insertAfter(".tblDashboardTaxRate_filter");
                               $(
                                   "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                              ).insertAfter("#tblTaxRate_filter");
+                              ).insertAfter(".tblDashboardTaxRate_filter");
                           },
                       });
                   }
@@ -377,7 +381,7 @@ Template.accountslistchart.onRendered(()=>{
               }
               templateObject.taxraterecords.set(taxCodesList);
               if (splashArrayTaxRateList) {
-                  $("#tblTaxRate").DataTable({
+                  $(".tblDashboardTaxRate").DataTable({
                       data: splashArrayTaxRateList,
                       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
 
@@ -405,6 +409,9 @@ Template.accountslistchart.onRendered(()=>{
                           [initialDatatableLoad, -1],
                           [initialDatatableLoad, "All"],
                       ],
+                      select: true,
+                      destroy: true,
+                      colReorder: true,
                       info: true,
                       responsive: true,
                       fnDrawCallback: function(oSettings) {
@@ -414,10 +421,10 @@ Template.accountslistchart.onRendered(()=>{
                       fnInitComplete: function() {
                           $(
                               "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
-                          ).insertAfter("#tblTaxRate_filter");
+                          ).insertAfter(".tblDashboardTaxRate_filter");
                           $(
                               "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                          ).insertAfter("#tblTaxRate_filter");
+                          ).insertAfter(".tblDashboardTaxRate_filter");
                       },
                   });
               }
@@ -447,7 +454,7 @@ Template.accountslistchart.onRendered(()=>{
               templateObject.taxraterecords.set(taxCodesList);
 
               if (splashArrayTaxRateList) {
-                  $("#tblTaxRate").DataTable({
+                  $(".tblDashboardTaxRate").DataTable({
                       data: splashArrayTaxRateList,
                       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
 
@@ -476,6 +483,9 @@ Template.accountslistchart.onRendered(()=>{
                           [initialDatatableLoad, "All"],
                       ],
                       info: true,
+                      select: true,
+                      destroy: true,
+                      colReorder: true,
                       responsive: true,
                       fnDrawCallback: function(oSettings) {
                           // $('.dataTables_paginate').css('display', 'none');
@@ -484,10 +494,10 @@ Template.accountslistchart.onRendered(()=>{
                       fnInitComplete: function() {
                           $(
                               "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
-                          ).insertAfter("#tblTaxRate_filter");
+                          ).insertAfter(".tblDashboardTaxRate_filter");
                           $(
                               "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                          ).insertAfter("#tblTaxRate_filter");
+                          ).insertAfter(".tblDashboardTaxRate_filter");
                       },
                   });
               }
@@ -497,6 +507,8 @@ Template.accountslistchart.onRendered(()=>{
 
   setTimeout(function() {
       templateObject.getAllTaxCodes();
+
+      $(".accountslistchart .portlet").removeClass("ui-widget ui-widget-content");
   }, 500);
 
   function MakeNegative() {
@@ -586,11 +598,11 @@ Template.accountslistchart.onRendered(()=>{
           $(".accountIsHeader").prop("checked", false);
       }
 
-      $("#expenseCategory").append('<option value="' + expenseCategory + '" selected="selected">' + expenseCategory + "</option>");
-      $("#expenseCategory").val(expenseCategory);
+      $(".expenseCategory").append('<option value="' + expenseCategory + '" selected="selected">' + expenseCategory + "</option>");
+      $(".expenseCategory").val(expenseCategory);
 
       setTimeout(function() {
-          $("#addNewAccount").modal("show");
+          $(".addNewAccount").modal("show");
       }, 500);
   }
 
@@ -709,7 +721,7 @@ Template.accountslistchart.onRendered(()=>{
 
       $(".fullScreenSpin").css("display", "none");
       setTimeout(function() {
-          $('#tblCategory').dataTable({
+          $('#tblDashboardCategory').dataTable({
               data: categoryAccountList,
               "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
               paging: true,
@@ -723,8 +735,8 @@ Template.accountslistchart.onRendered(()=>{
                   { className: "colTaxCode", "targets": [4] },
                   { className: "colAccountID hiddenColumn", "targets": [5] }
               ],
-              // select: true,
-              // destroy: true,
+              select: true,
+              destroy: true,
               colReorder: true,
               "order": [
                   [0, "asc"]
@@ -735,14 +747,17 @@ Template.accountslistchart.onRendered(()=>{
                   [initialDatatableLoad, "All"]
               ],
               info: true,
+              select: true,
+              destroy: true,
+              colReorder: true,
               responsive: true,
               "fnInitComplete": function() {
-                  $("<button class='btn btn-primary btnAddNewReceiptCategory' data-dismiss='modal' data-toggle='modal' data-target='#addReceiptCategoryModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCategory_filter");
-                  $("<button class='btn btn-primary btnRefreshCategoryAccount' type='button' id='btnRefreshCategoryAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCategory_filter");
+                  $("<button class='btn btn-primary btnAddNewReceiptCategory' data-dismiss='modal' data-toggle='modal' data-target='#addReceiptCategoryModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblDashboardCategory_filter");
+                  $("<button class='btn btn-primary btnRefreshCategoryAccount' type='button' id='btnRefreshCategoryAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDashboardCategory_filter");
               }
           });
           // //$.fn.dataTable.moment('DD/MM/YY');
-          $("#tblAccountOverview").DataTable({
+          $("#tblDashboardAccountList").DataTable({
                   columnDefs: [
                       // { type: 'currency', targets: 4 }
                   ],
@@ -796,13 +811,16 @@ Template.accountslistchart.onRendered(()=>{
                       [initialDatatableLoad, "All"],
                   ],
                   info: true,
+                  select: true,
+                  destroy: true,
+                  colReorder: true,
                   responsive: true,
                   order: [
                       [0, "asc"]
                   ],
                   // "aaSorting": [[1,'desc']],
                   action: function() {
-                      $("#tblAccountOverview").DataTable().ajax.reload();
+                      $("#tblDashboardAccountList").DataTable().ajax.reload();
                   },
                   language: { search: "",searchPlaceholder: "Search List..." },
                   fnDrawCallback: function(oSettings) {
@@ -813,7 +831,7 @@ Template.accountslistchart.onRendered(()=>{
                   fnInitComplete: function() {
                       $(
                           "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                      ).insertAfter("#tblAccountOverview_filter");
+                      ).insertAfter("#tblDashboardAccountList_filter");
                   },
               })
               .on("page", function() {
@@ -832,7 +850,7 @@ Template.accountslistchart.onRendered(()=>{
           // $('.fullScreenSpin').css('display','none');
       }, 10);
 
-      const columns = $("#tblAccountOverview th");
+      const columns = $("#tblDashboardAccountList th");
       let sTible = "";
       let sWidth = "";
       let sIndex = "";
@@ -864,7 +882,7 @@ Template.accountslistchart.onRendered(()=>{
   }
 
 
-  $('#expenseCategory').on('click', function(e, li) {
+  $('.expenseCategory').on('click', function(e, li) {
       templateObject.setCategoryAccountList(e);
   });
   templateObject.setCategoryAccountList = function(e) {
@@ -876,12 +894,12 @@ Template.accountslistchart.onRendered(()=>{
           $each.attr('data-id', '');
           $('#categoryListModal').modal('toggle');
           setTimeout(function() {
-              $('#tblCategory_filter .form-control-sm').focus();
-              $('#tblCategory_filter .form-control-sm').val('');
-              $('#tblCategory_filter .form-control-sm').trigger("input");
-              const datatable = $('#tblCategory').DataTable();
+              $('#tblDashboardCategory_filter .form-control-sm').focus();
+              $('#tblDashboardCategory_filter .form-control-sm').val('');
+              $('#tblDashboardCategory_filter .form-control-sm').trigger("input");
+              const datatable = $('#tblDashboardCategory').DataTable();
               datatable.draw();
-              $('#tblCategory_filter .form-control-sm').trigger("input");
+              $('#tblDashboardCategory_filter .form-control-sm').trigger("input");
           }, 200);
       } else {
           if (searchDataName.replace(/\s/g, '') != '') {
@@ -921,12 +939,12 @@ Template.accountslistchart.onRendered(()=>{
           } else {
               $('#categoryListModal').modal('toggle');
               setTimeout(function() {
-                  $('#tblCategory_filter .form-control-sm').focus();
-                  $('#tblCategory_filter .form-control-sm').val('');
-                  $('#tblCategory_filter .form-control-sm').trigger("input");
-                  const datatable = $('#tblCategory').DataTable();
+                  $('#tblDashboardCategory_filter .form-control-sm').focus();
+                  $('#tblDashboardCategory_filter .form-control-sm').val('');
+                  $('#tblDashboardCategory_filter .form-control-sm').trigger("input");
+                  const datatable = $('#tblDashboardCategory').DataTable();
                   datatable.draw();
-                  $('#tblCategory_filter .form-control-sm').trigger("input");
+                  $('#tblDashboardCategory_filter .form-control-sm').trigger("input");
               }, 200);
           }
       }
@@ -942,7 +960,7 @@ Template.accountslistchart.onRendered(()=>{
       }, 200);
   }
 
-  $("#tblAccountOverview tbody").on("click","tr .colAccountName, tr .colAccountName, tr .colDescription, tr .colAccountNo, tr .colType, tr .colTaxCode, tr .colBankAccountName, tr .colBSB, tr .colBankAccountNo, tr .colExtra, tr .colAPCANumber",function() {
+  $("#tblDashboardAccountList tbody").on("click","tr .colAccountName, tr .colAccountName, tr .colDescription, tr .colAccountNo, tr .colType, tr .colTaxCode, tr .colBankAccountName, tr .colBSB, tr .colBankAccountNo, tr .colExtra, tr .colAPCANumber",function() {
           var listData = $(this).closest("tr").attr("id");
           var tabletaxtcode = $(event.target).closest("tr").find(".colTaxCode").text();
           var accountName = $(event.target).closest("tr").find(".colAccountName").text();
@@ -1024,9 +1042,9 @@ Template.accountslistchart.onRendered(()=>{
                       $(".useReceiptClaim").prop("checked", false);
                   }
                   let category = $(event.target).closest("tr").find(".colExpenseCategory").attr("category") || "";
-                  $("#expenseCategory").val(category);
+                  $(".expenseCategory").val(category);
 
-                  $(this).closest("tr").attr("data-target", "#addNewAccount");
+                  $(this).closest("tr").attr("data-target", ".addNewAccount");
                   $(this).closest("tr").attr("data-toggle", "modal");
               }
 
@@ -1034,7 +1052,7 @@ Template.accountslistchart.onRendered(()=>{
           }
     });
 
-  $("#tblAccountOverview tbody").on("click", "tr .colBalance", async function() {
+  $("#tblDashboardAccountList tbody").on("click", "tr .colBalance", async function() {
       var listData = $(this).closest("tr").attr("id");
       var accountName = $(event.target).closest("tr").find(".colAccountName").text();
       let columnBalClass = $(event.target).attr("class");
@@ -1047,14 +1065,14 @@ Template.accountslistchart.onRendered(()=>{
   });
 
  Template.accountslistchart.events({
-   "click #btnJournalEntries": function(event) {
+   "click .accountslistchart #btnJournalEntries": function(event) {
        FlowRouter.go("/journalentrylist");
    },
-   "click #btnNewJournalEntry": function(event) {
+   "click .accountslistchart #btnNewJournalEntry": function(event) {
        FlowRouter.go("/journalentrycard");
    },
-   "click .chkDatatable": function(event) {
-       var columns = $("#tblAccountOverview th");
+   "click .accountslistchart .chkDatatable": function(event) {
+       var columns = $("#tblDashboardAccountList th");
        let columnDataValue = $(event.target)
            .closest("div")
            .find(".divcolumn")
@@ -1075,7 +1093,7 @@ Template.accountslistchart.onRendered(()=>{
            }
        });
    },
-   "click .resetTable": function(event) {
+   "click .accountslistchart .resetTable": function(event) {
        var getcurrentCloudDetails = CloudUser.findOne({
            _id: Session.get("mycloudLogonID"),
            clouddatabaseID: Session.get("mycloudLogonDBID"),
@@ -1087,7 +1105,7 @@ Template.accountslistchart.onRendered(()=>{
                var clientEmail = getcurrentCloudDetails.cloudEmail;
                var checkPrefDetails = CloudPreference.findOne({
                    userid: clientID,
-                   PrefName: "tblAccountOverview",
+                   PrefName: "tblDashboardAccountList",
                });
                if (checkPrefDetails) {
                    CloudPreference.remove({
@@ -1103,9 +1121,9 @@ Template.accountslistchart.onRendered(()=>{
            }
        }
    },
-   "click .saveTable": function(event) {
+   "click .accountslistchart .saveTable": function(event) {
        let lineItems = [];
-       //let datatable =$('#tblAccountOverview').DataTable();
+       //let datatable =$('#tblDashboardAccountList').DataTable();
        $(".columnSettings").each(function(index) {
            var $tblrow = $(this);
            var colTitle = $tblrow.find(".divcolumn").text() || "";
@@ -1140,7 +1158,7 @@ Template.accountslistchart.onRendered(()=>{
                var clientEmail = getcurrentCloudDetails.cloudEmail;
                var checkPrefDetails = CloudPreference.findOne({
                    userid: clientID,
-                   PrefName: "tblAccountOverview",
+                   PrefName: "tblDashboardAccountList",
                });
                if (checkPrefDetails) {
                    CloudPreference.update({
@@ -1151,7 +1169,7 @@ Template.accountslistchart.onRendered(()=>{
                                username: clientUsername,
                                useremail: clientEmail,
                                PrefGroup: "salesform",
-                               PrefName: "tblAccountOverview",
+                               PrefName: "tblDashboardAccountList",
                                published: true,
                                customFields: lineItems,
                                updatedAt: new Date(),
@@ -1171,7 +1189,7 @@ Template.accountslistchart.onRendered(()=>{
                            username: clientUsername,
                            useremail: clientEmail,
                            PrefGroup: "salesform",
-                           PrefName: "tblAccountOverview",
+                           PrefName: "tblDashboardAccountList",
                            published: true,
                            customFields: lineItems,
                            createdAt: new Date(),
@@ -1190,18 +1208,18 @@ Template.accountslistchart.onRendered(()=>{
        $("#myModal2").modal("toggle");
        //Meteor._reload.reload();
    },
-   "blur .divcolumn": function(event) {
+   "blur .accountslistchart .divcolumn": function(event) {
        let columData = $(event.target).text();
 
        let columnDatanIndex = $(event.target)
            .closest("div.columnSettings")
            .attr("id");
 
-       var datable = $("#tblAccountOverview").DataTable();
+       var datable = $("#tblDashboardAccountList").DataTable();
        var title = datable.column(columnDatanIndex).header();
        $(title).html(columData);
    },
-   "change .rngRange": function(event) {
+   "change .accountslistchart .rngRange": function(event) {
        let range = $(event.target).val();
        // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
 
@@ -1211,7 +1229,7 @@ Template.accountslistchart.onRendered(()=>{
            .prev()
            .find(".divcolumn")
            .text();
-       var datable = $("#tblAccountOverview th");
+       var datable = $("#tblDashboardAccountList th");
        $.each(datable, function(i, v) {
            if (v.innerText == columnDataValue) {
                let className = v.className;
@@ -1220,9 +1238,9 @@ Template.accountslistchart.onRendered(()=>{
            }
        });
    },
-   "click .btnOpenSettings": function(event) {
+   "click .accountslistchart .btnOpenSettings": function(event) {
        let templateObject = Template.instance();
-       var columns = $("#tblAccountOverview th");
+       var columns = $("#tblDashboardAccountList th");
 
        const tableHeaderList = [];
        let sTible = "";
@@ -1251,17 +1269,17 @@ Template.accountslistchart.onRendered(()=>{
        });
        templateObject.tableheaderrecords.set(tableHeaderList);
    },
-   "click .exportbtn": function() {
+   "click .accountslistchart .exportbtn": function() {
        $(".fullScreenSpin").css("display", "inline-block");
-       jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletocsv").click();
+       jQuery("#tblDashboardAccountList_wrapper .dt-buttons .btntabletocsv").click();
        $(".fullScreenSpin").css("display", "none");
    },
-   "click .exportbtnExcel": function() {
+   "click .accountslistchart .exportbtnExcel": function() {
        $(".fullScreenSpin").css("display", "inline-block");
-       jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletoexcel").click();
+       jQuery("#tblDashboardAccountList_wrapper .dt-buttons .btntabletoexcel").click();
        $(".fullScreenSpin").css("display", "none");
    },
-   "click .btnRefresh": function() {
+   "click .accountslistchart .btnRefresh": function() {
        $(".fullScreenSpin").css("display", "inline-block");
        let templateObject = Template.instance();
 
@@ -1280,7 +1298,7 @@ Template.accountslistchart.onRendered(()=>{
                window.open("/accountsoverview", "_self");
            });
    },
-   "click .btnSaveAccount": function() {
+   "click .accountslistchart .btnSaveAccount": function() {
        $(".fullScreenSpin").css("display", "inline-block");
        let templateObject = Template.instance();
        let accountService = new AccountService();
@@ -1312,7 +1330,7 @@ Template.accountslistchart.onRendered(()=>{
        const bankbsb = $("#edtBSB").val();
        const bankacountno = $("#edtBankAccountNo").val();
        const isBankAccount = templateObject.isBankAccount.get();
-       const expenseCategory = $("#expenseCategory").val();
+       const expenseCategory = $(".expenseCategory").val();
        const categoryAccountID = $("#categoryAccountID").val();
        const categoryAccountName = $("#categoryAccountName").val();
        const expirydateTime = new Date($("#edtExpiryDate").datepicker("getDate"));
@@ -1478,7 +1496,7 @@ Template.accountslistchart.onRendered(()=>{
        }
 
    },
-   "click .btnAddNewAccounts": function() {
+   "click .accountslistchart .btnAddNewAccounts": function() {
        $("#add-account-title").text("Add New Account");
        $("#edtAccountID").val("");
        $("#sltAccountType").val("");
@@ -1497,30 +1515,30 @@ Template.accountslistchart.onRendered(()=>{
        $("#swiftCode").val("");
        $(".showOnTransactions").prop("checked", false);
        $(".useReceiptClaim").prop("checked", false);
-       $("#expenseCategory").val("");
+       $(".expenseCategory").val("");
        // let availableCategories = Template.instance().availableCategories.get();
        // let cateogoryHtml = "";
        // availableCategories.forEach(function(item) {
        //     cateogoryHtml += '<option value="' + item + '">' + item + '</option>';
        // });
-       // $("#expenseCategory").empty();
-       // $("#expenseCategory").append(cateogoryHtml);
+       // $(".expenseCategory").empty();
+       // $(".expenseCategory").append(cateogoryHtml);
        // if (cateogoryHtml == "") {
-       //     $("#expenseCategory").attr("readonly", true);
-       //     $("#expenseCategory").attr("disabled", "disabled");
+       //     $(".expenseCategory").attr("readonly", true);
+       //     $(".expenseCategory").attr("disabled", "disabled");
        // } else {
-       //     $("#expenseCategory").removeAttr("readonly", true);
-       //     $("#expenseCategory").removeAttr("disabled", "disabled");
+       //     $(".expenseCategory").removeAttr("readonly", true);
+       //     $(".expenseCategory").removeAttr("disabled", "disabled");
        // }
        $(".isBankAccount").addClass("isNotBankAccount");
        $(".isCreditAccount").addClass("isNotCreditAccount");
    },
-   "click .printConfirm": function(event) {
+   "click .accountslistchart .printConfirm": function(event) {
        $(".fullScreenSpin").css("display", "inline-block");
-       jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletopdf").click();
+       jQuery("#tblDashboardAccountList_wrapper .dt-buttons .btntabletopdf").click();
        $(".fullScreenSpin").css("display", "none");
    },
-   "click .templateDownload": function() {
+   "click .accountslistchart .templateDownload": function() {
        let utilityService = new UtilityService();
        let rows = [];
        const filename = "SampleAccounts" + ".csv";
@@ -1702,17 +1720,17 @@ Template.accountslistchart.onRendered(()=>{
        ];
        utilityService.exportToCsv(rows, filename, "csv");
    },
-   "click .templateDownloadXLSX": function(e) {
+   "click .accountslistchart .templateDownloadXLSX": function(e) {
        e.preventDefault(); //stop the browser from following
        window.location.href = "sample_imports/SampleAccounts.xlsx";
    },
-   "click .btnUploadFile": function(event) {
+   "click .accountslistchart .btnUploadFile": function(event) {
        $("#attachment-upload").val("");
        $(".file-name").text("");
        // $(".btnImport").removeAttr("disabled");
        $("#attachment-upload").trigger("click");
    },
-   "change #attachment-upload": function(e) {
+   "change .accountslistchart #attachment-upload": function(e) {
        let templateObj = Template.instance();
        var filename = $("#attachment-upload")[0].files[0]["name"];
        var fileExtension = filename.split(".").pop().toLowerCase();
@@ -1776,7 +1794,7 @@ Template.accountslistchart.onRendered(()=>{
            }
        }
    },
-   "click .btnImport": function() {
+   "click .accountslistchart .btnImport": function() {
        $(".fullScreenSpin").css("display", "inline-block");
        let templateObject = Template.instance();
        let accountService = new AccountService();
@@ -1879,7 +1897,7 @@ Template.accountslistchart.onRendered(()=>{
            });
        } else {}
    },
-   "change #sltAccountType": function(e) {
+   "change .accountslistchart #sltAccountType": function(e) {
        let templateObject = Template.instance();
        var accountTypeName = $("#sltAccountType").val();
 
@@ -1902,7 +1920,7 @@ Template.accountslistchart.onRendered(()=>{
        //   $(".btnImport").Attr("disabled");
        // }
    },
-   "click .btnDeleteAccount": function() {
+   "click .accountslistchart .btnDeleteAccount": function() {
        swal({
            title: "Delete Account",
            text: "Are you sure you want to Delete Account?",
@@ -1963,29 +1981,29 @@ Template.accountslistchart.onRendered(()=>{
            } else {}
        });
    },
-   'click #tblCategory tbody tr': function(e) {
+   'click .accountslistchart #tblDashboardCategory tbody tr': function(e) {
        let category = $(e.target).closest('tr').find(".colReceiptCategory").text() || '';
        let accountName = $(e.target).closest('tr').find(".colAccountName").text() || '';
        let accountID = $(e.target).closest('tr').find(".colAccountID").text() || '';
 
-       $('#expenseCategory').val(category);
+       $('.expenseCategory').val(category);
        $('#categoryAccountID').val(accountID);
        $('#categoryAccountName').val(accountName);
 
        $('#categoryListModal').modal('toggle');
    },
-   'click .btnAddNewReceiptCategory': function(event) {
+   'click .accountslistchart .btnAddNewReceiptCategory': function(event) {
        $('#add-receiptcategory-title').text('Add New Receipt Category');
        $('#edtReceiptCategoryID').val('');
        $('#edtReceiptCategoryName').val('');
        $('#edtReceiptCategoryDesc').val('');
    },
-   'click .btnRefreshCategoryAccount': function(event) {
+   'click .accountslistchart .btnRefreshCategoryAccount': function(event) {
        $('.fullScreenSpin').css('display', 'inline-block');
        const splashArrayAccountList = [];
        let receiptService = new ReceiptService();
        let sideBarService = new SideBarService();
-       let dataSearchName = $('#tblCategory_filter input').val();
+       let dataSearchName = $('#tblDashboardCategory_filter input').val();
        let categories = [];
        if (dataSearchName.replace(/\s/g, '') !== '') {
            receiptService.getSearchReceiptCategoryByName(dataSearchName).then(function(data) {
@@ -2029,7 +2047,7 @@ Template.accountslistchart.onRendered(()=>{
                                }
                                splashArrayAccountList.push(cdataList);
                            });
-                           const datatable = $('#tblCategory').DataTable();
+                           const datatable = $('#tblDashboardCategory').DataTable();
                            datatable.clear();
                            datatable.rows.add(splashArrayAccountList);
                            datatable.draw(false);
@@ -2102,7 +2120,7 @@ Template.accountslistchart.onRendered(()=>{
                                }
                                splashArrayAccountList.push(cdataList);
                            });
-                           const datatable = $('#tblCategory').DataTable();
+                           const datatable = $('#tblDashboardCategory').DataTable();
                            datatable.clear();
                            datatable.rows.add(splashArrayAccountList);
                            datatable.draw(false);
@@ -2118,12 +2136,12 @@ Template.accountslistchart.onRendered(()=>{
            });
        }
    },
-   'keyup #tblCategory_filter input': function(event) {
+   'keyup .accountslistchart #tblDashboardCategory_filter input': function(event) {
        if (event.keyCode === 13) {
            $(".btnRefreshCategoryAccount").trigger("click");
        }
    },
-   'click #addReceiptCategoryModal .btnSave': function(event) {
+   'click .accountslistchart #addReceiptCategoryModal .btnSave': function(event) {
        $('.fullScreenSpin').css('display', 'inline-block');
        let receiptService = new ReceiptService();
        let receiptCategoryID = $('#edtReceiptCategoryID').val();
@@ -2231,7 +2249,7 @@ Template.accountslistchart.onRendered(()=>{
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
             userid: Session.get("mycloudLogonID"),
-            PrefName: "tblAccountOverview",
+            PrefName: "tblDashboardAccountList",
         });
     },
     taxraterecords: () => {

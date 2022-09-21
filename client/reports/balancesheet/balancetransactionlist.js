@@ -1345,13 +1345,15 @@ Template.balancetransactionlist.events({
     jQuery('#tblBalanceTransactionList_wrapper .dt-buttons .btntabletopdf').click();
      $('.fullScreenSpin').css('display','none');
    },
-  'click .btnRefresh': function () {
+  'click .btnRefresh': async function () {
     $('.fullScreenSpin').css('display','inline-block');
+    await clearData('TAccountRunningBalanceReport');
     //localStorage.setItem('VS1BalanceTrans_Report', '');
     Meteor._reload.reload();
   },
- 'click .btnRefreshTrans': function () {
+ 'click .btnRefreshTrans': async function () {
    $('.fullScreenSpin').css('display','inline-block');
+   await clearData('TAccountRunningBalanceReport');
    //localStorage.setItem('VS1BalanceTrans_Report', '');
    Meteor._reload.reload();
  },

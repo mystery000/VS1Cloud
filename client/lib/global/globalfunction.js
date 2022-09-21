@@ -600,6 +600,30 @@ setupMessagehideshow();
 // });
 //});
 
+isAdditionalModulePurchased = async function( moduleName ){
+  let purchaedAdModuleList = []
+  let additionModuleSettings = await getVS1Data('vscloudlogininfo');
+  if( additionModuleSettings.length > 0 ){
+      let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
+      if( additionModules.length > 0 ){
+        console.log('additionModules', additionModules)
+          let adModulesList = additionModules.filter((item) => {
+              if( item.ModuleActive == true && item.ModuleName == moduleName ){
+                  return item;
+              }
+          });
+
+          if( adModulesList.length > 0 ){
+              return true
+          }
+          return false
+      }
+  }
+  return false
+}
+
+
+
 
 handleValidationError = async function ( errorMessage, fieldID ) {
   swal({
