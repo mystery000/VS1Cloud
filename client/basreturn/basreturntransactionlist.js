@@ -30,8 +30,11 @@ Template.basreturntransactionlist.onRendered(function() {
         location.reload();
     };
 
-    templateObject.getAccountsSummaryReports = function(dateFrom, dateTo, items = []) {
+    templateObject.getAccountsSummaryReports = function(dateFrom, dateTo, items = [], description, accountingMethod, datemethod) {
         reportService.getBalanceSheetRedirectRangeData(dateFrom, dateTo, 5000, 0).then(function(data) {
+
+            console.log(dateFrom);
+            console.log(dateTo);
 
             // let data = JSON.parse(dataObject[0].data);
             let balanceTotal = 0;
@@ -70,6 +73,11 @@ Template.basreturntransactionlist.onRendered(function() {
                     };
 
                     var dataList = {
+                        description: description,
+                        accountingMethod: accountingMethod,
+                        datemethod: (datemethod == "q") ? "quarterly" : "monthly",
+                        dateFrom: dateFrom,
+                        dateTo: dateTo,
                         date: childArray.Date != '' ? moment(childArray.Date).format("DD/MM/YYYY") : data.taccountrunningbalancereport[i].Date,
                         sortdate: childArray.Date != '' ? moment(childArray.Date).format("YYYY/MM/DD") : childArray.Date,
                         accountname: childArray.AccountName || '',
@@ -89,6 +97,8 @@ Template.basreturntransactionlist.onRendered(function() {
             }
 
             templateObject.datatablerecords.set(dataTableList);
+
+            console.log("dataTableList", dataTableList);
 
             if (templateObject.datatablerecords.get()) {
 
@@ -155,7 +165,7 @@ Template.basreturntransactionlist.onRendered(function() {
                     info: true,
                     responsive: true,
                     "order": [
-                        [3, "desc"]
+                        [0, "desc"]
                     ],
                     action: function() {
                         $('#tblBasReturnTransactionList').DataTable().ajax.reload();
@@ -210,18 +220,16 @@ Template.basreturntransactionlist.onRendered(function() {
                         }, 100);
                     },
                     fnInitComplete: function() {
-                        this.fnPageChange("last");
-                        $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBasReturnTransactionList_filter");
+                        // this.fnPageChange("last");
+                        $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBasReturnTransactionList_filter");
                     }
 
                 }).on('page', function() {
-
                     let draftRecord = templateObject.datatablerecords.get();
                     templateObject.datatablerecords.set(draftRecord);
                 }).on('column-reorder', function() {
 
                 });
-
 
                 $('.fullScreenSpin').css('display', 'none');
 
@@ -259,7 +267,7 @@ Template.basreturntransactionlist.onRendered(function() {
                 let datatablerecordObj = {
                     sTitle: v.innerText || '',
                     sWidth: sWidth || '',
-                    sIndex: v.cellIndex || '',
+                    sIndex: v.id || '',
                     sVisible: columVisible || false,
                     sClass: v.className || ''
                 };
@@ -289,17 +297,25 @@ Template.basreturntransactionlist.onRendered(function() {
                                 toDate = moment(toDate).format("YYYY-MM-DD");
 
                                 if (transactionitem == "W1") {
-                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2W1.accounts);
+                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2W1.accounts, data[i].description, data[i].accountingMethod, data[i].basReturnTab2.datemethod);
                                 } else if (transactionitem == "W2") {
-                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2W2.accounts);
+                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2W2.accounts, data[i].description, data[i].accountingMethod, data[i].basReturnTab2.datemethod);
                                 } else if (transactionitem == "W3") {
-                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2W3.accounts);
+                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2W3.accounts, data[i].description, data[i].accountingMethod, data[i].basReturnTab2.datemethod);
                                 } else if (transactionitem == "W4") {
-                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2W4.accounts);
+                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2W4.accounts, data[i].description, data[i].accountingMethod, data[i].basReturnTab2.datemethod);
                                 } else if (transactionitem == "T1") {
-                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2T1.accounts);
+                                    fromDate = new Date(data[i].basReturnTab2.startDate_2);
+                                    fromDate = moment(fromDate).format("YYYY-MM-DD");
+                                    toDate = new Date(data[i].basReturnTab2.endDate_2);
+                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab2T1.accounts, data[i].description, data[i].accountingMethod, data[i].basReturnTab2.datemethod_2);
                                 } else if (transactionitem == "7D") {
-                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab37D.accounts);
+                                    fromDate = new Date(data[i].basReturnTab3.startDate);
+                                    fromDate = moment(fromDate).format("YYYY-MM-DD");
+                                    toDate = new Date(data[i].basReturnTab3.endDate);
+                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    templateObject.getAccountsSummaryReports(fromDate, toDate, data[i].basReturnTab2.tab37D.accounts, data[i].description, data[i].accountingMethod, data[i].basReturnTab3.datemethod);
                                 }
                             }
                         }
@@ -537,7 +553,7 @@ Template.basreturntransactionlist.events({
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.id || '',
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };
@@ -581,13 +597,13 @@ Template.basreturntransactionlist.events({
 Template.basreturntransactionlist.helpers({
     datatablerecords: () => {
         return Template.instance().datatablerecords.get();
-        //   return Template.instance().datatablerecords.get().sort(function(a, b) {
-        //     if (a.Date == 'NA') {
+        // return Template.instance().datatablerecords.get().sort(function(a, b) {
+        //     if (a.type == 'NA') {
         //         return 1;
-        //     } else if (b.Date == 'NA') {
+        //     } else if (b.type == 'NA') {
         //         return -1;
         //     }
-        //     return (a.Date.toUpperCase() > b.Date.toUpperCase()) ? 1 : -1;
+        //     return (a.type.toUpperCase() > b.type.toUpperCase()) ? 1 : -1;
         // });
     },
     tableheaderrecords: () => {

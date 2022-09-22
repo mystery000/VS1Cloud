@@ -287,11 +287,11 @@ Template.basreturnlist.onRendered(function() {
                 //             "fnInitComplete": function() {
                 //                 this.fnPageChange('last');
                 //                 if (data.Params.Search.replace(/\s/g, "") == "") {
-                //                     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                //                     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
                 //                 } else {
-                //                     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                //                     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                 //                 }
-                //                 $("<button class='btn btn-primary btnRefreshBasReturn' type='button' id='btnRefreshBasReturn' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBasReturnList_filter");
+                //                 $("<button class='btn btn-primary btnRefreshBasReturn' type='button' id='btnRefreshBasReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBasReturnList_filter");
                 //                 $('.myvarFilterForm').appendTo(".colDateFilter");
                 //             },
                 //             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -388,7 +388,7 @@ Template.basreturnlist.onRendered(function() {
                     $('#tblBasReturnList').DataTable({
                         // dom: 'lBfrtip',
                         columnDefs: [
-                            { type: 'date', targets: 0 }
+                            { type: 'basnumber', targets: 0 }
                         ],
                         "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         buttons: [{
@@ -424,7 +424,7 @@ Template.basreturnlist.onRendered(function() {
                         responsive: true,
                         "order": [
                             [0, "desc"],
-                            [2, "desc"]
+                            // [2, "desc"]
                         ],
                         // "aaSorting": [[1,'desc']],
                         action: function() {
@@ -527,11 +527,11 @@ Template.basreturnlist.onRendered(function() {
                         "fnInitComplete": function() {
                             this.fnPageChange('last');
                             // if (data.Params.Search.replace(/\s/g, "") == "") {
-                            //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                            //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
                             // } else {
-                            //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                            //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                             // }
-                            $("<button class='btn btn-primary btnRefreshBasReturn' type='button' id='btnRefreshBasReturn' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBasReturnList_filter");
+                            $("<button class='btn btn-primary btnRefreshBasReturn' type='button' id='btnRefreshBasReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBasReturnList_filter");
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
                         "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -571,7 +571,7 @@ Template.basreturnlist.onRendered(function() {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.id || '',
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -793,11 +793,11 @@ Template.basreturnlist.onRendered(function() {
             //             "fnInitComplete": function() {
             //                 this.fnPageChange('last');
             //                 if (data.Params.Search.replace(/\s/g, "") == "") {
-            //                     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+            //                     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
             //                 } else {
-            //                     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+            //                     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
             //                 }
-            //                 $("<button class='btn btn-primary btnRefreshBasReturn' type='button' id='btnRefreshBasReturn' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
+            //                 $("<button class='btn btn-primary btnRefreshBasReturn' type='button' id='btnRefreshBasReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
             //                 $('.myvarFilterForm').appendTo(".colDateFilter");
             //             },
             //             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -1078,30 +1078,30 @@ Template.basreturnlist.events({
         $("#myModal2").modal("toggle");
         //Meteor._reload.reload();
     },
-    "blur .divcolumn": function(event) {
-        let columData = $(event.target).text();
+    // "blur .divcolumn": function(event) {
+    //     let columData = $(event.target).text();
 
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr("id");
+    //     let columnDatanIndex = $(event.target).closest("div.columnSettings").attr("id");
 
-        var datable = $("#tblBasReturnList").DataTable();
-        var title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
-    },
-    "change .rngRange": function(event) {
-        let range = $(event.target).val();
-        // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
+    //     var datable = $("#tblBasReturnList").DataTable();
+    //     var title = datable.column(columnDatanIndex).header();
+    //     $(title).html(columData);
+    // },
+    // "change .rngRange": function(event) {
+    //     let range = $(event.target).val();
+    //     // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
 
-        // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $("#tblBasReturnList th");
-        $.each(datable, function(i, v) {
-            if (v.innerText == columnDataValue) {
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("." + replaceClass + "").css("width", range + "px");
-            }
-        });
-    },
+    //     // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
+    //     let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
+    //     var datable = $("#tblBasReturnList th");
+    //     $.each(datable, function(i, v) {
+    //         if (v.innerText == columnDataValue) {
+    //             let className = v.className;
+    //             let replaceClass = className.replace(/ /g, ".");
+    //             $("." + replaceClass + "").css("width", range + "px");
+    //         }
+    //     });
+    // },
     "click .btnOpenSettings": function(event) {
         let templateObject = Template.instance();
         var columns = $("#tblBasReturnList th");
@@ -1125,7 +1125,7 @@ Template.basreturnlist.events({
             let datatablerecordObj = {
                 sTitle: v.innerText || "",
                 sWidth: sWidth || "",
-                sIndex: v.cellIndex || "",
+                sIndex: v.id || "",
                 sVisible: columVisible || false,
                 sClass: v.className || ""
             };

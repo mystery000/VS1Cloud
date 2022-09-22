@@ -26,7 +26,8 @@
             <div class="card-body p-3 rounded">
                 <!-- Start {{> optionNavSalesOverview}} -->
                 <div class="d-xl-flex justify-content-xl-end">
-                    <div><a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
+                    <div>
+                        <!-- <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a> -->
                         <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
                             <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                                 <div class="modal-content">
@@ -171,34 +172,34 @@
                     <table id="tblBasReturnTransactionList" style="width:100%" class="dataTable table table-striped table-bordered tblBalanceTransactionList">
                         <thead>
                             <tr class="dnd-moved">
-                                <th class="th colAccountingMethod" style="width:100px; text-align:center" rowspan="2">Accounting Method</th>
-                                <th class="th colTransaction" colspan="4" style="text-align:center">Transaction</th>
-                                <th class="th colDescription" style="width:250px; text-align:center" rowspan="2">Description</th>
-                                <th class="th colReturn" colspan="3" style="text-align:center">Return</th>
+                                <th class="th colAccountingMethod" style="width:100px; text-align:center" rowspan="2" id="header-1">Accounting Method</th>
+                                <th class="th colTransaction" colspan="4" style="text-align:center" id="header-2">Transaction</th>
+                                <th class="th colDescription" style="width:250px; text-align:center" rowspan="2" id="header-3">Description</th>
+                                <th class="th colReturn" colspan="3" style="text-align:center" id="header-4">Return</th>
                             </tr>
                             <tr>
-                                <th class="th colRef" style="text-align:center; width:100px;">Ref</th>
-                                <th class="th colType" style="text-align:center; width:100px;">Type</th>
-                                <th class="th colDate" style="text-align:center; width:100px;">Date</th>
-                                <th class="th colAmount" style="width: 100px; text-align:center;">Amount</th>
-                                <th class="th colPeriod" style="width: 100px; text-align:center;">Period</th>
-                                <th class="th colFrom" style="width: 100px; text-align:center;">From</th>
-                                <th class="th colTo" style="width:100px; text-align:center;">To</th>
+                                <th class="th colRef" style="text-align:center; width:100px;" id="header-5">Ref</th>
+                                <th class="th colType" style="text-align:center; width:100px;" id="header-6">Type</th>
+                                <th class="th colDate" style="text-align:center; width:100px;" id="header-7">Date</th>
+                                <th class="th colAmount" style="width: 100px; text-align:center;" id="header-8">Amount</th>
+                                <th class="th colPeriod" style="width: 100px; text-align:center;" id="header-9">Period</th>
+                                <th class="th colFrom" style="width: 100px; text-align:center;" id="header-10">From</th>
+                                <th class="th colTo" style="width:100px; text-align:center;" id="header-11">To</th>
                             </tr>
                         </thead>
                         <tbody>
                             {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
                                     <tr class="dnd-moved" id="{{item.accountname}}">
+                                        <td contenteditable="false" class="colAccountingMethod">{{item.accountingMethod}}</td>
+                                        <td contenteditable="false" class="colRef">{{item.accountname}}</td>
+                                        <td contenteditable="false" class="colType">{{item.type}}</td>
                                         <td contenteditable="false" class="colDate">{{item.date}}</td>
-                                        <td contenteditable="false" class="colAccountName">{{item.accountname}}</td>
-                                        <td contenteditable="false" class="colType transactiontype" id="transactiontype">{{item.type}}</td>
-                                        <td contenteditable="false" class="colClientName">{{item.clientname}}</td>
-                                        <td contenteditable="false" class="colDebit">{{item.debit}}</td>
-                                        <td contenteditable="false" class="colCredit">{{item.credit}}</td>
-                                        <td contenteditable="false" class="colBalance">{{item.balance}}</td>
-                                        <td contenteditable="false" class="colAccountType">{{item.accounttype}}</td>
-                                        <td contenteditable="false" class="colClosingBalance">{{item.closingbalance}}</td>
+                                        <td contenteditable="false" class="colAmount">{{item.balance}}</td>
+                                        <td contenteditable="false" class="colDescription">{{item.description}}</td>
+                                        <td contenteditable="false" class="colPeriod">{{item.datemethod}}</td>
+                                        <td contenteditable="false" class="colFrom">{{item.dateFrom}}</td>
+                                        <td contenteditable="false" class="colTo">{{item.dateTo}}</td>
                                     </tr>
                                 {{/each}}
                             {{/if}}
