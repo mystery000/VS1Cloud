@@ -239,6 +239,10 @@ Template.allChartLists.onRendered(function () {
               $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
             }
 
+            if( _chartGroup == 'Dashboard' ){
+              $(`[key='dashboard__account_list']`).removeClass("hideelement");
+            }
+
           } else {
             $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
               "<i class='far fa-eye-slash'></i>"
