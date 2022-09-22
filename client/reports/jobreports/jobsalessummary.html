@@ -312,7 +312,7 @@
                                                                             </td>
                                                                         {{/if}}
                                                                     {{/each}}
-                                                                     <td class="text-right text-danger"> <a href="{{redirectionType item}}" style="text-decoration:none!important;"> {{ formatTax entry.TotalTax }}</a></td>
+                                                                     <td class="text-right {{#if isNegativeAmount entry.TotalTax}} text-danger{{else}} text-success {{/if}}"> <a href="{{redirectionType item}}" style="text-decoration:none!important;"> {{ formatPrice entry.TotalTax }}</a></td>
 
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
@@ -333,10 +333,10 @@
                                                                 {{/if}}
 
                                                             {{else}}
-                                                                <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice entry.TotalDiscount }}</a></td>
-                                                                <td class="text-right text-danger"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatTax entry.TotalTax }}</a></td>
-                                                                <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice entry.TotalAmountEx }}</a></td>
-                                                                <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice entry.TotalAmountInc }}</a></td>
+                                                                <td class="text-right {{#if isNegativeAmount entry.TotalDiscount}} text-danger{{else}} text-success {{/if}}"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice entry.TotalDiscount }}</a></td>
+                                                                <td class="text-right {{#if isNegativeAmount entry.TotalTax}} text-danger{{else}} text-success {{/if}}"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice entry.TotalTax }}</a></td>
+                                                                <td class="text-right {{#if isNegativeAmount entry.TotalAmountEx}} text-danger{{else}} text-success {{/if}}"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice entry.TotalAmountEx }}</a></td>
+                                                                <td class="text-right {{#if isNegativeAmount entry.TotalAmountInc}} text-danger{{else}} text-success {{/if}}"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice entry.TotalAmountInc }}</a></td>
                                                                 
                                                             {{/if}}
                                                             

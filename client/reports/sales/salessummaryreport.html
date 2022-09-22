@@ -222,10 +222,10 @@
                         <th>Sales No.</th>
                         <th>Sales Date</th>
                         <th>Employee Name</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">Amount (Ex)</th>
-                        <th class="text-right">Total Tax</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">Amount (Inc)</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">Balance</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Amount (Ex)</th>
+                        <th class="text-center text-center{{countActive currencyList}}">Total Tax</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Amount (Inc)</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Balance</th>
                       </tr>
 
                       {{#if isOnlyDefaultActive equal "false" }}
@@ -239,7 +239,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -249,7 +249,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -257,7 +257,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}

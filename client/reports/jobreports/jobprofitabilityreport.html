@@ -178,6 +178,10 @@
                                     .table td:first-child {
                                         text-align: left;
                                     }
+                                    
+                                    .text-success a {
+                                        color: #1cc88a !important;
+                                    }
                                     table tr .text-danger,
                                     table tr .text-danger a {
                                         color: #e74a3b !important;
@@ -217,14 +221,14 @@
                                                             <td></td>
                                                             <td> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.JobName }}</a></td>
                                                             <td> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.JobNumber }}</a></td>
-                                                            <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.IncomeEx }}</a></td>
-                                                            <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.CostEx }}</a></td>
-                                                            <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Quotedex }}</a></td>
-                                                            <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.DiffIncome_Cost }}</a></td>
+                                                            <td class="text-right {{#if isNegativeAmount item.IncomeEx}} text-danger{{else}} text-success {{/if}}"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.IncomeEx }}</a></td>
+                                                            <td class="text-right {{#if isNegativeAmount item.CostEx}} text-danger{{else}} text-success {{/if}}"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.CostEx }}</a></td>
+                                                            <td class="text-right {{#if isNegativeAmount item.Quotedex}} text-danger{{else}} text-success {{/if}}"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Quotedex }}</a></td>
+                                                            <td class="text-right {{#if isNegativeAmount item.DiffIncome_Cost}} text-danger{{else}} text-success {{/if}}"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.DiffIncome_Cost }}</a></td>
                                                             <td> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Backorders }}</a></td>
-                                                            <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.CreditEx }}</a></td>
+                                                            <td class="text-right {{#if isNegativeAmount item.CreditEx}} text-danger{{else}} text-success {{/if}}"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.CreditEx }}</a></td>
                                                             <td class="text-right"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPercent item.ProfitPercent }}</a></td>
-                                                            <td class="text-right text-success"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.ProfitDollars }}</a></td>
+                                                            <td class="text-right {{#if isNegativeAmount item.ProfitDollars}} text-danger{{else}} text-success {{/if}}"> <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.ProfitDollars }}</a></td>
                                                         </tr>
                                                     {{/each}}
                                                 {{/each}}

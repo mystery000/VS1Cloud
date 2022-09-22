@@ -15,7 +15,7 @@ const currentDate = new Date();
 Template.customersummaryreport.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
-  templateObject.reportOptions = new ReactiveVar([]);
+  templateObject.reportOptions = new ReactiveVar();
   templateObject.records = new ReactiveVar([]);
 
 

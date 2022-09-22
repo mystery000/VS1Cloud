@@ -18,7 +18,7 @@ Template.leaveaccruedreport.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.records = new ReactiveVar([]);
-  templateObject.reportOptions = new ReactiveVar([]);
+  templateObject.reportOptions = new ReactiveVar();
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
@@ -82,7 +82,7 @@ Template.leaveaccruedreport.onRendered(() => {
     //--------- END OF DATE ---------------//
   };
 
-  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
       defaultOptions.fromDate = formatDateFrom;
@@ -92,7 +92,7 @@ Template.leaveaccruedreport.onRendered(() => {
       defaultOptions = {
         fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
         toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: true
+        ignoreDate: false
       };
     }
     templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
@@ -322,32 +322,32 @@ Template.leaveaccruedreport.events({
     }
   },
   "change .edtReportDates": async function () {
-    // LoadingOverlay.show();
-    // localStorage.setItem('VS1LeaveAccrued_Report', '');
+    LoadingOverlay.show();
+    localStorage.setItem('VS1LeaveAccrued_Report', '');
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
     await templateObject.setReportOptions(false, dateFrom, dateTo);
   },
   "click #lastMonth": async function () {
-    // LoadingOverlay.show();
-    // localStorage.setItem('VS1LeaveAccrued_Report', '');
+    LoadingOverlay.show();
+    localStorage.setItem('VS1LeaveAccrued_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
   },
   "click #lastQuarter": async function () {
-    // LoadingOverlay.show();
-    // localStorage.setItem('VS1LeaveAccrued_Report', '');
+    LoadingOverlay.show();
+    localStorage.setItem('VS1LeaveAccrued_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
   },
   "click #last12Months": async function () {
-    // LoadingOverlay.show();
-    // localStorage.setItem('VS1LeaveAccrued_Report', '');
+    LoadingOverlay.show();
+    localStorage.setItem('VS1LeaveAccrued_Report', '');
     let templateObject = Template.instance();
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
@@ -374,7 +374,7 @@ Template.leaveaccruedreport.events({
     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
   },
   "click #ignoreDate": async function () {
-
+    LoadingOverlay.show();
     localStorage.setItem('VS1LeaveAccrued_Report', '');
     let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");

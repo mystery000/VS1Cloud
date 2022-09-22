@@ -181,6 +181,12 @@
                                     table tr .text-danger a {
                                         color: #e74a3b !important;
                                     }
+                                    
+                                    table tr .text-success,
+                                    table tr .text-success a {
+                                        color: #1cc88a !important
+                                    }
+                                    
                                     .customDoubleTableHeading + tr th {
                                         border-right: 1px solid #cbcbcb !important;
                                     }
@@ -271,22 +277,22 @@
                                                             {{#if currencyList}}
                                                                 {{#each c in currencyList }}
                                                                     {{# if c.active}}
-                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Total_Amount_Ex c}}</a></td>
+                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Total_Amount_Ex c}} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Total_Amount_Ex c}}</a></td>
                                                                     {{/if}}
                                                                 {{/each}}
                                                                 {{#each c in currencyList }}
                                                                     {{# if c.active}}
-                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Total_Amount_Inc c}}</a></td>
+                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Total_Amount_Inc c}} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Total_Amount_Inc c}}</a></td>
                                                                     {{/if}}
                                                                 {{/each}}
                                                                 {{#each c in currencyList }}
                                                                     {{# if c.active}}
-                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Gross_Profit c}}</a></td>
+                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Gross_Profit c}} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Gross_Profit c}}</a></td>
                                                                     {{/if}}
                                                                 {{/each}}
                                                                 {{#each c in currencyList }}
                                                                     {{# if c.active}}
-                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Margin c}}</a></td>
+                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Margin c}} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Margin c}}</a></td>
                                                                     {{/if}}
                                                                 {{/each}}
                                                             {{/if}}

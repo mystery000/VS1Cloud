@@ -618,9 +618,10 @@ Template.purchasesreport.onRendered(() => {
     }
     };
 
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + currentDate2.getDate();
+    var getLoadDate = moment().format("YYYY-MM-DD");
+    let getDateFrom =  moment().subtract(1, "months").format("YYYY-MM-DD");
+    $("#dateFrom").val(moment(getDateFrom).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(getLoadDate).format('DD/MM/YYYY'));
     templateObject.getPurchasesReports(getDateFrom, getLoadDate, false);
 
     templateObject.getDepartments = function() {

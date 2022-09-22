@@ -573,7 +573,7 @@ Template.payrollleavetaken.helpers({
   },
   redirectionType(item) {
     if(item.PayDate === 'PO') {
-      return '/purchaseordercard?id=' + item.Id;
+      return 'employeescard?id=' + item.PayID;
     } else {
       return '#noInfoFound';
     }

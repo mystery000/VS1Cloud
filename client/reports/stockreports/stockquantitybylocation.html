@@ -227,8 +227,8 @@
                                                             <td><a href="{{redirectionType item}}">{{ item.PartType }}</a></td>
                                                             <td><a href="{{redirectionType item}}">{{ item.PartType }}</a></td>
                                                             <td><a href="{{redirectionType item}}">{{ item.PartsDescription }}</a></td>
-                                                            <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.Cost }}</a></td>
-                                                            <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.Value }}</a></td>
+                                                            <td class="text-right {{#if isNegativeAmount item.Cost}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ formatPrice item.Cost }}</a></td>
+                                                            <td class="text-right {{#if isNegativeAmount item.Value}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ formatPrice item.Value }}</a></td>
                                                             <td class="text-right"><a href="{{redirectionType item}}">{{ item.Qty }}</a></td>
                                                         </tr>
                                                     {{/each}}

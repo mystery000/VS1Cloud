@@ -239,7 +239,7 @@ Template.customerdetailsreport.onRendered(() => {
 Template.customerdetailsreport.events({
   "change .edtReportDates": async function () {
     $(".fullScreenSpin").css("display", "block");
-    localStorage.setItem('VS1CustomerSummary_Report', '');
+    localStorage.setItem('VS1CustomerDetails_Report', '');
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
@@ -248,7 +248,7 @@ Template.customerdetailsreport.events({
   },
   "click #lastMonth": async function () {
     $(".fullScreenSpin").css("display", "block");
-    localStorage.setItem('VS1CustomerSummary_Report', '');
+    localStorage.setItem('VS1CustomerDetails_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
@@ -257,7 +257,7 @@ Template.customerdetailsreport.events({
   },
   "click #lastQuarter": async function () {
     $(".fullScreenSpin").css("display", "block");
-    localStorage.setItem('VS1CustomerSummary_Report', '');
+    localStorage.setItem('VS1CustomerDetails_Report', '');
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
@@ -266,7 +266,7 @@ Template.customerdetailsreport.events({
   },
   "click #last12Months": async function () {
     $(".fullScreenSpin").css("display", "block");
-    localStorage.setItem('VS1CustomerSummary_Report', '');
+    localStorage.setItem('VS1CustomerDetails_Report', '');
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
     $("#dateFrom").attr("readonly", false);
@@ -298,7 +298,7 @@ Template.customerdetailsreport.events({
     $(".fullScreenSpin").css("display", "inline-block");
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
-    localStorage.setItem('VS1CustomerSummary_Report', '');
+    localStorage.setItem('VS1CustomerDetails_Report', '');
     let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
     await templateObject.setReportOptions(true);

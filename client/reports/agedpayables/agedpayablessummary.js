@@ -24,7 +24,7 @@ Template.agedpayablessummary.onCreated(() => {
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
-  templateObject.reportOptions = new ReactiveVar([]);
+  templateObject.reportOptions = new ReactiveVar();
 });
 
 Template.agedpayablessummary.onRendered(()=>{
@@ -82,7 +82,7 @@ Template.agedpayablessummary.onRendered(()=>{
    $("#dateFrom").val(fromDate);
    $("#dateTo").val(begunDate);
 
-  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
       defaultOptions.fromDate = formatDateFrom;
@@ -92,7 +92,7 @@ Template.agedpayablessummary.onRendered(()=>{
       defaultOptions = {
         fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
         toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: true
+        ignoreDate: false
       };
     }
     templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
@@ -106,9 +106,9 @@ Template.agedpayablessummary.onRendered(()=>{
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getAgedPayableReports(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
   };
+  templateObject.setReportOptions(false);
 
-
-   let contactID = FlowRouter.current().queryParams.contactid ||'';
+  let contactID = FlowRouter.current().queryParams.contactid ||'';
    
     templateObject.getAgedPayableReports = function (dateFrom, dateTo, ignoreDate) {
       LoadingOverlay.show();
@@ -689,7 +689,7 @@ Template.agedpayablessummary.onRendered(()=>{
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + currentDate2.getDate();
     //templateObject.getAgedPayableReports(getDateFrom,getLoadDate,false);
-    $('.ignoreDate').trigger('click');
+    // $('.ignoreDate').trigger('click');
     templateObject.getDepartments = function(){
       reportService.getDepartment().then(function(data){
         for(let i in data.tdeptclass){

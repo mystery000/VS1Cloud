@@ -98,8 +98,13 @@ Template.jobprofitabilityreport.onRendered(() => {
         ignoreDate: true
       };
     }
-    $("#dateFrom").val(defaultOptions.fromDate);
-    $("#dateTo").val(defaultOptions.toDate);
+    $('.edtReportDates').attr('disabled', false)
+    if( ignoreDate == true ){
+      $('.edtReportDates').attr('disabled', true);
+      templateObject.dateAsAt.set("Current Date");
+    }
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getJobProfitabilityReportData();
   };

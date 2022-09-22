@@ -82,7 +82,7 @@ Template.transactionjournallist.onRendered(() => {
 
     //--------- END OF DATE ---------------//
   };
-  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
       defaultOptions.fromDate = formatDateFrom;
@@ -92,11 +92,16 @@ Template.transactionjournallist.onRendered(() => {
       defaultOptions = {
         fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
         toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: true
+        ignoreDate: false
       };
     }
-    $("#dateFrom").val(defaultOptions.fromDate);
-    $("#dateTo").val(defaultOptions.toDate);
+    $('.edtReportDates').attr('disabled', false)
+    if( ignoreDate == true ){
+      $('.edtReportDates').attr('disabled', true);
+      templateObject.dateAsAt.set("Current Date");
+    }
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getTransactionJournalReportData();
   };
@@ -295,66 +300,65 @@ Template.transactionjournallist.events({
       $(".table tbody tr").show();
     }
   },
-  // "change .edtReportDates": async function () {
-  //   $(".fullScreenSpin").css("display", "block");
-  //   let templateObject = Template.instance();
-  //   var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-  //   var dateTo = new Date($("#dateTo").datepicker("getDate"));
-  //   await templateObject.setReportOptions(false, dateFrom, dateTo);
-  //   $(".fullScreenSpin").css("display", "none");
-  // },
-  // "click #lastMonth": async function () {
-  //   $(".fullScreenSpin").css("display", "block");
-  //   let templateObject = Template.instance();
-  //   let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
-  //   let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
-  //   await templateObject.setReportOptions(false, fromDate, endDate);
-  //   $(".fullScreenSpin").css("display", "none");
-  // },
-  // "click #lastQuarter": async function () {
-  //   $(".fullScreenSpin").css("display", "block");
-  //   let templateObject = Template.instance();
-  //   let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
-  //   let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-  //   await templateObject.setReportOptions(false, fromDate, endDate);
-  //   $(".fullScreenSpin").css("display", "none");
-  // },
-  // "click #last12Months": async function () {
-  //   $(".fullScreenSpin").css("display", "block");
-  //   let templateObject = Template.instance();
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   $("#dateFrom").attr("readonly", false);
-  //   $("#dateTo").attr("readonly", false);
-  //   var currentDate = new Date();
-  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  "change .edtReportDates": async function () {
+    LoadingOverlay.show();
+    localStorage.setItem('VS1TransactionJournal_Report', '');
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    await templateObject.setReportOptions(false, dateFrom, dateTo);
+  },
+  "click #lastMonth": async function () {
+    LoadingOverlay.show();
+    localStorage.setItem('VS1TransactionJournal_Report', '');
+    let templateObject = Template.instance();
+    let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
+    let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
+    await templateObject.setReportOptions(false, fromDate, endDate);
+  },
+  "click #lastQuarter": async function () {
+    LoadingOverlay.show();
+    localStorage.setItem('VS1TransactionJournal_Report', '');
+    let templateObject = Template.instance();
+    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
+    await templateObject.setReportOptions(false, fromDate, endDate);
+  },
+  "click #last12Months": async function () {
+    LoadingOverlay.show();
+    localStorage.setItem('VS1TransactionJournal_Report', '');
+    let templateObject = Template.instance();
+    $("#dateFrom").attr("readonly", false);
+    $("#dateTo").attr("readonly", false);
+    var currentDate = new Date();
+    var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
-  //   let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-  //   let fromDateDay = currentDate.getDate();
-  //   if (currentDate.getMonth() + 1 < 10) {
-  //     fromDateMonth = "0" + (currentDate.getMonth() + 1);
-  //   }
-  //   if (currentDate.getDate() < 10) {
-  //     fromDateDay = "0" + currentDate.getDate();
-  //   }
+    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+    let fromDateDay = currentDate.getDate();
+    if (currentDate.getMonth() + 1 < 10) {
+      fromDateMonth = "0" + (currentDate.getMonth() + 1);
+    }
+    if (currentDate.getDate() < 10) {
+      fromDateDay = "0" + currentDate.getDate();
+    }
 
-  //   var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
-  //   templateObject.dateAsAt.set(begunDate);
-  //   $("#dateFrom").val(fromDate);
-  //   $("#dateTo").val(begunDate);
+    var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
+    templateObject.dateAsAt.set(begunDate);
+    $("#dateFrom").val(fromDate);
+    $("#dateTo").val(begunDate);
 
-  //   var currentDate2 = new Date();
-  //   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-  //   let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
-  //   await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-  //   $(".fullScreenSpin").css("display", "none");
-  // },
-  // "click #ignoreDate": async function () {
-  //   let templateObject = Template.instance();
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   templateObject.dateAsAt.set("Current Date");
-  //   await templateObject.setReportOptions(true);
-  //   $(".fullScreenSpin").css("display", "none");
-  // },
+    var currentDate2 = new Date();
+    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+    let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
+    await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
+  },
+  "click #ignoreDate": async function () {
+    LoadingOverlay.show();
+    localStorage.setItem('VS1TransactionJournal_Report', '');
+    let templateObject = Template.instance();
+    templateObject.dateAsAt.set("Current Date");
+    await templateObject.setReportOptions(true);
+  },
   
   // CURRENCY MODULE //
   "click .fx-rate-btn": async (e) => {

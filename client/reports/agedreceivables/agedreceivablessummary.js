@@ -641,11 +641,12 @@ Template.agedreceivablessummary.onRendered(()=>{
     }
     };
 
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + currentDate2.getDate();
-    //templateObject.getAgedReceivableReports(getDateFrom,getLoadDate,false);
-    $('.ignoreDate').trigger('click');
+    let getDateFrom = moment().subtract(1, "months").format("YYYY-MM-DD");
+    let getLoadDate = moment().format("YYYY-MM-DD");
+    $("#dateFrom").val(moment(getDateFrom).format("DD/MM/YYYY"));
+    $("#dateTo").val(moment(getLoadDate).format("DD/MM/YYYY"));
+    templateObject.getAgedReceivableReports(getDateFrom,getLoadDate,false);
+    // $('.ignoreDate').trigger('click');
     templateObject.getDepartments = function(){
       reportService.getDepartment().then(function(data){
         for(let i in data.tdeptclass){

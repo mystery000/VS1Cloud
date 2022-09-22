@@ -14,7 +14,7 @@ let defaultCurrencyCode = CountryAbbr;
 Template.stockquantitybylocation.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
-  templateObject.reportOptions = new ReactiveVar([]);
+  templateObject.reportOptions = new ReactiveVar();
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
@@ -78,7 +78,7 @@ Template.stockquantitybylocation.onRendered(() => {
 
     //--------- END OF DATE ---------------//
   };
-  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
       defaultOptions.fromDate = formatDateFrom;
@@ -88,11 +88,16 @@ Template.stockquantitybylocation.onRendered(() => {
       defaultOptions = {
         fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
         toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: true
+        ignoreDate: false
       };
     }
-    $("#dateFrom").val(defaultOptions.fromDate);
-    $("#dateTo").val(defaultOptions.toDate);
+    $('.edtReportDates').attr('disabled', false)
+    if( ignoreDate == true ){
+      $('.edtReportDates').attr('disabled', true);
+      templateObject.dateAsAt.set("Current Date");
+    }
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getStockLocationReportData();
   };
@@ -308,7 +313,7 @@ Template.stockquantitybylocation.events({
   "click #lastMonth": function () {
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1GeneralLedger_Report", "");
+    localStorage.setItem("VS1StockQuantityLocation_Report", "");
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
     var currentDate = new Date();
@@ -357,14 +362,13 @@ Template.stockquantitybylocation.events({
     var getLoadDate = formatDateERP(prevMonthLastDate);
     let getDateFrom = formatDateERP(prevMonthFirstDate);
     templateObject.dateAsAt.set(fromDate);
-    $(".fullScreenSpin").css("display", "none");
 
-    templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+    templateObject.setReportOptions(false, getDateFrom, getLoadDate);
   },
   "click #lastQuarter": function () {
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1GeneralLedger_Report", "");
+    localStorage.setItem("VS1StockQuantityLocation_Report", "");
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
     var currentDate = new Date();
@@ -401,13 +405,12 @@ Template.stockquantitybylocation.events({
 
     var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
     let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
-    templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
-    $(".fullScreenSpin").css("display", "none");
+    templateObject.setReportOptions(false, getDateFrom, getLoadDate);
   },
   "click #last12Months": function () {
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1GeneralLedger_Report", "");
+    localStorage.setItem("VS1StockQuantityLocation_Report", "");
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
     var currentDate = new Date();
@@ -440,18 +443,16 @@ Template.stockquantitybylocation.events({
       Math.floor(currentDate2.getMonth() + 1) +
       "-" +
       currentDate2.getDate();
-    templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
-    $(".fullScreenSpin").css("display", "none");
+    templateObject.setReportOptions(false, getDateFrom, getLoadDate);
   },
   "click #ignoreDate": function () {
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1GeneralLedger_Report", "");
+    localStorage.setItem("VS1StockQuantityLocation_Report", "");
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
     templateObject.dateAsAt.set("Current Date");
-    templateObject.getGeneralLedgerReports("", "", true);
-    $(".fullScreenSpin").css("display", "none");
+    templateObject.setReportOptions(true);
   },
 
   // CURRENCY MODULE //
