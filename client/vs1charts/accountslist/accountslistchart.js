@@ -1177,9 +1177,9 @@ Template.accountslistchart.onRendered(()=>{
                        },
                        function(err, idTag) {
                            if (err) {
-                               $("#myModal2").modal("toggle");
+                               $(".myModalAccountList").modal("toggle");
                            } else {
-                               $("#myModal2").modal("toggle");
+                               $(".myModalAccountList").modal("toggle");
                            }
                        }
                    );
@@ -1196,16 +1196,16 @@ Template.accountslistchart.onRendered(()=>{
                        },
                        function(err, idTag) {
                            if (err) {
-                               $("#myModal2").modal("toggle");
+                               $(".myModalAccountList").modal("toggle");
                            } else {
-                               $("#myModal2").modal("toggle");
+                               $(".myModalAccountList").modal("toggle");
                            }
                        }
                    );
                }
            }
        }
-       $("#myModal2").modal("toggle");
+       $(".myModalAccountList").modal("toggle");
        //Meteor._reload.reload();
    },
    "blur .accountslistchart .divcolumn": function(event) {
