@@ -16,6 +16,8 @@ import "../lib/global/indexdbstorage.js";
 import { ContactService } from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
 import { saveCurrencyHistory } from "../packages/currency/CurrencyWidget";
+import { getCurrentCurrencySymbol } from "../popUps/currnecypopup";
+import { convertToForeignAmount } from "../payments/paymentcard/supplierPaymentcard";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -25,8 +27,15 @@ let isDropDown = false;
 
 let template_list = ["Invoices", "Invoice Back Orders", "Delivery Docket"];
 
+const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Unit Price (Inc)", "Cost Price"];
+
+let defaultCurrencyCode = CountryAbbr;
+
 Template.new_invoice.onCreated(() => {
   const templateObject = Template.instance();
+  templateObject.isForeignEnabled = new ReactiveVar(false);
+
+
   templateObject.records = new ReactiveVar();
   templateObject.CleintName = new ReactiveVar();
   templateObject.Department = new ReactiveVar();
@@ -13624,6 +13633,36 @@ Template.new_invoice.helpers({
     }
     return countryVatLabel;
   },
+
+
+    isForeignEnabled: () => {
+        return Template.instance().isForeignEnabled.get();
+    },
+    getDefaultCurrency: () => {
+        return defaultCurrencyCode;
+    },
+    convertToForeignAmount: (amount) => {
+        return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+    },
+
+    displayFieldColspan: (displayfield) => {
+        if(foreignCols.includes(displayfield.custfieldlabel)) 
+        {
+            if(Template.instance().isForeignEnabled.get() == true) {
+                return 2
+            }
+            return 1;
+        } 
+        return 1;
+    },
+
+    subHeaderForeign: (displayfield) => {
+
+        if(foreignCols.includes(displayfield.custfieldlabel)) {
+            return true;
+        }
+        return false;
+    },
 });
 
 Template.new_invoice.events({
@@ -20330,6 +20369,38 @@ Template.new_invoice.events({
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
   },
+
+  'change #sltCurrency': (e, ui) => {
+    if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
+        $(".foreign-currency-js").css("display", "block");
+        ui.isForeignEnabled.set(true);
+    } else {
+        $(".foreign-currency-js").css("display", "none");
+        ui.isForeignEnabled.set(false);
+    }
+  },
+
+  'change .exchange-rate-js': (e, ui) => {
+
+
+      setTimeout(() => {
+          const toConvert = document.querySelectorAll('.convert-to-foreign:not(.hiddenColumn)');
+          const rate = $("#exchange_rate").val();
+
+          toConvert.forEach((element) => {
+              const mainClass = element.classList[0];
+              const mainValueElement = document.querySelector(`#tblInvoiceLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
+              
+              let value = mainValueElement.childElementCount > 0 ? 
+                  $(mainValueElement).find('input').val() : 
+                  mainValueElement.innerText;
+              value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
+              $(element).text(value);
+      
+          })
+      }, 500);
+
+  }
 });
 
 Template.registerHelper("equals", function (a, b) {

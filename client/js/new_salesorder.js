@@ -7602,34 +7602,34 @@ Template.new_salesorder.helpers({
 
 
 
-  isForeignEnabled: () => {
-    return Template.instance().isForeignEnabled.get();
-},
-getDefaultCurrency: () => {
-    return defaultCurrencyCode;
-},
-convertToForeignAmount: (amount) => {
-    return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-},
+    isForeignEnabled: () => {
+        return Template.instance().isForeignEnabled.get();
+    },
+    getDefaultCurrency: () => {
+        return defaultCurrencyCode;
+    },
+    convertToForeignAmount: (amount) => {
+        return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+    },
 
-displayFieldColspan: (displayfield) => {
-    if(foreignCols.includes(displayfield.custfieldlabel)) 
-    {
-        if(Template.instance().isForeignEnabled.get() == true) {
-            return 2
-        }
+    displayFieldColspan: (displayfield) => {
+        if(foreignCols.includes(displayfield.custfieldlabel)) 
+        {
+            if(Template.instance().isForeignEnabled.get() == true) {
+                return 2
+            }
+            return 1;
+        } 
         return 1;
-    } 
-    return 1;
-},
+    },
 
-subHeaderForeign: (displayfield) => {
+    subHeaderForeign: (displayfield) => {
 
-    if(foreignCols.includes(displayfield.custfieldlabel)) {
-        return true;
-    }
-    return false;
-},
+        if(foreignCols.includes(displayfield.custfieldlabel)) {
+            return true;
+        }
+        return false;
+    },
 });
 
 Template.new_salesorder.events({
