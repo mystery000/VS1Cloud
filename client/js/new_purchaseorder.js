@@ -189,7 +189,8 @@ Template.purchaseordercard.onRendered(() => {
           custfieldlabel: reset_data[r].label, 
           class: reset_data[r].class,
           display: reset_data[r].display,
-          width: reset_data[r].width ? reset_data[r].width : ''
+          width: reset_data[r].width ? reset_data[r].width : '',
+          colspan: ["Price (Inc)", "Tax Amt", "Amount (Ex)"].includes(reset_data[r].label) == true ? (templateObject.isForeignEnabled.get() == true ? 2 : 1) : 1
         };
         custFields.push(customData);
       }
@@ -5560,6 +5561,25 @@ Template.purchaseordercard.helpers({
     },
     convertToForeignAmount: (amount) => {
         return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+    },
+
+    displayFieldColspan: (displayfield) => {
+        if(["Price (Inc)", "Tax Amt", "Amount (Ex)"].includes(displayfield.custfieldlabel)) 
+        {
+            if(Template.instance().isForeignEnabled.get() == true) {
+                return 2
+            }
+            return 1;
+        } 
+        return 1;
+    },
+
+    subHeaderForeign: (displayfield) => {
+
+        if(["Price (Inc)", "Tax Amt", "Amount (Ex)"].includes(displayfield.custfieldlabel)) {
+            return true;
+        }
+        return false;
     },
 });
 
@@ -11385,17 +11405,41 @@ Template.purchaseordercard.events({
     $("#clickedControl").val("three");
   },
 
-  'change #sltCurrency': (e, ui) => {
-    if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
-        $(".foreign-currency-js").css("display", "block");
-        ui.isForeignEnabled.set(true);
-    } else {
-        $(".foreign-currency-js").css("display", "none");
-        ui.isForeignEnabled.set(false);
+    'change #sltCurrency': (e, ui) => {
+        if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
+            $(".foreign-currency-js").css("display", "block");
+            ui.isForeignEnabled.set(true);
+        } else {
+            $(".foreign-currency-js").css("display", "none");
+            ui.isForeignEnabled.set(false);
+        }
+    },
+
+    'change .exchange-rate-js': (e, ui) => {
+
+
+        setTimeout(() => {
+            const toConvert = document.querySelectorAll('.convert-to-foreign:not(.hiddenColumn)');
+            const rate = $("#exchange_rate").val();
+
+            toConvert.forEach((element) => {
+                const mainClass = element.classList[0];
+                const mainValueElement = document.querySelector(`#tblPurchaseOrderLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
+                
+                let value = mainValueElement.childElementCount > 0 ? 
+                    $(mainValueElement).find('input').val() : 
+                    mainValueElement.innerText;
+                value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
+                $(element).text(value);
+         
+            })
+        }, 500);
+
     }
-}
+
 });
 
 Template.registerHelper('equals', function(a, b) {
     return a === b;
 });
+

@@ -1474,41 +1474,40 @@
                                 <tr class="dnd-moved"> 
                                   {{#each displayfield in displayfields}}
                                     {{#if displayfield.display}}
-                                    <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
-                                      {{displayfield.custfieldlabel}}
-                                      {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>
-                                        {{else}}
-                                        {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>  
-                                          {{else}}
-                                          {{#if equals displayfield.class 'UnitPriceEx'}} <i class="fas fa-random"></i> 
+                                        <th colspan="{{displayFieldColspan displayfield}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                        {{displayfield.custfieldlabel}}
+                                        {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>
                                             {{else}}
-                                            {{#if equals displayfield.class 'UnitPriceInc'}} <i class="fas fa-random fa-trans"></i> 
+                                            {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>  
+                                            {{else}}
+                                            {{#if equals displayfield.class 'UnitPriceEx'}} <i class="fas fa-random"></i> 
+                                                {{else}}
+                                                {{#if equals displayfield.class 'UnitPriceInc'}} <i class="fas fa-random fa-trans"></i> 
+                                                {{/if}}
                                             {{/if}}
-                                          {{/if}}
+                                            {{/if}}
                                         {{/if}}
-                                      {{/if}}
-                                    </th>
+                                        </th>
                                     {{/if}}
                                   {{/each}}
                                   <th class="th" style="width: 25px;"></th>
                                 </tr>
                                 {{#if isForeignEnabled}}
                                     <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th>{{ getDefaultCurrency }}</th>
-                                        <th>Foreign</th>
-                                        <th></th>
-                                        <th></th>
-                                        <th>{{ getDefaultCurrency }}</th>
-                                        <th>Foreign</th>
-                                        <th></th>
-                                        <th>{{ getDefaultCurrency }}</th>
-                                        <th>Foreign</th>
-                                        <th></th>
+                                        {{#each displayfield in displayfields}}
+                                            {{#if displayfield.display}}
+                                                {{#if subHeaderForeign displayfield}}
+                                                    <th class="{{#if displayfield.active}}{{else}}hiddenColumn{{/if}}">{{ getDefaultCurrency }}</th>
+                                                    <th class="{{#if displayfield.active}}{{else}}hiddenColumn{{/if}}">Foreign</th>
+                                                {{else}}
+                                                    <th class="{{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"></th>
+                                                {{/if}}
+
+                                            {{/if}}
+                                        {{/each}}
+                                        <th class="th" style="width: 25px;"></th>
+
+                                    
                                     </tr>
                                 {{/if}}
                               </thead>
@@ -1528,7 +1527,15 @@
                                           {{/if}}
 
                                           <td class="colUnitPriceEx {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}"></td>
-                                          <td class="colUnitPriceInc {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text" value="{{item.unitPriceInc}}"></td>
+                                            {{#if isForeignEnabled}}
+                                                <td class="colUnitPriceEx convert-to-foreign {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPrice}}</td>
+                                            {{/if}}
+                                          <td class="colUnitPriceInc {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">
+                                            <input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text" value="{{item.unitPriceInc}}"></td>
+                                            {{#if isForeignEnabled}}
+                                                <td class="colUnitPriceInc convert-to-foreign {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPriceInc}}</td>
+                                            {{/if}}
+                                          
                                           <td contenteditable="false" class="colCustomerJob {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">
                                             <input class="es-input highlightSelect lineCustomerJob" type="search" value="{{item.customerJob}}">
                                           </td>
@@ -1537,11 +1544,25 @@
                                           <td contenteditable="false" class="lineTaxRate colTaxRate pointer {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.taxRate}}</td>
                                           <td contenteditable="false" class="colTaxCode {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
                                           <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
+                                          
+                                          {{#if isForeignEnabled}}
+                                            <td contenteditable="false" class="lineTaxAmount convert-to-foreign colTaxAmount pointer {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;cursor: pointer;">{{ convertToForeignAmount item.TaxTotal}}</td>
+
+                                          {{/if}}
+                                          
                                           {{#if isBatchSerialNoTracking 'true'}}
                                               <td class="th colSerialNo {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
                                           {{/if}}
                                           <td contenteditable="false" class="lineAmt colAmountEx colAmount {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.TotalAmt}}</td>
+                                          {{#if isForeignEnabled}}
+                                            <td contenteditable="false" class="lineAmt convert-to-foreign colAmountEx colAmount {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{convertToForeignAmount item.TotalAmt}}</td>
+                                          {{/if}}
                                           <td contenteditable="false" class="lineAmt colAmountInc colAmount {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.TotalAmtInc}}</td>
+                                          {{#if isForeignEnabled}}
+                                          <td contenteditable="false" class="lineAmt convert-to-foreign colAmountInc colAmount {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{convertToForeignAmount item.TotalAmtInc}}</td>
+
+                                          {{/if}}
+                                          
                                           <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
                                       </tr>
                                   {{/each}}

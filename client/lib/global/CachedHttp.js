@@ -21,7 +21,7 @@ class CachedHttp {
     const prefix = "CachedHttp | ";
 
     if (this.debug) {
-      // console info(prefix, message, ...optionalParams);
+      // console.info(prefix, message, ...optionalParams);
     }
   }
 
@@ -48,6 +48,7 @@ class CachedHttp {
     forceOverride: false,
     useIndexDb: true,
     useLocalStorage: false,
+    fallBackToLocal: true,
     requestParams: {},
     validate: cachedResponse => {
       // this function should return true if the request is using any previously used params
@@ -199,6 +200,11 @@ class CachedHttp {
       }
     } else {
        const _data = await getFromRemote();
+       if(options.fallBackToLocal == true) {
+        if(!_data) {
+          return getFromLocalIndexDb();
+        }
+       }
        this.logSeparator();
        return _data;
     }
