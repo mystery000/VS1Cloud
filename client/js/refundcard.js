@@ -172,7 +172,7 @@ Template.refundcard.onRendered(() => {
 
 
     // set initial table rest_data
-    function init_reset_data() { 
+    function init_reset_data() {
 
       let reset_data = [
         { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
@@ -191,11 +191,11 @@ Template.refundcard.onRendered(() => {
         { index: 13, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
       ];
 
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       if(isBatchSerialNoTracking) {
-        reset_data[11].display = true; 
+        reset_data[11].display = true;
       } else {
-        reset_data[11].display = false; 
+        reset_data[11].display = false;
       }
 
       let templateObject = Template.instance();
@@ -5623,13 +5623,13 @@ Template.refundcard.onRendered(function() {
             }).catch(function (err) {
             });
           } else {
-            let data = JSON.parse(dataObject[0].data); 
+            let data = JSON.parse(dataObject[0].data);
             // handle process here
           }
         });
       } catch (error) {
-      } 
-      return; 
+      }
+      return;
     }
 
     function showCustomFieldDisplaySettings(reset_data) {
@@ -5642,7 +5642,7 @@ Template.refundcard.onRendered(function() {
         customData = {
           active: reset_data[r].active,
           id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label, 
+          custfieldlabel: reset_data[r].label,
           class: reset_data[r].class,
           display: reset_data[r].display,
           width: reset_data[r].width ? reset_data[r].width : ''
@@ -7725,10 +7725,6 @@ Template.refundcard.events({
                             //   }).catch(function (err) {
                             //   });
                             // });
-                            sideBarService.getAllRefundList("All").then(function(data) {
-                              addVS1Data('TRefundSale', JSON.stringify(data));
-                              }).catch(function(err) {
-                              });
                             // add to custom field
                         if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
                             Meteor.call('sendEmail', {
@@ -8114,7 +8110,7 @@ Template.refundcard.events({
         }
 
     },
-    
+
     'click .chkProductName': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colProductName').addClass('showColumn');
@@ -8124,7 +8120,7 @@ Template.refundcard.events({
         $('.colProductName').removeClass('showColumn');
       }
     },
-    'click .chkDescription': function(event) { 
+    'click .chkDescription': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colDescription').addClass('showColumn');
         $('.colDescription').removeClass('hiddenColumn');
@@ -8190,16 +8186,16 @@ Template.refundcard.events({
     },
 
     'click .chkAmountEx': function (event) {
-      if ($(event.target).is(':checked')) {  
-          $('.chkAmountInc').prop("checked", false); 
+      if ($(event.target).is(':checked')) {
+          $('.chkAmountInc').prop("checked", false);
 
           $('.colAmountInc').addClass('hiddenColumn');
           $('.colAmountInc').removeClass('showColumn');
 
           $('.colAmountEx').addClass('showColumn');
           $('.colAmountEx').removeClass('hiddenColumn');
-        } else { 
-          $('.chkAmountInc').prop("checked", true); 
+        } else {
+          $('.chkAmountInc').prop("checked", true);
 
           $('.colAmountEx').addClass('hiddenColumn');
           $('.colAmountEx').removeClass('showColumn');
@@ -8209,16 +8205,16 @@ Template.refundcard.events({
       }
     },
     'click .chkAmountInc': function(event) {
-      if ($(event.target).is(':checked')) { 
-          $('.chkAmountEx').prop("checked", false); 
+      if ($(event.target).is(':checked')) {
+          $('.chkAmountEx').prop("checked", false);
 
           $('.colAmountEx').addClass('hiddenColumn');
           $('.colAmountEx').removeClass('showColumn');
 
           $('.colAmountInc').addClass('showColumn');
           $('.colAmountInc').removeClass('hiddenColumn');
-      } else { 
-          $('.chkAmountEx').prop("checked", true); 
+      } else {
+          $('.chkAmountEx').prop("checked", true);
 
           $('.colAmountInc').addClass('hiddenColumn');
           $('.colAmountInc').removeClass('showColumn');
@@ -8229,17 +8225,17 @@ Template.refundcard.events({
     },
 
     'click .chkUnitPriceEx': function (event) {
-      if ($(event.target).is(':checked')) { 
-          $('.chkUnitPriceInc').prop("checked", false); 
+      if ($(event.target).is(':checked')) {
+          $('.chkUnitPriceInc').prop("checked", false);
 
           $('.colUnitPriceInc').addClass('hiddenColumn');
           $('.colUnitPriceInc').removeClass('showColumn');
 
           $('.colUnitPriceEx').addClass('showColumn');
           $('.colUnitPriceEx').removeClass('hiddenColumn');
-          
-      } else { 
-          $('.chkUnitPriceInc').prop("checked", true); 
+
+      } else {
+          $('.chkUnitPriceInc').prop("checked", true);
 
           $('.colUnitPriceEx').addClass('hiddenColumn');
           $('.colUnitPriceEx').removeClass('showColumn');
@@ -8249,16 +8245,16 @@ Template.refundcard.events({
       }
     },
     'click .chkUnitPriceInc': function(event) {
-        if ($(event.target).is(':checked')) { 
-          $('.chkUnitPriceEx').prop("checked", false); 
+        if ($(event.target).is(':checked')) {
+          $('.chkUnitPriceEx').prop("checked", false);
 
           $('.colUnitPriceEx').addClass('hiddenColumn');
           $('.colUnitPriceEx').removeClass('showColumn');
 
           $('.colUnitPriceInc').addClass('showColumn');
           $('.colUnitPriceInc').removeClass('hiddenColumn');
-        } else { 
-          $('.chkUnitPriceEx').prop("checked", true); 
+        } else {
+          $('.chkUnitPriceEx').prop("checked", true);
 
           $('.colUnitPriceInc').addClass('hiddenColumn');
           $('.colUnitPriceInc').removeClass('showColumn');
@@ -8391,22 +8387,22 @@ Template.refundcard.events({
           display: true
         };
 
-        lineItems.push(lineItemObj); 
+        lineItems.push(lineItemObj);
       });
 
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index); 
+      lineItems.sort((a,b) => a.index - b.index);
 
       try {
         let erpGet = erpDb();
         let tableName = "tblRefundLine";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
         let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
-        if(added) { 
+        if(added) {
           swal({
             title: 'SUCCESS',
             text: "Display settings is updated!",
@@ -8416,7 +8412,7 @@ Template.refundcard.events({
           }).then((result) => {
               if (result.value) {
                  $('#myModal2').modal('hide');
-              }  
+              }
           });
         } else {
           swal("Something went wrong!", "", "error");
@@ -8424,21 +8420,21 @@ Template.refundcard.events({
       } catch (error) {
         $(".fullScreenSpin").css("display", "none");
         swal("Something went wrong!", "", "error");
-      } 
+      }
     },
 
     // custom field displaysettings
     'click .btnResetGridSettings': function(event) {
       let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get(); 
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+      let reset_data = templateObject.reset_data.get();
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       if(isBatchSerialNoTracking) {
-        reset_data[11].display = true; 
+        reset_data[11].display = true;
       } else {
-        reset_data[11].display = false; 
+        reset_data[11].display = false;
       }
-      reset_data = reset_data.filter(redata => redata.display); 
-  
+      reset_data = reset_data.filter(redata => redata.display);
+
       $(".displaySettings").each(function (index) {
         let $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);

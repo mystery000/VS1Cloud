@@ -429,7 +429,7 @@ Template.employeescard.onRendered(function () {
             }, 1000);
         }
     }, 500);
-    
+
     // setTimeout(function () {
     //     if( activeParentTab != ""){
     //         $('#mainTabs ul li a').removeClass('active');
@@ -1452,7 +1452,7 @@ Template.employeescard.onRendered(function () {
         $('.fullScreenSpin').css('display', 'none');
         let lineItems = [];
         let empEmail = '';
-        let overideset = data.fields.User.fields.CustFld14;
+        let overideset = data.fields.CustFld14||'';
         if (overideset != "") {
             overideset = !!(overideset = "true");
             $("#overridesettings").prop('checked', overideset);
@@ -3197,7 +3197,7 @@ Template.employeescard.onRendered(function () {
             }
         });
         await templateObject.openingBalanceInfo.set(openingBalances);
-        templateObject.setOpeningBalance();       
+        templateObject.setOpeningBalance();
     };
 
     templateObject.getOpeningBalances();
@@ -3207,7 +3207,7 @@ Template.employeescard.onRendered(function () {
             let checkOpeningBalances = templateObject.openingBalanceInfo.get();
             for (const item of checkOpeningBalances ) {
                 if( item.fields.Active == true ){
-                    let amount = utilityService.modifynegativeCurrencyFormat( item.fields.Amount );                   
+                    let amount = utilityService.modifynegativeCurrencyFormat( item.fields.Amount );
                     switch (item.fields.Balance) {
                         case 0:
                             $(`#obEarningRate${ item.fields.ID }`).val(item.fields.AType);
@@ -5338,12 +5338,12 @@ Template.employeescard.events({
         let PayPeriod = $(event.target).parents('tr').find('.colPayslipPeriod').text();
         let PaymentDate = $(event.target).parents('tr').find('.colPayslipPaymentDate').text();
         let TotalPay = $(event.target).parents('tr').find('.colPayslipTotalPay').text();
-        let EmployeeName = $('#edtCustomerCompany').val();    
-        let EmployeeEmail = $('#edtEmailAddress').val();    
-        let FirstName = $('#edtFirstName').val();    
-        let LastName = $('#edtLastName').val();    
-        let Phone = $('#edtPhone').val();    
-        let DOB = $('#dtDOB').val(); 
+        let EmployeeName = $('#edtCustomerCompany').val();
+        let EmployeeEmail = $('#edtEmailAddress').val();
+        let FirstName = $('#edtFirstName').val();
+        let LastName = $('#edtLastName').val();
+        let Phone = $('#edtPhone').val();
+        let DOB = $('#dtDOB').val();
         let doc = new jsPDF();
         doc.setFontSize(16);
         doc.text(PayPeriod, 20,40);
@@ -5357,7 +5357,7 @@ Template.employeescard.events({
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let period = $('#period').val();
-        let ID = $('#periodID').val();        
+        let ID = $('#periodID').val();
         let paymentDate = $('#paymentDate').val();
         let totalPay = $('#totalPay').val();
 
@@ -5372,7 +5372,7 @@ Template.employeescard.events({
         if(totalPay == ''){
             handleValidationError('Please enter Total Pay!', 'totalPay');
             return false
-        } 
+        }
 
         // Making a post request to save payslips
         $('.fullScreenSpin').css('display', 'block');
@@ -5414,7 +5414,7 @@ Template.employeescard.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) { }
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -5426,7 +5426,7 @@ Template.employeescard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -5490,7 +5490,7 @@ Template.employeescard.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) { }
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -5502,7 +5502,7 @@ Template.employeescard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -5566,7 +5566,7 @@ Template.employeescard.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) { }
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -5578,7 +5578,7 @@ Template.employeescard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -5645,7 +5645,7 @@ Template.employeescard.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) { }
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -5657,7 +5657,7 @@ Template.employeescard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -5734,7 +5734,7 @@ Template.employeescard.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) { }
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -5746,7 +5746,7 @@ Template.employeescard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -5852,7 +5852,7 @@ Template.employeescard.events({
                     }).then((result) => {
                         if (result.value) {
                             if (result.value) { }
-                        } 
+                        }
                     });
                 }else{
                     $('.fullScreenSpin').css('display', 'none');
@@ -5864,7 +5864,7 @@ Template.employeescard.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {}
-                    });  
+                    });
                 }
             } catch (error) {
                 $('.fullScreenSpin').css('display', 'none');
@@ -6000,7 +6000,7 @@ Template.employeescard.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) { }
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -6012,7 +6012,7 @@ Template.employeescard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -6043,7 +6043,7 @@ Template.employeescard.events({
         if(Notes == ''){
             handleValidationError('Please enter a Note!', 'payRollNotes');
             return false;
-        } 
+        }
         $('.fullScreenSpin').css('display', 'block');
         let noteSetting = new PayNotes({
             type: "TPayNotes",
@@ -6079,7 +6079,7 @@ Template.employeescard.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) { }
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -6091,7 +6091,7 @@ Template.employeescard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -6117,7 +6117,7 @@ Template.employeescard.events({
         $('#leaveRequestForm')[0].reset();
         $('#edtLeaveStartDate').val(today);
         $('#edtLeaveStartDate').val(today);
-        $('#removeLeaveRequestBtn').hide();       
+        $('#removeLeaveRequestBtn').hide();
     },
     'change #taxes :input, #taxes :select': async function(){
         $('.statusSaved').hide();
@@ -6132,7 +6132,7 @@ Template.employeescard.events({
         let EarningRate = $('#earningRateSelect').val();
         let CalculationType = $('input[name=calculationType]:checked').val();
         let ExpenseAccount = $('#expenseAccount').val();
-        
+
         if( EarningRate == ""){
             handleValidationError('Please select Earning Rate!', 'earningRateSelect');
             return false
@@ -6180,7 +6180,7 @@ Template.employeescard.events({
                 await templateObject.getPayEarningLines();
                 $('input[name=calculationType]:checked').attr('checked', false);
                 $('#expenseAccount').val('');
-                $('#earningRateSelect').val('');                
+                $('#earningRateSelect').val('');
                 $('#addEarningsLineModal').modal('hide');
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
@@ -6192,7 +6192,7 @@ Template.employeescard.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) {}
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -6204,7 +6204,7 @@ Template.employeescard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -6216,7 +6216,7 @@ Template.employeescard.events({
                 confirmButtonText: 'Try Again'
             }).then((result) => {
                 if (result.value) {}
-            });                
+            });
         }
     },
     'click #addDeductionLine': async function(){
@@ -6241,7 +6241,7 @@ Template.employeescard.events({
             handleValidationError('Please select Control Account!', 'controlAccountDeduction');
             return false
         }
-        
+
         $('.fullScreenSpin').css('display', 'block');
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
@@ -6286,7 +6286,7 @@ Template.employeescard.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) {}
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -6298,7 +6298,7 @@ Template.employeescard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -6310,7 +6310,7 @@ Template.employeescard.events({
                 confirmButtonText: 'Try Again'
             }).then((result) => {
                 if (result.value) {}
-            });                
+            });
         }
     },
     'click #addSuperannuationLine': async function(){
@@ -6329,7 +6329,7 @@ Template.employeescard.events({
         if(Fund == ''){
             handleValidationError('Please select Superannuation Fund!', 'superannuationFund');
             return false
-        } 
+        }
         if(ContributionType == ''){
             handleValidationError('Please select Contribution Type!', 'superannuationTypeSelect');
             return false
@@ -6406,7 +6406,7 @@ Template.employeescard.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) {}
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -6418,7 +6418,7 @@ Template.employeescard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -6430,17 +6430,17 @@ Template.employeescard.events({
                 confirmButtonText: 'Try Again'
             }).then((result) => {
                 if (result.value) {}
-            });                
+            });
         }
     },
     'click #addReiumbursementLine': async function(){
-        const templateObject = Template.instance();        
+        const templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let ReiumbursementType = $('#reimbursementTypeSelect').val();
         let Description = $('#reiumbursementDescription').val();
         let ControlExpenseAccount = $('#controlExpenseAccount').val();
-        
+
         if(ReiumbursementType == ''){
             handleValidationError('Please Select Reiumbursement Type!', 'reimbursementTypeSelect');
             return false;
@@ -6501,7 +6501,7 @@ Template.employeescard.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) {}
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -6513,7 +6513,7 @@ Template.employeescard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -6525,7 +6525,7 @@ Template.employeescard.events({
                 confirmButtonText: 'Try Again'
             }).then((result) => {
                 if (result.value) {}
-            });                
+            });
         }
     },
     'change #superannuationTypeSelect': function(){
@@ -6578,7 +6578,7 @@ Template.employeescard.events({
         }).then( async (result) => {
             if (result.value) {
                 $('.fullScreenSpin').css('display', 'block');
-                // $(e.target).parents('.earningLinesContainer').remove();               
+                // $(e.target).parents('.earningLinesContainer').remove();
 
                 const employeePayrolApis = new EmployeePayrollApi();
                 // now we have to make the post request to save the data in database
@@ -6620,7 +6620,7 @@ Template.employeescard.events({
                                 // Bind with html content
                                 await templateObject.payTemplateEarningLineInfo.set(useData);
                             }
-                        }                        
+                        }
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Earning Line deleted successfully',
@@ -6631,7 +6631,7 @@ Template.employeescard.events({
                         }).then((result) => {
                             if (result.value) {
                                 if (result.value) {}
-                            } 
+                            }
                         });
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
@@ -6643,7 +6643,7 @@ Template.employeescard.events({
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
                             if (result.value) {}
-                        });  
+                        });
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
@@ -6655,7 +6655,7 @@ Template.employeescard.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {}
-                    });                
+                    });
                 }
             }
         });
@@ -6720,7 +6720,7 @@ Template.employeescard.events({
                         }).then((result) => {
                             if (result.value) {
                                 if (result.value) {}
-                            } 
+                            }
                         });
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
@@ -6732,7 +6732,7 @@ Template.employeescard.events({
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
                             if (result.value) {}
-                        });  
+                        });
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
@@ -6744,7 +6744,7 @@ Template.employeescard.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {}
-                    });                
+                    });
                 }
             }
         });
@@ -6813,7 +6813,7 @@ Template.employeescard.events({
                         }).then((result) => {
                             if (result.value) {
                                 if (result.value) {}
-                            } 
+                            }
                         });
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
@@ -6825,7 +6825,7 @@ Template.employeescard.events({
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
                             if (result.value) {}
-                        });  
+                        });
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
@@ -6837,7 +6837,7 @@ Template.employeescard.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {}
-                    });                
+                    });
                 }
             }
         });
@@ -6873,7 +6873,7 @@ Template.employeescard.events({
                         method: "POST",
                         headers: ApiService.getPostHeaders(),
                         body: JSON.stringify(reiumbursementSettings),
-                    });    
+                    });
                     if (ApiResponse.ok == true) {
                         let dataObject = await getVS1Data('TPayTemplateReiumbursementLine');
                         if ( dataObject.length > 0) {
@@ -6902,7 +6902,7 @@ Template.employeescard.events({
                         }).then((result) => {
                             if (result.value) {
                                 if (result.value) {}
-                            } 
+                            }
                         });
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
@@ -6914,7 +6914,7 @@ Template.employeescard.events({
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
                             if (result.value) {}
-                        });  
+                        });
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
@@ -6926,7 +6926,7 @@ Template.employeescard.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {}
-                    });                
+                    });
                 }
             }
         });
@@ -6942,7 +6942,7 @@ Template.employeescard.events({
             confirmButtonText: 'Yes'
         }).then( async (result) => {
             if (result.value) {
-                $('.fullScreenSpin').css('display', 'block');                
+                $('.fullScreenSpin').css('display', 'block');
                 const employeePayrolApis = new EmployeePayrollApi();
                 // now we have to make the post request to save the data in database
                 const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -6963,7 +6963,7 @@ Template.employeescard.events({
                         headers: ApiService.getPostHeaders(),
                         body: JSON.stringify(reiumbursementSettings),
                     });
-                    
+
                     if (ApiResponse.ok == true) {
                         let dataObject = await getVS1Data('TOpeningBalances');
                         if ( dataObject.length > 0) {
@@ -6992,7 +6992,7 @@ Template.employeescard.events({
                         }).then((result) => {
                             if (result.value) {
                                 if (result.value) {}
-                            } 
+                            }
                         });
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
@@ -7004,7 +7004,7 @@ Template.employeescard.events({
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
                             if (result.value) {}
-                        });  
+                        });
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
@@ -7016,7 +7016,7 @@ Template.employeescard.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {}
-                    });                
+                    });
                 }
             }
         })
@@ -7055,7 +7055,7 @@ Template.employeescard.events({
                         headers: ApiService.getPostHeaders(),
                         body: JSON.stringify(reiumbursementSettings),
                     });
-                    
+
                     if (ApiResponse.ok == true) {
                         let dataObject = await getVS1Data('TOpeningBalances');
                         if ( dataObject.length > 0) {
@@ -7084,7 +7084,7 @@ Template.employeescard.events({
                         }).then((result) => {
                             if (result.value) {
                                 if (result.value) {}
-                            } 
+                            }
                         });
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
@@ -7096,7 +7096,7 @@ Template.employeescard.events({
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
                             if (result.value) {}
-                        });  
+                        });
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
@@ -7108,7 +7108,7 @@ Template.employeescard.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {}
-                    });                
+                    });
                 }
             }
         });
@@ -7172,7 +7172,7 @@ Template.employeescard.events({
                         }).then((result) => {
                             if (result.value) {
                                 if (result.value) {}
-                            } 
+                            }
                         });
                     } else {
                         $('.fullScreenSpin').css('display', 'none');
@@ -7184,7 +7184,7 @@ Template.employeescard.events({
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
                             if (result.value) {}
-                        });  
+                        });
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
@@ -7196,7 +7196,7 @@ Template.employeescard.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {}
-                    });                
+                    });
                 }
             }
         });
@@ -7220,7 +7220,7 @@ Template.employeescard.events({
                 const apiEndpoint = employeePayrolApis.collection.findByName(
                     employeePayrolApis.collectionNames.TOpeningBalances
                 );
-                
+
                 let reiumbursementSettings =  new OpeningBalance({
                     type: "TOpeningBalances",
                     fields: new OpeningBalanceFields({
@@ -7235,7 +7235,7 @@ Template.employeescard.events({
                         headers: ApiService.getPostHeaders(),
                         body: JSON.stringify(reiumbursementSettings),
                     });
-                    
+
                     if (ApiResponse.ok == true) {
                         let dataObject = await getVS1Data('TOpeningBalances');
                         if ( dataObject.length > 0) {
@@ -7252,7 +7252,7 @@ Template.employeescard.events({
                                 }
                                 await addVS1Data('TOpeningBalances', JSON.stringify(updatedObj));
                             }
-                        }                        
+                        }
                         await templateObject.getOpeningBalances();
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
@@ -7264,7 +7264,7 @@ Template.employeescard.events({
                         }).then((result) => {
                             if (result.value) {
                                 if (result.value) {}
-                            } 
+                            }
                         });
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
@@ -7276,7 +7276,7 @@ Template.employeescard.events({
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
                             if (result.value) {}
-                        });  
+                        });
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
@@ -7288,8 +7288,8 @@ Template.employeescard.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {}
-                    });                
-                }                
+                    });
+                }
             }
         })
     },
@@ -7515,9 +7515,9 @@ Template.employeescard.events({
                     }).then((result) => {
                         if (result.value) {
                             if (result.value) {}
-                        } 
-                    }); 
-                }else{            
+                        }
+                    });
+                }else{
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
@@ -7527,7 +7527,7 @@ Template.employeescard.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {}
-                    });  
+                    });
                 }
             } catch (error) {
                 $('.fullScreenSpin').css('display', 'none');
@@ -7539,8 +7539,8 @@ Template.employeescard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });                
-            }  
+                });
+            }
             return false
 
             /**
@@ -7620,7 +7620,7 @@ Template.employeescard.events({
                 handleValidationError('Please enter Account BSB!', 'bankAccountBSB');
                 return false
             }
-            $('.fullScreenSpin').css('display', 'block');            
+            $('.fullScreenSpin').css('display', 'block');
 
             let employeePaySettings = templateObject.employeePaySettings.get();
 
@@ -7658,9 +7658,9 @@ Template.employeescard.events({
                     }).then((result) => {
                         if (result.value) {
                             if (result.value) {}
-                        } 
-                    }); 
-                }else{            
+                        }
+                    });
+                }else{
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
@@ -7670,7 +7670,7 @@ Template.employeescard.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {}
-                    });  
+                    });
                 }
             } catch (error) {
                 $('.fullScreenSpin').css('display', 'none');
@@ -7682,8 +7682,8 @@ Template.employeescard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });                
-            }            
+                });
+            }
 
             return false;
             // Old Dev Code
@@ -8204,8 +8204,8 @@ Template.employeescard.events({
                     }).then((result) => {
                         if (result.value) {
                             if (result.value) {}
-                        } 
-                    }); 
+                        }
+                    });
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({

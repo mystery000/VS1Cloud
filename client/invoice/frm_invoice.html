@@ -979,7 +979,7 @@
                                                                   <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                                   <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
                                                               </div>
-                                                            </div> 
+                                                            </div>
                                                             {{/if}}
                                                             {{/each}}
 
@@ -1149,18 +1149,18 @@
                             {{#if displayfields}}
                             <table id="tblInvoiceLine" style="width:100%" class="table table-striped table-bordered tblInvoiceLine">
                                 <thead>
-                                  <tr class="dnd-moved"> 
+                                  <tr class="dnd-moved">
                                     {{#each displayfield in displayfields}}
                                       {{#if displayfield.display}}
                                       <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
                                         {{displayfield.custfieldlabel}}
                                         {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>
                                           {{else}}
-                                          {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>  
+                                          {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>
                                             {{else}}
-                                            {{#if equals displayfield.class 'UnitPriceEx'}} <i class="fas fa-random"></i> 
+                                            {{#if equals displayfield.class 'UnitPriceEx'}} <i class="fas fa-random"></i>
                                               {{else}}
-                                              {{#if equals displayfield.class 'UnitPriceInc'}} <i class="fas fa-random fa-trans"></i> 
+                                              {{#if equals displayfield.class 'UnitPriceInc'}} <i class="fas fa-random fa-trans"></i>
                                               {{/if}}
                                             {{/if}}
                                           {{/if}}
@@ -1174,18 +1174,18 @@
                                 <tbody>
 
                                     {{#each item in invoicerecord.LineItems}}
-                                    <tr class="dnd-moved" id={{item.lineID}}> 
+                                    <tr class="dnd-moved" id={{item.lineID}}>
                                       <td contenteditable="false" class="colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}"><input
                                           class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}"></td>
                                       <td contenteditable="true"
                                         class="lineProductDesc colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
                                         {{item.description}}</td>
-                                      
+
                                     {{#if equals includeBOnShippedQty true}}
                                       <td class="colOrdered {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input
                                           class="lineOrdered colOrdered highlightInput" type="number" value="{{item.qtyordered}}"></td>
                                       <td class="colShipped {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
-                                          class="lineShipped highlightInput" type="number" value="{{item.qtyshipped}}"></td>
+                                          class="lineQty colQty lineShipped highlightInput" type="number" value="{{item.qtyshipped}}"></td>
                                       <td class="colBackOrder {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}"><input
                                         class="lineBackOrder colBackOrder highlightInput" type="number" value="{{item.qtybo}}" readonly></td>
                                     {{else}}

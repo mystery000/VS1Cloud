@@ -834,7 +834,7 @@ Template.addemployeepop.onRendered(function () {
                             LoadingOverlay.hide();
                             let lineItems = [];
                             let empEmail = '';
-                            let overideset = data.fields.User.fields.CustFld14;
+                            let overideset = data.fields.CustFld14||'';
                             if (overideset != "") {
                                 if (overideset = "true") {
                                     overideset = true;
@@ -3067,7 +3067,7 @@ Template.addemployeepop.events({
           let city = $('.addemployeepop #edtCity').val();
           let state =  $('.addemployeepop #edtState').val();
           let zipcode =  $('.addemployeepop #edtPostalCode').val();
-        
+
           let country =  $('.addemployeepop #edtCountry').val();
            $('.addemployeepop #bedtStreetAddress').val(streetAddress);
            $('.addemployeepop #bedtCity').val(city);

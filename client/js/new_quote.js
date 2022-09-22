@@ -95,7 +95,7 @@ Template.new_quote.onRendered(() => {
     const templateObject = Template.instance();
 
     // set initial table rest_data
-    function init_reset_data() { 
+    function init_reset_data() {
 
       let reset_data = [
         { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
@@ -114,7 +114,7 @@ Template.new_quote.onRendered(() => {
         { index: 13, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
       ];
 
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       reset_data[11].display = !!isBatchSerialNoTracking;
 
       let templateObject = Template.instance();
@@ -5376,13 +5376,13 @@ Template.new_quote.onRendered(function() {
             }).catch(function (err) {
             });
           } else {
-            let data = JSON.parse(dataObject[0].data); 
+            let data = JSON.parse(dataObject[0].data);
             // handle process here
           }
         });
       } catch (error) {
-      } 
-      return; 
+      }
+      return;
     }
 
     function showCustomFieldDisplaySettings(reset_data) {
@@ -5395,7 +5395,7 @@ Template.new_quote.onRendered(function() {
         customData = {
           active: reset_data[r].active,
           id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label, 
+          custfieldlabel: reset_data[r].label,
           class: reset_data[r].class,
           display: reset_data[r].display,
           width: reset_data[r].width ? reset_data[r].width : ''
@@ -7400,8 +7400,6 @@ Template.new_quote.events({
                 };
             }
             salesService.saveQuoteEx(objDetails).then(function(objDetails) {
-                sideBarService.getAllQuoteList("All").then(function(data) {
-                    addVS1Data('TQuote', JSON.stringify(data));
                     if (customerID !== " ") {
                         let quoted = false;
                         for (let i = 0; i < data.tquoteex.length; i++) {
@@ -8038,9 +8036,7 @@ Template.new_quote.events({
                             }
                         }
                     }
-                }).catch(function(err) {
 
-                });
             }).catch(function(err) {
                 swal({
                     title: 'Oooops...',
@@ -8067,7 +8063,7 @@ Template.new_quote.events({
         $('.colProductName').removeClass('showColumn');
       }
     },
-    'click .chkDescription': function(event) { 
+    'click .chkDescription': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colDescription').addClass('showColumn');
         $('.colDescription').removeClass('hiddenColumn');
@@ -8132,16 +8128,16 @@ Template.new_quote.events({
       }
     },
     'click .chkAmountEx': function (event) {
-      if ($(event.target).is(':checked')) {  
-          $('.chkAmountInc').prop("checked", false); 
+      if ($(event.target).is(':checked')) {
+          $('.chkAmountInc').prop("checked", false);
 
           $('.colAmountInc').addClass('hiddenColumn');
           $('.colAmountInc').removeClass('showColumn');
 
           $('.colAmountEx').addClass('showColumn');
           $('.colAmountEx').removeClass('hiddenColumn');
-        } else { 
-          $('.chkAmountInc').prop("checked", true); 
+        } else {
+          $('.chkAmountInc').prop("checked", true);
 
           $('.colAmountEx').addClass('hiddenColumn');
           $('.colAmountEx').removeClass('showColumn');
@@ -8151,16 +8147,16 @@ Template.new_quote.events({
       }
     },
     'click .chkAmountInc': function(event) {
-      if ($(event.target).is(':checked')) { 
-          $('.chkAmountEx').prop("checked", false); 
+      if ($(event.target).is(':checked')) {
+          $('.chkAmountEx').prop("checked", false);
 
           $('.colAmountEx').addClass('hiddenColumn');
           $('.colAmountEx').removeClass('showColumn');
 
           $('.colAmountInc').addClass('showColumn');
           $('.colAmountInc').removeClass('hiddenColumn');
-      } else { 
-          $('.chkAmountEx').prop("checked", true); 
+      } else {
+          $('.chkAmountEx').prop("checked", true);
 
           $('.colAmountInc').addClass('hiddenColumn');
           $('.colAmountInc').removeClass('showColumn');
@@ -8170,13 +8166,13 @@ Template.new_quote.events({
       }
     },
     'click .chkUnitPriceEx': function (event) {
-      if ($(event.target).is(':checked')) { 
+      if ($(event.target).is(':checked')) {
           $('.chkUnitPriceInc').prop("checked", false);
           $('.colUnitPriceInc').addClass('hiddenColumn');
           $('.colUnitPriceInc').removeClass('showColumn');
           $('.colUnitPriceEx').addClass('showColumn');
           $('.colUnitPriceEx').removeClass('hiddenColumn');
-      } else { 
+      } else {
           $('.chkUnitPriceInc').prop("checked", true);
           $('.colUnitPriceEx').addClass('hiddenColumn');
           $('.colUnitPriceEx').removeClass('showColumn');
@@ -8185,13 +8181,13 @@ Template.new_quote.events({
       }
     },
     'click .chkUnitPriceInc': function(event) {
-        if ($(event.target).is(':checked')) { 
+        if ($(event.target).is(':checked')) {
             $('.chkUnitPriceEx').prop("checked", false);
             $('.colUnitPriceEx').addClass('hiddenColumn');
             $('.colUnitPriceEx').removeClass('showColumn');
             $('.colUnitPriceInc').addClass('showColumn');
             $('.colUnitPriceInc').removeClass('hiddenColumn');
-        } else { 
+        } else {
             $('.chkUnitPriceEx').prop("checked", true);
             $('.colUnitPriceInc').addClass('hiddenColumn');
             $('.colUnitPriceInc').removeClass('showColumn');
@@ -8291,11 +8287,11 @@ Template.new_quote.events({
     'blur .divcolumn': function(event) {
         let columData = $(event.target).html();
         let columHeaderUpdate = $(event.target).attr("valueupdate");
-        // $("" + columHeaderUpdate + "").html(columData);    
+        // $("" + columHeaderUpdate + "").html(columData);
         $("th.col" + columHeaderUpdate + "").html(columData);
     },
     // custom field displaysettings
-    'click .btnSaveGridSettings': function(event) { 
+    'click .btnSaveGridSettings': function(event) {
         let lineItems = [];
         $(".fullScreenSpin").css("display", "inline-block");
         $(".displaySettings").each(function (index) {
@@ -8351,11 +8347,11 @@ Template.new_quote.events({
     // custom field displaysettings
     'click .btnResetGridSettings': function(event) {
       let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get(); 
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+      let reset_data = templateObject.reset_data.get();
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       reset_data[11].display = !!isBatchSerialNoTracking;
-      reset_data = reset_data.filter(redata => redata.display); 
-  
+      reset_data = reset_data.filter(redata => redata.display);
+
       $(".displaySettings").each(function (index) {
         let $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
