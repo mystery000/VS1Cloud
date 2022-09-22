@@ -8509,24 +8509,323 @@ Template.setup.events({
       }
     }
   },
+  // Accounts Import functionality
   "click .new_attachment_btn_account": function (event) {
+    $("#attachment-upload-account").val("");
+    $(".file-name").text("");
     $("#attachment-upload-account").trigger("click");
   },
   "change #attachment-upload-account": async function (e) {
     let templateObj = Template.instance();
-    let saveToTAttachment = false;
-    let lineIDForAttachment = false;
-    let uploadedFilesArray = await templateObj.uploadedFiles.get();
+    var filename = $("#attachment-upload-account")[0].files[0]["name"];
+    var fileExtension = filename.split(".").pop().toLowerCase();
+    var validExtensions = ["csv", "txt", "xlsx", "xls"];
+    var validCSVExtensions = ["csv", "txt"];
+    var validExcelExtensions = ["xlsx", "xls"];
 
-    let myFiles = $("#attachment-upload-account")[0].files;
-    let uploadData = await utilityService.attachmentUpload(
-      uploadedFilesArray,
-      myFiles,
-      saveToTAttachment,
-      lineIDForAttachment
-    );
-    templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
-    templateObj.attachmentCount.set(uploadData.totalAttachments);
+    if (validExtensions.indexOf(fileExtension) == -1) {
+      swal(
+        "Invalid Format",
+        "formats allowed are :" + validExtensions.join(", "),
+        "error"
+      );
+      $(".file-name").text("");
+      $(".btnAccountImport").Attr("disabled");
+    } else if (validCSVExtensions.indexOf(fileExtension) != -1) {
+      $(".file-name").text(filename);
+      let selectedFile = event.target.files[0];
+      templateObj.selectedFile.set(selectedFile);
+      if ($(".file-name").text() != "") {
+        $(".btnAccountImport").removeAttr("disabled");
+      } else {
+        $(".btnAccountImport").Attr("disabled");
+      }
+    } else if (fileExtension == "xls") {
+      $(".file-name").text(filename);
+      let selectedFile = event.target.files[0];
+      var oFileIn;
+      var oFile = selectedFile;
+      var sFilename = oFile.name;
+      // Create A File Reader HTML5
+      var reader = new FileReader();
+
+      // Ready The Event For When A File Gets Selected
+      reader.onload = function (e) {
+        var data = e.target.result;
+        data = new Uint8Array(data);
+        var workbook = XLSX.read(data, {
+          type: "array",
+        });
+
+        var result = {};
+        workbook.SheetNames.forEach(function (sheetName) {
+          var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
+            header: 1,
+          });
+          var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+          templateObj.selectedFile.set(sCSV);
+
+          if (roa.length) result[sheetName] = roa;
+        });
+        // see the result, caution: it works after reader event is done.
+      };
+      reader.readAsArrayBuffer(oFile);
+
+      if ($(".file-name").text() != "") {
+        $(".btnAccountImport").removeAttr("disabled");
+      } else {
+        $(".btnAccountImport").Attr("disabled");
+      }
+    }
+    // let templateObj = Template.instance();
+    // let saveToTAttachment = false;
+    // let lineIDForAttachment = false;
+    // let uploadedFilesArray = await templateObj.uploadedFiles.get();
+
+    // let myFiles = $("#attachment-upload-account")[0].files;
+    // let uploadData = await utilityService.attachmentUpload(
+    //   uploadedFilesArray,
+    //   myFiles,
+    //   saveToTAttachment,
+    //   lineIDForAttachment
+    // );
+    // templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
+    // templateObj.attachmentCount.set(uploadData.totalAttachments);
+  },
+  "click .btnAccountImport": function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let templateObject = Template.instance();
+    let accountService = new AccountService();
+    Papa.parse(templateObject.selectedFile.get(), {
+      complete: async function (results) {
+        if (results.data.length > 0) {
+          if (
+            results.data[0][0] == "Account Name" &&
+            results.data[0][1] == "Description" &&
+            results.data[0][2] == "Account No" &&
+            results.data[0][3] == "Type" &&
+            results.data[0][4] == "Balance" &&
+            results.data[0][5] == "Tax Code" &&
+            results.data[0][6] == "Bank Account Name" &&
+            results.data[0][7] == "BSB" &&
+            results.data[0][8] == "Bank Account No"
+          ) {
+            let accountsList = [];
+            for (let i = 0; i < results.data.length - 1; i++) {
+              let Balance = await cleanPrice(results.data[i + 1][4])
+              accountsList.push({
+                type: "TAccount",
+                fields: {
+                  AccountName: results.data[i + 1][0]|| '',
+                  Description: results.data[i + 1][1] || "",
+                  AccountNumber: results.data[i + 1][2] || "",
+                  AccountTypeName: results.data[i + 1][3] || '',
+                  Balance: Balance,
+                  TaxCode: results.data[i + 1][5] || "",
+                  BankAccountName: results.data[i + 1][6] || "",
+                  BSB: results.data[i + 1][7] || "",
+                  BankAccountNumber: results.data[i + 1][8] || "",
+                  PublishOnVS1: true,
+                  Active: true,
+                },
+              });
+            }
+            try {
+              let accountsJson = {
+                  type: "TAccount",
+                  objects:accountsList
+              };
+              let response = await accountService.saveAccount(accountsJson);
+            } catch (error) {
+              swal({
+                title: "Oooops...",
+                text: error,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Try Again",
+              }).then((result) => {
+                if (result.value) {
+                  Meteor._reload.reload();
+                } else if (result.dismiss === "cancel") {
+                }
+              });
+            }
+            
+            LoadingOverlay.hide();
+          } else {
+            LoadingOverlay.hide();
+            swal(
+              "Invalid Data Mapping fields ",
+              "Please check that you are importing the correct file with the correct column headers.",
+              "error"
+            );
+          }
+        } else {
+          LoadingOverlay.hide();
+          swal(
+            "Invalid Data Mapping fields ",
+            "Please check that you are importing the correct file with the correct column headers.",
+            "error"
+          );
+        }
+      },
+    });
+  },
+  // Customer Import functions
+  "click .btnUploadFile-customer": function (event) {
+    $("#attachment-upload-customer").val("");
+    $(".file-name").text("");
+    $("#attachment-upload-customer").trigger("click");
+  },
+  "change #attachment-upload-customer": function (e) {
+    let templateObj = Template.instance();
+    var filename = $("#attachment-upload-customer")[0].files[0]["name"];
+    var fileExtension = filename.split(".").pop().toLowerCase();
+    var validExtensions = ["csv", "txt", "xlsx", "xls"];
+    var validCSVExtensions = ["csv", "txt"];
+    var validExcelExtensions = ["xlsx", "xls"];
+
+    if (validExtensions.indexOf(fileExtension) == -1) {
+      swal(
+        "Invalid Format",
+        "formats allowed are :" + validExtensions.join(", "),
+        "error"
+      );
+      $(".file-name").text("");
+      $(".btnCustomerImport").Attr("disabled");
+    } else if (validCSVExtensions.indexOf(fileExtension) != -1) {
+      $(".file-name").text(filename);
+      let selectedFile = event.target.files[0];
+      templateObj.selectedFile.set(selectedFile);
+      if ($(".file-name").text() != "") {
+        $(".btnCustomerImport").removeAttr("disabled");
+      } else {
+        $(".btnCustomerImport").Attr("disabled");
+      }
+    } else if (fileExtension == "xls") {
+      $(".file-name").text(filename);
+      let selectedFile = event.target.files[0];
+      var oFileIn;
+      var oFile = selectedFile;
+      var sFilename = oFile.name;
+      // Create A File Reader HTML5
+      var reader = new FileReader();
+
+      // Ready The Event For When A File Gets Selected
+      reader.onload = function (e) {
+        var data = e.target.result;
+        data = new Uint8Array(data);
+        var workbook = XLSX.read(data, {
+          type: "array",
+        });
+
+        var result = {};
+        workbook.SheetNames.forEach(function (sheetName) {
+          var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
+            header: 1,
+          });
+          var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+          templateObj.selectedFile.set(sCSV);
+
+          if (roa.length) result[sheetName] = roa;
+        });
+        // see the result, caution: it works after reader event is done.
+      };
+      reader.readAsArrayBuffer(oFile);
+
+      if ($(".file-name").text() != "") {
+        $(".btnCustomerImport").removeAttr("disabled");
+      } else {
+        $(".btnCustomerImport").Attr("disabled");
+      }
+    }
+  },
+  "click .btnCustomerImport": function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let templateObject = Template.instance();
+    Papa.parse(templateObject.selectedFile.get(), {
+      complete: async function (results) {
+        if (results.data.length > 0) {
+          if (
+            results.data[0][0] == "Company" &&
+            results.data[0][1] == "First Name" &&
+            results.data[0][2] == "Last Name" &&
+            results.data[0][3] == "Phone" &&
+            results.data[0][4] == "Mobile" &&
+            results.data[0][5] == "Email" &&
+            results.data[0][6] == "Skype" &&
+            results.data[0][7] == "Street" &&
+            results.data[0][8] == "City/Suburb" &&
+            results.data[0][9] == "State" &&
+            results.data[0][10] == "Post Code" &&
+            results.data[0][11] == "Country" &&
+            results.data[0][12] == "Tax Code"
+          ) {
+            let customerList = [];
+            for (let i = 0; i < results.data.length - 1; i++) {
+              customerList.push({
+                type: "TCustomerEx",
+                fields: {
+                  ClientName: results.data[i + 1][0]|| '',
+                  FirstName: results.data[i + 1][1] || "",
+                  LastName: results.data[i + 1][2] || "",
+                  Phone: results.data[i + 1][3] || '',
+                  Mobile: results.data[i + 1][4] || '',
+                  Email: results.data[i + 1][5] || "",
+                  SkypeName: results.data[i + 1][6] || "",
+                  Street2: results.data[i + 1][7] || "",
+                  Street2: results.data[i + 1][8] || "",
+                  Suburb: results.data[i + 1][8] || "",
+                  State: results.data[i + 1][9] || "",
+                  PostCode: results.data[i + 1][10] || "",
+                  Country: results.data[i + 1][11] || "",
+                  TaxCodeName: results.data[i + 1][12] || "",
+                  PublishOnVS1: true,
+                  Active: true,
+                },
+              });
+            }
+            try {
+              let customersJson = {
+                  type: "TCustomerEx",
+                  objects: customerList
+              };
+              let response = await contactService.saveCustomerEx(customersJson);
+              console.log('response', response)
+            } catch (error) {
+              swal({
+                title: "Oooops...",
+                text: error,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Try Again",
+              }).then((result) => {
+                if (result.value) {
+                  Meteor._reload.reload();
+                } else if (result.dismiss === "cancel") {
+                }
+              });
+            }
+            
+            LoadingOverlay.hide();
+          } else {
+            LoadingOverlay.hide();
+            swal(
+              "Invalid Data Mapping fields ",
+              "Please check that you are importing the correct file with the correct column headers.",
+              "error"
+            );
+          }
+        } else {
+          LoadingOverlay.hide();
+          swal(
+            "Invalid Data Mapping fields ",
+            "Please check that you are importing the correct file with the correct column headers.",
+            "error"
+          );
+        }
+      },
+    });
   },
   "change #img-attachment-upload-account": function (e) {
     let templateObj = Template.instance();

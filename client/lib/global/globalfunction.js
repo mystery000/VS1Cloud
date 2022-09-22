@@ -600,6 +600,14 @@ setupMessagehideshow();
 // });
 //});
 
+cleanPrice = async function( amount ){
+  if( isNaN(amount) || !amount){
+      amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+      amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+  }
+  return amount;
+}
+
 isAdditionalModulePurchased = async function( moduleName ){
   let purchaedAdModuleList = []
   let additionModuleSettings = await getVS1Data('vscloudlogininfo');
