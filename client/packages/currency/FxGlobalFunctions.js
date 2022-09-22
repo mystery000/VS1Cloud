@@ -29,6 +29,7 @@ export default class FxGlobalFunctions {
     }, {
       usIndexDb: true,
       useLocalStorage: false,
+      fallBackToLocal: true,
       validate: cachedResponse => {
         return false;
       }

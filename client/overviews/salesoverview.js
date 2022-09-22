@@ -8,9 +8,13 @@ import { SideBarService } from "../js/sidebar-service";
 import {OrganisationService} from '../js/organisation-service';
 
 import "../lib/global/indexdbstorage.js";
+import { convertToForeignAmount } from "../payments/paymentcard/supplierPaymentcard";
+import { getCurrentCurrencySymbol } from "../popUps/currnecypopup";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
+
+let defaultCurrencyCode = CountryAbbr;
 
 Template.salesoverview.onCreated(function () {
   const templateObject = Template.instance();
@@ -2241,6 +2245,7 @@ Template.salesoverview.events({
     var vid = document.getElementById("myVideo");
     vid.pause();
   },
+
 });
 
 Template.salesoverview.helpers({
@@ -2283,4 +2288,5 @@ Template.salesoverview.helpers({
   displayfields: () => {
     return Template.instance().displayfields.get();
   },
+
 });
