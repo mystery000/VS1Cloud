@@ -182,6 +182,9 @@ Template.chequelist.onRendered(function() {
                 orderdate: data.tchequelist[i].OrderDate != '' ? moment(data.tchequelist[i].OrderDate).format("DD/MM/YYYY") : data.tchequelist[i].OrderDate,
                 suppliername: data.tchequelist[i].SupplierName || '',
                 chequeNumber: data.tchequelist[i].InvoiceNumber || '',
+                reference: data.tchequelist[i].RefNo || '',
+                via: data.tchequelist[i].Shipping || '',
+                currency: data.tchequelist[i].ForeignExchangeCode || '',
                 totalamountex: totalAmountEx || 0.00,
                 totaltax: totalTax || 0.00,
                 totalamount: totalAmount || 0.00,
@@ -491,6 +494,9 @@ Template.chequelist.events({
                             orderdate: data.tchequeex[i].fields.OrderDate != '' ? moment(data.tchequeex[i].fields.OrderDate).format("DD/MM/YYYY") : data.tchequeex[i].fields.OrderDate,
                             suppliername: data.tchequeex[i].fields.SupplierName || '',
                             chequeNumber: data.tchequeex[i].fields.SupplierInvoiceNumber || '',
+                            reference: data.tchequelist[i].fields.RefNo || '',
+                            via: data.tchequelist[i].fields.Shipping || '',
+                            currency: data.tchequelist[i].fields.ForeignExchangeCode || '',
                             totalamountex: totalAmountEx || 0.00,
                             totaltax: totalTax || 0.00,
                             totalamount: totalAmount || 0.00,
@@ -522,6 +528,9 @@ Template.chequelist.events({
                                 '<td contenteditable="false" class="colBankAccount" >' + item[x].accountname + '</td>' +
                                 '<td contenteditable="false" class="colPurchaseNo">' + item[x].chequeNumber + '</td>' +
                                 '<td contenteditable="false" class="colSupplier">' + item[x].suppliername + '</td>' +
+                                '<td contenteditable="false" class="colReference">' + item[x].reference + '</td>' +
+                                '<td contenteditable="false" class="colVia">' + item[x].via + '</td>' +
+                                '<td contenteditable="false" class="colCurrency">' + item[x].currency + '</td>' +
                                 '<td contenteditable="false" class="colAmountEx" style="text-align: right!important;">' + item[x].totalamountex + '</td>' +
                                 '<td contenteditable="false" class="colTax" style="text-align: right!important;">' + item[x].totaltax + '</td>' +
                                 '<td contenteditable="false" class="colAmount" style="text-align: right!important;">' + item[x].totalamount + '</td>' +
@@ -576,7 +585,7 @@ Template.chequelist.events({
                 if ($(event.target).is(':checked')) {
                     $("." + replaceClass + "").css('display', 'table-cell');
                     $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
+                    // $("." + replaceClass + "").css('vertical-align', 'top');
                 } else {
                     $("." + replaceClass + "").css('display', 'none');
                 }
