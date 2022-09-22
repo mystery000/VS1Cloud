@@ -852,7 +852,7 @@
                                   </td>
 
                                   {{#if isForeignEnabled}}
-                                    <td class="colUnitPriceEx colUnitPrice {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPrice}}</td>
+                                    <td class="colUnitPriceEx convert-to-foreign colUnitPrice {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPrice}}</td>
                                   {{/if}}
                                   
                                   <td class="colUnitPriceInc {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
@@ -868,7 +868,12 @@
                                     {{item.DiscountPercent}}</td>
                                   <td class="colCostPrice {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><input
                                       class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}"></td>
-                                  <td contenteditable="true"
+                                  
+                                    {{#if isForeignEnabled}}
+                                        <td class="colCostPrice convert-to-foreign {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.lineCost}}</td>
+                                    {{/if}}
+                                  
+                                      <td contenteditable="true"
                                     class="lineSalesLinesCustField1 colSalesLinesCustField1  {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">
                                     {{item.SalesLinesCustField1}}</td>
                                   <td contenteditable="false"

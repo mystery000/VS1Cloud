@@ -17,6 +17,8 @@ import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
 import LoadingOverlay from '../LoadingOverlay';
 import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
+import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
+import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -28,8 +30,16 @@ var template_list = [
     "Quotes",
 ];
 
+
+const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Unit Price (Inc)", "Cost Price"];
+
+let defaultCurrencyCode = CountryAbbr;
+
 Template.new_quote.onCreated(() => {
     const templateObject = Template.instance();
+    templateObject.isForeignEnabled = new ReactiveVar(false);
+
+
     templateObject.records = new ReactiveVar();
     templateObject.CleintName = new ReactiveVar();
     templateObject.Department = new ReactiveVar();
@@ -6697,7 +6707,37 @@ Template.new_quote.helpers({
         countryVatLabel = "VAT";
       }
         return countryVatLabel;
-    }
+    },
+
+
+    isForeignEnabled: () => {
+        return Template.instance().isForeignEnabled.get();
+    },
+    getDefaultCurrency: () => {
+        return defaultCurrencyCode;
+    },
+    convertToForeignAmount: (amount) => {
+        return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+    },
+
+    displayFieldColspan: (displayfield) => {
+        if(foreignCols.includes(displayfield.custfieldlabel)) 
+        {
+            if(Template.instance().isForeignEnabled.get() == true) {
+                return 2
+            }
+            return 1;
+        } 
+        return 1;
+    },
+
+    subHeaderForeign: (displayfield) => {
+
+        if(foreignCols.includes(displayfield.custfieldlabel)) {
+            return true;
+        }
+        return false;
+    },
 });
 
 Template.new_quote.events({
@@ -11307,6 +11347,38 @@ Template.new_quote.events({
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
   },
+
+   'change #sltCurrency': (e, ui) => {
+    if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
+        $(".foreign-currency-js").css("display", "block");
+        ui.isForeignEnabled.set(true);
+    } else {
+        $(".foreign-currency-js").css("display", "none");
+        ui.isForeignEnabled.set(false);
+    }
+  },
+
+  'change .exchange-rate-js': (e, ui) => {
+
+
+      setTimeout(() => {
+          const toConvert = document.querySelectorAll('.convert-to-foreign:not(.hiddenColumn)');
+          const rate = $("#exchange_rate").val();
+
+          toConvert.forEach((element) => {
+              const mainClass = element.classList[0];
+              const mainValueElement = document.querySelector(`#tblQuoteLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
+              
+              let value = mainValueElement.childElementCount > 0 ? 
+                  $(mainValueElement).find('input').val() : 
+                  mainValueElement.innerText;
+              value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
+              $(element).text(value);
+      
+          })
+      }, 500);
+
+  }
 });
 
 
