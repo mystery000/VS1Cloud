@@ -2,11 +2,44 @@ import moment from "moment";
 import { BaseService } from "../js/base-service.js";
 
 export class ReportService extends BaseService {
-  getExecutiveSummaryReport(dateAsOf) {
+  getDashboardExecutiveReport(dateFrom, dateTo) {
+    let options = {
+      DateFrom: '"' + dateFrom + '"',
+      DateTo: '"' + dateTo + '"',
+    };
+    return this.getList(
+      this.ERPObjects.Vs1_DashboardExecutive,
+      options
+    );
+  }
+
+  getCashReceivedData(dateFrom, dateTo) {
+    let options = {
+      IgnoreDates: false,
+      OrderBy: "PaymentID desc",
+      Search: "Deleted != true",
+      DateFrom: '"' + dateFrom + '"',
+      DateTo: '"' + dateTo + '"',
+    };
+    return this.getList(this.ERPObjects.TCustomerPaymentList, options);
+  }
+  getCashSpentData(dateFrom, dateTo) {
+    let options = {
+      IgnoreDates: false,
+      OrderBy: "PaymentID desc",
+      Search: 'Deleted != true',
+      DateFrom: '"' + dateFrom + '"',
+      DateTo: '"' + dateTo + '"',
+    };
+    return this.getList(this.ERPObjects.TSupplierPaymentList, options);
+  }
+
+  getBalanceSheetReportOld(dateAsOf) {
     let options = {
       //select: "[Active]=true",
       //ListType:"Detail",
-      DateTo: '"' + dateAsOf + '"',
+      DateFrom: '"' + dateAsOf + '"',
+      DateTo: '"' + moment().format('YYYY-MM-DD') + '"',
     };
     return this.getList(this.ERPObjects.BalanceSheetReport, options);
   }
@@ -15,10 +48,49 @@ export class ReportService extends BaseService {
     let options = {
       //select: "[Active]=true",
       //ListType:"Detail",
-      DateFrom: '"' + dateAsOf + '"',
-      DateTo: '"' + moment().format('YYYY-MM-DD') + '"',
+      DateTo: '"' + dateAsOf + '"',
     };
     return this.getList(this.ERPObjects.BalanceSheetReport, options);
+  }
+  
+  getInvoicePaidReport(dateFrom, dateTo) {
+    let options = {
+      IgnoreDates: false,
+      OrderBy: "PaymentID desc",
+      Search: "Deleted != true",
+      DateFrom: '"' + dateFrom + '"',
+      DateTo: '"' + dateTo + '"',
+    };
+    return this.getList(this.ERPObjects.TCustomerPaymentList, options);
+  }
+  getInvoiceUnpaidReport(dateFrom, dateTo) {
+    let options = {
+      IgnoreDates: false,
+      IncludeIsInvoice: true,
+      IncludeIsQuote: false,
+      IncludeIsRefund: true,
+      IncludeISSalesOrder: false,
+      IsDetailReport: false,
+      Paid: false,
+      Unpaid: true,
+      Search: "Balance != 0",
+      OrderBy: "SaleID desc",
+      DateFrom: '"' + dateFrom + '"',
+      DateTo: '"' + dateTo + '"',
+    };
+    return this.getList(this.ERPObjects.TSalesList, options);
+  }
+  getInvoiceBOReport(dateFrom, dateTo) {
+    let options = {
+      OrderBy: "SaleID desc",
+      IgnoreDates: false,
+      IncludeBo: true,
+      IncludeShipped: false,
+      IncludeLines: true,
+      DateFrom: '"' + dateFrom + '"',
+      DateTo: '"' + dateTo + '"',
+    };
+    return this.getList(this.ERPObjects.TInvoiceList, options);
   }
 
   getProfitLossReport() {

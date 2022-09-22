@@ -56,24 +56,27 @@ Template.balancesheetchart.onRendered(()=>{
 
   let varianceRed = "#ff420e";
   let varianceGreen = "#579D1C;";
+  let minPerc = 40;
 
-  templateObject.calculatePercent = function(ptotalAgedReceivables, ptotalAgedPayables, ptotalNettAssets) {
-    var rtotalAgedReceivablesPerc = 0;
-    var rtotalAgedPayablesPerc = 0;
-    var rtotalNettAssetsPerc = 0;
-    var maxValue = Math.max(Math.abs(ptotalAgedReceivables), Math.abs(ptotalAgedPayables), Math.abs(ptotalNettAssets));
-    if (maxValue > 0) {
-      rtotalAgedReceivablesPerc = Math.round(Math.abs(ptotalAgedReceivables) / maxValue * 100);
-      if (rtotalAgedReceivablesPerc < 40)
-        rtotalAgedReceivablesPerc = 40;
-      rtotalAgedPayablesPerc = Math.round(Math.abs(ptotalAgedPayables) / maxValue * 100);
-      if (rtotalAgedPayablesPerc < 40)
-        rtotalAgedPayablesPerc = 40;
-      rtotalNettAssetsPerc = Math.round(Math.abs(ptotalNettAssets) / maxValue * 100);
-      if (rtotalNettAssetsPerc < 40)
-        rtotalNettAssetsPerc = 40;
+  templateObject.calculatePercent = function(pArrVal) {
+    var rArrVal = [];
+    var rArrAbs = [];
+    var i = 0;
+    for (i=0; i<pArrVal.length; i++) {
+      rArrVal.push(minPerc);
     }
-    return [rtotalAgedReceivablesPerc, rtotalAgedPayablesPerc, rtotalNettAssetsPerc];
+    for (i=0; i<pArrVal.length; i++){
+      rArrAbs.push(Math.abs(pArrVal[i]));
+    }
+    var maxValue = Math.max(...rArrAbs);
+    if (maxValue > 0) {
+      for (i=0; i<pArrVal.length; i++){
+        rArrVal[i] = Math.round(rArrAbs[i] / maxValue * 100);
+        if (rArrVal[i] < minPerc)
+          rArrVal[i] = minPerc;
+      } 
+    }
+    return rArrVal;
   }
 
   templateObject.setFieldValue = function(fieldVal, fieldSelector) {
@@ -112,64 +115,68 @@ Template.balancesheetchart.onRendered(()=>{
   }
 
   templateObject.getBalanceSheetReports = async () => {
-    var curDate = new Date();
-    var dateTo1 = new Date(curDate.getFullYear(), curDate.getMonth() - 1, 0);
-    var dateTo2 = new Date(curDate.getFullYear(), curDate.getMonth(), 0);
-    var loadDate1 = moment(dateTo1).format("YYYY-MM-DD");
-    var loadDate2 = moment(dateTo2).format("YYYY-MM-DD");
-    var loadDates = [];
-    loadDates.push(loadDate1);
-    loadDates.push(loadDate2);
+    try{
+      var curDate = new Date();
+      var dateTo1 = new Date(curDate.getFullYear(), curDate.getMonth() - 1, 0);
+      var dateTo2 = new Date(curDate.getFullYear(), curDate.getMonth(), 0);
+      var loadDate1 = moment(dateTo1).format("YYYY-MM-DD");
+      var loadDate2 = moment(dateTo2).format("YYYY-MM-DD");
+      var loadDates = [];
+      loadDates.push(loadDate1);
+      loadDates.push(loadDate2);
 
-    let SubAccountTotal = 0;
-    let HeaderAccountTotal = 0;
-    let TotalAsset_Liability = 0;
-    let AccountTree = "";
-    
-    for (var k=0; k<2; k++) {
-      let data = await reportService.getBalanceSheetReport(loadDates[k]);
-      if (data.balancesheetreport) {      
-        for (let i = 0, len = data.balancesheetreport.length; i < len; i++) {
-          SubAccountTotal = data.balancesheetreport[i]["Sub Account Total"];
-          HeaderAccountTotal = data.balancesheetreport[i]["Header Account Total"];
-          TotalAsset_Liability = data.balancesheetreport[i]["Total Asset & Liability"];
+      let SubAccountTotal = 0;
+      let HeaderAccountTotal = 0;
+      let TotalAsset_Liability = 0;
+      let AccountTree = "";
+      
+      for (var k=0; k<2; k++) {
+        let data = await reportService.getBalanceSheetReport(loadDates[k]);
+        if (data.balancesheetreport) {      
+          for (let i = 0, len = data.balancesheetreport.length; i < len; i++) {
+            SubAccountTotal = data.balancesheetreport[i]["Sub Account Total"];
+            HeaderAccountTotal = data.balancesheetreport[i]["Header Account Total"];
+            TotalAsset_Liability = data.balancesheetreport[i]["Total Asset & Liability"];
 
-          AccountTree = data.balancesheetreport[i]["Account Tree"];
-          if (AccountTree.replace(/\s/g, "") == "TotalAccountsReceivable") {
-            totalAgedReceivables[k] = HeaderAccountTotal;
-          } else if (AccountTree.replace(/\s/g, "") == "TotalAccountsPayable") {
-            totalAgedPayables[k] = SubAccountTotal;
-          } else if (AccountTree.replace(/\s/g, "") == "TOTALASSETS") {
-            GrandTotalAsset = TotalAsset_Liability;
-          } else if (AccountTree.replace(/\s/g, "") == "TOTALLIABILITIES&EQUITY") {
-            GrandTotalLiability = TotalAsset_Liability;
-          } else {
+            AccountTree = data.balancesheetreport[i]["Account Tree"];
+            if (AccountTree.replace(/\s/g, "") == "TotalAccountsReceivable") {
+              totalAgedReceivables[k] = HeaderAccountTotal;
+            } else if (AccountTree.replace(/\s/g, "") == "TotalAccountsPayable") {
+              totalAgedPayables[k] = SubAccountTotal;
+            } else if (AccountTree.replace(/\s/g, "") == "TOTALASSETS") {
+              GrandTotalAsset = TotalAsset_Liability;
+            } else if (AccountTree.replace(/\s/g, "") == "TOTALLIABILITIES&EQUITY") {
+              GrandTotalLiability = TotalAsset_Liability;
+            } else {
 
+            }
           }
+          totalNettAssets[k] = GrandTotalAsset - GrandTotalLiability;
         }
-        totalNettAssets[k] = GrandTotalAsset - GrandTotalLiability;
       }
+      [totalAgedReceivablesPerc1, totalAgedPayablesPerc1, totalNettAssetsPerc1] = templateObject.calculatePercent([totalAgedReceivables[0], totalAgedPayables[0], totalNettAssets[0]]);
+      [totalAgedReceivablesPerc2, totalAgedPayablesPerc2, totalNettAssetsPerc2] = templateObject.calculatePercent([totalAgedReceivables[1], totalAgedPayables[1], totalNettAssets[1]]);
+      
+      templateObject.totalAgedReceivablesPerc1.set(totalAgedReceivablesPerc1);
+      templateObject.totalAgedPayablesPerc1.set(totalAgedPayablesPerc1);
+      templateObject.totalNettAssetsPerc1.set(totalNettAssetsPerc1);
+      templateObject.totalAgedReceivablesPerc2.set(totalAgedReceivablesPerc2);
+      templateObject.totalAgedPayablesPerc2.set(totalAgedPayablesPerc2);
+      templateObject.totalNettAssetsPerc2.set(totalNettAssetsPerc2);
+
+      templateObject.setFieldValue(totalAgedReceivables[0], "spnTotalAgedReceivables");
+      templateObject.setFieldValue(totalAgedPayables[0], "spnTotalAgedPayables");
+      templateObject.setFieldValue(totalNettAssets[0], "spnTotalNettAssets");
+      templateObject.setFieldValue(totalAgedReceivables[1], "spnTotalAgedReceivables2");
+      templateObject.setFieldValue(totalAgedPayables[1], "spnTotalAgedPayables2");
+      templateObject.setFieldValue(totalNettAssets[1], "spnTotalNettAssets2");
+
+      templateObject.setFieldVariance(totalAgedReceivables[0], totalAgedReceivables[1], "spnTotalAgedReceivablesVariance", "divTotalAgedReceivablesVariance");
+      templateObject.setFieldVariance(totalAgedPayables[0], totalAgedPayables[1], "spnTotalAgedPayablesVariance", "divTotalAgedPayablesVariance");
+      templateObject.setFieldVariance(totalNettAssets[0], totalNettAssets[1], "spnTotalNettAssetVariance", "divTotalNettAssetVariance");
+    } catch (err) {
+      console.log(err);
     }
-    [totalAgedReceivablesPerc1, totalAgedPayablesPerc1, totalNettAssetsPerc1] = templateObject.calculatePercent(totalAgedReceivables[0], totalAgedPayables[0], totalNettAssets[0]);
-    [totalAgedReceivablesPerc2, totalAgedPayablesPerc2, totalNettAssetsPerc2] = templateObject.calculatePercent(totalAgedReceivables[1], totalAgedPayables[1], totalNettAssets[1]);
-    
-    templateObject.totalAgedReceivablesPerc1.set(totalAgedReceivablesPerc1);
-    templateObject.totalAgedPayablesPerc1.set(totalAgedPayablesPerc1);
-    templateObject.totalNettAssetsPerc1.set(totalNettAssetsPerc1);
-    templateObject.totalAgedReceivablesPerc2.set(totalAgedReceivablesPerc2);
-    templateObject.totalAgedPayablesPerc2.set(totalAgedPayablesPerc2);
-    templateObject.totalNettAssetsPerc2.set(totalNettAssetsPerc2);
-
-    templateObject.setFieldValue(totalAgedReceivables[0], "spnTotalAgedReceivables");
-    templateObject.setFieldValue(totalAgedPayables[0], "spnTotalAgedPayables");
-    templateObject.setFieldValue(totalNettAssets[0], "spnTotalNettAssets");
-    templateObject.setFieldValue(totalAgedReceivables[1], "spnTotalAgedReceivables2");
-    templateObject.setFieldValue(totalAgedPayables[1], "spnTotalAgedPayables2");
-    templateObject.setFieldValue(totalNettAssets[1], "spnTotalNettAssets2");
-
-    templateObject.setFieldVariance(totalAgedReceivables[0], totalAgedReceivables[1], "spnTotalAgedReceivablesVariance", "divTotalAgedReceivablesVariance");
-    templateObject.setFieldVariance(totalAgedPayables[0], totalAgedPayables[1], "spnTotalAgedPayablesVariance", "divTotalAgedPayablesVariance");
-    templateObject.setFieldVariance(totalNettAssets[0], totalNettAssets[1], "spnTotalNettAssetVariance", "divTotalNettAssetVariance");
   };
   templateObject.getBalanceSheetReports();
 });

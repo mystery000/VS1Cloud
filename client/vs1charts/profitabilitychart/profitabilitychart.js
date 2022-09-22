@@ -59,28 +59,27 @@ Template.profitabilitychart.onRendered(() => {
 
   let varianceRed = "#ff420e";
   let varianceGreen = "#579D1C;";
+  let minPerc = 40;
 
-  templateObject.calculatePercent = function(ptotalSales, pgrossProfit, ptotalExpense, pnettProfit) {
-    var maxValue = Math.max(Math.abs(ptotalSales), Math.abs(pgrossProfit), Math.abs(ptotalExpense), Math.abs(pnettProfit));
-    var rtotalSalesPerc = 0;
-    var rgrossProfitPerc = 0;
-    var rtotalExpensePerc = 0;
-    var rnettProfitPerc = 0;
-    if (maxValue > 0) {
-      rtotalSalesPerc = Math.round(Math.abs(ptotalSales) / maxValue * 100);
-      if (rtotalSalesPerc < 40)
-        rtotalSalesPerc = 40;
-      rgrossProfitPerc = Math.round(Math.abs(pgrossProfit) / maxValue * 100);
-      if (rgrossProfitPerc < 40)
-        rgrossProfitPerc = 40;
-      rtotalExpensePerc = Math.round(Math.abs(ptotalExpense) / maxValue * 100);
-      if (rtotalExpensePerc < 40)
-        rtotalExpensePerc = 40;
-      rnettProfitPerc = Math.round(Math.abs(pnettProfit) / maxValue * 100);
-      if (rnettProfitPerc < 40)
-        rnettProfitPerc = 40;
+  templateObject.calculatePercent = function(pArrVal) {
+    var rArrVal = [];
+    var rArrAbs = [];
+    var i = 0;
+    for (i=0; i<pArrVal.length; i++) {
+      rArrVal.push(minPerc);
     }
-    return [rtotalSalesPerc, rgrossProfitPerc, rtotalExpensePerc, rnettProfitPerc];
+    for (i=0; i<pArrVal.length; i++){
+      rArrAbs.push(Math.abs(pArrVal[i]));
+    }
+    var maxValue = Math.max(...rArrAbs);
+    if (maxValue > 0) {
+      for (i=0; i<pArrVal.length; i++){
+        rArrVal[i] = Math.round(rArrAbs[i] / maxValue * 100);
+        if (rArrVal[i] < minPerc)
+          rArrVal[i] = minPerc;
+      } 
+    }
+    return rArrVal;
   }
 
   templateObject.setFieldValue = function(fieldVal, fieldSelector) {
@@ -215,16 +214,17 @@ Template.profitabilitychart.onRendered(() => {
           grossProfit.push(records[1].periodAmounts[i].roundAmt);
           totalExpense.push(records[0].periodAmounts[i].roundAmt - records[1].periodAmounts[i].roundAmt);
           nettProfit.push(records[2].periodAmounts[i].roundAmt);
-        }
-        [totalSalesPerc1, grossProfitPerc1, totalExpensePerc1, nettProfitPerc1] = templateObject.calculatePercent(totalSales[0], grossProfit[0], totalExpense[0], nettProfit[0]);
-        [totalSalesPerc2, grossProfitPerc2, totalExpensePerc2, nettProfitPerc2] = templateObject.calculatePercent(totalSales[1], grossProfit[1], totalExpense[1], nettProfit[1]);
+        }  
         templateObject.records.set(records);
       }
+
+      [totalSalesPerc1, grossProfitPerc1, totalExpensePerc1, nettProfitPerc1] = templateObject.calculatePercent([totalSales[0], grossProfit[0], totalExpense[0], nettProfit[0]]);
+      [totalSalesPerc2, grossProfitPerc2, totalExpensePerc2, nettProfitPerc2] = templateObject.calculatePercent([totalSales[1], grossProfit[1], totalExpense[1], nettProfit[1]]);
+
       templateObject.totalSalesPerc1.set(totalSalesPerc1);
       templateObject.grossProfitPerc1.set(grossProfitPerc1);
       templateObject.totalExpensePerc1.set(totalExpensePerc1);
       templateObject.nettProfitPerc1.set(nettProfitPerc1);
-
       templateObject.totalSalesPerc2.set(totalSalesPerc2);
       templateObject.grossProfitPerc2.set(grossProfitPerc2);
       templateObject.totalExpensePerc2.set(totalExpensePerc2);
