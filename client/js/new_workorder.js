@@ -36,6 +36,7 @@ Template.new_workorder.onCreated(function() {
     templateObject.salesOrderId = new ReactiveVar();
     templateObject.workOrderRecords = new ReactiveVar([]);
     templateObject.workOrderLineId = new ReactiveVar(-1);
+    templateObject.selectedInputElement = new ReactiveVar();
 })
 
 Template.new_workorder.onRendered(function(){
@@ -319,7 +320,23 @@ Template.new_workorder.events({
     'click #tblWorkOrderLine tbody tr': function(event) {
         event.preventDefault();
         event.stopPropagation();
+        let tempalteObject = Template.instance();
+        let productName = $(event.target).closest('tr').find('input.lineProductName').val()
+        let tempBOMs = localStorage.getItem('TProcTree');
+        let bomProducts = tempBOMs?JSON.parse(tempBOMs):[];
+        let bomIndex = bomProducts.findIndex(product=>{
+            return product.fields.productName == productName
+        })
+        $('#edtMainProductName').val(productName);
         $('#BOMSetupModal').modal('toggle')
+        $('#edtProcess').editableSelect();
+        $('#BOMSetupModal .edtProductName').editableSelect();
+        if(bomIndex > -1) {
+            let product = bomProducts[bomIndex]
+            $('.edtProcess').val(product.fields.process)
+            $('.edtProcessNote').val(product.fields.processNote)
+        }
+
     }
 })
 
@@ -330,6 +347,22 @@ Template.new_workorder.helpers({
 
     uploadedFile : () => {
         return Template.instance().uploadedFile.get()
+    }
+})
+
+Template.new_workorder.events({
+    'click #BOMSetupModal .edtProductName': function(event) {
+        let targetElement = $(event.target);
+        let templateObject = Template.instance();
+        templateObject.selectedInputElement.set(targetElement);
+        $('#productListModal').modal('toggle');
+    },
+
+    'click #productListModal table tr': function(event) {
+        let name = $(event.target).closest('tr').find('.colProductName').text();
+        let templateObject = Template.instance();
+        let targetElement = templateObject.selectedInputElement.get();
+        $(targetElement).val(name)
     }
 })
 

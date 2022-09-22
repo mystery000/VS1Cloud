@@ -12180,6 +12180,7 @@ Template.new_salesorder.events({
 
     'click #btnMakeWorkOrder': async function(event) {
         let templateObject = Template.instance();
+        let productService = new ProductService();
         let workorderList = [];
 
         //await function to get all work order list data
@@ -12210,18 +12211,74 @@ Template.new_salesorder.events({
                 isAvailable = false
             }else {
                 for(let i = 0; i< lines.length; i++) {
+                    let isBOMProduct = false;
                     let isExisting = false;
-                     workorderList.map(order => {
-                        if(order.SalesOrderID == salesOrderRecord.id && order.Line.fields.productName == lines[i].item) {
-                            isExisting = true
-                            isAvailable = false;
+                    getVS1Data('TProductVS1').then(function(dataObject){
+                        if(dataObject.length == 0) {
+                            productService.getOneProductdatavs1byname(lines[i].item).then(function(data){
+                                isBOMProduct = data.tproduct[0].fields.IsManufactured;
+                                if(isBOMProduct == true) {
+                                    workorderList.map(order => {
+                                        if(order.SalesOrderID == salesOrderRecord.id && order.Line.fields.productName == lines[i].item) {
+                                            isExisting = true
+                                            isAvailable = false;
+                                        }
+                                    })
+                                    if(isExisting == false) {
+                                        FlowRouter.go('/workordercard?salesorderid='+FlowRouter.current().queryParams.id + '&lineId='+ i);
+                                        return;
+                                    }
+                                }
+                            })
+                        }else {
+                            let data = JSON.parse(dataObject[0].data);
+                            let useData = data.tproductvs1;
+                            for(let j=0; j<useData.length; j++ ) {
+                                if(useData[j].fields.ProductName == lines[i].item) {
+                                    isBOMProduct = useData[j].fields.IsManufactured;
+                                }
+                            }
+                            if(isBOMProduct == true) {
+                                workorderList.map(order => {
+                                    if(order.SalesOrderID == salesOrderRecord.id && order.Line.fields.productName == lines[i].item) {
+                                        isExisting = true
+                                        isAvailable = false;
+                                    }
+                                })
+                                if(isExisting == false) {
+                                    FlowRouter.go('/workordercard?salesorderid='+FlowRouter.current().queryParams.id + '&lineId='+ i);
+                                    return;
+                                }
+                            }
                         }
+                    }).catch(function(error){
+                        productService.getOneProductdatavs1byname(lines[i].item).then(function(data){
+                            isBOMProduct = data.tproduct[0].fields.IsManufactured;
+                            if(isBOMProduct == true) {
+                                workorderList.map(order => {
+                                    if(order.SalesOrderID == salesOrderRecord.id && order.Line.fields.productName == lines[i].item) {
+                                        isExisting = true
+                                        isAvailable = false;
+                                    }
+                                })
+                                if(isExisting == false) {
+                                    FlowRouter.go('/workordercard?salesorderid='+FlowRouter.current().queryParams.id + '&lineId='+ i);
+                                    return;
+                                }
+                            }
+                        })
                     })
+                    //  workorderList.map(order => {
+                    //     if(order.SalesOrderID == salesOrderRecord.id && order.Line.fields.productName == lines[i].item) {
+                    //         isExisting = true
+                    //         isAvailable = false;
+                    //     }
+                    // })
 
-                    if(isExisting == false) {
-                        FlowRouter.go('/workordercard?salesorderid='+FlowRouter.current().queryParams.id + '&lineId='+ i);
-                        return;
-                    }
+                    // if(isExisting == false) {
+                    //     FlowRouter.go('/workordercard?salesorderid='+FlowRouter.current().queryParams.id + '&lineId='+ i);
+                    //     return;
+                    // }
                 }
             }
 

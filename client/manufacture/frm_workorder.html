@@ -889,12 +889,12 @@
                             }
     
                            #BOMSetupModal .productRow .colProcess {
-                                flex: 14%;
+                                width: 14%;
                                 text-align: left;
                             }
     
                            #BOMSetupModal .productRow .colAttachment {
-                                flex: 18%;
+                                width: 18%;
                                 text-align: left;
                             }
     
@@ -919,7 +919,7 @@
                                     <input class="edtMainProductName form-control" id="edtMainProductName" disabled style="width: 60%" value="{{productrecord.productname}}"/>
                                 </div>
                                 <div class="colQty form-group">
-                                    <input type="text" class="edtQuantity form-control w-100" value="1"/>
+                                    <input type="text" id="edtMainQty" class="edtQuantity form-control w-100" value="1"/>
                                 </div>
                                 <div class="colProcess form-group">
                                     <select type="search" id="edtProcess" class="edtProcess form-control w-100" name="edtProcess"></select>

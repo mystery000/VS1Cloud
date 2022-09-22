@@ -839,7 +839,6 @@ Template.contactlistpop.onRendered(function () {
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
             }
         }).catch(function (err) {
-            console.log('get from vs1 failed, will go to service')
             sideBarService.getAllContactCombineVS1('All', 0).then(function (data) {
             // sideBarService.getAllContactCombineVS1(initialBaseDataLoad, 0).then(function (data) {
                 addVS1Data('TERPCombinedContactsVS1', JSON.stringify(data));
