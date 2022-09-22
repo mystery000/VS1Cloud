@@ -554,35 +554,35 @@ Template.salesoverview.onRendered(function () {
               //   templateObject.getAllCustomFieldDisplaySettings();
               // }, 500);
 
-              var columns = $("#tblSalesOverview th");
-              let sTible = "";
-              let sWidth = "";
-              let sIndex = "";
-              let sVisible = "";
-              let columVisible = false;
-              let sClass = "";
-              $.each(columns, function (i, v) {
-                if (v.hidden == false) {
-                  columVisible = true;
-                }
-                if (v.className.includes("hiddenColumn")) {
-                  columVisible = false;
-                }
-                sWidth = v.style.width.replace("px", "");
+              // var columns = $("#tblSalesOverview th");
+              // let sTible = "";
+              // let sWidth = "";
+              // let sIndex = "";
+              // let sVisible = "";
+              // let columVisible = false;
+              // let sClass = "";
+              // $.each(columns, function (i, v) {
+              //   if (v.hidden == false) {
+              //     columVisible = true;
+              //   }
+              //   if (v.className.includes("hiddenColumn")) {
+              //     columVisible = false;
+              //   }
+              //   sWidth = v.style.width.replace("px", "");
 
-                let datatablerecordObj = {
-                  sTitle: v.innerText || "",
-                  sWidth: sWidth || "",
-                  sIndex: v.cellIndex || "",
-                  sVisible: columVisible || false,
-                  sClass: v.className || "",
-                };
-                tableHeaderList.push(datatablerecordObj);
-              });
-              templateObject.tableheaderrecords.set(tableHeaderList);
-              $("div.dataTables_filter input").addClass(
-                "form-control form-control-sm"
-              );
+              //   let datatablerecordObj = {
+              //     sTitle: v.innerText || "",
+              //     sWidth: sWidth || "",
+              //     sIndex: v.cellIndex || "",
+              //     sVisible: columVisible || false,
+              //     sClass: v.className || "",
+              //   };
+              //   tableHeaderList.push(datatablerecordObj);
+              // });
+              // templateObject.tableheaderrecords.set(tableHeaderList);
+              // $("div.dataTables_filter input").addClass(
+              //   "form-control form-control-sm"
+              // );
             })
             .catch(function (err) {
               // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -923,35 +923,35 @@ Template.salesoverview.onRendered(function () {
           //   templateObject.getAllCustomFieldDisplaySettings();
           // }, 500);
 
-          var columns = $("#tblSalesOverview th");
-          let sTible = "";
-          let sWidth = "";
-          let sIndex = "";
-          let sVisible = "";
-          let columVisible = false;
-          let sClass = "";
-          $.each(columns, function (i, v) {
-            if (v.hidden == false) {
-              columVisible = true;
-            }
-            if (v.className.includes("hiddenColumn")) {
-              columVisible = false;
-            }
-            sWidth = v.style.width.replace("px", "");
+          // var columns = $("#tblSalesOverview th");
+          // let sTible = "";
+          // let sWidth = "";
+          // let sIndex = "";
+          // let sVisible = "";
+          // let columVisible = false;
+          // let sClass = "";
+          // $.each(columns, function (i, v) {
+          //   if (v.hidden == false) {
+          //     columVisible = true;
+          //   }
+          //   if (v.className.includes("hiddenColumn")) {
+          //     columVisible = false;
+          //   }
+          //   sWidth = v.style.width.replace("px", "");
 
-            let datatablerecordObj = {
-              sTitle: v.innerText || "",
-              sWidth: sWidth || "",
-              sIndex: v.cellIndex || "",
-              sVisible: columVisible || false,
-              sClass: v.className || "",
-            };
-            tableHeaderList.push(datatablerecordObj);
-          });
-          templateObject.tableheaderrecords.set(tableHeaderList);
-          $("div.dataTables_filter input").addClass(
-            "form-control form-control-sm"
-          );
+          //   let datatablerecordObj = {
+          //     sTitle: v.innerText || "",
+          //     sWidth: sWidth || "",
+          //     sIndex: v.cellIndex || "",
+          //     sVisible: columVisible || false,
+          //     sClass: v.className || "",
+          //   };
+          //   tableHeaderList.push(datatablerecordObj);
+          // });
+          // templateObject.tableheaderrecords.set(tableHeaderList);
+          // $("div.dataTables_filter input").addClass(
+          //   "form-control form-control-sm"
+          // );
         }
       }).catch(function (err) {
         sideBarService
@@ -1313,35 +1313,35 @@ Template.salesoverview.onRendered(function () {
             //   templateObject.getAllCustomFieldDisplaySettings();
             // }, 500);
 
-            var columns = $("#tblSalesOverview th");
-            let sTible = "";
-            let sWidth = "";
-            let sIndex = "";
-            let sVisible = "";
-            let columVisible = false;
-            let sClass = "";
-            $.each(columns, function (i, v) {
-              if (v.hidden == false) {
-                columVisible = true;
-              }
-              if (v.className.includes("hiddenColumn")) {
-                columVisible = false;
-              }
-              sWidth = v.style.width.replace("px", "");
+            // var columns = $("#tblSalesOverview th");
+            // let sTible = "";
+            // let sWidth = "";
+            // let sIndex = "";
+            // let sVisible = "";
+            // let columVisible = false;
+            // let sClass = "";
+            // $.each(columns, function (i, v) {
+            //   if (v.hidden == false) {
+            //     columVisible = true;
+            //   }
+            //   if (v.className.includes("hiddenColumn")) {
+            //     columVisible = false;
+            //   }
+            //   sWidth = v.style.width.replace("px", "");
 
-              let datatablerecordObj = {
-                sTitle: v.innerText || "",
-                sWidth: sWidth || "",
-                sIndex: v.cellIndex || "",
-                sVisible: columVisible || false,
-                sClass: v.className || "",
-              };
-              tableHeaderList.push(datatablerecordObj);
-            });
-            templateObject.tableheaderrecords.set(tableHeaderList);
-            $("div.dataTables_filter input").addClass(
-              "form-control form-control-sm"
-            );
+            //   let datatablerecordObj = {
+            //     sTitle: v.innerText || "",
+            //     sWidth: sWidth || "",
+            //     sIndex: v.cellIndex || "",
+            //     sVisible: columVisible || false,
+            //     sClass: v.className || "",
+            //   };
+            //   tableHeaderList.push(datatablerecordObj);
+            // });
+            // templateObject.tableheaderrecords.set(tableHeaderList);
+            // $("div.dataTables_filter input").addClass(
+            //   "form-control form-control-sm"
+            // );
           })
           .catch(function (err) {
             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -2185,39 +2185,39 @@ Template.salesoverview.events({
       }
     });
   },
-  "click .btnOpenSettings": function (event) {
-    let templateObject = Template.instance();
-    var columns = $("#tblSalesOverview th");
+  // "click .btnOpenSettings": function (event) {
+  //   let templateObject = Template.instance();
+  //   var columns = $("#tblSalesOverview th");
 
-    const tableHeaderList = [];
-    let sTible = "";
-    let sWidth = "";
-    let sIndex = "";
-    let sVisible = "";
-    let columVisible = false;
-    let sClass = "";
-    $.each(columns, function (i, v) {
-      if (v.hidden == false) {
-        columVisible = true;
-      }
-      if (v.className.includes("hiddenColumn")) {
-        columVisible = false;
-      }
-      sWidth = v.style.width.replace("px", "");
+  //   const tableHeaderList = [];
+  //   let sTible = "";
+  //   let sWidth = "";
+  //   let sIndex = "";
+  //   let sVisible = "";
+  //   let columVisible = false;
+  //   let sClass = "";
+  //   $.each(columns, function (i, v) {
+  //     if (v.hidden == false) {
+  //       columVisible = true;
+  //     }
+  //     if (v.className.includes("hiddenColumn")) {
+  //       columVisible = false;
+  //     }
+  //     sWidth = v.style.width.replace("px", "");
 
-      let datatablerecordObj = {
-        custid: $(this).attr("custid") || 0,
-        sTitle: v.innerText || "",
-        sWidth: sWidth || "",
-        sIndex: v.cellIndex || "",
-        sVisible: columVisible || false,
-        sClass: v.className || "",
-      };
-      tableHeaderList.push(datatablerecordObj);
-    });
+  //     let datatablerecordObj = {
+  //       custid: $(this).attr("custid") || 0,
+  //       sTitle: v.innerText || "",
+  //       sWidth: sWidth || "",
+  //       sIndex: v.cellIndex || "",
+  //       sVisible: columVisible || false,
+  //       sClass: v.className || "",
+  //     };
+  //     tableHeaderList.push(datatablerecordObj);
+  //   });
 
-    templateObject.tableheaderrecords.set(tableHeaderList);
-  },
+  //   templateObject.tableheaderrecords.set(tableHeaderList);
+  // },
   "click #exportbtn": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblSalesOverview_wrapper .dt-buttons .btntabletocsv").click();
