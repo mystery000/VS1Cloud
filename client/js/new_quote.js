@@ -24,7 +24,7 @@ let times = 0;
 let clickedInput = "";
 let isDropDown = false;
 
-var template_list = [
+const template_list = [
     "Quotes",
 ];
 
@@ -77,7 +77,6 @@ Template.new_quote.onCreated(() => {
 });
 
 Template.new_quote.onRendered(() => {
-
     $('#choosetemplate').attr('checked', true);
     $(window).on('load', function() {
         const win = $(this); //this = window
@@ -116,11 +115,7 @@ Template.new_quote.onRendered(() => {
       ];
 
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
-      if(isBatchSerialNoTracking) {
-        reset_data[11].display = true; 
-      } else {
-        reset_data[11].display = false; 
-      }
+      reset_data[11].display = !!isBatchSerialNoTracking;
 
       let templateObject = Template.instance();
       templateObject.reset_data.set(reset_data);
@@ -129,12 +124,11 @@ Template.new_quote.onRendered(() => {
     // set initial table rest_data
 
     $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
-
-        title = $(this).parent().attr("data-id");
-        number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
+        let title = $(this).parent().attr("data-id");
+        let number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
         templateObject.generateInvoiceData(title,number);
+    });
 
-     });
     const salesService = new SalesBoardService();
     const clientsService = new SalesBoardService();
     const accountService = new SalesBoardService();
@@ -148,14 +142,12 @@ Template.new_quote.onRendered(() => {
     let count = 1;
 
     templateObject.generateInvoiceData = function (template_title,number) {
-        object_invoce = [];
-         switch (template_title) {
-
-         case "Quotes":
+        let object_invoce = [];
+        switch (template_title) {
+            case "Quotes":
             showQuotes1(template_title,number);
             break;
-         }
-
+        }
     };
 
     templateObject.getTemplateInfoNew = function(){
@@ -303,21 +295,21 @@ Template.new_quote.onRendered(() => {
         let lastBankAccount = "Bank";
         let lastDepartment = defaultDept || "";
         salesService.getLastQuoteID().then(function(data) {
-          let latestQuoteId;
+            let latestQuoteId;
             if (data.tquote.length > 0) {
-                lastQuote = data.tquote[data.tquote.length - 1]
+                let lastQuote = data.tquote[data.tquote.length - 1]
                 latestQuoteId = (lastQuote.Id);
             } else {
               latestQuoteId = 0;
             }
-            newQuoteId = (latestQuoteId + 1);
+            let newQuoteId = (latestQuoteId + 1);
             setTimeout(function() {
                 $('#sltDept').val(lastDepartment);
                 if (FlowRouter.current().queryParams.id) {
 
                 }else{
                 // $(".heading").html("New Quote " +newQuoteId +'<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
-                };
+                }
             }, 50);
         }).catch(function(err) {
             $('#sltDept').val(lastDepartment);
@@ -325,24 +317,20 @@ Template.new_quote.onRendered(() => {
     };
 
     function showQuotes1(template_title, number) {
-        var array_data = [];
+        const array_data = [];
         let lineItems = [];
         let taxItems = {};
-        object_invoce = [];
-
-
+        let object_invoce = [];
         let quoteData = templateObject.quoterecord.get();
         let stripe_id = templateObject.accountID.get() || '';
         let stripe_fee_method = templateObject.stripe_fee_method.get();
-        var erpGet = erpDb();
-
-        var customfield1 = $('#edtSaleCustField1').val() || '  ';
-        var customfield2 = $('#edtSaleCustField2').val() || '  ';
-        var customfield3 = $('#edtSaleCustField3').val() || '  ';
-
-        var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
-        var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
-        var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
+        const erpGet = erpDb();
+        const customfield1 = $('#edtSaleCustField1').val() || '  ';
+        const customfield2 = $('#edtSaleCustField2').val() || '  ';
+        const customfield3 = $('#edtSaleCustField3').val() || '  ';
+        const customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+        const customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+        const customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
 
         let balancedue = $('#totalBalanceDue').html() || 0;
         let tax = $('#subtotal_tax').html() || 0;
@@ -351,23 +339,20 @@ Template.new_quote.onRendered(() => {
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
         let fx = $('#sltCurrency').val();
-        var comment = $('#txaComment').val();
-        var parking_instruction = $('#txapickmemo').val();
-        var subtotal_tax = $('#subtotal_tax').html() || '$' + 0;
-        var total_paid = $('#totalPaidAmt').html() || '$' + 0;
-        var ref = $('#edtRef').val() || '-';
-        var txabillingAddress = $('#txabillingAddress').val() || '';
-        var dtSODate = $('#dtSODate').val();
-        var subtotal_total = $('#subtotal_total').text() || '$' + 0;
-        var grandTotal = $('#grandTotal').text() || '$' + 0;
-        var duedate = $('#dtDueDate').val();
-        var po = $('#ponumber').val() || '.';
-
+        const comment = $('#txaComment').val();
+        const parking_instruction = $('#txapickmemo').val();
+        const subtotal_tax = $('#subtotal_tax').html() || '$' + 0;
+        const total_paid = $('#totalPaidAmt').html() || '$' + 0;
+        const ref = $('#edtRef').val() || '-';
+        const txabillingAddress = $('#txabillingAddress').val() || '';
+        const dtSODate = $('#dtSODate').val();
+        const subtotal_total = $('#subtotal_total').text() || '$' + 0;
+        const grandTotal = $('#grandTotal').text() || '$' + 0;
+        const duedate = $('#dtDueDate').val();
+        const po = $('#ponumber').val() || '.';
 
         $('#tblQuoteLine > tbody > tr').each(function () {
-            var lineID = this.id;
-
-
+            const lineID = this.id;
             let tdproduct = $('#' + lineID + " .lineProductName").val();
             let tddescription = $('#' + lineID + " .lineProductDesc").text();
             let tdQty = $('#' + lineID + " .lineQty").val();
@@ -397,8 +382,7 @@ Template.new_quote.onRendered(() => {
                             taxItems[taxCode] = amount;
                         }
                     });
-                }
-                else {
+                } else {
                     // taxItems[targetTaxCode] = taxTotal;
                 }
             }
@@ -412,14 +396,13 @@ Template.new_quote.onRendered(() => {
                 tdlineamt,
             ]);
 
-            lineItemObj = {
+            let lineItemObj = {
                 description: tddescription || '',
                 quantity: tdQty || 0,
                 unitPrice: tdunitprice.toLocaleString(undefined, {
                     minimumFractionDigits: 2
                 }) || 0
             }
-
             lineItems.push(lineItemObj);
         });
 
@@ -428,17 +411,14 @@ Template.new_quote.onRendered(() => {
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
         let currencyname = (CountryAbbr).toLowerCase();
-        stringQuery = "?";
-        var customerID = $('#edtCustomerEmail').attr('customerid');
+        let stringQuery = "?";
+        const customerID = $('#edtCustomerEmail').attr('customerid');
         for (let l = 0; l < lineItems.length; l++) {
             stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
         }
         stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-
-
         let item_quote = '';
-
         if (number == 1) {
             item_quote = {
                 o_url: Session.get('vs1companyURL'),
@@ -481,9 +461,7 @@ Template.new_quote.onRendered(() => {
                 comment: comment,
 
             };
-
-        }
-        else if (number == 2) {
+        } else if (number == 2) {
             item_quote = {
                 o_url: Session.get('vs1companyURL'),
                 o_name: Session.get('vs1companyName'),
@@ -525,10 +503,7 @@ Template.new_quote.onRendered(() => {
                 comment: comment,
 
             };
-
-        }
-        else {
-
+        } else {
             item_quote = {
                 o_url: Session.get('vs1companyURL'),
                 o_name: Session.get('vs1companyName'),
@@ -569,43 +544,34 @@ Template.new_quote.onRendered(() => {
                 showFX: fx,
                 comment: comment,
             };
-
-
         }
 
         item_quote.taxItems = taxItems;
-        if(stripe_id == ""){
-        item_quote.paylink = '';
-        };
+        if (stripe_id == "") {
+            item_quote.paylink = '';
+        }
         object_invoce.push(item_quote);
         $("#templatePreviewModal .field_payment").show();
         $("#templatePreviewModal .field_amount").show();
         updateTemplate1(object_invoce);
-
         saveTemplateFields("fields" + template_title, object_invoce[0]["fields"])
-
-
     }
 
-    function showQuotes(template_title,number)
-    {
-        var array_data = [];
+    function showQuotes(template_title,number) {
+        const array_data = [];
         let lineItems = [];
         let taxItems = {};
-        object_invoce = [];
-
-
+        let object_invoce = [];
         let quoteData = templateObject.quoterecord.get();
         let stripe_id = templateObject.accountID.get() || '';
         let stripe_fee_method = templateObject.stripe_fee_method.get();
-        var erpGet = erpDb();
-
-        var customfield1 = $('#edtSaleCustField1').val() || '  ';
-        var customfield2 = $('#edtSaleCustField2').val() || '  ';
-        var customfield3 = $('#edtSaleCustField3').val() || '  ';
-        var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
-        var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
-        var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
+        const erpGet = erpDb();
+        const customfield1 = $('#edtSaleCustField1').val() || '  ';
+        const customfield2 = $('#edtSaleCustField2').val() || '  ';
+        const customfield3 = $('#edtSaleCustField3').val() || '  ';
+        const customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+        const customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+        const customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
 
         let balancedue = $('#totalBalanceDue').html() || 0;
         let tax = $('#subtotal_tax').html() || 0;
@@ -614,23 +580,20 @@ Template.new_quote.onRendered(() => {
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
         let fx = $('#sltCurrency').val();
-        var comment = $('#txaComment').val();
-        var parking_instruction = $('#txapickmemo').val();
-        var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
-        var total_paid = $('#totalPaidAmt').html() || '$'+ 0 ;
-        var ref = $('#edtRef').val() || '-';
-        var txabillingAddress = $('#txabillingAddress').val() || '';
-        var dtSODate = $('#dtSODate').val();
-        var subtotal_total = $('#subtotal_total').text() || '$'+ 0;
-        var grandTotal = $('#grandTotal').text() || '$'+ 0;
-        var duedate = $('#dtDueDate').val();
-        var po = $('#ponumber').val() || '.';
-
+        const comment = $('#txaComment').val();
+        const parking_instruction = $('#txapickmemo').val();
+        const subtotal_tax = $('#subtotal_tax').html() || '$' + 0;
+        const total_paid = $('#totalPaidAmt').html() || '$' + 0;
+        const ref = $('#edtRef').val() || '-';
+        const txabillingAddress = $('#txabillingAddress').val() || '';
+        const dtSODate = $('#dtSODate').val();
+        const subtotal_total = $('#subtotal_total').text() || '$' + 0;
+        const grandTotal = $('#grandTotal').text() || '$' + 0;
+        const duedate = $('#dtDueDate').val();
+        const po = $('#ponumber').val() || '.';
 
         $('#tblQuoteLine > tbody > tr').each(function () {
-            var lineID = this.id;
-
-
+            const lineID = this.id;
             let tdproduct = $('#' + lineID + " .lineProductName").val();
             let tddescription = $('#' + lineID + " .lineProductDesc").text();
             let tdQty = $('#' + lineID + " .lineQty").val();
@@ -660,12 +623,10 @@ Template.new_quote.onRendered(() => {
                             taxItems[taxCode] = amount;
                         }
                     });
-                }
-                else {
+                } else {
                     // taxItems[targetTaxCode] = taxTotal;
                 }
             }
-
             array_data.push([
                 tdproduct,
                 tddescription,
@@ -674,15 +635,13 @@ Template.new_quote.onRendered(() => {
                 taxAmount,
                 tdlineamt,
             ]);
-
-            lineItemObj = {
+            let lineItemObj = {
                 description: tddescription || '',
                 quantity: tdQty || 0,
                 unitPrice: tdunitprice.toLocaleString(undefined, {
                     minimumFractionDigits: 2
                 }) || 0
             }
-
             lineItems.push(lineItemObj);
         });
 
@@ -691,20 +650,18 @@ Template.new_quote.onRendered(() => {
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
         let currencyname = (CountryAbbr).toLowerCase();
-        stringQuery = "?";
-        var customerID = $('#edtCustomerEmail').attr('customerid');
+        let stringQuery = "?";
+        const customerID = $('#edtCustomerEmail').attr('customerid');
         for (let l = 0; l < lineItems.length; l++) {
             stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
         }
         stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
-
         let item_quote = '';
 
-        if(number == 1)
-            {
-                item_quote = {
+        if (number == 1) {
+            item_quote = {
                     o_url: Session.get('vs1companyURL'),
                     o_name:  Session.get('vs1companyName'),
                     o_address: Session.get('vs1companyaddress1'),
@@ -746,10 +703,8 @@ Template.new_quote.onRendered(() => {
 
                 };
 
-        }
-        else if(number == 2)
-        {
-                item_quote = {
+        } else if(number == 2) {
+            item_quote = {
                     o_url: Session.get('vs1companyURL'),
                         o_name:  Session.get('vs1companyName'),
                         o_address: Session.get('vs1companyaddress1'),
@@ -790,11 +745,8 @@ Template.new_quote.onRendered(() => {
                         comment:comment,
 
                 };
-
-        }
-        else{
-
-                item_quote = {
+        } else {
+            item_quote = {
                     o_url: Session.get('vs1companyURL'),
                     o_name:  Session.get('vs1companyName'),
                     o_address: Session.get('vs1companyaddress1'),
@@ -834,22 +786,17 @@ Template.new_quote.onRendered(() => {
                     showFX:fx,
                     comment:comment,
                 };
-
-
         }
 
-            item_quote.taxItems = taxItems;
-            if(stripe_id == ""){
+        item_quote.taxItems = taxItems;
+        if (stripe_id == "") {
             item_quote.paylink = '';
-            };
-            object_invoce.push(item_quote);
-            $("#templatePreviewModal .field_payment").show();
-            $("#templatePreviewModal .field_amount").show();
-
-            updateTemplate(object_invoce);
-
-            saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-
+        }
+        object_invoce.push(item_quote);
+        $("#templatePreviewModal .field_payment").show();
+        $("#templatePreviewModal .field_amount").show();
+        updateTemplate(object_invoce);
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"]);
     }
 
     function updateTemplate1(object_invoce) {
@@ -1144,6 +1091,7 @@ Template.new_quote.onRendered(() => {
 
     function updateTemplate(object_invoce) {
 
+        let count;
         if (object_invoce.length > 0) {
         $('#html-2-pdfwrapper_new  #printcomment').text(object_invoce[0]["comment"]);
         $("#html-2-pdfwrapper_new .o_url").text(object_invoce[0]["o_url"]);
@@ -1350,7 +1298,7 @@ Template.new_quote.onRendered(() => {
 
             var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
             tbl_header.empty()
-            var count = 0;
+            count = 0;
             for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
                     if(count == 0)
                     {
@@ -1409,71 +1357,48 @@ Template.new_quote.onRendered(() => {
         }
 
         // table content
-        var tbl_content = $("#html-2-pdfwrapper_new .tbl_content")
+        const tbl_content = $("#html-2-pdfwrapper_new .tbl_content");
         tbl_content.empty()
         const data = object_invoce[0]["data"]
 
-        for(item of data){
-
-             var html = '';
-             var count = 0;
-             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
-             for(item_temp of item){
-                if(count > 1)
-                {
-
-                        html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-
-
-                }
-                else
-                {
+        for (let item of data){
+            let html = '';
+            count = 0;
+            html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+            for(item_temp of item){
+                if(count > 1) {
+                    html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                } else {
                     html = html + "<td>" + item_temp + "</td>";
                 }
                 count++
-             }
-
+            }
             html +="</tr>";
             tbl_content.append(html);
-
-         }
-
-
-        // total amount
-
-        if(object_invoce[0]["subtotal"] == "")
-        {
-            $("#html-2-pdfwrapper_new .field_amount").hide();
         }
-        else
-        {
+        // total amount
+        if(object_invoce[0]["subtotal"] == "") {
+            $("#html-2-pdfwrapper_new .field_amount").hide();
+        } else {
             $("#html-2-pdfwrapper_new .field_amount").show();
-
             if(object_invoce[0]["subtotal"] != ""){
               $('#html-2-pdfwrapper_new #subtotal_total').text("Sub total");
               $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
             }
-
             if(object_invoce[0]["gst"] != ""){
                 $('#html-2-pdfwrapper_new #grandTotal').text("Grand total");
                 $("#html-2-pdfwrapper_new #totalTax_totalPrint").text(object_invoce[0]["gst"]);
             }
-
-
             if(object_invoce[0]["total"] != ""){
                 $("#html-2-pdfwrapper_new #grandTotalPrint").text(object_invoce[0]["total"]);
             }
-
             if(object_invoce[0]["bal_due"] != ""){
                 $("#html-2-pdfwrapper_new #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
             }
-
             if(object_invoce[0]["paid_amount"] != ""){
                 $("#html-2-pdfwrapper_new #paid_amount").text(object_invoce[0]["paid_amount"]);
             }
-
         }
-
     }
 
     function saveTemplateFields(key, value){
@@ -1522,14 +1447,14 @@ Template.new_quote.onRendered(() => {
             $('.lblCustomField2').text(inputValue2);
         });
     });
-   LoadingOverlay.show();
+    LoadingOverlay.show();
 
     templateObject.getAllClients = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
             if (dataObject.length === 0) {
-            sideBarService.getAllCustomersDataVS1("All").then(function (data) {
-                setClientVS1(data);
-            });
+                sideBarService.getAllCustomersDataVS1("All").then(function (data) {
+                    setClientVS1(data);
+                });
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 setClientVS1(data);
@@ -1540,33 +1465,33 @@ Template.new_quote.onRendered(() => {
             });
         });
     };
-
     function setClientVS1(data){
         for (let i in data.tcustomervs1) {
             if (data.tcustomervs1.hasOwnProperty(i)) {
-              let customerrecordObj = {
-                  customerid: data.tcustomervs1[i].fields.ID || ' ',
-                  firstname: data.tcustomervs1[i].fields.FirstName || ' ',
-                  lastname: data.tcustomervs1[i].fields.LastName || ' ',
-                  customername: data.tcustomervs1[i].fields.ClientName || ' ',
-                  customeremail: data.tcustomervs1[i].fields.Email || ' ',
-                  street: data.tcustomervs1[i].fields.Street || ' ',
-                  street2: data.tcustomervs1[i].fields.Street2 || ' ',
-                  street3: data.tcustomervs1[i].fields.Street3 || ' ',
-                  suburb: data.tcustomervs1[i].fields.Suburb || ' ',
-                  statecode: data.tcustomervs1[i].fields.State + ' ' + data.tcustomervs1[i].fields.Postcode || ' ',
-                  country: data.tcustomervs1[i].fields.Country || ' ',
-                  termsName: data.tcustomervs1[i].fields.TermsName || '',
-                  taxCode: data.tcustomervs1[i].fields.TaxCodeName || 'E',
-                  clienttypename: data.tcustomervs1[i].fields.ClientTypeName || 'Default',
-                  discount: data.tcustomervs1[i].fields.Discount || 0
-              };
+                let customerrecordObj = {
+                    customerid: data.tcustomervs1[i].fields.ID || ' ',
+                    firstname: data.tcustomervs1[i].fields.FirstName || ' ',
+                    lastname: data.tcustomervs1[i].fields.LastName || ' ',
+                    customername: data.tcustomervs1[i].fields.ClientName || ' ',
+                    customeremail: data.tcustomervs1[i].fields.Email || ' ',
+                    street: data.tcustomervs1[i].fields.Street || ' ',
+                    street2: data.tcustomervs1[i].fields.Street2 || ' ',
+                    street3: data.tcustomervs1[i].fields.Street3 || ' ',
+                    suburb: data.tcustomervs1[i].fields.Suburb || ' ',
+                    statecode: data.tcustomervs1[i].fields.State + ' ' + data.tcustomervs1[i].fields.Postcode || ' ',
+                    country: data.tcustomervs1[i].fields.Country || ' ',
+                    termsName: data.tcustomervs1[i].fields.TermsName || '',
+                    taxCode: data.tcustomervs1[i].fields.TaxCodeName || 'E',
+                    clienttypename: data.tcustomervs1[i].fields.ClientTypeName || 'Default',
+                    discount: data.tcustomervs1[i].fields.Discount || 0,
+                    status: data.tcustomervs1[i].fields.Status || ''
+                };
                 clientList.push(customerrecordObj);
             }
         }
         templateObject.clientrecords.set(clientList);
 
-        for (var i = 0; i < clientList.length; i++) {
+        for (let i = 0; i < clientList.length; i++) {
             //$('#edtCustomerName').editableSelect('add', clientList[i].customername);
         }
         if (FlowRouter.current().queryParams.id || FlowRouter.current().queryParams.customerid) {
@@ -1615,13 +1540,10 @@ Template.new_quote.onRendered(() => {
                 for (let i in useData) {
                     let leadrecordObj = {
                         orderstatus: useData[i].TypeName || ' '
-
                     };
-
                     statusList.push(leadrecordObj);
                 }
                 templateObject.statusrecords.set(statusList);
-
             }
             setTimeout(function() {
                 $('#sltStatus').append('<option value="newstatus">New Lead Status</option>');
@@ -1631,7 +1553,6 @@ Template.new_quote.onRendered(() => {
                 for (let i in data.tleadstatustype) {
                     let leadrecordObj = {
                         orderstatus: data.tleadstatustype[i].TypeName || ' '
-
                     };
                     statusList.push(leadrecordObj);
                 }
@@ -1696,48 +1617,29 @@ Template.new_quote.onRendered(() => {
         getVS1Data('TDeptClass').then(function(dataObject) {
             if (dataObject.length == 0) {
                 salesService.getDepartment().then(function(data) {
-                    for (let i in data.tdeptclass) {
-
-                        let deptrecordObj = {
-                            department: data.tdeptclass[i].DeptClassName || ' ',
-                        };
-
-                        deptrecords.push(deptrecordObj);
-                        templateObject.deptrecords.set(deptrecords);
-
-                    }
+                    setDepartmentData(data);
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.tdeptclass;
-                for (let i in useData) {
-
-                    let deptrecordObj = {
-                        department: useData[i].DeptClassName || ' ',
-                    };
-
-                    deptrecords.push(deptrecordObj);
-                    templateObject.deptrecords.set(deptrecords);
-
-                }
-
+                setDepartmentData(data);
             }
         }).catch(function(err) {
             salesService.getDepartment().then(function(data) {
-                for (let i in data.tdeptclass) {
-
-                    let deptrecordObj = {
-                        department: data.tdeptclass[i].DeptClassName || ' ',
-                    };
-
-                    deptrecords.push(deptrecordObj);
-                    templateObject.deptrecords.set(deptrecords);
-
-                }
+                setDepartmentData(data);
             });
         });
-
     };
+    function setDepartmentData(data) {
+        for (let i in data.tdeptclass) {
+            if (data.tdeptclass.hasOwnProperty(i)) {
+                let deptrecordObj = {
+                    department: data.tdeptclass[i].DeptClassName || ' ',
+                };
+                deptrecords.push(deptrecordObj);
+            }
+        }
+        templateObject.deptrecords.set(deptrecords);
+    }
     templateObject.getDepartments();
 
     templateObject.getTerms = function () {
@@ -1745,44 +1647,34 @@ Template.new_quote.onRendered(() => {
             if (dataObject.length == 0) {
                 salesService.getTermVS1().then(function (data) {
                     for (let i in data.ttermsvs1) {
-
                         let termrecordObj = {
                             termsname: data.ttermsvs1[i].TermsName || ' ',
                         };
-
                         if (data.ttermsvs1[i].isSalesdefault == true) {
                             Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                             templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                         }
-
                         termrecords.push(termrecordObj);
                         templateObject.termrecords.set(termrecords);
-
                     }
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.ttermsvs1;
                 for (let i in useData) {
-
                     let termrecordObj = {
                         termsname: useData[i].TermsName || ' ',
                     };
                     if (useData[i].isSalesdefault == true) {
                         templateObject.defaultsaleterm.set(useData[i].TermsName);
                     }
-
                     termrecords.push(termrecordObj);
                     templateObject.termrecords.set(termrecords);
-
                 }
-
             }
         }).catch(function (err) {
-
             salesService.getTermVS1().then(function (data) {
                 for (let i in data.ttermsvs1) {
-
                     let termrecordObj = {
                         termsname: data.ttermsvs1[i].TermsName || ' ',
                     };
@@ -1792,11 +1684,9 @@ Template.new_quote.onRendered(() => {
                     }
                     termrecords.push(termrecordObj);
                     templateObject.termrecords.set(termrecords);
-
                 }
             });
         });
-
     };
     templateObject.getTerms();
 
@@ -3187,317 +3077,28 @@ Template.new_quote.onRendered(() => {
             setTimeout(function() {
                 addAttachment();
             }, 2500);
-
-
             function generatePdfForMail(invoiceId) {
                 return new Promise((resolve, reject) => {
                     let templateObject = Template.instance();
-
                     let completeTabRecord;
                     let doc = new jsPDF('p', 'pt', 'a4');
                     doc.setFontSize(18);
-                    var source = document.getElementById('html-2-pdfwrapper1');
+                    const source = document.getElementById('html-2-pdfwrapper1');
                     doc.addHTML(source, function() {
-
                         resolve(doc.output('blob'));
                         $('#html-2-pdfwrapper1').css('display', 'none');
                     });
                 });
             }
-
         }
     } else if (getso_id[1]) {
         let currentQuote = getso_id[1];
         $('.printID').attr("id", currentQuote);
         templateObject.getQuoteData = function() {
-
             getVS1Data('TQuote').then(function(dataObject) {
-                let customerData = templateObject.clientrecords.get();
-
                 if (dataObject.length == 0) {
                     accountService.getOneQuotedataEx(currentQuote).then(function(data) {
-                        let cust_result = customerData.filter(cust_data => {
-                            return cust_data.customername == data.fields.CustomerName
-                        });
-                        LoadingOverlay.hide();
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        let lineItemsTable = [];
-                        let lineItemTableObj = {};
-                        let exchangeCode = data.fields.ForeignExchangeCode;
-                        let currencySymbol = Currency;
-                        let total = currencySymbol + '' + data.fields.TotalAmount.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        });
-                        let totalInc = currencySymbol + '' + data.fields.TotalAmountInc.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        });
-                        let totalDiscount = utilityService.modifynegativeCurrencyFormat(data.fields.TotalDiscount).toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        });
-                        let subTotal = currencySymbol + '' + data.fields.TotalAmount.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        });
-                        let totalTax = currencySymbol + '' + data.fields.TotalTax.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        });
-                        let totalBalance = currencySymbol + '' + data.fields.TotalBalance.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        });
-                        let totalPaidAmount = currencySymbol + '' + data.fields.TotalPaid.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        });
-                      if(data.fields.Lines != null){
-                        if (data.fields.Lines.length) {
-                            for (let i = 0; i < data.fields.Lines.length; i++) {
-                                let AmountGbp = currencySymbol + '' + data.fields.Lines[i].fields.TotalLineAmount.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                });
-                                let currencyAmountGbp = currencySymbol + '' + data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
-                                let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.LineTaxTotal);
-                                let TaxRateGbp = (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
-                                lineItemObj = {
-                                    lineID: Random.id(),
-                                    id: data.fields.Lines[i].fields.ID || '',
-                                    item: data.fields.Lines[i].fields.ProductName || '',
-                                    description: data.fields.Lines[i].fields.ProductDescription || '',
-                                    quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
-                                    unitPrice: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePrice).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                    unitPriceInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePriceInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                    TotalAmt: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                    TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmountInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                    lineCost: currencySymbol + '' + data.fields.Lines[i].fields.LineCost.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2
-                                    }) || 0,
-                                    taxRate: (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2) || 0,
-                                    taxCode: data.fields.Lines[i].fields.LineTaxCode || '',
-                                    //TotalAmt: AmountGbp || 0,
-                                    curTotalAmt: currencyAmountGbp || currencySymbol + '0',
-                                    TaxTotal: TaxTotalGbp || 0,
-                                    TaxRate: TaxRateGbp || 0,
-                                    DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
-
-
-                                };
-                                var dataListTable = [
-                                    data.fields.Lines[i].fields.ProductName || '',
-                                    data.fields.Lines[i].fields.ProductDescription || '',
-                                    "<div contenteditable='true' class='qty'>" + '' + data.fields.Lines[i].fields.UOMOrderQty + '' + "</div>" || "<div>" + '' + 0 + '' + "</div>",
-                                    "<div>" + '' + currencySymbol + '' + data.fields.Lines[i].fields.LinePrice.toFixed(2) + '' + "</div>" || currencySymbol + '' + 0.00,
-                                    data.fields.Lines[i].fields.LineTaxCode || '',
-                                    AmountGbp || currencySymbol + '' + 0.00,
-                                    '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>'
-                                ];
-                                lineItemsTable.push(dataListTable);
-                                lineItems.push(lineItemObj);
-                            }
-                        } else {
-                            let AmountGbp = data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            }) || 0;
-                            let currencyAmountGbp = currencySymbol + '' + data.fields.Lines.fields.TotalLineAmount.toFixed(2) || 0;
-                            let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal) || 0;
-                            let TaxRateGbp = currencySymbol + '' + data.fields.Lines.fields.LineTaxRate || 0;
-                            lineItemObj = {
-                                lineID: Random.id(),
-                                id: data.fields.Lines.fields.ID || '',
-                                description: data.fields.Lines.fields.ProductDescription || '',
-                                quantity: data.fields.Lines.fields.UOMOrderQty || 0,
-                                unitPrice: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePrice).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                unitPriceInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePriceInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                TotalAmt: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmountInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                lineCost: data.fields.Lines.fields.LineCost.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                }) || 0,
-                                taxRate: data.fields.Lines.fields.LineTaxRate || 0,
-                                taxCode: data.fields.Lines.fields.LineTaxCode || '',
-                                //TotalAmt: AmountGbp || 0,
-                                curTotalAmt: currencyAmountGbp || currencySymbol + '0',
-                                TaxTotal: TaxTotalGbp || 0,
-                                TaxRate: TaxRateGbp || 0
-                            };
-                            lineItems.push(lineItemObj);
-                        }
-                      }
-                        let quoterecord = {
-                            id: data.fields.ID,
-                            lid: 'Edit Quote' + ' ' + data.fields.ID,
-                            socustomer: data.fields.CustomerName,
-                            salesOrderto: data.fields.InvoiceToDesc,
-                            shipto: data.fields.ShipToDesc,
-                            department: data.fields.SaleClassName,
-                            docnumber: data.fields.DocNumber,
-                            custPONumber: data.fields.CustPONumber,
-                            saledate: data.fields.SaleDate ? moment(data.fields.SaleDate).format('DD/MM/YYYY') : "",
-                            duedate: data.fields.DueDate ? moment(data.fields.DueDate).format('DD/MM/YYYY') : "",
-                            employeename: data.fields.EmployeeName,
-                            status: data.fields.SalesStatus,
-                            category: data.fields.SalesCategory,
-                            comments: data.fields.Comments,
-                            pickmemo: data.fields.PickMemo,
-                            ponumber: data.fields.CustPONumber,
-                            via: data.fields.Shipping,
-                            connote: data.fields.ConNote,
-                            reference: data.fields.ReferenceNo,
-                            currency: data.fields.ForeignExchangeCode,
-                            branding: data.fields.MedType,
-                            invoiceToDesc: data.fields.InvoiceToDesc,
-                            shipToDesc: data.fields.ShipToDesc,
-                            termsName: data.fields.TermsName,
-                            Total: totalInc,
-                            TotalDiscount: totalDiscount,
-                            LineItems: lineItems,
-                            TotalTax: totalTax,
-                            SubTotal: subTotal,
-                            balanceDue: totalBalance,
-                            saleCustField1: data.fields.SaleCustField1,
-                            saleCustField2: data.fields.SaleCustField2,
-                            totalPaid: totalPaidAmount,
-                            isConverted: data.fields.Converted
-                        };
-
-                        $('#edtCustomerName').val(data.fields.CustomerName);
-                        templateObject.CleintName.set(data.fields.CustomerName);
-                        $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                        $('#sltStatus').val(data.fields.SalesStatus);
-
-                                // tempcode
-                        // setTimeout(function () {
-                        //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                        //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                        //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                        // }, 2500);
-
-                        templateObject.attachmentCount.set(0);
-                        if (data.fields.Attachments) {
-                            if (data.fields.Attachments.length) {
-                                templateObject.attachmentCount.set(data.fields.Attachments.length);
-                                templateObject.uploadedFiles.set(data.fields.Attachments);
-                            }
-                        }
-
-                        var checkISCustLoad = false;
-                        setTimeout(function() {
-                            if (clientList) {
-                                for (var i = 0; i < clientList.length; i++) {
-                                    if (clientList[i].customername == data.fields.CustomerName) {
-                                        checkISCustLoad = true;
-                                        quoterecord.firstname = clientList[i].firstname || '';
-                                        quoterecord.lastname = clientList[i].lastname || '';
-                                        templateObject.quoterecord.set(quoterecord);
-                                        $('#edtCustomerEmail').val(clientList[i].customeremail);
-                                        $('#edtCustomerEmail').attr('customerid', clientList[i].customerid);
-                                        $('#edtCustomerName').attr('custid', clientList[i].customerid);
-                                        $('#edtCustomerEmail').attr('customerfirstname', clientList[i].firstname);
-                                        $('#edtCustomerEmail').attr('customerlastname', clientList[i].lastname);
-                                        $('#customerType').text(clientList[i].clienttypename || 'Default');
-                                        $('#customerDiscount').text(clientList[i].discount + '%' || 0 + '%');
-                                        $('#edtCustomerUseType').val(clientList[i].clienttypename || 'Default');
-                                        $('#edtCustomerUseDiscount').val(clientList[i].discount || 0);
-                                    }
-                                }
-                            };
-
-                            if (!checkISCustLoad) {
-                                sideBarService.getCustomersDataByName(useData[d].fields.CustomerName).then(function(dataClient) {
-                                    for (var c = 0; c < dataClient.tcustomervs1.length; c++) {
-                                        var customerrecordObj = {
-                                            customerid: dataClient.tcustomervs1[c].Id || ' ',
-                                            firstname: dataClient.tcustomervs1[c].FirstName || ' ',
-                                            lastname: dataClient.tcustomervs1[c].LastName || ' ',
-                                            customername: dataClient.tcustomervs1[c].ClientName || ' ',
-                                            customeremail: dataClient.tcustomervs1[c].Email || ' ',
-                                            street: dataClient.tcustomervs1[c].Street || ' ',
-                                            street2: dataClient.tcustomervs1[c].Street2 || ' ',
-                                            street3: dataClient.tcustomervs1[c].Street3 || ' ',
-                                            suburb: dataClient.tcustomervs1[c].Suburb || ' ',
-                                            statecode: dataClient.tcustomervs1[c].State + ' ' + dataClient.tcustomervs1[c].Postcode || ' ',
-                                            country: dataClient.tcustomervs1[c].Country || ' ',
-                                            termsName: dataClient.tcustomervs1[c].TermsName || '',
-                                            taxCode: dataClient.tcustomervs1[c].TaxCodeName || 'E',
-                                            clienttypename: dataClient.tcustomervs1[c].ClientTypeName || 'Default',
-                                            discount: dataClient.tcustomervs1[c].Discount || 0
-                                        };
-                                        clientList.push(customerrecordObj);
-
-                                        quoterecord.firstname = dataClient.tcustomervs1[c].FirstName || '';
-                                        quoterecord.lastname = dataClient.tcustomervs1[c].LastName || '';
-                                        $('#edtCustomerEmail').val(dataClient.tcustomervs1[c].Email);
-                                        $('#edtCustomerEmail').attr('customerid', clientList[c].customerid);
-                                        $('#edtCustomerName').attr('custid', dataClient.tcustomervs1[c].Id);
-                                        $('#edtCustomerEmail').attr('customerfirstname', dataClient.tcustomervs1[c].FirstName);
-                                        $('#edtCustomerEmail').attr('customerlastname', dataClient.tcustomervs1[c].LastName);
-                                        $('#customerType').text(dataClient.tcustomervs1[c].ClientTypeName || 'Default');
-                                        $('#customerDiscount').text(dataClient.tcustomervs1[c].Discount + '%' || 0 + '%');
-                                        $('#edtCustomerUseType').val(dataClient.tcustomervs1[c].ClientTypeName || 'Default');
-                                        $('#edtCustomerUseDiscount').val(dataClient.tcustomervs1[c].Discount || 0);
-                                    }
-
-                                    templateObject.clientrecords.set(clientList.sort(function(a, b) {
-                                        if (a.customername == 'NA') {
-                                            return 1;
-                                        } else if (b.customername == 'NA') {
-                                            return -1;
-                                        }
-                                        return (a.customername.toUpperCase() > b.customername.toUpperCase()) ? 1 : -1;
-                                    }));
-                                });
-                            }
-                        }, 100);
-
-                        templateObject.quoterecord.set(quoterecord);
-
-
-                        templateObject.lineitems.set(lineItems);
-
-                        templateObject.selectedCurrency.set(quoterecord.currency);
-                        templateObject.inputSelectedCurrency.set(quoterecord.currency);
-                        if (templateObject.quoterecord.get()) {
-
-
-
-
-
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
-                                if (error) {
-
-
-                                } else {
-                                    if (result) {
-                                        for (let i = 0; i < result.customFields.length; i++) {
-                                            let customcolumn = result.customFields;
-                                            let columData = customcolumn[i].label;
-                                            let columHeaderUpdate = customcolumn[i].thclass;
-                                            let hiddenColumn = customcolumn[i].hidden;
-                                            let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                            let columnWidth = customcolumn[i].width;
-
-
-                                            $("" + columHeaderUpdate + "").html(columData);
-                                            if (columnWidth != 0) {
-                                                $("" + columHeaderUpdate + "").css('width', columnWidth);
-                                            }
-
-                                            if (hiddenColumn == true) {
-
-
-                                                $("." + columnClass + "").addClass('hiddenColumn');
-                                                $("." + columnClass + "").removeClass('showColumn');
-                                            } else if (hiddenColumn == false) {
-                                                $("." + columnClass + "").removeClass('hiddenColumn');
-                                                $("." + columnClass + "").addClass('showColumn');
-
-
-
-                                            }
-
-                                        }
-                                    }
-
-                                }
-                            });
-                        }
+                        setOneQuoteData(data);
                     }).catch(function(err) {
                         swal({
                             title: 'Oooops...',
@@ -3512,575 +3113,20 @@ Template.new_quote.onRendered(() => {
                             }
                         });
                         LoadingOverlay.hide();
-
                     });
                 } else {
                     let data = JSON.parse(dataObject[0].data);
                     let useData = data.tquoteex;
-                    var added = false;
+                    let added = false;
                     for (let d = 0; d < useData.length; d++) {
                         if (parseInt(useData[d].fields.ID) === parseInt(currentQuote)) {
-                            let cust_result = customerData.filter(cust_data => {
-                                return cust_data.customername == useData[d].fields.ClientName
-                            });
                             added = true;
-                            LoadingOverlay.hide();
-                            let lineItems = [];
-                            let lineItemObj = {};
-                            let lineItemsTable = [];
-                            let lineItemTableObj = {};
-                            let exchangeCode = useData[d].fields.ForeignExchangeCode;
-                            let currencySymbol = Currency;
-                            let total = currencySymbol + '' + useData[d].fields.TotalAmount.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let totalInc = currencySymbol + '' + useData[d].fields.TotalAmountInc.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let totalDiscount = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalDiscount).toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let subTotal = currencySymbol + '' + useData[d].fields.TotalAmount.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let totalTax = currencySymbol + '' + useData[d].fields.TotalTax.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let totalBalance = currencySymbol + '' + useData[d].fields.TotalBalance.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let totalPaidAmount = currencySymbol + '' + useData[d].fields.TotalPaid.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            if (useData[d].fields.Lines.length) {
-                                for (let i = 0; i < useData[d].fields.Lines.length; i++) {
-                                    let AmountGbp = currencySymbol + '' + useData[d].fields.Lines[i].fields.TotalLineAmount.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2
-                                    });
-                                    let currencyAmountGbp = currencySymbol + '' + useData[d].fields.Lines[i].fields.TotalLineAmount.toFixed(2);
-                                    let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.LineTaxTotal);
-                                    let TaxRateGbp = (useData[d].fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
-                                    lineItemObj = {
-                                        lineID: Random.id(),
-                                        id: useData[d].fields.Lines[i].fields.ID || '',
-                                        item: useData[d].fields.Lines[i].fields.ProductName || '',
-                                        description: useData[d].fields.Lines[i].fields.ProductDescription || '',
-                                        quantity: useData[d].fields.Lines[i].fields.UOMOrderQty || 0,
-                                        unitPrice: utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.OriginalLinePrice).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                        unitPriceInc: utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.OriginalLinePriceInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                        TotalAmt: utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.TotalLineAmount).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                        TotalAmtInc: utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.TotalLineAmountInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                        lineCost: currencySymbol + '' + useData[d].fields.Lines[i].fields.LineCost.toLocaleString(undefined, {
-                                            minimumFractionDigits: 2
-                                        }) || 0,
-                                        taxRate: (useData[d].fields.Lines[i].fields.LineTaxRate * 100).toFixed(2) || 0,
-                                        taxCode: useData[d].fields.Lines[i].fields.LineTaxCode || '',
-                                        //TotalAmt: AmountGbp || 0,
-                                        curTotalAmt: currencyAmountGbp || currencySymbol + '0',
-                                        TaxTotal: TaxTotalGbp || 0,
-                                        TaxRate: TaxRateGbp || 0,
-                                        DiscountPercent: useData[d].fields.Lines[i].fields.DiscountPercent || 0
-
-                                    };
-
-                                    var dataListTable = [
-                                        useData[d].fields.Lines[i].fields.ProductName || '',
-                                        useData[d].fields.Lines[i].fields.ProductDescription || '',
-                                        "<div contenteditable='true' class='qty'>" + '' + useData[d].fields.Lines[i].fields.UOMOrderQty + '' + "</div>" || "<div>" + '' + 0 + '' + "</div>",
-                                        "<div>" + '' + currencySymbol + '' + useData[d].fields.Lines[i].fields.LinePrice.toFixed(2) + '' + "</div>" || currencySymbol + '' + 0.00,
-                                        useData[d].fields.Lines[i].fields.LineTaxCode || '',
-                                        AmountGbp || currencySymbol + '' + 0.00,
-                                        '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>'
-                                    ];
-                                    lineItemsTable.push(dataListTable);
-                                    lineItems.push(lineItemObj);
-                                }
-
-                            } else {
-                                let AmountGbp = useData[d].fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                });
-                                let currencyAmountGbp = currencySymbol + '' + useData[d].fields.Lines.fields.TotalLineAmount.toFixed(2);
-                                let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines.fields.LineTaxTotal);
-                                let TaxRateGbp = currencySymbol + '' + useData[d].fields.Lines.fields.LineTaxRate;
-                                lineItemObj = {
-                                    lineID: Random.id(),
-                                    id: useData[d].fields.Lines.fields.ID || '',
-                                    description: useData[d].fields.Lines.fields.ProductDescription || '',
-                                    quantity: useData[d].fields.Lines.fields.UOMOrderQty || 0,
-                                    unitPrice: utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.OriginalLinePrice).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                    unitPriceInc: utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.OriginalLinePriceInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                    TotalAmt: utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.TotalLineAmount).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                    TotalAmtInc: utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.TotalLineAmountInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                    lineCost: useData[d].fields.Lines.fields.LineCost.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2
-                                    }) || 0,
-                                    taxRate: useData[d].fields.Lines.fields.LineTaxRate || 0,
-                                    taxCode: useData[d].fields.Lines.fields.LineTaxCode || '',
-                                    //TotalAmt: AmountGbp || 0,
-                                    curTotalAmt: currencyAmountGbp || currencySymbol + '0',
-                                    TaxTotal: TaxTotalGbp || 0,
-                                    TaxRate: TaxRateGbp || 0
-                                };
-                                lineItems.push(lineItemObj);
-                            }
-
-                            let quoterecord = {
-                                id: useData[d].fields.ID,
-                                lid: 'Edit Quote' + ' ' + useData[d].fields.ID,
-                                socustomer: useData[d].fields.CustomerName,
-                                salesOrderto: useData[d].fields.InvoiceToDesc,
-                                shipto: useData[d].fields.ShipToDesc,
-                                department: useData[d].fields.SaleClassName,
-                                docnumber: useData[d].fields.DocNumber,
-                                custPONumber: useData[d].fields.CustPONumber,
-                                saledate: useData[d].fields.SaleDate ? moment(useData[d].fields.SaleDate).format('DD/MM/YYYY') : "",
-                                duedate: useData[d].fields.DueDate ? moment(useData[d].fields.DueDate).format('DD/MM/YYYY') : "",
-                                employeename: useData[d].fields.EmployeeName,
-                                status: useData[d].fields.SalesStatus,
-                                category: useData[d].fields.SalesCategory,
-                                comments: useData[d].fields.Comments,
-                                pickmemo: useData[d].fields.PickMemo,
-                                ponumber: useData[d].fields.CustPONumber,
-                                via: useData[d].fields.Shipping,
-                                connote: useData[d].fields.ConNote,
-                                reference: useData[d].fields.ReferenceNo,
-                                currency: useData[d].fields.ForeignExchangeCode,
-                                branding: useData[d].fields.MedType,
-                                invoiceToDesc: useData[d].fields.InvoiceToDesc,
-                                shipToDesc: useData[d].fields.ShipToDesc,
-                                termsName: useData[d].fields.TermsName,
-                                Total: totalInc,
-                                TotalDiscount: totalDiscount,
-                                LineItems: lineItems,
-                                TotalTax: totalTax,
-                                SubTotal: subTotal,
-                                balanceDue: totalBalance,
-                                saleCustField1: useData[d].fields.SaleCustField1,
-                                saleCustField2: useData[d].fields.SaleCustField2,
-                                totalPaid: totalPaidAmount,
-                                isConverted: useData[d].fields.Converted
-                            };
-
-                            $('#edtCustomerName').val(useData[d].fields.CustomerName);
-                            templateObject.CleintName.set(useData[d].fields.CustomerName);
-                            $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
-                            $('#sltStatus').val(useData[d].fields.SalesStatus);
-
-                                // tempcode
-                            // setTimeout(function () {
-                            //   $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
-                            //   $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
-                            //   $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
-                            // }, 2500);
-
-                            templateObject.attachmentCount.set(0);
-                            if (useData[d].fields.Attachments) {
-                                if (useData[d].fields.Attachments.length) {
-                                    templateObject.attachmentCount.set(useData[d].fields.Attachments.length);
-                                    templateObject.uploadedFiles.set(useData[d].fields.Attachments);
-                                }
-                            }
-
-                            var checkISCustLoad = false;
-                            setTimeout(function() {
-                                if (clientList) {
-                                    for (var i = 0; i < clientList.length; i++) {
-                                        if (clientList[i].customername == useData[d].fields.CustomerName) {
-                                            checkISCustLoad = true;
-                                            quoterecord.firstname = clientList[i].firstname || '';
-                                            quoterecord.lastname = clientList[i].lastname || '';
-                                            templateObject.quoterecord.set(quoterecord);
-                                            $('#edtCustomerEmail').val(clientList[i].customeremail);
-                                            $('#edtCustomerEmail').attr('customerid', clientList[i].customerid);
-                                            $('#edtCustomerName').attr('custid', clientList[i].customerid);
-                                            $('#edtCustomerEmail').attr('customerfirstname', clientList[i].firstname);
-                                            $('#edtCustomerEmail').attr('customerlastname', clientList[i].lastname);
-                                            $('#customerType').text(clientList[i].clienttypename || 'Default');
-                                            $('#customerDiscount').text(clientList[i].discount + '%' || 0 + '%');
-                                            $('#edtCustomerUseType').val(clientList[i].clienttypename || 'Default');
-                                            $('#edtCustomerUseDiscount').val(clientList[i].discount || 0);
-                                        }
-                                    }
-                                };
-
-                                if (!checkISCustLoad) {
-                                    sideBarService.getCustomersDataByName(useData[d].fields.CustomerName).then(function(dataClient) {
-                                        for (var c = 0; c < dataClient.tcustomervs1.length; c++) {
-                                            var customerrecordObj = {
-                                                customerid: dataClient.tcustomervs1[c].Id || ' ',
-                                                firstname: dataClient.tcustomervs1[c].FirstName || ' ',
-                                                lastname: dataClient.tcustomervs1[c].LastName || ' ',
-                                                customername: dataClient.tcustomervs1[c].ClientName || ' ',
-                                                customeremail: dataClient.tcustomervs1[c].Email || ' ',
-                                                street: dataClient.tcustomervs1[c].Street || ' ',
-                                                street2: dataClient.tcustomervs1[c].Street2 || ' ',
-                                                street3: dataClient.tcustomervs1[c].Street3 || ' ',
-                                                suburb: dataClient.tcustomervs1[c].Suburb || ' ',
-                                                statecode: dataClient.tcustomervs1[c].State + ' ' + dataClient.tcustomervs1[c].Postcode || ' ',
-                                                country: dataClient.tcustomervs1[c].Country || ' ',
-                                                termsName: dataClient.tcustomervs1[c].TermsName || '',
-                                                taxCode: dataClient.tcustomervs1[c].TaxCodeName || 'E',
-                                                clienttypename: dataClient.tcustomervs1[c].ClientTypeName || 'Default',
-                                                discount: dataClient.tcustomervs1[c].Discount || 0
-                                            };
-                                            clientList.push(customerrecordObj);
-
-                                            quoterecord.firstname = dataClient.tcustomervs1[c].FirstName || '';
-                                            quoterecord.lastname = dataClient.tcustomervs1[c].LastName || '';
-                                            $('#edtCustomerEmail').val(dataClient.tcustomervs1[c].Email);
-                                            $('#edtCustomerEmail').attr('customerid', clientList[c].customerid);
-                                            $('#edtCustomerName').attr('custid', dataClient.tcustomervs1[c].Id);
-                                            $('#edtCustomerEmail').attr('customerfirstname', dataClient.tcustomervs1[c].FirstName);
-                                            $('#edtCustomerEmail').attr('customerlastname', dataClient.tcustomervs1[c].LastName);
-                                            $('#customerType').text(dataClient.tcustomervs1[c].ClientTypeName || 'Default');
-                                            $('#customerDiscount').text(dataClient.tcustomervs1[c].Discount + '%' || 0 + '%');
-                                            $('#edtCustomerUseType').val(dataClient.tcustomervs1[c].ClientTypeName || 'Default');
-                                            $('#edtCustomerUseDiscount').val(dataClient.tcustomervs1[c].Discount || 0);
-                                        }
-
-                                        templateObject.clientrecords.set(clientList.sort(function(a, b) {
-                                            if (a.customername == 'NA') {
-                                                return 1;
-                                            } else if (b.customername == 'NA') {
-                                                return -1;
-                                            }
-                                            return (a.customername.toUpperCase() > b.customername.toUpperCase()) ? 1 : -1;
-                                        }));
-                                    });
-                                }
-                            }, 100);
-
-                            templateObject.quoterecord.set(quoterecord);
-
-                            templateObject.selectedCurrency.set(quoterecord.currency);
-                            templateObject.inputSelectedCurrency.set(quoterecord.currency);
-                            if (templateObject.quoterecord.get()) {
-
-
-
-
-
-                                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
-                                    if (error) {
-
-
-                                    } else {
-                                        if (result) {
-                                            for (let i = 0; i < result.customFields.length; i++) {
-                                                let customcolumn = result.customFields;
-                                                let columData = customcolumn[i].label;
-                                                let columHeaderUpdate = customcolumn[i].thclass;
-                                                let hiddenColumn = customcolumn[i].hidden;
-                                                let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                                let columnWidth = customcolumn[i].width;
-
-
-                                                $("" + columHeaderUpdate + "").html(columData);
-                                                if (columnWidth != 0) {
-                                                    $("" + columHeaderUpdate + "").css('width', columnWidth);
-                                                }
-
-                                                if (hiddenColumn == true) {
-
-
-                                                    $("." + columnClass + "").addClass('hiddenColumn');
-                                                    $("." + columnClass + "").removeClass('showColumn');
-                                                } else if (hiddenColumn == false) {
-                                                    $("." + columnClass + "").removeClass('hiddenColumn');
-                                                    $("." + columnClass + "").addClass('showColumn');
-
-
-
-                                                }
-
-                                            }
-                                        }
-
-                                    }
-                                });
-                            }
+                            setOneQuoteData(useData[d]);
                         }
                     }
-
                     if (!added) {
                         accountService.getOneQuotedataEx(currentQuote).then(function(data) {
-                            LoadingOverlay.hide();
-                            let lineItems = [];
-                            let lineItemObj = {};
-                            let lineItemsTable = [];
-                            let lineItemTableObj = {};
-                            let exchangeCode = data.fields.ForeignExchangeCode;
-                            let currencySymbol = Currency;
-                            let total = currencySymbol + '' + data.fields.TotalAmount.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let totalInc = currencySymbol + '' + data.fields.TotalAmountInc.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let totalDiscount = utilityService.modifynegativeCurrencyFormat(data.fields.TotalDiscount).toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let subTotal = currencySymbol + '' + data.fields.TotalAmount.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let totalTax = currencySymbol + '' + data.fields.TotalTax.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let totalBalance = currencySymbol + '' + data.fields.TotalBalance.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let totalPaidAmount = currencySymbol + '' + data.fields.TotalPaid.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            if (data.fields.Lines != null) {
-                                if (data.fields.Lines.length) {
-                                    for (let i = 0; i < data.fields.Lines.length; i++) {
-                                        let AmountGbp = currencySymbol + '' + data.fields.Lines[i].fields.TotalLineAmount.toLocaleString(undefined, {
-                                            minimumFractionDigits: 2
-                                        });
-                                        let currencyAmountGbp = currencySymbol + '' + data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
-                                        let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.LineTaxTotal);
-                                        let TaxRateGbp = (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
-                                        lineItemObj = {
-                                            lineID: Random.id(),
-                                            id: data.fields.Lines[i].fields.ID || '',
-                                            item: data.fields.Lines[i].fields.ProductName || '',
-                                            description: data.fields.Lines[i].fields.ProductDescription || '',
-                                            quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
-                                            unitPrice: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePrice).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                            unitPriceInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePriceInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                            TotalAmt: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                            TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmountInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                            lineCost: currencySymbol + '' + data.fields.Lines[i].fields.LineCost.toLocaleString(undefined, {
-                                                minimumFractionDigits: 2
-                                            }) || 0,
-                                            taxRate: (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2) || 0,
-                                            taxCode: data.fields.Lines[i].fields.LineTaxCode || '',
-                                            //TotalAmt: AmountGbp || 0,
-                                            curTotalAmt: currencyAmountGbp || currencySymbol + '0',
-                                            TaxTotal: TaxTotalGbp || 0,
-                                            TaxRate: TaxRateGbp || 0,
-                                            DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
-
-                                        };
-                                        var dataListTable = [
-                                            data.fields.Lines[i].fields.ProductName || '',
-                                            data.fields.Lines[i].fields.ProductDescription || '',
-                                            "<div contenteditable='true' class='qty'>" + '' + data.fields.Lines[i].fields.UOMOrderQty + '' + "</div>" || "<div>" + '' + 0 + '' + "</div>",
-                                            "<div>" + '' + currencySymbol + '' + data.fields.Lines[i].fields.LinePrice.toFixed(2) + '' + "</div>" || currencySymbol + '' + 0.00,
-                                            data.fields.Lines[i].fields.LineTaxCode || '',
-                                            AmountGbp || currencySymbol + '' + 0.00,
-                                            '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>'
-                                        ];
-                                        lineItemsTable.push(dataListTable);
-                                        lineItems.push(lineItemObj);
-                                    }
-                                } else {
-                                    let AmountGbp = data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2
-                                    });
-                                    let currencyAmountGbp = currencySymbol + '' + data.fields.Lines.fields.TotalLineAmount.toFixed(2);
-                                    let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
-                                    let TaxRateGbp = currencySymbol + '' + data.fields.Lines.fields.LineTaxRate;
-                                    lineItemObj = {
-                                        lineID: Random.id(),
-                                        id: data.fields.Lines.fields.ID || '',
-                                        description: data.fields.Lines.fields.ProductDescription || '',
-                                        quantity: data.fields.Lines.fields.UOMOrderQty || 0,
-                                        unitPrice: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePrice).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                        unitPriceInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePriceInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                        TotalAmt: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                        TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmountInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                        lineCost: data.fields.Lines.fields.LineCost.toLocaleString(undefined, {
-                                            minimumFractionDigits: 2
-                                        }) || 0,
-                                        taxRate: data.fields.Lines.fields.LineTaxRate || 0,
-                                        taxCode: data.fields.Lines.fields.LineTaxCode || '',
-                                        //TotalAmt: AmountGbp || 0,
-                                        curTotalAmt: currencyAmountGbp || currencySymbol + '0',
-                                        TaxTotal: TaxTotalGbp || 0,
-                                        TaxRate: TaxRateGbp || 0
-                                    };
-                                    lineItems.push(lineItemObj);
-                                }
-                            }
-
-                            let quoterecord = {
-                                id: data.fields.ID,
-                                lid: 'Edit Quote' + ' ' + data.fields.ID,
-                                socustomer: data.fields.CustomerName,
-                                salesOrderto: data.fields.InvoiceToDesc,
-                                shipto: data.fields.ShipToDesc,
-                                department: data.fields.SaleClassName,
-                                docnumber: data.fields.DocNumber,
-                                custPONumber: data.fields.CustPONumber,
-                                saledate: data.fields.SaleDate ? moment(data.fields.SaleDate).format('DD/MM/YYYY') : "",
-                                duedate: data.fields.DueDate ? moment(data.fields.DueDate).format('DD/MM/YYYY') : "",
-                                employeename: data.fields.EmployeeName,
-                                status: data.fields.SalesStatus,
-                                category: data.fields.SalesCategory,
-                                comments: data.fields.Comments,
-                                pickmemo: data.fields.PickMemo,
-                                ponumber: data.fields.CustPONumber,
-                                via: data.fields.Shipping,
-                                connote: data.fields.ConNote,
-                                reference: data.fields.ReferenceNo,
-                                currency: data.fields.ForeignExchangeCode,
-                                branding: data.fields.MedType,
-                                invoiceToDesc: data.fields.InvoiceToDesc,
-                                shipToDesc: data.fields.ShipToDesc,
-                                termsName: data.fields.TermsName,
-                                Total: totalInc,
-                                TotalDiscount: totalDiscount,
-                                LineItems: lineItems,
-                                TotalTax: totalTax,
-                                SubTotal: subTotal,
-                                balanceDue: totalBalance,
-                                saleCustField1: data.fields.SaleCustField1,
-                                saleCustField2: data.fields.SaleCustField2,
-                                totalPaid: totalPaidAmount,
-                                isConverted: data.fields.Converted
-                            };
-
-                            $('#edtCustomerName').val(data.fields.CustomerName);
-                            templateObject.CleintName.set(data.fields.CustomerName);
-                            $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                            $('#sltStatus').val(data.fields.SalesStatus);
-
-                                // tempcode
-                            // setTimeout(function () {
-                            //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                            //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                            //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                            // }, 2500);
-
-                            templateObject.attachmentCount.set(0);
-                            if (data.fields.Attachments) {
-                                if (data.fields.Attachments.length) {
-                                    templateObject.attachmentCount.set(data.fields.Attachments.length);
-                                    templateObject.uploadedFiles.set(data.fields.Attachments);
-                                }
-                            }
-
-                            var checkISCustLoad = false;
-                            setTimeout(function() {
-                                if (clientList) {
-                                    for (var i = 0; i < clientList.length; i++) {
-                                        if (clientList[i].customername == data.fields.CustomerName) {
-                                            checkISCustLoad = true;
-                                            quoterecord.firstname = clientList[i].firstname || '';
-                                            quoterecord.lastname = clientList[i].lastname || '';
-                                            templateObject.quoterecord.set(quoterecord);
-                                            $('#edtCustomerEmail').val(clientList[i].customeremail);
-                                            $('#edtCustomerEmail').attr('customerid', clientList[i].customerid);
-                                            $('#edtCustomerName').attr('custid', clientList[i].customerid);
-                                            $('#edtCustomerEmail').attr('customerfirstname', clientList[i].firstname);
-                                            $('#edtCustomerEmail').attr('customerlastname', clientList[i].lastname);
-                                            $('#customerType').text(clientList[i].clienttypename || 'Default');
-                                            $('#customerDiscount').text(clientList[i].discount + '%' || 0 + '%');
-                                            $('#edtCustomerUseType').val(clientList[i].clienttypename || 'Default');
-                                            $('#edtCustomerUseDiscount').val(clientList[i].discount || 0);
-                                        }
-                                    }
-                                };
-
-                                if (!checkISCustLoad) {
-                                    sideBarService.getCustomersDataByName(useData[d].fields.CustomerName).then(function(dataClient) {
-                                        for (var c = 0; c < dataClient.tcustomervs1.length; c++) {
-                                            var customerrecordObj = {
-                                                customerid: dataClient.tcustomervs1[c].Id || ' ',
-                                                firstname: dataClient.tcustomervs1[c].FirstName || ' ',
-                                                lastname: dataClient.tcustomervs1[c].LastName || ' ',
-                                                customername: dataClient.tcustomervs1[c].ClientName || ' ',
-                                                customeremail: dataClient.tcustomervs1[c].Email || ' ',
-                                                street: dataClient.tcustomervs1[c].Street || ' ',
-                                                street2: dataClient.tcustomervs1[c].Street2 || ' ',
-                                                street3: dataClient.tcustomervs1[c].Street3 || ' ',
-                                                suburb: dataClient.tcustomervs1[c].Suburb || ' ',
-                                                statecode: dataClient.tcustomervs1[c].State + ' ' + dataClient.tcustomervs1[c].Postcode || ' ',
-                                                country: dataClient.tcustomervs1[c].Country || ' ',
-                                                termsName: dataClient.tcustomervs1[c].TermsName || '',
-                                                taxCode: dataClient.tcustomervs1[c].TaxCodeName || 'E',
-                                                clienttypename: dataClient.tcustomervs1[c].ClientTypeName || 'Default',
-                                                discount: dataClient.tcustomervs1[c].Discount || 0
-                                            };
-                                            clientList.push(customerrecordObj);
-
-                                            quoterecord.firstname = dataClient.tcustomervs1[c].FirstName || '';
-                                            quoterecord.lastname = dataClient.tcustomervs1[c].LastName || '';
-                                            $('#edtCustomerEmail').val(dataClient.tcustomervs1[c].Email);
-                                            $('#edtCustomerEmail').attr('customerid', clientList[c].customerid);
-                                            $('#edtCustomerName').attr('custid', dataClient.tcustomervs1[c].Id);
-                                            $('#edtCustomerEmail').attr('customerfirstname', dataClient.tcustomervs1[c].FirstName);
-                                            $('#edtCustomerEmail').attr('customerlastname', dataClient.tcustomervs1[c].LastName);
-                                            $('#customerType').text(dataClient.tcustomervs1[c].ClientTypeName || 'Default');
-                                            $('#customerDiscount').text(dataClient.tcustomervs1[c].Discount + '%' || 0 + '%');
-                                            $('#edtCustomerUseType').val(dataClient.tcustomervs1[c].ClientTypeName || 'Default');
-                                            $('#edtCustomerUseDiscount').val(dataClient.tcustomervs1[c].Discount || 0);
-                                        }
-
-                                        templateObject.clientrecords.set(clientList.sort(function(a, b) {
-                                            if (a.customername == 'NA') {
-                                                return 1;
-                                            } else if (b.customername == 'NA') {
-                                                return -1;
-                                            }
-                                            return (a.customername.toUpperCase() > b.customername.toUpperCase()) ? 1 : -1;
-                                        }));
-                                    });
-                                }
-                            }, 100);
-
-                            templateObject.quoterecord.set(quoterecord);
-
-                            templateObject.selectedCurrency.set(quoterecord.currency);
-                            templateObject.inputSelectedCurrency.set(quoterecord.currency);
-                            if (templateObject.quoterecord.get()) {
-
-
-
-
-
-                                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
-                                    if (error) {
-
-
-                                    } else {
-                                        if (result) {
-                                            for (let i = 0; i < result.customFields.length; i++) {
-                                                let customcolumn = result.customFields;
-                                                let columData = customcolumn[i].label;
-                                                let columHeaderUpdate = customcolumn[i].thclass;
-                                                let hiddenColumn = customcolumn[i].hidden;
-                                                let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                                let columnWidth = customcolumn[i].width;
-
-
-                                                $("" + columHeaderUpdate + "").html(columData);
-                                                if (columnWidth != 0) {
-                                                    $("" + columHeaderUpdate + "").css('width', columnWidth);
-                                                }
-
-                                                if (hiddenColumn == true) {
-
-
-                                                    $("." + columnClass + "").addClass('hiddenColumn');
-                                                    $("." + columnClass + "").removeClass('showColumn');
-                                                } else if (hiddenColumn == false) {
-                                                    $("." + columnClass + "").removeClass('hiddenColumn');
-                                                    $("." + columnClass + "").addClass('showColumn');
-
-
-
-                                                }
-
-                                            }
-                                        }
-
-                                    }
-                                });
-                            }
+                            setOneQuoteData(data);
                         }).catch(function(err) {
                             swal({
                                 title: 'Oooops...',
@@ -4095,295 +3141,13 @@ Template.new_quote.onRendered(() => {
                                 }
                             });
                             LoadingOverlay.hide();
-
                         });
                     }
                 }
-
             }).catch(function(err) {
-
                 let customerData = templateObject.clientrecords.get();
                 accountService.getOneQuotedataEx(currentQuote).then(function(data) {
-                    let cust_result = customerData.filter(cust_data => {
-                        return cust_data.customername == data.fields.CustomerName
-                    });
-                    LoadingOverlay.hide();
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    let lineItemsTable = [];
-                    let lineItemTableObj = {};
-                    let exchangeCode = data.fields.ForeignExchangeCode;
-                    let currencySymbol = Currency;
-                    let total = currencySymbol + '' + data.fields.TotalAmount.toLocaleString(undefined, {
-                        minimumFractionDigits: 2
-                    });
-                    let totalInc = currencySymbol + '' + data.fields.TotalAmountInc.toLocaleString(undefined, {
-                        minimumFractionDigits: 2
-                    });
-                    let totalDiscount = utilityService.modifynegativeCurrencyFormat(data.fields.TotalDiscount).toLocaleString(undefined, {
-                        minimumFractionDigits: 2
-                    });
-                    let subTotal = currencySymbol + '' + data.fields.TotalAmount.toLocaleString(undefined, {
-                        minimumFractionDigits: 2
-                    });
-                    let totalTax = currencySymbol + '' + data.fields.TotalTax.toLocaleString(undefined, {
-                        minimumFractionDigits: 2
-                    });
-                    let totalBalance = currencySymbol + '' + data.fields.TotalBalance.toLocaleString(undefined, {
-                        minimumFractionDigits: 2
-                    });
-                    let totalPaidAmount = currencySymbol + '' + data.fields.TotalPaid.toLocaleString(undefined, {
-                        minimumFractionDigits: 2
-                    });
-                  if(data.fields.Lines != null){
-                    if (data.fields.Lines.length) {
-                        for (let i = 0; i < data.fields.Lines.length; i++) {
-                            let AmountGbp = currencySymbol + '' + data.fields.Lines[i].fields.TotalLineAmount.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let currencyAmountGbp = currencySymbol + '' + data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
-                            let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.LineTaxTotal);
-                            let TaxRateGbp = (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
-                            lineItemObj = {
-                                lineID: Random.id(),
-                                id: data.fields.Lines[i].fields.ID || '',
-                                item: data.fields.Lines[i].fields.ProductName || '',
-                                description: data.fields.Lines[i].fields.ProductDescription || '',
-                                quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
-                                unitPrice: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePrice).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                unitPriceInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePriceInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                TotalAmt: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmountInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                                lineCost: currencySymbol + '' + data.fields.Lines[i].fields.LineCost.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                }) || 0,
-                                taxRate: (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2) || 0,
-                                taxCode: data.fields.Lines[i].fields.LineTaxCode || '',
-                                //TotalAmt: AmountGbp || 0,
-                                curTotalAmt: currencyAmountGbp || currencySymbol + '0',
-                                TaxTotal: TaxTotalGbp || 0,
-                                TaxRate: TaxRateGbp || 0,
-                                DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
-
-                            };
-                            var dataListTable = [
-                                data.fields.Lines[i].fields.ProductName || '',
-                                data.fields.Lines[i].fields.ProductDescription || '',
-                                "<div contenteditable='true' class='qty'>" + '' + data.fields.Lines[i].fields.UOMOrderQty + '' + "</div>" || "<div>" + '' + 0 + '' + "</div>",
-                                "<div>" + '' + currencySymbol + '' + data.fields.Lines[i].fields.LinePrice.toFixed(2) + '' + "</div>" || currencySymbol + '' + 0.00,
-                                data.fields.Lines[i].fields.LineTaxCode || '',
-                                AmountGbp || currencySymbol + '' + 0.00,
-                                '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>'
-                            ];
-                            lineItemsTable.push(dataListTable);
-                            lineItems.push(lineItemObj);
-                        }
-                    } else {
-                        let AmountGbp = data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        });
-                        let currencyAmountGbp = currencySymbol + '' + data.fields.Lines.fields.TotalLineAmount.toFixed(2);
-                        let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
-                        let TaxRateGbp = currencySymbol + '' + data.fields.Lines.fields.LineTaxRate;
-                        lineItemObj = {
-                            lineID: Random.id(),
-                            id: data.fields.Lines.fields.ID || '',
-                            description: data.fields.Lines.fields.ProductDescription || '',
-                            quantity: data.fields.Lines.fields.UOMOrderQty || 0,
-                            unitPrice: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePrice).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                            unitPriceInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePriceInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                            TotalAmt: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                            TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmountInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
-                            lineCost: data.fields.Lines.fields.LineCost.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            }) || 0,
-                            taxRate: data.fields.Lines.fields.LineTaxRate || 0,
-                            taxCode: data.fields.Lines.fields.LineTaxCode || '',
-                            //TotalAmt: AmountGbp || 0,
-                            curTotalAmt: currencyAmountGbp || currencySymbol + '0',
-                            TaxTotal: TaxTotalGbp || 0,
-                            TaxRate: TaxRateGbp || 0
-                        };
-                        lineItems.push(lineItemObj);
-                    }
-                  }
-                    let quoterecord = {
-                        id: data.fields.ID,
-                        lid: 'Edit Quote' + ' ' + data.fields.ID,
-                        socustomer: data.fields.CustomerName,
-                        salesOrderto: data.fields.InvoiceToDesc,
-                        shipto: data.fields.ShipToDesc,
-                        department: data.fields.SaleClassName,
-                        docnumber: data.fields.DocNumber,
-                        custPONumber: data.fields.CustPONumber,
-                        saledate: data.fields.SaleDate ? moment(data.fields.SaleDate).format('DD/MM/YYYY') : "",
-                        duedate: data.fields.DueDate ? moment(data.fields.DueDate).format('DD/MM/YYYY') : "",
-                        employeename: data.fields.EmployeeName,
-                        status: data.fields.SalesStatus,
-                        category: data.fields.SalesCategory,
-                        comments: data.fields.Comments,
-                        pickmemo: data.fields.PickMemo,
-                        ponumber: data.fields.CustPONumber,
-                        via: data.fields.Shipping,
-                        connote: data.fields.ConNote,
-                        reference: data.fields.ReferenceNo,
-                        currency: data.fields.ForeignExchangeCode,
-                        branding: data.fields.MedType,
-                        invoiceToDesc: data.fields.InvoiceToDesc,
-                        shipToDesc: data.fields.ShipToDesc,
-                        termsName: data.fields.TermsName,
-                        Total: totalInc,
-                        TotalDiscount: totalDiscount,
-                        LineItems: lineItems,
-                        TotalTax: totalTax,
-                        SubTotal: subTotal,
-                        balanceDue: totalBalance,
-                        saleCustField1: data.fields.SaleCustField1,
-                        saleCustField2: data.fields.SaleCustField2,
-                        totalPaid: totalPaidAmount,
-                        isConverted: data.fields.Converted
-                    };
-
-                    templateObject.querystring.set(stringQuery);
-                    $('#edtCustomerName').val(data.fields.CustomerName);
-                    templateObject.CleintName.set(data.fields.CustomerName);
-                    $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                    $('#sltStatus').val(data.fields.SalesStatus);
-
-                                // tempcode
-                    // setTimeout(function () {
-                    //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                    //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                    //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                    // }, 2500);
-
-                    templateObject.attachmentCount.set(0);
-                    if (data.fields.Attachments) {
-                        if (data.fields.Attachments.length) {
-                            templateObject.attachmentCount.set(data.fields.Attachments.length);
-                            templateObject.uploadedFiles.set(data.fields.Attachments);
-                        }
-                    }
-
-                    var checkISCustLoad = false;
-                    setTimeout(function() {
-                        if (clientList) {
-                            for (var i = 0; i < clientList.length; i++) {
-                                if (clientList[i].customername == data.fields.CustomerName) {
-                                    checkISCustLoad = true;
-                                    quoterecord.firstname = clientList[i].firstname || '';
-                                    quoterecord.lastname = clientList[i].lastname || '';
-                                    templateObject.quoterecord.set(quoterecord);
-                                    $('#edtCustomerEmail').val(clientList[i].customeremail);
-                                    $('#edtCustomerEmail').attr('customerid', clientList[i].customerid);
-                                    $('#edtCustomerName').attr('custid', clientList[i].customerid);
-                                    $('#edtCustomerEmail').attr('customerfirstname', clientList[i].firstname);
-                                    $('#edtCustomerEmail').attr('customerlastname', clientList[i].lastname);
-                                    $('#customerType').text(clientList[i].clienttypename || 'Default');
-                                    $('#customerDiscount').text(clientList[i].discount + '%' || 0 + '%');
-                                    $('#edtCustomerUseType').val(clientList[i].clienttypename || 'Default');
-                                    $('#edtCustomerUseDiscount').val(clientList[i].discount || 0);
-
-                                }
-                            }
-                        };
-
-                        if (!checkISCustLoad) {
-                            sideBarService.getCustomersDataByName(useData[d].fields.CustomerName).then(function(dataClient) {
-                                for (var c = 0; c < dataClient.tcustomervs1.length; c++) {
-                                    var customerrecordObj = {
-                                        customerid: dataClient.tcustomervs1[c].Id || ' ',
-                                        firstname: dataClient.tcustomervs1[c].FirstName || ' ',
-                                        lastname: dataClient.tcustomervs1[c].LastName || ' ',
-                                        customername: dataClient.tcustomervs1[c].ClientName || ' ',
-                                        customeremail: dataClient.tcustomervs1[c].Email || ' ',
-                                        street: dataClient.tcustomervs1[c].Street || ' ',
-                                        street2: dataClient.tcustomervs1[c].Street2 || ' ',
-                                        street3: dataClient.tcustomervs1[c].Street3 || ' ',
-                                        suburb: dataClient.tcustomervs1[c].Suburb || ' ',
-                                        statecode: dataClient.tcustomervs1[c].State + ' ' + dataClient.tcustomervs1[c].Postcode || ' ',
-                                        country: dataClient.tcustomervs1[c].Country || ' ',
-                                        termsName: dataClient.tcustomervs1[c].TermsName || '',
-                                        taxCode: dataClient.tcustomervs1[c].TaxCodeName || 'E',
-                                        clienttypename: dataClient.tcustomervs1[c].ClientTypeName || 'Default',
-                                        discount: dataClient.tcustomervs1[c].Discount || 0
-                                    };
-                                    clientList.push(customerrecordObj);
-
-                                    quoterecord.firstname = dataClient.tcustomervs1[c].FirstName || '';
-                                    quoterecord.lastname = dataClient.tcustomervs1[c].LastName || '';
-                                    $('#edtCustomerEmail').val(dataClient.tcustomervs1[c].Email);
-                                    $('#edtCustomerEmail').attr('customerid', clientList[c].customerid);
-                                    $('#edtCustomerName').attr('custid', dataClient.tcustomervs1[c].Id);
-                                    $('#edtCustomerEmail').attr('customerfirstname', dataClient.tcustomervs1[c].FirstName);
-                                    $('#edtCustomerEmail').attr('customerlastname', dataClient.tcustomervs1[c].LastName);
-                                    $('#customerType').text(dataClient.tcustomervs1[c].ClientTypeName || 'Default');
-                                    $('#customerDiscount').text(dataClient.tcustomervs1[c].Discount + '%' || 0 + '%');
-                                    $('#edtCustomerUseType').val(dataClient.tcustomervs1[c].ClientTypeName || 'Default');
-                                    $('#edtCustomerUseDiscount').val(dataClient.tcustomervs1[c].Discount || 0);
-                                }
-
-                                templateObject.clientrecords.set(clientList.sort(function(a, b) {
-                                    if (a.customername == 'NA') {
-                                        return 1;
-                                    } else if (b.customername == 'NA') {
-                                        return -1;
-                                    }
-                                    return (a.customername.toUpperCase() > b.customername.toUpperCase()) ? 1 : -1;
-                                }));
-                            });
-                        }
-                    }, 100);
-
-                    templateObject.quoterecord.set(quoterecord);
-
-                    templateObject.selectedCurrency.set(quoterecord.currency);
-                    templateObject.inputSelectedCurrency.set(quoterecord.currency);
-                    if (templateObject.quoterecord.get()) {
-
-
-
-
-
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
-                            if (error) {
-
-
-                            } else {
-                                if (result) {
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass;
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                        let columnWidth = customcolumn[i].width;
-
-
-                                        $("" + columHeaderUpdate + "").html(columData);
-                                        if (columnWidth != 0) {
-                                            $("" + columHeaderUpdate + "").css('width', columnWidth);
-                                        }
-
-                                        if (hiddenColumn == true) {
-
-
-                                            $("." + columnClass + "").addClass('hiddenColumn');
-                                            $("." + columnClass + "").removeClass('showColumn');
-                                        } else if (hiddenColumn == false) {
-                                            $("." + columnClass + "").removeClass('hiddenColumn');
-                                            $("." + columnClass + "").addClass('showColumn');
-
-
-
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
-                    }
+                    setOneQuoteData(data);
                 }).catch(function(err) {
                     swal({
                         title: 'Oooops...',
@@ -4398,7 +3162,6 @@ Template.new_quote.onRendered(() => {
                         }
                     });
                     LoadingOverlay.hide();
-
                 });
             });
 
@@ -4506,6 +3269,265 @@ Template.new_quote.onRendered(() => {
                                 $("." + columnClass + "").addClass('hiddenColumn');
                                 $("." + columnClass + "").removeClass('showColumn');
                             } else if (hiddenColumn === false) {
+                                $("." + columnClass + "").removeClass('hiddenColumn');
+                                $("." + columnClass + "").addClass('showColumn');
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+    function setOneQuoteData(data) {
+        let customerData = templateObject.clientrecords.get();
+        let cust_result = customerData.filter(cust_data => {
+            return cust_data.customername == data.fields.CustomerName
+        });
+        LoadingOverlay.hide();
+        let lineItems = [];
+        let lineItemObj = {};
+        let lineItemsTable = [];
+        let lineItemTableObj = {};
+        let exchangeCode = data.fields.ForeignExchangeCode;
+        let currencySymbol = Currency;
+        let total = currencySymbol + '' + data.fields.TotalAmount.toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        let totalInc = currencySymbol + '' + data.fields.TotalAmountInc.toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        let totalDiscount = utilityService.modifynegativeCurrencyFormat(data.fields.TotalDiscount).toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        let subTotal = currencySymbol + '' + data.fields.TotalAmount.toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        let totalTax = currencySymbol + '' + data.fields.TotalTax.toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        let totalBalance = currencySymbol + '' + data.fields.TotalBalance.toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        let totalPaidAmount = currencySymbol + '' + data.fields.TotalPaid.toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        });
+        if(data.fields.Lines != null){
+            if (data.fields.Lines.length) {
+                for (let i = 0; i < data.fields.Lines.length; i++) {
+                    let AmountGbp = currencySymbol + '' + data.fields.Lines[i].fields.TotalLineAmount.toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    });
+                    let currencyAmountGbp = currencySymbol + '' + data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
+                    let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.LineTaxTotal);
+                    let TaxRateGbp = (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
+                    lineItemObj = {
+                        lineID: Random.id(),
+                        id: data.fields.Lines[i].fields.ID || '',
+                        item: data.fields.Lines[i].fields.ProductName || '',
+                        description: data.fields.Lines[i].fields.ProductDescription || '',
+                        quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
+                        unitPrice: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePrice).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
+                        unitPriceInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePriceInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
+                        TotalAmt: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
+                        TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmountInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
+                        lineCost: currencySymbol + '' + data.fields.Lines[i].fields.LineCost.toLocaleString(undefined, {
+                            minimumFractionDigits: 2
+                        }) || 0,
+                        taxRate: (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2) || 0,
+                        taxCode: data.fields.Lines[i].fields.LineTaxCode || '',
+                        //TotalAmt: AmountGbp || 0,
+                        curTotalAmt: currencyAmountGbp || currencySymbol + '0',
+                        TaxTotal: TaxTotalGbp || 0,
+                        TaxRate: TaxRateGbp || 0,
+                        DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
+                    };
+                    const dataListTable = [
+                        data.fields.Lines[i].fields.ProductName || '',
+                        data.fields.Lines[i].fields.ProductDescription || '',
+                        "<div contenteditable='true' class='qty'>" + '' + data.fields.Lines[i].fields.UOMOrderQty + '' + "</div>" || "<div>" + '' + 0 + '' + "</div>",
+                        "<div>" + '' + currencySymbol + '' + data.fields.Lines[i].fields.LinePrice.toFixed(2) + '' + "</div>" || currencySymbol + '' + 0.00,
+                        data.fields.Lines[i].fields.LineTaxCode || '',
+                        AmountGbp || currencySymbol + '' + 0.00,
+                        '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>'
+                    ];
+                    lineItemsTable.push(dataListTable);
+                    lineItems.push(lineItemObj);
+                }
+            } else {
+                let AmountGbp = data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                }) || 0;
+                let currencyAmountGbp = currencySymbol + '' + data.fields.Lines.fields.TotalLineAmount.toFixed(2) || 0;
+                let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal) || 0;
+                let TaxRateGbp = currencySymbol + '' + data.fields.Lines.fields.LineTaxRate || 0;
+                lineItemObj = {
+                    lineID: Random.id(),
+                    id: data.fields.Lines.fields.ID || '',
+                    description: data.fields.Lines.fields.ProductDescription || '',
+                    quantity: data.fields.Lines.fields.UOMOrderQty || 0,
+                    unitPrice: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePrice).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
+                    unitPriceInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.OriginalLinePriceInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
+                    TotalAmt: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
+                    TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmountInc).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
+                    lineCost: data.fields.Lines.fields.LineCost.toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    }) || 0,
+                    taxRate: data.fields.Lines.fields.LineTaxRate || 0,
+                    taxCode: data.fields.Lines.fields.LineTaxCode || '',
+                    //TotalAmt: AmountGbp || 0,
+                    curTotalAmt: currencyAmountGbp || currencySymbol + '0',
+                    TaxTotal: TaxTotalGbp || 0,
+                    TaxRate: TaxRateGbp || 0
+                };
+                lineItems.push(lineItemObj);
+            }
+        }
+        let quoterecord = {
+            id: data.fields.ID,
+            lid: 'Edit Quote' + ' ' + data.fields.ID,
+            socustomer: data.fields.CustomerName,
+            salesOrderto: data.fields.InvoiceToDesc,
+            shipto: data.fields.ShipToDesc,
+            department: data.fields.SaleClassName,
+            docnumber: data.fields.DocNumber,
+            custPONumber: data.fields.CustPONumber,
+            saledate: data.fields.SaleDate ? moment(data.fields.SaleDate).format('DD/MM/YYYY') : "",
+            duedate: data.fields.DueDate ? moment(data.fields.DueDate).format('DD/MM/YYYY') : "",
+            employeename: data.fields.EmployeeName,
+            status: data.fields.SalesStatus,
+            category: data.fields.SalesCategory,
+            comments: data.fields.Comments,
+            pickmemo: data.fields.PickMemo,
+            ponumber: data.fields.CustPONumber,
+            via: data.fields.Shipping,
+            connote: data.fields.ConNote,
+            reference: data.fields.ReferenceNo,
+            currency: data.fields.ForeignExchangeCode,
+            branding: data.fields.MedType,
+            invoiceToDesc: data.fields.InvoiceToDesc,
+            shipToDesc: data.fields.ShipToDesc,
+            termsName: data.fields.TermsName,
+            Total: totalInc,
+            TotalDiscount: totalDiscount,
+            LineItems: lineItems,
+            TotalTax: totalTax,
+            SubTotal: subTotal,
+            balanceDue: totalBalance,
+            saleCustField1: data.fields.SaleCustField1,
+            saleCustField2: data.fields.SaleCustField2,
+            totalPaid: totalPaidAmount,
+            isConverted: data.fields.Converted
+        };
+
+        $('#edtCustomerName').val(data.fields.CustomerName);
+        templateObject.CleintName.set(data.fields.CustomerName);
+        $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+        $('#sltStatus').val(data.fields.SalesStatus);
+        // tempcode
+        // setTimeout(function () {
+        //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+        //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+        //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+        // }, 2500);
+
+        templateObject.attachmentCount.set(0);
+        if (data.fields.Attachments) {
+            if (data.fields.Attachments.length) {
+                templateObject.attachmentCount.set(data.fields.Attachments.length);
+                templateObject.uploadedFiles.set(data.fields.Attachments);
+            }
+        }
+        let checkISCustLoad = false;
+        setTimeout(function() {
+            if (clientList) {
+                for (let i = 0; i < clientList.length; i++) {
+                    if (clientList[i].customername == data.fields.CustomerName) {
+                        checkISCustLoad = true;
+                        quoterecord.firstname = clientList[i].firstname || '';
+                        quoterecord.lastname = clientList[i].lastname || '';
+                        templateObject.quoterecord.set(quoterecord);
+                        $('#edtCustomerEmail').val(clientList[i].customeremail);
+                        $('#edtCustomerEmail').attr('customerid', clientList[i].customerid);
+                        $('#edtCustomerName').attr('custid', clientList[i].customerid);
+                        $('#edtCustomerEmail').attr('customerfirstname', clientList[i].firstname);
+                        $('#edtCustomerEmail').attr('customerlastname', clientList[i].lastname);
+                        $('#customerType').text(clientList[i].clienttypename || 'Default');
+                        $('#customerDiscount').text(clientList[i].discount + '%' || 0 + '%');
+                        $('#edtCustomerUseType').val(clientList[i].clienttypename || 'Default');
+                        $('#edtCustomerUseDiscount').val(clientList[i].discount || 0);
+                    }
+                }
+            }
+            if (!checkISCustLoad) {
+                sideBarService.getCustomersDataByName(useData[d].fields.CustomerName).then(function(dataClient) {
+                    for (let c = 0; c < dataClient.tcustomervs1.length; c++) {
+                        const customerrecordObj = {
+                            customerid: dataClient.tcustomervs1[c].Id || ' ',
+                            firstname: dataClient.tcustomervs1[c].FirstName || ' ',
+                            lastname: dataClient.tcustomervs1[c].LastName || ' ',
+                            customername: dataClient.tcustomervs1[c].ClientName || ' ',
+                            customeremail: dataClient.tcustomervs1[c].Email || ' ',
+                            street: dataClient.tcustomervs1[c].Street || ' ',
+                            street2: dataClient.tcustomervs1[c].Street2 || ' ',
+                            street3: dataClient.tcustomervs1[c].Street3 || ' ',
+                            suburb: dataClient.tcustomervs1[c].Suburb || ' ',
+                            statecode: dataClient.tcustomervs1[c].State + ' ' + dataClient.tcustomervs1[c].Postcode || ' ',
+                            country: dataClient.tcustomervs1[c].Country || ' ',
+                            termsName: dataClient.tcustomervs1[c].TermsName || '',
+                            taxCode: dataClient.tcustomervs1[c].TaxCodeName || 'E',
+                            clienttypename: dataClient.tcustomervs1[c].ClientTypeName || 'Default',
+                            discount: dataClient.tcustomervs1[c].Discount || 0
+                        };
+                        clientList.push(customerrecordObj);
+
+                        quoterecord.firstname = dataClient.tcustomervs1[c].FirstName || '';
+                        quoterecord.lastname = dataClient.tcustomervs1[c].LastName || '';
+                        $('#edtCustomerEmail').val(dataClient.tcustomervs1[c].Email);
+                        $('#edtCustomerEmail').attr('customerid', clientList[c].customerid);
+                        $('#edtCustomerName').attr('custid', dataClient.tcustomervs1[c].Id);
+                        $('#edtCustomerEmail').attr('customerfirstname', dataClient.tcustomervs1[c].FirstName);
+                        $('#edtCustomerEmail').attr('customerlastname', dataClient.tcustomervs1[c].LastName);
+                        $('#customerType').text(dataClient.tcustomervs1[c].ClientTypeName || 'Default');
+                        $('#customerDiscount').text(dataClient.tcustomervs1[c].Discount + '%' || 0 + '%');
+                        $('#edtCustomerUseType').val(dataClient.tcustomervs1[c].ClientTypeName || 'Default');
+                        $('#edtCustomerUseDiscount').val(dataClient.tcustomervs1[c].Discount || 0);
+                    }
+                    templateObject.clientrecords.set(clientList.sort(function(a, b) {
+                        if (a.customername == 'NA') {
+                            return 1;
+                        } else if (b.customername == 'NA') {
+                            return -1;
+                        }
+                        return (a.customername.toUpperCase() > b.customername.toUpperCase()) ? 1 : -1;
+                    }));
+                });
+            }
+        }, 100);
+        templateObject.quoterecord.set(quoterecord);
+        templateObject.lineitems.set(lineItems);
+        templateObject.selectedCurrency.set(quoterecord.currency);
+        templateObject.inputSelectedCurrency.set(quoterecord.currency);
+        if (templateObject.quoterecord.get()) {
+            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblQuoteLine', function(error, result) {
+                if (error) {
+
+                } else {
+                    if (result) {
+                        for (let i = 0; i < result.customFields.length; i++) {
+                            let customcolumn = result.customFields;
+                            let columData = customcolumn[i].label;
+                            let columHeaderUpdate = customcolumn[i].thclass;
+                            let hiddenColumn = customcolumn[i].hidden;
+                            let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
+                            let columnWidth = customcolumn[i].width;
+                            $("" + columHeaderUpdate + "").html(columData);
+                            if (columnWidth != 0) {
+                                $("" + columHeaderUpdate + "").css('width', columnWidth);
+                            }
+                            if (hiddenColumn == true) {
+                                $("." + columnClass + "").addClass('hiddenColumn');
+                                $("." + columnClass + "").removeClass('showColumn');
+                            } else if (hiddenColumn == false) {
                                 $("." + columnClass + "").removeClass('hiddenColumn');
                                 $("." + columnClass + "").addClass('showColumn');
                             }
@@ -5013,7 +4035,7 @@ Template.new_quote.onRendered(() => {
         //if (li.text() != undefined) {
         let selectedCustomer = $('#edtCustomerName').val();
         if (clientList) {
-            for (var i = 0; i < clientList.length; i++) {
+            for (let i = 0; i < clientList.length; i++) {
                 if (clientList[i].customername == selectedCustomer) {
                     $('#edtCustomerEmail').val(clientList[i].customeremail);
                     $('#edtCustomerEmail').attr('customerid', clientList[i].customerid);
@@ -5030,22 +4052,20 @@ Template.new_quote.onRendered(() => {
                     $('.pdfCustomerAddress').text(postalAddress);
                     $('#txaShipingInfo').val(postalAddress);
                     $('#sltTerms').val(clientList[i].termsName ||templateObject.defaultsaleterm.get() ||'');
+                    $('#sltStatus').val(clientList[i].status);
                 }
             }
         }
-
         let getCustDetails = "";
         let taxRate = "";
         if (selectedCustomer != "") {
             getCustDetails = customers.filter(customer => {
                 return customer.customername == selectedCustomer
             });
-
             //if (getCustDetails.length > 0) {
             taxRate = taxcodeList.filter(taxrate => {
                 return taxrate.codename == selectedTaxCodeName
             });
-
             if (taxRate.length > 0) {
                 let rate = taxRate[0].coderate||0;
                 let code = selectedTaxCodeName||'NT';
@@ -5061,14 +4081,14 @@ Template.new_quote.onRendered(() => {
                 let subGrandTotalNet = 0;
                 let taxGrandTotalNet = 0;
                 $tblrows.each(function(index) {
-                    var $tblrow = $(this);
-                    var qty = $tblrow.find(".lineQty").val() || 0;
-                    var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-                    var taxRate = $tblrow.find(".lineTaxCode").val();
+                    const $tblrow = $(this);
+                    const qty = $tblrow.find(".lineQty").val() || 0;
+                    const price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+                    const taxRate = $tblrow.find(".lineTaxCode").val();
                     if ($tblrow.find(".lineProductName").val() == '') {
                         $tblrow.find(".colProductName").addClass('boldtablealertsborder');
                     }
-                    var taxrateamount = 0;
+                    let taxrateamount = 0;
                     if (taxcodeList) {
                         for (var i = 0; i < taxcodeList.length; i++) {
                             if (taxcodeList[i].codename == taxRate) {
@@ -5076,22 +4096,18 @@ Template.new_quote.onRendered(() => {
                             }
                         }
                     }
-
-                    var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                    var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                    var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+                    const subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+                    const taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+                    const lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
                     let lineTotalAmount = subTotal + taxTotal;
-
                     let lineDiscountTotal = lineDiscountPerc / 100;
-
-                    var discountTotal = lineTotalAmount * lineDiscountTotal;
-                    var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-                    var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
-                    var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-                    var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+                    const discountTotal = lineTotalAmount * lineDiscountTotal;
+                    const subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+                    const subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
+                    const taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+                    const taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
                     if (!isNaN(discountTotal)) {
                         subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
-
                         document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
                     }
                     $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
@@ -5101,7 +4117,6 @@ Template.new_quote.onRendered(() => {
                     let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
                     $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
                     $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
-
                     if (!isNaN(subTotal)) {
                         $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
                         $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
@@ -5109,15 +4124,11 @@ Template.new_quote.onRendered(() => {
                         subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
                         document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
                     }
-
                     if (!isNaN(taxTotal)) {
                         taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
                         taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
                         document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
                     }
-
-
-
                     if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
                         let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
                         let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
@@ -5125,7 +4136,6 @@ Template.new_quote.onRendered(() => {
                         document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
                         document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
                         document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-
                     }
                 });
                 //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
@@ -5138,7 +4148,7 @@ Template.new_quote.onRendered(() => {
                     $printrows.find("#lineTaxRate").text(rate);
                     let taxrateamount = 0;
                     if (taxcodeList) {
-                        for (var i = 0; i < taxcodeList.length; i++) {
+                        for (let i = 0; i < taxcodeList.length; i++) {
                             if (taxcodeList[i].codename == taxcode) {
                                 taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
                             }
@@ -5161,7 +4171,6 @@ Template.new_quote.onRendered(() => {
                         document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
                         //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
                         document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
-
                     }
                 });
                 //}
@@ -5275,81 +4284,64 @@ Template.new_quote.onRendered(() => {
     //         }
     //     });
 
-    $('#sltStatus').editableSelect()
-        .on('click.editable-select', function(e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            $('#statusId').val('');
-            var statusDataName = e.target.value || '';
-            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                $('#statusPopModal').modal('toggle');
-            } else {
-                if (statusDataName.replace(/\s/g, '') != '') {
-                    $('#newStatusHeader').text('Edit Status');
-                    $('#newStatus').val(statusDataName);
+    $('#sltStatus').editableSelect().on('click.editable-select', function(e, li) {
+        const $earch = $(this);
+        const offset = $earch.offset();
+        $('#statusId').val('');
+        const statusDataName = e.target.value || '';
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $('#statusPopModal').modal('toggle');
+        } else {
+            if (statusDataName.replace(/\s/g, '') != '') {
+                $('#newStatusHeader').text('Edit Status');
+                $('#newStatus').val(statusDataName);
 
-                    getVS1Data('TLeadStatusType').then(function(dataObject) {
-                        if (dataObject.length == 0) {
-                           LoadingOverlay.show();
-                            sideBarService.getAllLeadStatus().then(function(data) {
-                                for (let i in data.tleadstatustype) {
-                                    if (data.tleadstatustype[i].TypeName === statusDataName) {
-                                        $('#statusId').val(data.tleadstatustype[i].Id);
-                                    }
-                                }
-                                setTimeout(function() {
-                                    LoadingOverlay.hide();
-                                    $('#newStatusPopModal').modal('toggle');
-                                }, 200);
-                            });
-                        } else {
-                            let data = JSON.parse(dataObject[0].data);
-                            let useData = data.tleadstatustype;
-                            for (let i in useData) {
-                                if (useData[i].TypeName === statusDataName) {
-                                    $('#statusId').val(useData[i].Id);
-
-                                }
-                            }
-                            setTimeout(function() {
-                                LoadingOverlay.hide();
-                                $('#newStatusPopModal').modal('toggle');
-                            }, 200);
-                        }
-                    }).catch(function(err) {
-                       LoadingOverlay.show();
+                getVS1Data('TLeadStatusType').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        LoadingOverlay.show();
                         sideBarService.getAllLeadStatus().then(function(data) {
-                            for (let i in data.tleadstatustype) {
-                                if (data.tleadstatustype[i].TypeName === statusDataName) {
-                                    $('#statusId').val(data.tleadstatustype[i].Id);
-                                }
-                            }
-                            setTimeout(function() {
-                                LoadingOverlay.hide();
-                                $('#newStatusPopModal').modal('toggle');
-                            }, 200);
+                            setLeadStatus(data);
                         });
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        setLeadStatus(data);
+                    }
+                }).catch(function(err) {
+                    LoadingOverlay.show();
+                    sideBarService.getAllLeadStatus().then(function(data) {
+                        setLeadStatus(data);
                     });
-                    setTimeout(function() {
-                        LoadingOverlay.hide();
-                        $('#newStatusPopModal').modal('toggle');
-                    }, 200);
-
-                } else {
-                    $('#statusPopModal').modal();
-                    setTimeout(function() {
-                        $('#tblStatusPopList_filter .form-control-sm').focus();
-                        $('#tblStatusPopList_filter .form-control-sm').val('');
-                        $('#tblStatusPopList_filter .form-control-sm').trigger("input");
-                        var datatable = $('#tblStatusPopList').DataTable();
-
-                        datatable.draw();
-                        $('#tblStatusPopList_filter .form-control-sm').trigger("input");
-
-                    }, 500);
+                });
+                setTimeout(function() {
+                    LoadingOverlay.hide();
+                    $('#newStatusPopModal').modal('toggle');
+                }, 200);
+            } else {
+                $('#statusPopModal').modal();
+                setTimeout(function() {
+                    $('#tblStatusPopList_filter .form-control-sm').focus();
+                    $('#tblStatusPopList_filter .form-control-sm').val('');
+                    $('#tblStatusPopList_filter .form-control-sm').trigger("input");
+                    const datatable = $('#tblStatusPopList').DataTable();
+                    datatable.draw();
+                    $('#tblStatusPopList_filter .form-control-sm').trigger("input");
+                }, 500);
+            }
+        }
+    });
+    function setLeadStatus(data) {
+        for (let i in data.tleadstatustype) {
+            if (data.tleadstatustype.hasOwnProperty(i)) {
+                if (data.tleadstatustype[i].TypeName === statusDataName) {
+                    $('#statusId').val(data.tleadstatustype[i].Id);
                 }
             }
-        });
+        }
+        setTimeout(function() {
+            LoadingOverlay.hide();
+            $('#newStatusPopModal').modal('toggle');
+        }, 200);
+    }
 
     $('#edtCustomerName').editableSelect().on('click.editable-select', function(e, li) {
         const $each = $(this);
@@ -5502,91 +4494,73 @@ Template.new_quote.onRendered(() => {
         }, 500);
     }
 
-    exportSalesToPdf = async function (template_title,number)
-    {
+    const exportSalesToPdf = async function (template_title,number) {
+        if(template_title == 'Quotes' && number == 1) {
+            exportSalesToPdf1();
+        } else {
+            if(template_title == 'Quotes') {
+                await showQuotes(template_title,number);
+            }
+            let margins = {
+                top: 0,
+                bottom: 0,
+                left: 0,
+                width: 100
+            };
+            let quoteData = templateObject.quoterecord.get();
+            document.getElementById('html-2-pdfwrapper_new').style.display="block";
+            const source = document.getElementById('html-2-pdfwrapper_new');
 
-
-        if(template_title == 'Quotes' && number == 1)
-        {
-                 exportSalesToPdf1();
-        }
-        else
-        {
-                if(template_title == 'Quotes')
-                {
-                    await showQuotes(template_title,number);
-
+            let file = "Quotes.pdf";
+            if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+                if(template_title == 'Quotes') {
+                    file = 'Quote-' + quoteData.id + '.pdf';
                 }
-
-
-                let margins = {
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    width: 100
-                };
-
-                let quoteData = templateObject.quoterecord.get();
-                document.getElementById('html-2-pdfwrapper_new').style.display="block";
-                var source = document.getElementById('html-2-pdfwrapper_new');
-
-                let file = "Quotes.pdf";
-                if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-                    if(template_title == 'Quotes')
-                    {
-                        file = 'Quote-' + quoteData.id + '.pdf';
-                    }
-
-
+            }
+            const opt = {
+                margin: 0,
+                filename: file,
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'a4',
+                    orientation: 'portrait'
                 }
+            };
 
-                var opt = {
-                    margin: 0,
-                    filename: file,
-                    image: {
-                        type: 'jpeg',
-                        quality: 0.98
-                    },
-                    html2canvas: {
-                        scale: 2
-                    },
-                    jsPDF: {
-                        unit: 'in',
-                        format: 'a4',
-                        orientation: 'portrait'
-                    }
+            html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data => {
+                let attachment = [];
+                let base64data = data.split(',')[1];
+                let chequeId  = FlowRouter.current().queryParams.id?FlowRouter.current().queryParams.id: ''
+                let pdfObject = {
+                    filename: 'Quote-' + chequeId + '.pdf',
+                    content: base64data,
+                    encoding: 'base64'
                 };
-
-
-
-                html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data => {
-                    let attachment = [];
-                    let base64data = data.split(',')[1];
-                    let chequeId  = FlowRouter.current().queryParams.id?FlowRouter.current().queryParams.id: ''
-                    pdfObject = {
-                        filename: 'Quote-' + chequeId + '.pdf',
-                        content: base64data,
-                        encoding: 'base64'
-                    };
-                    attachment.push(pdfObject);
-                    let values = [];
-                    let basedOnTypeStorages = Object.keys(localStorage);
-                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                        let employeeId = storage.split('_')[2];
-                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-                        return storage.includes('BasedOnType_');
-                    });
-                    let j = basedOnTypeStorages.length;
-                    if (j > 0) {
-                        while (j--) {
-                            values.push(localStorage.getItem(basedOnTypeStorages[j]));
-                        }
+                attachment.push(pdfObject);
+                let values = [];
+                let basedOnTypeStorages = Object.keys(localStorage);
+                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                    let employeeId = storage.split('_')[2];
+                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    return storage.includes('BasedOnType_');
+                });
+                let j = basedOnTypeStorages.length;
+                if (j > 0) {
+                    while (j--) {
+                        values.push(localStorage.getItem(basedOnTypeStorages[j]));
                     }
-                    if(values.length > 0) {
+                }
+                if(values.length > 0) {
                     values.forEach(value => {
                         let reportData = JSON.parse(value);
                         let temp = {... reportData};
-
                         temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                         reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                         temp.attachments = attachment;
@@ -5603,39 +4577,31 @@ Template.new_quote.onRendered(() => {
                             }
                         }
                     });
+                }
+
+                html2pdf().set(opt).from(source).save().then(function (dataObject) {
+                    if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                        //$(".btnSave").trigger("click");
+                        $('#html-2-pdfwrapper_new').css('display', 'none');
+                        LoadingOverlay.hide();
+                    } else {
+                        document.getElementById('html-2-pdfwrapper_new').style.display="none";
+                        $('#html-2-pdfwrapper_new').css('display', 'none');
+                        LoadingOverlay.hide();
                     }
-
-                    html2pdf().set(opt).from(source).save().then(function (dataObject) {
-                        if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
-                            //$(".btnSave").trigger("click");
-                            $('#html-2-pdfwrapper_new').css('display', 'none');
-                            LoadingOverlay.hide();
-                        } else {
-                            document.getElementById('html-2-pdfwrapper_new').style.display="none";
-                            $('#html-2-pdfwrapper_new').css('display', 'none');
-                            LoadingOverlay.hide();
-                        }
-                    });
-                })
-
-                return true;
-
+                });
+            })
+            return true;
         }
-
-
-
-
     }
 
-    exportSalesToPdf1= function () {
-
+    const exportSalesToPdf1= function () {
         let margins = {
             top: 0,
             bottom: 0,
             left: 0,
             width: 100
         };
-
         let quoteData = templateObject.quoterecord.get();
         let stripe_id = templateObject.accountID.get() || '';
         let stripe_fee_method = templateObject.stripe_fee_method.get();
@@ -5659,7 +4625,7 @@ Template.new_quote.onRendered(() => {
 
 
         $('#tblQuoteLine > tbody > tr').each(function () {
-            var lineID = this.id;
+            const lineID = this.id;
 
             let tdproduct = $('#' + lineID + " .lineProductName").val();
             let tddescription = $('#' + lineID + " .lineProductDesc").text();
@@ -5694,8 +4660,7 @@ Template.new_quote.onRendered(() => {
                     // taxItems[targetTaxCode] = taxTotal;
                 }
             }
-
-            lineItemObj = {
+            const lineItemObj = {
                 description: tddescription || '',
                 quantity: tdQty || 0,
                 unitPrice: tdunitprice.toLocaleString(undefined, {
@@ -5706,13 +4671,13 @@ Template.new_quote.onRendered(() => {
             lineItems.push(lineItemObj);
         });
         let id = $('.printID').attr("id") || "new";
-        var erpGet = erpDb();
+        const erpGet = erpDb();
         let company = Session.get('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
         let currencyname = (CountryAbbr).toLowerCase();
         let stringQuery = "?";
-        var customerID = $('#edtCustomerEmail').attr('customerid');
+        const customerID = $('#edtCustomerEmail').attr('customerid');
         for (let l = 0; l < lineItems.length; l++) {
             stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
         }
@@ -5722,7 +4687,7 @@ Template.new_quote.onRendered(() => {
             file = 'Quote-' + id + '.pdf';
         }
 
-        var opt = {
+        const opt = {
             margin: 0,
             filename: file,
             image: {
@@ -5738,19 +4703,14 @@ Template.new_quote.onRendered(() => {
                 orientation: 'portrait'
             }
         };
-
-
         // var pdf = new jsPDF('p', 'pt', 'a4');
-
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-
         $("#html-2-pdfwrapper #subtotal_totalPrint").html(subtotal);
         $("#html-2-pdfwrapper #grandTotalPrint").html(grandTotal);
         $("#html-2-pdfwrapper #totalpaidamount").html(totalPaidAmt);
         $("#html-2-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
 
         // pdf.setFontSize(18);
-
         if(taxItems && Object.keys(taxItems).length>0) {
             $("#html-2-pdfwrapper #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
@@ -6131,7 +5091,6 @@ Template.new_quote.onRendered(function() {
             })
         });
     };
-
     //tempObj.getAllProducts();
 
     tempObj.getAllTaxCodes = function() {
@@ -6210,7 +5169,6 @@ Template.new_quote.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.ttaxcodevs1;
-
                 let records = [];
                 let inventoryData = [];
                 taxCodes = data.ttaxcodevs1;
@@ -6223,18 +5181,14 @@ Template.new_quote.onRendered(function() {
                         useData[i].Description || '-',
                         taxRate || 0,
                     ];
-
                     let taxcoderecordObj = {
                         codename: useData[i].CodeName || ' ',
                         coderate: taxRate || ' ',
                     };
-
                     taxCodesList.push(taxcoderecordObj);
-
                     splashArrayTaxRateList.push(dataList);
                 }
                 tempObj.taxraterecords.set(taxCodesList);
-
 
                 if (splashArrayTaxRateList) {
 
@@ -6262,12 +5216,7 @@ Template.new_quote.onRendered(function() {
                             }
                         ],
                         colReorder: true,
-
-
-
                         bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -6280,20 +5229,12 @@ Template.new_quote.onRendered(function() {
                           $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                           $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
                         }
-
                     });
-
-
-
-
-
-
                 }
             }
         }).catch(function(err) {
 
             salesService.getTaxCodesDetailVS1().then(function(data) {
-
                 let records = [];
                 let inventoryData = [];
                 taxCodes = data.ttaxcodevs1;
@@ -6318,7 +5259,6 @@ Template.new_quote.onRendered(function() {
                 }
                 tempObj.taxraterecords.set(taxCodesList);
 
-
                 if (splashArrayTaxRateList) {
 
                     $('#tblTaxRate').DataTable({
@@ -6345,12 +5285,7 @@ Template.new_quote.onRendered(function() {
                             }
                         ],
                         colReorder: true,
-
-
-
                         bStateSave: true,
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [
                             [initialDatatableLoad, -1],
@@ -6425,9 +5360,7 @@ Template.new_quote.onRendered(function() {
             });
           });
     };
-
     tempObj.getSubTaxCodes();
-
 
     function initCustomFieldDisplaySettings(data, listType) {
       let templateObject = Template.instance();
@@ -6473,7 +5406,6 @@ Template.new_quote.onRendered(function() {
     }
     initCustomFieldDisplaySettings("", "tblQuoteLine");
 
-
     // tempObj.getAllCustomFieldDisplaySettings = function () {
 
     //   let listType = 'ltSaleslines';   // tempcode until InvoiceLines is added on backend
@@ -6508,18 +5440,13 @@ Template.new_quote.onRendered(function() {
 });
 
 Template.new_quote.helpers({
-
     getTemplateList: function () {
         return template_list;
     },
-
     getTemplateNumber: function () {
         let template_numbers = ["1", "2", "3"];
         return template_numbers;
-   },
-
-
-
+    },
     isBatchSerialNoTracking: () => {
         return Session.get('CloudShowSerial') || false;
     },
@@ -6544,7 +5471,6 @@ Template.new_quote.helpers({
     vs1companyBankRoutingNo: () => {
         return localStorage.getItem('vs1companyBankRoutingNo') || '';
     },
-
     // custom field displaysettings
     displayfields: () => {
       return Template.instance().displayfields.get();
@@ -6655,24 +5581,18 @@ Template.new_quote.helpers({
          let phone = "Phone: "+ Session.get('vs1companyPhone');
          return phone;
     },
-
-
-
     companyabn: () => { //Update Company ABN
-      let countryABNValue = "ABN: " + Session.get('vs1companyABN');
-      if(LoggedCountry== "South Africa"){
-        countryABNValue = "Vat No: " + Session.get('vs1companyABN');;
-      }
-
+        let countryABNValue = "ABN: " + Session.get('vs1companyABN');
+        if(LoggedCountry== "South Africa"){
+            countryABNValue = "Vat No: " + Session.get('vs1companyABN');;
+        }
         return countryABNValue;
     },
-
     companyReg: () => { //Add Company Reg
-      let countryRegValue = '';
-      if(LoggedCountry== "South Africa"){
-        countryRegValue = "Reg No: " + Session.get('vs1companyReg');
-      }
-
+        let countryRegValue = '';
+        if(LoggedCountry== "South Africa"){
+            countryRegValue = "Reg No: " + Session.get('vs1companyReg');
+        }
         return countryRegValue;
     },
     organizationname: () => {
@@ -6682,40 +5602,37 @@ Template.new_quote.helpers({
         return Session.get('vs1companyURL');
     },
     isMobileDevices: () => {
-        var isMobile = false;
-
+        let isMobile = false;
         if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) ||
             /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))) {
             isMobile = true;
         }
-
         return isMobile;
     },
     loggedInCountryVAT: () => {
-      let countryVatLabel ="GST";
-      if(Session.get('ERPLoggedCountry') == "South Africa"){
-        countryVatLabel = "VAT";
-      }
+        let countryVatLabel ="GST";
+        if(Session.get('ERPLoggedCountry') == "South Africa"){
+            countryVatLabel = "VAT";
+        }
         return countryVatLabel;
     }
 });
 
 Template.new_quote.events({
-
-  'click .btnRefreshCustomField': function (event) {
-     LoadingOverlay.show();
-      let templateObject = Template.instance();
-      sideBarService.getAllCustomFields().then(function (data) {
-        addVS1Data('TCustomFieldList', JSON.stringify(data)).then(function (datareturn) {
-            Meteor._reload.reload();
-        }).catch(function (err) {
-            Meteor._reload.reload();
-        });
+    'click .btnRefreshCustomField': function (event) {
+        LoadingOverlay.show();
+        let templateObject = Template.instance();
+        sideBarService.getAllCustomFields().then(function (data) {
+            addVS1Data('TCustomFieldList', JSON.stringify(data)).then(function (datareturn) {
+                Meteor._reload.reload();
+            }).catch(function (err) {
+                Meteor._reload.reload();
+            });
             templateObject.getSalesCustomFieldsList();
-          LoadingOverlay.hide();
-      }).catch(function (err) {
-          LoadingOverlay.hide();
-      });
+            LoadingOverlay.hide();
+        }).catch(function (err) {
+            LoadingOverlay.hide();
+        });
     },
     'click #edtSaleCustField1': function(event) {
         clickedInput = "one";
@@ -6729,16 +5646,10 @@ Template.new_quote.events({
         clickedInput = "three";
         $('#clickedControl').val(clickedInput);
     },
-
-    'click  #open_print_confirm':function(event)
-    {
-        if($('#choosetemplate').is(':checked'))
-        {
+    'click  #open_print_confirm': function(event) {
+        if($('#choosetemplate').is(':checked')) {
             $('#templateselection').modal('show');
-        }
-        else
-        {
-
+        } else {
            LoadingOverlay.show();
             $('#html-2-pdfwrapper').css('display', 'block');
             if ($('.edtCustomerEmail').val() != "") {
@@ -6748,18 +5659,12 @@ Template.new_quote.events({
                 var ponumber = $('#ponumber').val() || '.';
                 $('.po').text(ponumber);
                 var rowCount = $('.tblInvoiceLine tbody tr').length;
-
                 exportSalesToPdf1();
-
             }
-
             $('#confirmprint').modal('hide');
         }
-
     },
-
-    'click #choosetemplate':function(event)
-    {
+    'click #choosetemplate':function(event) {
         if($('#choosetemplate').is(':checked'))
         {
             $('#templateselection').modal('show');
@@ -6770,7 +5675,6 @@ Template.new_quote.events({
         }
 
     },
-
     // 'click .btnAddNewCustField': function(event) {
     //   let templateObject = Template.instance();
     //     let isDropDown = true;
@@ -6805,10 +5709,8 @@ Template.new_quote.events({
     //                                       '<button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions" autocomplete="off"><i class="fa fa-remove"></i></button>'+
     //                                   '</div>'+
     //                               '</div>');
-
     //       }
     //     }
-
     // },
     'click #edtCustomerName': function(event) {
         $('#edtCustomerName').select();
@@ -6940,7 +5842,7 @@ Template.new_quote.events({
         }
     },
     'blur .lineProductDesc': function(event) {
-        var targetID = $(event.target).closest('tr').attr('id');
+        const targetID = $(event.target).closest('tr').attr('id');
         $('#' + targetID + " #lineProductDesc").text($('#' + targetID + " .lineProductDesc").text());
     },
     'change .colUnitPriceExChange': function(event) {
@@ -7021,15 +5923,11 @@ Template.new_quote.events({
                 subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
                 document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
             }
-
             if (!isNaN(taxTotal)) {
                 taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
                 taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
                 document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
             }
-
-
-
             if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
                 let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
                 let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
@@ -7219,46 +6117,37 @@ Template.new_quote.events({
     'click .th.colAmountEx': function(event) {
         $('.colAmountEx').addClass('hiddenColumn');
         $('.colAmountEx').removeClass('showColumn');
-
         $('.colAmountInc').addClass('showColumn');
         $('.colAmountInc').removeClass('hiddenColumn');
-
         $('.chkAmountEx').prop("checked", false);
         $('.chkAmountInc').prop("checked", true);
     },
     'click .th.colAmountInc': function(event) {
         $('.colAmountInc').addClass('hiddenColumn');
         $('.colAmountInc').removeClass('showColumn');
-
         $('.colAmountEx').addClass('showColumn');
         $('.colAmountEx').removeClass('hiddenColumn');
-
         $('.chkAmountEx').prop("checked", true);
         $('.chkAmountInc').prop("checked", false);
     },
     'click .th.colUnitPriceEx': function(event) {
         $('.colUnitPriceEx').addClass('hiddenColumn');
         $('.colUnitPriceEx').removeClass('showColumn');
-
         $('.colUnitPriceInc').addClass('showColumn');
         $('.colUnitPriceInc').removeClass('hiddenColumn');
-
         $('.chkUnitPriceEx').prop("checked", false);
         $('.chkUnitPriceInc').prop("checked", true);
     },
     'click .th.colUnitPriceInc': function(event) {
         $('.colUnitPriceInc').addClass('hiddenColumn');
         $('.colUnitPriceInc').removeClass('showColumn');
-
         $('.colUnitPriceEx').addClass('showColumn');
         $('.colUnitPriceEx').removeClass('hiddenColumn');
-
         $('.chkUnitPriceEx').prop("checked", true);
         $('.chkUnitPriceInc').prop("checked", false);
-
     },
     'click #btnCustomFileds': function(event) {
-        var x = document.getElementById("divCustomFields");
+        const x = document.getElementById("divCustomFields");
         if (x.style.display === "none") {
             x.style.display = "block";
         } else {
@@ -7266,17 +6155,18 @@ Template.new_quote.events({
         }
     },
     'click .lineProductName, keydown .lineProductName': function(event) {
-        var $earch = $(event.currentTarget);
-        var offset = $earch.offset();
+        let targetID;
+        const $earch = $(event.currentTarget);
+        const offset = $earch.offset();
         let customername = $('#edtCustomerName').val();
         if (customername === '') {
             swal('Customer has not been selected!', '', 'warning');
             event.preventDefault();
         } else {
-            var productDataName = $(event.target).val() || '';
+            const productDataName = $(event.target).val() || '';
             if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
                 $('#productListModal').modal('toggle');
-                var targetID = $(event.target).closest('tr').attr('id');
+                targetID = $(event.target).closest('tr').attr('id');
                 $('#selectLineID').val(targetID);
                 setTimeout(function() {
                     $('#tblInventory_filter .form-control-sm').focus();
@@ -7483,14 +6373,14 @@ Template.new_quote.events({
                     });
                 } else {
                     $('#productListModal').modal('toggle');
-                    var targetID = $(event.target).closest('tr').attr('id');
+                    targetID = $(event.target).closest('tr').attr('id');
                     $('#selectLineID').val(targetID);
                     setTimeout(function() {
                         $('#tblInventory_filter .form-control-sm').focus();
                         $('#tblInventory_filter .form-control-sm').val('');
                         $('#tblInventory_filter .form-control-sm').trigger("input");
 
-                        var datatable = $('#tblInventory').DataTable();
+                        const datatable = $('#tblInventory').DataTable();
                         datatable.draw();
                         $('#tblInventory_filter .form-control-sm').trigger("input");
 
@@ -7501,7 +6391,7 @@ Template.new_quote.events({
         }
     },
     'click #productListModal #refreshpagelist': function() {
-       LoadingOverlay.show();
+        LoadingOverlay.show();
         localStorage.setItem('VS1SalesProductList', '');
         let templateObject = Template.instance();
         Meteor._reload.reload();
@@ -7511,7 +6401,7 @@ Template.new_quote.events({
     'click .lineTaxRate': function(event) {
         $('#tblQuoteLine tbody tr .lineTaxRate').attr("data-toggle", "modal");
         $('#tblQuoteLine tbody tr .lineTaxRate').attr("data-target", "#taxRateListModal");
-        var targetID = $(event.target).closest('tr').attr('id');
+        const targetID = $(event.target).closest('tr').attr('id');
         $('#selectLineID').val(targetID);
     },
     'click .lineTaxAmount': function (event) {
@@ -7752,190 +6642,136 @@ Template.new_quote.events({
 
     },
     'click .printConfirm':async function (event) {
-
-        var printTemplate = [];
-       LoadingOverlay.show();
-
-        var quotes = $('input[name="Quotes"]:checked').val();
+        const printTemplate = [];
+        LoadingOverlay.show();
+        const quotes = $('input[name="Quotes"]:checked').val();
         let emid = Session.get('mySessionEmployeeLoggedID');
-
-         sideBarService.getTemplateNameandEmployeId("Quotes",emid,1).then(function (data) {
-            templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
-            objDetails =  {
-            type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
-                                SettingName:"Quotes",
-                                GlobalRef:"Quotes",
-                                Description:$('input[name="Quotes_1"]').val(),
-                                Template:"1",
-                                Active:quotes == 1 ? true:false,
-                    }
+        sideBarService.getTemplateNameandEmployeId("Quotes",emid,1).then(function (data) {
+            let templateid = data.ttemplatesettings;
+            const id = templateid[0].fields.ID;
+            let objDetails = {
+                type: "TTemplateSettings",
+                fields: {
+                    ID: parseInt(id),
+                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    SettingName: "Quotes",
+                    GlobalRef: "Quotes",
+                    Description: $('input[name="Quotes_1"]').val(),
+                    Template: "1",
+                    Active: quotes == 1 ? true : false,
+                }
             }
-
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
+                });
+            }).catch(function (err) {
+            });
 
-              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-               });
-
+        }).catch(function (err) {
+            let objDetails = {
+                type: "TTemplateSettings",
+                fields: {
+                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    SettingName: "Quotes",
+                    Description: $('input[name="Quotes_1"]').val(),
+                    Template: "1",
+                    Active: quotes == 1 ? true : false,
+                }
+            }
+            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
+                });
             }).catch(function (err) {
 
+            });
+        });
 
+        sideBarService.getTemplateNameandEmployeId("Quotes",emid,2).then(function (data) {
+            let templateid = data.ttemplatesettings;
+            const id = templateid[0].fields.ID;
+            let objDetails = {
+                type: "TTemplateSettings",
+                fields: {
+                    ID: parseInt(id),
+                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    SettingName: "Quotes",
+                    GlobalRef: "Quotes",
+                    Description: $('input[name="Quotes_2"]').val(),
+                    Template: "2",
+                    Active: quotes == 2 ? true : false,
+                }
+            }
+            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
+                });
+            }).catch(function (err) {
+
+            });
+        }).catch(function (err) {
+            let objDetails = {
+                type: "TTemplateSettings",
+                fields: {
+                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    SettingName: "Quotes",
+                    Description: $('input[name="Quotes_2"]').val(),
+                    Template: "2",
+                    Active: quotes == 2 ? true : false,
+                }
+            }
+            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
+                });
+            }).catch(function (err) {
+
+            });
+        });
+        sideBarService.getTemplateNameandEmployeId("Quotes",emid,3).then(function (data) {
+            let templateid = data.ttemplatesettings;
+            const id = templateid[0].fields.ID;
+            let objDetails = {
+                type: "TTemplateSettings",
+                fields: {
+                    ID: parseInt(id),
+                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    SettingName: "Quotes",
+                    GlobalRef: "Quotes",
+                    Description: $('input[name="Quotes_3"]').val(),
+                    Template: "3",
+                    Active: quotes == 3 ? true : false,
+                }
+            }
+            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
+                });
+            }).catch(function (err) {
 
             });
 
-          }).catch(function (err) {
-
-                    objDetails =  {
-                    type:"TTemplateSettings",
-                    fields:{
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
-                                SettingName:"Quotes",
-                                Description:$('input[name="Quotes_1"]').val(),
-                                Template:"1",
-                                Active:quotes == 1 ? true:false,
-                            }
-                    }
-
-                      sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
-                        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                        });
-
-
-                      }).catch(function (err) {
-
-
-
-                      });
-
-          });
-
-
-          sideBarService.getTemplateNameandEmployeId("Quotes",emid,2).then(function (data) {
-            templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
-            objDetails =  {
-            type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
-                                SettingName:"Quotes",
-                                GlobalRef:"Quotes",
-                                Description:$('input[name="Quotes_2"]').val(),
-                                Template:"2",
-                                Active:quotes == 2 ? true:false,
-                    }
+        }).catch(function (err) {
+            let objDetails = {
+                type: "TTemplateSettings",
+                fields: {
+                    EmployeeID: Session.get('mySessionEmployeeLoggedID'),
+                    SettingName: "Quotes",
+                    Description: $('input[name="Quotes_3"]').val(),
+                    Template: "3",
+                    Active: quotes == 3 ? true : false,
+                }
             }
 
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
-              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-              });
-
-
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
+                });
             }).catch(function (err) {
 
-
-
             });
-
-          }).catch(function (err) {
-
-                    objDetails =  {
-                    type:"TTemplateSettings",
-                    fields:{
-                                  EmployeeID:Session.get('mySessionEmployeeLoggedID'),
-                                  SettingName:"Quotes",
-                                  Description:$('input[name="Quotes_2"]').val(),
-                                  Template:"2",
-                                  Active:quotes == 2 ? true:false,
-                            }
-                    }
-
-                    sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
-                      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                      });
-
-
-                    }).catch(function (err) {
-
-
-
-                    });
-
-          });
-
-
-          sideBarService.getTemplateNameandEmployeId("Quotes",emid,3).then(function (data) {
-            templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
-            objDetails =  {
-            type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
-                                SettingName:"Quotes",
-                                GlobalRef:"Quotes",
-                                Description:$('input[name="Quotes_3"]').val(),
-                                Template:"3",
-                                Active:quotes == 3 ? true:false,
-                    }
-            }
-
-            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
-              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-              });
-
-
-            }).catch(function (err) {
-
-
-
-            });
-
-          }).catch(function (err) {
-
-                    objDetails =  {
-                    type:"TTemplateSettings",
-                    fields:{
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
-                                SettingName:"Quotes",
-                                Description:$('input[name="Quotes_3"]').val(),
-                                Template:"3",
-                                Active:quotes == 3 ? true:false,
-                            }
-                    }
-
-                    sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
-                      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                      });
-
-
-                    }).catch(function (err) {
-
-
-
-                    });
-
-          });
+        });
 
 
         $('#html-2-pdfwrapper-new').css('display', 'block');
@@ -7950,9 +6786,6 @@ Template.new_quote.events({
             if($('#print_quote').is(':checked') || $('#print_quote_second').is(':checked')) {
                 printTemplate.push('Quotes');
             }
-
-
-
             if(printTemplate.length > 0) {
 
                   for(var i = 0; i < printTemplate.length; i++)
@@ -8163,7 +6996,7 @@ Template.new_quote.events({
         }
     },
     'click .btnDeleteQuote': function(event) {
-       LoadingOverlay.show();
+        LoadingOverlay.show();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
         var url = FlowRouter.current().path;
@@ -8185,7 +7018,7 @@ Template.new_quote.events({
                 FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
               }else{
                 FlowRouter.go('/quoteslist?success=true');
-              };
+              }
             }).catch(function(err) {
                 swal({
                     title: 'Oooops...',
@@ -8206,7 +7039,7 @@ Template.new_quote.events({
             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
           }else{
             FlowRouter.go('/quoteslist?success=true');
-          };
+          }
         }
         $('#deleteLineModal').modal('toggle');
     },
@@ -8334,11 +7167,8 @@ Template.new_quote.events({
 
                 }
             });
-
-
         } else {
             this.click;
-
             $('#' + selectLineID + " .lineProductName").val('');
             $('#' + selectLineID + " .lineProductDesc").text('');
             $('#' + selectLineID + " .lineOrdered").val('');
@@ -8350,15 +7180,11 @@ Template.new_quote.events({
             $('#' + selectLineID + " .lineTaxRate").text('');
             $('#' + selectLineID + " .lineTaxCode").val('');
             $('#' + selectLineID + " .lineAmt").text('');
-
             document.getElementById("subtotal_tax").innerHTML = Currency + '0.00';
             document.getElementById("subtotal_total").innerHTML = Currency + '0.00';
             document.getElementById("grandTotal").innerHTML = Currency + '0.00';
             document.getElementById("balanceDue").innerHTML = Currency + '0.00';
             document.getElementById("totalBalanceDue").innerHTML = Currency + '0.00';
-
-
-
         }
 
         $('#deleteLineModal').modal('toggle');
@@ -8366,9 +7192,9 @@ Template.new_quote.events({
     // 'click .btnSaveSettings': function(event) {
     //     $('#myModal4').modal('toggle');
     // },
-    'click .btnSave': (event, templateObject) => {
+    'click .btnSave': (e, templateObject) => {
+        let contactService = new ContactService();
         saveCurrencyHistory();
-
         //let templateObject = Template.instance();
         let quoteData = templateObject.quoterecord.get();
         let stripe_id = templateObject.accountID.get() || '';
@@ -8388,19 +7214,16 @@ Template.new_quote.events({
             swal('Customer has not been selected!', '', 'warning');
             e.preventDefault();
         } else {
-
-           LoadingOverlay.show();
-            var splashLineArray = new Array();
+            LoadingOverlay.show();
+            const splashLineArray = [];
             let lineItemsForm = [];
             let lineItemObjForm = {};
-            var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-            var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
-
+            const saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+            const duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
             let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
             let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
-
             $('#tblQuoteLine > tbody > tr').each(function() {
-                var lineID = this.id;
+                const lineID = this.id;
                 let tdproduct = $('#' + lineID + " .lineProductName").val();
                 let tddescription = $('#' + lineID + " .lineProductDesc").text();
                 let tdQty = $('#' + lineID + " .lineQty").val();
@@ -8412,18 +7235,15 @@ Template.new_quote.events({
                 let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumber');
                 let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-lotexpirydate');
 
-                lineItemObj = {
+                let lineItemObj = {
                     description: tddescription || '',
                     quantity: tdQty || 0,
                     unitPrice: tdunitprice.toLocaleString(undefined, {
                         minimumFractionDigits: 2
                     }) || 0
                 }
-
                 lineItems.push(lineItemObj);
-
                 if (tdproduct != "") {
-
                     lineItemObjForm = {
                         type: "TQuoteLine",
                         fields: {
@@ -8437,7 +7257,6 @@ Template.new_quote.events({
                             DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
                         }
                     };
-
                     // Feature/ser-lot number tracking: Save Serial Numbers
                     if (tdSerialNumber) {
                         const serialNumbers = tdSerialNumber.split(',');
@@ -8463,7 +7282,6 @@ Template.new_quote.events({
                         }
                         lineItemObjForm.fields.PQA = pqaObject;
                     }
-
                     // Feature/ser-lot number tracking: Save Lot Number
                     if (tdLotNumber) {
                         let tpqaList = [];
@@ -8488,7 +7306,6 @@ Template.new_quote.events({
                         }
                         lineItemObjForm.fields.PQA = pqaObject;
                     }
-
                     lineItemsForm.push(lineItemObjForm);
                     splashLineArray.push(lineItemObjForm);
                 }
@@ -8503,15 +7320,17 @@ Template.new_quote.events({
             if ($('#formCheck-two').is(':checked')) {
                 getchkcustomField2 = false;
             }
-
             let customer = $('#edtCustomerName').val();
+            const customerID = $('#edtCustomerEmail').attr('customerid');
+            let company = Session.get('vs1companyName');
+            let vs1User = localStorage.getItem('mySession');
             let customerEmail = $('#edtCustomerEmail').val();
+            let currencyname = (CountryAbbr).toLowerCase();
+            let status = $('#sltStatus').val();
+            status = "Quoted";
             let billingAddress = $('#txabillingAddress').val();
-
-
             let poNumber = $('#ponumber').val();
             let reference = $('#edtRef').val();
-
             let departement = $('#sltDept').val();
             let shippingAddress = $('#txaShipingInfo').val();
             let comments = $('#txaComment').val();
@@ -8521,12 +7340,12 @@ Template.new_quote.events({
             let saleCustField1 = $('#edtSaleCustField1').val()||'';
             let saleCustField2 = $('#edtSaleCustField2').val()||'';
             let saleCustField3 = $('#edtSaleCustField3').val()||'';
-            var url = FlowRouter.current().path;
-            var getso_id = url.split('?id=');
-            var currentQuote = getso_id[getso_id.length - 1];
+            const url = FlowRouter.current().path;
+            const getso_id = url.split('?id=');
+            let currentQuote = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
-            var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            var objDetails = '';
+            const currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let objDetails = '';
             if (getso_id[1]) {
                 currentQuote = parseInt(currentQuote);
                 objDetails = {
@@ -8551,7 +7370,7 @@ Template.new_quote.events({
                         SaleCustField3: saleCustField3,
                         PickMemo: pickingInfrmation,
                         Attachments: uploadedItems,
-                        SalesStatus: $('#sltStatus').val()
+                        SalesStatus: status
                     }
                 };
             } else {
@@ -8576,112 +7395,124 @@ Template.new_quote.events({
                         SaleCustField3: saleCustField3,
                         PickMemo: pickingInfrmation,
                         Attachments: uploadedItems,
-                        SalesStatus: $('#sltStatus').val()
+                        SalesStatus: status
                     }
                 };
             }
-
             salesService.saveQuoteEx(objDetails).then(function(objDetails) {
-                // add to custom field
                 sideBarService.getAllQuoteList("All").then(function(data) {
-                  addVS1Data('TQuote', JSON.stringify(data));
-                }).catch(function(err) {
-                });
-                // add to custom field
-
-                var erpGet = erpDb();
-                let company = Session.get('vs1companyName');
-                let vs1User = localStorage.getItem('mySession');
-                let customerEmail = $('#edtCustomerEmail').val();
-                let customer = $('#edtCustomerName').val();
-                let currencyname = (CountryAbbr).toLowerCase();
-                let stringQuery = "?";
-                var customerID = $('#edtCustomerEmail').attr('customerid');
-                for (let l = 0; l < lineItems.length; l++) {
-                    stringQuery = stringQuery + "product" + l + "=" + lineItemsForm[l].fields.ProductName + "&price" + l + "=" + lineItemsForm[l].fields.LinePrice + "&qty" + l + "=" + lineItemsForm[l].fields.UOMQtySold + "&";
-                }
-
-                stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Quote&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
-
-
-                $('#html-2-pdfwrapper').css('display', 'block');
-                $('.pdfCustomerName').html($('#edtCustomerName').val());
-                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                var ponumber = $('#ponumber').val() || '.';
-                $('.po').text(ponumber);
-
-                function generatePdfForMail(invoiceId) {
-                    let file = "Quote-" + objDetails.fields.ID + ".pdf"
-                    return new Promise((resolve, reject) => {
-                        $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-                        let templateObject = Template.instance();
-                        let completeTabRecord;
-                        let doc = new jsPDF('p', 'pt', 'a4');
-                        var source = document.getElementById('html-2-pdfwrapper');
-                        var opt = {
-                            margin: 0,
-                            filename: file,
-                            image: {
-                                type: 'jpeg',
-                                quality: 0.98
-                            },
-                            html2canvas: {
-                                scale: 2
-                            },
-                            jsPDF: {
-                                unit: 'in',
-                                format: 'a4',
-                                orientation: 'portrait'
+                    addVS1Data('TQuote', JSON.stringify(data));
+                    if (customerID !== " ") {
+                        let quoted = false;
+                        for (let i = 0; i < data.tquoteex.length; i++) {
+                            if (data.tquoteex[i].fields.CustomerID == customerID) {
+                                quoted = true;
+                                break;
                             }
                         }
-                        resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
-                        // doc.addHTML(source, function () {
-                        //     doc.setFontSize(10);
-                        //     doc.setTextColor(255, 255, 255);
-                        //     doc.textWithLink('Pay Now', 482, 113, { url: 'https://www.depot.vs1cloud.com/stripe/' + stringQuery });
-                        //     resolve(doc.output('blob'));
-                        //     $('#html-2-pdfwrapper').css('display', 'none');
-                        // });
-                    });
-                }
-                async function addAttachment() {
-                    let attachment = [];
-                    let templateObject = Template.instance();
+                        if (quoted) {
+                            let customerData = {
+                                type: "TCustomerEx",
+                                fields: {
+                                    ID: customerID,
+                                    Email: customerEmail,
+                                    Status: "Quoted"
+                                }
+                            }
+                            contactService.saveCustomerEx(customerData).then(function (objDetails) {
+                                let customerSaveID = objDetails.fields.ID;
+                                if (customerSaveID) {
+                                    sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function (dataReload) {
+                                        addVS1Data('TCustomerVS1', JSON.stringify(dataReload));
+                                    }).catch(function (err) {
 
-                    let invoiceId = objDetails.fields.ID;
-                    let encodedPdf = await generatePdfForMail(invoiceId);
-                    let base64data = encodedPdf.split(',')[1];
-                    let pdfObject = {
-                        filename: 'Quote-' + invoiceId + '.pdf',
-                        content: base64data,
-                        encoding: 'base64'
-                    };
-                    attachment.push(pdfObject);
-                    let erpInvoiceId = objDetails.fields.ID;
+                                    });
+                                }
+                            }).catch(function (err) {
 
+                            })
+                        }
+                    }
+                    const erpGet = erpDb();
+                    let stringQuery = "?";
+                    for (let l = 0; l < lineItems.length; l++) {
+                        stringQuery = stringQuery + "product" + l + "=" + lineItemsForm[l].fields.ProductName + "&price" + l + "=" + lineItemsForm[l].fields.LinePrice + "&qty" + l + "=" + lineItemsForm[l].fields.UOMQtySold + "&";
+                    }
+                    stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Quote&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
 
-                    let mailFromName = Session.get('vs1companyName');
-                    let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
-                    let customerEmailName = $('#edtCustomerName').val();
-                    let checkEmailData = $('#edtCustomerEmail').val();
+                    $('#html-2-pdfwrapper').css('display', 'block');
+                    $('.pdfCustomerName').html($('#edtCustomerName').val());
+                    $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+                    const ponumber = $('#ponumber').val() || '.';
+                    $('.po').text(ponumber);
 
-                    let grandtotal = $('#grandTotal').html();
-                    let amountDueEmail = $('#totalBalanceDue').html();
-                    let emailDueDate = $("#dtDueDate").val();
+                    function generatePdfForMail(invoiceId) {
+                        let file = "Quote-" + objDetails.fields.ID + ".pdf"
+                        return new Promise((resolve, reject) => {
+                            $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+                            let templateObject = Template.instance();
+                            let completeTabRecord;
+                            let doc = new jsPDF('p', 'pt', 'a4');
+                            const source = document.getElementById('html-2-pdfwrapper');
+                            const opt = {
+                                margin: 0,
+                                filename: file,
+                                image: {
+                                    type: 'jpeg',
+                                    quality: 0.98
+                                },
+                                html2canvas: {
+                                    scale: 2
+                                },
+                                jsPDF: {
+                                    unit: 'in',
+                                    format: 'a4',
+                                    orientation: 'portrait'
+                                }
+                            };
+                            resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
+                            // doc.addHTML(source, function () {
+                            //     doc.setFontSize(10);
+                            //     doc.setTextColor(255, 255, 255);
+                            //     doc.textWithLink('Pay Now', 482, 113, { url: 'https://www.depot.vs1cloud.com/stripe/' + stringQuery });
+                            //     resolve(doc.output('blob'));
+                            //     $('#html-2-pdfwrapper').css('display', 'none');
+                            // });
+                        });
+                    }
+                    async function addAttachment() {
+                        let attachment = [];
+                        let templateObject = Template.instance();
 
-                    let customerBillingAddress = $('#txabillingAddress').val();
-                    let customerTerms = $('#sltTerms').val();
+                        let invoiceId = objDetails.fields.ID;
+                        let encodedPdf = await generatePdfForMail(invoiceId);
+                        let base64data = encodedPdf.split(',')[1];
+                        let pdfObject = {
+                            filename: 'Quote-' + invoiceId + '.pdf',
+                            content: base64data,
+                            encoding: 'base64'
+                        };
+                        attachment.push(pdfObject);
+                        let erpInvoiceId = objDetails.fields.ID;
+                        let mailFromName = Session.get('vs1companyName');
+                        let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
+                        let customerEmailName = $('#edtCustomerName').val();
+                        let checkEmailData = $('#edtCustomerEmail').val();
+                        let grandtotal = $('#grandTotal').html();
+                        let amountDueEmail = $('#totalBalanceDue').html();
+                        let emailDueDate = $("#dtDueDate").val();
+                        let customerBillingAddress = $('#txabillingAddress').val();
+                        let customerTerms = $('#sltTerms').val();
+                        let customerSubtotal = $('#subtotal_total').html();
+                        let customerTax = $('#subtotal_tax').html();
+                        let customerNett = $('#subtotal_nett').html();
+                        let customerTotal = $('#grandTotal').html();
+                        let mailSubject = 'Quote ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
+                        let mailBody = "Hi " + customerEmailName + ",\n\n Here's invoice " + erpInvoiceId + " for  " + grandtotal + "." +
+                            "\n\nThe amount outstanding of " + amountDueEmail + " is due on " + emailDueDate + "." +
+                            "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
 
-                    let customerSubtotal = $('#subtotal_total').html();
-                    let customerTax = $('#subtotal_tax').html();
-                    let customerNett = $('#subtotal_nett').html();
-                    let customerTotal = $('#grandTotal').html();
-                    let mailSubject = 'Quote ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
-                    let mailBody = "Hi " + customerEmailName + ",\n\n Here's invoice " + erpInvoiceId + " for  " + grandtotal + "." +
-                        "\n\nThe amount outstanding of " + amountDueEmail + " is due on " + emailDueDate + "." +
-                        "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
-
-                        var htmlmailBody = '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
+                        const htmlmailBody = '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
                             '        <tr>' +
                             '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
                             '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
@@ -8704,7 +7535,7 @@ Template.new_quote.events({
                             '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
                             '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
                             '                                            <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' + emailDueDate + '</p>' +
-                            '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal +'</p>' +
+                            '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
                             '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
                             '                                                <tbody>' +
                             '                                                    <tr>' +
@@ -8740,7 +7571,7 @@ Template.new_quote.events({
                             '                                                </div>' +
                             '                                                <div style="width: 50%; float: right;">' +
                             '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
-                            '                                                    <p style="margin-bottom: 16px;font-size: 16px;">' + customerBillingAddress +'</p>' +
+                            '                                                    <p style="margin-bottom: 16px;font-size: 16px;">' + customerBillingAddress + '</p>' +
                             '                                                </div>' +
                             '                                            </div>' +
                             '                                        </td>' +
@@ -8831,361 +7662,357 @@ Template.new_quote.events({
                             '        </tr>' +
                             '    </table>';
 
-                    // var htmlmailBody = '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
-                    //     '    <tr>' +
-                    //     '        <td align="center" bgcolor="#54c7e2" style="padding: 40px 0 30px 0;">' +
-                    //     '            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" alt="VS1 Cloud" width="250px" style="display: block;" />' +
-                    //     '        </td>' +
-                    //     '    </tr>' +
-                    //     '    <tr>' +
-                    //     '        <td style="padding: 40px 30px 40px 30px;">' +
-                    //     '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
-                    //     '                <tr>' +
-                    //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 20px 0;">' +
-                    //     '                        Hi <span>' + customerEmailName + '</span>.' +
-                    //     '                    </td>' +
-                    //     '                </tr>' +
-                    //     '                <tr>' +
-                    //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-                    //     '                        Please find attached Quote <span>' + erpInvoiceId + '</span>' +
-                    //     '                    </td>' +
-                    //     '                </tr>' +
-                    //     '                <tr>' +
-                    //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-                    //     '                        Simply click on <a style="border: none; color: white; padding: 6px 12px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #5cb85c; border-color: #4cae4c; border-radius: 10px;" href="' + stripeGlobalURL + '' + stringQuery + '">Make Payment</a> to pay now.' +
-                    //     '                    </td>' +
-                    //     '                </tr>' +
-                    //     '                 <tr>' +
-                    //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-                    //     '                        The invoice is due by the ' + emailDueDate +
-                    //     '                    </td>' +
-                    //     '                </tr>' +
-                    //     '                <tr>' +
-                    //     '                     <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-                    //     '                        Thank you again for business' +
-                    //     '                    </td>' +
-                    //     '                <tr>' +
-                    //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
-                    //     '                        Kind regards,' +
-                    //     '                        <br>' +
-                    //     '                        ' + mailFromName + '' +
-                    //     '                    </td>' +
-                    //     '                </tr>' +
-                    //     '            </table>' +
-                    //     '        </td>' +
-                    //     '    </tr>' +
-                    //     '    <tr>' +
-                    //     '        <td bgcolor="#00a3d3" style="padding: 30px 30px 30px 30px;">' +
-                    //     '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
-                    //     '                <tr>' +
-                    //     '                    <td width="50%" style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">' +
-                    //     '                        If you have any question, please do not hesitate to contact us.' +
-                    //     '                    </td>' +
-                    //     '                    <td align="right">' +
-                    //     '                        <a style="border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;" href="mailto:' + mailFrom + '">Contact Us</a>' +
-                    //     '                    </td>' +
-                    //     '                </tr>' +
-                    //     '            </table>' +
-                    //     '        </td>' +
-                    //     '    </tr>' +
-                    //     '</table>';
+                        // var htmlmailBody = '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
+                        //     '    <tr>' +
+                        //     '        <td align="center" bgcolor="#54c7e2" style="padding: 40px 0 30px 0;">' +
+                        //     '            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" alt="VS1 Cloud" width="250px" style="display: block;" />' +
+                        //     '        </td>' +
+                        //     '    </tr>' +
+                        //     '    <tr>' +
+                        //     '        <td style="padding: 40px 30px 40px 30px;">' +
+                        //     '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+                        //     '                <tr>' +
+                        //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 20px 0;">' +
+                        //     '                        Hi <span>' + customerEmailName + '</span>.' +
+                        //     '                    </td>' +
+                        //     '                </tr>' +
+                        //     '                <tr>' +
+                        //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+                        //     '                        Please find attached Quote <span>' + erpInvoiceId + '</span>' +
+                        //     '                    </td>' +
+                        //     '                </tr>' +
+                        //     '                <tr>' +
+                        //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+                        //     '                        Simply click on <a style="border: none; color: white; padding: 6px 12px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #5cb85c; border-color: #4cae4c; border-radius: 10px;" href="' + stripeGlobalURL + '' + stringQuery + '">Make Payment</a> to pay now.' +
+                        //     '                    </td>' +
+                        //     '                </tr>' +
+                        //     '                 <tr>' +
+                        //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+                        //     '                        The invoice is due by the ' + emailDueDate +
+                        //     '                    </td>' +
+                        //     '                </tr>' +
+                        //     '                <tr>' +
+                        //     '                     <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+                        //     '                        Thank you again for business' +
+                        //     '                    </td>' +
+                        //     '                <tr>' +
+                        //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
+                        //     '                        Kind regards,' +
+                        //     '                        <br>' +
+                        //     '                        ' + mailFromName + '' +
+                        //     '                    </td>' +
+                        //     '                </tr>' +
+                        //     '            </table>' +
+                        //     '        </td>' +
+                        //     '    </tr>' +
+                        //     '    <tr>' +
+                        //     '        <td bgcolor="#00a3d3" style="padding: 30px 30px 30px 30px;">' +
+                        //     '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+                        //     '                <tr>' +
+                        //     '                    <td width="50%" style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">' +
+                        //     '                        If you have any question, please do not hesitate to contact us.' +
+                        //     '                    </td>' +
+                        //     '                    <td align="right">' +
+                        //     '                        <a style="border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;" href="mailto:' + mailFrom + '">Contact Us</a>' +
+                        //     '                    </td>' +
+                        //     '                </tr>' +
+                        //     '            </table>' +
+                        //     '        </td>' +
+                        //     '    </tr>' +
+                        //     '</table>';
 
 
-                    if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
-                        Meteor.call('sendEmail', {
-                            from: "" + mailFromName + " <" + mailFrom + ">",
-                            to: checkEmailData,
-                            subject: mailSubject,
-                            text: '',
-                            html: htmlmailBody,
-                            attachments: attachment
-                        }, function(error, result) {
-                            if (error && error.error === "error") {
+                        if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
+                            Meteor.call('sendEmail', {
+                                from: "" + mailFromName + " <" + mailFrom + ">",
+                                to: checkEmailData,
+                                subject: mailSubject,
+                                text: '',
+                                html: htmlmailBody,
+                                attachments: attachment
+                            }, function(error, result) {
+                                if (error && error.error === "error") {
+                                    FlowRouter.go('/quoteslist?success=true');
+                                } else {
+
+                                }
+                            });
+
+                            Meteor.call('sendEmail', {
+                                from: "" + mailFromName + " <" + mailFrom + ">",
+                                to: mailFrom,
+                                subject: mailSubject,
+                                text: '',
+                                html: htmlmailBody,
+                                attachments: attachment
+                            }, function(error, result) {
+                                if (error && error.error === "error") {
+                                    FlowRouter.go('/quoteslist?success=true');
+                                } else {
+                                    $('#html-2-pdfwrapper').css('display', 'none');
+                                    swal({
+                                        title: 'SUCCESS',
+                                        text: "Email Sent To Customer: " + checkEmailData + " and User: " + mailFrom + "",
+                                        type: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            if(FlowRouter.current().queryParams.trans){
+                                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                            }else{
+                                                FlowRouter.go('/quoteslist?success=true');
+                                            }
+                                        } else if (result.dismiss === 'cancel') {
+
+                                        }
+                                    });
+                                    LoadingOverlay.hide();
+                                }
+                            });
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_');
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("71")) {
+                                            reportData.FormID = 71;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 71)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                            });
+
+                        } else if (($('.chkEmailCopy').is(':checked'))) {
+                            Meteor.call('sendEmail', {
+                                from: "" + mailFromName + " <" + mailFrom + ">",
+                                to: checkEmailData,
+                                subject: mailSubject,
+                                text: '',
+                                html: htmlmailBody,
+                                attachments: attachment
+                            }, function(error, result) {
+                                if (error && error.error === "error") {
+
+                                } else {
+                                    $('#html-2-pdfwrapper').css('display', 'none');
+                                    swal({
+                                        title: 'SUCCESS',
+                                        text: "Email Sent To Customer: " + checkEmailData + " ",
+                                        type: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            if(FlowRouter.current().queryParams.trans){
+                                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                            }else{
+                                                FlowRouter.go('/quoteslist?success=true');
+                                            }
+                                        } else if (result.dismiss === 'cancel') {
+
+                                        }
+                                    });
+                                    LoadingOverlay.hide();
+                                }
+                            });
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_')
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("71")) {
+                                            reportData.FormID = 71;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 71)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                            });
+                        } else if (($('.chkEmailRep').is(':checked'))) {
+                            Meteor.call('sendEmail', {
+                                from: "" + mailFromName + " <" + mailFrom + ">",
+                                to: mailFrom,
+                                subject: mailSubject,
+                                text: '',
+                                html: htmlmailBody,
+                                attachments: attachment
+                            }, function(error, result) {
+
+                                if (error && error.error === "error") {
+                                    FlowRouter.go('/quoteslist?success=true');
+                                } else {
+                                    $('#html-2-pdfwrapper').css('display', 'none');
+                                    swal({
+                                        title: 'SUCCESS',
+                                        text: "Email Sent To User: " + mailFrom + " ",
+                                        type: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            if(FlowRouter.current().queryParams.trans){
+                                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                            }else{
+                                                FlowRouter.go('/quoteslist?success=true');
+                                            }
+                                        } else if (result.dismiss === 'cancel') {
+
+                                        }
+                                    });
+                                    LoadingOverlay.hide();
+                                }
+                            });
+
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_');
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("71")) {
+                                            reportData.FormID = 71;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 71)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                            });
+                        } else {
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_');
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("71")) {
+                                            reportData.FormID = 71;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 71)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                            });
+                            if(FlowRouter.current().queryParams.trans){
+                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                            }else{
                                 FlowRouter.go('/quoteslist?success=true');
-
-                            } else {
-
                             }
-                        });
-
-                        Meteor.call('sendEmail', {
-                            from: "" + mailFromName + " <" + mailFrom + ">",
-                            to: mailFrom,
-                            subject: mailSubject,
-                            text: '',
-                            html: htmlmailBody,
-                            attachments: attachment
-                        }, function(error, result) {
-                            if (error && error.error === "error") {
-                                FlowRouter.go('/quoteslist?success=true');
-                            } else {
-                                $('#html-2-pdfwrapper').css('display', 'none');
-                                swal({
-                                    title: 'SUCCESS',
-                                    text: "Email Sent To Customer: " + checkEmailData + " and User: " + mailFrom + "",
-                                    type: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'OK'
-                                }).then((result) => {
-                                    if (result.value) {
-                                      if(FlowRouter.current().queryParams.trans){
-                                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                                      }else{
-                                        FlowRouter.go('/quoteslist?success=true');
-                                      };
-                                    } else if (result.dismiss === 'cancel') {
-
-                                    }
-                                });
-
-                                LoadingOverlay.hide();
-                            }
-                        });
-
-                        let values = [];
-                        let basedOnTypeStorages = Object.keys(localStorage);
-                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                            let employeeId = storage.split('_')[2];
-                            return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-                        });
-                        let i = basedOnTypeStorages.length;
-                        if (i > 0) {
-                            while (i--) {
-                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
-                            }
-                        }
-                        values.forEach(value => {
-                            let reportData = JSON.parse(value);
-                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                            reportData.attachments = attachment
-                            if (reportData.BasedOnType.includes("S")) {
-                                if (reportData.FormID == 1) {
-                                    let formIds = reportData.FormIDs.split(',');
-                                    if (formIds.includes("71")) {
-                                        reportData.FormID = 71;
-                                        Meteor.call('sendNormalEmail', reportData);
-                                    }
-                                } else {
-                                    if (reportData.FormID == 71)
-                                        Meteor.call('sendNormalEmail', reportData);
-                                }
-                            }
-                        });
-
-                    } else if (($('.chkEmailCopy').is(':checked'))) {
-                        Meteor.call('sendEmail', {
-                            from: "" + mailFromName + " <" + mailFrom + ">",
-                            to: checkEmailData,
-                            subject: mailSubject,
-                            text: '',
-                            html: htmlmailBody,
-                            attachments: attachment
-                        }, function(error, result) {
-
-                            if (error && error.error === "error") {
-
-
-
-                            } else {
-                                $('#html-2-pdfwrapper').css('display', 'none');
-                                swal({
-                                    title: 'SUCCESS',
-                                    text: "Email Sent To Customer: " + checkEmailData + " ",
-                                    type: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'OK'
-                                }).then((result) => {
-                                    if (result.value) {
-                                      if(FlowRouter.current().queryParams.trans){
-                                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                                      }else{
-                                        FlowRouter.go('/quoteslist?success=true');
-                                      };
-                                    } else if (result.dismiss === 'cancel') {
-
-                                    }
-                                });
-
-                                LoadingOverlay.hide();
-                            }
-                        });
-
-                        let values = [];
-                        let basedOnTypeStorages = Object.keys(localStorage);
-                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                            let employeeId = storage.split('_')[2];
-                            return storage.includes('BasedOnType_')
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-                        });
-                        let i = basedOnTypeStorages.length;
-                        if (i > 0) {
-                            while (i--) {
-                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
-                            }
-                        }
-                        values.forEach(value => {
-                            let reportData = JSON.parse(value);
-                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                            reportData.attachments = attachment
-                            if (reportData.BasedOnType.includes("S")) {
-                                if (reportData.FormID == 1) {
-                                    let formIds = reportData.FormIDs.split(',');
-                                    if (formIds.includes("71")) {
-                                        reportData.FormID = 71;
-                                        Meteor.call('sendNormalEmail', reportData);
-                                    }
-                                } else {
-                                    if (reportData.FormID == 71)
-                                        Meteor.call('sendNormalEmail', reportData);
-                                }
-                            }
-                        });
-
-                    } else if (($('.chkEmailRep').is(':checked'))) {
-                        Meteor.call('sendEmail', {
-                            from: "" + mailFromName + " <" + mailFrom + ">",
-                            to: mailFrom,
-                            subject: mailSubject,
-                            text: '',
-                            html: htmlmailBody,
-                            attachments: attachment
-                        }, function(error, result) {
-
-                            if (error && error.error === "error") {
-                                FlowRouter.go('/quoteslist?success=true');
-                            } else {
-                                $('#html-2-pdfwrapper').css('display', 'none');
-                                swal({
-                                    title: 'SUCCESS',
-                                    text: "Email Sent To User: " + mailFrom + " ",
-                                    type: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'OK'
-                                }).then((result) => {
-                                    if (result.value) {
-                                      if(FlowRouter.current().queryParams.trans){
-                                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                                      }else{
-                                        FlowRouter.go('/quoteslist?success=true');
-                                      };
-                                    } else if (result.dismiss === 'cancel') {
-
-                                    }
-                                });
-
-                                LoadingOverlay.hide();
-                            }
-                        });
-
-                        let values = [];
-                        let basedOnTypeStorages = Object.keys(localStorage);
-                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                            let employeeId = storage.split('_')[2];
-                            return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
-                        });
-                        let i = basedOnTypeStorages.length;
-                        if (i > 0) {
-                            while (i--) {
-                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
-                            }
-                        }
-                        values.forEach(value => {
-                            let reportData = JSON.parse(value);
-                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                            reportData.attachments = attachment
-                            if (reportData.BasedOnType.includes("S")) {
-                                if (reportData.FormID == 1) {
-                                    let formIds = reportData.FormIDs.split(',');
-                                    if (formIds.includes("71")) {
-                                        reportData.FormID = 71;
-                                        Meteor.call('sendNormalEmail', reportData);
-                                    }
-                                } else {
-                                    if (reportData.FormID == 71)
-                                        Meteor.call('sendNormalEmail', reportData);
-                                }
-                            }
-                        });
-
-                    } else {
-
-                        let values = [];
-                        let basedOnTypeStorages = Object.keys(localStorage);
-                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                            let employeeId = storage.split('_')[2];
-                            return storage.includes('BasedOnType_');
-                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
-                        });
-                        let i = basedOnTypeStorages.length;
-                        if (i > 0) {
-                            while (i--) {
-                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
-                            }
-                        }
-                        values.forEach(value => {
-                            let reportData = JSON.parse(value);
-                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                            reportData.attachments = attachment
-                            if (reportData.BasedOnType.includes("S")) {
-                                if (reportData.FormID == 1) {
-                                    let formIds = reportData.FormIDs.split(',');
-                                    if (formIds.includes("71")) {
-                                        reportData.FormID = 71;
-                                        Meteor.call('sendNormalEmail', reportData);
-                                    }
-                                } else {
-                                    if (reportData.FormID == 71)
-                                        Meteor.call('sendNormalEmail', reportData);
-                                }
-                            }
-                        });
-                      if(FlowRouter.current().queryParams.trans){
-                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                      }else{
-                        FlowRouter.go('/quoteslist?success=true');
-                      };
-                    };
-
-
-
-                }
-                addAttachment();
-
-
-
-                if (customerID !== " ") {
-                    let customerEmailData = {
-                        type: "TCustomer",
-                        fields: {
-                            ID: customerID,
-                            Email: customerEmail
                         }
                     }
+                    addAttachment();
 
+                    const getcurrentCloudDetails = CloudUser.findOne({
+                        _id: Session.get('mycloudLogonID'),
+                        clouddatabaseID: Session.get('mycloudLogonDBID')
+                    });
+                    if (getcurrentCloudDetails) {
+                        if (getcurrentCloudDetails._id.length > 0) {
+                            const clientID = getcurrentCloudDetails._id;
+                            const clientUsername = getcurrentCloudDetails.cloudUsername;
+                            const clientEmail = getcurrentCloudDetails.cloudEmail;
+                            const checkPrefDetails = CloudPreference.findOne({
+                                userid: clientID,
+                                PrefName: 'new_quote'
+                            });
+                            if (checkPrefDetails) {
+                                CloudPreference.update({
+                                    _id: checkPrefDetails._id
+                                }, {
+                                    $set: {
+                                        username: clientUsername,
+                                        useremail: clientEmail,
+                                        PrefGroup: 'salesform',
+                                        PrefName: 'new_quote',
+                                        published: true,
+                                        customFields: [{
+                                            index: '1',
+                                            label: getcustomField1,
+                                            hidden: getchkcustomField1
+                                        }, {
+                                            index: '2',
+                                            label: getcustomField2,
+                                            hidden: getchkcustomField2
+                                        }],
+                                        updatedAt: new Date()
+                                    }
+                                }, function(err, idTag) {
+                                    if (err) {
 
+                                    } else {
 
-                };
-                var getcurrentCloudDetails = CloudUser.findOne({
-                    _id: Session.get('mycloudLogonID'),
-                    clouddatabaseID: Session.get('mycloudLogonDBID')
-                });
-                if (getcurrentCloudDetails) {
-                    if (getcurrentCloudDetails._id.length > 0) {
-                        var clientID = getcurrentCloudDetails._id;
-                        var clientUsername = getcurrentCloudDetails.cloudUsername;
-                        var clientEmail = getcurrentCloudDetails.cloudEmail;
-                        var checkPrefDetails = CloudPreference.findOne({
-                            userid: clientID,
-                            PrefName: 'new_quote'
-                        });
-
-                        if (checkPrefDetails) {
-                            CloudPreference.update({
-                                _id: checkPrefDetails._id
-                            }, {
-                                $set: {
+                                    }
+                                });
+                            } else {
+                                CloudPreference.insert({
+                                    userid: clientID,
                                     username: clientUsername,
                                     useremail: clientEmail,
                                     PrefGroup: 'salesform',
@@ -9200,47 +8027,20 @@ Template.new_quote.events({
                                         label: getcustomField2,
                                         hidden: getchkcustomField2
                                     }],
-                                    updatedAt: new Date()
-                                }
-                            }, function(err, idTag) {
-                                if (err) {
+                                    createdAt: new Date()
+                                }, function(err, idTag) {
+                                    if (err) {
 
-                                } else {
+                                    } else {
 
-
-                                }
-                            });
-                        } else {
-                            CloudPreference.insert({
-                                userid: clientID,
-                                username: clientUsername,
-                                useremail: clientEmail,
-                                PrefGroup: 'salesform',
-                                PrefName: 'new_quote',
-                                published: true,
-                                customFields: [{
-                                    index: '1',
-                                    label: getcustomField1,
-                                    hidden: getchkcustomField1
-                                }, {
-                                    index: '2',
-                                    label: getcustomField2,
-                                    hidden: getchkcustomField2
-                                }],
-                                createdAt: new Date()
-                            }, function(err, idTag) {
-                                if (err) {
-
-                                } else {
-
-
-                                }
-                            });
+                                    }
+                                });
+                            }
                         }
                     }
-                }
+                }).catch(function(err) {
 
-
+                });
             }).catch(function(err) {
                 swal({
                     title: 'Oooops...',
@@ -9254,11 +8054,9 @@ Template.new_quote.events({
 
                     }
                 });
-
                 LoadingOverlay.hide();
             });
         }
-
     },
     'click .chkProductName': function(event) {
       if ($(event.target).is(':checked')) {
@@ -9333,7 +8131,6 @@ Template.new_quote.events({
         $('.colTaxAmount').removeClass('showColumn');
       }
     },
-
     'click .chkAmountEx': function (event) {
       if ($(event.target).is(':checked')) {  
           $('.chkAmountInc').prop("checked", false); 
@@ -9372,71 +8169,59 @@ Template.new_quote.events({
           $('.colAmountEx').removeClass('hiddenColumn');
       }
     },
-
     'click .chkUnitPriceEx': function (event) {
       if ($(event.target).is(':checked')) { 
-          $('.chkUnitPriceInc').prop("checked", false); 
-
+          $('.chkUnitPriceInc').prop("checked", false);
           $('.colUnitPriceInc').addClass('hiddenColumn');
           $('.colUnitPriceInc').removeClass('showColumn');
-
           $('.colUnitPriceEx').addClass('showColumn');
           $('.colUnitPriceEx').removeClass('hiddenColumn');
-          
       } else { 
-          $('.chkUnitPriceInc').prop("checked", true); 
-
+          $('.chkUnitPriceInc').prop("checked", true);
           $('.colUnitPriceEx').addClass('hiddenColumn');
           $('.colUnitPriceEx').removeClass('showColumn');
-
           $('.colUnitPriceInc').addClass('showColumn');
           $('.colUnitPriceInc').removeClass('hiddenColumn');
       }
     },
     'click .chkUnitPriceInc': function(event) {
         if ($(event.target).is(':checked')) { 
-          $('.chkUnitPriceEx').prop("checked", false); 
-
-          $('.colUnitPriceEx').addClass('hiddenColumn');
-          $('.colUnitPriceEx').removeClass('showColumn');
-
-          $('.colUnitPriceInc').addClass('showColumn');
-          $('.colUnitPriceInc').removeClass('hiddenColumn');
+            $('.chkUnitPriceEx').prop("checked", false);
+            $('.colUnitPriceEx').addClass('hiddenColumn');
+            $('.colUnitPriceEx').removeClass('showColumn');
+            $('.colUnitPriceInc').addClass('showColumn');
+            $('.colUnitPriceInc').removeClass('hiddenColumn');
         } else { 
-          $('.chkUnitPriceEx').prop("checked", true); 
-
-          $('.colUnitPriceInc').addClass('hiddenColumn');
-          $('.colUnitPriceInc').removeClass('showColumn');
-
-          $('.colUnitPriceEx').addClass('showColumn');
-          $('.colUnitPriceEx').removeClass('hiddenColumn');
+            $('.chkUnitPriceEx').prop("checked", true);
+            $('.colUnitPriceInc').addClass('hiddenColumn');
+            $('.colUnitPriceInc').removeClass('showColumn');
+            $('.colUnitPriceEx').addClass('showColumn');
+            $('.colUnitPriceEx').removeClass('hiddenColumn');
         }
     },
-
     'click .chkDiscount': function(event) {
-      if ($(event.target).is(':checked')) {
-          // $('.colDiscount').css('display', 'table-cell');
-          // $('.colDiscount').css('padding', '.75rem');
-          // $('.colDiscount').css('vertical-align', 'top');
-        $('.colDiscount').addClass('showColumn');
-        $('.colDiscount').removeClass('hiddenColumn');
-      } else {
-          // $('.colDiscount').css('display', 'none');
-          $('.colDiscount').addClass('hiddenColumn');
-          $('.colDiscount').removeClass('showColumn');
-      }
+        if ($(event.target).is(':checked')) {
+            // $('.colDiscount').css('display', 'table-cell');
+            // $('.colDiscount').css('padding', '.75rem');
+            // $('.colDiscount').css('vertical-align', 'top');
+            $('.colDiscount').addClass('showColumn');
+            $('.colDiscount').removeClass('hiddenColumn');
+        } else {
+            // $('.colDiscount').css('display', 'none');
+            $('.colDiscount').addClass('hiddenColumn');
+            $('.colDiscount').removeClass('showColumn');
+        }
     },
     'click .chkSerialNo': function(event) {
-      if ($(event.target).is(':checked')) {
-        $('.colSerialNo').addClass('showColumn');
-        $('.colSerialNo').removeClass('hiddenColumn');
-      } else {
-        $('.colSerialNo').addClass('hiddenColumn');
-        $('.colSerialNo').removeClass('showColumn');
-      }
+        if ($(event.target).is(':checked')) {
+            $('.colSerialNo').addClass('showColumn');
+            $('.colSerialNo').removeClass('hiddenColumn');
+        } else {
+            $('.colSerialNo').addClass('hiddenColumn');
+            $('.colSerialNo').removeClass('showColumn');
+        }
     },
     // display settings
-
     'change .rngRangeProductName': function(event) {
         let range = $(event.target).val();
         // $(".spWidthProductName").html(range);
@@ -9509,81 +8294,66 @@ Template.new_quote.events({
         // $("" + columHeaderUpdate + "").html(columData);    
         $("th.col" + columHeaderUpdate + "").html(columData);
     },
-
     // custom field displaysettings
     'click .btnSaveGridSettings': function(event) { 
-      let lineItems = [];
-      $(".fullScreenSpin").css("display", "inline-block");
+        let lineItems = [];
+        $(".fullScreenSpin").css("display", "inline-block");
+        $(".displaySettings").each(function (index) {
+            const $tblrow = $(this);
+            const fieldID = $tblrow.attr("custid") || 0;
+            const colTitle = $tblrow.find(".divcolumn").text() || "";
+            const colWidth = $tblrow.find(".custom-range").val() || 0;
+            const colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+            let colHidden = false;
+            colHidden = !!$tblrow.find(".custom-control-input").is(":checked");
+            let lineItemObj = {
+                index: parseInt(fieldID),
+                label: colTitle,
+                active: colHidden,
+                width: parseInt(colWidth),
+                class: colthClass,
+                display: true
+            };
+            lineItems.push(lineItemObj);
+        });
+        let templateObject = Template.instance();
+        let reset_data = templateObject.reset_data.get();
+        reset_data = reset_data.filter(redata => redata.display == false);
+        lineItems.push(...reset_data);
+        lineItems.sort((a,b) => a.index - b.index);
 
-      $(".displaySettings").each(function (index) {
-        var $tblrow = $(this);
-        var fieldID = $tblrow.attr("custid") || 0;
-        var colTitle = $tblrow.find(".divcolumn").text() || "";
-        var colWidth = $tblrow.find(".custom-range").val() || 0;
-        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-        var colHidden = false;
-        if ($tblrow.find(".custom-control-input").is(":checked")) {
-          colHidden = true;
-        } else {
-          colHidden = false;
+        try {
+            let erpGet = erpDb();
+            let tableName = "tblQuoteLine";
+            let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
+            let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+            $(".fullScreenSpin").css("display", "none");
+            if(added) {
+                swal({
+                    title: 'SUCCESS',
+                    text: "Display settings is updated!",
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        $('#myModal2').modal('hide');
+                    }
+                });
+            } else {
+                swal("Something went wrong!", "", "error");
+            }
+        } catch (error) {
+            $(".fullScreenSpin").css("display", "none");
+            swal("Something went wrong!", "", "error");
         }
-        let lineItemObj = {
-          index: parseInt(fieldID),
-          label: colTitle,
-          active: colHidden,
-          width: parseInt(colWidth),
-          class: colthClass,
-          display: true
-        };
-
-        lineItems.push(lineItemObj); 
-      });
-
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      reset_data = reset_data.filter(redata => redata.display == false);
-      lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index); 
-
-      try {
-        let erpGet = erpDb();
-        let tableName = "tblQuoteLine";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
-        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-        $(".fullScreenSpin").css("display", "none");
-        if(added) {
-          swal({
-            title: 'SUCCESS',
-            text: "Display settings is updated!",
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonText: 'OK'
-          }).then((result) => {
-              if (result.value) {
-                 $('#myModal2').modal('hide');
-              }  
-          });
-          
-        } else {
-          swal("Something went wrong!", "", "error");
-        }
-      } catch (error) {
-        $(".fullScreenSpin").css("display", "none");
-        swal("Something went wrong!", "", "error");
-      } 
-
     },
-
     // custom field displaysettings
     'click .btnResetGridSettings': function(event) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get(); 
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
-      if(isBatchSerialNoTracking) {
-        reset_data[11].display = true; 
-      } else {
-        reset_data[11].display = false; 
-      }
+      reset_data[11].display = !!isBatchSerialNoTracking;
       reset_data = reset_data.filter(redata => redata.display); 
   
       $(".displaySettings").each(function (index) {
@@ -9617,7 +8387,6 @@ Template.new_quote.events({
         $(".rngRange" + reset_data[index].class).val('');
       });
     },
-
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
             _id: Session.get('mycloudLogonID'),
@@ -9649,7 +8418,6 @@ Template.new_quote.events({
     },
     'click .new_attachment_btn': function(event) {
         $('#attachment-upload').trigger('click');
-
     },
     'change #attachment-upload': function(e) {
         let templateObj = Template.instance();
@@ -9664,14 +8432,12 @@ Template.new_quote.events({
     },
     'click .img_new_attachment_btn': function(event) {
         $('#img-attachment-upload').trigger('click');
-
     },
     'change #img-attachment-upload': function(e) {
         let templateObj = Template.instance();
         let saveToTAttachment = false;
         let lineIDForAttachment = false;
         let uploadedFilesArray = templateObj.uploadedFiles.get();
-
         let myFiles = $('#img-attachment-upload')[0].files;
         let uploadData = utilityService.attachmentUpload(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
         templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
@@ -9716,12 +8482,7 @@ Template.new_quote.events({
         } else {
             previewFile.class = 'default-class';
         }
-
-        if (type.split('/')[0] === 'image') {
-            previewFile.image = true
-        } else {
-            previewFile.image = false
-        }
+        previewFile.image = type.split('/')[0] === 'image';
         templateObj.uploadedFile.set(previewFile);
 
         $('#files_view').modal('show');
@@ -9751,7 +8512,7 @@ Template.new_quote.events({
         }
     },
     'click .save-to-library': function(event, ui) {
-      $('.confirm-delete-attachment').trigger('click');
+        $('.confirm-delete-attachment').trigger('click');
     },
     'click #btn_Attachment': function() {
         let templateInstance = Template.instance();
@@ -9763,13 +8524,13 @@ Template.new_quote.events({
             $(".attchment-tooltip").show();
         }
     },
-    'click .payNow': function() {
+    'click .payNow': function(e) {
         let templateObject = Template.instance();
         let stripe_id = templateObject.accountID.get() || '';
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         if (stripe_id != "") {
-            var url = FlowRouter.current().path;
-            var id_available = url.includes("?id=");
+            let url = FlowRouter.current().path;
+            const id_available = url.includes("?id=");
             if (id_available == true) {
                 let templateObject = Template.instance();
                 let quoteData = templateObject.quoterecord.get();
@@ -9780,10 +8541,7 @@ Template.new_quote.events({
                 let name = $('#firstname').val();
                 let surname = $('#lastname').val();
                 $('#tblQuoteLine > tbody > tr').each(function() {
-                    var lineID = this.id;
-
-
-
+                    const lineID = this.id;
                     let tdproduct = $('#' + lineID + " .lineProductName").val();
                     let tddescription = $('#' + lineID + " .lineProductDesc").text();
                     let tdQty = $('#' + lineID + " .lineQty").val();
@@ -9792,29 +8550,27 @@ Template.new_quote.events({
                     let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
-                    lineItemObj = {
+                    let lineItemObj = {
                         description: tddescription || '',
                         quantity: tdQty || 0,
                         unitPrice: tdunitprice.toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         }) || 0
                     }
-
                     lineItems.push(lineItemObj);
                 });
-                var erpGet = erpDb();
+                const erpGet = erpDb();
                 let company = Session.get('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 let customerEmail = $('#edtCustomerEmail').val();
                 let currencyname = (CountryAbbr).toLowerCase();
                 let stringQuery = "?";
-                var customerID = $('#edtCustomerEmail').attr('customerid');
+                const customerID = $('#edtCustomerEmail').attr('customerid');
                 for (let l = 0; l < lineItems.length; l++) {
                     stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
                 }
                 stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Quote&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
                 window.open(stripeGlobalURL + stringQuery, '_self');
-
             } else {
                 let templateObject = Template.instance();
                 let quoteData = templateObject.quoterecord.get();
@@ -9822,6 +8578,14 @@ Template.new_quote.events({
                 let customername = $('#edtCustomerName');
                 let name = $('#edtCustomerEmail').attr('customerfirstname');
                 let surname = $('#edtCustomerEmail').attr('customerlastname');
+                let company = Session.get('vs1companyName');
+                let vs1User = localStorage.getItem('mySession');
+                let customerEmail = $('#edtCustomerEmail').val();
+                let customer = $('#edtCustomerName').val();
+                let currencyname = (CountryAbbr).toLowerCase();
+                const customerID = $('#edtCustomerEmail').attr('customerid');
+                let status = $('#sltStatus').val();
+                status = "Quoted";
                 let salesService = new SalesBoardService();
                 let termname = $('#sltTerms').val() || '';
                 // if (termname === '') {
@@ -9834,19 +8598,17 @@ Template.new_quote.events({
                     swal('Customer has not been selected!', '', 'warning');
                     e.preventDefault();
                 } else {
-
-                   LoadingOverlay.show();
-                    var splashLineArray = new Array();
+                    LoadingOverlay.show();
+                    const splashLineArray = [];
                     let lineItemsForm = [];
                     let lineItemObjForm = {};
-                    var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-                    var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
-
+                    const saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+                    const duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
                     let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
                     let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
 
                     $('#tblQuoteLine > tbody > tr').each(function() {
-                        var lineID = this.id;
+                        const lineID = this.id;
                         let tdproduct = $('#' + lineID + " .lineProductName").val();
                         let tddescription = $('#' + lineID + " .lineProductDesc").text();
                         let tdQty = $('#' + lineID + " .lineQty").val();
@@ -9855,18 +8617,15 @@ Template.new_quote.events({
                         let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                         let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
-                        lineItemObj = {
+                        let lineItemObj = {
                             description: tddescription || '',
                             quantity: tdQty || 0,
                             unitPrice: tdunitprice.toLocaleString(undefined, {
                                 minimumFractionDigits: 2
                             }) || 0
                         }
-
                         lineItems.push(lineItemObj);
-
                         if (tdproduct != "") {
-
                             lineItemObjForm = {
                                 type: "TQuoteLine",
                                 fields: {
@@ -9894,15 +8653,11 @@ Template.new_quote.events({
                     if ($('#formCheck-two').is(':checked')) {
                         getchkcustomField2 = false;
                     }
-
                     let customer = $('#edtCustomerName').val();
                     let customerEmail = $('#edtCustomerEmail').val();
                     let billingAddress = $('#txabillingAddress').val();
-
-
                     let poNumber = $('#ponumber').val();
                     let reference = $('#edtRef').val();
-
                     let departement = $('#sltDept').val();
                     let shippingAddress = $('#txaShipingInfo').val();
                     let comments = $('#txaComment').val();
@@ -9912,12 +8667,12 @@ Template.new_quote.events({
                     let saleCustField1 = $('#edtSaleCustField1').val()||'';
                     let saleCustField2 = $('#edtSaleCustField2').val()||'';
                     let saleCustField3 = $('#edtSaleCustField3').val()||'';
-                    var url = FlowRouter.current().path;
-                    var getso_id = url.split('?id=');
-                    var currentQuote = getso_id[getso_id.length - 1];
+                    url = FlowRouter.current().path;
+                    const getso_id = url.split('?id=');
+                    let currentQuote = getso_id[getso_id.length - 1];
                     let uploadedItems = templateObject.uploadedFiles.get();
-                    var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                    var objDetails = '';
+                    const currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                    let objDetails;
                     if (getso_id[1]) {
                         currentQuote = parseInt(currentQuote);
                         objDetails = {
@@ -9942,7 +8697,7 @@ Template.new_quote.events({
                                 SaleCustField3: saleCustField3,
                                 PickMemo: pickingInfrmation,
                                 Attachments: uploadedItems,
-                                SalesStatus: $('#sltStatus').val()
+                                SalesStatus: status
                             }
                         };
                     } else {
@@ -9967,27 +8722,18 @@ Template.new_quote.events({
                                 SaleCustField3: saleCustField3,
                                 PickMemo: pickingInfrmation,
                                 Attachments: uploadedItems,
-                                SalesStatus: $('#sltStatus').val()
+                                SalesStatus: status
                             }
                         };
                     }
 
                     salesService.saveQuoteEx(objDetails).then(function(objDetails) {
-                        var erpGet = erpDb();
-                        let company = Session.get('vs1companyName');
-                        let vs1User = localStorage.getItem('mySession');
-                        let customerEmail = $('#edtCustomerEmail').val();
-                        let customer = $('#edtCustomerName').val();
-                        let currencyname = (CountryAbbr).toLowerCase();
+                        const erpGet = erpDb();
                         let stringQuery = "?";
-                        var customerID = $('#edtCustomerEmail').attr('customerid');
                         for (let l = 0; l < lineItems.length; l++) {
                             stringQuery = stringQuery + "product" + l + "=" + lineItemsForm[l].fields.ProductName + "&price" + l + "=" + lineItemsForm[l].fields.LinePrice + "&qty" + l + "=" + lineItemsForm[l].fields.UOMQtySold + "&";
                         }
-
                         stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Quote&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
-
-
                         $('#html-2-pdfwrapper').css('display', 'block');
                         $('.pdfCustomerName').html($('#edtCustomerName').val());
                         $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
@@ -10287,12 +9033,10 @@ Template.new_quote.events({
                                 }, function(error, result) {
                                     if (error && error.error === "error") {
                                         FlowRouter.go('/quoteslist?success=true');
-
                                     } else {
 
                                     }
                                 });
-
                                 Meteor.call('sendEmail', {
                                     from: "" + mailFromName + " <" + mailFrom + ">",
                                     to: mailFrom,
@@ -10313,20 +9057,18 @@ Template.new_quote.events({
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.value) {
-                                              if(FlowRouter.current().queryParams.trans){
-                                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                                              }else{
-                                                FlowRouter.go('/quoteslist?success=true');
-                                              };
+                                                if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                }else{
+                                                    FlowRouter.go('/quoteslist?success=true');
+                                                }
                                             } else if (result.dismiss === 'cancel') {
 
                                             }
                                         });
-
                                         LoadingOverlay.hide();
                                     }
                                 });
-
                             } else if (($('.chkEmailCopy').is(':checked'))) {
                                 Meteor.call('sendEmail', {
                                     from: "" + mailFromName + " <" + mailFrom + ">",
@@ -10336,10 +9078,7 @@ Template.new_quote.events({
                                     html: htmlmailBody,
                                     attachments: attachment
                                 }, function(error, result) {
-
                                     if (error && error.error === "error") {
-
-
 
                                     } else {
                                         $('#html-2-pdfwrapper').css('display', 'none');
@@ -10351,20 +9090,18 @@ Template.new_quote.events({
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.value) {
-                                              if(FlowRouter.current().queryParams.trans){
-                                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                                              }else{
-                                                FlowRouter.go('/quoteslist?success=true');
-                                              };
+                                                if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                }else{
+                                                    FlowRouter.go('/quoteslist?success=true');
+                                                }
                                             } else if (result.dismiss === 'cancel') {
 
                                             }
                                         });
-
                                         LoadingOverlay.hide();
                                     }
                                 });
-
                             } else if (($('.chkEmailRep').is(':checked'))) {
                                 Meteor.call('sendEmail', {
                                     from: "" + mailFromName + " <" + mailFrom + ">",
@@ -10387,36 +9124,28 @@ Template.new_quote.events({
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.value) {
-                                              if(FlowRouter.current().queryParams.trans){
-                                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                                              }else{
-                                                FlowRouter.go('/quoteslist?success=true');
-                                              };
+                                                if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                }else{
+                                                    FlowRouter.go('/quoteslist?success=true');
+                                                }
                                             } else if (result.dismiss === 'cancel') {
 
                                             }
                                         });
-
                                         LoadingOverlay.hide();
                                     }
                                 });
-
                             } else {
-                              if(FlowRouter.current().queryParams.trans){
-                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                              }else{
-                                FlowRouter.go('/quoteslist?success=true');
-                              };
-                            };
-
-
-
+                                if(FlowRouter.current().queryParams.trans){
+                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                }else{
+                                    FlowRouter.go('/quoteslist?success=true');
+                                }
+                            }
                         }
                         addAttachment();
-
-
                     }).catch(function(err) {
-
                         swal({
                             title: 'Oooops...',
                             text: err,
@@ -10429,11 +9158,9 @@ Template.new_quote.events({
 
                             }
                         });
-
                         LoadingOverlay.hide();
                     });
                 }
-
             }
         } else {
             swal({
@@ -10452,7 +9179,6 @@ Template.new_quote.events({
         }
     },
     'click #btnPayment': function() {
-
         let templateObject = Template.instance();
         let customername = $('#edtCustomerName');
         let salesService = new SalesBoardService();
@@ -10467,18 +9193,16 @@ Template.new_quote.events({
             swal('Customer has not been selected!', '', 'warning');
             e.preventDefault();
         } else {
-
-           LoadingOverlay.show();
-            var splashLineArray = new Array();
+            LoadingOverlay.show();
+            const splashLineArray = [];
             let lineItemsForm = [];
             let lineItemObjForm = {};
-            var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-            var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
-
+            const saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+            const duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
             let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
             let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
             $('#tblQuoteLine > tbody > tr').each(function() {
-                var lineID = this.id;
+                const lineID = this.id;
                 let tdproduct = $('#' + lineID + " .lineProductName").val();
                 let tddescription = $('#' + lineID + " .lineProductDesc").text();
                 let tdQty = $('#' + lineID + " .lineQty").val();
@@ -10486,9 +9210,7 @@ Template.new_quote.events({
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                 let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
-
                 if (tdproduct != "") {
-
                     lineItemObjForm = {
                         type: "TQuoteLine",
                         fields: {
@@ -10519,28 +9241,28 @@ Template.new_quote.events({
 
             let customer = $('#edtCustomerName').val();
             let customerEmail = $('#edtCustomerEmail').val();
+            let company = Session.get('vs1companyName');
+            let vs1User = localStorage.getItem('mySession');
+            let currencyname = (CountryAbbr).toLowerCase();
+            const customerID = $('#edtCustomerEmail').attr('customerid');
+            let status = $('#sltStatus').val();
+            status = "Quoted";
             let billingAddress = $('#txabillingAddress').val();
-
-
-
-
             let poNumber = $('#ponumber').val();
             let reference = $('#edtRef').val();
-
             let departement = $('#sltDept').val();
             let shippingAddress = $('#txaShipingInfo').val();
             let comments = $('#txaComment').val();
             let pickingInfrmation = $('#txapickmemo').val();
-
             let saleCustField1 = $('#edtSaleCustField1').val()||'';
             let saleCustField2 = $('#edtSaleCustField2').val()||'';
             let saleCustField3 = $('#edtSaleCustField3').val()||'';
-            var url = FlowRouter.current().path;
-            var getso_id = url.split('?id=');
-            var currentQuote = getso_id[getso_id.length - 1];
+            const url = FlowRouter.current().path;
+            const getso_id = url.split('?id=');
+            let currentQuote = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
-            var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            var objDetails = '';
+            const currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let objDetails = '';
             if (getso_id[1]) {
                 currentQuote = parseInt(currentQuote);
                 objDetails = {
@@ -10565,7 +9287,7 @@ Template.new_quote.events({
                         SaleCustField3: saleCustField3,
                         PickMemo: pickingInfrmation,
                         Attachments: uploadedItems,
-                        SalesStatus: $('#sltStatus').val()
+                        SalesStatus: status
                     }
                 };
             } else {
@@ -10590,13 +9312,12 @@ Template.new_quote.events({
                         SaleCustField3: saleCustField3,
                         PickMemo: pickingInfrmation,
                         Attachments: uploadedItems,
-                        SalesStatus: $('#sltStatus').val()
+                        SalesStatus: status
                     }
                 };
             }
-
             salesService.saveQuoteEx(objDetails).then(function(objDetails) {
-                var customerID = $('#edtCustomerEmail').attr('customerid');
+                const customerID = $('#edtCustomerEmail').attr('customerid');
                 if (customerID !== " ") {
                     let customerEmailData = {
                         type: "TCustomer",
@@ -10608,7 +9329,7 @@ Template.new_quote.events({
                     // salesService.saveCustomerEmail(customerEmailData).then(function(customerEmailData) {
                     //
                     // });
-                };
+                }
 
                 let linesave = objDetails.fields.ID;
 
@@ -10678,14 +9399,11 @@ Template.new_quote.events({
                                     window.open('/paymentcard?quoteid=' + linesave, '_self');
                                 } else {
                                     window.open('/paymentcard?quoteid=' + linesave, '_self');
-
                                 }
                             });
                         }
                     }
                 }
-
-
             }).catch(function(err) {
                 swal({
                     title: 'Oooops...',
@@ -10699,7 +9417,6 @@ Template.new_quote.events({
 
                     }
                 });
-
                 LoadingOverlay.hide();
             });
         }
@@ -10708,14 +9425,14 @@ Template.new_quote.events({
     'click .btnBack': function(event) {
         event.preventDefault();
         if(FlowRouter.current().queryParams.trans){
-          FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
         }else{
-          history.back(1);
-        };
+            history.back(1);
+        }
     },
-    'click #btnCopyToOrder': function() {
-       LoadingOverlay.show();
-        var url = FlowRouter.current().path;
+    'click #btnCopyToOrder': function(e) {
+        LoadingOverlay.show();
+        let url = FlowRouter.current().path;
         if (url.indexOf('?id=') > 0) {
             let templateObject = Template.instance();
             let customername = $('#edtCustomerName');
@@ -10730,19 +9447,16 @@ Template.new_quote.events({
                 swal('Customer has not been selected!', '', 'warning');
                 e.preventDefault();
             } else {
-
-               LoadingOverlay.show();
-                var splashLineArray = new Array();
+                LoadingOverlay.show();
+                const splashLineArray = [];
                 let lineItemsForm = [];
                 let lineItemObjForm = {};
-
-                var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-                var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
-
+                const saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+                const duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
                 let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
                 let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
                 $('#tblQuoteLine > tbody > tr').each(function() {
-                    var lineID = this.id;
+                    const lineID = this.id;
                     let tdproduct = $('#' + lineID + " .lineProductName").val();
                     let tddescription = $('#' + lineID + " .lineProductDesc").text();
                     let tdQty = $('#' + lineID + " .lineQty").val();
@@ -10750,9 +9464,7 @@ Template.new_quote.events({
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                     let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
-
                     if (tdproduct != "") {
-
                         lineItemObjForm = {
                             type: "TQuoteLine",
                             fields: {
@@ -10780,29 +9492,30 @@ Template.new_quote.events({
                 if ($('#formCheck-two').is(':checked')) {
                     getchkcustomField2 = false;
                 }
-
                 let customer = $('#edtCustomerName').val();
                 let customerEmail = $('#edtCustomerEmail').val();
+                let company = Session.get('vs1companyName');
+                let vs1User = localStorage.getItem('mySession');
+                let currencyname = (CountryAbbr).toLowerCase();
+                const customerID = $('#edtCustomerEmail').attr('customerid');
+                let status = $('#sltStatus').val();
+                status = "Quoted";
                 let billingAddress = $('#txabillingAddress').val();
-
-
                 let poNumber = $('#ponumber').val();
                 let reference = $('#edtRef').val();
-
                 let departement = $('#sltDept').val();
                 let shippingAddress = $('#txaShipingInfo').val();
                 let comments = $('#txaComment').val();
                 let pickingInfrmation = $('#txapickmemo').val();
-
                 let saleCustField1 = $('#edtSaleCustField1').val()||'';
                 let saleCustField2 = $('#edtSaleCustField2').val()||'';
                 let saleCustField3 = $('#edtSaleCustField3').val()||'';
-                var url = FlowRouter.current().path;
-                var getso_id = url.split('?id=');
-                var currentQuote = getso_id[getso_id.length - 1];
+                url = FlowRouter.current().path;
+                const getso_id = url.split('?id=');
+                let currentQuote = getso_id[getso_id.length - 1];
                 let uploadedItems = templateObject.uploadedFiles.get();
-                var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                var objDetails = '';
+                const currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                let objDetails = '';
                 if (getso_id[1]) {
                     currentQuote = parseInt(currentQuote);
                     objDetails = {
@@ -10828,7 +9541,7 @@ Template.new_quote.events({
                             SaleCustField3: saleCustField3,
                             PickMemo: pickingInfrmation,
                             Attachments: uploadedItems,
-                            SalesStatus: $('#sltStatus').val()
+                            SalesStatus: status
                         }
                     };
                 } else {
@@ -10854,13 +9567,13 @@ Template.new_quote.events({
                             SaleCustField3: saleCustField3,
                             PickMemo: pickingInfrmation,
                             Attachments: uploadedItems,
-                            SalesStatus: $('#sltStatus').val()
+                            SalesStatus: status
                         }
                     };
                 }
 
                 salesService.saveQuoteEx(objDetails).then(function(objDetails) {
-                    var customerID = $('#edtCustomerEmail').attr('customerid');
+                    const customerID = $('#edtCustomerEmail').attr('customerid');
                     if (customerID !== " ") {
                         let customerEmailData = {
                             type: "TCustomer",
@@ -10869,23 +9582,19 @@ Template.new_quote.events({
                                 Email: customerEmail
                             }
                         }
-
-
-
-                    };
-
+                    }
                     let linesave = objDetails.fields.ID;
 
-                    var getcurrentCloudDetails = CloudUser.findOne({
+                    const getcurrentCloudDetails = CloudUser.findOne({
                         _id: Session.get('mycloudLogonID'),
                         clouddatabaseID: Session.get('mycloudLogonDBID')
                     });
                     if (getcurrentCloudDetails) {
                         if (getcurrentCloudDetails._id.length > 0) {
-                            var clientID = getcurrentCloudDetails._id;
-                            var clientUsername = getcurrentCloudDetails.cloudUsername;
-                            var clientEmail = getcurrentCloudDetails.cloudEmail;
-                            var checkPrefDetails = CloudPreference.findOne({
+                            const clientID = getcurrentCloudDetails._id;
+                            const clientUsername = getcurrentCloudDetails.cloudUsername;
+                            const clientEmail = getcurrentCloudDetails.cloudEmail;
+                            const checkPrefDetails = CloudPreference.findOne({
                                 userid: clientID,
                                 PrefName: 'new_quote'
                             });
@@ -10916,7 +9625,6 @@ Template.new_quote.events({
                                         window.open('/salesordercard?copyquid=' + linesave, '_self');
                                     } else {
                                         window.open('/salesordercard?copyquid=' + linesave, '_self');
-
                                     }
                                 });
                             } else {
@@ -10942,7 +9650,6 @@ Template.new_quote.events({
                                         window.open('/salesordercard?copyquid=' + linesave, '_self');
                                     } else {
                                         window.open('/salesordercard?copyquid=' + linesave, '_self');
-
                                     }
                                 });
                             }
@@ -10950,8 +9657,6 @@ Template.new_quote.events({
                     } else {
                         window.open('/salesordercard?copyquid=' + linesave, '_self');
                     }
-
-
                 }).catch(function(err) {
                     swal({
                         title: 'Oooops...',
@@ -10965,7 +9670,6 @@ Template.new_quote.events({
 
                         }
                     });
-
                     LoadingOverlay.hide();
                 });
             }
@@ -10973,9 +9677,9 @@ Template.new_quote.events({
             FlowRouter.go('/salesordercard');
         }
     },
-    'click #btnCopyToInvoice': function() {
-       LoadingOverlay.show();
-        var url = FlowRouter.current().path;
+    'click #btnCopyToInvoice': function(e) {
+        LoadingOverlay.show();
+        let url = FlowRouter.current().path;
         if (url.indexOf('?id=') > 0) {
             let templateObject = Template.instance();
             let customername = $('#edtCustomerName');
@@ -10991,19 +9695,16 @@ Template.new_quote.events({
                 swal('Customer has not been selected!', '', 'warning');
                 e.preventDefault();
             } else {
-
-               LoadingOverlay.show();
-                var splashLineArray = new Array();
+                LoadingOverlay.show();
+                const splashLineArray = [];
                 let lineItemsForm = [];
                 let lineItemObjForm = {};
-
-                var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-                var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
-
+                const saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+                const duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
                 let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
                 let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
                 $('#tblQuoteLine > tbody > tr').each(function() {
-                    var lineID = this.id;
+                    const lineID = this.id;
                     let tdproduct = $('#' + lineID + " .lineProductName").val();
                     let tddescription = $('#' + lineID + " .lineProductDesc").text();
                     let tdQty = $('#' + lineID + " .lineQty").val();
@@ -11011,9 +9712,7 @@ Template.new_quote.events({
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                     let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
-
                     if (tdproduct != "") {
-
                         lineItemObjForm = {
                             type: "TQuoteLine",
                             fields: {
@@ -11042,30 +9741,30 @@ Template.new_quote.events({
                     getchkcustomField2 = false;
                 }
 
-                let customer = $('#edtCustomerName').val();
+                let company = Session.get('vs1companyName');
+                let vs1User = localStorage.getItem('mySession');
                 let customerEmail = $('#edtCustomerEmail').val();
+                let customer = $('#edtCustomerName').val();
+                let currencyname = (CountryAbbr).toLowerCase();
+                const customerID = $('#edtCustomerEmail').attr('customerid');
+                let status = $('#sltStatus').val();
+                status = "Quoted";
                 let billingAddress = $('#txabillingAddress').val();
-
-
-
-
                 let poNumber = $('#ponumber').val();
                 let reference = $('#edtRef').val();
-
                 let departement = $('#sltDept').val();
                 let shippingAddress = $('#txaShipingInfo').val();
                 let comments = $('#txaComment').val();
                 let pickingInfrmation = $('#txapickmemo').val();
-
                 let saleCustField1 = $('#edtSaleCustField1').val()||'';
                 let saleCustField2 = $('#edtSaleCustField2').val()||'';
                 let saleCustField3 = $('#edtSaleCustField3').val()||'';
-                var url = FlowRouter.current().path;
-                var getso_id = url.split('?id=');
-                var currentQuote = getso_id[getso_id.length - 1];
+                url = FlowRouter.current().path;
+                const getso_id = url.split('?id=');
+                let currentQuote = getso_id[getso_id.length - 1];
                 let uploadedItems = templateObject.uploadedFiles.get();
-                var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                var objDetails = '';
+                const currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                let objDetails = '';
                 if (getso_id[1]) {
                     currentQuote = parseInt(currentQuote);
                     objDetails = {
@@ -11091,7 +9790,7 @@ Template.new_quote.events({
                             SaleCustField3: saleCustField3,
                             PickMemo: pickingInfrmation,
                             Attachments: uploadedItems,
-                            SalesStatus: $('#sltStatus').val()
+                            SalesStatus: status
                         }
                     };
                 } else {
@@ -11117,11 +9816,10 @@ Template.new_quote.events({
                             SaleCustField3: saleCustField3,
                             PickMemo: pickingInfrmation,
                             Attachments: uploadedItems,
-                            SalesStatus: $('#sltStatus').val()
+                            SalesStatus: status
                         }
                     };
                 }
-
                 salesService.saveQuoteEx(objDetails).then(function(objDetails) {
                     var customerID = $('#edtCustomerEmail').attr('customerid');
                     if (customerID !== " ") {
@@ -11228,7 +9926,6 @@ Template.new_quote.events({
 
                         }
                     });
-
                     LoadingOverlay.hide();
                 });
             }
@@ -11263,8 +9960,8 @@ Template.new_quote.events({
         }
     },
     'click .btnSnLotmodal': function(event) {
-       LoadingOverlay.show();
-        var target=event.target;
+        LoadingOverlay.show();
+        const target = event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
         let selectedunit = $(target).closest('tr').find('.lineQty').val();
         localStorage.setItem('productItem', selectedunit);
@@ -11292,24 +9989,8 @@ Template.new_quote.events({
                 }
             });
         }
-    },
-    // add to custom field
-  "click #edtSaleCustField1": function (e) {
-    $("#clickedControl").val("one");
-  },
-
-  // add to custom field
-  "click #edtSaleCustField2": function (e) {
-    $("#clickedControl").val("two");
-  },
-
-  // add to custom field
-  "click #edtSaleCustField3": function (e) {
-    $("#clickedControl").val("three");
-  },
+    }
 });
-
-
 
 Template.registerHelper('equals', function(a, b) {
     return a === b;

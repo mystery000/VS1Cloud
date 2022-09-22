@@ -472,12 +472,12 @@ Template.new_invoice.onRendered(function() {
       .then(function (data) {
         let latestInvoiceId;
         if (data.tinvoice.length > 0) {
-          lastInvoice = data.tinvoice[data.tinvoice.length - 1];
+          let lastInvoice = data.tinvoice[data.tinvoice.length - 1];
           latestInvoiceId = lastInvoice.Id;
         } else {
           latestInvoiceId = 0;
         }
-        newInvoiceId = latestInvoiceId + 1;
+        let newInvoiceId = latestInvoiceId + 1;
         setTimeout(function () {
           $("#sltDept").val(lastDepartment);
           if (FlowRouter.current().queryParams.id) {
@@ -492,9 +492,9 @@ Template.new_invoice.onRendered(function() {
   };
 
   $(document).on("click", ".templateItem .btnPreviewTemplate", function (e) {
-    title = $(this).parent().attr("data-id");
-    number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
-    templateObject.generateInvoiceData(title, number);
+      const title = $(this).parent().attr("data-id");
+      const number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
+      templateObject.generateInvoiceData(title, number);
   });
 
   let currentInvoice;
@@ -582,16 +582,13 @@ Template.new_invoice.onRendered(function() {
           street2: data.tcustomervs1[i].fields.Street2 || " ",
           street3: data.tcustomervs1[i].fields.Street3 || " ",
           suburb: data.tcustomervs1[i].fields.Suburb || " ",
-          statecode:
-            data.tcustomervs1[i].fields.State +
-              " " +
-              data.tcustomervs1[i].fields.Postcode || " ",
+          statecode: data.tcustomervs1[i].fields.State + " " + data.tcustomervs1[i].fields.Postcode || " ",
           country: data.tcustomervs1[i].fields.Country || " ",
           termsName: data.tcustomervs1[i].fields.TermsName || "",
           taxCode: data.tcustomervs1[i].fields.TaxCodeName || "E",
-          clienttypename:
-            data.tcustomervs1[i].fields.ClientTypeName || "Default",
+          clienttypename: data.tcustomervs1[i].fields.ClientTypeName || "Default",
           discount: data.tcustomervs1[i].fields.Discount || 0,
+          status: data.tcustomervs1[i].fields.Status || ''
         };
         clientList.push(customerrecordObj);
       }
@@ -842,6 +839,7 @@ Template.new_invoice.onRendered(function() {
       })
       .catch(function (err) {});
   };
+
   if (
     FlowRouter.current().queryParams.id ||
     FlowRouter.current().queryParams.customerid ||
@@ -9548,6 +9546,7 @@ Template.new_invoice.onRendered(function() {
           $(".pdfCustomerAddress").text(postalAddress);
           $("#txaShipingInfo").val(postalAddress);
           $("#sltTerms").val(clientList[i].termsName || "");
+          $('#sltStatus').val(clientList[i].status);
         }
       }
     }
@@ -10747,7 +10746,7 @@ Template.new_invoice.onRendered(function() {
     var array_data = [];
     let lineItems = [];
     let taxItems = {};
-    object_invoce = [];
+    let object_invoce = [];
     let item_invoices = "";
 
     let invoice_data = templateObject.invoicerecord.get();
@@ -10849,7 +10848,7 @@ Template.new_invoice.onRendered(function() {
     let customerEmail = $("#edtCustomerEmail").val();
     let id = $(".printID").attr("id") || "new";
     let currencyname = CountryAbbr.toLowerCase();
-    stringQuery = "?";
+    let stringQuery = "?";
     var customerID = $("#edtCustomerEmail").attr("customerid");
     for (let l = 0; l < lineItems.length; l++) {
       stringQuery =
@@ -11095,7 +11094,7 @@ Template.new_invoice.onRendered(function() {
   async function showInvoiceBack(template_title, number) {
     var array_data = [];
     let lineItems = [];
-    object_invoce = [];
+    let object_invoce = [];
     let item_invoices = "";
 
     let invoice_data = templateObject.invoicerecord.get();
@@ -11170,7 +11169,7 @@ Template.new_invoice.onRendered(function() {
     let customerEmail = $("#edtCustomerEmail").val();
     let id = $(".printID").attr("id") || "new";
     let currencyname = CountryAbbr.toLowerCase();
-    stringQuery = "?";
+    let stringQuery = "?";
     var customerID = $("#edtCustomerEmail").attr("customerid");
     for (let l = 0; l < lineItems.length; l++) {
       stringQuery =
@@ -11412,7 +11411,7 @@ Template.new_invoice.onRendered(function() {
   async function showDeliveryDocket(template_title, number) {
     var array_data = [];
     let lineItems = [];
-    object_invoce = [];
+    let object_invoce = [];
     let item_invoices = "";
 
     let invoice_data = templateObject.invoicerecord.get();
@@ -11481,7 +11480,7 @@ Template.new_invoice.onRendered(function() {
     let customerEmail = $("#edtCustomerEmail").val();
     let id = $(".printID").attr("id") || "new";
     let currencyname = CountryAbbr.toLowerCase();
-    stringQuery = "?";
+    let stringQuery = "?";
     var customerID = $("#edtCustomerEmail").attr("customerid");
     for (let l = 0; l < lineItems.length; l++) {
       stringQuery =
@@ -11688,7 +11687,7 @@ Template.new_invoice.onRendered(function() {
   }
 
   // exportSalesToPdf = function() {
-  exportSalesToPdf = async function (template_title, number) {
+  const exportSalesToPdf = async function (template_title, number) {
     if (template_title == "Invoices" && number == 1) {
       exportSalesToPdf1();
     } else if (template_title == "Invoice Back Orders" && number == 1) {
@@ -11770,7 +11769,7 @@ Template.new_invoice.onRendered(function() {
     }
   };
 
-  exportSalesToPdf1 = function () {
+  const exportSalesToPdf1 = function () {
     let margins = {
       top: 0,
       bottom: 0,
@@ -13385,12 +13384,10 @@ Template.new_invoice.helpers({
   getTemplateList: function () {
     return template_list;
   },
-
   getTemplateNumber: function () {
     let template_numbers = ["1", "2", "3"];
     return template_numbers;
   },
-
   isBatchSerialNoTracking: () => {
     return Session.get("CloudShowSerial") || false;
   },
@@ -13655,6 +13652,10 @@ Template.new_invoice.events({
     clickedInput = "two";
     $("#clickedControl").val(clickedInput);
   },
+  "click #edtSaleCustField3": function (event) {
+    clickedInput = "three";
+    $("#clickedControl").val(clickedInput);
+  },
   "click  #open_print_confirm": function (event) {
     if ($("#choosetemplate").is(":checked")) {
       let invoice_type = FlowRouter.current().queryParams.type;
@@ -13708,17 +13709,12 @@ Template.new_invoice.events({
       $("#confirmprint").modal("hide");
     }
   },
-
   "click #choosetemplate": function (event) {
     if ($("#choosetemplate").is(":checked")) {
       $("#templateselection").modal("show");
     } else {
       $("#templateselection").modal("hide");
     }
-  },
-  "click #edtSaleCustField3": function (event) {
-    clickedInput = "three";
-    $("#clickedControl").val(clickedInput);
   },
   // 'click .btnAddNewCustField': function(event) {
   //   let templateObject = Template.instance();
@@ -13757,7 +13753,6 @@ Template.new_invoice.events({
 
   //       }
   //     }
-
   // },
   "click #edtCustomerName": function (event) {
     $("#edtCustomerName").select();
@@ -13917,9 +13912,7 @@ Template.new_invoice.events({
           let lineItemObjForm = {};
           var erpGet = erpDb();
           var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-
           var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
-
           let saleDate =
             saledateTime.getFullYear() +
             "-" +
@@ -14013,6 +14006,8 @@ Template.new_invoice.events({
 
           let customer = $("#edtCustomerName").val();
           let customerEmail = $("#edtCustomerEmail").val();
+          let status = $('#sltStatus').val();
+          status = "Invoiced";
           let billingAddress = $("#txabillingAddress").val();
 
           let poNumber = $("#ponumber").val();
@@ -14055,7 +14050,7 @@ Template.new_invoice.events({
                 SaleCustField3: saleCustField3,
                 PickMemo: pickingInfrmation,
                 Attachments: uploadedItems,
-                SalesStatus: $("#sltStatus").val(),
+                SalesStatus: status,
               },
             };
           } else {
@@ -14078,7 +14073,7 @@ Template.new_invoice.events({
                 SaleCustField3: saleCustField3,
                 PickMemo: pickingInfrmation,
                 Attachments: uploadedItems,
-                SalesStatus: $("#sltStatus").val(),
+                SalesStatus: status,
               },
             };
           }
@@ -17383,15 +17378,13 @@ Template.new_invoice.events({
       event.preventDefault();
     } else {
       $(".fullScreenSpin").css("display", "inline-block");
-      var splashLineArray = new Array();
+      const splashLineArray = [];
       let lineItemsForm = [];
       let lineItems = [];
       let lineItemObjForm = {};
-      var erpGet = erpDb();
-      var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-
-      var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
-
+      const erpGet = erpDb();
+      const saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+      const duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
       let saleDate =
         saledateTime.getFullYear() +
         "-" +
@@ -17431,7 +17424,7 @@ Template.new_invoice.events({
           "data-lotexpirydate"
         );
 
-        lineItemObj = {
+        let lineItemObj = {
           description: tddescription || "",
           quantity: tdQty || 0,
           unitPrice:
@@ -17439,7 +17432,6 @@ Template.new_invoice.events({
               minimumFractionDigits: 2,
             }) || 0,
         };
-
         lineItems.push(lineItemObj);
 
         if (tdproduct != "") {
@@ -17550,14 +17542,13 @@ Template.new_invoice.events({
       if ($("#formCheck-two").is(":checked")) {
         getchkcustomField2 = false;
       }
-
       let customer = $("#edtCustomerName").val();
       let customerEmail = $("#edtCustomerEmail").val();
+      let status = $('#sltStatus').val();
+      status = "Invoiced";
       let billingAddress = $("#txabillingAddress").val();
-
       let poNumber = $("#ponumber").val();
       let reference = $("#edtRef").val();
-
       let departement = $("#sltDept").val() || "";
       let shippingAddress = $("#txaShipingInfo").val();
       let comments = $("#txaComment").val();
@@ -17567,12 +17558,12 @@ Template.new_invoice.events({
       let saleCustField1 = $("#edtSaleCustField1").val() || "";
       let saleCustField2 = $("#edtSaleCustField2").val() || "";
       let saleCustField3 = $("#edtSaleCustField3").val() || "";
-      var url = FlowRouter.current().path;
-      var getso_id = url.split("?id=");
-      var currentInvoice = getso_id[getso_id.length - 1];
+      const url = FlowRouter.current().path;
+      const getso_id = url.split("?id=");
+      let currentInvoice = getso_id[getso_id.length - 1];
       let uploadedItems = templateObject.uploadedFiles.get();
-      var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-      var objDetails = "";
+      const currencyCode = $("#sltCurrency").val() || CountryAbbr;
+      let objDetails = "";
       if (departement === "") {
         swal("Department has not been selected!", "", "warning");
         $(".fullScreenSpin").css("display", "none");
@@ -17602,7 +17593,7 @@ Template.new_invoice.events({
               SaleCustField3: saleCustField3,
               PickMemo: pickingInfrmation,
               Attachments: uploadedItems,
-              SalesStatus: $("#sltStatus").val(),
+              SalesStatus: status,
             },
           };
         } else {
@@ -17625,7 +17616,7 @@ Template.new_invoice.events({
               SaleCustField3: saleCustField3,
               PickMemo: pickingInfrmation,
               Attachments: uploadedItems,
-              SalesStatus: $("#sltStatus").val(),
+              SalesStatus: status,
             },
           };
         }
@@ -17651,7 +17642,7 @@ Template.new_invoice.events({
           let customerEmail = $("#edtCustomerEmail").val() || "";
           let currencyname = CountryAbbr.toLowerCase();
           let stringQuery = "?";
-          var customerID = $("#edtCustomerEmail").attr("customerid");
+          const customerID = $("#edtCustomerEmail").attr("customerid");
           for (let l = 0; l < lineItems.length; l++) {
             stringQuery =
               stringQuery +
@@ -17716,7 +17707,7 @@ Template.new_invoice.events({
               .val()
               .replace(/[\r\n]/g, "<br />")
           );
-          var ponumber = $("#ponumber").val() || ".";
+          const ponumber = $("#ponumber").val() || ".";
           $(".po").text(ponumber);
 
           function generatePdfForMail(invoiceId) {
@@ -17731,8 +17722,8 @@ Template.new_invoice.events({
               let templateObject = Template.instance();
               let completeTabRecord;
               let doc = new jsPDF("p", "pt", "a4");
-              var source = document.getElementById("html-Invoice-pdfwrapper");
-              var opt = {
+              const source = document.getElementById("html-Invoice-pdfwrapper");
+              const opt = {
                 margin: 0,
                 filename: file,
                 image: {
@@ -17769,7 +17760,7 @@ Template.new_invoice.events({
 
             // var base64data = reader.result;
             let base64data = encodedPdf.split(",")[1];
-            pdfObject = {
+            let pdfObject = {
               filename: "invoice-" + invoiceId + ".pdf",
               content: base64data,
               encoding: "base64",
@@ -18326,16 +18317,16 @@ Template.new_invoice.events({
               },
             };
           }
-          var getcurrentCloudDetails = CloudUser.findOne({
+          const getcurrentCloudDetails = CloudUser.findOne({
             _id: Session.get("mycloudLogonID"),
             clouddatabaseID: Session.get("mycloudLogonDBID"),
           });
           if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
-              var clientID = getcurrentCloudDetails._id;
-              var clientUsername = getcurrentCloudDetails.cloudUsername;
-              var clientEmail = getcurrentCloudDetails.cloudEmail;
-              var checkPrefDetails = CloudPreference.findOne({
+              const clientID = getcurrentCloudDetails._id;
+              const clientUsername = getcurrentCloudDetails.cloudUsername;
+              const clientEmail = getcurrentCloudDetails.cloudEmail;
+              const checkPrefDetails = CloudPreference.findOne({
                 userid: clientID,
                 PrefName: "new_invoice",
               });
@@ -18500,7 +18491,6 @@ Template.new_invoice.events({
       $('.colTaxAmount').removeClass('showColumn');
     }
   },
-
   'click .chkAmountEx': function (event) {
     if ($(event.target).is(':checked')) {  
         $('.chkAmountInc').prop("checked", false); 
@@ -18539,7 +18529,6 @@ Template.new_invoice.events({
         $('.colAmountEx').removeClass('hiddenColumn');
     }
   },
-
   'click .chkUnitPriceEx': function (event) {
     if ($(event.target).is(':checked')) { 
         $('.chkUnitPriceInc').prop("checked", false); 
@@ -18579,7 +18568,6 @@ Template.new_invoice.events({
         $('.colUnitPriceEx').removeClass('hiddenColumn');
       }
   },
-
   'click .chkDiscount': function(event) {
     if ($(event.target).is(':checked')) {
         // $('.colDiscount').css('display', 'table-cell');
@@ -18732,7 +18720,6 @@ Template.new_invoice.events({
   "click .btnSaveGridSettings": function (event) {
     let lineItems = [];
     $(".fullScreenSpin").css("display", "inline-block");
-
     $(".displaySettings").each(function (index) {
       var $tblrow = $(this);
       var fieldID = $tblrow.attr("custid") || 0;
@@ -18828,7 +18815,6 @@ Template.new_invoice.events({
       $(".rngRange" + reset_data[index].class).val('');
     });
   },
-
   "click .btnResetSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
       _id: Session.get("mycloudLogonID"),
@@ -19129,6 +19115,8 @@ Template.new_invoice.events({
 
       let customer = $("#edtCustomerName").val();
       let customerEmail = $("#edtCustomerEmail").val();
+      let status = $('#sltStatus').val();
+      status = "Invoiced";
       let billingAddress = $("#txabillingAddress").val();
 
       let poNumber = $("#ponumber").val();
@@ -19170,7 +19158,7 @@ Template.new_invoice.events({
             SaleCustField3: saleCustField3,
             PickMemo: pickingInfrmation,
             Attachments: uploadedItems,
-            SalesStatus: $("#sltStatus").val(),
+            SalesStatus: status,
           },
         };
       } else {
@@ -19193,7 +19181,7 @@ Template.new_invoice.events({
             SaleCustField3: saleCustField3,
             PickMemo: pickingInfrmation,
             Attachments: uploadedItems,
-            SalesStatus: $("#sltStatus").val(),
+            SalesStatus: status,
           },
         };
       }
@@ -19907,6 +19895,8 @@ Template.new_invoice.events({
 
         let customer = $("#edtCustomerName").val();
         let customerEmail = $("#edtCustomerEmail").val();
+        let status = $('#sltStatus').val();
+        status = "Invoiced";
         let billingAddress = $("#txabillingAddress").val();
 
         let poNumber = $("#ponumber").val();
@@ -19949,7 +19939,7 @@ Template.new_invoice.events({
               SaleCustField3: saleCustField3,
               PickMemo: pickingInfrmation,
               Attachments: uploadedItems,
-              SalesStatus: $("#sltStatus").val(),
+              SalesStatus: status,
             },
           };
         } else {
@@ -19973,6 +19963,7 @@ Template.new_invoice.events({
               SaleCustField3: saleCustField3,
               PickMemo: pickingInfrmation,
               Attachments: uploadedItems,
+              SalesStatus: status,
             },
           };
         }
@@ -20314,21 +20305,6 @@ Template.new_invoice.events({
 
     }
 
-  },
-
-  // add to custom field
-  "click #edtSaleCustField1": function (e) {
-    $("#clickedControl").val("one");
-  },
-
-  // add to custom field
-  "click #edtSaleCustField2": function (e) {
-    $("#clickedControl").val("two");
-  },
-
-  // add to custom field
-  "click #edtSaleCustField3": function (e) {
-    $("#clickedControl").val("three");
   },
 });
 

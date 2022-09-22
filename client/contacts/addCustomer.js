@@ -2582,7 +2582,6 @@ Template.customerscard.events({
         if(mobile != '') {
             mobile = contactService.changeDialFormat(mobile, country);
         }
-
         if(phone != '') {
             phone = contactService.changeDialFormat(phone, country);
         }

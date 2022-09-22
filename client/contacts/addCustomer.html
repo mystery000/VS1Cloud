@@ -938,7 +938,7 @@
                                         <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                                             <div class="col">
                                                 <div class="row">
-                                                    <div class="form-group col-md-5">
+                                                    <div class="form-group col-md-5" style="padding-left: 4px;">
                                                         <label>Company Name</label>
                                                         <input type="text" class="form-control" id="edtCustomerCompany" name="edtCustomerCompany" value="{{record.company}}">
                                                     </div>
@@ -948,7 +948,7 @@
                                                     </div>
                                                     <div class="form-group col-md-2">
                                                         <label for="leadStatus">Status</label>
-                                                        <input type="search" class="form-control" id="leadStatus" name="leadStatus" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{setLeadStatus record.status}}">
+                                                        <input type="search" class="form-control es-input" id="leadStatus" name="leadStatus" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{setLeadStatus record.status}}">
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -1665,11 +1665,9 @@
                                                                                             padding: 2px;
                                                                                             border-radius: .35rem;
                                                                                         }
-
                                                                                         .custom-control-label {
                                                                                             position: absolute;
                                                                                         }
-
                                                                                         .rngRange {
                                                                                             position: relative;
                                                                                             display: flex;
@@ -1684,7 +1682,6 @@
                                                                                             color: rgb(128, 128, 128);
                                                                                             height: inherit !important;
                                                                                         }
-
                                                                                         @media only screen and (max-width: 480px) {
                                                                                             .modal.show .modal-dialog {
                                                                                                 float: inherit !important;
@@ -1697,7 +1694,6 @@
                                                                                     {{#each itemjob in tableheaderrecordsjob}}
                                                                                         {{#if equals itemjob.sTitle "id"}}
                                                                                         {{else}}
-
                                                                                             <div id="{{itemjob.sIndex}}" class="columnSettings">
                                                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                                                     <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{itemjob.sIndex}}" name="chkSalesNo-{{itemjob.sIndex}}"
@@ -1715,25 +1711,15 @@
                                                                                                     <!-- <div contenteditable="true" class="groove rngRange" type="text" value="{{item.sWidth}}" min="0" max="1000">{{item.sWidth}}px</div> -->
                                                                                                 </div>
                                                                                             </div>
-
                                                                                             {{#if equals itemjob.sVisible true}}
                                                                                                 <script>
-                                                                                                    $("#" + {
-                                                                                                        {
-                                                                                                            itemjob.sIndex
-                                                                                                        }
-                                                                                                    } + ".chkDatatable").attr("checked", "checked");
+                                                                                                    $("#" + {{itemjob.sIndex}} + ".chkDatatable").attr("checked", "checked");
                                                                                                 </script>
                                                                                             {{else}}
                                                                                                 <script>
-                                                                                                    $("#" + {
-                                                                                                        {
-                                                                                                            itemjob.sIndex
-                                                                                                        }
-                                                                                                    } + ".chkDatatable").removeAttr("checked");
+                                                                                                    $("#" + {{itemjob.sIndex}} + ".chkDatatable").removeAttr("checked");
                                                                                                 </script>
                                                                                             {{/if}}
-
                                                                                         {{/if}}
                                                                                     {{/each}}
                                                                                 </div>
@@ -1757,37 +1743,29 @@
                                                     th {
                                                         background-color: #ededed;
                                                     }
-
                                                     .table-striped tbody tr:nth-of-type(odd) {
                                                         background-color: white !important;
                                                     }
-
                                                     .table-striped tbody tr:nth-of-type(even) {
                                                         background-color: #0000000d !important;
                                                     }
-
                                                     .JColResizer>tbody>tr>td,
                                                     .JColResizer>tbody>tr>th {
                                                         padding: .75rem !important;
                                                     }
-
                                                     .hiddenColumn {
                                                         display: none;
                                                     }
-
                                                     .showColumn {
                                                         display: table-cell;
                                                         padding: .75rem;
                                                         vertical-align: top;
                                                     }
-
                                                     input[type=number]::-webkit-inner-spin-button,
                                                     input[type=number]::-webkit-outer-spin-button {
                                                         opacity: 1;
                                                     }
                                                 </style>
-
-
                                                 <table id="tblJoblist" name="tblJoblist" style="width:100%" class="dataTable table table-striped table-bordered tblJoblist">
                                                     <thead>
                                                         <tr class="dnd-moved">
@@ -1951,9 +1929,11 @@
                                                                         <li class="nav-item" style=" cursor: pointer;"><a class="nav-link active" role="tab" data-toggle="tab" data-target="#tab-Job11">Address</a></li>
                                                                         <li class="nav-item" style=" cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job12">Notes</a></li>
                                                                         <li class="nav-item" style=" cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job13">Billing</a></li>
-                                                                        <li class="nav-item attachmentTabJobPOP" style=" cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job14"> {{#if
-                                                      attachmentCount}}<span id="attachment-countJob">{{attachmentCountJob}}</span>{{/if}}
-                                                                                Attachments</a></li>
+                                                                        <li class="nav-item attachmentTabJobPOP" style=" cursor: pointer;">
+                                                                            <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job14">
+                                                                                {{#if attachmentCount}}<span id="attachment-countJob">{{attachmentCountJob}}</span>{{/if}}
+                                                                                Attachments</a>
+                                                                        </li>
                                                                         <!-- <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job15">Custom Fields</a></li> -->
                                                                         <li class="nav-item" style=" cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job16">Tax</a></li>
                                                                     </ul>
@@ -1962,10 +1942,8 @@
                                                                             <div class="row no-gutters flex-column" style="margin: 12px;">
                                                                                 <div class="col">
                                                                                     <script>
-                                                                                        < !--modalDraggable();
-                                                                                        -- >
-                                                                                        function
-                                                                                        myFunctionJobNoPOP() {
+                                                                                        // modalDraggable();
+                                                                                        function myFunctionJobNoPOP() {
                                                                                             const checkBoxJob = document.getElementById("chkJobSameAsShipping2NoPOP");
                                                                                             const billingAddressJob = document.getElementById("jobbillingaddressNoPOP");
                                                                                             if (checkBoxJob.checked === true) {
