@@ -18,11 +18,87 @@ Template.salesoverview.onCreated(function () {
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.custfields = new ReactiveVar([]);
   templateObject.displayfields = new ReactiveVar([]);
+  templateObject.reset_data = new ReactiveVar([]);
 });
 
 Template.salesoverview.onRendered(function () {
   $(".fullScreenSpin").css("display", "inline-block");
   let templateObject = Template.instance();
+
+
+  // set initial table rest_data
+  function init_reset_data() { 
+    let reset_data = [
+      { index: 0, label: 'Sort Date', class:'SortDate', active: false, display: false, width: "0" },
+      { index: 1, label: 'Sale Date', class:'SaleDate', active: true, display: true, width: "" },
+      { index: 2, label: 'Sales No.', class:'SalesNo', active: true, display: true, width: "" },
+      { index: 3, label: 'Type', class:'Type', active: true, display: true, width: "" },
+      { index: 4, label: 'Customer', class:'Customer', active: true, display: true, width: "" },
+      { index: 5, label: 'Amount(Ex)', class:'AmountEx', active: true, display: true, width: "" },
+      { index: 6, label: 'Tax', class:'Tax', active: true, display: true, width: "" },
+      { index: 7, label: 'Amount', class:'Amount', active: true, display: true, width: "" },
+      { index: 8, label: 'Paid', class:'Paid', active: true, display: true, width: "" },
+      { index: 9, label: 'Balance Outstanding', class:'BalanceOutstanding', active: true, display: true, width: "" },
+      { index: 10, label: 'Status', class:'Status', active: true, display: true, width: "" },
+      { index: 11, label: 'Employee', class:'Employee', active: false, display: true, width: "" },
+      { index: 12, label: 'Comments', class: 'Comments', active: true, display: true, width: "" },
+    ];
+
+    let templateObject = Template.instance();
+    templateObject.reset_data.set(reset_data);
+  }
+  init_reset_data();
+  // set initial table rest_data
+
+
+  // custom field displaysettings
+  function initCustomFieldDisplaySettings(data, listType) {
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    showCustomFieldDisplaySettings(reset_data);
+
+    try {
+      getVS1Data("VS1_Customize").then(function (dataObject) { 
+        if (dataObject.length == 0) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+              // reset_data = data.ProcessLog.CustomLayout.Columns;
+              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              showCustomFieldDisplaySettings(reset_data);
+          }).catch(function (err) {
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data); 
+          // handle process here
+        }
+      });
+    } catch (error) {
+    } 
+    return; 
+  }
+
+  function showCustomFieldDisplaySettings(reset_data) {
+
+    let custFields = [];
+    let customData = {};
+    let customFieldCount = reset_data.length;
+
+    for (let r = 0; r < customFieldCount; r++) {
+      customData = {
+        active: reset_data[r].active,
+        id: reset_data[r].index,
+        custfieldlabel: reset_data[r].label, 
+        class: reset_data[r].class,
+        display: reset_data[r].display,
+        width: reset_data[r].width ? reset_data[r].width : ''
+      };
+      custFields.push(customData);
+    }
+    templateObject.displayfields.set(custFields);
+  }
+
+  initCustomFieldDisplaySettings("", "tblSalesOverview");
+
+
   let accountService = new AccountService();
   let salesService = new SalesBoardService();
   const customerList = [];
@@ -1328,126 +1404,29 @@ Template.salesoverview.onRendered(function () {
     }
   }
 
-  function initCustomFieldDisplaySettings(data, listType) {
-    let custFields = [];
-    let dispFields = [];
-    let customData = {};
-
-    let reset_data = [
-      { label: 'Sale Date', class: 'colSaleDate', active: true },
-      { label: 'Sales No.', class: 'colSalesNo', active: true },
-      { label: 'Type', class: 'colType', active: true },
-      { label: 'Customer', class: 'colCustomer', active: true },
-      { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
-      { label: 'Tax', class: 'colTax', active: true },
-      { label: 'Amount', class: 'colAmount', active: true },
-      { label: 'Paid', class: 'colPaid', active: true },
-      { label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true },
-      { label: 'Status', class: 'colStatus', active: true },
-      { label: 'Employee', class: 'colEmployee', active: false },
-      { label: 'Comments', class: 'colComments', active: true },
-    ];
-    let customFieldCount = reset_data.length;
-
-    for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-      if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
-        customData = {
-          active: data.tcustomfieldlist[x].fields.Active || false,
-          id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-          custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-          datatype: data.tcustomfieldlist[x].fields.DataType || "",
-          isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-          iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-          dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-        };
-        custFields.push(customData);
-      } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
-        customData = {
-          active: data.tcustomfieldlist[x].fields.Active || false,
-          id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-          custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-          datatype: data.tcustomfieldlist[x].fields.DataType || "",
-          isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-          iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-          dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-          // width: data.tcustomfieldlist[x].fields.Width || 0,
-        };
-        dispFields.push(customData);
-      }
-    }
-
-    if (custFields.length < 3) {
-      let remainder = 3 - custFields.length;
-      let getRemCustomFields = parseInt(custFields.length);
-      for (let r = 0; r < remainder; r++) {
-        getRemCustomFields++;
-        customData = {
-          active: false,
-          id: "",
-          custfieldlabel: "Custom Field " + getRemCustomFields,
-          datatype: "",
-          isempty: true,
-          iscombo: false,
-        };
-        // count++;
-        custFields.push(customData);
-      }
-    }
-
-    if (dispFields.length < customFieldCount) {
-      let remainder = customFieldCount - dispFields.length;
-      let getRemCustomFields = parseInt(dispFields.length);
-      for (let r = 0; r < remainder; r++) {
-        customData = {
-          active: reset_data[getRemCustomFields].active,
-          id: "",
-          custfieldlabel: reset_data[getRemCustomFields].label,
-          datatype: "",
-          isempty: true,
-          iscombo: false,
-          // width: reset_data[getRemCustomFields].width,
-        };
-        getRemCustomFields++;
-        // count++;
-        dispFields.push(customData);
-      }
-    }
-
-    for (let index = 0; index < custFields.length; index++) {
-      const element = custFields[index];
-      dispFields.push(element);
-
-    }
-
-    templateObject.custfields.set(custFields);
-    templateObject.displayfields.set(dispFields);
-  }
-
   // custom field displaysettings
-  templateObject.getAllCustomFieldDisplaySettings = function () {
+  // templateObject.getAllCustomFieldDisplaySettings = function () {
+  //     let listType = "ltSalesOverview";
+  //     try {
+  //       getVS1Data("TltSalesOverview").then(function (dataObject) {
+  //         if (dataObject.length == 0) {
+  //           sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+  //             initCustomFieldDisplaySettings(data, listType);
+  //             addVS1Data("TltSalesOverview", JSON.stringify(data));
+  //           });
+  //         } else {
+  //           let data = JSON.parse(dataObject[0].data);
+  //           initCustomFieldDisplaySettings(data, listType);
+  //           sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+  //             addVS1Data("TltSalesOverview", JSON.stringify(data));
+  //           });
+  //         }
+  //       })
+  //     } catch (error) {
+  //     }
+  // }
+  // templateObject.getAllCustomFieldDisplaySettings();
 
-      let listType = "ltSalesOverview";
-      try {
-        getVS1Data("TltSalesOverview").then(function (dataObject) {
-          if (dataObject.length == 0) {
-            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-              initCustomFieldDisplaySettings(data, listType);
-              addVS1Data("TltSalesOverview", JSON.stringify(data));
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            initCustomFieldDisplaySettings(data, listType);
-            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-              addVS1Data("TltSalesOverview", JSON.stringify(data));
-            });
-          }
-        })
-
-      } catch (error) {
-      }
-  }
-
-  templateObject.getAllCustomFieldDisplaySettings();
   tableResize();
 });
 
@@ -1897,144 +1876,296 @@ Template.salesoverview.events({
       }
     });
   },
+  'click .chkSaleDate': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colSaleDate').addClass('showColumn');
+      $('.colSaleDate').removeClass('hiddenColumn');
+    } else {
+      $('.colSaleDate').addClass('hiddenColumn');
+      $('.colSaleDate').removeClass('showColumn');
+    }
+  },
+  'click .chkSalesNo': function(event) { 
+    if ($(event.target).is(':checked')) {
+      $('.colSalesNo').addClass('showColumn');
+      $('.colSalesNo').removeClass('hiddenColumn');
+    } else {
+      $('.colSalesNo').addClass('hiddenColumn');
+      $('.colSalesNo').removeClass('showColumn');
+    }
+  },
+  'click .chkType': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colType').addClass('showColumn');
+      $('.colType').removeClass('hiddenColumn');
+    } else {
+      $('.colType').addClass('hiddenColumn');
+      $('.colType').removeClass('showColumn');
+    }
+  },
+  'click .chkCustomer': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colCustomer').addClass('showColumn');
+      $('.colCustomer').removeClass('hiddenColumn');
+    } else {
+      $('.colCustomer').addClass('hiddenColumn');
+      $('.colCustomer').removeClass('showColumn');
+    }
+  },
+  'click .chkAmountEx': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colAmountEx').addClass('showColumn');
+      $('.colAmountEx').removeClass('hiddenColumn');
+    } else {
+      $('.colAmountEx').addClass('hiddenColumn');
+      $('.colAmountEx').removeClass('showColumn');
+    }
+  },
+  'click .chkTax': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colTax').addClass('showColumn');
+      $('.colTax').removeClass('hiddenColumn');
+    } else {
+      $('.colTax').addClass('hiddenColumn');
+      $('.colTax').removeClass('showColumn');
+    }
+  },
+  // displaysettings
+  'click .chkAmount': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colAmount').addClass('showColumn');
+      $('.colAmount').removeClass('hiddenColumn');
+    } else {
+      $('.colAmount').addClass('hiddenColumn');
+      $('.colAmount').removeClass('showColumn');
+    }
+  },
+  'click .chkPaid': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colPaid').addClass('showColumn');
+      $('.colPaid').removeClass('hiddenColumn');
+    } else {
+      $('.colPaid').addClass('hiddenColumn');
+      $('.colPaid').removeClass('showColumn');
+    }
+  },
+
+  'click .chkBalanceOutstanding': function(event) {
+    if ($(event.target).is(':checked')) { 
+      $('.colBalanceOutstanding').addClass('showColumn');
+      $('.colBalanceOutstanding').removeClass('hiddenColumn');
+    } else { 
+        $('.colBalanceOutstanding').addClass('hiddenColumn');
+        $('.colBalanceOutstanding').removeClass('showColumn');
+    }
+  },
+  'click .chkStatus': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colStatus').addClass('showColumn');
+      $('.colStatus').removeClass('hiddenColumn');
+    } else {
+      $('.colStatus').addClass('hiddenColumn');
+      $('.colStatus').removeClass('showColumn');
+    }
+  },
+  'click .chkEmployee': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colEmployee').addClass('showColumn');
+      $('.colEmployee').removeClass('hiddenColumn');
+    } else {
+      $('.colEmployee').addClass('hiddenColumn');
+      $('.colEmployee').removeClass('showColumn');
+    }
+  },
+  'click .chkComments': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colComments').addClass('showColumn');
+      $('.colComments').removeClass('hiddenColumn');
+    } else {
+      $('.colComments').addClass('hiddenColumn');
+      $('.colComments').removeClass('showColumn');
+    }
+  },
+  // display settings
+
+
+  'change .rngRangeSaleDate': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthSaleDate").html(range);
+      $('.colSaleDate').css('width', range);
+  },
+  'change .rngRangeSalesNo': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthSalesNo").html(range);
+      $('.colSalesNo').css('width', range);
+  },
+  'change .rngRangeType': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthType").html(range);
+      $('.colType').css('width', range);
+  },
+  'change .rngRangeUnitPriceInc': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthUnitPrice").html(range);
+      $('.colUnitPriceInc').css('width', range);
+  },
+  'change .rngRangeUnitPriceEx': function(event) {
+      let range = $(event.target).val();
+      $('.colUnitPriceEx').css('width', range);
+  },
+  'change .rngRangeTax': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthTax").html(range);
+      $('.colTax').css('width', range);
+  },
+  'change .rngRangeAmountInc': function (event) {
+      let range = $(event.target).val();
+      //$(".spWidthAmount").html(range);
+      $('.colAmountInc').css('width', range);
+  },
+  'change .rngRangeAmountEx': function (event) {
+      let range = $(event.target).val();
+      //$(".spWidthAmount").html(range);
+      $('.colAmountEx').css('width', range);
+  },
+  'change .rngRangePaid': function (event) {
+      let range = $(event.target).val();
+      //$(".spWidthAmount").html(range);
+      $('.colPaid').css('width', range);
+  },
+  'change .rngRangeBalanceOutstanding': function (event) {
+      let range = $(event.target).val();
+      $('.colBalanceOutstanding').css('width', range);
+  },
+  'change .rngRangeStatus': function (event) {
+      let range = $(event.target).val();
+      $('.colStatus').css('width', range);
+  },
+  'change .rngRangeAmount': function (event) {
+      let range = $(event.target).val();
+      $('.colAmount').css('width', range);
+  },
+  'change .rngRangeCustomer': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthCustomer").html(range);
+      $('.colCustomer').css('width', range);
+  },
+  'change .rngRangeEmployee': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthEmployee").html(range);
+      $('.colEmployee').css('width', range);
+  },
+  'change .rngRangeComments': function(event) {
+      let range = $(event.target).val();
+      $(".spWidthComments").html(range);
+      $('.colComments').css('width', range);
+  },
+"blur .divcolumn": function (event) {
+  let columData = $(event.target).html();
+  let columHeaderUpdate = $(event.target).attr("valueupdate");
+  $("th.col" + columHeaderUpdate + "").html(columData);
+},
   "click .resetTable": function (event) {
-
     let templateObject = Template.instance();
-    let custFields = templateObject.custfields.get();
-    // var datable = $('#tblSalesOverview').DataTable();
+    let reset_data = templateObject.reset_data.get(); 
+    // let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+    // if(isBatchSerialNoTracking) {
+    //   reset_data[11].display = true; 
+    // } else {
+    //   reset_data[11].display = false; 
+    // }
+    reset_data = reset_data.filter(redata => redata.display); 
 
-    let reset_data = [
-      { label: 'Sale Date', class: 'colSaleDate', active: true, width: 0 },
-      { label: 'Sales No.', class: 'colSalesNo', active: true, width: 0 },
-      { label: 'Type', class: 'colType', active: true, width: 0 },
-      { label: 'Customer', class: 'colCustomer', active: true, width: 0 },
-      { label: 'Amount(Ex)', class: 'colAmountEx', active: true, width: 0 },
-      { label: 'Tax', class: 'colTax', active: true, width: 0 },
-      { label: 'Amount', class: 'colAmount', active: true, width: 0 },
-      { label: 'Paid', class: 'colPaid', active: true, width: 0 },
-      { label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true, width: 0 },
-      { label: 'Status', class: 'colStatus', active: true, width: 0 },
-      { label: 'Employee', class: 'colEmployee', active: false, width: 0 },
-      { label: 'Comments', class: 'colComments', active: true, width: 0 },
-      { label: custFields[0].custfieldlabel, class: 'colSaleCustField1', active: custFields[0].active, width: 0},
-      { label: custFields[1].custfieldlabel, class: 'colSaleCustField2', active: custFields[1].active, width: 0},
-      { label: custFields[2].custfieldlabel, class: 'colSaleCustField3', active: custFields[2].active, width: 0}
-    ];
-
-
-    $('.displaySettings').each(function(index) {
-      var $tblrow = $(this);
+    $(".displaySettings").each(function (index) {
+      let $tblrow = $(this);
       $tblrow.find(".divcolumn").text(reset_data[index].label);
-      $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
+      $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
 
-      // var title = datable.column( index+1 ).header();
-      var title = $('#tblSalesOverview').find('th').eq(index + 1);
-      $(title).html(reset_data[index].label);
+      let title = $("#tblSalesOverview").find("th").eq(index+1);
+      $(title).html(reset_data[index].label); 
 
       if (reset_data[index].active) {
-        $('.' + reset_data[index].class).css('display', 'table-cell');
-        $('.' + reset_data[index].class).css('padding', '.75rem');
-        $('.' + reset_data[index].class).css('vertical-align', 'top');
+        $('.col' + reset_data[index].class).addClass('showColumn');
+        $('.col' + reset_data[index].class).removeClass('hiddenColumn');
       } else {
-        $('.' + reset_data[index].class).css('display', 'none');
+        $('.col' + reset_data[index].class).addClass('hiddenColumn');
+        $('.col' + reset_data[index].class).removeClass('showColumn');
       }
+      $(".rngRange" + reset_data[index].class).val('');
     });
-
   },
   "click .saveTable": function (event) {
     let lineItems = [];
-    let organisationService = new OrganisationService();
-    let listType = "ltSalesOverview";
-
     $(".fullScreenSpin").css("display", "inline-block");
 
-    $('.displaySettings').each(function(index) {
+    $(".displaySettings").each(function (index) {
       var $tblrow = $(this);
       var fieldID = $tblrow.attr("custid") || 0;
-      var colTitle = $tblrow.find(".divcolumn").text() || '';
+      var colTitle = $tblrow.find(".divcolumn").text() || "";
       var colWidth = $tblrow.find(".custom-range").val() || 0;
-      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
       var colHidden = false;
-      if ($tblrow.find(".custom-control-input").is(':checked')) {
-          colHidden = true;
+      if ($tblrow.find(".custom-control-input").is(":checked")) {
+        colHidden = true;
       } else {
-          colHidden = false;
+        colHidden = false;
       }
       let lineItemObj = {
-          index: index,
-          label: colTitle,
-          hidden: colHidden,
-          width: colWidth,
-          thclass: colthClass
-      }
+        index: parseInt(fieldID),
+        label: colTitle,
+        active: colHidden,
+        width: parseInt(colWidth),
+        class: colthClass,
+        display: true
+      };
 
-      lineItems.push(lineItemObj);
-
-      if(fieldID && parseInt(fieldID) != 0){
-        objDetails1 = {
-          type: "TCustomFieldList",
-          fields: {
-            Active: colHidden,
-            ID: parseInt(fieldID),
-            Description: colTitle,
-            Width: colWidth
-          },
-        };
-      } else {
-        objDetails1 = {
-          type: "TCustomFieldList",
-          fields: {
-            Active: colHidden,
-            DataType: "ftString",
-            Description: colTitle,
-            ListType: listType,
-            Width: colWidth
-          },
-        };
-      }
-
-      organisationService.saveCustomField(objDetails1).then(function (objDetails) {
-        $(".fullScreenSpin").css("display", "none");
-        $('#myModal2').modal('hide');
-      })
-      .catch(function (err) {
-        swal({
-          title: "Oooops...",
-          text: err,
-          type: "error",
-          showCancelButton: false,
-          confirmButtonText: "Try Again",
-        }).then((result) => {
-          if (result.value) {
-            $(".fullScreenSpin").css("display", "none");
-          } else if (result.dismiss === "cancel") {
-          }
-          $('#myModal2').modal('hide');
-        });
-        $(".fullScreenSpin").css("display", "none");
-        $('#myModal2').modal('hide');
-      });
+      lineItems.push(lineItemObj); 
     });
 
-    setTimeout(() => {
-      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-        addVS1Data("TltSalesOverview", JSON.stringify(data));
-      });
-    }, 8000);
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    reset_data = reset_data.filter(redata => redata.display == false);
+    lineItems.push(...reset_data);
+    lineItems.sort((a,b) => a.index - b.index); 
 
+    try {
+      let erpGet = erpDb();
+      let tableName = "tblSalesOverview";
+      let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+      let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+      $(".fullScreenSpin").css("display", "none");
+      if(added) {
+          swal({
+            title: 'SUCCESS',
+            text: "Display settings is updated!",
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonText: 'OK'
+          }).then((result) => {
+              if (result.value) {
+                 $('#myModal2').modal('hide');
+              }  
+          });
+      } else {
+        swal("Something went wrong!", "", "error");
+      }
+    } catch (error) {
+      $(".fullScreenSpin").css("display", "none");
+      swal("Something went wrong!", "", "error");
+    } 
   },
 
-  "blur .divcolumn": function (event) {
-    let columData = $(event.target).text();
+  // "blur .divcolumn": function (event) {
+  //   let columData = $(event.target).text();
 
-    let columnDatanIndex = $(event.target)
-      .closest("div.columnSettings")
-      .attr("id");
+  //   let columnDatanIndex = $(event.target)
+  //     .closest("div.columnSettings")
+  //     .attr("id");
 
-    var datable = $("#tblSalesOverview").DataTable();
-    var title = datable.column(columnDatanIndex).header();
-    $(title).html(columData);
-  },
+  //   var datable = $("#tblSalesOverview").DataTable();
+  //   var title = datable.column(columnDatanIndex).header();
+  //   $(title).html(columData);
+  // },
   "change .rngRange": function (event) {
     let range = $(event.target).val();
     // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
