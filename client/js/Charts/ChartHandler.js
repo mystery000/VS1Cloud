@@ -177,7 +177,7 @@ export default class ChartHandler {
     let tvs1ChartDashboardPreference = [];
     let Tvs1dashboardpreferences = await getVS1Data('Tvs1dashboardpreferences')
     if( Tvs1dashboardpreferences.length ){
-      Tvs1ChartData = await JSON.parse(Tvs1dashboardpreferences[0].data)
+      let Tvs1ChartData = await JSON.parse(Tvs1dashboardpreferences[0].data)
       if( Tvs1ChartData ){
         tvs1ChartDashboardPreference = Tvs1ChartDashboardPreference.fromList(
           Tvs1ChartData.tvs1dashboardpreferences

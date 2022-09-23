@@ -320,82 +320,66 @@
                                 </ul>
                                 <div class="tab-content">
                                     <style>
-                            .table-responsive {
-                                overflow-x: auto;
-                            }
-
-                            @media only screen and (max-width: 1920px) {
-                                .cardSizing {
-                                    /*                                                width: 1464px;*/
-                                }
-
-                                .tab-1 {
-                                    width: 100%;
-                                }
-
-                                .tab-2 {
-                                    width: 100%;
-                                }
-
-                                .tab-3 {
-                                    width: 100%;
-                                }
-                            }
-
-                            @media only screen and (max-width: 1600px) {
-                                .cardSizing {
-                                    /*                                                width: 1146px;*/
-                                }
-
-                                .tab-1 {
-                                    width: 100%;
-                                }
-
-                                .tab-2 {
-                                    width: 100%;
-                                }
-
-                                .tab-3 {
-                                    width: 100%;
-                                }
-                            }
-
-                            @media only screen and (max-width: 1536px) {
-                                .cardSizing {
-                                    /*                                                width: 1066.400px;*/
-                                }
-
-                                .tab-1 {
-                                    width: 100%;
-                                }
-
-                                .tab-2 {
-                                    width: 100%;
-                                }
-
-                                .tab-3 {
-                                    width: 100%;
-                                }
-                            }
-
-                            @media only screen and (max-width: 1367px) {
-                                .cardSizing {
-                                    /*                                                width: 898px;*/
-                                }
-
-                                .tab-1 {
-                                    width: 100%;
-                                }
-
-                                .tab-2 {
-                                    width: 100%;
-                                }
-
-                                .tab-3 {
-                                    width: 100%;
-                                }
-                            }
-                        </style>
+                                        .table-responsive {
+                                            overflow-x: auto;
+                                        }
+                                        @media only screen and (max-width: 1920px) {
+                                            .cardSizing {
+                                                /*                                                width: 1464px;*/
+                                            }
+                                            .tab-1 {
+                                                width: 100%;
+                                            }
+                                            .tab-2 {
+                                                width: 100%;
+                                            }
+                                            .tab-3 {
+                                                width: 100%;
+                                            }
+                                        }
+                                        @media only screen and (max-width: 1600px) {
+                                            .cardSizing {
+                                                /*                                                width: 1146px;*/
+                                            }
+                                            .tab-1 {
+                                                width: 100%;
+                                            }
+                                            .tab-2 {
+                                                width: 100%;
+                                            }
+                                            .tab-3 {
+                                                width: 100%;
+                                            }
+                                        }
+                                        @media only screen and (max-width: 1536px) {
+                                            .cardSizing {
+                                                /*                                                width: 1066.400px;*/
+                                            }
+                                            .tab-1 {
+                                                width: 100%;
+                                            }
+                                            .tab-2 {
+                                                width: 100%;
+                                            }
+                                            .tab-3 {
+                                                width: 100%;
+                                            }
+                                        }
+                                        @media only screen and (max-width: 1367px) {
+                                            .cardSizing {
+                                                /*                                                width: 898px;*/
+                                            }
+                                            .tab-1 {
+                                                width: 100%;
+                                            }
+                                            .tab-2 {
+                                                width: 100%;
+                                            }
+                                            .tab-3 {
+                                                width: 100%;
+                                            }
+                                        }
+                                    </style>
                                     <!-- start Job -->
                                     {{# if isJob}}
                                     <div class="tab-pane active border rounded-0 tab-Job jobTabEdit" role="tabpanel" id="tab-Job" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
@@ -938,17 +922,22 @@
                                         <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                                             <div class="col">
                                                 <div class="row">
-                                                    <div class="form-group col-md-5" style="padding-left: 4px;">
+                                                    <div class="form-group col-md-3" style="padding-left: 4px;">
                                                         <label>Company Name</label>
                                                         <input type="text" class="form-control" id="edtCustomerCompany" name="edtCustomerCompany" value="{{record.company}}">
                                                     </div>
-                                                    <div class="form-group col-md-5">
+                                                    <div class="form-group col-md-4">
                                                         <label>Customer Email</label>
                                                         <input type="text" class="form-control" id="edtCustomerEmail" name="edtCustomerEmail" value="{{record.email}}">
                                                     </div>
-                                                    <div class="form-group col-md-2">
+                                                    <div class="form-group col-md-3">
                                                         <label for="leadStatus">Status</label>
                                                         <input type="search" class="form-control es-input" id="leadStatus" name="leadStatus" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{setLeadStatus record.status}}">
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        <label>Sales Quota</label>
+                                                        <input type="text" class="form-control" id="edtSalesQuota" name="edtSalesQuota" value="{{formatPrice record.salesQuota}}"
+                                                               title="Displays as Rev Counter on Sales Manager Dashboard">
                                                     </div>
                                                 </div>
                                                 <div class="row">

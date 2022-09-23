@@ -4876,8 +4876,10 @@ Template.employeescard.events({
         contactService.saveEmployeeEx(objDetails).then(function (objDetails) {
             let employeeSaveID = objDetails.fields.ID;
             sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function (dataReload) {
-                  addVS1Data('TEmployee',JSON.stringify(dataReload));
-            }).catch(function (err) {});
+                addVS1Data('TEmployee',JSON.stringify(dataReload));
+            }).catch(function (err) {
+
+            });
 
             $('#selectEmployeeID').val(employeeSaveID);
             // var erpUserID = $("#erpEmpID").val();
@@ -4903,53 +4905,51 @@ Template.employeescard.events({
 
             contactService.saveEmployeePicture(employeePicObj).then(function (employeePicObj) {});
 
-            var tblSelectedInventoryService = $(".tblEmpServiceList").dataTable();
-            if(includeAllProducts == "true"){
+            const tblSelectedInventoryService = $(".tblEmpServiceList").dataTable();
+            if (includeAllProducts == "true") {
 
-            }else{
-            $(".colServiceName",tblSelectedInventoryService).each(function () {
-                var lineID =$(this).closest('tr').find('.colID').text()||''; // table row ID
-                let tdproduct = $(this).text() ||'';
-                //$('#' + lineID + " .colServiceName").text()||'';
-                let tddescription = $(this).closest('tr').find('.colServiceDescription').text()||'';
-                //$('#' + lineID + " .colServiceDescription").text()||'';
-                let tdCostPrice = $(this).closest('tr').find('.colServiceCostPrice').val()||Currency +0;
-                //$('#' + lineID + " .colServiceCostPrice").val() || 0;
+            } else {
+                $(".colServiceName",tblSelectedInventoryService).each(function () {
+                    const lineID = $(this).closest('tr').find('.colID').text() || ''; // table row ID
+                    let tdproduct = $(this).text() ||'';
+                    //$('#' + lineID + " .colServiceName").text()||'';
+                    let tddescription = $(this).closest('tr').find('.colServiceDescription').text()||'';
+                    //$('#' + lineID + " .colServiceDescription").text()||'';
+                    let tdCostPrice = $(this).closest('tr').find('.colServiceCostPrice').val()||Currency +0;
+                    //$('#' + lineID + " .colServiceCostPrice").val() || 0;
 
-                let tdSalePrice = $(this).closest('tr').find('.colServiceSalesPrice').val()||Currency +0;
-                //$('#' + lineID + " .colServiceSalesPrice").val()|| 0;
-                //$('#' + lineID + " .colServiceSalesPrice").val()|| 0;
-                let paymentTransObj = '';
-                if(tdproduct!= '' && tdproduct!= 'Name'){
-                  if($.isNumeric(lineID)){
-                    paymentTransObj = {
-                           type: "TRepServices",
-                           fields: {
-                               ID: parseInt(lineID) || 0,
-                               EmployeeName: employeeName || '',
-                               Rate:Number(tdCostPrice.replace(/[^0-9.-]+/g, ""))||0,
-                               PayRate:Number(tdSalePrice.replace(/[^0-9.-]+/g, ""))||0,
-                               ServiceDesc: tdproduct || ''
-                           }
-
-                   };
-                  }else{
-                 paymentTransObj = {
-                        type: "TRepServices",
-                        fields: {
-                            EmployeeName: employeeName || '',
-                            Rate:Number(tdCostPrice.replace(/[^0-9.-]+/g, ""))||0,
-                            PayRate:Number(tdSalePrice.replace(/[^0-9.-]+/g, ""))||0,
-                            ServiceDesc: tdproduct || ''
+                    let tdSalePrice = $(this).closest('tr').find('.colServiceSalesPrice').val()||Currency +0;
+                    //$('#' + lineID + " .colServiceSalesPrice").val()|| 0;
+                    //$('#' + lineID + " .colServiceSalesPrice").val()|| 0;
+                    let paymentTransObj = '';
+                    if (tdproduct!= '' && tdproduct!= 'Name'){
+                        if($.isNumeric(lineID)){
+                            paymentTransObj = {
+                                type: "TRepServices",
+                                fields: {
+                                    ID: parseInt(lineID) || 0,
+                                    EmployeeName: employeeName || '',
+                                    Rate:Number(tdCostPrice.replace(/[^0-9.-]+/g, ""))||0,
+                                    PayRate:Number(tdSalePrice.replace(/[^0-9.-]+/g, ""))||0,
+                                    ServiceDesc: tdproduct || ''
+                                }
+                            };
+                        } else {
+                            paymentTransObj = {
+                                type: "TRepServices",
+                                fields: {
+                                    EmployeeName: employeeName || '',
+                                    Rate:Number(tdCostPrice.replace(/[^0-9.-]+/g, ""))||0,
+                                    PayRate:Number(tdSalePrice.replace(/[^0-9.-]+/g, ""))||0,
+                                    ServiceDesc: tdproduct || ''
+                                }
+                            };
                         }
+                        contactService.saveEmployeeProducts(paymentTransObj).then(function (paymentTransObj) {
 
-                };
-              }
-
-
-                contactService.saveEmployeeProducts(paymentTransObj).then(function (paymentTransObj) {});
-                }
-            });
+                        });
+                    }
+                });
             }
 
             let showSat = false;

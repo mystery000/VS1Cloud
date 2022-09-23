@@ -5,13 +5,14 @@ import {UtilityService} from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+
 Template.employeelist.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
-
     templateObject.selectedFile = new ReactiveVar();
 });
 
@@ -21,7 +22,7 @@ Template.employeelist.onRendered(function() {
     let contactService = new ContactService();
     const customerList = [];
     let salesOrderTable;
-    var splashArray = new Array();
+    const splashArray = [];
     const dataTableList = [];
     const tableHeaderList = [];
     if(FlowRouter.current().queryParams.success){
@@ -51,175 +52,9 @@ Template.employeelist.onRendered(function() {
 
     templateObject.getEmployees = function () {
         getVS1Data('TEmployee').then(function (dataObject) {
-
             if(dataObject.length == 0){
                 sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function (data) {
-                  addVS1Data('TEmployee',JSON.stringify(data));
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    for(let i=0; i<data.temployee.length; i++){
-                        let mobile = contactService.changeDialFormat(data.temployee[i].fields.Mobile, data.temployee[i].fields.Country)
-                        var dataList = {
-                            id: data.temployee[i].fields.ID || '',
-                            employeeno: data.temployee[i].fields.EmployeeNo || '',
-                            employeename:data.temployee[i].fields.EmployeeName || '',
-                            firstname: data.temployee[i].fields.FirstName || '',
-                            lastname: data.temployee[i].fields.LastName || '',
-                            phone: data.temployee[i].fields.Phone || '',
-                            mobile:  mobile || '',
-                            email: data.temployee[i].fields.Email || '',
-                            address: data.temployee[i].fields.Street || '',
-                            country: data.temployee[i].fields.Country || '',
-                            department: data.temployee[i].fields.DefaultClassName || '',
-                            custFld1: data.temployee[i].fields.CustFld1 || '',
-                            custFld2: data.temployee[i].fields.CustFld2 || '',
-                            custFld3: data.temployee[i].fields.CustFld3 || '',
-                            custFld4: data.temployee[i].fields.CustFld4 || ''
-                        };
-
-                        if(data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != ''){
-                            dataTableList.push(dataList);
-                        }
-                        //}
-                    }
-
-                    templateObject.datatablerecords.set(dataTableList);
-
-                    if(templateObject.datatablerecords.get()){
-
-                        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelist', function(error, result){
-                            if(error){
-
-                            }else{
-                                if(result){
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.split('.')[1];
-                                        let columnWidth = customcolumn[i].width;
-                                        let columnindex = customcolumn[i].index + 1;
-
-                                        if(hiddenColumn == true){
-
-                                            $("."+columnClass+"").addClass('hiddenColumn');
-                                            $("."+columnClass+"").removeClass('showColumn');
-                                        }else if(hiddenColumn == false){
-                                            $("."+columnClass+"").removeClass('hiddenColumn');
-                                            $("."+columnClass+"").addClass('showColumn');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
-                    }
-
-
-                    setTimeout(function () {
-                        $('#tblEmployeelist').DataTable({
-
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            buttons: [
-                                {
-                                    extend: 'csvHtml5',
-                                    text: '',
-                                    download: 'open',
-                                    className: "btntabletocsv hiddenColumn",
-                                    filename: "Employee List - "+ moment().format(),
-                                    orientation:'portrait',
-                                    exportOptions: {
-                                        columns: ':visible'
-                                    }
-                                },{
-                                    extend: 'print',
-                                    download: 'open',
-                                    className: "btntabletopdf hiddenColumn",
-                                    text: '',
-                                    title: 'Employee List',
-                                    filename: "Employee List - "+ moment().format(),
-                                    exportOptions: {
-                                        columns: ':visible',
-                                        stripHtml: false
-                                    }
-                                },
-                                {
-                                    extend: 'excelHtml5',
-                                    title: '',
-                                    download: 'open',
-                                    className: "btntabletoexcel hiddenColumn",
-                                    filename: "Employee List - "+ moment().format(),
-                                    orientation:'portrait',
-                                    exportOptions: {
-                                        columns: ':visible'
-                                    }
-
-                                }],
-                            select: true,
-                            destroy: true,
-                            colReorder: true,
-                            // bStateSave: true,
-                            // rowId: 0,
-                            pageLength: initialDatatableLoad,
-                            lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                            info: true,
-                            responsive: true,
-                            "order": [[ 1, "asc" ]],
-                            action: function () {
-                                $('#tblEmployeelist').DataTable().ajax.reload();
-                            },
-                            language: { search: "",searchPlaceholder: "Search List..." },
-                             "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
-                        }
-
-                        }).on('page', function () {
-
-                            let draftRecord = templateObject.datatablerecords.get();
-                            templateObject.datatablerecords.set(draftRecord);
-                        }).on('column-reorder', function () {
-
-                        });
-
-                        // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
-                        $('.fullScreenSpin').css('display','none');
-                    }, 0);
-
-                    var columns = $('#tblEmployeelist th');
-                    let sTible = "";
-                    let sWidth = "";
-                    let sIndex = "";
-                    let sVisible = "";
-                    let columVisible = false;
-                    let sClass = "";
-                    $.each(columns, function(i,v) {
-                        if(v.hidden == false){
-                            columVisible =  true;
-                        }
-                        if((v.className.includes("hiddenColumn"))){
-                            columVisible = false;
-                        }
-                        sWidth = v.style.width.replace('px', "");
-                        let datatablerecordObj = {
-                            sTitle: v.innerText || '',
-                            sWidth: sWidth || '',
-                            sIndex: v.cellIndex || '',
-                            sVisible: columVisible || false,
-                            sClass: v.className || ''
-                        };
-                        tableHeaderList.push(datatablerecordObj);
-                    });
-                    templateObject.tableheaderrecords.set(tableHeaderList);
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                    $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
-                        var listData = $(this).closest('tr').attr('id');
-                        if(listData){
-                            FlowRouter.go('/employeescard?id=' + listData);
-                        }
-                    });
-
+                    setAllEmployees(data);
                 }).catch(function (err) {
                     // Bert.alert('<strong>' + err + '</strong>!', 'danger');
                     $('.fullScreenSpin').css('display','none');
@@ -227,338 +62,11 @@ Template.employeelist.onRendered(function() {
                 });
             }else{
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.temployee;
-
-                let lineItems = [];
-                let lineItemObj = {};
-                for(let i=0; i<useData.length; i++){
-
-                    let mobile = contactService.changeDialFormat(useData[i].fields.Mobile, useData[i].fields.Country);
-                    var dataList = {
-                        id: useData[i].fields.ID || '',
-                        employeeno: useData[i].fields.EmployeeNo || '',
-                        employeename:useData[i].fields.EmployeeName || '',
-                        firstname: useData[i].fields.FirstName || '',
-                        lastname: useData[i].fields.LastName || '',
-                        phone: useData[i].fields.Phone || '',
-                        mobile: mobile || '',
-                        email: useData[i].fields.Email || '',
-                        address: useData[i].fields.Street || '',
-                        country: useData[i].fields.Country || '',
-                        department: useData[i].fields.DefaultClassName || '',
-                        custFld1: useData[i].fields.CustFld1 || '',
-                        custFld2: useData[i].fields.CustFld2 || '',
-                        custFld3: useData[i].fields.CustFld3 || '',
-                        custFld4: useData[i].fields.CustFld4 || ''
-                    };
-
-                    if(useData[i].fields.EmployeeName.replace(/\s/g, '') != ''){
-                        dataTableList.push(dataList);
-                    }
-                    //}
-                }
-
-                templateObject.datatablerecords.set(dataTableList);
-
-                if(templateObject.datatablerecords.get()){
-
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelist', function(error, result){
-                        if(error){
-
-                        }else{
-                            if(result){
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if(hiddenColumn == true){
-
-                                        $("."+columnClass+"").addClass('hiddenColumn');
-                                        $("."+columnClass+"").removeClass('showColumn');
-                                    }else if(hiddenColumn == false){
-                                        $("."+columnClass+"").removeClass('hiddenColumn');
-                                        $("."+columnClass+"").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-                }
-
-
-                setTimeout(function () {
-                    $('#tblEmployeelist').DataTable({
-
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [
-                            {
-                                extend: 'csvHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "Employee List - "+ moment().format(),
-                                orientation:'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            },{
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Employee List',
-                                filename: "Employee List - "+ moment().format(),
-                                exportOptions: {
-                                    columns: ':visible',
-                                    stripHtml: false
-                                }
-                            },
-                            {
-                                extend: 'excelHtml5',
-                                title: '',
-                                download: 'open',
-                                className: "btntabletoexcel hiddenColumn",
-                                filename: "Employee List - "+ moment().format(),
-                                orientation:'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-
-                            }],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        // bStateSave: true,
-                        // rowId: 0,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        info: true,
-                        responsive: true,
-                        "order": [[ 1, "asc" ]],
-                        action: function () {
-                            $('#tblEmployeelist').DataTable().ajax.reload();
-                        },
-                        language: { search: "",searchPlaceholder: "Search List..." },
-                         "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
-                        }
-
-                    }).on('page', function () {
-
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function () {
-
-                    });
-
-                    // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
-                    $('.fullScreenSpin').css('display','none');
-                }, 0);
-
-                var columns = $('#tblEmployeelist th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i,v) {
-                    if(v.hidden == false){
-                        columVisible =  true;
-                    }
-                    if((v.className.includes("hiddenColumn"))){
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
-                    var listData = $(this).closest('tr').attr('id');
-                    if(listData){
-                        FlowRouter.go('/employeescard?id=' + listData);
-                    }
-                });
+                setAllEmployees(data);
             }
         }).catch(function (err) {
             sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function (data) {
-              addVS1Data('TEmployee',JSON.stringify(data));
-                let lineItems = [];
-                let lineItemObj = {};
-                for(let i=0; i<data.temployee.length; i++){
-                    let mobile = contactService.changeDialFormat(data.temployee[i].fields.Mobile, data.temployee[i].fields.Country);
-                    var dataList = {
-                        id: data.temployee[i].fields.ID || '',
-                        employeeno: data.temployee[i].fields.EmployeeNo || '',
-                        employeename:data.temployee[i].fields.EmployeeName || '',
-                        firstname: data.temployee[i].fields.FirstName || '',
-                        lastname: data.temployee[i].fields.LastName || '',
-                        phone: data.temployee[i].fields.Phone || '',
-                        mobile: mobile || '',
-                        email: data.temployee[i].fields.Email || '',
-                        address: data.temployee[i].fields.Street || '',
-                        country: data.temployee[i].fields.Country || '',
-                        department: data.temployee[i].fields.DefaultClassName || '',
-                        custFld1: data.temployee[i].fields.CustFld1 || '',
-                        custFld2: data.temployee[i].fields.CustFld2 || '',
-                        custFld3: data.temployee[i].fields.CustFld3 || '',
-                        custFld4: data.temployee[i].fields.CustFld4 || ''
-                    };
-
-                    if(data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != ''){
-                        dataTableList.push(dataList);
-                    }
-                    //}
-                }
-
-                templateObject.datatablerecords.set(dataTableList);
-
-                if(templateObject.datatablerecords.get()){
-
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelist', function(error, result){
-                        if(error){
-
-                        }else{
-                            if(result){
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if(hiddenColumn == true){
-
-                                        $("."+columnClass+"").addClass('hiddenColumn');
-                                        $("."+columnClass+"").removeClass('showColumn');
-                                    }else if(hiddenColumn == false){
-                                        $("."+columnClass+"").removeClass('hiddenColumn');
-                                        $("."+columnClass+"").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-                }
-
-
-                setTimeout(function () {
-                    $('#tblEmployeelist').DataTable({
-
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [
-                            {
-                                extend: 'csvHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "Employee List - "+ moment().format(),
-                                orientation:'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            },{
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Employee List',
-                                filename: "Employee List - "+ moment().format(),
-                                exportOptions: {
-                                    columns: ':visible',
-                                    stripHtml: false
-                                }
-                            },
-                            {
-                                extend: 'excelHtml5',
-                                title: '',
-                                download: 'open',
-                                className: "btntabletoexcel hiddenColumn",
-                                filename: "Employee List - "+ moment().format(),
-                                orientation:'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-
-                            }],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        // bStateSave: true,
-                        // rowId: 0,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        info: true,
-                        responsive: true,
-                        "order": [[ 1, "asc" ]],
-                        action: function () {
-                            $('#tblEmployeelist').DataTable().ajax.reload();
-                        },
-
-                    }).on('page', function () {
-
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function () {
-
-                    });
-
-                    // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
-                    $('.fullScreenSpin').css('display','none');
-                }, 0);
-
-                var columns = $('#tblEmployeelist th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i,v) {
-                    if(v.hidden == false){
-                        columVisible =  true;
-                    }
-                    if((v.className.includes("hiddenColumn"))){
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
-                    var listData = $(this).closest('tr').attr('id');
-                    if(listData){
-                        FlowRouter.go('/employeescard?id=' + listData);
-                    }
-                });
-
+                setAllEmployees(data);
             }).catch(function (err) {
                 // Bert.alert('<strong>' + err + '</strong>!', 'danger');
                 $('.fullScreenSpin').css('display','none');
@@ -566,20 +74,169 @@ Template.employeelist.onRendered(function() {
             });
         });
     }
+    function setAllEmployees(data) {
+        addVS1Data('TEmployee',JSON.stringify(data));
+        let lineItems = [];
+        let lineItemObj = {};
+        for(let i=0; i<data.temployee.length; i++){
+            let mobile = contactService.changeDialFormat(data.temployee[i].fields.Mobile, data.temployee[i].fields.Country)
+            const dataList = {
+                id: data.temployee[i].fields.ID || '',
+                employeeno: data.temployee[i].fields.EmployeeNo || '',
+                employeename: data.temployee[i].fields.EmployeeName || '',
+                firstname: data.temployee[i].fields.FirstName || '',
+                lastname: data.temployee[i].fields.LastName || '',
+                phone: data.temployee[i].fields.Phone || '',
+                mobile: mobile || '',
+                email: data.temployee[i].fields.Email || '',
+                address: data.temployee[i].fields.Street || '',
+                country: data.temployee[i].fields.Country || '',
+                department: data.temployee[i].fields.DefaultClassName || '',
+                custFld1: data.temployee[i].fields.CustFld1 || '',
+                custFld2: data.temployee[i].fields.CustFld2 || '',
+                custFld3: data.temployee[i].fields.CustFld3 || '',
+                custFld4: data.temployee[i].fields.CustFld4 || ''
+            };
+            if(data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != ''){
+                dataTableList.push(dataList);
+            }
+            //}
+        }
+        templateObject.datatablerecords.set(dataTableList);
 
+        if(templateObject.datatablerecords.get()){
+            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelist', function(error, result){
+                if (error) {
+
+                } else {
+                    if (result) {
+                        for (let i = 0; i < result.customFields.length; i++) {
+                            let customcolumn = result.customFields;
+                            let columData = customcolumn[i].label;
+                            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+                            let hiddenColumn = customcolumn[i].hidden;
+                            let columnClass = columHeaderUpdate.split('.')[1];
+                            let columnWidth = customcolumn[i].width;
+                            let columnindex = customcolumn[i].index + 1;
+                            if(hiddenColumn == true){
+                                $("."+columnClass+"").addClass('hiddenColumn');
+                                $("."+columnClass+"").removeClass('showColumn');
+                            }else if(hiddenColumn == false){
+                                $("."+columnClass+"").removeClass('hiddenColumn');
+                                $("."+columnClass+"").addClass('showColumn');
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        setTimeout(function () {
+            $('#tblEmployeelist').DataTable({
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [
+                    {
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Employee List - "+ moment().format(),
+                        orientation:'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },{
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Employee List',
+                        filename: "Employee List - "+ moment().format(),
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Employee List - "+ moment().format(),
+                        orientation:'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                // bStateSave: true,
+                // rowId: 0,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[ 1, "asc" ]],
+                action: function () {
+                    $('#tblEmployeelist').DataTable().ajax.reload();
+                },
+                language: { search: "",searchPlaceholder: "Search List..." },
+                "fnInitComplete": function () {
+                    $("<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
+                }
+            }).on('page', function () {
+                let draftRecord = templateObject.datatablerecords.get();
+                templateObject.datatablerecords.set(draftRecord);
+            }).on('column-reorder', function () {
+
+            });
+            // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
+            $('.fullScreenSpin').css('display','none');
+        }, 0);
+
+        const columns = $('#tblEmployeelist th');
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function(i,v) {
+            if(v.hidden == false){
+                columVisible =  true;
+            }
+            if((v.className.includes("hiddenColumn"))){
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || '',
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+        $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
+            const listData = $(this).closest('tr').attr('id');
+            if(listData){
+                FlowRouter.go('/employeescard?id=' + listData);
+            }
+        });
+    }
     templateObject.getEmployees();
 
     $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
-        var listData = $(this).closest('tr').attr('id');
+        const listData = $(this).closest('tr').attr('id');
         if(listData){
             FlowRouter.go('/employeescard?id=' + listData);
         }
-
     });
-
-
 });
-
 
 Template.employeelist.events({
     'click #btnNewEmployee':function(event){
