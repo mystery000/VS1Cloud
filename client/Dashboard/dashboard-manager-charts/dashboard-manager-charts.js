@@ -95,7 +95,7 @@ Template.dashboardManagerCharts.onRendered(function () {
                 data: employeesTotalDiscount
             }],
             chart: {
-                type: 'column'
+                type: 'bar'
             },
             title: {
                 text: ''
@@ -136,7 +136,7 @@ Template.dashboardManagerCharts.onRendered(function () {
                 plotShadow: false
             },
             title: {
-                text: ''
+                text: empData.name
             },
             pane: {
                 startAngle: -150,
@@ -228,14 +228,14 @@ Template.dashboardManagerCharts.onRendered(function () {
             highCharts.chart(divId, options);
             $(`#${divId}`).css('display', 'block');
             $('.sortable-chart-widget-js').removeClass(`spd-gauge-chart${index+1}`);
-            if($(`#${divId}-emp`).length) {
-                $(`#${divId}-emp`).css('display', 'block');
-                $(`#${divId}-emp`).html(empData.name);
-            }
-            if($(`#${divId}-amount`).length) {
-                $(`#${divId}-amount`).css('display', 'block');
-                $(`#${divId}-amount`).html(formatPrice(empData.totalSales));
-            }
+            // if($(`#${divId}-emp`).length) {
+            //     $(`#${divId}-emp`).css('display', 'block');
+            //     $(`#${divId}-emp`).html(empData.name);
+            // }
+            // if($(`#${divId}-amount`).length) {
+            //     $(`#${divId}-amount`).css('display', 'block');
+            //     $(`#${divId}-amount`).html(formatPrice(empData.totalSales));
+            // }
         }
     }
 
@@ -254,7 +254,6 @@ Template.dashboardManagerCharts.onRendered(function () {
         let employeeSalesQuota = [];
         // if (employeeObject.length) {
         //     let { temployee = [] } = JSON.parse(employeeObject[0].data);
-        //     console.log(temployee);
         //     let employees = [];
         //     temployee.forEach(employee => {
         //         employees.push(employee.fields);
@@ -264,13 +263,10 @@ Template.dashboardManagerCharts.onRendered(function () {
         //             employeeSalesQuota.push(parseInt(employee.fields.CustFld12));
         //         }
         //     });
-        //     console.log(employeeNames);
-        //     console.log(employeeSalesQuota);
         //     templateObject.employees.set(employees);
         // }
         if (employeeObject.length) {
             let { tcustomervs1 = [] } = JSON.parse(employeeObject[0].data);
-            console.log(tcustomervs1);
             let employees = [];
             tcustomervs1.forEach(employee => {
                 employees.push(employee.fields);
@@ -280,22 +276,19 @@ Template.dashboardManagerCharts.onRendered(function () {
                     employeeSalesQuota.push(parseInt(employee.fields.CUSTFLD12));
                 }
             });
-            console.log(employeeNames);
-            console.log(employeeSalesQuota);
             templateObject.employees.set(employees);
         }
 
         getVS1Data('TInvoiceList').then(function (dataObject) {
             if (dataObject.length) {
                 let { tinvoicelist } = JSON.parse(dataObject[0].data);
-                console.log(tinvoicelist);
                 // const tinvoicelistGroupBy = _.groupBy(tinvoicelist, 'EmployeeName');
                 const tinvoicelistGroupBy = _.groupBy(tinvoicelist, 'CustomerName');
                 let employeesByTotalSales = [];
                 _.each(templateObject.employees.get(), employee => {
                     let lastMonthUnix = moment().subtract(1, 'months').unix();
                     // let employeeData = { name: employee.EmployeeName, totalSales: 0, salesQuota: 0, totalDiscount: 0 };
-                    let employeeData = { name: employee.CustomerName, totalSales: 0, salesQuota: 0, totalDiscount: 0 };
+                    let employeeData = { name: employee.ClientName, totalSales: 0, salesQuota: 0, totalDiscount: 0 };
                     if (employee.CUSTFLD12 && Number(employee.CUSTFLD12) != 'NaN' && Number(employee.CUSTFLD12) > 0) {
                         employeeData.salesQuota = Number(employee.CUSTFLD12);
                     }
@@ -307,17 +300,16 @@ Template.dashboardManagerCharts.onRendered(function () {
                     //         }
                     //     });
                     // }
-                    if(tinvoicelistGroupBy[employee.CustomerName]) {
-                        _.each(tinvoicelistGroupBy[employee.CustomerName], invoiceData => {
-                            if (moment(invoiceData.SaleDate).unix() > lastMonthUnix) {
+                    if(tinvoicelistGroupBy[employee.ClientName]) {
+                        _.each(tinvoicelistGroupBy[employee.ClientName], invoiceData => {
+                            // if (moment(invoiceData.SaleDate).unix() > lastMonthUnix) {
                                 employeeData.totalSales += invoiceData.TotalAmountInc
                                 employeeData.totalDiscount += invoiceData.TotalDiscount
-                            }
+                            // }
                         });
                     }
                     employeesByTotalSales.push(employeeData);
                 });
-                console.log(employeesByTotalSales);
                 templateObject.employeesByTotalSales.set(employeesByTotalSales);
                 renderSPMEmployeeChart();
                 templateObject.renderSPDCharts();

@@ -125,8 +125,8 @@ async function saveCharts() {
 Template.allChartLists.onRendered(function () {
   const templateObject = Template.instance();
 
-  _tabGroup = $("#connectedSortable").data("tabgroup");
-  _chartGroup = $("#connectedSortable").data("chartgroup");
+  let _tabGroup = $("#connectedSortable").data("tabgroup");
+  let _chartGroup = $("#connectedSortable").data("chartgroup");
 
   templateObject.hideChartElements = () => {
     // on edit mode false
@@ -236,6 +236,10 @@ Template.allChartLists.onRendered(function () {
             }
 
             if( _chartGroup == 'Dashboard' && ( chart.fields._chartSlug == 'dashboard__monthly_earnings' || chart.fields._chartSlug == 'dashboard__quoted_amounts_/_invoiced_amounts' ) ){
+              $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
+            }
+
+            if( _chartGroup == 'DSMCharts' && ( chart.fields._chartSlug == 'spd-employee-chart' || chart.fields._chartSlug == 'spd-gauge-area' ) ){
               $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
             }
 
