@@ -32,15 +32,15 @@ Template.purchasesaleschart.onRendered(()=>{
     let dateTo = moment().format("YYYY-MM-DD");
     let dateFrom = moment().subtract(3, "months").format("YYYY-MM-DD");
     let contactID = "";
-    let ignoreDate = false
+    let ignoreDate = true;
 
     templateObject.getAgedReceivableReportCard = async function () {
         let data = [];
-        if( !localStorage.getItem('VS1AgedReceivableSummary_Report') ){
+        if( !localStorage.getItem('VS1AgedReceivableSummary_Card') ){
             data = await reportService.getAgedReceivableDetailsSummaryData(dateFrom, dateTo, ignoreDate,contactID);
-            localStorage.setItem('VS1AgedReceivableSummary_Report', JSON.stringify(data) || '');
+            localStorage.setItem('VS1AgedReceivableSummary_Card', JSON.stringify(data) || '');
         }else{
-            data = JSON.parse(localStorage.getItem('VS1AgedReceivableSummary_Report'));
+            data = JSON.parse(localStorage.getItem('VS1AgedReceivableSummary_Card'));
         }
         let amountdueTotal = 0;
         let currentTotal = 0;
@@ -54,8 +54,11 @@ Template.purchasesaleschart.onRendered(()=>{
                 currentTotal += item.Current
             }
         }
+        console.log(data);
+        console.log(amountdueTotal);
+        console.log(currentTotal);
         let totalRecievableSummaryAmount = amountdueTotal + currentTotal;
-        $('.oustandingInvQty').text(itemsAwaitingPaymentcount.length);
+        $('.oustandingInvQty').text(data.Params.Count);
         if (!isNaN(totalRecievableSummaryAmount)) {
             $('.oustandaingInvAmt').text(utilityService.modifynegativeCurrencyFormat(totalRecievableSummaryAmount));
         }else{
@@ -65,62 +68,39 @@ Template.purchasesaleschart.onRendered(()=>{
 
     templateObject.getAgedReceivableReportCard();
 
-    if ( !localStorage.getItem('VS1OutstandingPayablesAmt_dash') ) {
-        // Session.setPersistent('myExpenses', '');
-        vs1chartService.getOverviewAPDetails().then(function (data) {
-            let itemsSuppAwaitingPaymentcount = [];
-            let itemsSuppOverduePaymentcount = [];
-            let dataListAwaitingSupp = {};
-            let customerawaitingpaymentCount = '';
-            let supptotAmount = 0;
-            let supptotAmountOverDue = 0;
-            Session.setPersistent('myExpenses', data);
-            for(let i=0; i<data.tapreport.length; i++){
-                dataListAwaitingSupp = {
-                    id: data.tapreport[i].ClientID || '',
-                };
-                if(data.tapreport[i].AmountDue != 0){
-                    // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
-                    supptotAmount += Number(data.tapreport[i].AmountDue);
-                    itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
-                    let date = new Date(data.tapreport[i].DueDate);
-                    let supptotAmountOverDueLine = Number(data.tapreport[i].AmountDue) - Number(data.tapreport[i].Current)||0;
-                    //if (date < new Date()) {
-                        supptotAmountOverDue += supptotAmountOverDueLine;
-                        itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                    //}
-                }
 
-            }
-            $('.suppAwaiting').text(itemsSuppAwaitingPaymentcount.length);
-            $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
-
-            if (!isNaN(supptotAmount)) {
-                $('.suppAwaitingAmtdash').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
-            }else{
-                $('.suppAwaitingAmtdash').text(Currency+'0.00');
-            }
-
-            if (!isNaN(supptotAmountOverDue)) {
-                $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
-            }else{
-                $('.suppOverdueAmt').text(Currency+'0.00');
-            }
-        });
-    }else{
-        let totInvQty = localStorage.getItem('VS1OutstandingInvoiceQty_dash')||0;
-        let totInvAmountOverDue = localStorage.getItem('VS1OutstandingInvoiceAmt_dash')||0;
-
-        let supptotQty = localStorage.getItem('VS1OutstandingPayablesQty_dash')||0;
-        let supptotAmountOverDue = localStorage.getItem('VS1OutstandingPayablesAmt_dash')||0;
-
-        $('.suppAwaiting').text(supptotQty);
-        if (!isNaN(supptotAmountOverDue)) {
-            $('.suppAwaitingAmtdash').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
+    templateObject.getAgedPayablesReportCard = async function () {
+        let data = [];
+        if( !localStorage.getItem('VS1AgedPayablesSummary_Card') ){
+            data = await reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, true,contactID);
+            localStorage.setItem('VS1AgedPayablesSummary_Card', JSON.stringify(data) || '');
         }else{
-            $('.suppAwaitingAmtdash').text(Currency+'0.00');
+            data = JSON.parse(localStorage.getItem('VS1AgedPayablesSummary_Report'));
+        }
+        let amountdueTotal = 0;
+        let currentTotal = 0;
+        let itemsPayablescount = [];
+        if( data.tapreport.length > 0 ){
+            for (const item of data.tapreport) {
+                itemsPayablescount.push({
+                    id: item.ClientID || '',
+                });
+                amountdueTotal += item.AmountDue
+                currentTotal += item.Current
+            }
+        }
+        let totalPayablesSummaryAmount = amountdueTotal + currentTotal;
+        $('.suppAwaitingAP').text(data.Params.Count);
+        if (!isNaN(totalPayablesSummaryAmount)) {
+            $('.suppAwaitingAPAmtdash').text(utilityService.modifynegativeCurrencyFormat(totalPayablesSummaryAmount));
+        }else{
+            $('.suppAwaitingAPAmtdash').text(Currency+'0.00');
         }
     }
+
+    templateObject.getAgedPayablesReportCard();
+
+
 
 });
 

@@ -30,7 +30,7 @@ Template.agedpayablessummary.onCreated(() => {
 Template.agedpayablessummary.onRendered(()=>{
   $('.fullScreenSpin').css('display','inline-block');
   const templateObject = Template.instance();
-  
+
   let salesOrderTable;
   var splashArray = new Array();
   var today = moment().format('DD/MM/YYYY');
@@ -109,7 +109,7 @@ Template.agedpayablessummary.onRendered(()=>{
   templateObject.setReportOptions(false);
 
   let contactID = FlowRouter.current().queryParams.contactid ||'';
-   
+
     templateObject.getAgedPayableReports = function (dateFrom, dateTo, ignoreDate) {
       LoadingOverlay.show();
       if (!localStorage.getItem('VS1AgedPayablesSummary_Report')) {
@@ -129,6 +129,17 @@ Template.agedpayablessummary.onRendered(()=>{
           let expArr = [];
           let accountData = data.tapreport;
           let accountType = "";
+
+          if (data.Params.IgnoreDates == true) {
+              $('#dateFrom').attr('readonly', true);
+              $('#dateTo').attr('readonly', true);
+
+          } else {
+            $('#dateFrom').attr('readonly', false);
+            $('#dateTo').attr('readonly', false);
+              $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+              $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+          }
 
           accountData.forEach(account => {
             let amountdue = utilityService.modifynegativeCurrencyFormat(account.AmountDue) || 0;
@@ -366,12 +377,12 @@ Template.agedpayablessummary.onRendered(()=>{
           if (templateObject.records.get()) {
             setTimeout(function () {
               $("td a").each(function () {
-                if ($(this).text().indexOf("-" + Currency) >= 0) 
+                if ($(this).text().indexOf("-" + Currency) >= 0)
                   $(this).addClass("text-danger");
                 }
               );
               $("td").each(function () {
-                if ($(this).text().indexOf("-" + Currency) >= 0) 
+                if ($(this).text().indexOf("-" + Currency) >= 0)
                   $(this).addClass("text-danger");
                 }
               );
@@ -379,13 +390,13 @@ Template.agedpayablessummary.onRendered(()=>{
               $("td").each(function () {
                 let lineValue = $(this).first().text()[0];
                 if (lineValue != undefined) {
-                  if (lineValue.indexOf(Currency) >= 0) 
+                  if (lineValue.indexOf(Currency) >= 0)
                     $(this).addClass("text-right");
                   }
                 });
 
               $("td").each(function () {
-                if ($(this).first().text().indexOf("-" + Currency) >= 0) 
+                if ($(this).first().text().indexOf("-" + Currency) >= 0)
                   $(this).addClass("text-right");
                 }
               );
@@ -402,6 +413,16 @@ Template.agedpayablessummary.onRendered(()=>{
     } else {
       let data = JSON.parse(localStorage.getItem('VS1AgedPayablesSummary_Report'));
       if (data.tapreport.length) {
+        if (data.Params.IgnoreDates == true) {
+            $('#dateFrom').attr('readonly', true);
+            $('#dateTo').attr('readonly', true);
+
+        } else {
+          $('#dateFrom').attr('readonly', false);
+          $('#dateTo').attr('readonly', false);
+            $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+            $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+        }
         // localStorage.setItem("VS1AgedPayablesSummary_Report", JSON.stringify(data) || "");
         let records = [];
         let reportrecords = [];
@@ -653,12 +674,12 @@ Template.agedpayablessummary.onRendered(()=>{
         if (templateObject.records.get()) {
           setTimeout(function () {
             $("td a").each(function () {
-              if ($(this).text().indexOf("-" + Currency) >= 0) 
+              if ($(this).text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-danger");
               }
             );
             $("td").each(function () {
-              if ($(this).text().indexOf("-" + Currency) >= 0) 
+              if ($(this).text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-danger");
               }
             );
@@ -666,13 +687,13 @@ Template.agedpayablessummary.onRendered(()=>{
             $("td").each(function () {
               let lineValue = $(this).first().text()[0];
               if (lineValue != undefined) {
-                if (lineValue.indexOf(Currency) >= 0) 
+                if (lineValue.indexOf(Currency) >= 0)
                   $(this).addClass("text-right");
                 }
               });
 
             $("td").each(function () {
-              if ($(this).first().text().indexOf("-" + Currency) >= 0) 
+              if ($(this).first().text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-right");
               }
             );
@@ -839,7 +860,7 @@ Template.agedpayablessummary.events({
             Meteor.call("sendNormalEmail", reportData);
           }
         } else {
-          if (reportData.FormID == 6) 
+          if (reportData.FormID == 6)
             Meteor.call("sendNormalEmail", reportData);
           }
         }
@@ -897,7 +918,7 @@ Template.agedpayablessummary.events({
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
     await templateObject.setReportOptions(false, dateFrom, dateTo);
-    
+
   },
   "click #lastMonth": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -906,7 +927,7 @@ Template.agedpayablessummary.events({
     let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
-    
+
   },
   "click #lastQuarter": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -915,7 +936,7 @@ Template.agedpayablessummary.events({
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
     await templateObject.setReportOptions(false, fromDate, endDate);
-    
+
   },
   "click #last12Months": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -944,15 +965,18 @@ Template.agedpayablessummary.events({
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-    
+
   },
   "click #ignoreDate": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem('VS1AgedPayablesSummary_Report', '');
+    localStorage.setItem('VS1AgedPayablesSummary_Card', '');
     let templateObject = Template.instance();
+    $('#dateFrom').attr('readonly', true);
+    $('#dateTo').attr('readonly', true);
     templateObject.dateAsAt.set("Current Date");
     await templateObject.setReportOptions(true);
-    
+
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
@@ -1130,9 +1154,9 @@ Template.agedpayablessummary.helpers({
 
     // Lets remove the minus character
     const isMinus = amount < 0;
-    if (isMinus == true) 
+    if (isMinus == true)
       amount = amount * -1; // make it positive for now
-    
+
     //  get default currency symbol
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode

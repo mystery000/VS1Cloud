@@ -551,7 +551,7 @@ Template.bankingoverview.onRendered(function() {
 
                                     let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                     let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                    if(checkurlIgnoreDate == 'true'){
+                                    if(data.Params.IgnoreDates == true){
                                       sideBarService.getAllBankAccountDetails(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                                           getVS1Data('TBankAccountReport').then(function (dataObjectold) {
                                               if (dataObjectold.length == 0) {}
@@ -882,7 +882,7 @@ Template.bankingoverview.onRendered(function() {
 
                                 let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                 let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                if(checkurlIgnoreDate == 'true'){
+                                if(data.Params.IgnoreDates == true){
                                   sideBarService.getAllBankAccountDetails(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                                       getVS1Data('TBankAccountReport').then(function (dataObjectold) {
                                           if (dataObjectold.length == 0) {}
@@ -1200,7 +1200,7 @@ Template.bankingoverview.onRendered(function() {
 
                                 let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                 let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                if(checkurlIgnoreDate == 'true'){
+                                if(data.Params.IgnoreDates == true){
                                   sideBarService.getAllBankAccountDetails(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                                       getVS1Data('TBankAccountReport').then(function (dataObjectold) {
                                           if (dataObjectold.length == 0) {}

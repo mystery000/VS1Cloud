@@ -3731,6 +3731,11 @@ Template.newsidenav.onRendered(function() {
         }).catch(function(err) {
 
         });
+
+        sideBarService.getAgedReceivableDetailsSummaryData(prevMonth11Date, toDate, true, '').then(function(data) {
+          localStorage.setItem("VS1AgedReceivableSummary_Report", JSON.stringify(data) || "");
+          localStorage.setItem("VS1AgedReceivableSummary_Card", JSON.stringify(data) || "");
+        });
     }
 
     templateObject.getTAPReportData = function() {
@@ -3768,6 +3773,11 @@ Template.newsidenav.onRendered(function() {
         }).catch(function(err) {
 
         });
+
+          sideBarService.getAgedPayableDetailsSummaryData(prevMonth11Date, toDate, true, '').then(function(data) {
+            localStorage.setItem("VS1AgedPayablesSummary_Report", JSON.stringify(data) || "");
+            localStorage.setItem("VS1AgedPayablesSummary_Card", JSON.stringify(data) || "");
+          });
     }
 
     templateObject.getTCustomerPaymentData = function() {

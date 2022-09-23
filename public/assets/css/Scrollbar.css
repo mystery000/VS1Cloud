@@ -342,6 +342,13 @@ overflow-y: auto;
     overflow-y: scroll !important;
 }
 
+.myModalAccountList > .modal-dialog > .modal-content > .modal-body {
+    max-height: 500px !important;
+    /* overflow-x: scroll !important; */
+    overflow-x: hidden !important;
+    overflow-y: scroll !important;
+}
+
 .btn-sm.btn-danger {
     padding: 0.5px 5px !important;
     margin-top: 6px !important;
@@ -574,4 +581,22 @@ div.dataTables_wrapper .row button{
 
 .align-items-xl-start .btnRefresh{
   margin-left: 0px!important;
+}
+
+.custom-range {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: rgb(255, 255, 255);
+  background-clip: padding-box;
+  border: 1px solid rgb(133, 135, 150);
+  border-radius: 0.3rem;
+  border-style: solid;
+  border-width: 1px;
+  padding: 2px;
+  border-radius: 0.35rem;
+  color: rgb(128, 128, 128);
+  height: inherit !important;
 }
