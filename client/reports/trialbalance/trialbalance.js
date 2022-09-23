@@ -4,12 +4,15 @@ import { UtilityService } from "../../utility-service";
 import { TaxRateService } from "../../settings/settings-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import GlobalFunctions from "../../GlobalFunctions";
+import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
+const currentDate = new Date();
 
 Template.trialbalance.onCreated(() => {
   const templateObject = Template.instance();
@@ -28,60 +31,122 @@ Template.trialbalance.onRendered(() => {
   LoadingOverlay.show();
   const templateObject = Template.instance();
 
+  templateObject.initDate = () => {
+    const currentDate = new Date();
+
+    /**
+     * This will init dates
+     */
+    let begunDate = moment(currentDate).format("DD/MM/YYYY");
+    templateObject.dateAsAt.set(begunDate);
+
+    let fromDateMonth = currentDate.getMonth() + 1;
+    let fromDateDay = currentDate.getDate();
+    if (currentDate.getMonth() + 1 < 10) {
+      fromDateMonth = "0" + (currentDate.getMonth() + 1);
+    }
+
+    let prevMonth = moment().subtract(1, "months").format("MM");
+
+    if (currentDate.getDate() < 10) {
+      fromDateDay = "0" + currentDate.getDate();
+    }
+    // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
+    var fromDate =
+      fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
+
+    $("#date-input,#dateTo,#dateFrom").datepicker({
+      showOn: "button",
+      buttonText: "Show Date",
+      buttonImageOnly: true,
+      buttonImage: "/img/imgCal2.png",
+      dateFormat: "dd/mm/yy",
+      showOtherMonths: true,
+      selectOtherMonths: true,
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "-90:+10",
+      onChangeMonthYear: function (year, month, inst) {
+        // Set date to picker
+        $(this).datepicker(
+          "setDate",
+          new Date(year, inst.selectedMonth, inst.selectedDay)
+        );
+        // Hide (close) the picker
+        // $(this).datepicker('hide');
+        // // Change ttrigger the on change function
+        // $(this).trigger('change');
+      },
+    });
+
+    $("#dateFrom").val(fromDate);
+    $("#dateTo").val(begunDate);
+
+    //--------- END OF DATE ---------------//
+  };
+
+templateObject.initDate();
+
  
-  let utilityService = new UtilityService();
-  let salesOrderTable;
-  var splashArray = new Array();
-  var today = moment().format("DD/MM/YYYY");
-  var currentDate = new Date();
-  var begunDate = moment(currentDate).format("DD/MM/YYYY");
-  let fromDateMonth = currentDate.getMonth() + 1;
-  let fromDateDay = currentDate.getDate();
-  if (currentDate.getMonth() + 1 < 10) {
-    fromDateMonth = "0" + (currentDate.getMonth() + 1);
-  }
+  // let salesOrderTable;
+  // var splashArray = new Array();
+  // var today = moment().format("DD/MM/YYYY");
+  // var currentDate = new Date();
+  // var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  // let fromDateMonth = currentDate.getMonth() + 1;
+  // let fromDateDay = currentDate.getDate();
+  // if (currentDate.getMonth() + 1 < 10) {
+  //   fromDateMonth = "0" + (currentDate.getMonth() + 1);
+  // }
 
-  let imageData = localStorage.getItem("Image");
-  if (imageData) {
-    $("#uploadedImage").attr("src", imageData);
-    $("#uploadedImage").attr("width", "50%");
-  }
+  templateObject.initUploadedImage = () => {
+    let imageData = localStorage.getItem("Image");
+    if (imageData) {
+      $("#uploadedImage").attr("src", imageData);
+      $("#uploadedImage").attr("width", "50%");
+    }
+  };
+  // let imageData = localStorage.getItem("Image");
+  // if (imageData) {
+  //   $("#uploadedImage").attr("src", imageData);
+  //   $("#uploadedImage").attr("width", "50%");
+  // }
 
-  if (currentDate.getDate() < 10) {
-    fromDateDay = "0" + currentDate.getDate();
-  }
-  // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
-  var fromDate =
-    fromDateDay + "/" + fromDateMonth + "/" + currentDate.getFullYear();
-  templateObject.dateAsAt.set(begunDate);
-  const dataTableList = [];
-  const deptrecords = [];
-  $("#date-input,#dateTo,#dateFrom").datepicker({
-    showOn: "button",
-    buttonText: "Show Date",
-    buttonImageOnly: true,
-    buttonImage: "/img/imgCal2.png",
-    dateFormat: "dd/mm/yy",
-    showOtherMonths: true,
-    selectOtherMonths: true,
-    changeMonth: true,
-    changeYear: true,
-    yearRange: "-90:+10",
-    onChangeMonthYear: function (year, month, inst) {
-      // Set date to picker
-      $(this).datepicker(
-        "setDate",
-        new Date(year, inst.selectedMonth, inst.selectedDay)
-      );
-      // Hide (close) the picker
-      // $(this).datepicker('hide');
-      // // Change ttrigger the on change function
-      // $(this).trigger('change');
-    },
-  });
+  // if (currentDate.getDate() < 10) {
+  //   fromDateDay = "0" + currentDate.getDate();
+  // }
+  // // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
+  // var fromDate =
+  //   fromDateDay + "/" + fromDateMonth + "/" + currentDate.getFullYear();
+  // templateObject.dateAsAt.set(begunDate);
+  // const dataTableList = [];
+  // const deptrecords = [];
+  // $("#date-input,#dateTo,#dateFrom").datepicker({
+  //   showOn: "button",
+  //   buttonText: "Show Date",
+  //   buttonImageOnly: true,
+  //   buttonImage: "/img/imgCal2.png",
+  //   dateFormat: "dd/mm/yy",
+  //   showOtherMonths: true,
+  //   selectOtherMonths: true,
+  //   changeMonth: true,
+  //   changeYear: true,
+  //   yearRange: "-90:+10",
+  //   onChangeMonthYear: function (year, month, inst) {
+  //     // Set date to picker
+  //     $(this).datepicker(
+  //       "setDate",
+  //       new Date(year, inst.selectedMonth, inst.selectedDay)
+  //     );
+  //     // Hide (close) the picker
+  //     // $(this).datepicker('hide');
+  //     // // Change ttrigger the on change function
+  //     // $(this).trigger('change');
+  //   },
+  // });
 
-  $("#dateFrom").val(fromDate);
-  $("#dateTo").val(begunDate);
+  // $("#dateFrom").val(fromDate);
+  // $("#dateTo").val(begunDate);
   templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
@@ -106,6 +171,12 @@ Template.trialbalance.onRendered(() => {
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getTrialBalanceReports(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
   };
+
+
+  /**
+   * @deprecated since 23 september 2022
+   * use loadReport instead
+   */
   templateObject.getTrialBalanceReports = function (
     dateFrom,
     dateTo,
@@ -507,17 +578,143 @@ Template.trialbalance.onRendered(() => {
     }
   };
 
-  var currentDate2 = new Date();
-  var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+  /**
+   * This will be used 
+   * 
+   * @param {*} dateFrom 
+   * @param {*} dateTo 
+   * @param {*} ignoreDate 
+   */
+  templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
+    LoadingOverlay.show();
 
-  let getDateFrom =
-    currentDate2.getFullYear() +
-    "-" +
-    currentDate2.getMonth() +
-    "-" +
-    currentDate2.getDate();
+    let data = await CachedHttp.get(erpObject.TTrialBalanceReport, async () => {
+      return await reportService.getTrialBalanceDetailsData(dateFrom, dateTo, ignoreDate);
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: cachedResponse => {
+        return false;
+      }
+    });
 
-  templateObject.getTrialBalanceReports(getDateFrom, getLoadDate, false);
+    data = data.response;
+    let accountData = data.ttrialbalancereport;
+
+    let records = accountData.map(account => {
+      return {
+        Id: account.TransID,
+        type: account.Account,
+        AccountName: account.AccountName,
+        ...account
+      };
+    });
+
+    records = _.sortBy(records, "AccountName");
+    records = _.groupBy(records, "AccountName");
+
+    let allRecords = [];
+
+    const calculateTotal = (entries = [], title = "Total ") => {
+      let amountduetotal = 0;
+      let Currenttotal = 0;
+      let creditEx = 0;
+      let debitEx = 0;
+      let twoMonth = 0;
+      let threeMonth = 0;
+      let Older = 0;
+      const currencyLength = Currency.length;
+
+      entries.forEach(entry => {
+        creditEx = creditEx + parseFloat(entry.CreditsEx);
+        debitEx = debitEx + parseFloat(entry.DebitsEx);
+      });
+
+      return {
+        title: "Total " + title,
+        CreditsEx: creditEx,
+        DebitsEx: debitEx
+      };
+    };
+
+    for (let key in records) {
+      allRecords.push({
+        title: key,
+        entries: records[key],
+        total: calculateTotal(records[key], key)
+      });
+    }
+
+    const calculateGrandTotal = (allRecords = []) => {
+      //grandtotalRecord
+      let grandamountduetotal = 0;
+      let grandCurrenttotal = 0;
+      let grandlessTnMonth = 0;
+      let grandCreditEx = 0;
+      let grandDebitEx = 0;
+      let grandthreeMonth = 0;
+      let grandOlder = 0;
+
+      allRecords.forEach(record => {
+        grandCreditEx = grandCreditEx + parseFloat(record.total.CreditsEx);
+        grandDebitEx = grandDebitEx + parseFloat(record.total.DebitsEx);
+      });
+
+      return {title: "Grand Total ", DebitsEx: grandDebitEx, CreditsEx: grandCreditEx};
+    };
+
+    const grandTotal = calculateGrandTotal(allRecords);
+
+    templateObject.records.set(allRecords);
+    templateObject.grandrecords.set(grandTotal);
+
+    if (templateObject.records.get()) {
+      setTimeout(function () {
+        $("td a").each(function () {
+          if ($(this).text().indexOf("-" + Currency) >= 0) 
+            $(this).addClass("text-danger");
+          }
+        );
+        $("td").each(function () {
+          if ($(this).text().indexOf("-" + Currency) >= 0) 
+            $(this).addClass("text-danger");
+          }
+        );
+
+        $("td").each(function () {
+          let lineValue = $(this).first().text()[0];
+          if (lineValue != undefined) {
+            if (lineValue.indexOf(Currency) >= 0) 
+              $(this).addClass("text-right");
+            }
+          });
+
+        $("td").each(function () {
+          if ($(this).first().text().indexOf("-" + Currency) >= 0) 
+            $(this).addClass("text-right");
+          }
+        );
+
+        LoadingOverlay.hide();
+      }, 100);
+    }
+
+    LoadingOverlay.hide();
+  };
+
+ 
+
+  // var currentDate2 = new Date();
+  // var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+
+  // let getDateFrom =
+  //   currentDate2.getFullYear() +
+  //   "-" +
+  //   currentDate2.getMonth() +
+  //   "-" +
+  //   currentDate2.getDate();
+
+  //templateObject.getTrialBalanceReports(getDateFrom, getLoadDate, false);
 
   templateObject.getDepartments = function () {
     reportService.getDepartment().then(function (data) {
@@ -533,7 +730,7 @@ Template.trialbalance.onRendered(() => {
     });
   };
   // templateObject.getAllProductData();
-  templateObject.getDepartments();
+  //templateObject.getDepartments();
 
   
   /**
@@ -552,6 +749,16 @@ Template.trialbalance.onRendered(() => {
   };
 
   //templateObject.loadCurrencyHistory();
+
+  templateObject.initDate();
+  templateObject.initUploadedImage();
+  templateObject.getDepartments();
+
+  templateObject.loadReport(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    false
+  );
 });
 
 Template.trialbalance.events({
@@ -1056,140 +1263,6 @@ Template.trialbalance.events({
 });
 
 Template.trialbalance.helpers({
-  convertAmount: (amount, currencyData) => {
-    let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
-
-     
-    if (!amount || amount.trim() == "") {
-      return "";
-    }
-    if (currencyData.code == defaultCurrencyCode) {
-      // default currency
-      return amount;
-    }
-
-    amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
-
-    // Lets remove the minus character
-    const isMinus = amount < 0;
-    if (isMinus == true) amount = amount * -1;
-
-
-
-    // // get default currency symbol
-    // let _defaultCurrency = currencyList.filter(
-    //   (a) => a.Code == defaultCurrencyCode
-    // )[0];
-     
-    // amount = amount.replace(_defaultCurrency.symbol, "");
-
-     
-    // amount =
-    //   isNaN(amount) == true
-    //     ? parseFloat(amount.substring(1))
-    //     : parseFloat(amount);
-     
-     
-
-    // Get the selected date
-    let dateTo = $("#dateTo").val();
-    const day = dateTo.split("/")[0];
-    const m = dateTo.split("/")[1];
-    const y = dateTo.split("/")[2];
-    dateTo = new Date(y, m, day);
-    dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
-     
-
-    // Filter by currency code
-    currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-
-    // Sort by the closest date
-    currencyList = currencyList.sort((a, b) => {
-      a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
-      a.setHours(0);
-      a.setMinutes(0);
-      a.setSeconds(0);
-
-      b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
-      b.setHours(0);
-      b.setMinutes(0);
-      b.setSeconds(0);
-
-      var distancea = Math.abs(dateTo - a);
-      var distanceb = Math.abs(dateTo - b);
-      return distancea - distanceb; // sort a before b when the distance is smaller
-
-      // const adate= new Date(a.MsTimeStamp);
-      // const bdate = new Date(b.MsTimeStamp);
-
-      // if(adate < bdate) {
-      //   return 1;
-      // }
-      // return -1;
-    });
-
-    const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
-     
-     
-
-    let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
-    amount = parseFloat(amount * rate); // Multiply by the rate
-    amount = Number(amount).toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }); // Add commas
-     
-    let convertedAmount =
-      isMinus == true
-        ? `- ${currencyData.symbol} ${amount}`
-        : `${currencyData.symbol} ${amount}`;
-     
-
-    return convertedAmount;
-  },
-  count: (array) => {
-    return array.length;
-  },
-  countActive: (array) => {
-    if (array.length == 0) {
-      return 0;
-    }
-    let activeArray = array.filter((c) => c.active == true);
-    return activeArray.length;
-  },
-  currencyList: () => {
-    return Template.instance().currencyList.get();
-  },
-  isNegativeAmount(amount) {
-    if (Math.sign(amount) === -1) {
-      return true;
-    }
-    return false;
-  },
-  isOnlyDefaultActive() {
-    const array = Template.instance().currencyList.get();
-    if (array.length == 0) {
-      return false;
-    }
-    let activeArray = array.filter((c) => c.active == true);
-
-    if (activeArray.length == 1) {
-       
-      if (activeArray[0].code == defaultCurrencyCode) {
-        return !true;
-      } else {
-        return !false;
-      }
-    } else {
-      return !false;
-    }
-  },
-  isCurrencyListActive() {
-    const array = Template.instance().currencyList.get();
-    let activeArray = array.filter((c) => c.active == true);
-
-    return activeArray.length > 0;
-  },
   isObject(variable) {
     return (typeof variable === 'object' && variable !== null);
   },
@@ -1218,6 +1291,173 @@ Template.trialbalance.helpers({
         return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
       });
   },
+
+  
+  formatDate: (date)  => GlobalFunctions.formatDate(date),
+
+    // FX Module //
+    convertAmount: (amount, currencyData) => {
+      let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
+  
+      if(isNaN(amount)) {
+        if (!amount || amount.trim() == "") {
+          return "";
+        }
+        amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+      }
+      // if (currencyData.code == defaultCurrencyCode) {
+      //   // default currency
+      //   return amount;
+      // }
+  
+  
+      // Lets remove the minus character
+      const isMinus = amount < 0;
+      if (isMinus == true) amount = amount * -1; // make it positive for now
+  
+      // // get default currency symbol
+      // let _defaultCurrency = currencyList.filter(
+      //   (a) => a.Code == defaultCurrencyCode
+      // )[0];
+  
+      // amount = amount.replace(_defaultCurrency.symbol, "");
+  
+  
+      // amount =
+      //   isNaN(amount) == true
+      //     ? parseFloat(amount.substring(1))
+      //     : parseFloat(amount);
+  
+  
+  
+      // Get the selected date
+      let dateTo = $("#dateTo").val();
+      const day = dateTo.split("/")[0];
+      const m = dateTo.split("/")[1];
+      const y = dateTo.split("/")[2];
+      dateTo = new Date(y, m, day);
+      dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
+  
+  
+      // Filter by currency code
+      currencyList = currencyList.filter((a) => a.Code == currencyData.code);
+  
+      // Sort by the closest date
+      currencyList = currencyList.sort((a, b) => {
+        a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
+        a.setHours(0);
+        a.setMinutes(0);
+        a.setSeconds(0);
+  
+        b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
+        b.setHours(0);
+        b.setMinutes(0);
+        b.setSeconds(0);
+  
+        var distancea = Math.abs(dateTo - a);
+        var distanceb = Math.abs(dateTo - b);
+        return distancea - distanceb; // sort a before b when the distance is smaller
+  
+        // const adate= new Date(a.MsTimeStamp);
+        // const bdate = new Date(b.MsTimeStamp);
+  
+        // if(adate < bdate) {
+        //   return 1;
+        // }
+        // return -1;
+      });
+  
+      const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
+  
+  
+  
+      let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
+  
+  
+  
+  
+      amount = parseFloat(amount * rate); // Multiply by the rate
+      amount = Number(amount).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }); // Add commas
+  
+      let convertedAmount =
+        isMinus == true
+          ? `- ${currencyData.symbol} ${amount}`
+          : `${currencyData.symbol} ${amount}`;
+  
+  
+      return convertedAmount;
+    },
+    count: (array) => {
+      return array.length;
+    },
+    countActive: (array) => {
+      if (array.length == 0) {
+        return 0;
+      }
+      let activeArray = array.filter((c) => c.active == true);
+      return activeArray.length;
+    },
+    currencyList: () => {
+      return Template.instance().currencyList.get();
+    },
+    isNegativeAmount(amount) {
+      if (Math.sign(amount) === -1) {
+  
+        return true;
+      }
+      return false;
+    },
+    isOnlyDefaultActive() {
+      const array = Template.instance().currencyList.get();
+      if (array.length == 0) {
+        return false;
+      }
+      let activeArray = array.filter((c) => c.active == true);
+  
+      if (activeArray.length == 1) {
+  
+        if (activeArray[0].code == defaultCurrencyCode) {
+          return !true;
+        } else {
+          return !false;
+        }
+      } else {
+        return !false;
+      }
+    },
+    isCurrencyListActive() {
+      const array = Template.instance().currencyList.get();
+      let activeArray = array.filter((c) => c.active == true);
+  
+      return activeArray.length > 0;
+    },
+    isObject(variable) {
+      return typeof variable === "object" && variable !== null;
+    },
+    currency: () => {
+      return Currency;
+    },
+  
+    formatPrice( amount){
+  
+      let utilityService = new UtilityService();
+      if( isNaN( amount ) ){
+          amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+          amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+      }
+        return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+    },
+    formatTax( amount){
+  
+      if( isNaN( amount ) ){
+          amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+          amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+      }
+        return amount + "%" || "0.00 %";
+    },
 });
 Template.registerHelper("equals", function (a, b) {
   return a === b;
