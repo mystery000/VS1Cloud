@@ -3,6 +3,10 @@ import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
+import Datehandler from "../../DateHandler";
+import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
+import GlobalFunctions from "../../GlobalFunctions";
 
 
 const reportService = new ReportService();
@@ -26,58 +30,61 @@ Template.stockquantitybylocation.onRendered(() => {
   LoadingOverlay.show();
 
   templateObject.initDate = () => {
-    const currentDate = new Date();
+    Datehandler.initOneMonth();
+    // const currentDate = new Date();
 
-    /**
-     * This will init dates
-     */
-    let begunDate = moment(currentDate).format("DD/MM/YYYY");
-    templateObject.dateAsAt.set(begunDate);
+    // /**
+    //  * This will init dates
+    //  */
+    // let begunDate = moment(currentDate).format("DD/MM/YYYY");
+    // templateObject.dateAsAt.set(begunDate);
 
-    let fromDateMonth = currentDate.getMonth() + 1;
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
+    // let fromDateMonth = currentDate.getMonth() + 1;
+    // let fromDateDay = currentDate.getDate();
+    // if (currentDate.getMonth() + 1 < 10) {
+    //   fromDateMonth = "0" + (currentDate.getMonth() + 1);
+    // }
 
-    let prevMonth = moment().subtract(1, "months").format("MM");
+    // let prevMonth = moment().subtract(1, "months").format("MM");
 
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-    // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
-    var fromDate =
-      fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
+    // if (currentDate.getDate() < 10) {
+    //   fromDateDay = "0" + currentDate.getDate();
+    // }
+    // // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
+    // var fromDate =
+    //   fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
 
-    $("#date-input,#dateTo,#dateFrom").datepicker({
-      showOn: "button",
-      buttonText: "Show Date",
-      buttonImageOnly: true,
-      buttonImage: "/img/imgCal2.png",
-      dateFormat: "dd/mm/yy",
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "-90:+10",
-      onChangeMonthYear: function (year, month, inst) {
-        // Set date to picker
-        $(this).datepicker(
-          "setDate",
-          new Date(year, inst.selectedMonth, inst.selectedDay)
-        );
-        // Hide (close) the picker
-        // $(this).datepicker('hide');
-        // // Change ttrigger the on change function
-        // $(this).trigger('change');
-      },
-    });
+    // $("#date-input,#dateTo,#dateFrom").datepicker({
+    //   showOn: "button",
+    //   buttonText: "Show Date",
+    //   buttonImageOnly: true,
+    //   buttonImage: "/img/imgCal2.png",
+    //   dateFormat: "dd/mm/yy",
+    //   showOtherMonths: true,
+    //   selectOtherMonths: true,
+    //   changeMonth: true,
+    //   changeYear: true,
+    //   yearRange: "-90:+10",
+    //   onChangeMonthYear: function (year, month, inst) {
+    //     // Set date to picker
+    //     $(this).datepicker(
+    //       "setDate",
+    //       new Date(year, inst.selectedMonth, inst.selectedDay)
+    //     );
+    //     // Hide (close) the picker
+    //     // $(this).datepicker('hide');
+    //     // // Change ttrigger the on change function
+    //     // $(this).trigger('change');
+    //   },
+    // });
 
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
+    // $("#dateFrom").val(fromDate);
+    // $("#dateTo").val(begunDate);
 
-    //--------- END OF DATE ---------------//
+    // //--------- END OF DATE ---------------//
   };
+
+
   templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
     if (defaultOptions) {
@@ -101,20 +108,38 @@ Template.stockquantitybylocation.onRendered(() => {
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getStockLocationReportData();
   };
-  templateObject.getStockLocationReportData = async function () {
-    let data = [];
-    if (!localStorage.getItem('VS1StockQuantityLocation_Report')) {
-      const options = await templateObject.reportOptions.get();
-      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let ignoreDate = options.ignoreDate || false;
-      data = await reportService.getStockQuantityLocationReport( dateFrom, dateTo, ignoreDate);
-      if( data.tstockquantitylocation.length > 0 ){
-        localStorage.setItem('VS1StockQuantityLocation_Report', JSON.stringify(data)||'');
+
+
+  templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate) => {
+    LoadingOverlay.show();
+    // let data = [];
+    // if (!localStorage.getItem('VS1StockQuantityLocation_Report')) {
+    //   const options = await templateObject.reportOptions.get();
+    //   let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    //   let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    //   let ignoreDate = options.ignoreDate || false;
+    //   data = await reportService.getStockQuantityLocationReport( dateFrom, dateTo, ignoreDate);
+    //   if( data.tstockquantitylocation.length > 0 ){
+    //     localStorage.setItem('VS1StockQuantityLocation_Report', JSON.stringify(data)||'');
+    //   }
+    // }else{
+    //   data = JSON.parse(localStorage.getItem('VS1StockQuantityLocation_Report'));
+    // }
+
+    let data = await CachedHttp.get(erpObject.TStockQuantityLocation, async () => {
+      return await reportService.getStockQuantityLocationReport( dateFrom, dateTo, ignoreDate);
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate : (cachedResponse) => {
+        return false;
       }
-    }else{
-      data = JSON.parse(localStorage.getItem('VS1StockQuantityLocation_Report'));
-    }
+    });
+
+    data = data.response;
+
+
+
     let reportData = [];
     if( data.tstockquantitylocation.length > 0 ){
       for (const item of data.tstockquantitylocation ) {   
@@ -165,9 +190,11 @@ Template.stockquantitybylocation.onRendered(() => {
         $(".fullScreenSpin").css("display", "none");
       }, 1000);
     }    
+
+    LoadingOverlay.hide();
   }
 
-  templateObject.setReportOptions();
+  //templateObject.setReportOptions();
 
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
@@ -178,18 +205,24 @@ Template.stockquantitybylocation.onRendered(() => {
   };
 
 
-  //----------- CURRENCY MODULE ------------------//
-  templateObject.loadCurrency = async () => {
-    await loadCurrency();
-  };
+  // //----------- CURRENCY MODULE ------------------//
+  // templateObject.loadCurrency = async () => {
+  //   await loadCurrency(templateObject);
+  // };
 
-  templateObject.loadCurrencyHistory = async () => {
-    await loadCurrencyHistory();
-  };
+  // templateObject.loadCurrencyHistory = async () => {
+  //   await loadCurrencyHistory(templateObject);
+  // };
 
   templateObject.initDate();
   templateObject.initUploadedImage();
-  LoadingOverlay.hide();
+
+  templateObject.loadReport(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    false
+  );
+
 });
 
 Template.stockquantitybylocation.events({
@@ -310,154 +343,157 @@ Template.stockquantitybylocation.events({
       $(".table tbody tr").show();
     }
   },
-  "click #lastMonth": function () {
-    let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1StockQuantityLocation_Report", "");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
+  // "click #lastMonth": function () {
+  //   let templateObject = Template.instance();
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   localStorage.setItem("VS1StockQuantityLocation_Report", "");
+  //   $("#dateFrom").attr("readonly", false);
+  //   $("#dateTo").attr("readonly", false);
+  //   var currentDate = new Date();
 
-    var prevMonthLastDate = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      0
-    );
-    var prevMonthFirstDate = new Date(
-      currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1),
-      (currentDate.getMonth() - 1 + 12) % 12,
-      1
-    );
+  //   var prevMonthLastDate = new Date(
+  //     currentDate.getFullYear(),
+  //     currentDate.getMonth(),
+  //     0
+  //   );
+  //   var prevMonthFirstDate = new Date(
+  //     currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1),
+  //     (currentDate.getMonth() - 1 + 12) % 12,
+  //     1
+  //   );
 
-    var formatDateComponent = function (dateComponent) {
-      return (dateComponent < 10 ? "0" : "") + dateComponent;
-    };
+  //   var formatDateComponent = function (dateComponent) {
+  //     return (dateComponent < 10 ? "0" : "") + dateComponent;
+  //   };
 
-    var formatDate = function (date) {
-      return (
-        formatDateComponent(date.getDate()) +
-        "/" +
-        formatDateComponent(date.getMonth() + 1) +
-        "/" +
-        date.getFullYear()
-      );
-    };
+  //   var formatDate = function (date) {
+  //     return (
+  //       formatDateComponent(date.getDate()) +
+  //       "/" +
+  //       formatDateComponent(date.getMonth() + 1) +
+  //       "/" +
+  //       date.getFullYear()
+  //     );
+  //   };
 
-    var formatDateERP = function (date) {
-      return (
-        date.getFullYear() +
-        "-" +
-        formatDateComponent(date.getMonth() + 1) +
-        "-" +
-        formatDateComponent(date.getDate())
-      );
-    };
+  //   var formatDateERP = function (date) {
+  //     return (
+  //       date.getFullYear() +
+  //       "-" +
+  //       formatDateComponent(date.getMonth() + 1) +
+  //       "-" +
+  //       formatDateComponent(date.getDate())
+  //     );
+  //   };
 
-    var fromDate = formatDate(prevMonthFirstDate);
-    var toDate = formatDate(prevMonthLastDate);
+  //   var fromDate = formatDate(prevMonthFirstDate);
+  //   var toDate = formatDate(prevMonthLastDate);
 
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(toDate);
+  //   $("#dateFrom").val(fromDate);
+  //   $("#dateTo").val(toDate);
 
-    var getLoadDate = formatDateERP(prevMonthLastDate);
-    let getDateFrom = formatDateERP(prevMonthFirstDate);
-    templateObject.dateAsAt.set(fromDate);
+  //   var getLoadDate = formatDateERP(prevMonthLastDate);
+  //   let getDateFrom = formatDateERP(prevMonthFirstDate);
+  //   templateObject.dateAsAt.set(fromDate);
 
-    templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-  },
-  "click #lastQuarter": function () {
-    let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1StockQuantityLocation_Report", "");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  //   templateObject.setReportOptions(false, getDateFrom, getLoadDate);
+  // },
+  // "click #lastQuarter": function () {
+  //   let templateObject = Template.instance();
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   localStorage.setItem("VS1StockQuantityLocation_Report", "");
+  //   $("#dateFrom").attr("readonly", false);
+  //   $("#dateTo").attr("readonly", false);
+  //   var currentDate = new Date();
+  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-    function getQuarter(d) {
-      d = d || new Date();
-      var m = Math.floor(d.getMonth() / 3) + 2;
-      return m > 4 ? m - 4 : m;
-    }
+  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  //   function getQuarter(d) {
+  //     d = d || new Date();
+  //     var m = Math.floor(d.getMonth() / 3) + 2;
+  //     return m > 4 ? m - 4 : m;
+  //   }
 
-    var quarterAdjustment = (moment().month() % 3) + 1;
-    var lastQuarterEndDate = moment()
-      .subtract({ months: quarterAdjustment })
-      .endOf("month");
-    var lastQuarterStartDate = lastQuarterEndDate
-      .clone()
-      .subtract({ months: 2 })
-      .startOf("month");
+  //   var quarterAdjustment = (moment().month() % 3) + 1;
+  //   var lastQuarterEndDate = moment()
+  //     .subtract({ months: quarterAdjustment })
+  //     .endOf("month");
+  //   var lastQuarterStartDate = lastQuarterEndDate
+  //     .clone()
+  //     .subtract({ months: 2 })
+  //     .startOf("month");
 
-    var lastQuarterStartDateFormat =
-      moment(lastQuarterStartDate).format("DD/MM/YYYY");
-    var lastQuarterEndDateFormat =
-      moment(lastQuarterEndDate).format("DD/MM/YYYY");
+  //   var lastQuarterStartDateFormat =
+  //     moment(lastQuarterStartDate).format("DD/MM/YYYY");
+  //   var lastQuarterEndDateFormat =
+  //     moment(lastQuarterEndDate).format("DD/MM/YYYY");
 
-    templateObject.dateAsAt.set(lastQuarterStartDateFormat);
-    $("#dateFrom").val(lastQuarterStartDateFormat);
-    $("#dateTo").val(lastQuarterEndDateFormat);
+  //   templateObject.dateAsAt.set(lastQuarterStartDateFormat);
+  //   $("#dateFrom").val(lastQuarterStartDateFormat);
+  //   $("#dateTo").val(lastQuarterEndDateFormat);
 
-    let fromDateMonth = getQuarter(currentDate);
-    var quarterMonth = getQuarter(currentDate);
-    let fromDateDay = currentDate.getDate();
+  //   let fromDateMonth = getQuarter(currentDate);
+  //   var quarterMonth = getQuarter(currentDate);
+  //   let fromDateDay = currentDate.getDate();
 
-    var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
-    let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
-    templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-  },
-  "click #last12Months": function () {
-    let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1StockQuantityLocation_Report", "");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  //   var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
+  //   let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
+  //   templateObject.setReportOptions(false, getDateFrom, getLoadDate);
+  // },
+  // "click #last12Months": function () {
+  //   let templateObject = Template.instance();
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   localStorage.setItem("VS1StockQuantityLocation_Report", "");
+  //   $("#dateFrom").attr("readonly", false);
+  //   $("#dateTo").attr("readonly", false);
+  //   var currentDate = new Date();
+  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
-    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
+  //   let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+  //   let fromDateDay = currentDate.getDate();
+  //   if (currentDate.getMonth() + 1 < 10) {
+  //     fromDateMonth = "0" + (currentDate.getMonth() + 1);
+  //   }
+  //   if (currentDate.getDate() < 10) {
+  //     fromDateDay = "0" + currentDate.getDate();
+  //   }
 
-    var fromDate =
-      fromDateDay +
-      "/" +
-      fromDateMonth +
-      "/" +
-      Math.floor(currentDate.getFullYear() - 1);
-    templateObject.dateAsAt.set(begunDate);
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
+  //   var fromDate =
+  //     fromDateDay +
+  //     "/" +
+  //     fromDateMonth +
+  //     "/" +
+  //     Math.floor(currentDate.getFullYear() - 1);
+  //   templateObject.dateAsAt.set(begunDate);
+  //   $("#dateFrom").val(fromDate);
+  //   $("#dateTo").val(begunDate);
 
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom =
-      Math.floor(currentDate2.getFullYear() - 1) +
-      "-" +
-      Math.floor(currentDate2.getMonth() + 1) +
-      "-" +
-      currentDate2.getDate();
-    templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-  },
-  "click #ignoreDate": function () {
-    let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1StockQuantityLocation_Report", "");
-    $("#dateFrom").attr("readonly", true);
-    $("#dateTo").attr("readonly", true);
+  //   var currentDate2 = new Date();
+  //   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+  //   let getDateFrom =
+  //     Math.floor(currentDate2.getFullYear() - 1) +
+  //     "-" +
+  //     Math.floor(currentDate2.getMonth() + 1) +
+  //     "-" +
+  //     currentDate2.getDate();
+  //   templateObject.setReportOptions(false, getDateFrom, getLoadDate);
+  // },
+  "click #ignoreDate":  (e, templateObject) => {
+    //localStorage.setItem("VS1StockQuantityLocation_Report", "");
+    // $("#dateFrom").attr("readonly", true);
+    // $("#dateTo").attr("readonly", true);
     templateObject.dateAsAt.set("Current Date");
-    templateObject.setReportOptions(true);
+    //templateObject.setReportOptions(true);
+    templateObject.loadReport(
+      null, 
+      null, 
+      true
+    );
   },
 
-  // CURRENCY MODULE //
-  "click .fx-rate-btn": async (e) => {
-    await loadCurrency();
+   // CURRENCY MODULE //
+   "click .fx-rate-btn": async (e, ui) => {
+    await loadCurrency(ui);
     //loadCurrencyHistory();
   },
   "click .currency-modal-save": (e) => {
@@ -518,7 +554,20 @@ Template.stockquantitybylocation.events({
         type: 'warning',
         confirmButtonText: 'Ok'
       })
-  }
+  },
+
+
+   /**
+   * This is the new way to handle any modification on the date fields
+   */
+    "change #dateTo, change #dateFrom": (e, templateObject) => {
+      templateObject.loadReport(
+        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+        GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+        false
+      );
+    },
+    ...Datehandler.getDateRangeEvents()
 });
 
 Template.stockquantitybylocation.helpers({
@@ -537,64 +586,56 @@ Template.stockquantitybylocation.helpers({
       return '#noInfoFound';
     }
   },
-  formatPrice( amount ){
-    let utilityService = new UtilityService();
-    if( isNaN( amount ) ){
-        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-    }
-      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
-  },
   checkZero( value ){
     return ( value == 0 )? '': value;
   },
-  formatDate: ( date ) => {
-    return ( date )? moment(date).format("YYYY/MM/DD") : '';
-  },
+  formatDate: ( date ) => GlobalFunctions.formatDate(date),
+ // FX Module //
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-    if (!amount || amount.trim() == "") {
-      return "";
+    if(isNaN(amount)) {
+      if (!amount || amount.trim() == "") {
+        return "";
+      }
+      amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
     }
-    if (currencyData.code == defaultCurrencyCode) {
-      // default currency
-      return amount;
-    }
+    // if (currencyData.code == defaultCurrencyCode) {
+    //   // default currency
+    //   return amount;
+    // }
 
-    amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
 
     // Lets remove the minus character
     const isMinus = amount < 0;
-    if (isMinus == true) amount = amount * -1; // Make it positive
+    if (isMinus == true) amount = amount * -1; // make it positive for now
 
-    // get default currency symbol
+    // // get default currency symbol
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode
     // )[0];
 
-    //amount = amount.replace(_defaultCurrency.symbol, "");
+    // amount = amount.replace(_defaultCurrency.symbol, "");
+
 
     // amount =
     //   isNaN(amount) == true
     //     ? parseFloat(amount.substring(1))
     //     : parseFloat(amount);
 
+
+
     // Get the selected date
-    let dateTo = $("#balancedate").val();
+    let dateTo = $("#dateTo").val();
     const day = dateTo.split("/")[0];
     const m = dateTo.split("/")[1];
     const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
 
+
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-
-    // if(currencyList.length == 0) {
-    //   currencyList = Template.instance().currencyList.get();
-    //   currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-    // }
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -623,20 +664,24 @@ Template.stockquantitybylocation.helpers({
 
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
 
+
+
     let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
-    //amount = amount + 0.36;
+
+
+
+
     amount = parseFloat(amount * rate); // Multiply by the rate
     amount = Number(amount).toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }); // Add commas
 
-    // amount = amount.toLocaleString();
-
     let convertedAmount =
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
+
 
     return convertedAmount;
   },
@@ -655,6 +700,7 @@ Template.stockquantitybylocation.helpers({
   },
   isNegativeAmount(amount) {
     if (Math.sign(amount) === -1) {
+
       return true;
     }
     return false;
@@ -667,6 +713,7 @@ Template.stockquantitybylocation.helpers({
     let activeArray = array.filter((c) => c.active == true);
 
     if (activeArray.length == 1) {
+
       if (activeArray[0].code == defaultCurrencyCode) {
         return !true;
       } else {
@@ -682,12 +729,31 @@ Template.stockquantitybylocation.helpers({
 
     return activeArray.length > 0;
   },
-  isObject: (variable) => {
+  isObject(variable) {
     return typeof variable === "object" && variable !== null;
   },
   currency: () => {
     return Currency;
   },
+
+  formatPrice( amount){
+
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
+  formatTax( amount){
+
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return amount + "%" || "0.00 %";
+  },
+
 });
 
 Template.registerHelper("equals", function (a, b) {
@@ -707,8 +773,8 @@ Template.registerHelper("containsequals", function (a, b) {
 /**
  *
  */
- async function loadCurrency() {
-  let templateObject = Template.instance();
+ async function loadCurrency(templateObject) {
+  //let templateObject = Template.instance();
 
   if ((await templateObject.currencyList.get().length) == 0) {
     LoadingOverlay.show();
