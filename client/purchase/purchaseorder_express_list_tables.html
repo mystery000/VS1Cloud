@@ -30,7 +30,6 @@
                             <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                         <div class="modal-body">
                             <div>
-                                {{#if tableheaderrecords}}
                                 <form class="d-xl-flex align-items-xl-center">
                                     <div class="flex-grow-1">
                                         <style>
@@ -71,38 +70,23 @@
                                             }
 
                                         </style>
-                                        {{#each item in tableheaderrecords}}
-                                        {{#if equals item.sTitle "id"}}
-                                        {{else}}
-
-                                        <div id="{{item.sIndex}}" class="columnSettings displaySettings" custid="{{item.custid}}">
-                                            <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}" checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
-                                                <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
-                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
-                                            </div>
-                                            <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                                <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width: <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>--></label>
-                                                <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
-                                                <!-- <div contenteditable="true" class="groove rngRange" type="text" value="{{item.sWidth}}" min="0" max="1000">{{item.sWidth}}px</div> -->
-                                            </div>
-                                        </div>
-
-                                        {{#if equals item.sVisible true}}
-                                        <script>
-                                            $("#"+ {{item.sIndex}} +".chkDatatable").attr("checked","checked");
-                                        </script>
-                                        {{else}}
-                                        <script>
-                                            $("#"+ {{item.sIndex}} +".chkDatatable").removeAttr("checked");
-                                        </script>
-                                        {{/if}}
-
+                                        {{#each displayfield in displayfields}}
+                                        {{#if displayfield.display}}
+                                        <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
+                                          <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                              <input class="custom-control-input chk{{displayfield.class}}" type="checkbox" id="formCheck-0{{displayfield.id}}" checked="{{displayfield.active}}">
+                                              <label class="custom-control-label" for="formCheck-0{{displayfield.id}}"></label>
+                                              <div contenteditable="true" class="groove divcolumn" type="text" value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">{{displayfield.custfieldlabel}}</div>
+                                          </div>
+                                          <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                              <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                              <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
+                                          </div>
+                                        </div> 
                                         {{/if}}
                                         {{/each}}
                                     </div>
                                 </form>
-                                {{/if}}
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -223,36 +207,13 @@
                             <thead>
                                 <tr class="dnd-moved">
                                   <th class="th colSortDate hiddenColumn">id</th>
-                                  <th class="th colOrderDate {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[0].id}}" style="width:80px;">{{#if
-                                    displayfields}}{{displayfields.[0].custfieldlabel}}{{else}}Order Date {{/if}}</th>
-                                  <th class="th colPurchaseNo {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[1].id}}" style="width:80px;">{{#if
-                                    displayfields}}{{displayfields.[1].custfieldlabel}}{{else}}P/O No. {{/if}}</th>
-                                  <th class="th colSupplier {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[2].id}}" style="width:80px;">{{#if
-                                    displayfields}}{{displayfields.[2].custfieldlabel}}{{else}}Supplier {{/if}}</th>
-                                  <th class="th colAmountEx {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[3].id}}" style="width:200px;">{{#if
-                                    displayfields}}{{displayfields.[3].custfieldlabel}}{{else}}Amount(Ex) {{/if}}</th>
-                                  <th class="th colTax {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[4].id}}" style="width:80px;">{{#if
-                                    displayfields}}{{displayfields.[4].custfieldlabel}}{{else}}Tax {{/if}}</th>
-                                  <th class="th colAmount {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[5].id}}" style="width:80px;">{{#if
-                                    displayfields}}{{displayfields.[5].custfieldlabel}}{{else}}Amount {{/if}}</th>
-                                  <th class="th colPaid {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[6].id}}" style="width:80px;">{{#if
-                                    displayfields}}{{displayfields.[6].custfieldlabel}}{{else}}Paid {{/if}}</th>
-                                  <th class="th colBalanceOutstanding {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[7].id}}" style="width:80px;">{{#if
-                                    displayfields}}{{displayfields.[7].custfieldlabel}}{{else}}Outstanding {{/if}}</th>
-                                  <th class="th colStatus {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[8].id}}" style="width: 5% !important;">{{#if
-                                    displayfields}}{{displayfields.[8].custfieldlabel}}{{else}}Status {{/if}}</th>
-
-                                  <th class="th colEmployee {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[9].id}}">{{#if
-                                    displayfields}}{{displayfields.[9].custfieldlabel}}{{else}}Employee {{/if}}</th>
-                                  <th class="th colComments {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[10].id}}">{{#if
-                                    displayfields}}{{displayfields.[10].custfieldlabel}}{{else}}Comments {{/if}}</th>
-
-                                  <th class="th colSaleCustField1 colCustFieldHeader1 customFieldColumn {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[11].id}}">{{#if
-                                    displayfields}}{{displayfields.[11].custfieldlabel}}{{else}}Custom Field 1 {{/if}}</th>
-                                  <th class="th colSaleCustField2 colCustFieldHeader2 customFieldColumn {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[12].id}}">{{#if
-                                    displayfields}}{{displayfields.[12].custfieldlabel}}{{else}}Custom Field 2 {{/if}}</th>
-                                  <th class="th colSaleCustField3 colCustFieldHeader3 customFieldColumn {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}" custid="{{displayfields.[13].id}}">{{#if
-                                    displayfields}}{{displayfields.[13].custfieldlabel}}{{else}}Custom Field 3 {{/if}}</th>
+                                  {{#each displayfield in displayfields}}
+                                      {{#if displayfield.display}}
+                                      <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                          {{displayfield.custfieldlabel}} 
+                                        </th>
+                                      {{/if}}
+                                    {{/each}}   
                               </tr>
                             </thead>
                             <tbody>
@@ -260,22 +221,17 @@
                                 {{#each item in datatablerecords}}
                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                                     <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
-                                    <td contenteditable="false" class="colOrderDate {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}" ><span style="display:none;">{{item.sortdate}}</span>{{item.orderdate}}</td>
-                                    <td contenteditable="false" class="colPurchaseNo {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">{{item.id}}</td>
-                                    <td contenteditable="false" class="colSupplier {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}" >{{item.suppliername}}</td>
-                                    <td contenteditable="false" class="colAmountEx {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totalamountex}}</td>
-                                    <td contenteditable="false" class="colTax {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totaltax}}</td>
-                                    <td contenteditable="false" class="colAmount {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totalamount}}</td>
-                                    <td contenteditable="false" class="colPaid {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totalpaid}}</td>
-                                    <td contenteditable="false" class="colBalanceOutstanding {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totaloustanding}}</td>
-                                    <td contenteditable="false" class="colStatus {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">{{item.orderstatus}}</td>
-                                    <td contenteditable="false" class="colEmployee {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.employee}}</td>
-                                    <td contenteditable="false" class="colComments {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}" >{{item.comments}}</td>
-
-                                    <td contenteditable="false" class="colSaleCustField1 customFieldColumn {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield1}}</td>
-                                    <td contenteditable="false" class="colSaleCustField2 customFieldColumn {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield2}}</td>
-                                    <td contenteditable="false" class="colSaleCustField3 customFieldColumn {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield3}}</td>
-
+                                    <td contenteditable="false" class="colOrderDate {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" ><span style="display:none;">{{item.sortdate}}</span>{{item.orderdate}}</td>
+                                    <td contenteditable="false" class="colPurchaseNo {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.id}}</td>
+                                    <td contenteditable="false" class="colSupplier {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}" >{{item.suppliername}}</td>
+                                    <td contenteditable="false" class="colAmountEx {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totalamountex}}</td>
+                                    <td contenteditable="false" class="colTax {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totaltax}}</td>
+                                    <td contenteditable="false" class="colAmount {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totalamount}}</td>
+                                    <td contenteditable="false" class="colPaid {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totalpaid}}</td>
+                                    <td contenteditable="false" class="colBalanceOutstanding {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totaloustanding}}</td>
+                                    <td contenteditable="false" class="colStatus {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.orderstatus}}</td>
+                                    <td contenteditable="false" class="colEmployee {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">{{item.employee}}</td>
+                                    <td contenteditable="false" class="colComments {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}" >{{item.comments}}</td>
                                 </tr>
                                 {{/each}}
                                 {{/if}}
