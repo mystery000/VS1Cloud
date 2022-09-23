@@ -4,7 +4,9 @@ require('highcharts/modules/exporting')(highCharts);
 require('highcharts/highcharts-more')(highCharts);
 let _ = require("lodash");
 import { UtilityService } from "../../utility-service";
+import {SideBarService} from "../../js/sidebar-service";
 
+let sideBarService = new SideBarService();
 
 Template.dashboardManagerCharts.onCreated(function() {
     const templateObject = Template.instance();
@@ -14,6 +16,59 @@ Template.dashboardManagerCharts.onCreated(function() {
 
 Template.dashboardManagerCharts.onRendered(function () {
     const templateObject = Template.instance();
+/*
+    templateObject.getEmployees = function () {
+        getVS1Data('TEmployee').then(function (dataObject) {
+            if(dataObject.length == 0){
+                sideBarService.getAllEmployees("All",0).then(function (data) {
+                    setAllEmployees(data);
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display','none');
+                });
+            }else{
+                let data = JSON.parse(dataObject[0].data);
+                setAllEmployees(data);
+            }
+        }).catch(function (err) {
+            sideBarService.getAllEmployees("All",0).then(function (data) {
+                setAllEmployees(data);
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display','none');
+            });
+        });
+    }
+    function setAllEmployees(data) {
+        console.log(data);
+        addVS1Data('TEmployee',JSON.stringify(data));
+        let dataTableList = [];
+        for(let i=0; i<data.temployee.length; i++){
+            const dataList = {
+                id: data.temployee[i].fields.ID || '',
+                employeeno: data.temployee[i].fields.EmployeeNo || '',
+                employeename: data.temployee[i].fields.EmployeeName || '',
+                firstname: data.temployee[i].fields.FirstName || '',
+                lastname: data.temployee[i].fields.LastName || '',
+                phone: data.temployee[i].fields.Phone || '',
+                email: data.temployee[i].fields.Email || '',
+                address: data.temployee[i].fields.Street || '',
+                country: data.temployee[i].fields.Country || '',
+                department: data.temployee[i].fields.DefaultClassName || '',
+                custFld1: data.temployee[i].fields.CustFld1 || '',
+                custFld2: data.temployee[i].fields.CustFld2 || '',
+                custFld3: data.temployee[i].fields.CustFld3 || '',
+                custFld4: data.temployee[i].fields.CustFld4 || ''
+            };
+            if(data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != ''){
+                dataTableList.push(dataList);
+            }
+            //}
+        }
+        templateObject.employeesByTotalSales.set(dataTableList);
+
+    }
+    templateObject.getEmployees();
+
+ */
 
     function formatPrice( amount ){
         let utilityService = new UtilityService();
@@ -38,7 +93,6 @@ Template.dashboardManagerCharts.onRendered(function () {
             series: [{
                 name: 'Employees',
                 data: employeesTotalDiscount
-
             }],
             chart: {
                 type: 'column'
@@ -66,9 +120,9 @@ Template.dashboardManagerCharts.onRendered(function () {
                 }
             }
         });
-    };
+    }
 
-    function setGauageChart({ divId, empData, index }) {
+    function setGaugeChart({ divId, empData, index }) {
         const fourtyPercentOfQuota = ((40 / 100) * empData.salesQuota).toFixed();
         const eightyPercentOfQuota = ((80 / 100) * empData.salesQuota).toFixed();
         const oneTwentyPercentOfQuota = ((120 / 100) * empData.salesQuota).toFixed();
@@ -183,46 +237,78 @@ Template.dashboardManagerCharts.onRendered(function () {
                 $(`#${divId}-amount`).html(formatPrice(empData.totalSales));
             }
         }
-    };
+    }
 
     templateObject.renderSPDCharts = function () {
         const filteredEmployees = _.sortBy(_.filter(templateObject.employeesByTotalSales.get(), emp => !!emp.salesQuota), ['totalSales']);
         const employeesByTotalSales = _.sortBy(filteredEmployees, ['sale']).reverse().slice(0, 6); // get top 6 employees
         _.each(employeesByTotalSales, (empData, index) => {
-            setGauageChart({ divId: `spd-gauge-area${index + 1}`, empData, index });
+            setGaugeChart({ divId: `spd-gauge-area${index + 1}`, empData, index });
         });
     };
 
     templateObject.getDashboardData = async function () {
-        const employeeObject = await getVS1Data('TEmployee');
+        // const employeeObject = await getVS1Data('TEmployee');
+        const employeeObject = await getVS1Data('TCustomerVS1');
         let employeeNames = [];
         let employeeSalesQuota = [];
+        // if (employeeObject.length) {
+        //     let { temployee = [] } = JSON.parse(employeeObject[0].data);
+        //     console.log(temployee);
+        //     let employees = [];
+        //     temployee.forEach(employee => {
+        //         employees.push(employee.fields);
+        //         if(!(isNaN(parseInt(employee.fields.CustFld12)) || parseInt(employee.fields.CustFld12) == 0)) {
+        //             // employeeNames.push(employee.fields.EmployeeName);
+        //             employeeNames.push(employee.fields.CustomerName);
+        //             employeeSalesQuota.push(parseInt(employee.fields.CustFld12));
+        //         }
+        //     });
+        //     console.log(employeeNames);
+        //     console.log(employeeSalesQuota);
+        //     templateObject.employees.set(employees);
+        // }
         if (employeeObject.length) {
-            let { temployee = [] } = JSON.parse(employeeObject[0].data);
+            let { tcustomervs1 = [] } = JSON.parse(employeeObject[0].data);
+            console.log(tcustomervs1);
             let employees = [];
-            temployee.forEach(employee => {
+            tcustomervs1.forEach(employee => {
                 employees.push(employee.fields);
-                if(!(isNaN(parseInt(employee.fields.CustFld12)) || parseInt(employee.fields.CustFld12) == 0)) {
-                    employeeNames.push(employee.fields.EmployeeName);
-                    employeeSalesQuota.push(parseInt(employee.fields.CustFld12));
+                if(!(isNaN(parseInt(employee.fields.CUSTFLD12)) || parseInt(employee.fields.CUSTFLD12) == 0)) {
+                    // employeeNames.push(employee.fields.EmployeeName);
+                    employeeNames.push(employee.fields.ClientName);
+                    employeeSalesQuota.push(parseInt(employee.fields.CUSTFLD12));
                 }
             });
+            console.log(employeeNames);
+            console.log(employeeSalesQuota);
             templateObject.employees.set(employees);
         }
 
         getVS1Data('TInvoiceList').then(function (dataObject) {
             if (dataObject.length) {
                 let { tinvoicelist } = JSON.parse(dataObject[0].data);
-                const tinvoicelistGroupBy = _.groupBy(tinvoicelist, 'EmployeeName');
+                console.log(tinvoicelist);
+                // const tinvoicelistGroupBy = _.groupBy(tinvoicelist, 'EmployeeName');
+                const tinvoicelistGroupBy = _.groupBy(tinvoicelist, 'CustomerName');
                 let employeesByTotalSales = [];
                 _.each(templateObject.employees.get(), employee => {
                     let lastMonthUnix = moment().subtract(1, 'months').unix();
-                    let employeeData = { name: employee.EmployeeName, totalSales: 0, salesQuota: 0, totalDiscount: 0 };
-                    if (employee.CustFld12 && Number(employee.CustFld12) != 'NaN' && Number(employee.CustFld12) > 0) {
-                        employeeData.salesQuota = Number(employee.CustFld12);
+                    // let employeeData = { name: employee.EmployeeName, totalSales: 0, salesQuota: 0, totalDiscount: 0 };
+                    let employeeData = { name: employee.CustomerName, totalSales: 0, salesQuota: 0, totalDiscount: 0 };
+                    if (employee.CUSTFLD12 && Number(employee.CUSTFLD12) != 'NaN' && Number(employee.CUSTFLD12) > 0) {
+                        employeeData.salesQuota = Number(employee.CUSTFLD12);
                     }
-                    if(tinvoicelistGroupBy[employee.EmployeeName]) {
-                        _.each(tinvoicelistGroupBy[employee.EmployeeName], invoiceData => {
+                    // if(tinvoicelistGroupBy[employee.EmployeeName]) {
+                    //     _.each(tinvoicelistGroupBy[employee.EmployeeName], invoiceData => {
+                    //         if (moment(invoiceData.SaleDate).unix() > lastMonthUnix) {
+                    //             employeeData.totalSales += invoiceData.TotalAmountInc
+                    //             employeeData.totalDiscount += invoiceData.TotalDiscount
+                    //         }
+                    //     });
+                    // }
+                    if(tinvoicelistGroupBy[employee.CustomerName]) {
+                        _.each(tinvoicelistGroupBy[employee.CustomerName], invoiceData => {
                             if (moment(invoiceData.SaleDate).unix() > lastMonthUnix) {
                                 employeeData.totalSales += invoiceData.TotalAmountInc
                                 employeeData.totalDiscount += invoiceData.TotalDiscount
@@ -231,6 +317,7 @@ Template.dashboardManagerCharts.onRendered(function () {
                     }
                     employeesByTotalSales.push(employeeData);
                 });
+                console.log(employeesByTotalSales);
                 templateObject.employeesByTotalSales.set(employeesByTotalSales);
                 renderSPMEmployeeChart();
                 templateObject.renderSPDCharts();

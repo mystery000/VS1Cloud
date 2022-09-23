@@ -1000,7 +1000,6 @@ Template.customerscard.onRendered(function () {
             let dataPhone = countryService.getCountryJeyhun();
             templateObject.phoneCodeData.set(dataPhone);
     };
-
     templateObject.getCountryData();
 
     templateObject.getPreferredPaymentList = function () {
@@ -1044,7 +1043,6 @@ Template.customerscard.onRendered(function () {
             });
         });
     };
-
      function setTermsDataVS1(data) {
         for (let i = 0; i < data.ttermsvs1.length; i++) {
             terms.push(data.ttermsvs1[i].TermsName);
@@ -1323,6 +1321,7 @@ Template.customerscard.onRendered(function () {
             status: data.fields.Status || '',
             rep: data.fields.RepName || '',
             source: data.fields.SourceName || '',
+            salesQuota: data.fields.CUSTFLD12 || '',
             jobcompany: data.fields.ClientName || '',
             jobCompanyParent: data.fields.ClientName || '',
             jobemail: data.fields.Email || '',
@@ -1399,7 +1398,6 @@ Template.customerscard.onRendered(function () {
             $('#sltJobTerms').val(lineItemObj.jobterms);
             $('#sltJobCustomerType').val(lineItemObj.jobclienttype);
             $('#sltJobTaxCode').val(lineItemObj.jobtaxcode);
-
             const rowCount = $('.results tbody tr').length;
             $('.counter').text(rowCount + ' items');
             setTab();
@@ -1439,6 +1437,7 @@ Template.customerscard.onRendered(function () {
             status: '',
             rep: '',
             source: '',
+            salesQuota: 5000,
             jobbcountry: LoggedCountry || '',
             jobscountry: LoggedCountry || '',
             discount:0
@@ -1488,7 +1487,7 @@ Template.customerscard.onRendered(function () {
             $('.customerTab').trigger('click');
         }
     }
-    if(JSON.stringify(currentId) != '{}'){
+    if (JSON.stringify(currentId) != '{}') {
         if (currentId.id == "undefined") {
             setInitialForEmptyCurrentID();
         } else {
@@ -1528,7 +1527,6 @@ Template.customerscard.onRendered(function () {
                 //Bert.alert('<strong>' + err + '</strong>!', 'danger');
             });
         });
-
     };
     templateObject.getCustomersList();
     templateObject.setAllCustomerSideDataVS1 = function (data) {
@@ -2639,6 +2637,7 @@ Template.customerscard.events({
         let sourceName = $('#leadSource').val()||'';
         let repName = $('#leadRep').val()||'';
         let status = $('#leadStatus').val()||'';
+        let salesQuota = $('#edtSalesQuota').val()||'';
 
         if (company == '') {
             swal('Please provide the compamy name !', '', 'warning');
@@ -2736,6 +2735,7 @@ Template.customerscard.events({
                 Status: status,
                 SourceName: sourceName,
                 RepName: repName,
+                CUSTFLD12: salesQuota,
             }
         };
         contactService.saveCustomerEx(objDetails).then(function (objDetails) {
@@ -3474,7 +3474,6 @@ Template.customerscard.events({
     },
     'click .btnResetSettings': function (event) {
         let checkPrefDetails = getCheckPrefDetails();
-
         if (checkPrefDetails) {
             CloudPreference.remove({ _id: checkPrefDetails._id }, function (err, idTag) {
                 if (err) {
@@ -4073,7 +4072,15 @@ Template.customerscard.helpers({
         }
         return isMobile;
     },
-    setLeadStatus: (status) => status || 'Unqualified'
+    setLeadStatus: (status) => status || 'Unqualified',
+    formatPrice( amount ){
+        let utilityService = new UtilityService();
+        if( isNaN(amount) || !amount){
+            amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+            amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+        }
+        return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+    },
 });
 
 Template.registerHelper('equals', function (a, b) {

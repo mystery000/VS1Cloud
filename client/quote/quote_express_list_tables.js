@@ -17,11 +17,84 @@ Template.quoteslist.onCreated(function(){
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.custfields = new ReactiveVar([]);
     templateObject.displayfields = new ReactiveVar([]);
+    templateObject.reset_data = new ReactiveVar([]);
 });
 
 Template.quoteslist.onRendered(function() {
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
+
+
+    // set initial table rest_data
+    function init_reset_data() {  
+      let reset_data = [
+        { index: 0, label: 'Sort Date', class:'SortDate', active: false, display: false, width: "0" },
+        { index: 1, label: "Sale Date", class: "SaleDate", active: true, display: true, width: "" },
+        { index: 2, label: "Sales No.", class: "SalesNo", active: true, display: true, width: "" },
+        { index: 3, label: "Due Date", class: "DueDate", active: true, display: true, width: "" },
+        { index: 4, label: "Customer", class: "Customer", active: true, display: true, width: "" },
+        { index: 5, label: "Amount(Ex)", class: "AmountEx", active: true, display: true, width: "" },
+        { index: 6, label: "Tax", class: "Tax", active: true, display: true, width: "" },
+        { index: 7, label: "Amount", class: "Amount", active: true, display: true, width: "" }, 
+        { index: 8, label: "Status", class: "Status", active: true, display: true, width: "" },
+        { index: 9, label: "Employee", class: "Employee", active: true, display: true, width: "" },
+        { index: 10, label: "Converted", class: "Converted", active: false, display: true, width: "" },
+        { index: 11, label: "Comments", class: "Comments", active: false, display: true, width: "" },
+      ];
+  
+      let templateObject = Template.instance();
+      templateObject.reset_data.set(reset_data);
+    }
+    init_reset_data();
+    // set initial table rest_data
+  
+    // custom field displaysettings
+    function initCustomFieldDisplaySettings(data, listType) {
+      let templateObject = Template.instance();
+      let reset_data = templateObject.reset_data.get();
+      showCustomFieldDisplaySettings(reset_data);
+  
+      try {
+        getVS1Data("VS1_Customize").then(function (dataObject) { 
+          if (dataObject.length == 0) {
+            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+                // reset_data = data.ProcessLog.CustomLayout.Columns;
+                reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                showCustomFieldDisplaySettings(reset_data);
+            }).catch(function (err) {
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data); 
+            // handle process here
+          }
+        });
+      } catch (error) {
+      } 
+      return; 
+    }
+  
+    function showCustomFieldDisplaySettings(reset_data) {
+      let custFields = [];
+      let customData = {};
+      let customFieldCount = reset_data.length;
+  
+      for (let r = 0; r < customFieldCount; r++) {
+        customData = {
+          active: reset_data[r].active,
+          id: reset_data[r].index,
+          custfieldlabel: reset_data[r].label, 
+          class: reset_data[r].class,
+          display: reset_data[r].display,
+          width: reset_data[r].width ? reset_data[r].width : ''
+        };
+        custFields.push(customData);
+      }
+      templateObject.displayfields.set(custFields);
+    }
+    initCustomFieldDisplaySettings("", "tblquotelist");
+    // custom field displaysettings
+
+
     let accountService = new AccountService();
     let salesService = new SalesBoardService();
     const customerList = [];
@@ -123,99 +196,99 @@ Template.quoteslist.onRendered(function() {
     // custom field displaysettings
     templateObject.getCustomFieldData = function() {
 
-      let custFields = [];
-      let dispFields = [];
-      let customData = {};
-      let customFieldCount = 11;
-      let listType = "ltQuoteList";
+      // let custFields = [];
+      // let dispFields = [];
+      // let customData = {};
+      // let customFieldCount = 11;
+      // let listType = "ltQuoteList";
 
-      let reset_data = [
-        { label: 'Sale Date', class: 'colSaleDate', active: true },
-        { label: 'Sales No.', class: 'colSalesNo', active: true },
-        { label: 'Due Date', class: 'colDueDate', active: true },
-        { label: 'Customer', class: 'colCustomer', active: true },
-        { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
-        { label: 'Tax', class: 'colTax', active: true },
-        { label: 'Amount', class: 'colAmount', active: true },
-        { label: 'Status', class: 'colStatus', active: true },
-        { label: 'Employee', class: 'colEmployee', active: false },
-        { label: 'Converted?', class: 'colConverted', active: true },
-        { label: 'Comments', class: 'colComments', active: true },
-      ];
+      // let reset_data = [
+      //   { label: 'Sale Date', class: 'colSaleDate', active: true },
+      //   { label: 'Sales No.', class: 'colSalesNo', active: true },
+      //   { label: 'Due Date', class: 'colDueDate', active: true },
+      //   { label: 'Customer', class: 'colCustomer', active: true },
+      //   { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
+      //   { label: 'Tax', class: 'colTax', active: true },
+      //   { label: 'Amount', class: 'colAmount', active: true },
+      //   { label: 'Status', class: 'colStatus', active: true },
+      //   { label: 'Employee', class: 'colEmployee', active: false },
+      //   { label: 'Converted?', class: 'colConverted', active: true },
+      //   { label: 'Comments', class: 'colComments', active: true },
+      // ];
 
-      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-        for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-          if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
-            customData = {
-              active: data.tcustomfieldlist[x].fields.Active || false,
-              id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-              custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-              datatype: data.tcustomfieldlist[x].fields.DataType || "",
-              isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-              iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-              dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-            };
-            custFields.push(customData);
-          } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
-            customData = {
-              active: data.tcustomfieldlist[x].fields.Active || false,
-              id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-              custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-              datatype: data.tcustomfieldlist[x].fields.DataType || "",
-              isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-              iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-              dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-            };
-            dispFields.push(customData);
-          }
-        }
+      // sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+      //   for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+      //     if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
+      //       customData = {
+      //         active: data.tcustomfieldlist[x].fields.Active || false,
+      //         id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+      //         custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+      //         datatype: data.tcustomfieldlist[x].fields.DataType || "",
+      //         isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+      //         iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+      //         dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+      //       };
+      //       custFields.push(customData);
+      //     } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
+      //       customData = {
+      //         active: data.tcustomfieldlist[x].fields.Active || false,
+      //         id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+      //         custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+      //         datatype: data.tcustomfieldlist[x].fields.DataType || "",
+      //         isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+      //         iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+      //         dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+      //       };
+      //       dispFields.push(customData);
+      //     }
+      //   }
 
-        if (custFields.length < 3) {
-          let remainder = 3 - custFields.length;
-          let getRemCustomFields = parseInt(custFields.length);
-          for (let r = 0; r < remainder; r++) {
-            getRemCustomFields++;
-            customData = {
-              active: false,
-              id: "",
-              custfieldlabel: "Custom Field " + getRemCustomFields,
-              datatype: "",
-              isempty: true,
-              iscombo: false,
-            };
-            // count++;
-            custFields.push(customData);
-          }
-        }
+      //   if (custFields.length < 3) {
+      //     let remainder = 3 - custFields.length;
+      //     let getRemCustomFields = parseInt(custFields.length);
+      //     for (let r = 0; r < remainder; r++) {
+      //       getRemCustomFields++;
+      //       customData = {
+      //         active: false,
+      //         id: "",
+      //         custfieldlabel: "Custom Field " + getRemCustomFields,
+      //         datatype: "",
+      //         isempty: true,
+      //         iscombo: false,
+      //       };
+      //       // count++;
+      //       custFields.push(customData);
+      //     }
+      //   }
 
-        if (dispFields.length < customFieldCount) {
-          let remainder = customFieldCount - dispFields.length;
-          let getRemCustomFields = parseInt(dispFields.length);
-          for (let r = 0; r < remainder; r++) {
-            customData = {
-              active: reset_data[getRemCustomFields].active,
-              id: "",
-              custfieldlabel: reset_data[getRemCustomFields].label,
-              datatype: "",
-              isempty: true,
-              iscombo: false,
-            };
-            getRemCustomFields++;
-            // count++;
-            dispFields.push(customData);
-          }
-        }
+      //   if (dispFields.length < customFieldCount) {
+      //     let remainder = customFieldCount - dispFields.length;
+      //     let getRemCustomFields = parseInt(dispFields.length);
+      //     for (let r = 0; r < remainder; r++) {
+      //       customData = {
+      //         active: reset_data[getRemCustomFields].active,
+      //         id: "",
+      //         custfieldlabel: reset_data[getRemCustomFields].label,
+      //         datatype: "",
+      //         isempty: true,
+      //         iscombo: false,
+      //       };
+      //       getRemCustomFields++;
+      //       // count++;
+      //       dispFields.push(customData);
+      //     }
+      //   }
 
-        for (let index = 0; index < custFields.length; index++) {
-          const element = custFields[index];
-          dispFields.push(element);
+      //   for (let index = 0; index < custFields.length; index++) {
+      //     const element = custFields[index];
+      //     dispFields.push(element);
 
-        }
+      //   }
 
-        templateObject.custfields.set(custFields);
-        templateObject.displayfields.set(dispFields);
+      //   templateObject.custfields.set(custFields);
+      //   templateObject.displayfields.set(dispFields);
 
-      })
+      // })
     }
 
     templateObject.getAllQuoteData = function () {
@@ -513,33 +586,33 @@ Template.quoteslist.onRendered(function() {
 
                     }, 0);
 
-                    var columns = $('#tblquotelist th');
-                    let sTible = "";
-                    let sWidth = "";
-                    let sIndex = "";
-                    let sVisible = "";
-                    let columVisible = false;
-                    let sClass = "";
-                    $.each(columns, function(i,v) {
-                        if(v.hidden == false){
-                            columVisible =  true;
-                        }
-                        if((v.className.includes("hiddenColumn"))){
-                            columVisible = false;
-                        }
-                        sWidth = v.style.width.replace('px', "");
+                    // var columns = $('#tblquotelist th');
+                    // let sTible = "";
+                    // let sWidth = "";
+                    // let sIndex = "";
+                    // let sVisible = "";
+                    // let columVisible = false;
+                    // let sClass = "";
+                    // $.each(columns, function(i,v) {
+                    //     if(v.hidden == false){
+                    //         columVisible =  true;
+                    //     }
+                    //     if((v.className.includes("hiddenColumn"))){
+                    //         columVisible = false;
+                    //     }
+                    //     sWidth = v.style.width.replace('px', "");
 
-                        let datatablerecordObj = {
-                          custid: $(this).attr("custid") || 0,
-                            sTitle: v.innerText || '',
-                            sWidth: sWidth || '',
-                            sIndex: v.cellIndex || '',
-                            sVisible: columVisible || false,
-                            sClass: v.className || ''
-                        };
-                        tableHeaderList.push(datatablerecordObj);
-                    });
-                    templateObject.tableheaderrecords.set(tableHeaderList);
+                    //     let datatablerecordObj = {
+                    //       custid: $(this).attr("custid") || 0,
+                    //         sTitle: v.innerText || '',
+                    //         sWidth: sWidth || '',
+                    //         sIndex: v.cellIndex || '',
+                    //         sVisible: columVisible || false,
+                    //         sClass: v.className || ''
+                    //     };
+                    //     tableHeaderList.push(datatablerecordObj);
+                    // });
+                    // templateObject.tableheaderrecords.set(tableHeaderList);
                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     $('#tblquotelist tbody').on( 'click', 'tr', function () {
                         var listData = $(this).closest('tr').attr('id');
@@ -835,33 +908,33 @@ Template.quoteslist.onRendered(function() {
 
                 }, 0);
 
-                var columns = $('#tblquotelist th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i,v) {
-                    if(v.hidden == false){
-                        columVisible =  true;
-                    }
-                    if((v.className.includes("hiddenColumn"))){
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
+                // var columns = $('#tblquotelist th');
+                // let sTible = "";
+                // let sWidth = "";
+                // let sIndex = "";
+                // let sVisible = "";
+                // let columVisible = false;
+                // let sClass = "";
+                // $.each(columns, function(i,v) {
+                //     if(v.hidden == false){
+                //         columVisible =  true;
+                //     }
+                //     if((v.className.includes("hiddenColumn"))){
+                //         columVisible = false;
+                //     }
+                //     sWidth = v.style.width.replace('px', "");
 
-                    let datatablerecordObj = {
-                      custid: $(this).attr("custid") || 0,
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
+                //     let datatablerecordObj = {
+                //       custid: $(this).attr("custid") || 0,
+                //         sTitle: v.innerText || '',
+                //         sWidth: sWidth || '',
+                //         sIndex: v.cellIndex || '',
+                //         sVisible: columVisible || false,
+                //         sClass: v.className || ''
+                //     };
+                //     tableHeaderList.push(datatablerecordObj);
+                // });
+                // templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 $('#tblquotelist tbody').on( 'click', 'tr', function () {
                     var listData = $(this).closest('tr').attr('id');
@@ -1151,33 +1224,33 @@ Template.quoteslist.onRendered(function() {
 
               }, 0);
 
-              var columns = $('#tblquotelist th');
-              let sTible = "";
-              let sWidth = "";
-              let sIndex = "";
-              let sVisible = "";
-              let columVisible = false;
-              let sClass = "";
-              $.each(columns, function(i,v) {
-                  if(v.hidden == false){
-                      columVisible =  true;
-                  }
-                  if((v.className.includes("hiddenColumn"))){
-                      columVisible = false;
-                  }
-                  sWidth = v.style.width.replace('px', "");
+              // var columns = $('#tblquotelist th');
+              // let sTible = "";
+              // let sWidth = "";
+              // let sIndex = "";
+              // let sVisible = "";
+              // let columVisible = false;
+              // let sClass = "";
+              // $.each(columns, function(i,v) {
+              //     if(v.hidden == false){
+              //         columVisible =  true;
+              //     }
+              //     if((v.className.includes("hiddenColumn"))){
+              //         columVisible = false;
+              //     }
+              //     sWidth = v.style.width.replace('px', "");
 
-                  let datatablerecordObj = {
-                    custid: $(this).attr("custid") || 0,
-                      sTitle: v.innerText || '',
-                      sWidth: sWidth || '',
-                      sIndex: v.cellIndex || '',
-                      sVisible: columVisible || false,
-                      sClass: v.className || ''
-                  };
-                  tableHeaderList.push(datatablerecordObj);
-              });
-              templateObject.tableheaderrecords.set(tableHeaderList);
+              //     let datatablerecordObj = {
+              //       custid: $(this).attr("custid") || 0,
+              //         sTitle: v.innerText || '',
+              //         sWidth: sWidth || '',
+              //         sIndex: v.cellIndex || '',
+              //         sVisible: columVisible || false,
+              //         sClass: v.className || ''
+              //     };
+              //     tableHeaderList.push(datatablerecordObj);
+              // });
+              // templateObject.tableheaderrecords.set(tableHeaderList);
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
               $('#tblquotelist tbody').on( 'click', 'tr', function () {
                   var listData = $(this).closest('tr').attr('id');
@@ -1498,33 +1571,33 @@ Template.quoteslist.onRendered(function() {
 
                     }, 0);
 
-                    var columns = $('#tblquotelist th');
-                    let sTible = "";
-                    let sWidth = "";
-                    let sIndex = "";
-                    let sVisible = "";
-                    let columVisible = false;
-                    let sClass = "";
-                    $.each(columns, function(i,v) {
-                        if(v.hidden == false){
-                            columVisible =  true;
-                        }
-                        if((v.className.includes("hiddenColumn"))){
-                            columVisible = false;
-                        }
-                        sWidth = v.style.width.replace('px', "");
+                    // var columns = $('#tblquotelist th');
+                    // let sTible = "";
+                    // let sWidth = "";
+                    // let sIndex = "";
+                    // let sVisible = "";
+                    // let columVisible = false;
+                    // let sClass = "";
+                    // $.each(columns, function(i,v) {
+                    //     if(v.hidden == false){
+                    //         columVisible =  true;
+                    //     }
+                    //     if((v.className.includes("hiddenColumn"))){
+                    //         columVisible = false;
+                    //     }
+                    //     sWidth = v.style.width.replace('px', "");
 
-                        let datatablerecordObj = {
-                          custid: $(this).attr("custid") || 0,
-                            sTitle: v.innerText || '',
-                            sWidth: sWidth || '',
-                            sIndex: v.cellIndex || '',
-                            sVisible: columVisible || false,
-                            sClass: v.className || ''
-                        };
-                        tableHeaderList.push(datatablerecordObj);
-                    });
-                    templateObject.tableheaderrecords.set(tableHeaderList);
+                    //     let datatablerecordObj = {
+                    //       custid: $(this).attr("custid") || 0,
+                    //         sTitle: v.innerText || '',
+                    //         sWidth: sWidth || '',
+                    //         sIndex: v.cellIndex || '',
+                    //         sVisible: columVisible || false,
+                    //         sClass: v.className || ''
+                    //     };
+                    //     tableHeaderList.push(datatablerecordObj);
+                    // });
+                    // templateObject.tableheaderrecords.set(tableHeaderList);
                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     $('#tblquotelist tbody').on( 'click', 'tr', function () {
                         var listData = $(this).closest('tr').attr('id');
@@ -1821,33 +1894,33 @@ Template.quoteslist.onRendered(function() {
 
                 }, 0);
 
-                var columns = $('#tblquotelist th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i,v) {
-                    if(v.hidden == false){
-                        columVisible =  true;
-                    }
-                    if((v.className.includes("hiddenColumn"))){
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
+                // var columns = $('#tblquotelist th');
+                // let sTible = "";
+                // let sWidth = "";
+                // let sIndex = "";
+                // let sVisible = "";
+                // let columVisible = false;
+                // let sClass = "";
+                // $.each(columns, function(i,v) {
+                //     if(v.hidden == false){
+                //         columVisible =  true;
+                //     }
+                //     if((v.className.includes("hiddenColumn"))){
+                //         columVisible = false;
+                //     }
+                //     sWidth = v.style.width.replace('px', "");
 
-                    let datatablerecordObj = {
-                      custid: $(this).attr("custid") || 0,
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
+                //     let datatablerecordObj = {
+                //       custid: $(this).attr("custid") || 0,
+                //         sTitle: v.innerText || '',
+                //         sWidth: sWidth || '',
+                //         sIndex: v.cellIndex || '',
+                //         sVisible: columVisible || false,
+                //         sClass: v.className || ''
+                //     };
+                //     tableHeaderList.push(datatablerecordObj);
+                // });
+                // templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 $('#tblquotelist tbody').on( 'click', 'tr', function () {
                     var listData = $(this).closest('tr').attr('id');
@@ -2138,33 +2211,33 @@ Template.quoteslist.onRendered(function() {
 
               }, 0);
 
-              var columns = $('#tblquotelist th');
-              let sTible = "";
-              let sWidth = "";
-              let sIndex = "";
-              let sVisible = "";
-              let columVisible = false;
-              let sClass = "";
-              $.each(columns, function(i,v) {
-                  if(v.hidden == false){
-                      columVisible =  true;
-                  }
-                  if((v.className.includes("hiddenColumn"))){
-                      columVisible = false;
-                  }
-                  sWidth = v.style.width.replace('px', "");
+              // var columns = $('#tblquotelist th');
+              // let sTible = "";
+              // let sWidth = "";
+              // let sIndex = "";
+              // let sVisible = "";
+              // let columVisible = false;
+              // let sClass = "";
+              // $.each(columns, function(i,v) {
+              //     if(v.hidden == false){
+              //         columVisible =  true;
+              //     }
+              //     if((v.className.includes("hiddenColumn"))){
+              //         columVisible = false;
+              //     }
+              //     sWidth = v.style.width.replace('px', "");
 
-                  let datatablerecordObj = {
-                    custid: $(this).attr("custid") || 0,
-                      sTitle: v.innerText || '',
-                      sWidth: sWidth || '',
-                      sIndex: v.cellIndex || '',
-                      sVisible: columVisible || false,
-                      sClass: v.className || ''
-                  };
-                  tableHeaderList.push(datatablerecordObj);
-              });
-              templateObject.tableheaderrecords.set(tableHeaderList);
+              //     let datatablerecordObj = {
+              //       custid: $(this).attr("custid") || 0,
+              //         sTitle: v.innerText || '',
+              //         sWidth: sWidth || '',
+              //         sIndex: v.cellIndex || '',
+              //         sVisible: columVisible || false,
+              //         sClass: v.className || ''
+              //     };
+              //     tableHeaderList.push(datatablerecordObj);
+              // });
+              // templateObject.tableheaderrecords.set(tableHeaderList);
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
               $('#tblquotelist tbody').on( 'click', 'tr', function () {
                   var listData = $(this).closest('tr').attr('id');
@@ -2429,135 +2502,320 @@ Template.quoteslist.events({
 
     // custom field displaysettings
     'click .resetTable' : function(event) {
-
       let templateObject = Template.instance();
-      let custFields = templateObject.custfields.get();
-      // var datable = $('#tblquotelist').DataTable();
-
-      let reset_data = [
-        { label: 'Sale Date', class: 'colSaleDate', active: true },
-        { label: 'Sales No.', class: 'colSalesNo', active: true },
-        { label: 'Due Date', class: 'colDueDate', active: true },
-        { label: 'Customer', class: 'colCustomer', active: true },
-        { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
-        { label: 'Tax', class: 'colTax', active: true },
-        { label: 'Amount', class: 'colAmount', active: true },
-        { label: 'Status', class: 'colStatus', active: true },
-        { label: 'Employee', class: 'colEmployee', active: false },
-        { label: 'Converted?', class: 'colConverted', active: true },
-        { label: 'Comments', class: 'colComments', active: true },
-        { label: custFields[0].custfieldlabel, class: 'colSaleCustField1', active: custFields[0].active },
-        { label: custFields[1].custfieldlabel, class: 'colSaleCustField2', active: custFields[1].active },
-        { label: custFields[2].custfieldlabel, class: 'colSaleCustField3', active: custFields[2].active }
-      ];
-
-      $('.displaySettings').each(function(index) {
-        var $tblrow = $(this);
+      let reset_data = templateObject.reset_data.get();  
+      reset_data = reset_data.filter(redata => redata.display); 
+  
+      $(".displaySettings").each(function (index) {
+        let $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
-        $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
-
-        // var title = datable.column( index+1 ).header();
-        var title = $('#tblquotelist').find('th').eq(index + 1);
-        $(title).html(reset_data[index].label);
-
+        $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
+  
+        let title = $("#tblquotelist").find("th").eq(index+1);
+        $(title).html(reset_data[index].label); 
+  
         if (reset_data[index].active) {
-          $('.' + reset_data[index].class).css('display', 'table-cell');
-          $('.' + reset_data[index].class).css('padding', '.75rem');
-          $('.' + reset_data[index].class).css('vertical-align', 'top');
+          $('.col' + reset_data[index].class).addClass('showColumn');
+          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
         } else {
-          $('.' + reset_data[index].class).css('display', 'none');
+          $('.col' + reset_data[index].class).addClass('hiddenColumn');
+          $('.col' + reset_data[index].class).removeClass('showColumn');
         }
-
+        $(".rngRange" + reset_data[index].class).val('');
       });
-
     },
 
     // custom field displaysettings
     'click .saveTable' : function(event){
       let lineItems = [];
-      let organisationService = new OrganisationService();
-      let listType = "ltQuoteList";
-
       $(".fullScreenSpin").css("display", "inline-block");
 
-      $('.displaySettings').each(function(index) {
+      $(".displaySettings").each(function (index) {
         var $tblrow = $(this);
         var fieldID = $tblrow.attr("custid") || 0;
-        var colTitle = $tblrow.find(".divcolumn").text() || '';
+        var colTitle = $tblrow.find(".divcolumn").text() || "";
         var colWidth = $tblrow.find(".custom-range").val() || 0;
-        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
         var colHidden = false;
-        if ($tblrow.find(".custom-control-input").is(':checked')) {
-            colHidden = true;
+        if ($tblrow.find(".custom-control-input").is(":checked")) {
+          colHidden = true;
         } else {
-            colHidden = false;
+          colHidden = false;
         }
         let lineItemObj = {
-            index: index,
-            label: colTitle,
-            hidden: colHidden,
-            width: colWidth,
-            thclass: colthClass
-        }
+          index: parseInt(fieldID),
+          label: colTitle,
+          active: colHidden,
+          width: parseInt(colWidth),
+          class: colthClass,
+          display: true
+        };
 
-        lineItems.push(lineItemObj);
-
-        if(fieldID && parseInt(fieldID) != 0){
-          objDetails1 = {
-            type: "TCustomFieldList",
-            fields: {
-              Active: colHidden,
-              ID: parseInt(fieldID),
-              Description: colTitle,
-              Width: colWidth
-            },
-          };
-        } else {
-          objDetails1 = {
-            type: "TCustomFieldList",
-            fields: {
-              Active: colHidden,
-              DataType: "ftString",
-              Description: colTitle,
-              ListType: listType,
-              Width: colWidth
-            },
-          };
-        }
-
-        organisationService.saveCustomField(objDetails1).then(function (objDetails) {
-          $(".fullScreenSpin").css("display", "none");
-          $('#myModal2').modal('hide');
-        })
-        .catch(function (err) {
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-              $(".fullScreenSpin").css("display", "none");
-            } else if (result.dismiss === "cancel") {
-            }
-            $('#myModal2').modal('hide');
-          });
-          $(".fullScreenSpin").css("display", "none");
-          $('#myModal2').modal('hide');
-        });
+        lineItems.push(lineItemObj); 
       });
+
+      let templateObject = Template.instance();
+      let reset_data = templateObject.reset_data.get();
+      reset_data = reset_data.filter(redata => redata.display == false);
+      lineItems.push(...reset_data);
+      lineItems.sort((a,b) => a.index - b.index); 
+
+      try {
+        let erpGet = erpDb();
+        let tableName = "tblquotelist";
+        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+        $(".fullScreenSpin").css("display", "none");
+        if(added) {
+            swal({
+              title: 'SUCCESS',
+              text: "Display settings is updated!",
+              type: 'success',
+              showCancelButton: false,
+              confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.value) {
+                  $('#myModal2').modal('hide');
+                }  
+            });
+        } else {
+          swal("Something went wrong!", "", "error");
+        }
+      } catch (error) {
+        $(".fullScreenSpin").css("display", "none");
+        swal("Something went wrong!", "", "error");
+      } 
     },
 
-    'blur .divcolumn' : function(event){
-        let columData = $(event.target).text();
+    // 'blur .divcolumn' : function(event){
+    //     let columData = $(event.target).text();
 
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        var datable = $('#tblquotelist').DataTable();
-        var title = datable.column( columnDatanIndex ).header();
-        $(title).html(columData);
+    //     let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
+    //     var datable = $('#tblquotelist').DataTable();
+    //     var title = datable.column( columnDatanIndex ).header();
+    //     $(title).html(columData);
 
-    },
+    // },
+
+
+  'click .chkSaleDate': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colSaleDate').addClass('showColumn');
+      $('.colSaleDate').removeClass('hiddenColumn');
+    } else {
+      $('.colSaleDate').addClass('hiddenColumn');
+      $('.colSaleDate').removeClass('showColumn');
+    }
+  },
+  'click .chkSalesNo': function(event) { 
+    if ($(event.target).is(':checked')) {
+      $('.colSalesNo').addClass('showColumn');
+      $('.colSalesNo').removeClass('hiddenColumn');
+    } else {
+      $('.colSalesNo').addClass('hiddenColumn');
+      $('.colSalesNo').removeClass('showColumn');
+    }
+  },
+  'click .chkDueDate': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colDueDate').addClass('showColumn');
+      $('.colDueDate').removeClass('hiddenColumn');
+    } else {
+      $('.colDueDate').addClass('hiddenColumn');
+      $('.colDueDate').removeClass('showColumn');
+    }
+  },
+  'click .chkCustomer': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colCustomer').addClass('showColumn');
+      $('.colCustomer').removeClass('hiddenColumn');
+    } else {
+      $('.colCustomer').addClass('hiddenColumn');
+      $('.colCustomer').removeClass('showColumn');
+    }
+  },
+  'click .chkAmountEx': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colAmountEx').addClass('showColumn');
+      $('.colAmountEx').removeClass('hiddenColumn');
+    } else {
+      $('.colAmountEx').addClass('hiddenColumn');
+      $('.colAmountEx').removeClass('showColumn');
+    }
+  },
+  'click .chkTax': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colTax').addClass('showColumn');
+      $('.colTax').removeClass('hiddenColumn');
+    } else {
+      $('.colTax').addClass('hiddenColumn');
+      $('.colTax').removeClass('showColumn');
+    }
+  },
+  // displaysettings
+  'click .chkAmount': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colAmount').addClass('showColumn');
+      $('.colAmount').removeClass('hiddenColumn');
+    } else {
+      $('.colAmount').addClass('hiddenColumn');
+      $('.colAmount').removeClass('showColumn');
+    }
+  },
+  'click .chkPaid': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colPaid').addClass('showColumn');
+      $('.colPaid').removeClass('hiddenColumn');
+    } else {
+      $('.colPaid').addClass('hiddenColumn');
+      $('.colPaid').removeClass('showColumn');
+    }
+  },
+
+  'click .chkBalanceOutstanding': function(event) {
+    if ($(event.target).is(':checked')) { 
+      $('.colBalanceOutstanding').addClass('showColumn');
+      $('.colBalanceOutstanding').removeClass('hiddenColumn');
+    } else { 
+        $('.colBalanceOutstanding').addClass('hiddenColumn');
+        $('.colBalanceOutstanding').removeClass('showColumn');
+    }
+  },
+  'click .chkStatus': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colStatus').addClass('showColumn');
+      $('.colStatus').removeClass('hiddenColumn');
+    } else {
+      $('.colStatus').addClass('hiddenColumn');
+      $('.colStatus').removeClass('showColumn');
+    }
+  },
+  'click .chkEmployee': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colEmployee').addClass('showColumn');
+      $('.colEmployee').removeClass('hiddenColumn');
+    } else {
+      $('.colEmployee').addClass('hiddenColumn');
+      $('.colEmployee').removeClass('showColumn');
+    }
+  },
+  'click .chkComments': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colComments').addClass('showColumn');
+      $('.colComments').removeClass('hiddenColumn');
+    } else {
+      $('.colComments').addClass('hiddenColumn');
+      $('.colComments').removeClass('showColumn');
+    }
+  },
+  'click .chkPONumber': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colPONumber').addClass('showColumn');
+      $('.colPONumber').removeClass('hiddenColumn');
+    } else {
+      $('.colPONumber').addClass('hiddenColumn');
+      $('.colPONumber').removeClass('showColumn');
+    }
+  },
+  'click .chkReference': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colReference').addClass('showColumn');
+      $('.colReference').removeClass('hiddenColumn');
+    } else {
+      $('.colReference').addClass('hiddenColumn');
+      $('.colReference').removeClass('showColumn');
+    }
+  },
+  'click .chkConverted': function(event) {
+    if ($(event.target).is(':checked')) {
+      $('.colConverted').addClass('showColumn');
+      $('.colConverted').removeClass('hiddenColumn');
+    } else {
+      $('.colConverted').addClass('hiddenColumn');
+      $('.colConverted').removeClass('showColumn');
+    }
+  },
+  // display settings
+  
+
+  'change .rngRangeSaleDate': function(event) {
+      let range = $(event.target).val();
+      $('.colSaleDate').css('width', range);
+  },
+  'change .rngRangeSalesNo': function(event) {
+      let range = $(event.target).val();
+      $('.colSalesNo').css('width', range);
+  },
+  'change .rngRangeDueDate': function(event) {
+      let range = $(event.target).val();
+      $('.colDueDate').css('width', range);
+  },
+  'change .rngRangeUnitPriceInc': function(event) {
+      let range = $(event.target).val();
+      $('.colUnitPriceInc').css('width', range);
+  },
+  'change .rngRangeUnitPriceEx': function(event) {
+      let range = $(event.target).val();
+      $('.colUnitPriceEx').css('width', range);
+  },
+  'change .rngRangeTax': function(event) {
+      let range = $(event.target).val();
+      $('.colTax').css('width', range);
+  },
+  'change .rngRangeAmountInc': function (event) {
+      let range = $(event.target).val();
+      $('.colAmountInc').css('width', range);
+  },
+  'change .rngRangeAmountEx': function (event) {
+      let range = $(event.target).val();
+      $('.colAmountEx').css('width', range);
+  },
+  'change .rngRangePaid': function (event) {
+      let range = $(event.target).val();
+      $('.colPaid').css('width', range);
+  },
+  'change .rngRangeBalanceOutstanding': function (event) {
+      let range = $(event.target).val();
+      $('.colBalanceOutstanding').css('width', range);
+  },
+  'change .rngRangeStatus': function (event) {
+      let range = $(event.target).val();
+      $('.colStatus').css('width', range);
+  },
+  'change .rngRangeAmount': function (event) {
+      let range = $(event.target).val();
+      $('.colAmount').css('width', range);
+  },
+  'change .rngRangeCustomer': function(event) {
+      let range = $(event.target).val();
+      $('.colCustomer').css('width', range);
+  },
+  'change .rngRangeEmployee': function(event) {
+      let range = $(event.target).val();
+      $('.colEmployee').css('width', range);
+  },
+  'change .rngRangeComments': function(event) {
+      let range = $(event.target).val();
+      $('.colComments').css('width', range);
+  },
+  'change .rngRangePONumber': function(event) {
+      let range = $(event.target).val();
+      $('.colPONumber').css('width', range);
+  },
+  'change .rngRangeReference': function(event) {
+      let range = $(event.target).val();
+      $('.colReference').css('width', range);
+  },
+  'change .rngRangeConverted': function(event) {
+      let range = $(event.target).val();
+      $('.colConverted').css('width', range);
+  },
+  "blur .divcolumn": function (event) {
+    let columData = $(event.target).html();
+    let columHeaderUpdate = $(event.target).attr("valueupdate");
+    $("th.col" + columHeaderUpdate + "").html(columData);
+  },
+
     'change .rngRange' : function(event){
         let range = $(event.target).val();
         $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
@@ -2575,38 +2833,38 @@ Template.quoteslist.events({
         });
 
     },
-    'click .btnOpenSettings' : function(event){
-        let templateObject = Template.instance();
-        var columns = $('#tblquotelist th');
+    // 'click .btnOpenSettings' : function(event){
+    //     let templateObject = Template.instance();
+    //     var columns = $('#tblquotelist th');
 
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i,v) {
-            if(v.hidden == false){
-                columVisible =  true;
-            }
-            if((v.className.includes("hiddenColumn"))){
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
+    //     const tableHeaderList = [];
+    //     let sTible = "";
+    //     let sWidth = "";
+    //     let sIndex = "";
+    //     let sVisible = "";
+    //     let columVisible = false;
+    //     let sClass = "";
+    //     $.each(columns, function(i,v) {
+    //         if(v.hidden == false){
+    //             columVisible =  true;
+    //         }
+    //         if((v.className.includes("hiddenColumn"))){
+    //             columVisible = false;
+    //         }
+    //         sWidth = v.style.width.replace('px', "");
 
-            let datatablerecordObj = {
-                custid: $(this).attr("custid") || 0,
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
+    //         let datatablerecordObj = {
+    //             custid: $(this).attr("custid") || 0,
+    //             sTitle: v.innerText || '',
+    //             sWidth: sWidth || '',
+    //             sIndex: v.cellIndex || '',
+    //             sVisible: columVisible || false,
+    //             sClass: v.className || ''
+    //         };
+    //         tableHeaderList.push(datatablerecordObj);
+    //     });
+    //     templateObject.tableheaderrecords.set(tableHeaderList);
+    // },
     'click #exportbtn': function () {
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblquotelist_wrapper .dt-buttons .btntabletocsv').click();
