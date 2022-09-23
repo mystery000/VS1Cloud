@@ -33,60 +33,11 @@ Template.trialbalance.onRendered(() => {
   const templateObject = Template.instance();
 
   templateObject.initDate = () => {
-    const currentDate = new Date();
-
-    /**
-     * This will init dates
-     */
-    let begunDate = moment(currentDate).format("DD/MM/YYYY");
-    templateObject.dateAsAt.set(begunDate);
-
-    let fromDateMonth = currentDate.getMonth() + 1;
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-
-    let prevMonth = moment().subtract(1, "months").format("MM");
-
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-    // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
-    var fromDate =
-      fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
-
-    $("#date-input,#dateTo,#dateFrom").datepicker({
-      showOn: "button",
-      buttonText: "Show Date",
-      buttonImageOnly: true,
-      buttonImage: "/img/imgCal2.png",
-      dateFormat: "dd/mm/yy",
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "-90:+10",
-      onChangeMonthYear: function (year, month, inst) {
-        // Set date to picker
-        $(this).datepicker(
-          "setDate",
-          new Date(year, inst.selectedMonth, inst.selectedDay)
-        );
-        // Hide (close) the picker
-        // $(this).datepicker('hide');
-        // // Change ttrigger the on change function
-        // $(this).trigger('change');
-      },
-    });
-
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
-    //--------- END OF DATE ---------------//
+    Datehandler.initOneMonth();
+    
   };
 
-templateObject.initDate();
+  templateObject.initDate();
 
  
   // let salesOrderTable;

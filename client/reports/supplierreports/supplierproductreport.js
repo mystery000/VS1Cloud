@@ -3,6 +3,10 @@ import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
+import Datehandler from "../../DateHandler";
+import GlobalFunctions from "../../GlobalFunctions";
+import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -14,6 +18,7 @@ Template.supplierproductreport.onCreated(() => {
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.records = new ReactiveVar([]);
   templateObject.reportOptions = new ReactiveVar([]);
+
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
@@ -22,59 +27,12 @@ Template.supplierproductreport.onCreated(() => {
 Template.supplierproductreport.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
+  
   templateObject.initDate = () => {
-    const currentDate = new Date();
-
-    /**
-     * This will init dates
-     */
-    let begunDate = moment(currentDate).format("DD/MM/YYYY");
-    templateObject.dateAsAt.set(begunDate);
-
-    let fromDateMonth = currentDate.getMonth() + 1;
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-
-    let prevMonth = moment().subtract(1, "months").format("MM");
-
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-    // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
-    var fromDate =
-      fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
-
-    $("#date-input,#dateTo,#dateFrom").datepicker({
-      showOn: "button",
-      buttonText: "Show Date",
-      buttonImageOnly: true,
-      buttonImage: "/img/imgCal2.png",
-      dateFormat: "dd/mm/yy",
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "-90:+10",
-      onChangeMonthYear: function (year, month, inst) {
-        // Set date to picker
-        $(this).datepicker(
-          "setDate",
-          new Date(year, inst.selectedMonth, inst.selectedDay)
-        );
-        // Hide (close) the picker
-        // $(this).datepicker('hide');
-        // // Change ttrigger the on change function
-        // $(this).trigger('change');
-      },
-    });
-
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
-    //--------- END OF DATE ---------------//
+    Datehandler.initOneMonth();
+    
   };
+
 
   templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
     let defaultOptions = templateObject.reportOptions.get();
@@ -97,9 +55,19 @@ Template.supplierproductreport.onRendered(() => {
     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getSupplierProductReportData();
+    //await templateObject.getSupplierProductReportData();
+
+    // await templateObject.loadReport(
+    //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+    //   GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    //   ignoreDate
+    // );
   };
 
+
+  /**
+   * @deprecated since 23 septemeber 2022
+   */
   templateObject.getSupplierProductReportData = async function () {
     let data = [];
     if (!localStorage.getItem('VS1SupplierProduct_Report')) {
@@ -142,7 +110,7 @@ Template.supplierproductreport.onRendered(() => {
               ...item
           });
         }
-        $(".fullScreenSpin").css("display", "none");
+       LoadingOverlay.hide();
       }     
     }
     let useData = reportData.filter((item) => {
@@ -160,6 +128,8 @@ Template.supplierproductreport.onRendered(() => {
       return item;
     });    
     templateObject.records.set(useData);
+
+
     if (templateObject.records.get()) {
       setTimeout(function () {
         $("td a").each(function () {
@@ -174,12 +144,94 @@ Template.supplierproductreport.onRendered(() => {
             $(this).removeClass("fgrblue");
           }
         });
-        $(".fullScreenSpin").css("display", "none");
+       LoadingOverlay.hide();
       }, 1000);
     }  
   }
 
-  templateObject.setReportOptions();
+  templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
+    LoadingOverlay.show();
+
+    let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
+      return await  await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
+    }, {
+      useIndexDb: true, 
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        return false;
+      }
+    });
+    data = data.response;
+
+    let reportSummary = data.tsupplierproduct.map(el => {
+      let resultobj = {};
+      Object.entries(el).map(([key, val]) => {      
+          resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
+          return resultobj;
+      })
+      return resultobj;
+    })
+    let reportData = [];
+    if( reportSummary.length > 0 ){
+      for (const item of reportSummary ) {   
+        let isExist = reportData.filter((subitem) => {
+          if( subitem.Supplier_Name == item.Supplier_Name ){
+              subitem.SubAccounts.push(item)
+              return subitem
+          }
+        });
+
+        if( isExist.length == 0 ){
+          reportData.push({
+              TotalCostEx: 0,
+              TotalCostInc: 0,
+              TotalTax: 0,
+              SubAccounts: [item],
+              ...item
+          });
+        }
+       LoadingOverlay.hide();
+      }     
+    }
+    let useData = reportData.filter((item) => {
+      let TotalCostEx = 0;
+      let TotalCostInc = 0;
+      let TotalTax = 0;
+      item.SubAccounts.map((subitem) => {
+        TotalCostEx += subitem.Line_Cost_Ex;
+        TotalCostInc += subitem.Line_Cost_Inc;
+        TotalTax += subitem.Line_Tax;
+      });
+      item.TotalCostEx = TotalCostEx;
+      item.TotalCostInc = TotalCostInc;
+      item.TotalTax = TotalTax;
+      return item;
+    });    
+    templateObject.records.set(useData);
+
+
+    if (templateObject.records.get()) {
+      setTimeout(function () {
+        $("td a").each(function () {
+          if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+            $(this).addClass("text-danger");
+            $(this).removeClass("fgrblue");
+          }
+        });
+        $("td").each(function () {
+          if ($(this).text().indexOf("-" + Currency) >= 0) {
+            $(this).addClass("text-danger");
+            $(this).removeClass("fgrblue");
+          }
+        });
+       LoadingOverlay.hide();
+      }, 1000);
+    }  
+
+  }
+  
+
+
 
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
@@ -200,7 +252,15 @@ Template.supplierproductreport.onRendered(() => {
 
   templateObject.initDate();
   templateObject.initUploadedImage();
-  LoadingOverlay.hide();
+  //templateObject.setReportOptions();
+
+  templateObject.loadReport(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    false
+  );
+ 
+ 
 });
 
 Template.supplierproductreport.events({
@@ -318,72 +378,87 @@ Template.supplierproductreport.events({
       $(".table tbody tr").show();
     }
   },
-  "change .edtReportDates": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    localStorage.setItem('VS1SupplierProduct_Report', '');
-    let templateObject = Template.instance();
-    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    await templateObject.setReportOptions(false, dateFrom, dateTo);
-    // $(".fullScreenSpin").css("display", "none");
-  },
-  "click #lastMonth": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    localStorage.setItem('VS1SupplierProduct_Report', '');
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
-    // $(".fullScreenSpin").css("display", "none");
-  },
-  "click #lastQuarter": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    localStorage.setItem('VS1SupplierProduct_Report', '');
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-    await templateObject.setReportOptions(false, fromDate, endDate);
-    // $(".fullScreenSpin").css("display", "none");
-  },
-  "click #last12Months": async function () {
-    $(".fullScreenSpin").css("display", "block");
-    localStorage.setItem('VS1SupplierProduct_Report', '');
-    let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  "change .edtReportDates": (e, templateObject) => {
+    // LoadingOverlay.show();
+    // localStorage.setItem('VS1SupplierProduct_Report', '');
+    // let templateObject = Template.instance();
+    // var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    // var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    // await templateObject.setReportOptions(false, dateFrom, dateTo);
+    // //LoadingOverlay.hide();
 
-    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-    let fromDateDay = currentDate.getDate();
-    if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
-
-    var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
-    templateObject.dateAsAt.set(begunDate);
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
-
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
-    await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-    // $(".fullScreenSpin").css("display", "none");
+    templateObject.loadReport(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false
+    );
   },
-  "click #ignoreDate": async function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+  // "click #lastMonth": async function () {
+  //   LoadingOverlay.show();
+  //   localStorage.setItem('VS1SupplierProduct_Report', '');
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
+  //   let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
+  //   await templateObject.setReportOptions(false, fromDate, endDate);
+  //   //LoadingOverlay.hide();
+  // },
+  // "click #lastQuarter": async function () {
+  //   LoadingOverlay.show();
+  //   localStorage.setItem('VS1SupplierProduct_Report', '');
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+  //   let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
+  //   await templateObject.setReportOptions(false, fromDate, endDate);
+  //   //LoadingOverlay.hide();
+  // },
+  // "click #last12Months": async function () {
+  //   LoadingOverlay.show();
+  //   localStorage.setItem('VS1SupplierProduct_Report', '');
+  //   let templateObject = Template.instance();
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   $("#dateFrom").attr("readonly", false);
+  //   $("#dateTo").attr("readonly", false);
+  //   var currentDate = new Date();
+  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+  //   let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+  //   let fromDateDay = currentDate.getDate();
+  //   if (currentDate.getMonth() + 1 < 10) {
+  //     fromDateMonth = "0" + (currentDate.getMonth() + 1);
+  //   }
+  //   if (currentDate.getDate() < 10) {
+  //     fromDateDay = "0" + currentDate.getDate();
+  //   }
+
+  //   var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
+  //   templateObject.dateAsAt.set(begunDate);
+  //   $("#dateFrom").val(fromDate);
+  //   $("#dateTo").val(begunDate);
+
+  //   var currentDate2 = new Date();
+  //   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+  //   let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
+  //   await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
+  //   //LoadingOverlay.hide();
+  // },
+  "click #ignoreDate": async (e, templateObject) => {
+    // $(".fullScreenSpin").css("display", "inline-block");
+    // $("#dateFrom").attr("readonly", true);
+    // $("#dateTo").attr("readonly", true);
+    // localStorage.setItem('VS1SupplierProduct_Report', '');
+
+    templateObject.initDate();
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
-    localStorage.setItem('VS1SupplierProduct_Report', '');
-    let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
-    await templateObject.setReportOptions(true);
-    // $(".fullScreenSpin").css("display", "none");
+    // await templateObject.setReportOptions(true);
+     
+    // $("#dateTo").trigger("change");
+    templateObject.loadReport(
+      null, 
+      null, 
+      true
+    );
   },
 
   // CURRENCY MODULE //
@@ -448,7 +523,20 @@ Template.supplierproductreport.events({
         type: 'warning',
         confirmButtonText: 'Ok'
       })
-  }
+  },
+
+
+  /**
+   * This is the new way to handle any modification on the date fields
+   */
+   "change #dateTo, change #dateFrom": (e, templateObject) => {
+    templateObject.loadReport(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false
+    );
+  },
+  ...Datehandler.getDateRangeEvents()
 });
 
 Template.supplierproductreport.helpers({
@@ -458,20 +546,10 @@ Template.supplierproductreport.helpers({
   records: () => {
     return Template.instance().records.get();
   },
-  formatPrice( amount ){
-    let utilityService = new UtilityService();
-    if( isNaN( amount ) ){
-        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-    }
-    return ( amount != 0 )? utilityService.modifynegativeCurrencyFormat(amount): "" || "";
-  },
   checkZero( value ){
     return ( value == 0 )? '': value;
   },
-  formatDate: ( date ) => {
-    return ( date )? moment(date).format("YYYY/MM/DD") : '';
-  },
+  formatDate: ( date ) => GlobalFunctions.formatDate(date),
   redirectionType(item) {
     if(item.Transaction_Type === 'Purchase Order') {
       return '/purchaseordercard?id=' + item.PurchaseOrderID;
@@ -482,50 +560,52 @@ Template.supplierproductreport.helpers({
       return '#noInfoFound';
     }
   },
+  // FX Module //
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-    if (!amount || amount.trim() == "") {
-      return "";
+    if(isNaN(amount)) {
+      if (!amount || amount.trim() == "") {
+        return "";
+      }
+      amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
     }
-    if (currencyData.code == defaultCurrencyCode) {
-      // default currency
-      return amount;
-    }
+    // if (currencyData.code == defaultCurrencyCode) {
+    //   // default currency
+    //   return amount;
+    // }
 
-    amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
 
     // Lets remove the minus character
     const isMinus = amount < 0;
-    if (isMinus == true) amount = amount * -1; // Make it positive
+    if (isMinus == true) amount = amount * -1; // make it positive for now
 
-    // get default currency symbol
+    // // get default currency symbol
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode
     // )[0];
 
-    //amount = amount.replace(_defaultCurrency.symbol, "");
+    // amount = amount.replace(_defaultCurrency.symbol, "");
+
 
     // amount =
     //   isNaN(amount) == true
     //     ? parseFloat(amount.substring(1))
     //     : parseFloat(amount);
 
+
+
     // Get the selected date
-    let dateTo = $("#balancedate").val();
+    let dateTo = $("#dateTo").val();
     const day = dateTo.split("/")[0];
     const m = dateTo.split("/")[1];
     const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
 
+
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-
-    // if(currencyList.length == 0) {
-    //   currencyList = Template.instance().currencyList.get();
-    //   currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-    // }
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -554,20 +634,24 @@ Template.supplierproductreport.helpers({
 
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
 
+
+
     let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
-    //amount = amount + 0.36;
+
+
+
+
     amount = parseFloat(amount * rate); // Multiply by the rate
     amount = Number(amount).toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }); // Add commas
 
-    // amount = amount.toLocaleString();
-
     let convertedAmount =
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
+
 
     return convertedAmount;
   },
@@ -586,6 +670,7 @@ Template.supplierproductreport.helpers({
   },
   isNegativeAmount(amount) {
     if (Math.sign(amount) === -1) {
+
       return true;
     }
     return false;
@@ -598,6 +683,7 @@ Template.supplierproductreport.helpers({
     let activeArray = array.filter((c) => c.active == true);
 
     if (activeArray.length == 1) {
+
       if (activeArray[0].code == defaultCurrencyCode) {
         return !true;
       } else {
@@ -613,11 +699,29 @@ Template.supplierproductreport.helpers({
 
     return activeArray.length > 0;
   },
-  isObject: (variable) => {
+  isObject(variable) {
     return typeof variable === "object" && variable !== null;
   },
   currency: () => {
     return Currency;
+  },
+
+  formatPrice( amount){
+
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
+  formatTax( amount){
+
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return amount + "%" || "0.00 %";
   },
 });
 
