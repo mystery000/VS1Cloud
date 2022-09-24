@@ -854,19 +854,43 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       //ListType: "Detail",
-      select: '[name] f7like "' + dataSearchName + '"',
+      //select: '[name] f7like "' + dataSearchName + '"',
+      IgnoreDates:true,
+      Search: 'Company = "' + dataSearchName + '" OR Employeename = "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TERPCombinedContactsVS1, options);
   }
 
   getAllContactOverviewVS1ByName(dataSearchName) {
     let options = "";
+    // options = {
+    //   //ListType: "Detail",
+    //   Company:dataSearchName,
+    //   Employeename:dataSearchName,
+    //   // select: '[name] = "' + dataSearchName + '"',
+    // };
+    console.log(dataSearchName.toLowerCase());
+    if(dataSearchName.toLowerCase() == "supplier"){
+      options = {
+        IgnoreDates:true,
+        Search: '"issupplier:true"',
+      };
+    }else if(dataSearchName.toLowerCase() == "customer"){
+      options = {
+        IgnoreDates:true,
+        Search: '"isEmployee:true"',
+      };
+    }else if(dataSearchName.toLowerCase() == "employee"){
+      options = {
+        IgnoreDates:true,
+        Search: '"isEmployee:true"',
+      };
+    }else{
     options = {
-      //ListType: "Detail",
-      Company:dataSearchName,
-      Employeename:dataSearchName,
-      // select: '[name] = "' + dataSearchName + '"',
+      IgnoreDates:true,
+      Search: 'Company = "' + dataSearchName + '" OR Employeename = "' + dataSearchName + '"',
     };
+    }
     return this.getList(this.ERPObjects.TERPCombinedContactsVS1, options);
   }
 
@@ -984,12 +1008,14 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         //IgnoreDates:true,
+        IgnoreDates:true,
         select: "[Active]=true",
       };
     } else {
       options = {
         // orderby:'"ClientID desc"',
         // ListType: "Detail",
+        IgnoreDates:true,
         select: "[Active]=true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
@@ -2199,6 +2225,62 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAPReport, options);
   }
 
+  getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate,contactID) {
+    let options = "";
+    if(contactID != ''){
+      options = {
+        IgnoreDates: true,
+        ReportType: "Summary",
+        ClientID:contactID
+      };
+    }else{
+
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+        ReportType: "Summary",
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        ReportType: "Summary",
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+  }
+    return this.getList(this.ERPObjects.TAPReport, options);
+  }
+
+  getAgedReceivableDetailsSummaryData(dateFrom, dateTo, ignoreDate, contactID) {
+    let options = "";
+    if(contactID != ''){
+      options = {
+        IgnoreDates: true,
+        ReportType: "Summary",
+        ClientID:contactID,
+        IncludeRefunds:false
+      };
+    }else{
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+        ReportType: "Summary",
+        IncludeRefunds:false
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        ReportType: "Summary",
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+        IncludeRefunds:false
+      };
+    }
+    }
+    return this.getList(this.ERPObjects.TARReport, options);
+  }
+
   getTAPReportByName(contactName) {
     let options = "";
     options = {
@@ -2672,6 +2754,7 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
+        //IncludedataPriorToClosingDate:true,
         Search: "Deleted != true",
         OrderBy: "Date desc",
         LimitCount: '"' + limitcount + '"',
@@ -2680,6 +2763,7 @@ export class SideBarService extends BaseService {
     } else {
       options = {
         IgnoreDates: false,
+        //IncludedataPriorToClosingDate:true,
         Search: "Deleted != true",
         OrderBy: "Date desc",
         DateFrom: '"' + dateFrom + '"',
@@ -2692,6 +2776,7 @@ export class SideBarService extends BaseService {
       if (ignoreDate == true) {
         options = {
           IgnoreDates: true,
+          //IncludedataPriorToClosingDate:true,
           Search: "",
           OrderBy: "Date desc",
           LimitCount: '"' + limitcount + '"',
@@ -2700,6 +2785,7 @@ export class SideBarService extends BaseService {
       } else {
         options = {
           IgnoreDates: false,
+          //IncludedataPriorToClosingDate:true,
           Search: "",
           OrderBy: "Date desc",
           DateFrom: '"' + dateFrom + '"',

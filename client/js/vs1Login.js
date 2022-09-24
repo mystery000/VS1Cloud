@@ -144,6 +144,9 @@ Template.vs1login.onRendered(function () {
     localStorage.removeItem('VS1FormAccessDetail');
     localStorage.setItem('VS1FormAccessDetail', '');
 
+    localStorage.setItem('VS1AgedPayablesSummary_Card', '');
+    localStorage.setItem('VS1AgedReceivableSummary_Card', '');
+
     Session.setPersistent('ERPCurrency', '$');
 
     Session.setPersistent('ERPDefaultDepartment', '');

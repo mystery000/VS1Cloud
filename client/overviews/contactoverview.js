@@ -2157,7 +2157,7 @@ Template.contactoverview.events({
     let dataSearchName = $('#tblcontactoverview_filter input').val();
 
     if (dataSearchName.replace(/\s/g, '') != '') {
-        sideBarService.getAllContactOverviewVS1ByName(dataSearchName).then(function (data) {
+        sideBarService.getAllContactOverviewVS1ByName(dataSearchName.toLowerCase()).then(function (data) {
             let lineItems = [];
             let lineItemObj = {};
             let clienttype = '';

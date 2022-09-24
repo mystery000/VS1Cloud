@@ -28,7 +28,7 @@ const templateObject = Template.instance();
 Template.agedreceivablessummary.onRendered(()=>{
   LoadingOverlay.show();
   const templateObject = Template.instance();
- 
+
   let salesOrderTable;
   var splashArray = new Array();
   var today = moment().format('DD/MM/YYYY');
@@ -92,6 +92,16 @@ Template.agedreceivablessummary.onRendered(()=>{
       .then(function (data) {
         if (data.tarreport.length) {
           localStorage.setItem("VS1AgedReceivableSummary_Report", JSON.stringify(data) || "");
+          if (data.Params.IgnoreDates == true) {
+              $('#dateFrom').attr('readonly', true);
+              $('#dateTo').attr('readonly', true);
+
+          } else {
+            $('#dateFrom').attr('readonly', false);
+            $('#dateTo').attr('readonly', false);
+              $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+              $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+          };
           let records = [];
           let reportrecords = [];
           let allRecords = [];
@@ -332,12 +342,12 @@ Template.agedreceivablessummary.onRendered(()=>{
           if (templateObject.records.get()) {
             setTimeout(function () {
               $("td a").each(function () {
-                if ($(this).text().indexOf("-" + Currency) >= 0) 
+                if ($(this).text().indexOf("-" + Currency) >= 0)
                   $(this).addClass("text-danger");
                 }
               );
               $("td").each(function () {
-                if ($(this).text().indexOf("-" + Currency) >= 0) 
+                if ($(this).text().indexOf("-" + Currency) >= 0)
                   $(this).addClass("text-danger");
                 }
               );
@@ -345,13 +355,13 @@ Template.agedreceivablessummary.onRendered(()=>{
               $("td").each(function () {
                 let lineValue = $(this).first().text()[0];
                 if (lineValue != undefined) {
-                  if (lineValue.indexOf(Currency) >= 0) 
+                  if (lineValue.indexOf(Currency) >= 0)
                     $(this).addClass("text-right");
                   }
                 });
 
               $("td").each(function () {
-                if ($(this).first().text().indexOf("-" + Currency) >= 0) 
+                if ($(this).first().text().indexOf("-" + Currency) >= 0)
                   $(this).addClass("text-right");
                 }
               );
@@ -359,17 +369,28 @@ Template.agedreceivablessummary.onRendered(()=>{
               $(".fullScreenSpin").css("display", "none");
             }, 100);
           }
-        } 
+        }
         LoadingOverlay.hide();
       }).catch(function (err) {
         //Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        
+
         LoadingOverlay.hide();
       });
     } else {
       let data = JSON.parse(localStorage.getItem('VS1AgedReceivableSummary_Report'));
       if (data.tarreport.length) {
 
+        if (data.Params.IgnoreDates == true) {
+            $('#dateFrom').attr('readonly', true);
+            $('#dateTo').attr('readonly', true);
+
+        } else {
+          $('#dateFrom').attr('readonly', false);
+          $('#dateTo').attr('readonly', false);
+            $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+            $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+        }
+        
         let records = [];
         let reportrecords = [];
         let allRecords = [];
@@ -610,12 +631,12 @@ Template.agedreceivablessummary.onRendered(()=>{
         if (templateObject.records.get()) {
           setTimeout(function () {
             $("td a").each(function () {
-              if ($(this).text().indexOf("-" + Currency) >= 0) 
+              if ($(this).text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-danger");
               }
             );
             $("td").each(function () {
-              if ($(this).text().indexOf("-" + Currency) >= 0) 
+              if ($(this).text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-danger");
               }
             );
@@ -623,13 +644,13 @@ Template.agedreceivablessummary.onRendered(()=>{
             $("td").each(function () {
               let lineValue = $(this).first().text()[0];
               if (lineValue != undefined) {
-                if (lineValue.indexOf(Currency) >= 0) 
+                if (lineValue.indexOf(Currency) >= 0)
                   $(this).addClass("text-right");
                 }
               });
 
             $("td").each(function () {
-              if ($(this).first().text().indexOf("-" + Currency) >= 0) 
+              if ($(this).first().text().indexOf("-" + Currency) >= 0)
                 $(this).addClass("text-right");
               }
             );
@@ -676,13 +697,13 @@ Template.agedreceivablessummary.onRendered(()=>{
       templateObject.loadCurrency = async () => {
         await loadCurrency();
       };
-  
+
       //templateObject.loadCurrency();
-  
+
       templateObject.loadCurrencyHistory = async () => {
         await loadCurrencyHistory();
       };
-  
+
       //templateObject.loadCurrencyHistory();
   });
 
@@ -953,6 +974,7 @@ Template.agedreceivablessummary.onRendered(()=>{
     'click #ignoreDate':function(){
       let templateObject = Template.instance();
       localStorage.setItem('VS1AgedReceivableSummary_Report', '');
+      localStorage.setItem('VS1AgedReceivableSummary_Card', '');
       $('.fullScreenSpin').css('display','inline-block');
       $('#dateFrom').attr('readonly', true);
       $('#dateTo').attr('readonly', true);
@@ -1135,9 +1157,9 @@ Template.agedreceivablessummary.onRendered(()=>{
 
     // Lets remove the minus character
     const isMinus = amount < 0;
-    if (isMinus == true) 
+    if (isMinus == true)
       amount = amount * -1; // make it positive for now
-    
+
     //  get default currency symbol
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode
