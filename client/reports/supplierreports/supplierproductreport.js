@@ -462,8 +462,8 @@ Template.supplierproductreport.events({
   },
 
   // CURRENCY MODULE //
-  "click .fx-rate-btn": async (e) => {
-    await loadCurrency();
+  "click .fx-rate-btn": async (e, ui) => {
+    await loadCurrency(ui);
     //loadCurrencyHistory();
   },
   "click .currency-modal-save": (e) => {
