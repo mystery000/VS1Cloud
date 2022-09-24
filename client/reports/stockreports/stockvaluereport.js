@@ -485,11 +485,11 @@ Template.stockvaluereport.events({
     templateObject.setReportOptions(true);
   },
 
-  // CURRENCY MODULE //
-  "click .fx-rate-btn": async (e, ui) => {
-    await loadCurrency(ui);
-    //loadCurrencyHistory();
-  },
+ // CURRENCY MODULE //
+ "click .fx-rate-btn": async (e, ui) => {
+  await loadCurrency(ui);
+  //loadCurrencyHistory();
+},
   "click .currency-modal-save": (e) => {
     //$(e.currentTarget).parentsUntil(".modal").modal("hide");
     LoadingOverlay.show();

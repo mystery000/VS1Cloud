@@ -219,12 +219,51 @@
                                                 <th>Date</th>
                                                 <th>Product ID</th>
                                                 <th>Type</th>
-                                                <th class="text-right">Debit (Ex)</th>
-                                                <th class="text-right">Credit (Ex)</th>
-                                                <th class="text-right">Debit (Inc)</th>
-                                                <th class="text-right">Credit (Inc)</th>
+                                                <th colspan="{{countActive currencyList}}" class="text-center">Debit (Ex)</th>
+                                                <th colspan="{{countActive currencyList}}" class="text-center">Credit (Ex)</th>
+                                                <th colspan="{{countActive currencyList}}" class="text-center">Debit (Inc)</th>
+                                                <th colspan="{{countActive currencyList}}" class="text-center">Credit (Inc)</th>
                                                 <th class="text-right">Global Ref</th>
                                             </tr>
+
+                                            {{#if isOnlyDefaultActive equal "false" }}
+                                            <tr class="table-active tblAvoid customDoubleTableHeading">
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                          
+                    
+                                            {{#if currencyList}}
+                                                {{#each c in currencyList }}
+                                                {{# if c.active}}
+                                                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                                {{/if}}
+                                                {{/each}}
+                                            
+                                                {{#each c in currencyList }}
+                                                {{# if c.active}}
+                                                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                                {{/if}}
+                                                {{/each}}
+                                        
+                                                {{#each c in currencyList }}
+                                                {{# if c.active}}
+                                                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                                {{/if}}
+                                                {{/each}}
+                                                {{#each c in currencyList }}
+                                                {{# if c.active}}
+                                                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                                {{/if}}
+                                                {{/each}}
+                                            {{/if}}
+
+                                            <th></th>
+                                      
+                    
+                                            </tr>
+                                        {{/if}}
                                         </thead>
                                         <tbody>
                                             {{#if records}}
@@ -240,10 +279,51 @@
                                                             <td><a href="{{redirectionType item}}">{{ formatDate item.DATE }}</a></td>
                                                             <td><a href="{{redirectionType item}}">{{ item.PRODUCTNAME }}</a></td>
                                                             <td><a href="{{redirectionType item}}">{{ item.TYPE }}</a></td>
-                                                            <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.DEBITSEX }}</a></td>
-                                                            <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.CREDITSEX }}</a></td>
-                                                            <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.DEBITSINC }}</a></td>
-                                                            <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.CREDITSINC }}</a></td>
+
+
+                                                            {{#if isOnlyDefaultActive}}
+
+                                                            {{#if currencyList}}
+
+                                                            {{#each c in currencyList }}
+                                                                {{# if c.active}}
+                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}">{{ convertAmount item.DEBITSEX c}}</a></td>
+                                                             
+                                                                {{/if}}
+                                                            {{/each}}
+
+                                                            {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                          
+                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}">{{ convertAmount item.CREDITSEX c}}</a></td>
+                                                         
+                                                            {{/if}}
+                                                        {{/each}}
+
+                                                        {{#each c in currencyList }}
+                                                        {{# if c.active}}
+                                                     
+                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}">{{ convertAmount item.DEBITSINC c}}</a></td>
+                                                      
+                                                        {{/if}}
+                                                    {{/each}}
+
+                                                    {{#each c in currencyList }}
+                                                    {{# if c.active}}
+                                                 
+                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}">{{ convertAmount item.CREDITSINC c}}</a></td>
+                                                    {{/if}}
+                                                {{/each}}
+
+                                                            {{/if}}
+
+                                                        {{else}}
+                                                        <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.DEBITSEX }}</a></td>
+                                                        <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.CREDITSEX }}</a></td>
+                                                        <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.DEBITSINC }}</a></td>
+                                                        <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.CREDITSINC }}</a></td>
+                                                        {{/if}}
+                                                           
                                                             <td>{{ item.ReferenceNo }}</td>
                                                         </tr>
                                                     {{/each}}
@@ -263,5 +343,6 @@
 
 
     <!-- Start Currency Modal -->
+    {{> FxRateModal currencies=currencyList}}
      <!-- End Currency Modal -->
 </template>

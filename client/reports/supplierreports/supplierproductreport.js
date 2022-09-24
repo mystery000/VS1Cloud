@@ -737,11 +737,12 @@ Template.registerHelper("containsequals", function (a, b) {
   return a.indexOf(b) >= 0;
 });
 
+
 /**
  *
  */
-async function loadCurrency() {
-  let templateObject = Template.instance();
+ async function loadCurrency(templateObject) {
+  //let templateObject = Template.instance();
 
   if ((await templateObject.currencyList.get().length) == 0) {
     LoadingOverlay.show();
