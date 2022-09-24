@@ -172,9 +172,12 @@ Template.stockvaluereport.onRendered(() => {
               ...item
           });
         }
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
       }     
     }
+
+    // please add comments to explain this code.
+    // I cant make Fx Module work
     let useData = reportData.filter((item) => {
       let TotalOrCost = 0;
       let TotalCrCost = 0;
@@ -186,7 +189,6 @@ Template.stockvaluereport.onRendered(() => {
       item.TotalCrCost = TotalCrCost;
       return item;
     });    
-    console.log(useData);
 
     templateObject.records.set(useData);
     if (templateObject.records.get()) {
@@ -203,7 +205,7 @@ Template.stockvaluereport.onRendered(() => {
             $(this).removeClass("fgrblue");
           }
         });
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
       }, 1000);
     }  
 
@@ -223,13 +225,13 @@ Template.stockvaluereport.onRendered(() => {
 
 Template.stockvaluereport.events({
   "click .btnRefresh": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem("VS1StockValue_Report", "");
     Meteor._reload.reload();
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
   },
   "click .btnExportReport": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     let utilityService = new UtilityService();
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
@@ -251,7 +253,7 @@ Template.stockvaluereport.events({
     const filename = loggedCompany + "- Stock Value Report" + ".csv";
     utilityService.exportReportToCsvTable("tableExport", filename, "csv");
     let rows = [];
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
   },
   "click .btnPrintReport": function (event) {
     let values = [];
@@ -340,7 +342,7 @@ Template.stockvaluereport.events({
   },
   // "click #lastMonth": function () {
   //   let templateObject = Template.instance();
-  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   LoadingOverlay.show();
   //   localStorage.setItem("VS1StockValue_Report", "");
   //   $("#dateFrom").attr("readonly", false);
   //   $("#dateTo").attr("readonly", false);
@@ -395,7 +397,7 @@ Template.stockvaluereport.events({
   // },
   // "click #lastQuarter": function () {
   //   let templateObject = Template.instance();
-  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   LoadingOverlay.show();
   //   localStorage.setItem("VS1StockValue_Report", "");
   //   $("#dateFrom").attr("readonly", false);
   //   $("#dateTo").attr("readonly", false);
@@ -437,7 +439,7 @@ Template.stockvaluereport.events({
   // },
   // "click #last12Months": function () {
   //   let templateObject = Template.instance();
-  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   LoadingOverlay.show();
   //   localStorage.setItem("VS1StockValue_Report", "");
   //   $("#dateFrom").attr("readonly", false);
   //   $("#dateTo").attr("readonly", false);
@@ -475,7 +477,7 @@ Template.stockvaluereport.events({
   // },
   "click #ignoreDate": function () {
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem("VS1StockValue_Report", "");
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
@@ -545,7 +547,21 @@ Template.stockvaluereport.events({
         type: 'warning',
         confirmButtonText: 'Ok'
       })
-  }
+  },
+
+
+
+  /**
+   * This is the new way to handle any modification on the date fields
+   */
+   "change #dateTo, change #dateFrom": (e, templateObject) => {
+    templateObject.loadReport(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      false
+    );
+  },
+  ...Datehandler.getDateRangeEvents()
 });
 
 Template.stockvaluereport.helpers({
