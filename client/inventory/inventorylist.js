@@ -51,6 +51,9 @@ Template.inventorylist.onCreated(function() {
     templateObject.isImportProduct.set(false);
     templateObject.isStockonHandDemandChart = new ReactiveVar();
     templateObject.isStockonHandDemandChart.set(false);
+
+    templateObject.displayfields = new ReactiveVar([]);
+    templateObject.reset_data = new ReactiveVar([]);
 });
 
 Template.inventorylist.onRendered(function() {
@@ -74,6 +77,90 @@ Template.inventorylist.onRendered(function() {
     };
 
     let templateObject = Template.instance();
+
+
+    // set initial table rest_data
+    function init_reset_data() {
+      let reset_data = [
+        { index: 0, label: "#ID", class: "ProductID", width: "30", active: false, display: true },
+        { index: 1, label: "Product Name", class: "ProductName", width: "200", active: true, display: true },
+        { index: 2, label: "Sales Description", class: "SalesDescription", width: "", active: true, display: true },
+        { index: 3, label: "Available", class: "Available", width: "70", active: true, display: true },
+        { index: 4, label: "On SO", class: "OnSO", width: "60", active: true, display: true },
+        { index: 5, label: "On BO", class: "OnBO", width: "60", active: true, display: true },
+        { index: 6, label: "In Stock", class: "InStock", width: "65", active: true, display: true },
+        { index: 7, label: "On Order", class: "OnOrder", width: "72", active: true, display: true },
+        { index: 8, label: "Cost Price (Ex)", class: "CostPrice", width: "135", active: false, display: true },
+        { index: 9, label: "Cost Price (Inc)", class: "CostPriceInc", width: "135", active: true, display: true },
+        { index: 10, label: "Sale Price (Ex)", class: "SalePrice", width: "135", active: false, display: true },
+        { index: 11, label: "Sale Price (Inc)", class: "SalePriceInc", width: "135", active: true, display: true },
+        { index: 12, label: "Serial/Lot No", class: "SerialNo", width: "124", active: false, display: true },
+        { index: 13, label: "Barcode", class: "Barcode", width: "80", active: false, display: true },
+        { index: 14, label: "Department", class: "Department", width: "100", active: false, display: true },
+        { index: 15, label: "Purchase Description", class: "PurchaseDescription", width: "", active: false, display: true },
+      ];
+      
+      let isSNTrackchecked = localStorage.getItem('vs1cloudlicenselevel') == 'PLUS' || false;
+      if(isSNTrackchecked) {
+        reset_data[12].display = true;
+      } else {
+        reset_data[12].display = false;
+      }
+
+      let templateObject = Template.instance();
+      templateObject.reset_data.set(reset_data);
+    }
+    init_reset_data();
+    // set initial table rest_data
+
+  // custom field displaysettings
+  function initCustomFieldDisplaySettings(data, listType) {
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    showCustomFieldDisplaySettings(reset_data);
+
+    try {
+      getVS1Data("VS1_Customize").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+            reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+            showCustomFieldDisplaySettings(reset_data);
+          }).catch(function (err) {
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data); 
+          // handle process here
+        }
+      });
+    } catch (error) {
+    } 
+    return; 
+  }
+
+  function showCustomFieldDisplaySettings(reset_data) {
+
+    let custFields = [];
+    let customData = {};
+    let customFieldCount = reset_data.length;
+
+    for (let r = 0; r < customFieldCount; r++) {
+      customData = {
+        active: reset_data[r].active,
+        id: reset_data[r].index,
+        custfieldlabel: reset_data[r].label, 
+        class: reset_data[r].class,
+        display: reset_data[r].display,
+        width: reset_data[r].width ? reset_data[r].width : ''
+      };
+      custFields.push(customData);
+    }
+    templateObject.displayfields.set(custFields);
+  }
+
+  initCustomFieldDisplaySettings("", "tblInventory");
+  // custom field displaysettings
+
+
     let productService = new ProductService();
     const deptrecords = [];
     const dataTableList = [];
@@ -231,7 +318,7 @@ Template.inventorylist.onRendered(function() {
                                           data.tproductvs1[i].fields.CUSTFLD2 || "",
                                       ];
                                       splashArrayProductList.push(dataList);
-                                      // dataTableList.push(dataList);
+                                      dataTableList.push(dataList);
                                   }
 
                             templateObject.datatablerecords.set(dataTableList);
@@ -531,10 +618,10 @@ Template.inventorylist.onRendered(function() {
                             data.tproductvs1[i].fields.CUSTFLD2 || "",
                         ];
                         splashArrayProductList.push(dataList);
-                        // dataTableList.push(dataList);
+                        dataTableList.push(dataList);
                     }
 
-                    // templateObject.datatablerecords.set(dataTableList);
+                    templateObject.datatablerecords.set(dataTableList);
                     // templateObject.datatablebackuprecords.set(dataTableList);
 
                     // Session.set('VS1ProductList', splashArrayProd);
@@ -826,7 +913,7 @@ Template.inventorylist.onRendered(function() {
                             data.tproductvs1[i].fields.CUSTFLD2 || "",
                         ];
                         splashArrayProductList.push(dataList);
-                        // dataTableList.push(dataList);
+                        dataTableList.push(dataList);
                     }
 
                         templateObject.datatablerecords.set(dataTableList);
@@ -1293,6 +1380,8 @@ Template.inventorylist.helpers({
             });
     },
     datatablerecords: () => {
+      return Template.instance().datatablerecords.get();
+
         return Template.instance()
             .datatablerecords.get()
             .sort(function(a, b) {
@@ -1359,7 +1448,13 @@ Template.inventorylist.helpers({
     },
     isStockonHandDemandChart: () => {
       return Template.instance().isStockonHandDemandChart.get();
-    }
+    },
+
+    // custom field displaysettings
+    displayfields: () => {
+      return Template.instance().displayfields.get();
+    },
+
 });
 
 Template.inventorylist.events({
@@ -1386,184 +1481,365 @@ Template.inventorylist.events({
         });
     },
     "click .resetTable": function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get("mycloudLogonID"),
-            clouddatabaseID: Session.get("mycloudLogonDBID"),
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: "tblInventory",
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({ _id: checkPrefDetails._id },
-                        function(err, idTag) {
-                            if (err) {} else {
-                                Meteor._reload.reload();
-                            }
-                        }
-                    );
-                }
-            }
+      let templateObject = Template.instance();
+      let reset_data = templateObject.reset_data.get(); 
+      let isSNTrackchecked = localStorage.getItem('vs1cloudlicenselevel') == 'PLUS' || false;
+      if(isSNTrackchecked) {
+        reset_data[12].display = true; 
+      } else {
+        reset_data[12].display = false; 
+      }
+      reset_data = reset_data.filter(redata => redata.display); 
+  
+      $(".displaySettings").each(function (index) {
+        let $tblrow = $(this);
+        $tblrow.find(".divcolumn").text(reset_data[index].label);
+        $tblrow
+          .find(".custom-control-input")
+          .prop("checked", reset_data[index].active);
+
+        let title = $("#tblInventory").find("th").eq(index);
+        if(reset_data[index].class === 'CostPrice' || reset_data[index].class === 'SalePrice') {
+          $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
+        } else if( reset_data[index].class === 'CostPriceInc' || reset_data[index].class === 'SalePriceInc') {
+          $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
+        } else {
+          $(title).html(reset_data[index].label);
         }
+
+        if (reset_data[index].active) {
+          $('.col' + reset_data[index].class).addClass('showColumn');
+          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
+        } else {
+          $('.col' + reset_data[index].class).addClass('hiddenColumn');
+          $('.col' + reset_data[index].class).removeClass('showColumn');
+        }
+        $(".rngRange" + reset_data[index].class).val('');
+      });
     },
     "click .saveTable": function(event) {
-        let lineItems = [];
-        $(".columnSettings").each(function(index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || "";
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(":checked")) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass,
-            };
-
-            lineItems.push(lineItemObj);
-        });
-
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get("mycloudLogonID"),
-            clouddatabaseID: Session.get("mycloudLogonDBID"),
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: "tblInventory",
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.update({ _id: checkPrefDetails._id }, {
-                            $set: {
-                                userid: clientID,
-                                username: clientUsername,
-                                useremail: clientEmail,
-                                PrefGroup: "inventoryform",
-                                PrefName: "tblInventory",
-                                published: true,
-                                customFields: lineItems,
-                                updatedAt: new Date(),
-                            },
-                        },
-                        function(err, idTag) {
-                            if (err) {
-                                $("#myModal2").modal("toggle");
-                            } else {
-                                $("#myModal2").modal("toggle");
-                            }
-                        }
-                    );
-                } else {
-                    CloudPreference.insert({
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: "inventoryform",
-                            PrefName: "tblInventory",
-                            published: true,
-                            customFields: lineItems,
-                            createdAt: new Date(),
-                        },
-                        function(err, idTag) {
-                            if (err) {
-                                $("#myModal2").modal("toggle");
-                            } else {
-                                $("#myModal2").modal("toggle");
-                            }
-                        }
-                    );
-                }
-
-                let getcustomField1 = $(".colProdCustField1").html();
-                let getcustomField2 = $(".colProdCustField2").html();
-
-                var checkPrefDetailsProd = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: "productview",
-                });
-                if (checkPrefDetailsProd) {
-                    CloudPreference.update({ _id: checkPrefDetailsProd._id }, {
-                            $set: {
-                                username: clientUsername,
-                                useremail: clientEmail,
-                                PrefGroup: "inventoryform",
-                                PrefName: "productview",
-                                published: true,
-                                customFields: [{
-                                        index: "1",
-                                        label: getcustomField1,
-                                        // hidden: false,
-                                    },
-                                    {
-                                        index: "2",
-                                        label: getcustomField2,
-                                        // hidden: getchkcustomField2
-                                    },
-                                ],
-                                updatedAt: new Date(),
-                            },
-                        },
-                        function(err, idTag) {
-                            if (err) {} else {}
-                        }
-                    );
-                } else {
-                    CloudPreference.insert({
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: "inventoryform",
-                            PrefName: "productview",
-                            published: true,
-                            customFields: [{
-                                    index: "1",
-                                    label: getcustomField1,
-                                    hidden: false,
-                                },
-                                {
-                                    index: "2",
-                                    label: getcustomField2,
-                                    hidden: false,
-                                },
-                            ],
-                            createdAt: new Date(),
-                        },
-                        function(err, idTag) {
-                            if (err) {} else {}
-                        }
-                    );
-                }
-            }
+      let lineItems = [];
+      $(".fullScreenSpin").css("display", "inline-block");
+  
+      $(".displaySettings").each(function (index) {
+        var $tblrow = $(this);
+        var fieldID = $tblrow.attr("custid") || 0;
+        var colTitle = $tblrow.find(".divcolumn").text() || "";
+        var colWidth = $tblrow.find(".custom-range").val() || 0;
+        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+        var colHidden = false;
+        if ($tblrow.find(".custom-control-input").is(":checked")) {
+          colHidden = true;
+        } else {
+          colHidden = false;
         }
-
-        $("#myModal2").modal("toggle");
+        let lineItemObj = {
+          index: parseInt(fieldID),
+          label: colTitle,
+          active: colHidden,
+          width: parseInt(colWidth),
+          class: colthClass,
+          display: true
+        };
+  
+        lineItems.push(lineItemObj); 
+      });
+  
+      let templateObject = Template.instance();
+      let reset_data = templateObject.reset_data.get();
+      reset_data = reset_data.filter(redata => redata.display == false);
+      lineItems.push(...reset_data);
+      lineItems.sort((a,b) => a.index - b.index); 
+  
+      try {
+        let erpGet = erpDb();
+        let tableName = "tblInventory";
+        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+        $(".fullScreenSpin").css("display", "none");
+        if(added) {
+            swal({
+              title: 'SUCCESS',
+              text: "Display settings is updated!",
+              type: 'success',
+              showCancelButton: false,
+              confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.value) {
+                   $('#myModal2').modal('hide');
+                }  
+            });
+        } else {
+          swal("Something went wrong!", "", "error");
+        }
+      } catch (error) {
+        $(".fullScreenSpin").css("display", "none");
+        swal("Something went wrong!", "", "error");
+      } 
     },
-    "blur .divcolumn": function(event) {
-        let columData = $(event.target).text();
-
-        let columnDatanIndex = $(event.target)
-            .closest("div.columnSettings")
-            .attr("id");
-        var datable = $("#tblInventory").DataTable();
-        var title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
+    "blur .divcolumn": function(event) { 
+        let columData = $(event.target).html();
+        let columHeaderUpdate = $(event.target).attr("valueupdate");
+        $("th.col" + columHeaderUpdate + "").html(columData);
     },
+
+
+    'click .chkProductID': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colProductID').addClass('showColumn');
+        $('.colProductID').removeClass('hiddenColumn');
+      } else {
+        $('.colProductID').addClass('hiddenColumn');
+        $('.colProductID').removeClass('showColumn');
+      }
+    },    
+    'click .chkProductName': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colProductName').addClass('showColumn');
+        $('.colProductName').removeClass('hiddenColumn');
+      } else {
+        $('.colProductName').addClass('hiddenColumn');
+        $('.colProductName').removeClass('showColumn');
+      }
+    },    
+    'click .chkSalesDescription': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colSalesDescription').addClass('showColumn');
+        $('.colSalesDescription').removeClass('hiddenColumn');
+      } else {
+        $('.colSalesDescription').addClass('hiddenColumn');
+        $('.colSalesDescription').removeClass('showColumn');
+      }
+    },    
+    'click .chkAvailable': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colAvailable').addClass('showColumn');
+        $('.colAvailable').removeClass('hiddenColumn');
+      } else {
+        $('.colAvailable').addClass('hiddenColumn');
+        $('.colAvailable').removeClass('showColumn');
+      }
+    },    
+    'click .chkOnSO': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colOnSO').addClass('showColumn');
+        $('.colOnSO').removeClass('hiddenColumn');
+      } else {
+        $('.colOnSO').addClass('hiddenColumn');
+        $('.colOnSO').removeClass('showColumn');
+      }
+    },    
+    'click .chkOnBO': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colOnBO').addClass('showColumn');
+        $('.colOnBO').removeClass('hiddenColumn');
+      } else {
+        $('.colOnBO').addClass('hiddenColumn');
+        $('.colOnBO').removeClass('showColumn');
+      }
+    },    
+    'click .chkInStock': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colInStock').addClass('showColumn');
+        $('.colInStock').removeClass('hiddenColumn');
+      } else {
+        $('.colInStock').addClass('hiddenColumn');
+        $('.colInStock').removeClass('showColumn');
+      }
+    },    
+    'click .chkOnOrder': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colOnOrder').addClass('showColumn');
+        $('.colOnOrder').removeClass('hiddenColumn');
+      } else {
+        $('.colOnOrder').addClass('hiddenColumn');
+        $('.colOnOrder').removeClass('showColumn');
+      }
+    },    
+    'click .chkSerialNo': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colSerialNo').addClass('showColumn');
+        $('.colSerialNo').removeClass('hiddenColumn');
+      } else {
+        $('.colSerialNo').addClass('hiddenColumn');
+        $('.colSerialNo').removeClass('showColumn');
+      }
+    },    
+    'click .chkBarcode': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colBarcode').addClass('showColumn');
+        $('.colBarcode').removeClass('hiddenColumn');
+      } else {
+        $('.colBarcode').addClass('hiddenColumn');
+        $('.colBarcode').removeClass('showColumn');
+      }
+    },    
+    'click .chkDepartment': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colDepartment').addClass('showColumn');
+        $('.colDepartment').removeClass('hiddenColumn');
+      } else {
+        $('.colDepartment').addClass('hiddenColumn');
+        $('.colDepartment').removeClass('showColumn');
+      }
+    },    
+    'click .chkPurchaseDescription': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colPurchaseDescription').addClass('showColumn');
+        $('.colPurchaseDescription').removeClass('hiddenColumn');
+      } else {
+        $('.colPurchaseDescription').addClass('hiddenColumn');
+        $('.colPurchaseDescription').removeClass('showColumn');
+      }
+    },
+
+
+  'click .chkCostPrice': function (event) {
+    if ($(event.target).is(':checked')) {
+        $('.chkCostPriceInc').prop("checked", false);
+
+        $('.colCostPriceInc').addClass('hiddenColumn');
+        $('.colCostPriceInc').removeClass('showColumn');
+
+        $('.colCostPrice').addClass('showColumn');
+        $('.colCostPrice').removeClass('hiddenColumn');
+      } else {
+        $('.chkCostPriceInc').prop("checked", true);
+
+        $('.colCostPrice').addClass('hiddenColumn');
+        $('.colCostPrice').removeClass('showColumn');
+
+        $('.colCostPriceInc').addClass('showColumn');
+        $('.colCostPriceInc').removeClass('hiddenColumn');
+    }
+  },
+  'click .chkCostPriceInc': function(event) {
+    if ($(event.target).is(':checked')) {
+        $('.chkCostPrice').prop("checked", false);
+
+        $('.colCostPrice').addClass('hiddenColumn');
+        $('.colCostPrice').removeClass('showColumn');
+
+        $('.colCostPriceInc').addClass('showColumn');
+        $('.colCostPriceInc').removeClass('hiddenColumn');
+    } else {
+        $('.chkCostPrice').prop("checked", true);
+
+        $('.colCostPriceInc').addClass('hiddenColumn');
+        $('.colCostPriceInc').removeClass('showColumn');
+
+        $('.colCostPrice').addClass('showColumn');
+        $('.colCostPrice').removeClass('hiddenColumn');
+    }
+  },
+
+  'click .chkSalePrice': function (event) {
+    if ($(event.target).is(':checked')) {
+        $('.chkSalePriceInc').prop("checked", false);
+
+        $('.colSalePriceInc').addClass('hiddenColumn');
+        $('.colSalePriceInc').removeClass('showColumn');
+
+        $('.colSalePrice').addClass('showColumn');
+        $('.colSalePrice').removeClass('hiddenColumn');
+
+    } else {
+        $('.chkSalePriceInc').prop("checked", true);
+
+        $('.colSalePrice').addClass('hiddenColumn');
+        $('.colSalePrice').removeClass('showColumn');
+
+        $('.colSalePriceInc').addClass('showColumn');
+        $('.colSalePriceInc').removeClass('hiddenColumn');
+    }
+  },
+  'click .chkSalePriceInc': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.chkSalePrice').prop("checked", false);
+
+        $('.colSalePrice').addClass('hiddenColumn');
+        $('.colSalePrice').removeClass('showColumn');
+
+        $('.colSalePriceInc').addClass('showColumn');
+        $('.colSalePriceInc').removeClass('hiddenColumn');
+      } else {
+        $('.chkSalePrice').prop("checked", true);
+
+        $('.colSalePriceInc').addClass('hiddenColumn');
+        $('.colSalePriceInc').removeClass('showColumn');
+
+        $('.colSalePrice').addClass('showColumn');
+        $('.colSalePrice').removeClass('hiddenColumn');
+      }
+  },
+    // display settings
+
+
+    'change .rngRangeProductID': function(event) {
+        let range = $(event.target).val();
+        $('.colProductID').css('width', range);
+    },
+    'change .rngRangeProductName': function(event) {
+      let range = $(event.target).val();
+      $('.colProductName').css('width', range);
+    },
+    'change .rngRangeSalesDescription': function(event) {
+      let range = $(event.target).val();
+      $('.colSalesDescription').css('width', range);
+    },
+    'change .rngRangeAvailable': function(event) {
+      let range = $(event.target).val();
+      $('.colAvailable').css('width', range);
+    },
+    'change .rngRangeOnSO': function(event) {
+      let range = $(event.target).val();
+      $('.colOnSO').css('width', range);
+    },
+    'change .rngRangeOnBO': function(event) {
+      let range = $(event.target).val();
+      $('.colOnBO').css('width', range);
+    },
+    'change .rngRangeInStock': function(event) {
+      let range = $(event.target).val();
+      $('.colInStock').css('width', range);
+    },
+    'change .rngRangeOnOrder': function(event) {
+      let range = $(event.target).val();
+      $('.colOnOrder').css('width', range);
+    },
+    'change .rngRangeSerialNo': function(event) {
+      let range = $(event.target).val();
+      $('.colSerialNo').css('width', range);
+    },
+    'change .rngRangeBarcode': function(event) {
+      let range = $(event.target).val();
+      $('.colBarcode').css('width', range);
+    },
+    'change .rngRangeDepartment': function(event) {
+      let range = $(event.target).val();
+      $('.colDepartment').css('width', range);
+    },
+    'change .rngRangePurchaseDescription': function(event) {
+      let range = $(event.target).val();
+      $('.colPurchaseDescription').css('width', range);
+    },
+    'change .rngRangeCostPrice': function(event) {
+      let range = $(event.target).val();
+      $('.colCostPrice').css('width', range);
+    },
+    'change .rngRangeCostPriceInc': function(event) {
+      let range = $(event.target).val();
+      $('.colCostPriceInc').css('width', range);
+    },
+    'change .rngRangeSalePrice': function(event) {
+      let range = $(event.target).val();
+      $('.colSalePrice').css('width', range);
+    },
+    'change .rngRangeSalePriceInc': function(event) {
+      let range = $(event.target).val();
+      $('.colSalePriceInc').css('width', range);
+    },
+    
     "change .rngRange": function(event) {
         let range = $(event.target).val();
         $(event.target)
@@ -2025,7 +2301,7 @@ Template.inventorylist.events({
 
                         splashArrayProductListDept.push(dataList);
 
-                        // dataTableList.push(dataList);
+                        dataTableList.push(dataList);
                     }
                     if (splashArrayProductListDept) {
                         var datatable = $("#tblInventory").DataTable();
