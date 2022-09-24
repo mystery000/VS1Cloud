@@ -669,6 +669,7 @@ Template.trialbalance.onRendered(() => {
   //templateObject.getTrialBalanceReports(getDateFrom, getLoadDate, false);
 
   templateObject.getDepartments = function () {
+    let deptrecords = [];
     reportService.getDepartment().then(function (data) {
       for (let i in data.tdeptclass) {
         let deptrecordObj = {
