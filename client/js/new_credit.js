@@ -8158,7 +8158,9 @@ Template.creditcard.events({
             })
         }, 500);
 
-    }
+    },
+
+  
 });
 
 Template.registerHelper('equals', function(a, b) {

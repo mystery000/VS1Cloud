@@ -13,7 +13,8 @@ import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
-import { saveCurrencyHistory } from "./paymentcard";
+import { saveCurrencyHistory } from "../../packages/currency/CurrencyWidget";
+
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -11930,6 +11931,7 @@ Template.supplierpaymentcard.events({
           LoadingOverlay.hide();
         });
     }
+    LoadingOverlay.hide();
   },
   "click #tblSupplierPaymentcard tr .colTransNoDONT": function (e) {
     let custname = $("#edtSupplierName").val() || "";
