@@ -591,15 +591,31 @@
                                                 <!-- <th class="th colAccountNo" style="width: 300px;">Account No</th> -->
                                                 <th class="th colMemo">Memo</th>
                                                 <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Tax Code</th>
-                                                <th class="th colCreditEx colCreditExCheck" style="width: 130px; text-align: left!important;">Credit (Ex) <i class="fas fa-random"></i></th>
-                                                <th class="th colCreditInc colCreditIncCheck hiddenColumn" style="width: 130px; text-align: left!important;">Credit (Inc) <i class="fas fa-random fa-trans"></i></th>
-                                                <th class="th colDebitEx colDebitExCheck" style="width: 130px; text-align: left!important;">Debit (Ex) <i class="fas fa-random"></i></th>
-                                                <th class="th colDebitInc colDebitIncCheck hiddenColumn" style="width: 130px; text-align: left!important;">Debit (Inc) <i class="fas fa-random fa-trans"></i></th>
+                                                <th colspan="{{displayFieldColspan }}" class="th colCreditEx colCreditExCheck" style="width: 130px; text-align: left!important;">Credit (Ex) <i class="fas fa-random"></i></th>
+                                                <th colspan="{{displayFieldColspan }}" class="th colCreditInc colCreditIncCheck hiddenColumn" style="width: 130px; text-align: left!important;">Credit (Inc) <i class="fas fa-random fa-trans"></i></th>
+                                                <th colspan="{{displayFieldColspan }}" class="th colDebitEx colDebitExCheck" style="width: 130px; text-align: left!important;">Debit (Ex) <i class="fas fa-random"></i></th>
+                                                <th colspan="{{displayFieldColspan }}" class="th colDebitInc colDebitIncCheck hiddenColumn" style="width: 130px; text-align: left!important;">Debit (Inc) <i class="fas fa-random fa-trans"></i></th>
                                                 <th class="th colTaxRate hiddenColumn" style="width: 91px; text-align: left!important;">Tax Rate</th>
-                                                <th class="th colTaxAmount hiddenColumn" style="width: 95px; text-align: left!important;">Tax Amt</th>
+                                                <th colspan="{{displayFieldColspan }}" class="th colTaxAmount hiddenColumn" style="width: 95px; text-align: left!important;">Tax Amt</th>
                                                 <!-- <th class="th">Tax Price</th> -->
                                                 <th class="th" style="width: 25px;"></th>
                                             </tr>
+
+                                            {{#if isForeignEnabled}}
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>                            
+                                                    <th>{{ getDefaultCurrency }}</th>
+                                                    <th>Foreign</th>
+                                                    
+                                                    <th>{{ getDefaultCurrency }}</th>
+                                                    <th>Foreign</th>
+                                                    <th></th>  
+                                  
+        
+                                                </tr>
+                                            {{/if}}
                                         </thead>
                                         <tbody>
                                             {{#each item in record.LineItems}}
@@ -610,13 +626,30 @@
                                                     <td contenteditable="true" class="lineMemo colMemo">{{item.memo}}</td>
                                                     <!-- <td contenteditable="false" class="lineTaxCode colTaxCode" style="text-align: right!important;cursor: pointer;">{{item.taxCode}}</td> -->
                                                     <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
-                                                    <td class="colCreditExCheck" style="text-align: right!important;"><input class="lineCreditEx colCreditEx lineCreditExChange highlightInput" type="text" value="{{item.creditex}}"></td>
-                                                    <td class="colCreditIncCheck hiddenColumn" style="text-align: right!important;"><input class="lineCreditInc colCreditInc lineCreditIncChange highlightInput" type="text" value="{{item.creditinc}}">
+                                                    
+
+                                                    <td class="BcolCreditExCheck-{{item.lineID}}" style="text-align: right!important;">
+                                                        <input class="lineCreditEx colCreditEx lineCreditExChange highlightInput" type="text" value="{{item.creditex}}"></td>
+                                                    {{#if isForeignEnabled}}
+                                                        <td class="BcolCreditExCheck-{{item.lineID}}  convert-to-foreign " style="text-align: right!important;">{{ convertToForeignAmount item.creditex}}</td>
+                                                    {{/if}}
+                                                    <td class="BcolCreditIncCheck-{{item.lineID}} hiddenColumn" style="text-align: right!important;"><input class="lineCreditInc colCreditInc lineCreditIncChange highlightInput" type="text" value="{{item.creditinc}}">
                                                     </td>
-                                                    <td class="colDebitExCheck" style="text-align: right!important;"><input class="lineDebitEx colDebitEx lineDebitExChange highlightInput" type="text" value="{{item.debitex}}"></td>
-                                                    <td class="colDebitIncCheck hiddenColumn" style="text-align: right!important;"><input class="lineDebitInc colDebitInc lineDebitIncChange highlightInput" type="text" value="{{item.debitinc}}"></td>
+                                                    {{#if isForeignEnabled}}
+                                                        <td class="BcolCreditIncCheck-{{item.lineID}} hiddenColumn  convert-to-foreign " style="text-align: right!important;">{{ convertToForeignAmount item.creditinc}}</td>
+                                                    {{/if}}
+                                                    <td class="BcolDebitExCheck-{{item.lineID}}" style="text-align: right!important;"><input class="lineDebitEx colDebitEx lineDebitExChange highlightInput" type="text" value="{{item.debitex}}"></td>
+                                                    {{#if isForeignEnabled}}
+                                                        <td class="BcolDebitExCheck-{{item.lineID}}  convert-to-foreign " style="text-align: right!important;">{{ convertToForeignAmount item.debitex}}</td>
+                                                    {{/if}}
+                                                    <td class="BcolDebitIncCheck-{{item.lineID}} hiddenColumn" style="text-align: right!important;">
+                                                        <input class="lineDebitInc colDebitInc lineDebitIncChange highlightInput" type="text" value="{{item.debitinc}}">
+                                                    </td>
+                                                    {{#if isForeignEnabled}}
+                                                        <td class="BcolDebitIncCheck-{{item.lineID}}  convert-to-foreign  hiddenColumn" style="text-align: right!important;">{{ convertToForeignAmount item.debitinc}}</td>
+                                                    {{/if}}
                                                     <td contenteditable="false" class="lineTaxRate colTaxRate pointer hiddenColumn" style="text-align: right!important;">{{item.taxRate}}</td>
-                                                    <td contenteditable="false" class=" lineTaxAmount colTaxAmount pointer hiddenColumn">{{item.TaxTotal}}</td>
+                                                    <td contenteditable="false" class="lineTaxAmount-{{item.lineID}} colTaxAmount pointer hiddenColumn">{{item.TaxTotal}}</td>
 
                                                     <td contenteditable="false"><span class="table-remove btnRemove"><button type="button" id="btnRemove1" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span>
                                                     </td>
@@ -627,11 +660,27 @@
                                             <tr>
                                                 <td colspan="2" style="font-size: 20px; color: #696969; font-weight: 800;">Total</td>
                                                 <td class="colTaxCode"></td>
+                                                
                                                 <td class="colCreditExCheck" style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="creditTotal" name="creditTotal">{{totalCredit}}</td>
+                                                {{#if isForeignEnabled}}
+                                                    <td class="colCreditExCheck  convert-to-foreign " style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="creditTotal" name="creditTotal">{{convertToForeignAmount totalCredit}}</td>
+                                                {{/if}}
                                                 <td class="colCreditIncCheck hiddenColumn" style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="creditTotal" name="creditTotal">{{totalCreditInc}}
                                                 </td>
+                                                {{#if isForeignEnabled}}
+                                                <td class="colCreditIncCheck hiddenColumn  convert-to-foreign " style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="creditTotal" name="creditTotal">{{convertToForeignAmount totalCreditInc}}</td>
+                                                {{/if}}
+                                                
                                                 <td class="colDebitExCheck" style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="debitTotal" name="debitTotal">{{totalDebit}}</td>
+                                                
+                                                {{#if isForeignEnabled}}
+                                                    <td class="colDebitExCheck  convert-to-foreign " style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="debitTotal" name="debitTotal">{{ convertToForeignAmount totalDebit}}</td>
+                                                {{/if}}
+                                                
                                                 <td class="colDebitIncCheck hiddenColumn" style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="debitTotal" name="debitTotal">{{totalDebitInc}}</td>
+                                                {{#if isForeignEnabled}}
+                                                    <td class="colDebitIncCheck hiddenColumn  convert-to-foreign " style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="debitTotal" name="debitTotal">{{convertToForeignAmount totalDebitInc}}</td>
+                                                {{/if}}
                                                 <td class="colTaxRate hiddenColumn"></td>
                                                 <td class="colTaxAmount hiddenColumn"></td>
                                                 <td></td>

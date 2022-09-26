@@ -920,22 +920,22 @@
                                     </tr>
 
                                     {{#if isForeignEnabled}}
-                                    <tr>
-                                        {{#each displayfield in displayfields}}
-                                            {{#if displayfield.display}}
-                                                {{#if subHeaderForeign displayfield}}
-                                                    <th class="{{#if displayfield.active}}{{else}}hiddenColumn{{/if}}">{{ getDefaultCurrency }}</th>
-                                                    <th class="{{#if displayfield.active}}{{else}}hiddenColumn{{/if}}">Foreign</th>
-                                                {{else}}
-                                                    <th class="{{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"></th>
+                                        <tr>
+                                            {{#each displayfield in displayfields}}
+                                                {{#if displayfield.display}}
+                                                    {{#if subHeaderForeign displayfield}}
+                                                        <th class="{{#if displayfield.active}}{{else}}hiddenColumn{{/if}}">{{ getDefaultCurrency }}</th>
+                                                        <th class="{{#if displayfield.active}}{{else}}hiddenColumn{{/if}}">Foreign</th>
+                                                    {{else}}
+                                                        <th class="{{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"></th>
+                                                    {{/if}}
+
                                                 {{/if}}
+                                            {{/each}}
+                                            <th class="th" style="width: 25px;"></th>
 
-                                            {{/if}}
-                                        {{/each}}
-                                        <th class="th" style="width: 25px;"></th>
-
-                                    </tr>
-                                {{/if}}
+                                        </tr>
+                                    {{/if}}
                                 </thead>
                                 <tbody>
                                     {{#each item in creditrecord.LineItems}}

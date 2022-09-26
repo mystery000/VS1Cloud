@@ -37,12 +37,18 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
+import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
+let defaultCurrencyCode = CountryAbbr;
+
 
 Template.journalentrycard.onCreated(() => {
     const templateObject = Template.instance();
+    templateObject.isForeignEnabled = new ReactiveVar(false);
+
     templateObject.records = new ReactiveVar();
     templateObject.CleintName = new ReactiveVar();
     templateObject.Department = new ReactiveVar();
@@ -1098,6 +1104,8 @@ Template.journalentrycard.onRendered(() => {
 
 
 });
+
+
 Template.journalentrycard.onRendered(function() {
     let tempObj = Template.instance();
     let utilityService = new UtilityService();
@@ -1800,7 +1808,43 @@ Template.journalentrycard.helpers({
     },
     isCurrencyEnable: () => {
         return Session.get('CloudUseForeignLicence');
-    }
+    },
+
+
+    isForeignEnabled: () => {
+        return Template.instance().isForeignEnabled.get();
+    },
+    getDefaultCurrency: () => {
+        return defaultCurrencyCode;
+    },
+    convertToForeignAmount: (amount) => {
+        return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+    },
+
+    displayFieldColspan: (displayfield) => {
+        if(Template.instance().isForeignEnabled.get() == true) {
+            return 2
+        }
+        return 1;
+
+
+        if(["Amount (Ex)", "Amount (Inc)", "Tax Amt"].includes(displayfield.custfieldlabel)) 
+        {
+            if(Template.instance().isForeignEnabled.get() == true) {
+                return 2
+            }
+            return 1;
+        } 
+        return 1;
+    },
+
+    subHeaderForeign: (displayfield) => {
+
+        if(["Amount (Ex)", "Amount (Inc)", "Tax Amt"].includes(displayfield.custfieldlabel)) {
+            return true;
+        }
+        return false;
+    },
 });
 
 Template.journalentrycard.events({
@@ -3521,6 +3565,42 @@ Template.journalentrycard.events({
         event.preventDefault();
         history.back(1);
 
+
+    },
+
+    'change #sltCurrency': (e, ui) => {
+        if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
+            $(".foreign-currency-js").css("display", "block");
+            ui.isForeignEnabled.set(true);
+        } else {
+            $(".foreign-currency-js").css("display", "none");
+            ui.isForeignEnabled.set(false);
+        }
+    },
+
+    'change .exchange-rate-js': (e, ui) => {
+
+
+        setTimeout(() => {
+            const toConvert = document.querySelectorAll('.convert-to-foreign:not(.hiddenColumn)');
+            const rate = $("#exchange_rate").val();
+
+
+            toConvert.forEach((element) => {
+                const mainClass = element.classList[0];
+                const mainValueElement = document.querySelector(`#tblJournalEntryLine td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
+               // const footerValueElement = document.querySelector(`#tblJournalEntryLine tfoot td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
+                
+                let value = mainValueElement.childElementCount > 0 ? 
+                    $(mainValueElement).find('input').val() : 
+                    mainValueElement.innerText;
+
+                $(element).attr("value", convertToForeignAmount(value, rate, false));
+                value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
+                $(element).text(value);
+        
+            })
+        }, 500);
 
     }
 

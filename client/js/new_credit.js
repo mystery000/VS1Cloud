@@ -8126,39 +8126,39 @@ Template.creditcard.events({
     $("#clickedControl").val("three");
   },
 
-  'change #sltCurrency': (e, ui) => {
-    if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
-        $(".foreign-currency-js").css("display", "block");
-        ui.isForeignEnabled.set(true);
-    } else {
-        $(".foreign-currency-js").css("display", "none");
-        ui.isForeignEnabled.set(false);
+    'change #sltCurrency': (e, ui) => {
+        if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
+            $(".foreign-currency-js").css("display", "block");
+            ui.isForeignEnabled.set(true);
+        } else {
+            $(".foreign-currency-js").css("display", "none");
+            ui.isForeignEnabled.set(false);
+        }
+    },
+
+    'change .exchange-rate-js': (e, ui) => {
+
+
+        setTimeout(() => {
+            const toConvert = document.querySelectorAll('.convert-to-foreign:not(.hiddenColumn)');
+            const rate = $("#exchange_rate").val();
+
+            toConvert.forEach((element) => {
+                const mainClass = element.classList[0];
+                const mainValueElement = document.querySelector(`#tblCreditLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
+                
+                let value = mainValueElement.childElementCount > 0 ? 
+                    $(mainValueElement).find('input').val() : 
+                    mainValueElement.innerText;
+
+                $(element).attr("value", convertToForeignAmount(value, rate, false));
+                value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
+                $(element).text(value);
+        
+            })
+        }, 500);
+
     }
-},
-
-'change .exchange-rate-js': (e, ui) => {
-
-
-    setTimeout(() => {
-        const toConvert = document.querySelectorAll('.convert-to-foreign:not(.hiddenColumn)');
-        const rate = $("#exchange_rate").val();
-
-        toConvert.forEach((element) => {
-            const mainClass = element.classList[0];
-            const mainValueElement = document.querySelector(`#tblCreditLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
-            
-            let value = mainValueElement.childElementCount > 0 ? 
-                $(mainValueElement).find('input').val() : 
-                mainValueElement.innerText;
-
-            $(element).attr("value", convertToForeignAmount(value, rate, false));
-            value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
-            $(element).text(value);
-    
-        })
-    }, 500);
-
-}
 });
 
 Template.registerHelper('equals', function(a, b) {
