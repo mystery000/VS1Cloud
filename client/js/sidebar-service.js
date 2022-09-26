@@ -888,7 +888,7 @@ export class SideBarService extends BaseService {
     }else{
     options = {
       IgnoreDates:true,
-      Search: 'Company = "' + dataSearchName + '" OR Employeename = "' + dataSearchName + '"',
+      Search: 'ID = "' + dataSearchName + '" OR Company = "' + dataSearchName + '" OR email = "' + dataSearchName + '"',
     };
     }
     return this.getList(this.ERPObjects.TERPCombinedContactsVS1, options);
