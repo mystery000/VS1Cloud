@@ -1054,8 +1054,6 @@ let grandtotalqty = 0;
   });
   Template.productsalesreport.helpers({
     records : () => {
-      console.log('deptrecords', Template.instance().records.get());
-
        return Template.instance().records.get();
      //   .sort(function(a, b){
      //     if (a.accounttype == 'NA') {
