@@ -1847,8 +1847,8 @@ Template.inventorylist.events({
       $('.colCostPriceInc').addClass('showColumn');
       $('.colCostPriceInc').removeClass('hiddenColumn');
 
-      $('.chkAmountEx').prop("checked", false);
-      $('.chkAmountInc').prop("checked", true);
+      $('.chkCostPrice').prop("checked", false);
+      $('.chkCostPriceInc').prop("checked", true);
   },
   'click .th.colCostPriceInc': function(event) {
       $('.colCostPriceInc').addClass('hiddenColumn');
@@ -1857,28 +1857,28 @@ Template.inventorylist.events({
       $('.colCostPrice').addClass('showColumn');
       $('.colCostPrice').removeClass('hiddenColumn');
 
-      $('.chkAmountEx').prop("checked", true);
-      $('.chkAmountInc').prop("checked", false);
+      $('.chkCostPrice').prop("checked", true);
+      $('.chkCostPriceInc').prop("checked", false);
   },
-  'click .th.chkSalePrice': function(event) {
-      $('.chkSalePrice').addClass('hiddenColumn');
-      $('.chkSalePrice').removeClass('showColumn');
+  'click .th.colSalePrice': function(event) {
+      $('.colSalePrice').addClass('hiddenColumn');
+      $('.colSalePrice').removeClass('showColumn');
 
-      $('.chkSalePriceInc').addClass('showColumn');
-      $('.chkSalePriceInc').removeClass('hiddenColumn');
+      $('.colSalePriceInc').addClass('showColumn');
+      $('.colSalePriceInc').removeClass('hiddenColumn');
 
-      $('.chkUnitPriceEx').prop("checked", false);
-      $('.chkUnitPriceInc').prop("checked", true);
+      $('.chkSalePrice').prop("checked", false);
+      $('.chkSalePriceInc').prop("checked", true);
   },
-  'click .th.chkSalePriceInc': function(event) {
-      $('.chkSalePriceInc').addClass('hiddenColumn');
-      $('.chkSalePriceInc').removeClass('showColumn');
+  'click .th.colSalePriceInc': function(event) {
+      $('.colSalePriceInc').addClass('hiddenColumn');
+      $('.colSalePriceInc').removeClass('showColumn');
 
-      $('.chkSalePrice').addClass('showColumn');
-      $('.chkSalePrice').removeClass('hiddenColumn');
+      $('.colSalePrice').addClass('showColumn');
+      $('.colSalePrice').removeClass('hiddenColumn');
 
-      $('.chkUnitPriceEx').prop("checked", true);
-      $('.chkUnitPriceInc').prop("checked", false);
+      $('.chkSalePrice').prop("checked", true);
+      $('.chkSalePriceInc').prop("checked", false);
 
   },
 
