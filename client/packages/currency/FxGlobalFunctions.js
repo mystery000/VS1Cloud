@@ -4,23 +4,36 @@ import LoadingOverlay from "../../LoadingOverlay";
 import {TaxRateService} from "../../settings/settings-service";
 
 export default class FxGlobalFunctions {
-
+  /**
+     *
+     * Call this in the onCreated method of blaze template
+     *
+     * @param {BlazeTemplate} templateObject
+     */
+  static initVars(templateObject) {
+    templateObject.currencyList = new ReactiveVar([]);
+    templateObject.activeCurrencyList = new ReactiveVar([]);
+    templateObject.tcurrencyratehistory = new ReactiveVar([]);
+  }
 
   static async loadDefaultCurrencyForReport(defaultCurrencyCode = "AUD") {
-    $('#sltCurrency').attr('disabled', true);
-    $('#exchange_rate').attr('disabled', true);
+    $("#sltCurrency").attr("disabled", true);
+    $("#exchange_rate").attr("disabled", true);
 
     const currency = await FxGlobalFunctions.loadDefaultCurrency(defaultCurrencyCode);
     const currencyCode = currency.Code || defaultCurrencyCode;
     const currencySymbol = currency.CurrencySymbol || "$";
-    const currencyRate = ($('.currency-js').attr('type') == "buy" ? currency.BuyRate : currency.SellRate)  || 1; // We can make this dynamic
+    const currencyRate = (
+      $(".currency-js").attr("type") == "buy"
+      ? currency.BuyRate
+      : currency.SellRate) || 1; // We can make this dynamic
 
-    $('#sltCurrency').val(currencyCode);
-    $('#sltCurrency').attr('currency-symbol', currencySymbol);
-    $('#exchange_rate').val(currencyRate);
+    $("#sltCurrency").val(currencyCode);
+    $("#sltCurrency").attr("currency-symbol", currencySymbol);
+    $("#exchange_rate").val(currencyRate);
 
-    $('#sltCurrency').attr('disabled', false);
-    $('#exchange_rate').attr('disabled', false);
+    $("#sltCurrency").attr("disabled", false);
+    $("#exchange_rate").attr("disabled", false);
   }
 
   static async loadDefaultCurrency(defaultCurrencyCode = "AUD") {
@@ -50,41 +63,31 @@ export default class FxGlobalFunctions {
     if ((await ui.currencyList.get().length) == 0) {
       LoadingOverlay.show();
 
-      let _currencyList = [];
       const result = await taxRateService.getCurrencies();
 
-      //taxRateService.getCurrencies().then((result) => {
-
-      const data = result.tcurrency;
-
-      for (let i = 0; i < data.length; i++) {
-        // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-        var dataList = {
-          id: data[i].Id || "",
-          code: data[i].Code || "-",
-          currency: data[i].Currency || "NA",
-          symbol: data[i].CurrencySymbol || "NA",
-          buyrate: data[i].BuyRate || "-",
-          sellrate: data[i].SellRate || "-",
-          country: data[i].Country || "NA",
-          description: data[i].CurrencyDesc || "-",
-          ratelastmodified: data[i].RateLastModified || "-",
-          active: data[i].Code == defaultCurrencyCode
+      let currencies = result.tcurrency.map(currency => {
+        return {
+          ...currency,
+          id: currency.Id || "",
+          code: currency.Code || "-",
+          currency: currency.Currency || "NA",
+          symbol: currency.CurrencySymbol || "NA",
+          buyrate: currency.BuyRate || "-",
+          sellrate: currency.SellRate || "-",
+          country: currency.Country || "NA",
+          description: currency.CurrencyDesc || "-",
+          ratelastmodified: currency.RateLastModified || "-",
+          active: currency.Code == defaultCurrencyCode
             ? true
-            : false // By default if AUD then true
-            //active: false,
-            // createdAt: new Date(data[i].MsTimeStamp) || "-",
-            // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+            : false
         };
+      });
 
-        _currencyList.push(dataList);
-        //}
-      }
-      _currencyList = _currencyList.sort((a, b) => {
+      currencies = currencies.sort((a, b) => {
         return a.currency.split("")[0].toLowerCase().localeCompare(b.currency.split("")[0].toLowerCase());
       });
 
-      ui.currencyList.set(_currencyList);
+      ui.currencyList.set(currencies);
 
       //   await loadCurrencyHistory(ui);
       await this.loadCurrencyHistory(ui);

@@ -1,4 +1,5 @@
 import moment from "moment";
+import { UtilityService } from "./utility-service";
 
 export default class GlobalFunctions {
   /**
@@ -57,5 +58,18 @@ export default class GlobalFunctions {
 
   static formatDate(date) {
       return moment(date).format("DD/MM/YYYY");
+  }
+
+  static formatPrice(amount) {
+    let utilityService = new UtilityService();
+    if (isNaN(amount)) {
+      amount = amount === undefined || amount === null || amount.length === 0
+        ? 0
+        : amount;
+      amount = amount
+        ? Number(amount.replace(/[^0-9.-]+/g, ""))
+        : 0;
+    }
+    return utilityService.modifynegativeCurrencyFormat(amount) || 0.0;
   }
 }
