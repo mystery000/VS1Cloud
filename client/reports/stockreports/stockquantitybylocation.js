@@ -98,6 +98,8 @@ Template.stockquantitybylocation.onRendered(() => {
         ignoreDate: false
       };
     }
+    let begunDate = moment(formatDateTo).format("DD/MM/YYYY");
+    templateObject.dateAsAt.set(begunDate);
     $('.edtReportDates').attr('disabled', false)
     if( ignoreDate == true ){
       $('.edtReportDates').attr('disabled', true);
@@ -194,7 +196,7 @@ Template.stockquantitybylocation.onRendered(() => {
     LoadingOverlay.hide();
   }
 
-  //templateObject.setReportOptions();
+  templateObject.setReportOptions();
 
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");

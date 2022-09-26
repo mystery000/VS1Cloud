@@ -109,6 +109,8 @@ Template.stockvaluereport.onRendered(() => {
         ignoreDate: false
       };
     }
+    let begunDate = moment(formatDateTo).format("DD/MM/YYYY");
+    templateObject.dateAsAt.set(begunDate);
     $('.edtReportDates').attr('disabled', false)
     if( ignoreDate == true ){
       $('.edtReportDates').attr('disabled', true);
