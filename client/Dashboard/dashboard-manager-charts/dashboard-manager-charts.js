@@ -101,8 +101,7 @@ Template.dashboardManagerCharts.onRendered(function () {
                 text: ''
             },
             subtitle: {
-                text:
-                    'Discount Given By Employees'
+                text: 'Discount Given By Employees'
             },
             xAxis: {
                 categories: employeeNames
@@ -133,10 +132,16 @@ Template.dashboardManagerCharts.onRendered(function () {
                 plotBackgroundColor: null,
                 plotBackgroundImage: null,
                 plotBorderWidth: 0,
-                plotShadow: false
+                plotShadow: false,
             },
             title: {
-                text: empData.name
+                text: empData.name,
+                align: 'center',
+                verticalAlign: 'bottom',
+                y: 10
+            },
+            exporting: {
+                enabled: false
             },
             pane: {
                 startAngle: -150,
@@ -221,6 +226,16 @@ Template.dashboardManagerCharts.onRendered(function () {
                     baseLength: '0%',
                     rearLength: '0%'
                 },
+                dataLabels: {
+                    useHTML: true,
+                    enabled: true,
+                    align: 'center',
+                    x: 0,
+                    y: 45,
+                    overflow: "allow",
+                    borderWidth: 0,
+                    className: 'rev-counter',
+                }
             }]
         };
 
@@ -248,66 +263,72 @@ Template.dashboardManagerCharts.onRendered(function () {
     };
 
     templateObject.getDashboardData = async function () {
-        // const employeeObject = await getVS1Data('TEmployee');
-        const employeeObject = await getVS1Data('TCustomerVS1');
+        const employeeObject = await getVS1Data('TEmployee');
+        // const employeeObject = await getVS1Data('TCustomerVS1');
         let employeeNames = [];
         let employeeSalesQuota = [];
-        // if (employeeObject.length) {
-        //     let { temployee = [] } = JSON.parse(employeeObject[0].data);
-        //     let employees = [];
-        //     temployee.forEach(employee => {
-        //         employees.push(employee.fields);
-        //         if(!(isNaN(parseInt(employee.fields.CustFld12)) || parseInt(employee.fields.CustFld12) == 0)) {
-        //             // employeeNames.push(employee.fields.EmployeeName);
-        //             employeeNames.push(employee.fields.CustomerName);
-        //             employeeSalesQuota.push(parseInt(employee.fields.CustFld12));
-        //         }
-        //     });
-        //     templateObject.employees.set(employees);
-        // }
         if (employeeObject.length) {
-            let { tcustomervs1 = [] } = JSON.parse(employeeObject[0].data);
+            let { temployee = [] } = JSON.parse(employeeObject[0].data);
             let employees = [];
-            tcustomervs1.forEach(employee => {
+            temployee.forEach(employee => {
                 employees.push(employee.fields);
-                if(!(isNaN(parseInt(employee.fields.CUSTFLD12)) || parseInt(employee.fields.CUSTFLD12) == 0)) {
+                if(!(isNaN(parseInt(employee.fields.CustFld12)) || parseInt(employee.fields.CustFld12) == 0)) {
                     // employeeNames.push(employee.fields.EmployeeName);
-                    employeeNames.push(employee.fields.ClientName);
-                    employeeSalesQuota.push(parseInt(employee.fields.CUSTFLD12));
+                    employeeNames.push(employee.fields.FirstName + " " + employee.fields.LastName);
+                    employeeSalesQuota.push(parseInt(employee.fields.CustFld12));
+                    // employeeNames.push(employee.fields.CustomerName);
+                    // employeeSalesQuota.push(parseInt(employee.fields.CUSTFLD12));
                 }
             });
             templateObject.employees.set(employees);
         }
+        // if (employeeObject.length) {
+        //     let { tcustomervs1 = [] } = JSON.parse(employeeObject[0].data);
+        //     let employees = [];
+        //     tcustomervs1.forEach(employee => {
+        //         employees.push(employee.fields);
+        //         if(!(isNaN(parseInt(employee.fields.CUSTFLD12)) || parseInt(employee.fields.CUSTFLD12) == 0)) {
+        //             // employeeNames.push(employee.fields.EmployeeName);
+        //             employeeNames.push(employee.fields.ClientName);
+        //             employeeSalesQuota.push(parseInt(employee.fields.CUSTFLD12));
+        //         }
+        //     });
+        //     templateObject.employees.set(employees);
+        // }
 
         getVS1Data('TInvoiceList').then(function (dataObject) {
             if (dataObject.length) {
                 let { tinvoicelist } = JSON.parse(dataObject[0].data);
-                // const tinvoicelistGroupBy = _.groupBy(tinvoicelist, 'EmployeeName');
-                const tinvoicelistGroupBy = _.groupBy(tinvoicelist, 'CustomerName');
+                const tinvoicelistGroupBy = _.groupBy(tinvoicelist, 'EmployeeName');
+                // const tinvoicelistGroupBy = _.groupBy(tinvoicelist, 'CustomerName');
                 let employeesByTotalSales = [];
                 _.each(templateObject.employees.get(), employee => {
                     let lastMonthUnix = moment().subtract(1, 'months').unix();
-                    // let employeeData = { name: employee.EmployeeName, totalSales: 0, salesQuota: 0, totalDiscount: 0 };
-                    let employeeData = { name: employee.ClientName, totalSales: 0, salesQuota: 0, totalDiscount: 0 };
-                    if (employee.CUSTFLD12 && Number(employee.CUSTFLD12) != 'NaN' && Number(employee.CUSTFLD12) > 0) {
-                        employeeData.salesQuota = Number(employee.CUSTFLD12);
+                    let empName = employee.FirstName + " " + employee.LastName;
+                    let employeeData = { name: empName, totalSales: 0, salesQuota: 0, totalDiscount: 0 };
+                    if (employee.CustFld12 && Number(employee.CustFld12) != 'NaN' && Number(employee.CustFld12) > 0) {
+                        employeeData.salesQuota = Number(employee.CustFld12);
                     }
-                    // if(tinvoicelistGroupBy[employee.EmployeeName]) {
-                    //     _.each(tinvoicelistGroupBy[employee.EmployeeName], invoiceData => {
-                    //         if (moment(invoiceData.SaleDate).unix() > lastMonthUnix) {
-                    //             employeeData.totalSales += invoiceData.TotalAmountInc
-                    //             employeeData.totalDiscount += invoiceData.TotalDiscount
-                    //         }
-                    //     });
+                    // let employeeData = { name: employee.ClientName, totalSales: 0, salesQuota: 0, totalDiscount: 0 };
+                    // if (employee.CUSTFLD12 && Number(employee.CUSTFLD12) != 'NaN' && Number(employee.CUSTFLD12) > 0) {
+                    //     employeeData.salesQuota = Number(employee.CUSTFLD12);
                     // }
-                    if(tinvoicelistGroupBy[employee.ClientName]) {
-                        _.each(tinvoicelistGroupBy[employee.ClientName], invoiceData => {
-                            // if (moment(invoiceData.SaleDate).unix() > lastMonthUnix) {
-                                employeeData.totalSales += invoiceData.TotalAmountInc
-                                employeeData.totalDiscount += invoiceData.TotalDiscount
-                            // }
+                    if (tinvoicelistGroupBy[empName]) {
+                        _.each(tinvoicelistGroupBy[empName], invoiceData => {
+                            if (moment(invoiceData.SaleDate).unix() > lastMonthUnix) {
+                                employeeData.totalSales += invoiceData.TotalAmountInc;
+                                employeeData.totalDiscount += invoiceData.TotalDiscount;
+                            }
                         });
                     }
+                    // if(tinvoicelistGroupBy[employee.ClientName]) {
+                    //     _.each(tinvoicelistGroupBy[employee.ClientName], invoiceData => {
+                    //         // if (moment(invoiceData.SaleDate).unix() > lastMonthUnix) {
+                    //             employeeData.totalSales += invoiceData.TotalAmountInc
+                    //             employeeData.totalDiscount += invoiceData.TotalDiscount
+                    //         // }
+                    //     });
+                    // }
                     employeesByTotalSales.push(employeeData);
                 });
                 templateObject.employeesByTotalSales.set(employeesByTotalSales);

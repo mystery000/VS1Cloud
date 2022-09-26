@@ -8420,7 +8420,8 @@ Template.new_quote.events({
           $('.col' + reset_data[index].class).addClass('hiddenColumn');
           $('.col' + reset_data[index].class).removeClass('showColumn');
         }
-        $(".rngRange" + reset_data[index].class).val('');
+        $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
+        $(".col" + reset_data[index].class).css('width', reset_data[index].width);
       });
     },
     'click .btnResetSettings': function(event) {
