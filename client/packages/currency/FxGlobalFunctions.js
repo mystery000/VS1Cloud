@@ -18,7 +18,7 @@ export default class FxGlobalFunctions {
 
   static async loadDefaultCurrencyForReport(defaultCurrencyCode = "AUD") {
     $("#sltCurrency").attr("disabled", true);
-    $("#exchange_rate").attr("disabled", true);
+    $(".exchange-rate-js").attr("disabled", true);
 
     const currency = await FxGlobalFunctions.loadDefaultCurrency(defaultCurrencyCode);
     const currencyCode = currency.Code || defaultCurrencyCode;
@@ -30,10 +30,10 @@ export default class FxGlobalFunctions {
 
     $("#sltCurrency").val(currencyCode);
     $("#sltCurrency").attr("currency-symbol", currencySymbol);
-    $("#exchange_rate").val(currencyRate);
+    $(".exchange-rate-js").val(currencyRate);
 
     $("#sltCurrency").attr("disabled", false);
-    $("#exchange_rate").attr("disabled", false);
+    $(".exchange-rate-js").attr("disabled", false);
   }
 
   static async loadDefaultCurrency(defaultCurrencyCode = "AUD") {

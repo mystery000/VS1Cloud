@@ -63,7 +63,7 @@ Template.CurrencyWidget.events({
   }
 });
 
-const onExhangeRateChanged = e => {
+export const onExhangeRateChanged = e => {
   if (e.type == "keyup" || e.type == "change") {
     $(e.currentTarget).attr("hand-edited", true);
   } else {
@@ -82,7 +82,7 @@ export const isCurrencyEnable = () => {
 };
 
 
-export const saveCurrencyHistory = async () => {
+export const saveCurrencyHistory = async (date = null) => {
    
   if($('#exchange_rate').attr('hand-edited') == true || $('#exchange_rate').attr('hand-edited') == "true" ) {
      const type = $('.currency-js').attr('type');
@@ -91,6 +91,7 @@ export const saveCurrencyHistory = async () => {
    
      const _currencyObj = await FxGlobalFunctions.loadDefaultCurrency(currencyCode);
      
+     console.log(_currencyObj);
    
      const currencyObj = {
        type: "TCurrency",

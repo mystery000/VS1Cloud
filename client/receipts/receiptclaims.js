@@ -9,12 +9,17 @@ import moment from 'moment';
 import CurrencyConverter from '../packages/currency/CurrencyConverter';
 import {PurchaseBoardService} from "../js/purchase-service";
 import {ReceiptService} from "./receipt-service";
+import { onExhangeRateChanged, saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
+import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
+import GlobalFunctions from '../GlobalFunctions';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let accountService = new AccountService();
 let ocrService = new OCRService();
 let contactService = new ContactService();
+
+let defaultCurrencyCode = CountryAbbr;
 
 Template.receiptsoverview.onCreated(function() {
     const templateObject = Template.instance();
@@ -33,6 +38,12 @@ Template.receiptsoverview.onCreated(function() {
 
 Template.receiptsoverview.onRendered(function() {
     let templateObject = Template.instance();
+
+        /**
+         * Lets load the default currency
+         */
+    templateObject.loadDefaultCurrency = async c => FxGlobalFunctions.loadDefaultCurrencyForReport(c);
+
 
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnSearchAlert');
@@ -1679,6 +1690,10 @@ Template.receiptsoverview.onRendered(function() {
         }, 100);
     };
     tableResize();
+
+
+    templateObject.loadDefaultCurrency(defaultCurrencyCode);
+
 });
 
 Template.receiptsoverview.events({
@@ -3663,6 +3678,23 @@ Template.receiptsoverview.events({
             }
         }
     },
+
+    "keyup #exchange_rate": e => onExhangeRateChanged(e),
+    "change #exchange_rate": e => onExhangeRateChanged(e),
+    "click #newReceiptModal .btnSave": (e, ui) => {
+        console.log($(".nav-link.active"));
+        const nav = $(".nav-link.active");
+        if(nav.attr('href') == "#nav-expense") {
+            saveCurrencyHistory(
+                GlobalFunctions.convertYearMonthDay($('#nav-expense .dtReceiptDate').val())
+            );
+        } else if (nav.attr('href') == "#nav-time") {
+            saveCurrencyHistory(
+                GlobalFunctions.convertYearMonthDay($('#nav-time .dtReceiptDate').val())
+            );
+        }
+  
+    }
 });
 
 Template.receiptsoverview.helpers({
