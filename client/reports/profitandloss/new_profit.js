@@ -12,6 +12,8 @@ import LoadingOverlay from "../../LoadingOverlay";
 import GlobalFunctions from "../../GlobalFunctions";
 import moment from "moment";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
 
 let utilityService = new UtilityService();
 let reportService = new ReportService();
@@ -286,7 +288,7 @@ Template.newprofitandloss.onRendered(function () {
   $("#dispCurrFiscYearToDate").append(yeartodate + " - " + monthCurr);
   // get 'financial year' to appear end
 
-  templateObject.getProfitandLossReports = async function () {
+  templateObject.getProfitandLossReports = async () => {
     // if (!localStorage.getItem('VS1ProfitAndLoss_Report')) {
       const options = await templateObject.reportOptions.get();
       let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
@@ -295,7 +297,20 @@ Template.newprofitandloss.onRendered(function () {
       if (options.compPeriod) {
         try {
           let periodMonths = `${options.compPeriod} Month`;
-          let data = await reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths );
+
+          let data = await CachedHttp.get(erpObject.TProfitAndLossPeriodCompareReport, async () => {
+            return await reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths );
+          }, {
+            useIndexDb: true, 
+            useLocalStorage: false,
+            validate: (cachedResponse) => {
+              return false;
+            }
+          });
+
+          data = data.response;
+
+          //let data = await reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths );
           let records = [];
           options.threcords = [];
           if (data.tprofitandlossperiodcomparereport) {
@@ -406,7 +421,19 @@ Template.newprofitandloss.onRendered(function () {
           }
           options.threcords = dateRange;
           let departments = options.departments.length ? options.departments.join(",") : "";
-          let data = await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );
+
+          let data = await CachedHttp.get(erpObject.ProfitLossReport, async () => {
+            return await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );
+          }, {
+            useIndexDb: true, 
+            useLocalStorage: false,
+            validate: (cachedResponse) => {
+              return false;
+            }
+          });
+
+          data = data.response;
+          //let data = await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );
           let records = [];
           if (data.profitandlossreport) {
             let accountData = data.profitandlossreport;
