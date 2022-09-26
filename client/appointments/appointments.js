@@ -770,6 +770,12 @@ Template.appointments.onRendered(function () {
     },
   };
 
+  const todayButton = {
+    today: {
+      text: "Today"
+    },
+  };
+
   templateObject.renderCalendar = function (slotMin, slotMax, hideDays) {
     let calendarSet = templateObject.globalSettings.get();
     var calendarEl = document.getElementById("calendar");
@@ -802,6 +808,7 @@ Template.appointments.onRendered(function () {
           },
         },
         ...refreshButton,
+        ...todayButton,
       },
       headerToolbar: {
         left: "prev,next today appointments allocation refresh",
@@ -1413,6 +1420,7 @@ Template.appointments.onRendered(function () {
           },
         },
         ...refreshButton,
+        ...todayButton,
       },
       headerToolbar: {
         left: "prev,next today appointments allocation refresh",
@@ -4186,6 +4194,7 @@ Template.appointments.onRendered(function () {
                     },
                   },
                   ...refreshButton,
+                  ...todayButton,
                 },
                 headerToolbar: {
                   left: "prev,next today appointments allocation refresh",
@@ -6825,6 +6834,7 @@ Template.appointments.onRendered(function () {
                   },
                 },
                 ...refreshButton,
+                ...todayButton,
               },
               headerToolbar: {
                 left: "prev,next today appointments allocation refresh",
@@ -9225,6 +9235,7 @@ Template.appointments.onRendered(function () {
                   },
                 },
                 ...refreshButton,
+                ...todayButton,
               },
               headerToolbar: {
                 left: "prev,next today appointments allocation refresh",
