@@ -14,6 +14,7 @@ import moment from "moment";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
+import TemplateInjector from "../../TemplateInjector";
 
 let utilityService = new UtilityService();
 let reportService = new ReportService();
@@ -29,7 +30,7 @@ Template.newprofitandloss.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
   templateObject.dateAsAt = new ReactiveVar();
-  templateObject.deptrecords = new ReactiveVar();
+  templateObject.departments = new ReactiveVar([]);
   templateObject.reportOptions = new ReactiveVar();
   templateObject.recordslayout = new ReactiveVar([]);
   templateObject.profitlosslayoutrecords = new ReactiveVar([]);
@@ -622,7 +623,7 @@ Template.newprofitandloss.onRendered(function () {
                 department: data.tdeptclass[i].DeptClassName || " ",
               };
               deptrecords.push(deptrecordObj);
-              templateObject.deptrecords.set(deptrecords);
+              templateObject.departments.set(deptrecords);
             }
           });
         } else {
@@ -635,7 +636,7 @@ Template.newprofitandloss.onRendered(function () {
             };
             //deptArr.push(data.tdeptclass[i].DeptClassName);
             deptrecords.push(deptrecordObj);
-            templateObject.deptrecords.set(deptrecords);
+            templateObject.departments.set(deptrecords);
           }
         }
       })
@@ -649,13 +650,15 @@ Template.newprofitandloss.onRendered(function () {
             };
             //deptArr.push(data.tdeptclass[i].DeptClassName);
             deptrecords.push(deptrecordObj);
-            templateObject.deptrecords.set(deptrecords);
+            templateObject.departments.set(deptrecords);
           }
         });
       });
   };
   // templateObject.getAllProductData();
-  templateObject.getDepartments();
+  //templateObject.getDepartments();
+
+  TemplateInjector.addDepartments(templateObject);
 
   templateObject.getProfitLossLayout = async function () {
     const profitLossLayoutApi = new ProfitLossLayoutApi();
@@ -2153,12 +2156,12 @@ Template.newprofitandloss.events({
 
       if (ApiResponse.ok == true) {
           const jsonResponse = await ApiResponse.json();
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
       }else{
-          $('.fullScreenSpin').css('display', 'none');
+          LoadingOverlay.hide();
       }
   } catch (error) {
-      $('.fullScreenSpin').css('display', 'none');
+      LoadingOverlay.hide();
   }
 
     // "type": "TProfitLossLayout",
@@ -2349,7 +2352,7 @@ Template.newprofitandloss.helpers({
 
   deptrecords: () => {
     return Template.instance()
-      .deptrecords.get()
+      .departments.get()
       .sort(function (a, b) {
         if (a.department == "NA") {
           return 1;
