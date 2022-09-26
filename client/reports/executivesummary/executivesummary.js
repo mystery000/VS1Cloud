@@ -4,6 +4,7 @@ import {UtilityService} from "../../utility-service";
 import GlobalFunctions from "../../GlobalFunctions";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
+import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 let _ = require('lodash');
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 let reportService = new ReportService();
@@ -43,9 +44,7 @@ Template.executivesummaryreport.onCreated(function () {
   templateObject.termAsset = new ReactiveVar();
 
   templateObject.currencyRecord = new ReactiveVar([]);
-  templateObject.currencyList = new ReactiveVar([]);
-  templateObject.activeCurrencyList = new ReactiveVar([]);
-  templateObject.tcurrencyratehistory = new ReactiveVar([]);
+  FxGlobalFunctions.initVars(templateObject);
 });
 
 Template.executivesummaryreport.onRendered(() => {
@@ -187,15 +186,6 @@ Template.executivesummaryreport.onRendered(() => {
   var getLoadDate = moment(curDate).format("YYYY-MM-DD");
   templateObject.getBalanceSheetReports(getLoadDate);
 
-  templateObject.loadCurrency = async() => {
-    await loadCurrency();
-  };
-  //templateObject.loadCurrency();
-
-  templateObject.loadCurrencyHistory = async() => {
-    await loadCurrencyHistory();
-  };
-  //templateObject.loadCurrencyHistory();
 });
 
 Template.executivesummaryreport.events({
@@ -218,10 +208,7 @@ Template.executivesummaryreport.events({
     const filename = loggedCompany + "-ExecutiveSummary" + ".csv";
     utilityService.exportReportToCsvTable("tableExport", filename, "csv");
   },
-  "click .fx-rate-btn": async(e) => {
-    await loadCurrency();
-    //loadCurrencyHistory();
-},
+  ...FxGlobalFunctions.getEvents(),
 });
 
 Template.executivesummaryreport.helpers({

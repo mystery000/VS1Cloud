@@ -103,4 +103,19 @@ export default class FxGlobalFunctions {
     ui.tcurrencyratehistory.set(data);
     LoadingOverlay.hide();
   }
+
+
+  /**
+   * 
+   * This will all events of Fx Module
+   * 
+   * @returns 
+   */
+  static getEvents() {
+    return {
+      "click .fx-rate-btn": async (e, ui) => {
+        await FxGlobalFunctions.loadCurrency(ui, CountryAbbr);
+      },
+    }
+  }
 }

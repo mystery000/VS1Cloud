@@ -12,6 +12,7 @@ import GlobalFunctions from "../../GlobalFunctions";
 import LoadingOverlay from "../../LoadingOverlay";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
+import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 
 
 const reportService = new ReportService();
@@ -31,9 +32,7 @@ Template.salessummaryreport.onCreated(() => {
 
 
 
-  templateObject.currencyList = new ReactiveVar([]);
-  templateObject.activeCurrencyList = new ReactiveVar([]);
-  templateObject.tcurrencyratehistory = new ReactiveVar([]);
+  FxGlobalFunctions.initVars(templateObject);
 });
 
 Template.salessummaryreport.onRendered(() => {
@@ -794,10 +793,7 @@ Template.salessummaryreport.events({
 
     
    // CURRENCY MODULE //
-  "click .fx-rate-btn": async (e, ui) => {
-    await loadCurrency(ui);
-    //loadCurrencyHistory();
-  },
+   ...FxGlobalFunctions.getEvents(),
   "click .currency-modal-save": (e) => {
     //$(e.currentTarget).parentsUntil(".modal").modal("hide");
     LoadingOverlay.show();
@@ -1065,63 +1061,3 @@ Template.registerHelper('containsequals', function(a, b) {
 });
 
 
-
-/**
- *
- */
- async function loadCurrency(templateObject) {
-    //let templateObject = Template.instance();
-  
-    if ((await templateObject.currencyList.get().length) == 0) {
-      LoadingOverlay.show();
-  
-      let _currencyList = [];
-      const result = await taxRateService.getCurrencies();
-  
-      //taxRateService.getCurrencies().then((result) => {
-  
-      const data = result.tcurrency;
-  
-      for (let i = 0; i < data.length; i++) {
-        // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-        var dataList = {
-          id: data[i].Id || "",
-          code: data[i].Code || "-",
-          currency: data[i].Currency || "NA",
-          symbol: data[i].CurrencySymbol || "NA",
-          buyrate: data[i].BuyRate || "-",
-          sellrate: data[i].SellRate || "-",
-          country: data[i].Country || "NA",
-          description: data[i].CurrencyDesc || "-",
-          ratelastmodified: data[i].RateLastModified || "-",
-          active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
-          //active: false,
-          // createdAt: new Date(data[i].MsTimeStamp) || "-",
-          // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
-        };
-  
-        _currencyList.push(dataList);
-        //}
-      }
-      _currencyList = _currencyList.sort((a, b) => {
-        return a.currency
-          .split("")[0]
-          .toLowerCase()
-          .localeCompare(b.currency.split("")[0].toLowerCase());
-      });
-  
-      templateObject.currencyList.set(_currencyList);
-  
-      await loadCurrencyHistory(templateObject);
-      LoadingOverlay.hide();
-      //});
-    }
-  }
-  
-  async function loadCurrencyHistory(templateObject) {
-    let result = await taxRateService.getCurrencyHistory();
-    const data = result.tcurrencyratehistory;
-    templateObject.tcurrencyratehistory.set(data);
-    LoadingOverlay.hide();
-  }
-  

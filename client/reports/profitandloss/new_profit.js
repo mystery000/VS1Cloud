@@ -11,6 +11,7 @@ import { TaxRateService } from "../../settings/settings-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import GlobalFunctions from "../../GlobalFunctions";
 import moment from "moment";
+import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 
 let utilityService = new UtilityService();
 let reportService = new ReportService();
@@ -31,9 +32,7 @@ Template.newprofitandloss.onCreated(function () {
   templateObject.recordslayout = new ReactiveVar([]);
   templateObject.profitlosslayoutrecords = new ReactiveVar([]);
   templateObject.profitlosslayoutfields = new ReactiveVar([]);
-  templateObject.currencyList = new ReactiveVar([]);
-  templateObject.activeCurrencyList = new ReactiveVar([]);
-  templateObject.tcurrencyratehistory = new ReactiveVar([]);
+  FxGlobalFunctions.initVars(templateObject);
 });
 
 
@@ -825,22 +824,6 @@ $('.tblAvoid').each(function(){
   //            };
   //            sortArray(eLayScreenArr, pnlTblArr);
 
-  /**
-   * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
-   * So we have a showable list of currencies to toggle
-   */
-
-  templateObject.loadCurrency = async () => {
-    await loadCurrency();
-  };
-
-  //templateObject.loadCurrency();
-
-  templateObject.loadCurrencyHistory = async () => {
-    await loadCurrencyHistory();
-  };
-
-  //templateObject.loadCurrencyHistory();
 
   LoadingOverlay.hide();
 });
@@ -2164,10 +2147,7 @@ Template.newprofitandloss.events({
     // };
     // await addVS1Data("TProfitLossEditLayout", JSON.stringify(layoutLists));
   },
-  "click .fx-rate-btn": async (e) => {
-    await loadCurrency();
-    //loadCurrencyHistory();
-  },
+  ...FxGlobalFunctions.getEvents(),
 });
 
 Template.newprofitandloss.helpers({
@@ -2389,61 +2369,3 @@ Template.registerHelper("noDecimal", function (a) {
   let numOut = parseInt(numIn);
   return numOut;
 });
-
-async function loadCurrency() {
-  let templateObject = Template.instance();
-
-  if ((await templateObject.currencyList.get().length) == 0) {
-    LoadingOverlay.show();
-
-    let _currencyList = [];
-    const result = await taxRateService.getCurrencies();
-
-    //taxRateService.getCurrencies().then((result) => {
-
-    const data = result.tcurrency;
-
-    for (let i = 0; i < data.length; i++) {
-      // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-      var dataList = {
-        id: data[i].Id || "",
-        code: data[i].Code || "-",
-        currency: data[i].Currency || "NA",
-        symbol: data[i].CurrencySymbol || "NA",
-        buyrate: data[i].BuyRate || "-",
-        sellrate: data[i].SellRate || "-",
-        country: data[i].Country || "NA",
-        description: data[i].CurrencyDesc || "-",
-        ratelastmodified: data[i].RateLastModified || "-",
-        active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
-        //active: false,
-        // createdAt: new Date(data[i].MsTimeStamp) || "-",
-        // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
-      };
-
-      _currencyList.push(dataList);
-      //}
-    }
-    _currencyList = _currencyList.sort((a, b) => {
-      return a.currency
-        .split("")[0]
-        .toLowerCase()
-        .localeCompare(b.currency.split("")[0].toLowerCase());
-    });
-
-
-
-    templateObject.currencyList.set(_currencyList);
-
-    await loadCurrencyHistory(templateObject);
-    LoadingOverlay.hide();
-    //});
-  }
-}
-
-async function loadCurrencyHistory(templateObject) {
-  let result = await taxRateService.getCurrencyHistory();
-  const data = result.tcurrencyratehistory;
-  templateObject.tcurrencyratehistory.set(data);
-  LoadingOverlay.hide();
-}

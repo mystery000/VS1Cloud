@@ -8,6 +8,7 @@ import '../lib/global/indexdbstorage.js';
 import LoadingOverlay from '../LoadingOverlay';
 import GlobalFunctions from '../GlobalFunctions';
 import { TaxRateService } from '../settings/settings-service';
+import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 
 
 let utilityService = new UtilityService();
@@ -23,9 +24,7 @@ Template.basreturnlist.onCreated(function() {
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     // Currency related vars //
-    templateObject.currencyList = new ReactiveVar([]);
-    templateObject.activeCurrencyList = new ReactiveVar([]);
-    templateObject.tcurrencyratehistory = new ReactiveVar([]);
+    FxGlobalFunctions.initVars(templateObject);
 });
 
 Template.basreturnlist.onRendered(function() {
@@ -886,22 +885,6 @@ Template.basreturnlist.onRendered(function() {
     tableResize();
 
 
-    /**
-     * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
-     * So we have a showable list of currencies to toggle
-     */
-
-    templateObject.loadCurrency = async() => {
-        await loadCurrency();
-    };
-
-    //templateObject.loadCurrency();
-
-    templateObject.loadCurrencyHistory = async() => {
-        await loadCurrencyHistory();
-    };
-
-    //templateObject.loadCurrencyHistory();
 
 });
 
@@ -1154,10 +1137,7 @@ Template.basreturnlist.events({
         //  });
     },
     // CURRENCY MODULE //
-    "click .fx-rate-btn": async(e) => {
-        await loadCurrency();
-        //loadCurrencyHistory();
-    },
+    ...FxGlobalFunctions.getEvents(),
     "click .currency-modal-save": (e) => {
         //$(e.currentTarget).parentsUntil(".modal").modal("hide");
         LoadingOverlay.show();

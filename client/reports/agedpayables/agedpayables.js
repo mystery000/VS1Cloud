@@ -734,22 +734,7 @@ Template.agedpayables.onRendered(() => {
     // templateObject.getAllProductData();
     //templateObject.getDepartments();
 
-      /**
-   * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
-   * So we have a showable list of currencies to toggle
-   */
-
-       templateObject.loadCurrency = async () => {
-        await loadCurrency();
-      };
   
-    //templateObject.loadCurrency();
-  
-      templateObject.loadCurrencyHistory = async () => {
-        await loadCurrencyHistory();
-      };
-  
-    //templateObject.loadCurrencyHistory();
 });
 
 Template.agedpayables.events({
@@ -1016,9 +1001,7 @@ Template.agedpayables.events({
     },
 
      // CURRENCY MODULE
-    "click .fx-rate-btn": async (e, ui) => {
-      await FxGlobalFunctions.loadCurrency(ui, defaultCurrencyCode);
-    },
+    ...FxGlobalFunctions.getEvents(),
     "click .currency-modal-save": (e) => {
         //$(e.currentTarget).parentsUntil(".modal").modal("hide");
         LoadingOverlay.show();

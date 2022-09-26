@@ -20,9 +20,6 @@ Template.jobprofitabilityreport.onCreated(() => {
   templateObject.records = new ReactiveVar([]);
   templateObject.reportOptions = new ReactiveVar([]);
 
-  // templateObject.currencyList = new ReactiveVar([]);
-  // templateObject.activeCurrencyList = new ReactiveVar([]);
-  // templateObject.tcurrencyratehistory = new ReactiveVar([]);
   FxGlobalFunctions.initVars(templateObject);
 });
 
@@ -156,15 +153,6 @@ Template.jobprofitabilityreport.onRendered(() => {
 
   // templateObject.setReportOptions();
 
-
-  //----------- CURRENCY MODULE ------------------//
-  templateObject.loadCurrency = async () => {
-    await loadCurrency();
-  };
-
-  templateObject.loadCurrencyHistory = async () => {
-    await loadCurrencyHistory();
-  };
 
   templateObject.initDate();
   templateObject.initUploadedImage();
@@ -439,9 +427,7 @@ Template.jobprofitabilityreport.events({
   },
 
   // CURRENCY MODULE
-  "click .fx-rate-btn": async (e, ui) => {
-    await FxGlobalFunctions.loadCurrency(ui, defaultCurrencyCode);
-  },
+  ...FxGlobalFunctions.getEvents(),
   "click .currency-modal-save": (e) => {
     //$(e.currentTarget).parentsUntil(".modal").modal("hide");
     LoadingOverlay.show();
