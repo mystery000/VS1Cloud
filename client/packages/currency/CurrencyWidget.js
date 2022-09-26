@@ -90,8 +90,7 @@ export const saveCurrencyHistory = async (date = null) => {
      const currencyCode = $('#sltCurrency').val();
    
      const _currencyObj = await FxGlobalFunctions.loadDefaultCurrency(currencyCode);
-     
-     console.log(_currencyObj);
+    
    
      const currencyObj = {
        type: "TCurrency",
