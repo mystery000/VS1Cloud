@@ -7440,617 +7440,591 @@ Template.new_quote.events({
                 };
             }
             salesService.saveQuoteEx(objDetails).then(function(objDetails) {
-                    if (customerID !== " ") {
-                        let quoted = false;
-                        for (let i = 0; i < data.tquoteex.length; i++) {
-                            if (data.tquoteex[i].fields.CustomerID == customerID) {
-                                quoted = true;
-                                break;
+                if (customerID !== " ") {
+                    // let quoted = false;
+                    // for (let i = 0; i < data.tquoteex.length; i++) {
+                    //     if (data.tquoteex[i].fields.CustomerID == customerID) {
+                    //         quoted = true;
+                    //         break;
+                    //     }
+                    // }
+                    // if (quoted) {
+                        let customerData = {
+                            type: "TCustomerEx",
+                            fields: {
+                                ID: customerID,
+                                Email: customerEmail,
+                                Status: "Quoted"
                             }
                         }
-                        if (quoted) {
-                            let customerData = {
-                                type: "TCustomerEx",
-                                fields: {
-                                    ID: customerID,
-                                    Email: customerEmail,
-                                    Status: "Quoted"
-                                }
+                        contactService.saveCustomerEx(customerData).then(function (objDetails) {
+                            let customerSaveID = objDetails.fields.ID;
+                            if (customerSaveID) {
+                                sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function (dataReload) {
+                                    addVS1Data('TCustomerVS1', JSON.stringify(dataReload));
+                                }).catch(function (err) {
+
+                                });
                             }
-                            contactService.saveCustomerEx(customerData).then(function (objDetails) {
-                                let customerSaveID = objDetails.fields.ID;
-                                if (customerSaveID) {
-                                    sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function (dataReload) {
-                                        addVS1Data('TCustomerVS1', JSON.stringify(dataReload));
-                                    }).catch(function (err) {
+                        }).catch(function (err) {
 
-                                    });
-                                }
-                            }).catch(function (err) {
+                        })
+                    // }
+                }
+                const erpGet = erpDb();
+                let stringQuery = "?";
+                for (let l = 0; l < lineItems.length; l++) {
+                    stringQuery = stringQuery + "product" + l + "=" + lineItemsForm[l].fields.ProductName + "&price" + l + "=" + lineItemsForm[l].fields.LinePrice + "&qty" + l + "=" + lineItemsForm[l].fields.UOMQtySold + "&";
+                }
+                stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Quote&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
 
-                            })
-                        }
-                    }
-                    const erpGet = erpDb();
-                    let stringQuery = "?";
-                    for (let l = 0; l < lineItems.length; l++) {
-                        stringQuery = stringQuery + "product" + l + "=" + lineItemsForm[l].fields.ProductName + "&price" + l + "=" + lineItemsForm[l].fields.LinePrice + "&qty" + l + "=" + lineItemsForm[l].fields.UOMQtySold + "&";
-                    }
-                    stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Quote&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
+                $('#html-2-pdfwrapper').css('display', 'block');
+                $('.pdfCustomerName').html($('#edtCustomerName').val());
+                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+                const ponumber = $('#ponumber').val() || '.';
+                $('.po').text(ponumber);
 
-                    $('#html-2-pdfwrapper').css('display', 'block');
-                    $('.pdfCustomerName').html($('#edtCustomerName').val());
-                    $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                    const ponumber = $('#ponumber').val() || '.';
-                    $('.po').text(ponumber);
-
-                    function generatePdfForMail(invoiceId) {
-                        let file = "Quote-" + objDetails.fields.ID + ".pdf"
-                        return new Promise((resolve, reject) => {
-                            $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-                            let templateObject = Template.instance();
-                            let completeTabRecord;
-                            let doc = new jsPDF('p', 'pt', 'a4');
-                            const source = document.getElementById('html-2-pdfwrapper');
-                            const opt = {
-                                margin: 0,
-                                filename: file,
-                                image: {
-                                    type: 'jpeg',
-                                    quality: 0.98
-                                },
-                                html2canvas: {
-                                    scale: 2
-                                },
-                                jsPDF: {
-                                    unit: 'in',
-                                    format: 'a4',
-                                    orientation: 'portrait'
-                                }
-                            };
-                            resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
-                            // doc.addHTML(source, function () {
-                            //     doc.setFontSize(10);
-                            //     doc.setTextColor(255, 255, 255);
-                            //     doc.textWithLink('Pay Now', 482, 113, { url: 'https://www.depot.vs1cloud.com/stripe/' + stringQuery });
-                            //     resolve(doc.output('blob'));
-                            //     $('#html-2-pdfwrapper').css('display', 'none');
-                            // });
-                        });
-                    }
-                    async function addAttachment() {
-                        let attachment = [];
+                function generatePdfForMail(invoiceId) {
+                    let file = "Quote-" + objDetails.fields.ID + ".pdf"
+                    return new Promise((resolve, reject) => {
+                        $(".linkText").attr("href", stripeGlobalURL + stringQuery);
                         let templateObject = Template.instance();
-
-                        let invoiceId = objDetails.fields.ID;
-                        let encodedPdf = await generatePdfForMail(invoiceId);
-                        let base64data = encodedPdf.split(',')[1];
-                        let pdfObject = {
-                            filename: 'Quote-' + invoiceId + '.pdf',
-                            content: base64data,
-                            encoding: 'base64'
+                        let completeTabRecord;
+                        let doc = new jsPDF('p', 'pt', 'a4');
+                        const source = document.getElementById('html-2-pdfwrapper');
+                        const opt = {
+                            margin: 0,
+                            filename: file,
+                            image: {
+                                type: 'jpeg',
+                                quality: 0.98
+                            },
+                            html2canvas: {
+                                scale: 2
+                            },
+                            jsPDF: {
+                                unit: 'in',
+                                format: 'a4',
+                                orientation: 'portrait'
+                            }
                         };
-                        attachment.push(pdfObject);
-                        let erpInvoiceId = objDetails.fields.ID;
-                        let mailFromName = Session.get('vs1companyName');
-                        let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
-                        let customerEmailName = $('#edtCustomerName').val();
-                        let checkEmailData = $('#edtCustomerEmail').val();
-                        let grandtotal = $('#grandTotal').html();
-                        let amountDueEmail = $('#totalBalanceDue').html();
-                        let emailDueDate = $("#dtDueDate").val();
-                        let customerBillingAddress = $('#txabillingAddress').val();
-                        let customerTerms = $('#sltTerms').val();
-                        let customerSubtotal = $('#subtotal_total').html();
-                        let customerTax = $('#subtotal_tax').html();
-                        let customerNett = $('#subtotal_nett').html();
-                        let customerTotal = $('#grandTotal').html();
-                        let mailSubject = 'Quote ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
-                        let mailBody = "Hi " + customerEmailName + ",\n\n Here's invoice " + erpInvoiceId + " for  " + grandtotal + "." +
-                            "\n\nThe amount outstanding of " + amountDueEmail + " is due on " + emailDueDate + "." +
-                            "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
-
-                        const htmlmailBody = '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
-                            '        <tr>' +
-                            '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
-                            '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
-                            '                    <table class="main">' +
-                            '                        <tr>' +
-                            '                            <td class="wrapper">' +
-                            '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                            '                                    <tr>' +
-                            '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
-                            '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' + erpInvoiceId + ' Details</span>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr style="height: 16px;"></tr>' +
-                            '                                    <tr>' +
-                            '                                        <td>' +
-                            '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr style="height: 48px;"></tr>' +
-                            '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
-                            '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
-                            '                                            <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' + emailDueDate + '</p>' +
-                            '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
-                            '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                            '                                                <tbody>' +
-                            '                                                    <tr>' +
-                            '                                                        <td align="center" style="padding-bottom: 15px;">' +
-                            '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                            '                                                                <tbody>' +
-                            '                                                                    <tr>' +
-                            '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                            '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                            '                                                                    </tr>' +
-                            '                                                                </tbody>' +
-                            '                                                            </table>' +
-                            '                                                        </td>' +
-                            '                                                    </tr>' +
-                            '                                                </tbody>' +
-                            '                                            </table>' +
-                            '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr>' +
-                            '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                            '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
-                            '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
-                            '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
-                            '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr style="background-color: #ededed;">' +
-                            '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                            '                                            <div style="width: 100%; padding: 0px;">' +
-                            '                                                <div style="width: 50%; float: left;">' +
-                            '                                                    <p style="font-size: 18px;">Invoice To</p>' +
-                            '                                                </div>' +
-                            '                                                <div style="width: 50%; float: right;">' +
-                            '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
-                            '                                                    <p style="margin-bottom: 16px;font-size: 16px;">' + customerBillingAddress + '</p>' +
-                            '                                                </div>' +
-                            '                                            </div>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr>' +
-                            '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                            '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                            '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
-                            '                                                <div style="width: 50%; float: left;">' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
-                            '                                                </div>' +
-                            '                                                <div style="width: 50%; float: right; text-align: right;">' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
-                            '                                                </div>' +
-                            '                                            </div>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr>' +
-                            '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
-                            '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                            '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                            '                                                <tbody>' +
-                            '                                                    <tr>' +
-                            '                                                        <td align="center">' +
-                            '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                            '                                                                <tbody>' +
-                            '                                                                    <tr>' +
-                            '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                            '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                            '                                                                    </tr>' +
-                            '                                                                </tbody>' +
-                            '                                                            </table>' +
-                            '                                                        </td>' +
-                            '                                                    </tr>' +
-                            '                                                </tbody>' +
-                            '                                            </table>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr>' +
-                            '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                            '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr>' +
-                            '                                        <td>' +
-                            '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                            '                                                <tbody>' +
-                            '                                                    <tr>' +
-                            '                                                        <td align="center">' +
-                            '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                            '                                                                <tbody>' +
-                            '                                                                    <tr>' +
-                            '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
-                            '                                                                    </tr>' +
-                            '                                                                </tbody>' +
-                            '                                                            </table>' +
-                            '                                                        </td>' +
-                            '                                                    </tr>' +
-                            '                                                </tbody>' +
-                            '                                            </table>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                </table>' +
-                            '                            </td>' +
-                            '                        </tr>' +
-                            '                    </table>' +
-                            '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
-                            '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                            '                            <tr>' +
-                            '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
-                            '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
-                            '                                    <br>' +
-                            '                                    <a href="mailto:' + mailFrom + '" style="color: #999999; font-size: 12px; text-align: center;">Contact Us</a>' +
-                            '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
-                            '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
-                            '                                </td>' +
-                            '                            </tr>' +
-                            '                        </table>' +
-                            '                    </div>' +
-                            '                </div>' +
-                            '            </td>' +
-                            '        </tr>' +
-                            '    </table>';
-
-                        // var htmlmailBody = '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
-                        //     '    <tr>' +
-                        //     '        <td align="center" bgcolor="#54c7e2" style="padding: 40px 0 30px 0;">' +
-                        //     '            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" alt="VS1 Cloud" width="250px" style="display: block;" />' +
-                        //     '        </td>' +
-                        //     '    </tr>' +
-                        //     '    <tr>' +
-                        //     '        <td style="padding: 40px 30px 40px 30px;">' +
-                        //     '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
-                        //     '                <tr>' +
-                        //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 20px 0;">' +
-                        //     '                        Hi <span>' + customerEmailName + '</span>.' +
-                        //     '                    </td>' +
-                        //     '                </tr>' +
-                        //     '                <tr>' +
-                        //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-                        //     '                        Please find attached Quote <span>' + erpInvoiceId + '</span>' +
-                        //     '                    </td>' +
-                        //     '                </tr>' +
-                        //     '                <tr>' +
-                        //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-                        //     '                        Simply click on <a style="border: none; color: white; padding: 6px 12px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #5cb85c; border-color: #4cae4c; border-radius: 10px;" href="' + stripeGlobalURL + '' + stringQuery + '">Make Payment</a> to pay now.' +
-                        //     '                    </td>' +
-                        //     '                </tr>' +
-                        //     '                 <tr>' +
-                        //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-                        //     '                        The invoice is due by the ' + emailDueDate +
-                        //     '                    </td>' +
-                        //     '                </tr>' +
-                        //     '                <tr>' +
-                        //     '                     <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-                        //     '                        Thank you again for business' +
-                        //     '                    </td>' +
-                        //     '                <tr>' +
-                        //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
-                        //     '                        Kind regards,' +
-                        //     '                        <br>' +
-                        //     '                        ' + mailFromName + '' +
-                        //     '                    </td>' +
-                        //     '                </tr>' +
-                        //     '            </table>' +
-                        //     '        </td>' +
-                        //     '    </tr>' +
-                        //     '    <tr>' +
-                        //     '        <td bgcolor="#00a3d3" style="padding: 30px 30px 30px 30px;">' +
-                        //     '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
-                        //     '                <tr>' +
-                        //     '                    <td width="50%" style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">' +
-                        //     '                        If you have any question, please do not hesitate to contact us.' +
-                        //     '                    </td>' +
-                        //     '                    <td align="right">' +
-                        //     '                        <a style="border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;" href="mailto:' + mailFrom + '">Contact Us</a>' +
-                        //     '                    </td>' +
-                        //     '                </tr>' +
-                        //     '            </table>' +
-                        //     '        </td>' +
-                        //     '    </tr>' +
-                        //     '</table>';
-
-
-                        if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
-                            Meteor.call('sendEmail', {
-                                from: "" + mailFromName + " <" + mailFrom + ">",
-                                to: checkEmailData,
-                                subject: mailSubject,
-                                text: '',
-                                html: htmlmailBody,
-                                attachments: attachment
-                            }, function(error, result) {
-                                if (error && error.error === "error") {
-                                    FlowRouter.go('/quoteslist?success=true');
-                                } else {
-
-                                }
-                            });
-
-                            Meteor.call('sendEmail', {
-                                from: "" + mailFromName + " <" + mailFrom + ">",
-                                to: mailFrom,
-                                subject: mailSubject,
-                                text: '',
-                                html: htmlmailBody,
-                                attachments: attachment
-                            }, function(error, result) {
-                                if (error && error.error === "error") {
-                                    FlowRouter.go('/quoteslist?success=true');
-                                } else {
-                                    $('#html-2-pdfwrapper').css('display', 'none');
-                                    swal({
-                                        title: 'SUCCESS',
-                                        text: "Email Sent To Customer: " + checkEmailData + " and User: " + mailFrom + "",
-                                        type: 'success',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.value) {
-                                            if(FlowRouter.current().queryParams.trans){
-                                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                                            }else{
-                                                FlowRouter.go('/quoteslist?success=true');
-                                            }
-                                        } else if (result.dismiss === 'cancel') {
-
-                                        }
-                                    });
-                                    LoadingOverlay.hide();
-                                }
-                            });
-                            let values = [];
-                            let basedOnTypeStorages = Object.keys(localStorage);
-                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                                let employeeId = storage.split('_')[2];
-                                return storage.includes('BasedOnType_');
-                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-                            });
-                            let i = basedOnTypeStorages.length;
-                            if (i > 0) {
-                                while (i--) {
-                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
-                                }
-                            }
-                            values.forEach(value => {
-                                let reportData = JSON.parse(value);
-                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                reportData.attachments = attachment
-                                if (reportData.BasedOnType.includes("S")) {
-                                    if (reportData.FormID == 1) {
-                                        let formIds = reportData.FormIDs.split(',');
-                                        if (formIds.includes("71")) {
-                                            reportData.FormID = 71;
-                                            Meteor.call('sendNormalEmail', reportData);
-                                        }
-                                    } else {
-                                        if (reportData.FormID == 71)
-                                            Meteor.call('sendNormalEmail', reportData);
-                                    }
-                                }
-                            });
-
-                        } else if (($('.chkEmailCopy').is(':checked'))) {
-                            Meteor.call('sendEmail', {
-                                from: "" + mailFromName + " <" + mailFrom + ">",
-                                to: checkEmailData,
-                                subject: mailSubject,
-                                text: '',
-                                html: htmlmailBody,
-                                attachments: attachment
-                            }, function(error, result) {
-                                if (error && error.error === "error") {
-
-                                } else {
-                                    $('#html-2-pdfwrapper').css('display', 'none');
-                                    swal({
-                                        title: 'SUCCESS',
-                                        text: "Email Sent To Customer: " + checkEmailData + " ",
-                                        type: 'success',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.value) {
-                                            if(FlowRouter.current().queryParams.trans){
-                                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                                            }else{
-                                                FlowRouter.go('/quoteslist?success=true');
-                                            }
-                                        } else if (result.dismiss === 'cancel') {
-
-                                        }
-                                    });
-                                    LoadingOverlay.hide();
-                                }
-                            });
-                            let values = [];
-                            let basedOnTypeStorages = Object.keys(localStorage);
-                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                                let employeeId = storage.split('_')[2];
-                                return storage.includes('BasedOnType_')
-                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-                            });
-                            let i = basedOnTypeStorages.length;
-                            if (i > 0) {
-                                while (i--) {
-                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
-                                }
-                            }
-                            values.forEach(value => {
-                                let reportData = JSON.parse(value);
-                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                reportData.attachments = attachment
-                                if (reportData.BasedOnType.includes("S")) {
-                                    if (reportData.FormID == 1) {
-                                        let formIds = reportData.FormIDs.split(',');
-                                        if (formIds.includes("71")) {
-                                            reportData.FormID = 71;
-                                            Meteor.call('sendNormalEmail', reportData);
-                                        }
-                                    } else {
-                                        if (reportData.FormID == 71)
-                                            Meteor.call('sendNormalEmail', reportData);
-                                    }
-                                }
-                            });
-                        } else if (($('.chkEmailRep').is(':checked'))) {
-                            Meteor.call('sendEmail', {
-                                from: "" + mailFromName + " <" + mailFrom + ">",
-                                to: mailFrom,
-                                subject: mailSubject,
-                                text: '',
-                                html: htmlmailBody,
-                                attachments: attachment
-                            }, function(error, result) {
-
-                                if (error && error.error === "error") {
-                                    FlowRouter.go('/quoteslist?success=true');
-                                } else {
-                                    $('#html-2-pdfwrapper').css('display', 'none');
-                                    swal({
-                                        title: 'SUCCESS',
-                                        text: "Email Sent To User: " + mailFrom + " ",
-                                        type: 'success',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.value) {
-                                            if(FlowRouter.current().queryParams.trans){
-                                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                                            }else{
-                                                FlowRouter.go('/quoteslist?success=true');
-                                            }
-                                        } else if (result.dismiss === 'cancel') {
-
-                                        }
-                                    });
-                                    LoadingOverlay.hide();
-                                }
-                            });
-
-                            let values = [];
-                            let basedOnTypeStorages = Object.keys(localStorage);
-                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                                let employeeId = storage.split('_')[2];
-                                return storage.includes('BasedOnType_');
-                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
-                            });
-                            let i = basedOnTypeStorages.length;
-                            if (i > 0) {
-                                while (i--) {
-                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
-                                }
-                            }
-                            values.forEach(value => {
-                                let reportData = JSON.parse(value);
-                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                reportData.attachments = attachment
-                                if (reportData.BasedOnType.includes("S")) {
-                                    if (reportData.FormID == 1) {
-                                        let formIds = reportData.FormIDs.split(',');
-                                        if (formIds.includes("71")) {
-                                            reportData.FormID = 71;
-                                            Meteor.call('sendNormalEmail', reportData);
-                                        }
-                                    } else {
-                                        if (reportData.FormID == 71)
-                                            Meteor.call('sendNormalEmail', reportData);
-                                    }
-                                }
-                            });
-                        } else {
-                            let values = [];
-                            let basedOnTypeStorages = Object.keys(localStorage);
-                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                                let employeeId = storage.split('_')[2];
-                                return storage.includes('BasedOnType_');
-                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
-                            });
-                            let i = basedOnTypeStorages.length;
-                            if (i > 0) {
-                                while (i--) {
-                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
-                                }
-                            }
-                            values.forEach(value => {
-                                let reportData = JSON.parse(value);
-                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                reportData.attachments = attachment
-                                if (reportData.BasedOnType.includes("S")) {
-                                    if (reportData.FormID == 1) {
-                                        let formIds = reportData.FormIDs.split(',');
-                                        if (formIds.includes("71")) {
-                                            reportData.FormID = 71;
-                                            Meteor.call('sendNormalEmail', reportData);
-                                        }
-                                    } else {
-                                        if (reportData.FormID == 71)
-                                            Meteor.call('sendNormalEmail', reportData);
-                                    }
-                                }
-                            });
-                            if(FlowRouter.current().queryParams.trans){
-                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                            }else{
-                                FlowRouter.go('/quoteslist?success=true');
-                            }
-                        }
-                    }
-                    addAttachment();
-
-                    const getcurrentCloudDetails = CloudUser.findOne({
-                        _id: Session.get('mycloudLogonID'),
-                        clouddatabaseID: Session.get('mycloudLogonDBID')
+                        resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
+                        // doc.addHTML(source, function () {
+                        //     doc.setFontSize(10);
+                        //     doc.setTextColor(255, 255, 255);
+                        //     doc.textWithLink('Pay Now', 482, 113, { url: 'https://www.depot.vs1cloud.com/stripe/' + stringQuery });
+                        //     resolve(doc.output('blob'));
+                        //     $('#html-2-pdfwrapper').css('display', 'none');
+                        // });
                     });
-                    if (getcurrentCloudDetails) {
-                        if (getcurrentCloudDetails._id.length > 0) {
-                            const clientID = getcurrentCloudDetails._id;
-                            const clientUsername = getcurrentCloudDetails.cloudUsername;
-                            const clientEmail = getcurrentCloudDetails.cloudEmail;
-                            const checkPrefDetails = CloudPreference.findOne({
-                                userid: clientID,
-                                PrefName: 'new_quote'
-                            });
-                            if (checkPrefDetails) {
-                                CloudPreference.update({
-                                    _id: checkPrefDetails._id
-                                }, {
-                                    $set: {
-                                        username: clientUsername,
-                                        useremail: clientEmail,
-                                        PrefGroup: 'salesform',
-                                        PrefName: 'new_quote',
-                                        published: true,
-                                        customFields: [{
-                                            index: '1',
-                                            label: getcustomField1,
-                                            hidden: getchkcustomField1
-                                        }, {
-                                            index: '2',
-                                            label: getcustomField2,
-                                            hidden: getchkcustomField2
-                                        }],
-                                        updatedAt: new Date()
-                                    }
-                                }, function(err, idTag) {
-                                    if (err) {
+                }
+                async function addAttachment() {
+                    let attachment = [];
+                    let templateObject = Template.instance();
 
-                                    } else {
+                    let invoiceId = objDetails.fields.ID;
+                    let encodedPdf = await generatePdfForMail(invoiceId);
+                    let base64data = encodedPdf.split(',')[1];
+                    let pdfObject = {
+                        filename: 'Quote-' + invoiceId + '.pdf',
+                        content: base64data,
+                        encoding: 'base64'
+                    };
+                    attachment.push(pdfObject);
+                    let erpInvoiceId = objDetails.fields.ID;
+                    let mailFromName = Session.get('vs1companyName');
+                    let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
+                    let customerEmailName = $('#edtCustomerName').val();
+                    let checkEmailData = $('#edtCustomerEmail').val();
+                    let grandtotal = $('#grandTotal').html();
+                    let amountDueEmail = $('#totalBalanceDue').html();
+                    let emailDueDate = $("#dtDueDate").val();
+                    let customerBillingAddress = $('#txabillingAddress').val();
+                    let customerTerms = $('#sltTerms').val();
+                    let customerSubtotal = $('#subtotal_total').html();
+                    let customerTax = $('#subtotal_tax').html();
+                    let customerNett = $('#subtotal_nett').html();
+                    let customerTotal = $('#grandTotal').html();
+                    let mailSubject = 'Quote ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
+                    let mailBody = "Hi " + customerEmailName + ",\n\n Here's invoice " + erpInvoiceId + " for  " + grandtotal + "." +
+                        "\n\nThe amount outstanding of " + amountDueEmail + " is due on " + emailDueDate + "." +
+                        "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
+
+                    const htmlmailBody = '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
+                        '        <tr>' +
+                        '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+                        '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+                        '                    <table class="main">' +
+                        '                        <tr>' +
+                        '                            <td class="wrapper">' +
+                        '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+                        '                                    <tr>' +
+                        '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+                        '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' + erpInvoiceId + ' Details</span>' +
+                        '                                        </td>' +
+                        '                                    </tr>' +
+                        '                                    <tr style="height: 16px;"></tr>' +
+                        '                                    <tr>' +
+                        '                                        <td>' +
+                        '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+                        '                                        </td>' +
+                        '                                    </tr>' +
+                        '                                    <tr style="height: 48px;"></tr>' +
+                        '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+                        '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+                        '                                            <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' + emailDueDate + '</p>' +
+                        '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
+                        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+                        '                                                <tbody>' +
+                        '                                                    <tr>' +
+                        '                                                        <td align="center" style="padding-bottom: 15px;">' +
+                        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+                        '                                                                <tbody>' +
+                        '                                                                    <tr>' +
+                        '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+                        '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+                        '                                                                    </tr>' +
+                        '                                                                </tbody>' +
+                        '                                                            </table>' +
+                        '                                                        </td>' +
+                        '                                                    </tr>' +
+                        '                                                </tbody>' +
+                        '                                            </table>' +
+                        '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+                        '                                        </td>' +
+                        '                                    </tr>' +
+                        '                                    <tr>' +
+                        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                        '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
+                        '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+                        '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+                        '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
+                        '                                        </td>' +
+                        '                                    </tr>' +
+                        '                                    <tr style="background-color: #ededed;">' +
+                        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                        '                                            <div style="width: 100%; padding: 0px;">' +
+                        '                                                <div style="width: 50%; float: left;">' +
+                        '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+                        '                                                </div>' +
+                        '                                                <div style="width: 50%; float: right;">' +
+                        '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
+                        '                                                    <p style="margin-bottom: 16px;font-size: 16px;">' + customerBillingAddress + '</p>' +
+                        '                                                </div>' +
+                        '                                            </div>' +
+                        '                                        </td>' +
+                        '                                    </tr>' +
+                        '                                    <tr>' +
+                        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+                        '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+                        '                                                <div style="width: 50%; float: left;">' +
+                        '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+                        '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+                        '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+                        '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+                        '                                                </div>' +
+                        '                                                <div style="width: 50%; float: right; text-align: right;">' +
+                        '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
+                        '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
+                        '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
+                        '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
+                        '                                                </div>' +
+                        '                                            </div>' +
+                        '                                        </td>' +
+                        '                                    </tr>' +
+                        '                                    <tr>' +
+                        '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+                        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+                        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+                        '                                                <tbody>' +
+                        '                                                    <tr>' +
+                        '                                                        <td align="center">' +
+                        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+                        '                                                                <tbody>' +
+                        '                                                                    <tr>' +
+                        '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+                        '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+                        '                                                                    </tr>' +
+                        '                                                                </tbody>' +
+                        '                                                            </table>' +
+                        '                                                        </td>' +
+                        '                                                    </tr>' +
+                        '                                                </tbody>' +
+                        '                                            </table>' +
+                        '                                        </td>' +
+                        '                                    </tr>' +
+                        '                                    <tr>' +
+                        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                        '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+                        '                                        </td>' +
+                        '                                    </tr>' +
+                        '                                    <tr>' +
+                        '                                        <td>' +
+                        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+                        '                                                <tbody>' +
+                        '                                                    <tr>' +
+                        '                                                        <td align="center">' +
+                        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+                        '                                                                <tbody>' +
+                        '                                                                    <tr>' +
+                        '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+                        '                                                                    </tr>' +
+                        '                                                                </tbody>' +
+                        '                                                            </table>' +
+                        '                                                        </td>' +
+                        '                                                    </tr>' +
+                        '                                                </tbody>' +
+                        '                                            </table>' +
+                        '                                        </td>' +
+                        '                                    </tr>' +
+                        '                                </table>' +
+                        '                            </td>' +
+                        '                        </tr>' +
+                        '                    </table>' +
+                        '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+                        '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+                        '                            <tr>' +
+                        '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+                        '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
+                        '                                    <br>' +
+                        '                                    <a href="mailto:' + mailFrom + '" style="color: #999999; font-size: 12px; text-align: center;">Contact Us</a>' +
+                        '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+                        '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+                        '                                </td>' +
+                        '                            </tr>' +
+                        '                        </table>' +
+                        '                    </div>' +
+                        '                </div>' +
+                        '            </td>' +
+                        '        </tr>' +
+                        '    </table>';
+
+                    // var htmlmailBody = '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
+                    //     '    <tr>' +
+                    //     '        <td align="center" bgcolor="#54c7e2" style="padding: 40px 0 30px 0;">' +
+                    //     '            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" alt="VS1 Cloud" width="250px" style="display: block;" />' +
+                    //     '        </td>' +
+                    //     '    </tr>' +
+                    //     '    <tr>' +
+                    //     '        <td style="padding: 40px 30px 40px 30px;">' +
+                    //     '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+                    //     '                <tr>' +
+                    //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 20px 0;">' +
+                    //     '                        Hi <span>' + customerEmailName + '</span>.' +
+                    //     '                    </td>' +
+                    //     '                </tr>' +
+                    //     '                <tr>' +
+                    //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+                    //     '                        Please find attached Quote <span>' + erpInvoiceId + '</span>' +
+                    //     '                    </td>' +
+                    //     '                </tr>' +
+                    //     '                <tr>' +
+                    //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+                    //     '                        Simply click on <a style="border: none; color: white; padding: 6px 12px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #5cb85c; border-color: #4cae4c; border-radius: 10px;" href="' + stripeGlobalURL + '' + stringQuery + '">Make Payment</a> to pay now.' +
+                    //     '                    </td>' +
+                    //     '                </tr>' +
+                    //     '                 <tr>' +
+                    //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+                    //     '                        The invoice is due by the ' + emailDueDate +
+                    //     '                    </td>' +
+                    //     '                </tr>' +
+                    //     '                <tr>' +
+                    //     '                     <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+                    //     '                        Thank you again for business' +
+                    //     '                    </td>' +
+                    //     '                <tr>' +
+                    //     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
+                    //     '                        Kind regards,' +
+                    //     '                        <br>' +
+                    //     '                        ' + mailFromName + '' +
+                    //     '                    </td>' +
+                    //     '                </tr>' +
+                    //     '            </table>' +
+                    //     '        </td>' +
+                    //     '    </tr>' +
+                    //     '    <tr>' +
+                    //     '        <td bgcolor="#00a3d3" style="padding: 30px 30px 30px 30px;">' +
+                    //     '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+                    //     '                <tr>' +
+                    //     '                    <td width="50%" style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">' +
+                    //     '                        If you have any question, please do not hesitate to contact us.' +
+                    //     '                    </td>' +
+                    //     '                    <td align="right">' +
+                    //     '                        <a style="border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;" href="mailto:' + mailFrom + '">Contact Us</a>' +
+                    //     '                    </td>' +
+                    //     '                </tr>' +
+                    //     '            </table>' +
+                    //     '        </td>' +
+                    //     '    </tr>' +
+                    //     '</table>';
+
+
+                    if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
+                        Meteor.call('sendEmail', {
+                            from: "" + mailFromName + " <" + mailFrom + ">",
+                            to: checkEmailData,
+                            subject: mailSubject,
+                            text: '',
+                            html: htmlmailBody,
+                            attachments: attachment
+                        }, function(error, result) {
+                            if (error && error.error === "error") {
+                                FlowRouter.go('/quoteslist?success=true');
+                            } else {
+
+                            }
+                        });
+
+                        Meteor.call('sendEmail', {
+                            from: "" + mailFromName + " <" + mailFrom + ">",
+                            to: mailFrom,
+                            subject: mailSubject,
+                            text: '',
+                            html: htmlmailBody,
+                            attachments: attachment
+                        }, function(error, result) {
+                            if (error && error.error === "error") {
+                                FlowRouter.go('/quoteslist?success=true');
+                            } else {
+                                $('#html-2-pdfwrapper').css('display', 'none');
+                                swal({
+                                    title: 'SUCCESS',
+                                    text: "Email Sent To Customer: " + checkEmailData + " and User: " + mailFrom + "",
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'OK'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        if(FlowRouter.current().queryParams.trans){
+                                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                        }else{
+                                            FlowRouter.go('/quoteslist?success=true');
+                                        }
+                                    } else if (result.dismiss === 'cancel') {
 
                                     }
                                 });
+                                LoadingOverlay.hide();
+                            }
+                        });
+                        let values = [];
+                        let basedOnTypeStorages = Object.keys(localStorage);
+                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                            let employeeId = storage.split('_')[2];
+                            return storage.includes('BasedOnType_');
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        });
+                        let i = basedOnTypeStorages.length;
+                        if (i > 0) {
+                            while (i--) {
+                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                            }
+                        }
+                        values.forEach(value => {
+                            let reportData = JSON.parse(value);
+                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment
+                            if (reportData.BasedOnType.includes("S")) {
+                                if (reportData.FormID == 1) {
+                                    let formIds = reportData.FormIDs.split(',');
+                                    if (formIds.includes("71")) {
+                                        reportData.FormID = 71;
+                                        Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                } else {
+                                    if (reportData.FormID == 71)
+                                        Meteor.call('sendNormalEmail', reportData);
+                                }
+                            }
+                        });
+
+                    } else if (($('.chkEmailCopy').is(':checked'))) {
+                        Meteor.call('sendEmail', {
+                            from: "" + mailFromName + " <" + mailFrom + ">",
+                            to: checkEmailData,
+                            subject: mailSubject,
+                            text: '',
+                            html: htmlmailBody,
+                            attachments: attachment
+                        }, function(error, result) {
+                            if (error && error.error === "error") {
+
                             } else {
-                                CloudPreference.insert({
-                                    userid: clientID,
+                                $('#html-2-pdfwrapper').css('display', 'none');
+                                swal({
+                                    title: 'SUCCESS',
+                                    text: "Email Sent To Customer: " + checkEmailData + " ",
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'OK'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        if(FlowRouter.current().queryParams.trans){
+                                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                        }else{
+                                            FlowRouter.go('/quoteslist?success=true');
+                                        }
+                                    } else if (result.dismiss === 'cancel') {
+
+                                    }
+                                });
+                                LoadingOverlay.hide();
+                            }
+                        });
+                        let values = [];
+                        let basedOnTypeStorages = Object.keys(localStorage);
+                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                            let employeeId = storage.split('_')[2];
+                            return storage.includes('BasedOnType_')
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        });
+                        let i = basedOnTypeStorages.length;
+                        if (i > 0) {
+                            while (i--) {
+                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                            }
+                        }
+                        values.forEach(value => {
+                            let reportData = JSON.parse(value);
+                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment
+                            if (reportData.BasedOnType.includes("S")) {
+                                if (reportData.FormID == 1) {
+                                    let formIds = reportData.FormIDs.split(',');
+                                    if (formIds.includes("71")) {
+                                        reportData.FormID = 71;
+                                        Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                } else {
+                                    if (reportData.FormID == 71)
+                                        Meteor.call('sendNormalEmail', reportData);
+                                }
+                            }
+                        });
+                    } else if (($('.chkEmailRep').is(':checked'))) {
+                        Meteor.call('sendEmail', {
+                            from: "" + mailFromName + " <" + mailFrom + ">",
+                            to: mailFrom,
+                            subject: mailSubject,
+                            text: '',
+                            html: htmlmailBody,
+                            attachments: attachment
+                        }, function(error, result) {
+
+                            if (error && error.error === "error") {
+                                FlowRouter.go('/quoteslist?success=true');
+                            } else {
+                                $('#html-2-pdfwrapper').css('display', 'none');
+                                swal({
+                                    title: 'SUCCESS',
+                                    text: "Email Sent To User: " + mailFrom + " ",
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'OK'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        if(FlowRouter.current().queryParams.trans){
+                                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                        }else{
+                                            FlowRouter.go('/quoteslist?success=true');
+                                        }
+                                    } else if (result.dismiss === 'cancel') {
+
+                                    }
+                                });
+                                LoadingOverlay.hide();
+                            }
+                        });
+
+                        let values = [];
+                        let basedOnTypeStorages = Object.keys(localStorage);
+                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                            let employeeId = storage.split('_')[2];
+                            return storage.includes('BasedOnType_');
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
+                        });
+                        let i = basedOnTypeStorages.length;
+                        if (i > 0) {
+                            while (i--) {
+                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                            }
+                        }
+                        values.forEach(value => {
+                            let reportData = JSON.parse(value);
+                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment
+                            if (reportData.BasedOnType.includes("S")) {
+                                if (reportData.FormID == 1) {
+                                    let formIds = reportData.FormIDs.split(',');
+                                    if (formIds.includes("71")) {
+                                        reportData.FormID = 71;
+                                        Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                } else {
+                                    if (reportData.FormID == 71)
+                                        Meteor.call('sendNormalEmail', reportData);
+                                }
+                            }
+                        });
+                    } else {
+                        let values = [];
+                        let basedOnTypeStorages = Object.keys(localStorage);
+                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                            let employeeId = storage.split('_')[2];
+                            return storage.includes('BasedOnType_');
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')☻
+                        });
+                        let i = basedOnTypeStorages.length;
+                        if (i > 0) {
+                            while (i--) {
+                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                            }
+                        }
+                        values.forEach(value => {
+                            let reportData = JSON.parse(value);
+                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment
+                            if (reportData.BasedOnType.includes("S")) {
+                                if (reportData.FormID == 1) {
+                                    let formIds = reportData.FormIDs.split(',');
+                                    if (formIds.includes("71")) {
+                                        reportData.FormID = 71;
+                                        Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                } else {
+                                    if (reportData.FormID == 71)
+                                        Meteor.call('sendNormalEmail', reportData);
+                                }
+                            }
+                        });
+                        if(FlowRouter.current().queryParams.trans){
+                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                        }else{
+                            FlowRouter.go('/quoteslist?success=true');
+                        }
+                    }
+                }
+                addAttachment();
+
+                const getcurrentCloudDetails = CloudUser.findOne({
+                    _id: Session.get('mycloudLogonID'),
+                    clouddatabaseID: Session.get('mycloudLogonDBID')
+                });
+                if (getcurrentCloudDetails) {
+                    if (getcurrentCloudDetails._id.length > 0) {
+                        const clientID = getcurrentCloudDetails._id;
+                        const clientUsername = getcurrentCloudDetails.cloudUsername;
+                        const clientEmail = getcurrentCloudDetails.cloudEmail;
+                        const checkPrefDetails = CloudPreference.findOne({
+                            userid: clientID,
+                            PrefName: 'new_quote'
+                        });
+                        if (checkPrefDetails) {
+                            CloudPreference.update({
+                                _id: checkPrefDetails._id
+                            }, {
+                                $set: {
                                     username: clientUsername,
                                     useremail: clientEmail,
                                     PrefGroup: 'salesform',
@@ -8065,17 +8039,43 @@ Template.new_quote.events({
                                         label: getcustomField2,
                                         hidden: getchkcustomField2
                                     }],
-                                    createdAt: new Date()
-                                }, function(err, idTag) {
-                                    if (err) {
+                                    updatedAt: new Date()
+                                }
+                            }, function(err, idTag) {
+                                if (err) {
 
-                                    } else {
+                                } else {
 
-                                    }
-                                });
-                            }
+                                }
+                            });
+                        } else {
+                            CloudPreference.insert({
+                                userid: clientID,
+                                username: clientUsername,
+                                useremail: clientEmail,
+                                PrefGroup: 'salesform',
+                                PrefName: 'new_quote',
+                                published: true,
+                                customFields: [{
+                                    index: '1',
+                                    label: getcustomField1,
+                                    hidden: getchkcustomField1
+                                }, {
+                                    index: '2',
+                                    label: getcustomField2,
+                                    hidden: getchkcustomField2
+                                }],
+                                createdAt: new Date()
+                            }, function(err, idTag) {
+                                if (err) {
+
+                                } else {
+
+                                }
+                            });
                         }
                     }
+                }
 
             }).catch(function(err) {
                 swal({
