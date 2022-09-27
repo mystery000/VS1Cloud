@@ -68,7 +68,7 @@ if (!localStorage.getItem('VS1SalesEmpReport_dash')) {
       // topData.topTenData.set(data);
 
       templateObject.topTenData.set(topTenData1);
-      var ctx = document.getElementById("myChartCustomer").getContext("2d");
+      var ctx = document.getElementById("employeeSalesComparisonChart").getContext("2d");
       var myChart = new Chart(ctx, {
         type: 'horizontalBar',
         data: {
@@ -234,7 +234,7 @@ if (!localStorage.getItem('VS1SalesEmpReport_dash')) {
     // topData.topTenData.set(data);
 
     templateObject.topTenData.set(topTenData1);
-    var ctx = document.getElementById("myChartCustomer").getContext("2d");
+    var ctx = document.getElementById("employeeSalesComparisonChart").getContext("2d");
     var myChart = new Chart(ctx, {
       type: 'horizontalBar',
       data: {
