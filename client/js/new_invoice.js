@@ -12890,13 +12890,7 @@ Template.new_invoice.onRendered(function () {
                       datatable.draw(false);
 
                       $(".fullScreenSpin").css("display", "none");
-                      $(".dataTables_info").html(
-                        "Showing 1 to " +
-                          data.tcustomervs1.length +
-                          " of " +
-                          data.tcustomervs1.length +
-                          " entries"
-                      );
+    
                       $(".fullScreenSpin").css("display", "none");
                     });
                 } else {
@@ -13646,13 +13640,13 @@ Template.new_invoice.helpers({
     },
 
     displayFieldColspan: (displayfield) => {
-        if(foreignCols.includes(displayfield.custfieldlabel)) 
+        if(foreignCols.includes(displayfield.custfieldlabel))
         {
             if(Template.instance().isForeignEnabled.get() == true) {
                 return 2
             }
             return 1;
-        } 
+        }
         return 1;
     },
 
@@ -20386,13 +20380,13 @@ Template.new_invoice.events({
           toConvert.forEach((element) => {
               const mainClass = element.classList[0];
               const mainValueElement = document.querySelector(`#tblInvoiceLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
-              
-              let value = mainValueElement.childElementCount > 0 ? 
-                  $(mainValueElement).find('input').val() : 
+
+              let value = mainValueElement.childElementCount > 0 ?
+                  $(mainValueElement).find('input').val() :
                   mainValueElement.innerText;
               value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
               $(element).text(value);
-      
+
           })
       }, 500);
 

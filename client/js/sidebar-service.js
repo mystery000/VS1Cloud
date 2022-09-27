@@ -863,13 +863,6 @@ export class SideBarService extends BaseService {
 
   getAllContactOverviewVS1ByName(dataSearchName) {
     let options = "";
-    // options = {
-    //   //ListType: "Detail",
-    //   Company:dataSearchName,
-    //   Employeename:dataSearchName,
-    //   // select: '[name] = "' + dataSearchName + '"',
-    // };
-    console.log(dataSearchName.toLowerCase());
     if(dataSearchName.toLowerCase() == "supplier"){
       options = {
         IgnoreDates:true,

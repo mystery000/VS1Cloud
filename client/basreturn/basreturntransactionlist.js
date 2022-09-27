@@ -33,10 +33,6 @@ Template.basreturntransactionlist.onRendered(function() {
     templateObject.getAccountsSummaryReports = function(dateFrom, dateTo, items = [], description, accountingMethod, datemethod) {
         reportService.getBalanceSheetRedirectRangeData(dateFrom, dateTo, 5000, 0).then(function(data) {
 
-            console.log(dateFrom);
-            console.log(dateTo);
-
-            // let data = JSON.parse(dataObject[0].data);
             let balanceTotal = 0;
             for (let i = 0; i < data.taccountrunningbalancereport.length; i++) {
                 let childArray = data.taccountrunningbalancereport[i];
@@ -97,8 +93,6 @@ Template.basreturntransactionlist.onRendered(function() {
             }
 
             templateObject.datatablerecords.set(dataTableList);
-
-            console.log("dataTableList", dataTableList);
 
             if (templateObject.datatablerecords.get()) {
 
@@ -222,6 +216,11 @@ Template.basreturntransactionlist.onRendered(function() {
                     fnInitComplete: function() {
                         // this.fnPageChange("last");
                         $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBasReturnTransactionList_filter");
+                    },
+                    "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                      let countTableData = data.Params.Count || 0; //get count from API data
+
+                        return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
                     }
 
                 }).on('page', function() {
@@ -238,12 +237,6 @@ Template.basreturntransactionlist.onRendered(function() {
                 if (data.taccountrunningbalancereport.length > countTableData) {
                     //Check if what is on the list is more than API count
                     countTableData = data.taccountrunningbalancereport.length || 1;
-                }
-
-                if (data.taccountrunningbalancereport.length > 0) {
-                    $(".dataTables_info").html("Showing 1 to " + data.taccountrunningbalancereport.length + " of " + countTableData + " entries");
-                } else {
-                    $(".dataTables_info").html("Showing 0 to " + data.taccountrunningbalancereport.length + " of 0 entries");
                 }
                 /* End Add count functionality to table */
             }, 0);
@@ -323,26 +316,7 @@ Template.basreturntransactionlist.onRendered(function() {
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-                // var getid = url.split('?id=');
 
-                // if (getid[1]) {
-                //     templateObject.getId.set(getid[1]);
-                //     templateObject.pageTitle.set("Edit BAS Return");
-
-                //     getVS1Data('TBasReturn').then(function(dataObject) {
-                //         if (dataObject.length > 0) {
-                //             console.log("dataObject", dataObject);
-                //             let data = JSON.parse(dataObject[0].data);
-                //             for (let i = 0; i < data.length; i++) {
-                //                 if (getid[1] == data[i].basNumber) {
-                //                     console.log("===", data[i]);
-                //                 }
-                //             }
-                //         }
-                //     }).catch(function(err) {
-                //         $('.fullScreenSpin').css('display', 'none');
-                //     });
-                // }
             }
         });
     }, 500);

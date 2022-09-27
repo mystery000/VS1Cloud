@@ -2016,7 +2016,7 @@ Template.newsidenav.onRendered(function() {
 
     templateObject.getAllERPCombinedContactsData = function() {
         // sideBarService.getAllContactCombineVS1(initialDataLoad, 0).then(function(data) {
-        sideBarService.getAllContactCombineVS1('All', 0).then(function(data) {
+        sideBarService.getAllContactCombineVS1(initialBaseDataLoad, 0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -5851,7 +5851,7 @@ Template.newsidenav.onRendered(function() {
                 let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
                 getVS1Data('TERPCombinedContactsVS1').then(function(dataObject) {
                     if (dataObject.length == 0) {
-                        sideBarService.getAllContactCombineVS1('All', 0).then(function(data) {
+                        sideBarService.getAllContactCombineVS1(initialBaseDataLoad, 0).then(function(data) {
                         // sideBarService.getAllContactCombineVS1(initialDataLoad, 0).then(function(data) {
                           countObjectTimes++;
                           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
@@ -5890,7 +5890,7 @@ Template.newsidenav.onRendered(function() {
                         templateObject.getFollowedSalesDetailsPull();
                     }
                 }).catch(function(err) {
-                    sideBarService.getAllContactCombineVS1('All', 0).then(function(data) {
+                    sideBarService.getAllContactCombineVS1(initialBaseDataLoad, 0).then(function(data) {
                     // sideBarService.getAllContactCombineVS1(initialDataLoad, 0).then(function(data) {
                       countObjectTimes++;
                       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
