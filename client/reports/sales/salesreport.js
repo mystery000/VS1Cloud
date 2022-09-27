@@ -501,24 +501,24 @@ Template.salesreport.events({
         localStorage.setItem('VS1Sales_Report', '');
         Meteor._reload.reload();
     },
-    'click td a': function(event) {
-        let redirectid = $(event.target).closest('tr').attr('id');
+    // 'click td a': function(event) {
+    //     let redirectid = $(event.target).closest('tr').attr('id');
 
-        let transactiontype = $(event.target).closest('tr').attr('class');;
+    //     let transactiontype = $(event.target).closest('tr').attr('class');;
 
-        if (redirectid && transactiontype) {
-            if (transactiontype === 'Quote') {
-                window.open('/quotecard?id=' + redirectid, '_self');
-            } else if (transactiontype === 'Sales Order') {
-                window.open('/salesordercard?id=' + redirectid, '_self');
-            } else if (transactiontype === 'Invoice') {
-                window.open('/invoicecard?id=' + redirectid, '_self');
-            } else if (transactiontype === 'Customer Payment') {
-                // window.open('/paymentcard?id=' + redirectid,'_self');
-            }
-        }
-        // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
-    },
+    //     if (redirectid && transactiontype) {
+    //         if (transactiontype === 'Quote') {
+    //             window.open('/quotecard?id=' + redirectid, '_self');
+    //         } else if (transactiontype === 'Sales Order') {
+    //             window.open('/salesordercard?id=' + redirectid, '_self');
+    //         } else if (transactiontype === 'Invoice') {
+    //             window.open('/invoicecard?id=' + redirectid, '_self');
+    //         } else if (transactiontype === 'Customer Payment') {
+    //             // window.open('/paymentcard?id=' + redirectid,'_self');
+    //         }
+    //     }
+    //     // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
+    // },
     'click .btnPrintReport': function(event) {
 
         let values = [];
@@ -804,6 +804,14 @@ Template.salesreport.events({
     LoadingOverlay.hide();
   },
 
+  "click [href='#noInfoFound']": function () {
+    swal({
+        title: 'Information',
+        text: "No further information available on this column",
+        type: 'warning',
+        confirmButtonText: 'Ok'
+      })
+  },
 });
 Template.salesreport.helpers({
     records: () => {
@@ -820,6 +828,14 @@ Template.salesreport.helpers({
         // });
     },
 
+    redirectionType(entry) {
+        if(entry.Type === 'Invoice') {
+            return '/invoicecard?id=' + entry.SaleId;
+        } else {
+          return '#';
+          return '#noInfoFound';
+        }
+      },
     grandrecords: () => {
         return Template.instance().grandrecords.get();
     },
