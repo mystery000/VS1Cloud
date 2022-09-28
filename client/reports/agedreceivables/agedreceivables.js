@@ -940,7 +940,6 @@ Template.agedreceivables.events({
         $('#dateTo').attr('readonly', true);
         templateObject.dateAsAt.set('Current Date');
         templateObject.getAgedReceivableReports('', '', true);
-
     },
     'keyup #myInputSearch': function (event) {
         $('.table tbody tr').show();

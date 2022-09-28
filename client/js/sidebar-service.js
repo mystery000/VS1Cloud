@@ -24,8 +24,8 @@ export class SideBarService extends BaseService {
         orderby: '"PARTSID desc"',
         ListType: "Detail",
         select: "[Active]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TProductVS1, options);
@@ -36,15 +36,15 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-        select: "[Active]=true",
+        //select: "[Active]=true",
       };
     } else {
       options = {
         orderby: '"PARTSID desc"',
         ListType: "Detail",
-        select: "[Active]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        //select: "[Active]=true",
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TProductList, options);
@@ -182,8 +182,8 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         select: "[EmployeeTerminationPaymentsActive]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TTerminationSimple, options);
@@ -200,8 +200,8 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         select: "[OverTimeEarningsActive]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TOverTimeEarnings, options);
@@ -217,8 +217,8 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         select: "[LumpSumEActive]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TLumpSumE, options);
@@ -248,8 +248,8 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         select: "[EarningBonusesCommisionsActive]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TEarningsBonusesCommissions, options);
@@ -266,8 +266,8 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         select: "[LumpSumWActive]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TLumpSumW, options);
@@ -284,8 +284,8 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         select: "[DirectorsFeesActive]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TDirectorsFees, options);
@@ -303,8 +303,8 @@ export class SideBarService extends BaseService {
         orderby: '"PARTSID desc"',
         ListType: "Detail",
         select: "[Active]=true and [ProductType]!='INV'",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TProductVS1, options);
@@ -321,8 +321,8 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         select: "[PayrollHolidaysActive]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TPayrollHolidays, options);
@@ -383,6 +383,15 @@ export class SideBarService extends BaseService {
       select:'[ProductName] f7like "' +dataSearchName +'" OR [BARCODE] f7like "' +dataSearchName +  '"',
     };
     return this.getList(this.ERPObjects.TProductVS1, options);
+  }
+
+  getProductListVS1BySearch(dataSearchName) {
+    let options = "";
+    options = {
+      ListType: "Detail",
+      Search: 'PARTNAME = "' + dataSearchName + '" OR PARTSID = "' + dataSearchName + '" OR BARCODE = "' + dataSearchName + '"',
+    };
+    return this.getList(this.ERPObjects.TProductList, options);
   }
 
   getNewInvoiceByNameOrID(dataSearchName) {
@@ -585,8 +594,8 @@ export class SideBarService extends BaseService {
         orderby: '"ClientID desc"',
         ListType: "Detail",
         select: "[Active]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TJobVS1, options);
@@ -612,8 +621,8 @@ export class SideBarService extends BaseService {
         select: "[Active]=true",
         IgnoreDates: true,
         OrderBy: "ExpenseClaimID desc",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -623,8 +632,8 @@ export class SideBarService extends BaseService {
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TExpenseClaimList, options);
@@ -639,8 +648,8 @@ export class SideBarService extends BaseService {
             IsDetailReport: true,
             OrderBy: "PaymentDate desc",
             Search: "Deleted != true",
-            LimitCount: '"' + limitcount + '"',
-            LimitFrom: '"' + limitfrom + '"',
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
           };
         } else {
           options = {
@@ -652,8 +661,8 @@ export class SideBarService extends BaseService {
             // OrderBy: "PaymentDate desc",
             DateFrom: '"' + dateFrom + '"',
             DateTo: '"' + dateTo + '"',
-            LimitCount: '"' + limitcount + '"',
-            LimitFrom: '"' + limitfrom + '"',
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
           };
         }
     }else{
@@ -663,8 +672,8 @@ export class SideBarService extends BaseService {
           IsDetailReport: true,
           OrderBy: "PaymentDate desc",
           // Search: "Deleted != true",
-          LimitCount: '"' + limitcount + '"',
-          LimitFrom: '"' + limitfrom + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
         };
       }else{
         options = {
@@ -674,8 +683,8 @@ export class SideBarService extends BaseService {
           IsDetailReport: true,
           DateFrom: '"' + dateFrom + '"',
           DateTo: '"' + dateTo + '"',
-          LimitCount: '"' + limitcount + '"',
-          LimitFrom: '"' + limitfrom + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
         };
       }
     }
@@ -691,7 +700,7 @@ export class SideBarService extends BaseService {
       IgnoreDates: true,
       IsDetailReport: true,
       OrderBy: "PaymentDate desc",
-      LimitCount: '"' + initialReportLoad + '"',
+      LimitCount: parseInt(initialReportLoad),
       Search: 'ClientName = "' + dataSearchName + '" OR ReceiptNo = "' + dataSearchName + '" OR BankAccount = "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TPaymentList, options);
@@ -709,8 +718,8 @@ export class SideBarService extends BaseService {
         orderby: '"PaymentDate desc"',
         ListType: "Detail",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TCustomerPayment, options);
@@ -725,8 +734,8 @@ export class SideBarService extends BaseService {
         IsDetailReport: true,
         OrderBy: "PaymentDate desc",
         Search: "Deleted != true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -736,8 +745,8 @@ export class SideBarService extends BaseService {
         Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TCustomerPaymentList, options);
@@ -768,8 +777,8 @@ export class SideBarService extends BaseService {
         orderby: '"PaymentDate desc"',
         ListType: "Detail",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TSupplierPayment, options);
@@ -797,8 +806,8 @@ export class SideBarService extends BaseService {
         IsDetailReport: true,
         OrderBy: "PaymentDate desc",
         Search: 'Deleted != true',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -808,8 +817,8 @@ export class SideBarService extends BaseService {
         Search: 'Deleted != true',
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TSupplierPaymentList, options);
@@ -827,8 +836,8 @@ export class SideBarService extends BaseService {
         orderby: '"ClientID desc"',
         ListType: "Detail",
         select: "[Active]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TCustomerVS1, options);
@@ -881,7 +890,9 @@ export class SideBarService extends BaseService {
     }else{
     options = {
       IgnoreDates:true,
-      Search: 'ID = "' + dataSearchName + '" OR Company = "' + dataSearchName + '" OR email = "' + dataSearchName + '"',
+      // Search: 'ID=' + dataSearchName + ' OR printname='+ dataSearchName + ' OR email=' + dataSearchName +'',
+      //search: "printname = '" + dataSearchName + "'",
+      search: 'ID="' + dataSearchName + '" OR printname="' + dataSearchName + '" email="' + dataSearchName + '"',
     };
     }
     return this.getList(this.ERPObjects.TERPCombinedContactsVS1, options);
@@ -943,8 +954,8 @@ export class SideBarService extends BaseService {
         orderby: '"ClientID desc"',
         ListType: "Detail",
         select: "[Active]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TSupplierVS1, options);
@@ -1010,8 +1021,8 @@ export class SideBarService extends BaseService {
         // ListType: "Detail",
         IgnoreDates:true,
         select: "[Active]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TERPCombinedContactsVS1, options);
@@ -1029,8 +1040,8 @@ export class SideBarService extends BaseService {
         orderby: '"ClientID desc"',
         PropertyList:"ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName",
         select: "[Active]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TCustomerVS1, options);
@@ -1065,8 +1076,8 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         select: "[Active]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TProspect, options);
@@ -1083,8 +1094,8 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         select: "[Active]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TTripGroup, options);
@@ -1136,8 +1147,8 @@ export class SideBarService extends BaseService {
       options = {
         OrderBy: "SaleID desc",
         PropertyList:"ID,EmployeeName,SaleClassName,SaleDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
 
@@ -1157,8 +1168,8 @@ export class SideBarService extends BaseService {
         OrderBy: "SaleID desc",
         ListType: "Detail",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TSalesOrderEx, options);
@@ -1172,8 +1183,8 @@ export class SideBarService extends BaseService {
         IgnoreDates: true,
         OrderBy: "SaleID desc",
         Search: "Deleted != true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1182,8 +1193,8 @@ export class SideBarService extends BaseService {
         Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TSalesOrderList, options);
@@ -1197,16 +1208,16 @@ export class SideBarService extends BaseService {
         IgnoreDates: true,
         OrderBy: "SaleID desc",
         Search: "Deleted != true and Converted = " + true + "",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: "SaleID desc",
         Search: "Deleted != true and Converted != true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TSalesOrderList, options);
@@ -1224,8 +1235,8 @@ export class SideBarService extends BaseService {
         orderby: '"PurchaseOrderID desc"',
         ListType: "Detail",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TPurchaseOrderEx, options);
@@ -1242,8 +1253,8 @@ export class SideBarService extends BaseService {
         IncludeBO: false,
         IncludeShipped: true,
         IncludeLines: false,
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1255,8 +1266,8 @@ export class SideBarService extends BaseService {
         IncludeLines: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TPurchaseOrderList, options);
@@ -1274,8 +1285,8 @@ export class SideBarService extends BaseService {
         orderby: '"PurchaseOrderID desc"',
         ListType: "Detail",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
 
@@ -1290,8 +1301,8 @@ export class SideBarService extends BaseService {
         IgnoreDates: true,
         OrderBy: "PurchaseOrderID desc",
         Search: "Deleted != true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1300,8 +1311,8 @@ export class SideBarService extends BaseService {
         Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TChequeList, options);
@@ -1316,8 +1327,8 @@ export class SideBarService extends BaseService {
         IncludePOs: true,
         IncludeBills: true,
         OrderBy: "PurchaseOrderID desc",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1327,8 +1338,8 @@ export class SideBarService extends BaseService {
         OrderBy: "PurchaseOrderID desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TbillReport, options);
@@ -1347,8 +1358,8 @@ export class SideBarService extends BaseService {
         IsCheque: false,
         IsRA: false,
         Search: "Deleted != true and SupplierName != '' and IsCheque != true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1362,8 +1373,8 @@ export class SideBarService extends BaseService {
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TBillList, options);
@@ -1380,8 +1391,8 @@ export class SideBarService extends BaseService {
         Paid: false,
         Unpaid: true,
         OrderBy: "PurchaseOrderID desc",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
         ClientID:contactID,
       };
     }else{
@@ -1394,8 +1405,8 @@ export class SideBarService extends BaseService {
         Paid: false,
         Unpaid: true,
         OrderBy: "PurchaseOrderID desc",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1408,8 +1419,8 @@ export class SideBarService extends BaseService {
         OrderBy: "PurchaseOrderID desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
    }
@@ -1493,8 +1504,8 @@ export class SideBarService extends BaseService {
         Paid: false,
         Unpaid: true,
         OrderBy: "PurchaseOrderID desc",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else if (currentDate == "Bill") {
       options = {
@@ -1506,8 +1517,8 @@ export class SideBarService extends BaseService {
         Paid: false,
         Unpaid: true,
         OrderBy: "PurchaseOrderID desc",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1519,8 +1530,8 @@ export class SideBarService extends BaseService {
         Unpaid: true,
         OrderBy: "PurchaseOrderID desc",
         Search: 'DueDate < "' + currentDate + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TbillReport, options);
@@ -1538,8 +1549,8 @@ export class SideBarService extends BaseService {
         Unpaid: true,
         OrderBy: "PurchaseOrderID desc",
         Search: 'DueDate < "' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1553,8 +1564,8 @@ export class SideBarService extends BaseService {
         Search: 'DueDate < "' + dateTo + '"',
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TbillReport, options);
@@ -1572,8 +1583,8 @@ export class SideBarService extends BaseService {
         IsDetailReport: false,
         Paid: false,
         Unpaid: true,
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
         Search: "ClientId = "+contactID,
         OrderBy: "SaleID desc"
       };
@@ -1590,8 +1601,8 @@ export class SideBarService extends BaseService {
         Unpaid: true,
         Search: "Balance != 0",
         OrderBy: "SaleID desc",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1607,8 +1618,8 @@ export class SideBarService extends BaseService {
         OrderBy: "SaleID desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     }
@@ -1630,8 +1641,8 @@ export class SideBarService extends BaseService {
         // Search: "Balance != 0",
         OrderBy: "SaleID desc",
         Search: 'dueDate < "' + dateTo + '" and Balance != 0',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1648,8 +1659,8 @@ export class SideBarService extends BaseService {
         Search: 'dueDate < "' + dateTo + '" and Balance != 0',
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TSalesList, options);
@@ -1685,8 +1696,8 @@ export class SideBarService extends BaseService {
         orderby: '"PurchaseOrderID desc"',
         ListType: "Detail",
         select: "[Deleted]=false and [Cancelled]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
 
@@ -1702,8 +1713,8 @@ export class SideBarService extends BaseService {
         IsBill: true,
         OrderBy: "OrderDate desc",
         Search: "Deleted != true and IsBill = true and IsCheque != true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1713,8 +1724,8 @@ export class SideBarService extends BaseService {
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TBillList, options);
@@ -1733,8 +1744,8 @@ export class SideBarService extends BaseService {
         OrderBy: "SaleID desc",
         ListType: "Detail",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TQuoteEx, options);
@@ -1748,8 +1759,8 @@ export class SideBarService extends BaseService {
         IgnoreDates: true,
         Search: "Deleted != true",
         OrderBy: "SaleID desc",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1758,8 +1769,8 @@ export class SideBarService extends BaseService {
         Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TQuoteList, options);
@@ -1773,16 +1784,16 @@ export class SideBarService extends BaseService {
         IgnoreDates: true,
         OrderBy: "SaleID desc",
         Search: "Deleted != true and Converted = " + true + "",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: "SaleID desc",
         Search: "Deleted != true and Converted != true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TQuoteList, options);
@@ -1800,8 +1811,8 @@ export class SideBarService extends BaseService {
         orderby: '"PurchaseOrderID desc"',
         ListType: "Detail",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TCredit, options);
@@ -1814,8 +1825,8 @@ export class SideBarService extends BaseService {
         OrderBy: "OrderDate desc",
         Search: "Deleted != true",
         IgnoreDates: true,
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1824,8 +1835,8 @@ export class SideBarService extends BaseService {
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
 
@@ -1844,8 +1855,8 @@ export class SideBarService extends BaseService {
           OrderBy: "CreationDate desc",
           IgnoreDates: true,
           IsDetailReport: false,
-          LimitCount: '"' + limitcount + '"',
-          LimitFrom: '"' + limitfrom + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
           Search: "TrainerID = " + loggedEmpID + "",
         };
       } else {
@@ -1855,8 +1866,8 @@ export class SideBarService extends BaseService {
           IsDetailReport: false,
           DateFrom: '"' + dateFrom + '"',
           DateTo: '"' + dateTo + '"',
-          LimitCount: '"' + limitcount + '"',
-          LimitFrom: '"' + limitfrom + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
           Search: "TrainerID = " + loggedEmpID + "",
         };
       }
@@ -1866,8 +1877,8 @@ export class SideBarService extends BaseService {
           OrderBy: "CreationDate desc",
           IgnoreDates: true,
           IsDetailReport: false,
-          LimitCount: '"' + limitcount + '"',
-          LimitFrom: '"' + limitfrom + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
         };
       } else {
         options = {
@@ -1876,8 +1887,8 @@ export class SideBarService extends BaseService {
           IsDetailReport: false,
           DateFrom: '"' + dateFrom + '"',
           DateTo: '"' + dateTo + '"',
-          LimitCount: '"' + limitcount + '"',
-          LimitFrom: '"' + limitfrom + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
         };
       }
     }
@@ -1916,8 +1927,8 @@ export class SideBarService extends BaseService {
         IgnoreDates: true,
         Search: "Deleted != true",
         IsDetailReport: true,
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1926,8 +1937,8 @@ export class SideBarService extends BaseService {
         Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     }else{
@@ -1936,8 +1947,8 @@ export class SideBarService extends BaseService {
           OrderBy: "TransactionDate desc",
           IgnoreDates: true,
           IsDetailReport: true,
-          LimitCount: '"' + limitcount + '"',
-          LimitFrom: '"' + limitfrom + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
         };
       } else {
         options = {
@@ -1945,8 +1956,8 @@ export class SideBarService extends BaseService {
           IgnoreDates: false,
           DateFrom: '"' + dateFrom + '"',
           DateTo: '"' + dateTo + '"',
-          LimitCount: '"' + limitcount + '"',
-          LimitFrom: '"' + limitfrom + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
         };
       }
     }
@@ -1968,8 +1979,8 @@ export class SideBarService extends BaseService {
         IsDetailReport: false,
         Paid: true,
         Unpaid: true,
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -1985,8 +1996,8 @@ export class SideBarService extends BaseService {
         IncludeISSalesOrder: true,
         Paid: true,
         Unpaid: true,
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     }else{
@@ -2002,8 +2013,8 @@ export class SideBarService extends BaseService {
           IsDetailReport: false,
           Paid: true,
           Unpaid: true,
-          LimitCount: '"' + limitcount + '"',
-          LimitFrom: '"' + limitfrom + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
         };
       } else {
         options = {
@@ -2019,8 +2030,8 @@ export class SideBarService extends BaseService {
           IncludeISSalesOrder: true,
           Paid: true,
           Unpaid: true,
-          LimitCount: '"' + limitcount + '"',
-          LimitFrom: '"' + limitfrom + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
         };
       }
     }
@@ -2040,8 +2051,8 @@ export class SideBarService extends BaseService {
         orderby: '"GJID desc"',
         ListType: "Detail",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TJournalEntry, options);
@@ -2059,8 +2070,8 @@ export class SideBarService extends BaseService {
         orderby: '"StockAdjustEntryID desc"',
         ListType: "Detail",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TStockAdjustEntry, options);
@@ -2087,8 +2098,8 @@ export class SideBarService extends BaseService {
         orderby: '"TransferEntryID desc"',
         ListType: "Detail",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TStockTransferEntry, options);
@@ -2107,8 +2118,8 @@ export class SideBarService extends BaseService {
         OrderBy: "SaleID desc",
         ListType: "Detail",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TInvoiceEx, options);
@@ -2125,8 +2136,8 @@ export class SideBarService extends BaseService {
         IncludeBo: false,
         IncludeShipped: true,
         IncludeLines: false,
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -2138,8 +2149,8 @@ export class SideBarService extends BaseService {
         IncludeLines: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TInvoiceList, options);
@@ -2166,7 +2177,7 @@ export class SideBarService extends BaseService {
         select: "[deleted]=false",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + initialReportLoad + '"',
+        LimitCount: parseInt(initialReportLoad),
       };
     }
     return this.getList(this.ERPObjects.TARReport, options);
@@ -2185,7 +2196,7 @@ export class SideBarService extends BaseService {
         select: "[deleted]=false",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + initialReportLoad + '"',
+        LimitCount: parseInt(initialReportLoad),
       };
     }
     return this.getList(this.ERPObjects.TAPReport, options);
@@ -2210,7 +2221,7 @@ export class SideBarService extends BaseService {
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + initialReportLoad + '"',
+        LimitCount: parseInt(initialReportLoad),
         AgeByTransactionDate:true
       };
     }
@@ -2292,7 +2303,7 @@ export class SideBarService extends BaseService {
         FilterIndex: 2,
         ClientID:msTimeStamp,
         OrderBy: "DATE desc",
-        LimitCount: '"' + initialReportLoad + '"',
+        LimitCount: parseInt(initialReportLoad),
       };
     } else {
       options = {
@@ -2300,7 +2311,7 @@ export class SideBarService extends BaseService {
         Listtype: 1,
         FilterIndex: 2,
         OrderBy: "DATE desc",
-        LimitCount: '"' + initialReportLoad + '"',
+        LimitCount: parseInt(initialReportLoad),
       };
     }
     return this.getList(this.ERPObjects.TTransactionListReport, options);
@@ -2311,7 +2322,7 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         select: "[Active]=true",
-        // LimitCount: '"' + initialReportLoad + '"',
+        // LimitCount: initialReportLoad
       };
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
@@ -2332,8 +2343,8 @@ export class SideBarService extends BaseService {
         OrderBy: "CreationDate desc",
         ListType: "Detail",
         select: "[Active]=true",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
 
@@ -2619,8 +2630,8 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         //select: '[Active]=true',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TEmployeepaysettings, options);
@@ -2710,8 +2721,8 @@ export class SideBarService extends BaseService {
         ListType: "Detail",
         select: "[Deleted]=false",
         // LimitCount:'"'+initialReportLoad+'"'
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TVS1BankDeposit, options);
@@ -2724,8 +2735,8 @@ export class SideBarService extends BaseService {
         IgnoreDates: true,
         Search: "Deleted != true",
         OrderBy: "DepositDate desc",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -2734,8 +2745,8 @@ export class SideBarService extends BaseService {
         Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TBankDepositList, options);
@@ -2750,8 +2761,8 @@ export class SideBarService extends BaseService {
         //IncludedataPriorToClosingDate:true,
         Search: "Deleted != true",
         OrderBy: "Date desc",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -2761,8 +2772,8 @@ export class SideBarService extends BaseService {
         OrderBy: "Date desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     }else{
@@ -2772,8 +2783,8 @@ export class SideBarService extends BaseService {
           //IncludedataPriorToClosingDate:true,
           Search: "",
           OrderBy: "Date desc",
-          LimitCount: '"' + limitcount + '"',
-          LimitFrom: '"' + limitfrom + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
         };
       } else {
         options = {
@@ -2783,8 +2794,8 @@ export class SideBarService extends BaseService {
           OrderBy: "Date desc",
           DateFrom: '"' + dateFrom + '"',
           DateTo: '"' + dateTo + '"',
-          LimitCount: '"' + limitcount + '"',
-          LimitFrom: '"' + limitfrom + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
         };
       }
     }
@@ -2813,8 +2824,8 @@ export class SideBarService extends BaseService {
         OrderBy: "SaleID desc",
         FilterString: "SaleType='Invoice'",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.BackOrderSalesList, options);
@@ -2852,8 +2863,8 @@ export class SideBarService extends BaseService {
         OrderBy: "SaleID desc",
         ListType: "Detail",
         // select: '[Deleted]=false',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TInvoiceBackOrder, options);
@@ -2870,8 +2881,8 @@ export class SideBarService extends BaseService {
         IncludeBo: true,
         IncludeShipped: false,
         IncludeLines: true,
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -2883,8 +2894,8 @@ export class SideBarService extends BaseService {
         IncludeLines: true,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TInvoiceList, options);
@@ -2909,8 +2920,8 @@ export class SideBarService extends BaseService {
         orderby: '"PurchaseOrderID desc"',
         PropertyList:"ID,EmployeeName,SaleClassName,OrderDate,SupplierName,TotalAmount,OrderStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TpurchaseOrderBackOrder, options);
@@ -2927,8 +2938,8 @@ export class SideBarService extends BaseService {
         IncludeBo: true,
         IncludeShipped: false,
         IncludeLines: true,
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -2940,8 +2951,8 @@ export class SideBarService extends BaseService {
         IncludeLines: true,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TPurchaseOrderList, options);
@@ -2959,8 +2970,8 @@ export class SideBarService extends BaseService {
         orderby: '"ReconciliationID desc"',
         ListType: "Detail",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TReconciliation, options);
@@ -2973,8 +2984,8 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: true,
         OrderBy: "ReconciliationID desc",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
         Search: "Deleted != true",
       };
     } else {
@@ -2983,8 +2994,8 @@ export class SideBarService extends BaseService {
         OrderBy: "ReconciliationID desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
         Search: "Deleted != true",
       };
     }
@@ -3025,7 +3036,7 @@ export class SideBarService extends BaseService {
       IgnoreDates: false,
       DateFrom: '"' + dateFrom + '"',
       DateTo: '"' + dateTo + '"',
-      LimitCount: '"' + initialReportLoad + '"',
+      LimitCount: parseInt(initialReportLoad),
     };
 
     return this.getList(
@@ -3113,7 +3124,7 @@ export class SideBarService extends BaseService {
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + initialReportLoad + '"',
+        LimitCount: parseInt(initialReportLoad),
       };
     }
     return this.getList(this.ERPObjects.TStatementList, options);
@@ -3139,8 +3150,8 @@ export class SideBarService extends BaseService {
     let options = {
       SearchName: "'" + searchName + "'",
       QuerySearchMode: "'smSearchEngineLike'",
-      LimitCount: '"' + limitcount + '"',
-      LimitFrom: '"' + limitfrom + '"',
+      LimitCount: parseInt(limitcount),
+      LimitFrom: parseInt(limitfrom),
     };
     return this.getList(this.ERPObjects.TGlobalSearchReport, options);
   }
@@ -3204,8 +3215,8 @@ export class SideBarService extends BaseService {
         OrderBy: "SaleID desc",
         ListType: "Detail",
         select: "[Deleted]=false",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TRefundSale, options);
@@ -3219,8 +3230,8 @@ export class SideBarService extends BaseService {
         IgnoreDates: true,
         Search: "Deleted != true",
         OrderBy: "SaleID desc",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     } else {
       options = {
@@ -3229,8 +3240,8 @@ export class SideBarService extends BaseService {
         Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TRefundSaleList, options);
@@ -3272,8 +3283,8 @@ export class SideBarService extends BaseService {
       options = {
         // orderby:'"ClientID desc"',
         ListType: "Detail",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TPayRun, options);
@@ -3289,8 +3300,8 @@ export class SideBarService extends BaseService {
       options = {
         // orderby:'"ClientID desc"',
         ListType: "Detail",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
       };
     }
     return this.getList(this.ERPObjects.TPayHistory, options);
@@ -3307,8 +3318,8 @@ export class SideBarService extends BaseService {
       options = {
         // orderby:'"ClientID desc"',
         ListType: "Detail",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
         select: "[PayrollCalendarActive]=true",
       };
     }

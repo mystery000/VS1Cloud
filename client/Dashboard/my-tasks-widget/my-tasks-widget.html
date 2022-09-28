@@ -19,14 +19,14 @@
     </div>
     {{#if todayTasks}}
         {{#each item in todayTasks}}
-        <div class="row no-gutters mb-1 align-items-center" style="font-size: 16px; cursor: pointer; padding: 4px;">
-            <div class="col-md-2 no-gutters text-center">
-                <a class="mb-0" href="crmoverview?taskid={{item.id}}">View</a>
-            </div>
-            <div class="col-md-3 no-gutters text-center">
+        <div class="row no-gutters mb-1 align-items-center taskline" style="font-size: 16px; cursor: pointer; padding: 4px;" taskid="{{item.id}}">
+<!--            <div class="col-md-2 no-gutters text-center">-->
+<!--                <a class="mb-0" href="crmoverview?taskid={{item.id}}">View</a>-->
+<!--            </div>-->
+            <div class="col-md-4 no-gutters text-center">
                 <p class="mb-0">{{item.dueDate}}</p>
             </div>
-            <div class="col-md-3 no-gutters text-center">
+            <div class="col-md-4 no-gutters text-center">
                 <p class="mb-0">{{item.priority}}</p>
             </div>
             <div class="col-md-4 no-gutters">

@@ -7,6 +7,7 @@ import { UtilityService } from "../../utility-service";
 import {SideBarService} from "../../js/sidebar-service";
 
 let sideBarService = new SideBarService();
+let utilityService = new UtilityService();
 
 Template.dashboardManagerCharts.onCreated(function() {
     const templateObject = Template.instance();
@@ -16,62 +17,8 @@ Template.dashboardManagerCharts.onCreated(function() {
 
 Template.dashboardManagerCharts.onRendered(function () {
     const templateObject = Template.instance();
-/*
-    templateObject.getEmployees = function () {
-        getVS1Data('TEmployee').then(function (dataObject) {
-            if(dataObject.length == 0){
-                sideBarService.getAllEmployees("All",0).then(function (data) {
-                    setAllEmployees(data);
-                }).catch(function (err) {
-                    $('.fullScreenSpin').css('display','none');
-                });
-            }else{
-                let data = JSON.parse(dataObject[0].data);
-                setAllEmployees(data);
-            }
-        }).catch(function (err) {
-            sideBarService.getAllEmployees("All",0).then(function (data) {
-                setAllEmployees(data);
-            }).catch(function (err) {
-                $('.fullScreenSpin').css('display','none');
-            });
-        });
-    }
-    function setAllEmployees(data) {
-        console.log(data);
-        addVS1Data('TEmployee',JSON.stringify(data));
-        let dataTableList = [];
-        for(let i=0; i<data.temployee.length; i++){
-            const dataList = {
-                id: data.temployee[i].fields.ID || '',
-                employeeno: data.temployee[i].fields.EmployeeNo || '',
-                employeename: data.temployee[i].fields.EmployeeName || '',
-                firstname: data.temployee[i].fields.FirstName || '',
-                lastname: data.temployee[i].fields.LastName || '',
-                phone: data.temployee[i].fields.Phone || '',
-                email: data.temployee[i].fields.Email || '',
-                address: data.temployee[i].fields.Street || '',
-                country: data.temployee[i].fields.Country || '',
-                department: data.temployee[i].fields.DefaultClassName || '',
-                custFld1: data.temployee[i].fields.CustFld1 || '',
-                custFld2: data.temployee[i].fields.CustFld2 || '',
-                custFld3: data.temployee[i].fields.CustFld3 || '',
-                custFld4: data.temployee[i].fields.CustFld4 || ''
-            };
-            if(data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != ''){
-                dataTableList.push(dataList);
-            }
-            //}
-        }
-        templateObject.employeesByTotalSales.set(dataTableList);
 
-    }
-    templateObject.getEmployees();
-
- */
-
-    function formatPrice( amount ){
-        let utilityService = new UtilityService();
+    function formatPrice(amount){
         if( isNaN(amount) || !amount){
             amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
             amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
@@ -89,6 +36,7 @@ Template.dashboardManagerCharts.onRendered(function () {
                 employeesTotalDiscount.push(emp.totalDiscount);
             }
         });
+        /*
         highCharts.chart('spd-employee-chart', {
             series: [{
                 name: 'Employees',
@@ -98,10 +46,19 @@ Template.dashboardManagerCharts.onRendered(function () {
                 type: 'bar'
             },
             title: {
-                text: ''
+                text: '',
+                style: {
+                    display: 'none'
+                }
             },
             subtitle: {
-                text: 'Discount Given By Employees'
+                text: 'Discount Given By Employees',
+                style: {
+                    display: 'none'
+                }
+            },
+            exporting: {
+                enabled: false
             },
             xAxis: {
                 categories: employeeNames
@@ -119,6 +76,98 @@ Template.dashboardManagerCharts.onRendered(function () {
                 }
             }
         });
+        */
+        const ctx = document.getElementById("spd-employee-chart").getContext("2d");
+        const myChart = new Chart(ctx, {
+            type: "horizontalBar",
+            data: {
+                labels: employeeNames,
+                datasets: [
+                    {
+                        label: "Earnings",
+                        data: employeesTotalDiscount,
+                        backgroundColor: [
+                            "#f6c23e",
+                            "#f6c23e",
+                            "#f6c23e",
+                            "#f6c23e",
+                            "#f6c23e",
+                            "#f6c23e",
+                        ],
+                        borderColor: [
+                            "rgba(78,115,223,0)",
+                            "rgba(78,115,223,0)",
+                            "rgba(78,115,223,0)",
+                            "rgba(78,115,223,0)",
+                            "rgba(78,115,223,0)",
+                            "rgba(78,115,223,0)",
+                        ],
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                onClick: chartClickEvent,
+                maintainAspectRatio: false,
+                responsive: true,
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return (
+                                utilityService.modifynegativeCurrencyFormat(
+                                    tooltipItem.xLabel
+                                ) || 0.0
+                            );
+                        },
+                    },
+                },
+                legend: {
+                    display: false,
+                },
+                title: {},
+                scales: {
+                    xAxes: [
+                        {
+                            gridLines: {
+                                color: "rgb(234, 236, 244)",
+                                zeroLineColor: "rgb(234, 236, 244)",
+                                drawBorder: false,
+                                drawTicks: false,
+                                borderDash: ["2"],
+                                zeroLineBorderDash: ["2"],
+                                drawOnChartArea: false,
+                            },
+                            ticks: {
+                                fontColor: "#858796",
+                                beginAtZero: true,
+                                padding: 20,
+                            },
+                        },
+                    ],
+                    yAxes: [
+                        {
+                            gridLines: {
+                                color: "rgb(234, 236, 244)",
+                                zeroLineColor: "rgb(234, 236, 244)",
+                                drawBorder: false,
+                                drawTicks: false,
+                                borderDash: ["2"],
+                                zeroLineBorderDash: ["2"],
+                            },
+                            ticks: {
+                                fontColor: "#858796",
+                                beginAtZero: true,
+                                padding: 20,
+                            },
+                        },
+                    ],
+                },
+            },
+        });
+    }
+
+    function chartClickEvent() {
+        FlowRouter.go("/employeelist");
     }
 
     function setGaugeChart({ divId, empData, index }) {
@@ -231,10 +280,13 @@ Template.dashboardManagerCharts.onRendered(function () {
                     enabled: true,
                     align: 'center',
                     x: 0,
-                    y: 45,
+                    y: 65,
                     overflow: "allow",
                     borderWidth: 0,
                     className: 'rev-counter',
+                    formatter: function() {
+                        return formatPrice(empData.totalSales)
+                    },
                 }
             }]
         };
@@ -258,7 +310,10 @@ Template.dashboardManagerCharts.onRendered(function () {
         const filteredEmployees = _.sortBy(_.filter(templateObject.employeesByTotalSales.get(), emp => !!emp.salesQuota), ['totalSales']);
         const employeesByTotalSales = _.sortBy(filteredEmployees, ['sale']).reverse().slice(0, 6); // get top 6 employees
         _.each(employeesByTotalSales, (empData, index) => {
-            setGaugeChart({ divId: `spd-gauge-area${index + 1}`, empData, index });
+            if (empData && empData.name) {
+                $('#gauge-card-'+(index + 1)).show();
+                setGaugeChart({ divId: `spd-gauge-area${index + 1}`, empData, index });
+            }
         });
     };
 

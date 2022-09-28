@@ -795,8 +795,7 @@ Template.contactoverview.onRendered(function () {
                   $("#tblcontactoverview").DataTable().ajax.reload();
                 },
                 fnDrawCallback: function (oSettings) {
-                  let checkurlIgnoreDate =
-                    FlowRouter.current().queryParams.ignoredate;
+                  let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
                   if (checkurlIgnoreDate == "true") {
                   } else {
                     $(".paginate_button.page-item").removeClass("disabled");

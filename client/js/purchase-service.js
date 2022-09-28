@@ -590,7 +590,7 @@ export class PurchaseBoardService extends BaseService {
     let options = {
       PropertyList: "ID,GLAccountName",
       orderby:'"PurchaseOrderID desc"',
-      LimitCount:'"1"',
+      LimitCount:1,
     };
     return this.getList(this.ERPObjects.TCheque, options);
   }
@@ -656,7 +656,7 @@ export class PurchaseBoardService extends BaseService {
     let options = {
       PropertyList: "ID",
       orderby:'"PurchaseOrderID desc"',
-      LimitCount:'"1"',
+      LimitCount:1,
     };
     return this.getList(this.ERPObjects.TBill, options);
   }
@@ -666,7 +666,7 @@ export class PurchaseBoardService extends BaseService {
     let options = {
       PropertyList: "ID",
       orderby:'"PurchaseOrderID desc"',
-      LimitCount:'"1"',
+      LimitCount:1,
     };
     return this.getList(this.ERPObjects.TPurchaseOrder, options);
   }
@@ -675,7 +675,7 @@ export class PurchaseBoardService extends BaseService {
     let options = {
       PropertyList: "ID",
       orderby:'"PurchaseOrderID desc"',
-      LimitCount:'"1"',
+      LimitCount:1,
     };
     return this.getList(this.ERPObjects.TCredit, options);
   }

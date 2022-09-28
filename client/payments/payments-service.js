@@ -20,7 +20,7 @@ export class PaymentsService extends BaseService {
     let options = {
       PropertyList: "ID,AccountName,DeptClassName",
       orderby:'"PaymentID desc"',
-      LimitCount:'"1"',
+      LimitCount:1,
     };
     return this.getList(this.ERPObjects.TCustomerPayment, options);
   }
@@ -29,7 +29,7 @@ export class PaymentsService extends BaseService {
     let options = {
         PropertyList:'ID,AccountName,DeptClassName',
         orderby:'"PaymentID desc"',
-        LimitCount:'"1"',
+        LimitCount:1,
     };
     return this.getList(this.ERPObjects.TSupplierPayment, options);
   }

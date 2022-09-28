@@ -565,11 +565,7 @@ Template.payrollleavetaken.helpers({
     return Template.instance().records.get();
   },
   redirectionType(item) {
-    if(item.PayDate === 'PO') {
-      return 'employeescard?id=' + item.PayID;
-    } else {
-      return '#noInfoFound';
-    }
+      return '/employeescard?id=' + item.EmployeeID;
   },
   formatPrice( amount ){
     let utilityService = new UtilityService();

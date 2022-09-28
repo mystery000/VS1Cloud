@@ -71,7 +71,6 @@ async function saveCharts() {
     const dashboardApis = new DashboardApi(); // Load all dashboard APIS
     ChartHandler.buildPositions();
     const charts = $(".chart-visibility.editCharts");
-
     /**
     * @property {Tvs1ChartDashboardPreference[]}
     */
@@ -103,7 +102,6 @@ async function saveCharts() {
             })
         );
     });
-    console.log(chartList);
     // for (const _chart of chartList) {
     let chartJSON = {
         type: "Tvs1dashboardpreferences",
@@ -153,8 +151,7 @@ Template.allChartLists.onRendered(function () {
         const dashboardApis = new DashboardApi(); // Load all dashboard APIS
         let displayedCharts = 0;
         chartList = await ChartHandler.getTvs1charts();
-        console.log(chartList);
-        if( chartList.length == 0 ){
+        if (chartList.length == 0) {
             // Fetching data from API
             const allChartsEndpoint = dashboardApis.collection.findByName(
                 dashboardApis.collectionNames.vs1charts
@@ -166,7 +163,7 @@ Template.allChartLists.onRendered(function () {
                 chartList = Tvs1chart.fromList(allChartsJsonResponse.tvs1charts);
             }
         }
-        if( chartList.length > 0 ){
+        if (chartList.length > 0) {
             // Hide all charts
             $('.sortable-chart-widget-js').addClass("hideelement");
             // the goal here is to get the right names so it can be used for preferences
@@ -272,12 +269,14 @@ Template.allChartLists.onRendered(function () {
 
         // Now get user preferences
         let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( _tabGroup );
-        console.log('user preferences');
-        console.log(tvs1ChartDashboardPreference);
+        // let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( 2 );
         if (tvs1ChartDashboardPreference.length > 0) {
             // if charts to be displayed are specified
             tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
                 setTimeout(() => {
+                    if (!tvs1chart.fields.Chartname || tvs1chart.fields.Chartname == "") {
+                        return;
+                    }
                     const itemName =
                         tvs1chart.fields.ChartGroup.toLowerCase() +
                         "__" +
@@ -478,19 +477,17 @@ Template.allChartLists.events({
         // Save Into local indexDB
         await ChartHandler.saveChartsInLocalDB();
         await templateObject.checkChartToDisplay();
-        getVS1Data('Tvs1charts').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                sideBarService.getTvs1charts().then(function(data) {
-                    console.log(data);
-                    addVS1Data('Tvs1charts', JSON.stringify(data));
-                }).catch(function(err) {
-
-                });
-            } else {
-                let data1 = JSON.parse(dataObject[0].data);
-                console.log(data1)
-            }
-        });
+        // getVS1Data('Tvs1charts').then(function(dataObject) {
+        //     if (dataObject.length == 0) {
+        //         sideBarService.getTvs1charts().then(function(data) {
+        //             addVS1Data('Tvs1charts', JSON.stringify(data));
+        //         }).catch(function(err) {
+        //
+        //         });
+        //     } else {
+        //         let data1 = JSON.parse(dataObject[0].data);
+        //     }
+        // });
         $(".fullScreenSpin").css("display", "none");
     },
 });

@@ -6,7 +6,7 @@ export class ProductService extends BaseService {
       let options = {
         SearchName: "'"+searchName+"'",
         QuerySearchMode: "'smSearchEngineLike'",
-        LimitCount:'"'+initialReportLoad+'"'
+        LimitCount: parseInt(initialDataLoad),
       };
       return this.getList(this.ERPObjects.TGlobalSearchReport, options);
   }
@@ -344,7 +344,7 @@ export class ProductService extends BaseService {
       let options = {
         PropertyList: "ID,TaxCodePurchase,TaxCodeSales",
         orderby:'"PARTSID desc"',
-        LimitCount:'"1"',
+        LimitCount:1,
       };
       return this.getList(this.ERPObjects.TProduct, options);
     }

@@ -381,7 +381,8 @@ Template.transactionjournallist.events({
     // let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
     //await templateObject.setReportOptions(true);
-
+    $('#dateFrom').attr('readonly', true);
+    $('#dateTo').attr('readonly', true);
      templateObject.loadReport(null, null, true);
   },
 
