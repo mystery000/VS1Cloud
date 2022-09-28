@@ -1277,6 +1277,8 @@ Template.employeescard.onRendered(function () {
         });
     }
 
+    
+
     if (currentId.id == "undefined") {
         currentDate = new Date();
         $('.fullScreenSpin').css('display', 'none');
@@ -2674,6 +2676,7 @@ Template.employeescard.onRendered(function () {
     templateObject.filterPayTemplates = function ( type ) {
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+
         if(type == "earningLines"){
             let payTemplateEarningLines = [];
             let checkPayTemplateEarningLine = templateObject.payTemplateEarningLineInfo.get();
@@ -2681,7 +2684,7 @@ Template.employeescard.onRendered(function () {
                 payTemplateEarningLines = PayTemplateEarningLine.fromList(
                     checkPayTemplateEarningLine
                 ).filter((item) => {
-                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Active == true) {
+                    if ( parseInt( item.EmployeeID ) == parseInt( employeeID ) && item.Active == true) {
                         return item;
                     }
                 });
@@ -2696,7 +2699,7 @@ Template.employeescard.onRendered(function () {
                 payTemplateDeductionLines = PayTemplateDeductionLine.fromList(
                     checkPayTemplateDeductionLine
                 ).filter((item) => {
-                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Active == true ) {
+                    if ( parseInt( item.EmployeeID ) == parseInt( employeeID ) && item.Active == true ) {
                         return item;
                     }
                 });
@@ -2710,7 +2713,7 @@ Template.employeescard.onRendered(function () {
                 payTemplateSuperannuationLines = PayTemplateSuperannuationLine.fromList(
                     checkPayTemplateSuperannuationLine
                 ).filter((item) => {
-                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Active == true ) {
+                    if ( parseInt( item.EmployeeID ) == parseInt( employeeID ) && item.Active == true ) {
                         return item;
                     }
                 });
@@ -2725,7 +2728,7 @@ Template.employeescard.onRendered(function () {
                 payTemplateReiumbursementLines = PayTemplateReiumbursementLine.fromList(
                     checkPayTemplateReiumbursementLine
                 ).filter((item) => {
-                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Active == true ) {
+                    if ( parseInt( item.EmployeeID ) == parseInt( employeeID ) && item.Active == true ) {
                         return item;
                     }
                 });
@@ -2733,6 +2736,37 @@ Template.employeescard.onRendered(function () {
             return payTemplateReiumbursementLines;
         }
     };
+
+    templateObject.getEarnings = async (employeeID = null) => {
+        let data = await CachedHttp.get(erpObject.TPayTemplateEarningLine, async () => {
+            const employeePayrolApis = new EmployeePayrollApi();
+            const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TPayTemplateEarningLine
+            );
+            employeePayrolEndpoint.url.searchParams.append(
+                "ListType",
+                "'Detail'"
+            );
+
+            const response = await employeePayrolEndpoint.fetch();
+            if (response.ok == true) {
+                return await response.json();
+            }
+            return null;
+        }, {
+            useIndexDb: true, 
+            useLocalStorage: false,
+            validate: (cachedResponse) => {
+                return false;
+            }
+        });
+
+        data = data.response.tpaytemplateearningline.map((earning) => earning.fields);
+        if(employeeID) {
+            data = data.filter((item) => parseInt( item.EmployeeID ) == parseInt( employeeID ));
+        }
+        return data;
+    }
 
     templateObject.saveEarningLocalDB = async function(){
         const employeePayrolApis = new EmployeePayrollApi();
@@ -2756,28 +2790,29 @@ Template.employeescard.onRendered(function () {
     };
 
     templateObject.getPayEarningLines = async function(){
-        let data = [];
-        let dataObject = await getVS1Data('TPayTemplateEarningLine')
-        if (dataObject.length == 0) {
-            data = await templateObject.saveEarningLocalDB();
-        } else {
-            data = JSON.parse(dataObject[0].data);
-        }
-        let useData = PayTemplateEarningLine.fromList(
-            data.tpaytemplateearningline
-        ).filter((item) => {
-            if (parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
-                return item;
-            }
-        });
+        let useData = await templateObject.getEarnings(employeeID);
+        // let dataObject = await getVS1Data('TPayTemplateEarningLine')
+        // if (dataObject.length == 0) {
+        //     data = await templateObject.saveEarningLocalDB();
+        // } else {
+        //     data = JSON.parse(dataObject[0].data);
+        // }
+
+        // let useData = PayTemplateEarningLine.fromList(
+        //     data.tpaytemplateearningline
+        // ).filter((item) => {
+        //     if (parseInt( item.EmployeeID ) == parseInt( employeeID ) ) {
+        //         return item;
+        //     }
+        // });
 
         await templateObject.payTemplateEarningLineInfo.set(useData);
         await templateObject.setEarningLineDropDown();
         if( useData.length ){
             setTimeout(function () {
                 Array.prototype.forEach.call(useData, (item) => {
-                    $(`#ptEarningRate${item.fields.ID}`).val( item.fields.EarningRate );
-                    $(`#ptEarningAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(item.fields.Amount)|| 0.00 );
+                    $(`#ptEarningRate${item.ID}`).val( item.EarningRate );
+                    $(`#ptEarningAmount${item.ID}`).val( utilityService.modifynegativeCurrencyFormat(item.Amount)|| 0.00 );
                 })
             }, 500);
         }

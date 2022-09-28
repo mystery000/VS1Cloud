@@ -1,23 +1,116 @@
-import { isEmpty, times } from "lodash";
+import {isEmpty, times} from "lodash";
+import {ContactService} from "../../../contacts/contact-service";
+import CachedHttp from "../../../lib/global/CachedHttp";
+import erpObject from "../../../lib/global/erp-objects";
+import EmployeePayrollApi from "../EmployeePayrollApi";
+import PayTemplateSuperannuationLine from "./PayTemplateSuperannuationLine";
 import UserModel from "./User";
 
 export default class Employee {
-  constructor({ type, fields }) {
+  constructor({type, fields}) {
     this.type = type;
     this.fields = fields;
+
+    this.earnings = [];
+    this.earningTotal = 0.0;
+
+    this.taxtTotal = 0.0;
+    this.taxes = [];
+
+    this.superAnnuations = [];
+    this.superAnnuationTotal = 0.0;
   }
 
   /**
-   * This will convert from a list
-   * @param {Array} list 
-   * @returns {Employee[]}
-   */
+     * This will convert from a list
+     * @param {Array} list
+     * @returns {Employee[]}
+     */
   static fromList(list = []) {
-    let _list = [];
-    list.forEach((el) => {
-      _list.push(new Employee(el));
+    return list.map(employee => new Employee(employee));
+    // let _list = [];
+    // list.forEach(el => {
+    //   _list.push(new Employee(el));
+    // });
+    // return _list;
+  }
+
+  static async loadFromId(id) {
+    const employee = await new ContactService().getOneEmployeeDataEx(id);
+    console.log("employee");
+    return new Employee(employee);
+  }
+
+  /**
+     * This will load earnings of this employee
+     * @returns
+     */
+  async getEarnings() {
+    let data = await CachedHttp.get(erpObject.TPayTemplateEarningLine, async () => {
+      const employeePayrolApis = new EmployeePayrollApi();
+      const employeePayrolEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TPayTemplateEarningLine);
+      employeePayrolEndpoint.url.searchParams.append("ListType", "'Detail'");
+
+      const response = await employeePayrolEndpoint.fetch();
+      if (response.ok == true) {
+        return await response.json();
+      }
+      return null;
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: cachedResponse => {
+        return false;
+      }
     });
-    return _list;
+
+    data = data.response.tpaytemplateearningline.map(earning => earning.fields);
+    if (this.fields.ID) {
+      data = data.filter(item => parseInt(item.EmployeeID) == parseInt(this.fields.ID));
+      this.earnings = data;
+      this.calculateEarnings();
+    }
+
+    return data;
+  }
+
+  incrementEarnings(amount = 0.0) {
+    this.earningTotal += amount;
+  }
+  calculateEarnings() {
+    this.earnings.forEach(earning => this.incrementEarnings(earning.Amount));
+  }
+
+  async getSuperAnnuations() {
+    // let data = await CachedHttp.get(erpObject.TSuperannuation, async () => {
+    //   return await new SideBarService().getSuperannuationByName(dataSearchName)
+    // })
+
+    let data = [];
+    let dataObject = await getVS1Data("TPayTemplateSuperannuationLine");
+    data = JSON.parse(dataObject[0].data);
+    let useData = PayTemplateSuperannuationLine.fromList(data.tpaytemplatesuperannuationline);
+
+    useData = useData.map(item => item.fields);
+
+    useData = useData.filter(item => {
+      if (parseInt(item.EmployeeID) == parseInt(this.fields.ID)) {
+        return item;
+      }
+    });
+
+    this.superAnnuations = useData;
+    this.calculateSuperAnnuation();
+  }
+
+  calculateSuperAnnuation() {
+    this.superAnnuations.forEach(s => {
+      this.incrementSuperAnnuation(s.Amount);
+    });
+  }
+
+  incrementSuperAnnuation(amount = 0.0) {
+    this.superAnnuationTotal += amount;
   }
 }
 
@@ -315,7 +408,7 @@ export class EmployeeFields {
     } else {
       this.User = new UserModel(User);
     }
-    
+
     this.Wages = Wages;
     this.WorkersCompInsurer = WorkersCompInsurer;
     this.WorkersCompRate = WorkersCompRate;
