@@ -41,7 +41,8 @@
   //Global Declaration
   /* VS1 SandBox Details */
   URLRequest = 'https://'; //non ssl server
-  checkSSLPorts = '4433'; //Non SSL Port
+  //checkSSLPorts = '4433'; //Non SSL Port
+  checkSSLPorts = '8453'; //Sandbox
   vs1loggedDatatbase = 'vs1_sandbox_license'; //SandBox databaseName
 
   ERPDatabaseIPAdderess = "login.vs1cloud.com"; //www.login.vs1cloud.com
