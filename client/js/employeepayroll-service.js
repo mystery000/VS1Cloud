@@ -1,6 +1,6 @@
 import {BaseService} from "../js/base-service";
 export class EmployeePayrollService extends BaseService {
-  
+
   getAllEmployeePaySettings(limitcount, limitfrom) {
     let options = '';
     if(limitcount == 'All'){
@@ -12,17 +12,17 @@ export class EmployeePayrollService extends BaseService {
       options = {
         ListType: "Detail",
         //select: '[Active]=true',
-        LimitCount:'"'+limitcount+'"',
-        LimitFrom:'"'+limitfrom+'"'
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
      };
     };
     return this.getList(this.ERPObjects.TEmployeepaysettings, options);
   }
-  
+
   saveTEmployeepaysettings(data) {
     return this.POST(this.ERPObjects.TEmployeepaysettings, data);
   }
-  
+
   getAllTLeaveTypes(limitcount, limitfrom) {
     let options = '';
     if(limitcount == 'All'){
@@ -34,8 +34,8 @@ export class EmployeePayrollService extends BaseService {
       options = {
         ListType: "Detail",
         //select: '[Active]=true',
-        LimitCount:'"'+limitcount+'"',
-        LimitFrom:'"'+limitfrom+'"'
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
      };
     };
     return this.getList(this.ERPObjects.TLeavetypes, options);
@@ -52,8 +52,8 @@ export class EmployeePayrollService extends BaseService {
       options = {
         ListType: "Detail",
         //select: '[Active]=true',
-        LimitCount:'"'+limitcount+'"',
-        LimitFrom:'"'+limitfrom+'"'
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
      };
     };
     return this.getList(this.ERPObjects.TBankAccounts, options);
@@ -126,5 +126,5 @@ export class EmployeePayrollService extends BaseService {
     return this.getList('TReimbursement', options);
   }
 
-  
+
 }

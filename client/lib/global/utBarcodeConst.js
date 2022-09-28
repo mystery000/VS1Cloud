@@ -37,6 +37,7 @@
   Barcode_Prefix_Lead = 'LED';
 
  licenceIPAddress = "login.vs1cloud.com"; //165.228.147.127
+ //licenceIPAddress = "sandboxcoreedi.vs1cloud.com"; //192.168.15.124
   //Global Declaration
   /* VS1 SandBox Details */
   URLRequest = 'https://'; //non ssl server
