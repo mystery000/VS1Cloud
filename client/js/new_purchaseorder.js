@@ -190,7 +190,7 @@ Template.purchaseordercard.onRendered(() => {
           class: reset_data[r].class,
           display: reset_data[r].display,
           width: reset_data[r].width ? reset_data[r].width : '',
-          colspan: ["Price (Inc)", "Tax Amt", "Amount (Ex)"].includes(reset_data[r].label) == true ? (templateObject.isForeignEnabled.get() == true ? 2 : 1) : 1
+          colspan: ["Price (Inc)", "Tax Amt", "Amount (Ex)", "Amount (Inc)"].includes(reset_data[r].label) == true ? (templateObject.isForeignEnabled.get() == true ? 2 : 1) : 1
         };
         custFields.push(customData);
       }
@@ -5574,7 +5574,7 @@ Template.purchaseordercard.helpers({
     },
 
     displayFieldColspan: (displayfield) => {
-        if(["Price (Inc)", "Tax Amt", "Amount (Ex)"].includes(displayfield.custfieldlabel)) 
+        if(["Price (Inc)", "Tax Amt", "Amount (Ex)", "Amount (Inc)"].includes(displayfield.custfieldlabel)) 
         {
             if(Template.instance().isForeignEnabled.get() == true) {
                 return 2

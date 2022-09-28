@@ -136,8 +136,8 @@ function _updateRates(dbCurrencies = [], FxCurrencies = [], erpGet, callback = (
 }
 
 function buildParser(cronSetting, parser ){
-  // let cronStartDate = moment(cronSetting.startAt).subtract(1, 'days');  
-  let cronStartDate = cronSetting.startAt;  
+  let cronStartDate = moment(cronSetting.startAt).subtract(1, 'days');  
+  //let cronStartDate = cronSetting.startAt;  
   if ( cronSetting.isProcessed == 1 ) {
     let parseTime = moment(cronStartDate).format('h:mm a');
     let parseDay = moment(cronStartDate).format('Do');

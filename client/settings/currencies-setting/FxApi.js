@@ -3,7 +3,7 @@ import {TaxRateService} from "../settings-service";
 class FxApi {
   static ApiID = "zuusoft547505136";
   static ApiKey = "jkupm6cmhafko2jm7hbodgonur";
-  static encodedApiKey = "enV1c29mdDU0NzUwNTEzNjpqa3VwbTZjbWhhZmtvMmptN2hib2Rnb251cg==";
+  static encodedApiKey =  "eXl5dXV1dXV1eXV5dXl1eTU0ODg0MDU4NzozMXNldXFrMTRkdGZyczZjc2FzbWIzanIyMQ==";
 
   constructor() {}
 
