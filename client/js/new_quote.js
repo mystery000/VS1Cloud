@@ -1865,6 +1865,7 @@ Template.new_quote.onRendered(() => {
                             $('#edtCustomerName').val(data.fields.CustomerName);
                             templateObject.CleintName.set(data.fields.CustomerName);
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                             $('#sltStatus').val(data.fields.SalesStatus);
 
                                 // tempcode
@@ -2212,6 +2213,7 @@ Template.new_quote.onRendered(() => {
                                 $('#edtCustomerName').val(useData[d].fields.CustomerName);
                                 templateObject.CleintName.set(useData[d].fields.CustomerName);
                                 $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
+                                $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
                                 $('#sltStatus').val(useData[d].fields.SalesStatus);
 
                                 // tempcode
@@ -2490,6 +2492,7 @@ Template.new_quote.onRendered(() => {
                                 $('#edtCustomerName').val(data.fields.CustomerName);
                                 templateObject.CleintName.set(data.fields.CustomerName);
                                 $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                                 $('#sltStatus').val(data.fields.SalesStatus);
 
                                 // tempcode
@@ -2776,6 +2779,7 @@ Template.new_quote.onRendered(() => {
                         $('#edtCustomerName').val(data.fields.CustomerName);
                         templateObject.CleintName.set(data.fields.CustomerName);
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                        $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                         $('#sltStatus').val(data.fields.SalesStatus);
 
                                 // tempcode
@@ -3432,6 +3436,7 @@ Template.new_quote.onRendered(() => {
         $('#edtCustomerName').val(data.fields.CustomerName);
         templateObject.CleintName.set(data.fields.CustomerName);
         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+        $('#exchange_rate').val(data.fields.ForeignExchangeRate);
         $('#sltStatus').val(data.fields.SalesStatus);
         // tempcode
         // setTimeout(function () {
@@ -7385,6 +7390,7 @@ Template.new_quote.events({
             let currentQuote = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             let objDetails = '';
             if (getso_id[1]) {
                 currentQuote = parseInt(currentQuote);
@@ -7394,6 +7400,7 @@ Template.new_quote.events({
                         ID: currentQuote,
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -7419,6 +7426,7 @@ Template.new_quote.events({
                     fields: {
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -8709,6 +8717,7 @@ Template.new_quote.events({
                     let currentQuote = getso_id[getso_id.length - 1];
                     let uploadedItems = templateObject.uploadedFiles.get();
                     const currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                    let ForeignExchangeRate = $('#exchange_rate').val();
                     let objDetails;
                     if (getso_id[1]) {
                         currentQuote = parseInt(currentQuote);
@@ -8718,6 +8727,7 @@ Template.new_quote.events({
                                 ID: currentQuote,
                                 CustomerName: customer,
                                 ForeignExchangeCode: currencyCode,
+                                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
                                 SaleDate: saleDate,
@@ -9299,6 +9309,7 @@ Template.new_quote.events({
             let currentQuote = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             let objDetails = '';
             if (getso_id[1]) {
                 currentQuote = parseInt(currentQuote);
@@ -9308,6 +9319,7 @@ Template.new_quote.events({
                         ID: currentQuote,
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -9333,6 +9345,7 @@ Template.new_quote.events({
                     fields: {
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -9552,6 +9565,7 @@ Template.new_quote.events({
                 let currentQuote = getso_id[getso_id.length - 1];
                 let uploadedItems = templateObject.uploadedFiles.get();
                 const currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                let ForeignExchangeRate = $('#exchange_rate').val();
                 let objDetails = '';
                 if (getso_id[1]) {
                     currentQuote = parseInt(currentQuote);
@@ -9561,6 +9575,7 @@ Template.new_quote.events({
                             ID: currentQuote,
                             CustomerName: customer,
                             ForeignExchangeCode: currencyCode,
+                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             InvoiceToDesc: billingAddress,
                             SaleDate: saleDate,
@@ -9587,6 +9602,7 @@ Template.new_quote.events({
                         fields: {
                             CustomerName: customer,
                             ForeignExchangeCode: currencyCode,
+                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             InvoiceToDesc: billingAddress,
                             SaleDate: saleDate,
@@ -9801,6 +9817,7 @@ Template.new_quote.events({
                 let currentQuote = getso_id[getso_id.length - 1];
                 let uploadedItems = templateObject.uploadedFiles.get();
                 const currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                let ForeignExchangeRate = $('#exchange_rate').val();
                 let objDetails = '';
                 if (getso_id[1]) {
                     currentQuote = parseInt(currentQuote);
@@ -9810,6 +9827,7 @@ Template.new_quote.events({
                             ID: currentQuote,
                             CustomerName: customer,
                             ForeignExchangeCode: currencyCode,
+                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             InvoiceToDesc: billingAddress,
                             SaleDate: saleDate,
@@ -9836,6 +9854,7 @@ Template.new_quote.events({
                         fields: {
                             CustomerName: customer,
                             ForeignExchangeCode: currencyCode,
+                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             InvoiceToDesc: billingAddress,
                             SaleDate: saleDate,

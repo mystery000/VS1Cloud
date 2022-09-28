@@ -2018,6 +2018,8 @@ templateObject.getLastPOData = async function() {
                             $('#sltDept').val(getDepartmentVal);
                             $('#sltStatus').val(data.fields.OrderStatus);
                             $('#shipvia').val(data.fields.Shipping);
+                            $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -2257,6 +2259,8 @@ templateObject.getLastPOData = async function() {
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(useData[d].fields.OrderStatus);
                                 $('#shipvia').val(useData[d].fields.Shipping);
+                                $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
@@ -2476,6 +2480,8 @@ templateObject.getLastPOData = async function() {
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(data.fields.OrderStatus);
                                 $('#shipvia').val(data.fields.Shipping);
+                                $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                                 templateObject.attachmentCount.set(0);
                                 if (data.fields.Attachments) {
@@ -2691,6 +2697,8 @@ templateObject.getLastPOData = async function() {
                         $('#sltDept').val(getDepartmentVal);
                         $('#sltStatus').val(data.fields.OrderStatus);
                         $('#shipvia').val(data.fields.Shipping);
+                        $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                        $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -2925,6 +2933,8 @@ templateObject.getLastPOData = async function() {
                 $('#sltDept').val(getDepartmentVal);
                 $('#sltStatus').val(data.fields.OrderStatus);
                 $('#shipvia').val(data.fields.Shipping);
+                $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                 templateObject.attachmentCount.set(0);
                 if (data.fields.Attachments) {
@@ -7793,6 +7803,7 @@ Template.purchaseordercard.events({
             var currentPurchaseOrder = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             var objDetails = '';
             if ($('#sltDept').val() === '') {
                 swal('Department has not been selected!', '', 'warning');
@@ -7810,6 +7821,7 @@ Template.purchaseordercard.events({
 
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
+                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -7834,6 +7846,7 @@ Template.purchaseordercard.events({
                             ID: currentPurchaseOrder,
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
+                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -7858,6 +7871,7 @@ Template.purchaseordercard.events({
                     fields: {
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         SupplierInvoiceNumber: poNumber || ' ',
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
@@ -9010,6 +9024,7 @@ Template.purchaseordercard.events({
             var currentPurchaseOrder = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             var objDetails = '';
             if (getso_id[1]) {
                 currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -9019,6 +9034,7 @@ Template.purchaseordercard.events({
                         ID: currentPurchaseOrder,
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         SupplierInvoiceNumber: poNumber || ' ',
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
@@ -9044,6 +9060,7 @@ Template.purchaseordercard.events({
                     fields: {
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         SupplierInvoiceNumber: poNumber || ' ',
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
@@ -9287,6 +9304,7 @@ Template.purchaseordercard.events({
                 var currentPurchaseOrder = getso_id[getso_id.length - 1];
                 let uploadedItems = templateObject.uploadedFiles.get();
                 var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                let ForeignExchangeRate = $('#exchange_rate').val();
                 var objDetails = '';
                 if (getso_id[1]) {
                     currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -9296,6 +9314,7 @@ Template.purchaseordercard.events({
                             ID: currentPurchaseOrder,
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
+                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -9321,6 +9340,7 @@ Template.purchaseordercard.events({
                         fields: {
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
+                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -9576,6 +9596,7 @@ Template.purchaseordercard.events({
             var currentPurchaseOrder = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             var objDetails = '';
             if (getso_id[1]) {
                 currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -9586,6 +9607,7 @@ Template.purchaseordercard.events({
 
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
+                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -9610,6 +9632,7 @@ Template.purchaseordercard.events({
 
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
+                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -9634,6 +9657,7 @@ Template.purchaseordercard.events({
                     fields: {
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         SupplierInvoiceNumber: poNumber || ' ',
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
@@ -10035,6 +10059,7 @@ Template.purchaseordercard.events({
                         var currentPurchaseOrder = getso_id[getso_id.length - 1];
                         let uploadedItems = tpobtnpayment.uploadedFiles.get();
                         var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                        let ForeignExchangeRate = $('#exchange_rate').val();
                         var objDetails = '';
                         if (getso_id[1]) {
                             currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -10045,6 +10070,7 @@ Template.purchaseordercard.events({
 
                                         SupplierName: supplier,
                                         ForeignExchangeCode: currencyCode,
+                                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                         SupplierInvoiceNumber: poNumber || ' ',
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
@@ -10069,6 +10095,7 @@ Template.purchaseordercard.events({
                                         ID: currentPurchaseOrder,
                                         SupplierName: supplier,
                                         ForeignExchangeCode: currencyCode,
+                                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                         SupplierInvoiceNumber: poNumber || ' ',
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
@@ -10093,6 +10120,7 @@ Template.purchaseordercard.events({
                                 fields: {
                                     SupplierName: supplier,
                                     ForeignExchangeCode: currencyCode,
+                                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                     SupplierInvoiceNumber: poNumber || ' ',
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
@@ -10347,6 +10375,7 @@ Template.purchaseordercard.events({
                                 var currentPurchaseOrder = getso_id[getso_id.length - 1];
                                 let uploadedItems = tpobtnpayment.uploadedFiles.get();
                                 var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                                let ForeignExchangeRate = $('#exchange_rate').val();
                                 var objDetails = '';
                                 if (getso_id[1]) {
                                     currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -10357,6 +10386,7 @@ Template.purchaseordercard.events({
 
                                                 SupplierName: supplier,
                                                 ForeignExchangeCode: currencyCode,
+                                                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                                 SupplierInvoiceNumber: poNumber || ' ',
                                                 Lines: splashLineArray,
                                                 OrderTo: billingAddress,
@@ -10381,6 +10411,7 @@ Template.purchaseordercard.events({
                                                 ID: currentPurchaseOrder,
                                                 SupplierName: supplier,
                                                 ForeignExchangeCode: currencyCode,
+                                                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                                 SupplierInvoiceNumber: poNumber || ' ',
                                                 Lines: splashLineArray,
                                                 OrderTo: billingAddress,
@@ -10405,6 +10436,7 @@ Template.purchaseordercard.events({
                                         fields: {
                                             SupplierName: supplier,
                                             ForeignExchangeCode: currencyCode,
+                                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                             SupplierInvoiceNumber: poNumber || ' ',
                                             Lines: splashLineArray,
                                             OrderTo: billingAddress,
@@ -10666,6 +10698,7 @@ Template.purchaseordercard.events({
                         var currentPurchaseOrder = getso_id[getso_id.length - 1];
                         let uploadedItems = tpobtnpayment.uploadedFiles.get();
                         var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                        let ForeignExchangeRate = $('#exchange_rate').val();
                         var objDetails = '';
                         if (getso_id[1]) {
                             currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -10676,6 +10709,7 @@ Template.purchaseordercard.events({
 
                                         SupplierName: supplier,
                                         ForeignExchangeCode: currencyCode,
+                                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                         SupplierInvoiceNumber: poNumber || ' ',
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
@@ -10700,6 +10734,7 @@ Template.purchaseordercard.events({
                                         ID: currentPurchaseOrder,
                                         SupplierName: supplier,
                                         ForeignExchangeCode: currencyCode,
+                                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                         SupplierInvoiceNumber: poNumber || ' ',
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
@@ -10724,6 +10759,7 @@ Template.purchaseordercard.events({
                                 fields: {
                                     SupplierName: supplier,
                                     ForeignExchangeCode: currencyCode,
+                                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                     SupplierInvoiceNumber: poNumber || ' ',
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
@@ -10983,6 +11019,7 @@ Template.purchaseordercard.events({
                     var currentPurchaseOrder = getso_id[getso_id.length - 1];
                     let uploadedItems = tpobtnpayment.uploadedFiles.get();
                     var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                    let ForeignExchangeRate = $('#exchange_rate').val();
                     var objDetails = '';
                     if (getso_id[1]) {
                         currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -10993,6 +11030,7 @@ Template.purchaseordercard.events({
 
                                     SupplierName: supplier,
                                     ForeignExchangeCode: currencyCode,
+                                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                     SupplierInvoiceNumber: poNumber || ' ',
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
@@ -11017,6 +11055,7 @@ Template.purchaseordercard.events({
                                     ID: currentPurchaseOrder,
                                     SupplierName: supplier,
                                     ForeignExchangeCode: currencyCode,
+                                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                     SupplierInvoiceNumber: poNumber || ' ',
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
@@ -11041,6 +11080,7 @@ Template.purchaseordercard.events({
                             fields: {
                                 SupplierName: supplier,
                                 ForeignExchangeCode: currencyCode,
+                                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                 SupplierInvoiceNumber: poNumber || ' ',
                                 Lines: splashLineArray,
                                 OrderTo: billingAddress,
