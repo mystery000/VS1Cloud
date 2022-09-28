@@ -1,15 +1,48 @@
 <template name="taskDetailModal">
-
+<style scoped>
+  .flex {
+    display: flex;
+  }
+  .detail-label {
+    margin-bottom: 0; 
+    display: block;
+    margin-top: 4px;
+    margin-right: 10px;
+  } 
+  #nav-subtasks .dataTables_wrapper {
+    min-height: 32vh !important;
+    padding: 0 10px;
+  } 
+</style>
   <div class="modal fade" id="taskDetailModal" tabindex="-1" role="dialog" aria-labelledby="taskNameLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content" style="min-height: 90vh; padding: 20px;">
         <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
           <div style="display: grid; width: 100%;">
-            <span class="taskLocation"><a class="taganchor" href="" id="taskDetailModalCategoryLabel"><i
-                  class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>All Tasks</a></span>
 
-            <div style="display: inline-flex; margin-top: 8px; margin-bottom: 16px;">
+            <div class="form-group flex">
+              <label class="detail-label">Task:</label>
+              <h5 class="modal-title displayTaskNameDescription" style="padding-top: 5px;" id="taskmodalNameLabel"></h5>
+              <input type="text" class="editTaskNameDescription editTaskDetailName" />
+            </div>
+            <div class="form-group flex"> 
+              <label class="detail-label" style="width: 130px;">Assigned Task:</label>
+              <select id="crmSelectEmployeeList" class="form-control crmSelectEmployeeList"> 
+              </select>
+            </div>
+            <div class="form-group flex"> 
+              <label class="detail-label">Contact:</label>
+              <select id="crmSelectLeadList" class="form-control crmSelectLeadList"> 
+              </select>
+            </div>
+            <div class="form-group flex taskDetailProjectName"> 
+              <label class="detail-label">For Project:</label>
+              <span class="taskLocation"><a class="taganchor" href="" id="taskDetailModalCategoryLabel"><i
+                class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>All Tasks</a></span>
+            </div>             
+
+            <div style="display: inline-flex;">
               <div class="custom-control custom-checkbox chkBox pointer"
                 style="width: 15px; margin: 4px; background: transparent;" id="chkComplete_taskEditLabel">
                 <input class="custom-control-input chkBox chkComplete pointer chk_complete" type="checkbox"
@@ -17,17 +50,11 @@
                 <label id="lblComplete_taskEditLabel" class="custom-control-label chkBox pointer chk_complete" for="chkComplete_taskEdit"
                   data-dismiss="modal" data-id="edit">Complete</label>
               </div>
-              <select id="crmSelectLeadList" class="form-control crmSelectLeadList" style="margin-left: 75px;"> 
-              </select>
-            </div>
-
-            <div>
-              <h5 class="modal-title displayTaskNameDescription" style="padding-top: 5px;" id="taskmodalNameLabel"></h5>
-              <input type="text" class="editTaskNameDescription editTaskDetailName" />
+              
             </div>
           </div>
 
-          <button type="button" class="close" style="position: absolute; right: 36px;" data-dismiss="modal"
+          <button type="button" class="close" style="position: absolute; right: 14px; top: 14px" data-dismiss="modal"
             aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -184,7 +211,7 @@
                         <div class="col-12">
                           <div class="form-group">
                             <label>Task Description</label>
-                            <textarea class="form-control" rows="4" id="" name="" autocomplete="off"></textarea>
+                            <textarea class="form-control" rows="2" id="" name="" autocomplete="off"></textarea>
                           </div>
                         </div>
                         <div class="col-6" style="display: inline-flex;">
@@ -323,17 +350,17 @@
                   </div>
                 </div>
 
-                <div class="tab-pane fade" id="nav-comments" style="max-height: 50vh;" role="tabpanel"
+                <div class="tab-pane fade" id="nav-comments" style="max-height: 24vh;" role="tabpanel"
                   aria-labelledby="nav-comments-tab">
                   <div class="row">
                     <div class="task-comment-row col-12">
                     </div>
 
-                    <div class="col-12 commentSection" style="padding: 16px 42px;">
+                    <div class="col-12 commentSection" style="padding: 16px 24px;">
                       <div class="row">
                         <div class="form-group" style="width: 100%;">
                           <label>Comment</label>
-                          <textarea class="form-control" rows="4" id="txtCommentsDescription" name=""
+                          <textarea class="form-control" rows="1" id="txtCommentsDescription" name=""
                             autocomplete="off"></textarea>
                           <input type="hidden" id="txtCrmTaskID" value="" />
                           <input type="hidden" id="txtCrmProjectID" value="" />
@@ -345,7 +372,7 @@
                   </div>
                 </div>
 
-                <div class="tab-pane fade" id="nav-activity" style="height: 50vh;" role="tabpanel"
+                <div class="tab-pane fade" id="nav-activity" style="height: 36vh;" role="tabpanel"
                   aria-labelledby="nav-activity-tab">
                   <div class="row">
                     <span class="activityAdded"></span>
@@ -358,7 +385,7 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" style="padding-bottom: 0; border-top: none;">
           <button class="btn btn-success btnSaveEditTask" data-dismiss="modal" type="button"><i class="fa fa-save"
               style="margin-right: 5px;"></i>Save</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"
@@ -375,7 +402,8 @@
     .task-comment-row {
       /* height: 27vh; */
       overflow-y: auto;
-      max-height: 25px;
+      max-height: 24vh;
+      min-height: 12vh;
     }
 
     .displayTaskNameDescription {
@@ -391,7 +419,7 @@
 
     .editTaskDetailDescription {
       width: 100%;
-      height: 10vh;
+      /* height: 10vh; */
       border-color: #e3e3e3;
       padding: 5px 15px;
       border-radius: 5px;
