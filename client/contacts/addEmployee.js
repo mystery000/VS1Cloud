@@ -363,8 +363,8 @@ Template.employeescard.onRendered(function () {
     //     // $('#currencyLists').DataTable().column( 0 ).visible( true );
     //     $('.fullScreenSpin').css('display', 'none');
     // }, 200);
-    
-    
+
+
     setTimeout(function () {
         const redirectUrl = document.location.toString();
         if (redirectUrl.match('&')) {
@@ -372,7 +372,7 @@ Template.employeescard.onRendered(function () {
             setTimeout(function () {
                 $('.nav-tabs a[href="#payslips').tab('show');
             }, 100);
-        } 
+        }
     }, 100);
 
     // $('.nav-tabs a').on('shown.bs.tab', function (e) {
@@ -1482,6 +1482,16 @@ Template.employeescard.onRendered(function () {
             if (data.fields.User != null) {
                 let emplineItems = [];
                 let emplineItemObj = {};
+                if (Array.isArray(data.fields.User)) {
+                  empEmail = data.fields.User[0].fields.LogonName;
+                  Session.setPersistent('cloudCurrentLogonName', data.fields.User[0].fields.LogonName);
+                  emplineItemObj = {
+                      empID: data.fields.User[0].fields.EmployeeId || '',
+                      EmployeeName: data.fields.User[0].fields.EmployeeName || '',
+                      LogonName: data.fields.User[0].fields.LogonName || '',
+                      PasswordHash: data.fields.User[0].fields.LogonPassword || ''
+                  };
+                }else{
                 empEmail = data.fields.User.fields.LogonName;
                 Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                 emplineItemObj = {
@@ -1490,6 +1500,7 @@ Template.employeescard.onRendered(function () {
                     LogonName: data.fields.User.fields.LogonName || '',
                     PasswordHash: data.fields.User.fields.LogonPassword || ''
                 };
+                }
                 emplineItems.push(emplineItemObj);
                 templateObject.empuserrecord.set(emplineItems);
             } else {
@@ -1508,6 +1519,15 @@ Template.employeescard.onRendered(function () {
             if (data.fields.User != null) {
                 let emplineItems = [];
                 let emplineItemObj = {};
+                if (Array.isArray(data.fields.User)) {
+                  Session.setPersistent('cloudCurrentLogonName', data.fields.User[0].fields.LogonName);
+                  emplineItemObj = {
+                      empID: data.fields.User[0].fields.EmployeeId || '',
+                      EmployeeName: data.fields.User[0].fields.EmployeeName || '',
+                      LogonName: data.fields.User[0].fields.LogonName || '',
+                      PasswordHash: data.fields.User[0].fields.LogonPassword || ''
+                  };
+                }else{
                 Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                 emplineItemObj = {
                     empID: data.fields.User.fields.EmployeeId || '',
@@ -1515,6 +1535,7 @@ Template.employeescard.onRendered(function () {
                     LogonName: data.fields.User.fields.LogonName || '',
                     PasswordHash: data.fields.User.fields.LogonPassword || ''
                 };
+               }
                 emplineItems.push(emplineItemObj);
                 templateObject.empuserrecord.set(emplineItems);
             } else {
@@ -4009,11 +4030,11 @@ Template.employeescard.onRendered(function () {
 
         let payPeriods = templateObject.payPeriods.get();
 
-      
+
 
         payPeriods.forEach((period) => {
             $('#edtPayPeriod').editableSelect(
-                'add', `${period.PayrollCalendarName} (${period.PayrollCalendarPayPeriod})`, 
+                'add', `${period.PayrollCalendarName} (${period.PayrollCalendarPayPeriod})`,
                 null,
                 {
                     name: "period-id",
@@ -4030,7 +4051,7 @@ Template.employeescard.onRendered(function () {
         $('#period').editableSelect('add','Daily');
         $('#period').editableSelect('add','Weekly');
         $('#period').editableSelect('add','Monthly');
-        
+
     }
 
     templateObject.initPayPeriods();
