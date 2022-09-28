@@ -37,10 +37,12 @@
   Barcode_Prefix_Lead = 'LED';
 
  licenceIPAddress = "login.vs1cloud.com"; //165.228.147.127
+ //licenceIPAddress = "sandboxcoreedi.vs1cloud.com"; //192.168.15.124
   //Global Declaration
   /* VS1 SandBox Details */
   URLRequest = 'https://'; //non ssl server
-  checkSSLPorts = '4433'; //Non SSL Port
+  //checkSSLPorts = '4433'; //Non SSL Port
+  checkSSLPorts = '8453'; //Sandbox
   vs1loggedDatatbase = 'vs1_sandbox_license'; //SandBox databaseName
 
   ERPDatabaseIPAdderess = "login.vs1cloud.com"; //www.login.vs1cloud.com

@@ -1840,6 +1840,49 @@ Template.inventorylist.events({
       $('.colSalePriceInc').css('width', range);
     },
     
+    'click .th.colCostPrice': function(event) {
+      $('.colCostPrice').addClass('hiddenColumn');
+      $('.colCostPrice').removeClass('showColumn');
+
+      $('.colCostPriceInc').addClass('showColumn');
+      $('.colCostPriceInc').removeClass('hiddenColumn');
+
+      $('.chkCostPrice').prop("checked", false);
+      $('.chkCostPriceInc').prop("checked", true);
+  },
+  'click .th.colCostPriceInc': function(event) {
+      $('.colCostPriceInc').addClass('hiddenColumn');
+      $('.colCostPriceInc').removeClass('showColumn');
+
+      $('.colCostPrice').addClass('showColumn');
+      $('.colCostPrice').removeClass('hiddenColumn');
+
+      $('.chkCostPrice').prop("checked", true);
+      $('.chkCostPriceInc').prop("checked", false);
+  },
+  'click .th.colSalePrice': function(event) {
+      $('.colSalePrice').addClass('hiddenColumn');
+      $('.colSalePrice').removeClass('showColumn');
+
+      $('.colSalePriceInc').addClass('showColumn');
+      $('.colSalePriceInc').removeClass('hiddenColumn');
+
+      $('.chkSalePrice').prop("checked", false);
+      $('.chkSalePriceInc').prop("checked", true);
+  },
+  'click .th.colSalePriceInc': function(event) {
+      $('.colSalePriceInc').addClass('hiddenColumn');
+      $('.colSalePriceInc').removeClass('showColumn');
+
+      $('.colSalePrice').addClass('showColumn');
+      $('.colSalePrice').removeClass('hiddenColumn');
+
+      $('.chkSalePrice').prop("checked", true);
+      $('.chkSalePriceInc').prop("checked", false);
+
+  },
+
+
     "change .rngRange": function(event) {
         let range = $(event.target).val();
         $(event.target)

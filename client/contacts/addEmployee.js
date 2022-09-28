@@ -363,7 +363,21 @@ Template.employeescard.onRendered(function () {
     //     // $('#currencyLists').DataTable().column( 0 ).visible( true );
     //     $('.fullScreenSpin').css('display', 'none');
     // }, 200);
+    
+    
+    setTimeout(function () {
+        const redirectUrl = document.location.toString();
+        if (redirectUrl.match('&')) {
+            $('.nav-tabs a[data-target="#' + redirectUrl.split('&')[1] + '"]').tab('show');
+            setTimeout(function () {
+                $('.nav-tabs a[href="#payslips').tab('show');
+            }, 100);
+        } 
+    }, 100);
 
+    // $('.nav-tabs a').on('shown.bs.tab', function (e) {
+    //     window.location.hash = e.target.hash;
+    // });
     setTimeout(function () {
         Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'defaulttax', function (error, result) {
             if (error) {
@@ -1454,7 +1468,6 @@ Template.employeescard.onRendered(function () {
         }
     }
     function setEmployeeData(data) {
-        console.log(data);
         $('.fullScreenSpin').css('display', 'none');
         let lineItems = [];
         let empEmail = '';

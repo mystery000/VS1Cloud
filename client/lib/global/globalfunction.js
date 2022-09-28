@@ -614,7 +614,6 @@ isAdditionalModulePurchased = async function( moduleName ){
   if( additionModuleSettings.length > 0 ){
       let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
       if( additionModules.length > 0 ){
-        console.log('additionModules', additionModules)
           let adModulesList = additionModules.filter((item) => {
               if( item.ModuleActive == true && item.ModuleName == moduleName ){
                   return item;
@@ -644,6 +643,6 @@ handleValidationError = async function ( errorMessage, fieldID ) {
           if (result.value) {
               $(`#${fieldID}`).focus();
           }
-      } 
-  }); 
+      }
+  });
 }

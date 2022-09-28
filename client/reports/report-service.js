@@ -52,7 +52,7 @@ export class ReportService extends BaseService {
     };
     return this.getList(this.ERPObjects.BalanceSheetReport, options);
   }
-  
+
   getInvoicePaidReport(dateFrom, dateTo) {
     let options = {
       IgnoreDates: false,
@@ -129,7 +129,7 @@ export class ReportService extends BaseService {
     let options = {
       ReportType: "Detail",
       IgnoreSummarised: true,
-      LimitCount: '"25"',
+      LimitCount: 25,
     };
     // return this.getList(this.ERPObjects.TAccount,options);
     return this.getList(this.ERPObjects.TAccountRunningBalanceReport, options);
@@ -142,8 +142,8 @@ export class ReportService extends BaseService {
       IgnoreDates: false,
       DateTo: '"' + dateto + '"',
       DateFrom: '"' + datefrom + '"',
-      LimitCount: '"' + limitcount + '"',
-      LimitFrom: '"' + limitfrom + '"',
+      LimitCount: parseInt(limitcount),
+      LimitFrom: parseInt(limitfrom),
     };
     // return this.getList(this.ERPObjects.TAccount,options);
     return this.getList(this.ERPObjects.TAccountRunningBalanceReport, options);
@@ -159,8 +159,8 @@ export class ReportService extends BaseService {
          OrderBy:"Date desc",
          DateFrom: '"' + urlParametersDateFrom + '"',
          DateTo: '"' + urlParametersDateTo + '"',
-         LimitCount: '"' + limitcount + '"',
-         LimitFrom: '"' + limitfrom + '"',
+         LimitCount: parseInt(limitcount),
+         LimitFrom: parseInt(limitfrom),
        };
       }else{
      options = {
@@ -169,8 +169,8 @@ export class ReportService extends BaseService {
       IgnoreDates: true,
       AccountName:'"'+accountName+'"',
       OrderBy:"clientname desc",
-      LimitCount: '"' + limitcount + '"',
-      LimitFrom: '"' + limitfrom + '"',
+      LimitCount: parseInt(limitcount),
+      LimitFrom: parseInt(limitfrom),
     };
   }
     // return this.getList(this.ERPObjects.TAccount,options);
@@ -681,7 +681,7 @@ export class ReportService extends BaseService {
     }
     return this.getList(this.ERPObjects.TStockValue, options);
   }
-  
+
   getLeaveTakenReport(dateFrom, dateTo, ignoreDate = false) {
     let options = "";
     if (ignoreDate == true) {
@@ -696,7 +696,7 @@ export class ReportService extends BaseService {
       };
     }
     return this.getList(this.ERPObjects.TLeaveTaken, options);
-  }  
+  }
 
   getSupplierProductReport(dateFrom, dateTo, ignoreDate = false) {
     let options = "";
@@ -877,5 +877,5 @@ export class ReportService extends BaseService {
     });
     return promise;
   }
-  
+
 }

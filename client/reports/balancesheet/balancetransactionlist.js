@@ -583,6 +583,11 @@ Template.balancetransactionlist.onRendered(function() {
                         fnInitComplete: function () {
                           this.fnPageChange("last");
                           $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBalanceTransactionList_filter");
+                        },
+                        "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                          let countTableData = data.Params.Count || 0; //get count from API data
+
+                            return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
                         }
 
                     }).on('page', function () {
@@ -603,11 +608,6 @@ Template.balancetransactionlist.onRendered(function() {
                       countTableData = data.taccountrunningbalancereport.length || 1;
                     }
 
-                    if (data.taccountrunningbalancereport.length > 0) {
-                      $(".dataTables_info").html("Showing 1 to " +data.taccountrunningbalancereport.length +" of " +countTableData +" entries");
-                    } else {
-                      $(".dataTables_info").html("Showing 0 to " +data.taccountrunningbalancereport.length +" of 0 entries");
-                    }
                     /* End Add count functionality to table */
               }, 0);
 
@@ -822,6 +822,11 @@ Template.balancetransactionlist.onRendered(function() {
                       fnInitComplete: function () {
                         this.fnPageChange("last");
                         $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBalanceTransactionList_filter");
+                      },
+                      "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                        let countTableData = data.Params.Count || 0; //get count from API data
+
+                          return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
                       }
 
                   }).on('page', function () {
@@ -842,11 +847,6 @@ Template.balancetransactionlist.onRendered(function() {
                     countTableData = data.taccountrunningbalancereport.length || 1;
                   }
 
-                  if (data.taccountrunningbalancereport.length > 0) {
-                    $(".dataTables_info").html("Showing 1 to " +data.taccountrunningbalancereport.length +" of " +countTableData +" entries");
-                  } else {
-                    $(".dataTables_info").html("Showing 0 to " +data.taccountrunningbalancereport.length +" of 0 entries");
-                  }
                   /* End Add count functionality to table */
             }, 0);
 
@@ -1054,6 +1054,11 @@ Template.balancetransactionlist.onRendered(function() {
                     fnInitComplete: function () {
                       this.fnPageChange("last");
                       $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBalanceTransactionList_filter");
+                    },
+                    "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                      let countTableData = data.Params.Count || 0; //get count from API data
+
+                        return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
                     }
 
                 }).on('page', function () {
@@ -1074,11 +1079,7 @@ Template.balancetransactionlist.onRendered(function() {
                   countTableData = data.taccountrunningbalancereport.length || 1;
                 }
 
-                if (data.taccountrunningbalancereport.length > 0) {
-                  $(".dataTables_info").html("Showing 1 to " +data.taccountrunningbalancereport.length +" of " +countTableData +" entries");
-                } else {
-                  $(".dataTables_info").html("Showing 0 to " +data.taccountrunningbalancereport.length +" of 0 entries");
-                }
+
                 /* End Add count functionality to table */
           }, 0);
 

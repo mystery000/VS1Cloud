@@ -302,6 +302,7 @@ openDb = function(dbName) {
             db.createObjectStore('TEftOptions', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TBasReturn', { keyPath: "EmployeeEmail" });
             db.createObjectStore('VS1_Customize', { keyPath: "EmployeeEmail" });
+            db.createObjectStore('VS1_Dashboard', { keyPath: "EmployeeEmail" });
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });
@@ -562,7 +563,7 @@ getStoreToDelete = async function(email) {
 openDbCheckVersion = async function() {
     var promiseversion = new Promise((resolve, reject) => {
         var versionExists = false;
-        let dbReqVersion = indexedDB.open('TDatabaseVersion', 84);
+        let dbReqVersion = indexedDB.open('TDatabaseVersion', 85);
         dbReqVersion.onsuccess = function() {
             resolve(versionExists);
         };

@@ -178,6 +178,7 @@ Template.appointments.onRendered(function () {
   let seeOwnAppointments =
     Session.get("CloudAppointmentSeeOwnAppointmentsOnly") || false;
   let templateObject = Template.instance();
+  let tempObj = Template.instance();
   let contactService = new ContactService();
   let productService = new ProductService();
   let clientsService = new SalesBoardService();
@@ -770,12 +771,6 @@ Template.appointments.onRendered(function () {
     },
   };
 
-  const todayButton = {
-    today: {
-      text: "Today"
-    },
-  };
-
   templateObject.renderCalendar = function (slotMin, slotMax, hideDays) {
     let calendarSet = templateObject.globalSettings.get();
     var calendarEl = document.getElementById("calendar");
@@ -808,12 +803,17 @@ Template.appointments.onRendered(function () {
           },
         },
         ...refreshButton,
-        ...todayButton,
       },
       headerToolbar: {
         left: "prev,next today appointments allocation refresh",
         center: "title",
         right: "dayGridMonth,timeGridWeek,timeGridDay",
+      },
+      buttonText: {
+        today: "Today",
+        dayGridMonth: "Month",
+        timeGridWeek: "Week",
+        timeGridDay: "Day"
       },
       slotMinTime: slotMin,
       slotMaxTime: slotMax,
@@ -1420,12 +1420,17 @@ Template.appointments.onRendered(function () {
           },
         },
         ...refreshButton,
-        ...todayButton,
       },
       headerToolbar: {
         left: "prev,next today appointments allocation refresh",
         center: "title",
         right: "dayGridMonth,timeGridWeek,timeGridDay",
+      },
+      buttonText: {
+        today: "Today",
+        dayGridMonth: "Month",
+        timeGridWeek: "Week",
+        timeGridDay: "Day"
       },
       slotMinTime: slotMin,
       slotMaxTime: slotMax,
@@ -4194,12 +4199,17 @@ Template.appointments.onRendered(function () {
                     },
                   },
                   ...refreshButton,
-                  ...todayButton,
                 },
                 headerToolbar: {
                   left: "prev,next today appointments allocation refresh",
                   center: "title",
                   right: "dayGridMonth,timeGridWeek,timeGridDay",
+                },
+                buttonText: {
+                  today: "Today",
+                  dayGridMonth: "Month",
+                  timeGridWeek: "Week",
+                  timeGridDay: "Day"
                 },
                 initialDate: begunDate,
                 navLinks: true, // can click day/week names to navigate views
@@ -6834,12 +6844,17 @@ Template.appointments.onRendered(function () {
                   },
                 },
                 ...refreshButton,
-                ...todayButton,
               },
               headerToolbar: {
                 left: "prev,next today appointments allocation refresh",
                 center: "title",
                 right: "dayGridMonth,timeGridWeek,timeGridDay",
+              },
+              buttonText: {
+                today: "Today",
+                dayGridMonth: "Month",
+                timeGridWeek: "Week",
+                timeGridDay: "Day"
               },
               initialDate: begunDate,
               navLinks: true, // can click day/week names to navigate views
@@ -9235,12 +9250,17 @@ Template.appointments.onRendered(function () {
                   },
                 },
                 ...refreshButton,
-                ...todayButton,
               },
               headerToolbar: {
                 left: "prev,next today appointments allocation refresh",
                 center: "title",
                 right: "dayGridMonth,timeGridWeek,timeGridDay",
+              },
+              buttonText: {
+                today: "Today",
+                dayGridMonth: "Month",
+                timeGridWeek: "Week",
+                timeGridDay: "Day"
               },
               slotMinTime: slotMin,
               slotMaxTime: slotMax,

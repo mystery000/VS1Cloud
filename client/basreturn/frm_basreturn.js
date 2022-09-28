@@ -169,7 +169,6 @@ Template.basreturn.onRendered(function() {
 
     templateObject.getTaxSummaryReports = function(dateFrom, dateTo, ignoreDate, tabType = "t1") {
         reportService.getTaxSummaryData(dateFrom, dateTo, ignoreDate).then(function(data) {
-            console.log("======");
             if (data.ttaxsummaryreport.length) {
                 const taxSummaryReport = data.ttaxsummaryreport;
 
@@ -308,7 +307,6 @@ Template.basreturn.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
 
         }).catch(function(err) {
-            console.log("eeeeeeeeeeee");
             if (tabType == "t1") {
                 templateObject.taxSummaryListT1.set([]);
             } else if (tabType == "t3") {

@@ -54,9 +54,7 @@ Template.purchasesaleschart.onRendered(()=>{
                 currentTotal += item.Current
             }
         }
-        console.log(data);
-        console.log(amountdueTotal);
-        console.log(currentTotal);
+
         let totalRecievableSummaryAmount = amountdueTotal + currentTotal;
         $('.oustandingInvQty').text(data.Params.Count);
         if (!isNaN(totalRecievableSummaryAmount)) {

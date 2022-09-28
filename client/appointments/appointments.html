@@ -4,7 +4,7 @@
     </div>
 
     <div class="d-sm-flex justify-content-between align-items-center mb-4 headerDiv" style="margin-left: 24px;">
-        <h3 class="text-dark mb-0 appointmentHeader" style="width: 100%; margin-right: 1em;">
+        <h3 class="text-dark mb-0 appointmentHeader" style="width: 100%; margin-right: 1em; padding-right: 32px;">
             Appointment Overview
 
             {{> helpbutton}}
@@ -686,7 +686,7 @@
                                 <hr class="m-2">
                             </div>
 
-                        
+
                             <div class="col-xl-4 col-12 colProductService2" id="colProductService2">
                                 <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Product /
                                         Service for Appointment</label>
@@ -726,11 +726,11 @@
                             <div class="col-md-12 p-0">
                                 <hr class="m-2">
                             </div>
-                            
+
                             <div class="row">
                             <button class="btn btn-primary" type="button" id="addExtraProduct" style="margin-bottom: 36px; margin-left: 16px;">Extra Product / Service Fees</button>
 
-                            
+
                         </div>
 
                         </div>
@@ -1330,6 +1330,44 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
     </div>
 
     <style>
+      .fc-next-button{
+        margin-right: 12px!important;
+      }
+
+      .fc-today-button {
+          margin: 0 12px 0 12px !important;
+      }
+
+      .fc-appointments-button {
+          margin: 0 12px 0 12px !important;
+      }
+
+      .fc-allocation-button {
+          margin: 0 12px 0 12px !important;
+      }
+      .fc-refresh-button {
+          margin-left: 12px!important;
+      }
+
+      .fc-next-button{
+        margin-right: 12px!important;
+      }
+
+      .fc-dayGridMonth-button{
+        margin-right: 12px!important;
+        border-radius: 0.35rem!important;
+      }
+
+      .fc-timeGridWeek-button {
+          margin: 0 12px 0 12px !important;
+          border-radius: 0.35rem!important;
+      }
+
+      .fc-timeGridDay-button{
+        margin-left: 12px!important;
+        border-radius: 0.35rem!important;
+      }
+
         .results tr[visible='false'],
         .no-result {
             display: none;

@@ -106,8 +106,7 @@ Template.contactoverview.onRendered(function () {
   };
 
   templateObject.getAllContactData = function () {
-    getVS1Data("TERPCombinedContactsVS1")
-      .then(function (dataObject) {
+    getVS1Data("TERPCombinedContactsVS1").then(function (dataObject) {
         if (dataObject.length == 0) {
           sideBarService
             .getAllContactCombineVS1(initialDataLoad, 0)
@@ -304,6 +303,11 @@ Template.contactoverview.onRendered(function () {
                         "<button class='btn btn-primary btnRefreshContact' type='button' id='btnRefreshContact' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                       ).insertAfter("#tblcontactoverview_filter");
                     },
+                    "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                      let countTableData = data.Params.Count || 0; //get count from API data
+
+                        return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                    },
                   })
                   .on("page", function () {
                     setTimeout(function () {
@@ -492,13 +496,6 @@ Template.contactoverview.onRendered(function () {
                             templateObject.datatablerecords.set(dataTableList);
 
                             templateObject.datatablerecords.set(dataTableList);
-                            $(".dataTables_info").html(
-                              "Showing 1 to " +
-                                data.terpcombinedcontactsvs1.length +
-                                " of " +
-                                data.terpcombinedcontactsvs1.length +
-                                " entries"
-                            );
                             $(".fullScreenSpin").css("display", "none");
                           })
                           .catch(function (err) {
@@ -798,8 +795,7 @@ Template.contactoverview.onRendered(function () {
                   $("#tblcontactoverview").DataTable().ajax.reload();
                 },
                 fnDrawCallback: function (oSettings) {
-                  let checkurlIgnoreDate =
-                    FlowRouter.current().queryParams.ignoredate;
+                  let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
                   if (checkurlIgnoreDate == "true") {
                   } else {
                     $(".paginate_button.page-item").removeClass("disabled");
@@ -862,6 +858,11 @@ Template.contactoverview.onRendered(function () {
                     "<button class='btn btn-primary btnRefreshContact' type='button' id='btnRefreshContact' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                   ).insertAfter("#tblcontactoverview_filter");
                 },
+                "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                  let countTableData = data.Params.Count || 0; //get count from API data
+
+                    return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                },
               })
               .on("page", function () {
                 setTimeout(function () {
@@ -879,171 +880,7 @@ Template.contactoverview.onRendered(function () {
                   if (settings.fnRecordsDisplay() > initialDatatableLoad) {
                     $(".fullScreenSpin").css("display", "none");
                   } else {
-                    sideBarService
-                      .getAllContactCombineVS1("All", 1)
-                      .then(function (data) {
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        let clienttype = "";
-
-                        let isprospect = false;
-                        let iscustomer = false;
-                        let isEmployee = false;
-                        let issupplier = false;
-                        for (
-                          let i = 0;
-                          i < data.terpcombinedcontactsvs1.length;
-                          i++
-                        ) {
-                          isprospect =
-                            data.terpcombinedcontactsvs1[i].isprospect;
-                          iscustomer =
-                            data.terpcombinedcontactsvs1[i].iscustomer;
-                          isEmployee =
-                            data.terpcombinedcontactsvs1[i].isEmployee;
-                          issupplier =
-                            data.terpcombinedcontactsvs1[i].issupplier;
-
-                          if (
-                            isprospect == true &&
-                            iscustomer == true &&
-                            isEmployee == true &&
-                            issupplier == true
-                          ) {
-                            clienttype =
-                              "Customer / Employee / Supplier";
-                          } else if (
-                            isprospect == true &&
-                            iscustomer == true &&
-                            issupplier == true
-                          ) {
-                            clienttype = "Customer / Supplier";
-                          } else if (iscustomer == true && issupplier == true) {
-                            clienttype = "Customer / Supplier";
-                          } else if (iscustomer == true) {
-                            if (
-                              data.terpcombinedcontactsvs1[i].name.toLowerCase().indexOf("^") >= 0
-                            ) {
-                              clienttype = "Job";
-                            } else {
-                              clienttype = "Customer";
-                            }
-                            // clienttype = "Customer";
-                          } else if (isEmployee == true) {
-                            clienttype = "Employee";
-                          } else if (issupplier == true) {
-                            clienttype = "Supplier";
-                          } else if (isprospect == true) {
-                            clienttype = "Lead";
-                          } else {
-                            clienttype = " ";
-                          }
-                          // if(data.terpcombinedcontactsvs1[i].IsCustomer == true){
-                          //   clienttype = "Customer";
-                          // }else if(data.terpcombinedcontactsvs1[i].IsSupplier == true){
-                          //   clienttype = "Supplier";
-                          // };
-
-                          let arBalance =
-                            utilityService.modifynegativeCurrencyFormat(
-                              data.terpcombinedcontactsvs1[i].ARBalance
-                            ) || 0.0;
-                          let creditBalance =
-                            utilityService.modifynegativeCurrencyFormat(
-                              data.terpcombinedcontactsvs1[i].CreditBalance
-                            ) || 0.0;
-                          let balance =
-                            utilityService.modifynegativeCurrencyFormat(
-                              data.terpcombinedcontactsvs1[i].Balance
-                            ) || 0.0;
-                          let creditLimit =
-                            utilityService.modifynegativeCurrencyFormat(
-                              data.terpcombinedcontactsvs1[i].CreditLimit
-                            ) || 0.0;
-                          let salesOrderBalance =
-                            utilityService.modifynegativeCurrencyFormat(
-                              data.terpcombinedcontactsvs1[i].SalesOrderBalance
-                            ) || 0.0;
-                          if (
-                            isNaN(data.terpcombinedcontactsvs1[i].ARBalance)
-                          ) {
-                            arBalance = Currency + "0.00";
-                          }
-
-                          if (
-                            isNaN(data.terpcombinedcontactsvs1[i].CreditBalance)
-                          ) {
-                            creditBalance = Currency + "0.00";
-                          }
-                          if (isNaN(data.terpcombinedcontactsvs1[i].Balance)) {
-                            balance = Currency + "0.00";
-                          }
-                          if (
-                            isNaN(data.terpcombinedcontactsvs1[i].CreditLimit)
-                          ) {
-                            creditLimit = Currency + "0.00";
-                          }
-
-                          if (
-                            isNaN(
-                              data.terpcombinedcontactsvs1[i].SalesOrderBalance
-                            )
-                          ) {
-                            salesOrderBalance = Currency + "0.00";
-                          }
-
-                          var dataList = {
-                            id: data.terpcombinedcontactsvs1[i].ID || "",
-                            employeeno:
-                              data.terpcombinedcontactsvs1[i].printname || "",
-                            clientname:
-                              data.terpcombinedcontactsvs1[i].name || "",
-                            phone: data.terpcombinedcontactsvs1[i].phone || "",
-                            mobile:
-                              data.terpcombinedcontactsvs1[i].mobile || "",
-                            arbalance: arBalance || 0.0,
-                            creditbalance: creditBalance || 0.0,
-                            balance: balance || 0.0,
-                            creditlimit: creditLimit || 0.0,
-                            salesorderbalance: salesOrderBalance || 0.0,
-                            email: data.terpcombinedcontactsvs1[i].email || "",
-                            address:
-                              data.terpcombinedcontactsvs1[i].street || "",
-                            // country: data.terpcombinedcontactsvs1[i].Country || '',
-                            // department: data.terpcombinedcontactsvs1[i].DefaultClassName || '',
-                            type: clienttype || "",
-                            custFld1:
-                              data.terpcombinedcontactsvs1[i].CUSTFLD1 || "",
-                            custFld2:
-                              data.terpcombinedcontactsvs1[i].CUSTFLD2 || "",
-                          };
-
-                          if (
-                            data.terpcombinedcontactsvs1[i].name.replace(
-                              /\s/g,
-                              ""
-                            ) !== ""
-                          ) {
-                            dataTableList.push(dataList);
-                          }
-
-                          //}
-                        }
-                        templateObject.datatablerecords.set(dataTableList);
-
-                        templateObject.datatablerecords.set(dataTableList);
-                        $(".dataTables_info").html(
-                          "Showing 1 to " +
-                            data.terpcombinedcontactsvs1.length +
-                            " of " +
-                            data.terpcombinedcontactsvs1.length +
-                            " entries"
-                        );
-                        $(".fullScreenSpin").css("display", "none");
-                      })
-                      .catch(function (err) {
-                        $(".fullScreenSpin").css("display", "none");
-                      });
+                    $(".fullScreenSpin").css("display", "none");
                   }
                 } else {
                   if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
@@ -1080,11 +917,6 @@ Template.contactoverview.onRendered(function () {
               countTableData = data.terpcombinedcontactsvs1.length || 1;
             }
 
-            if (data.terpcombinedcontactsvs1.length > 0) {
-              $("#tblcontactoverview_info").html("Showing 1 to " +data.terpcombinedcontactsvs1.length +" of " +countTableData +" entries");
-            } else {
-              $("#tblcontactoverview_info").html("Showing 0 to " +data.terpcombinedcontactsvs1.length + " of 0 entries");
-            }
             /* End Add count functionality to table */
           }, 0);
 
@@ -1365,6 +1197,11 @@ Template.contactoverview.onRendered(function () {
                       MakeNegative();
                     }, 100);
                   },
+                  "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params.Count || 0; //get count from API data
+
+                      return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                  },
                 })
                 .on("page", function () {
                   setTimeout(function () {
@@ -1382,184 +1219,7 @@ Template.contactoverview.onRendered(function () {
                     if (settings.fnRecordsDisplay() > initialDatatableLoad) {
                       $(".fullScreenSpin").css("display", "none");
                     } else {
-                      sideBarService
-                        .getAllContactCombineVS1("All", 1)
-                        .then(function (data) {
-                          let lineItems = [];
-                          let lineItemObj = {};
-                          let clienttype = "";
-
-                          let isprospect = false;
-                          let iscustomer = false;
-                          let isEmployee = false;
-                          let issupplier = false;
-                          for (
-                            let i = 0;
-                            i < data.terpcombinedcontactsvs1.length;
-                            i++
-                          ) {
-                            isprospect =
-                              data.terpcombinedcontactsvs1[i].isprospect;
-                            iscustomer =
-                              data.terpcombinedcontactsvs1[i].iscustomer;
-                            isEmployee =
-                              data.terpcombinedcontactsvs1[i].isEmployee;
-                            issupplier =
-                              data.terpcombinedcontactsvs1[i].issupplier;
-
-                            if (
-                              isprospect == true &&
-                              iscustomer == true &&
-                              isEmployee == true &&
-                              issupplier == true
-                            ) {
-                              clienttype =
-                                "Customer / Employee / Supplier";
-                            } else if (
-                              isprospect == true &&
-                              iscustomer == true &&
-                              issupplier == true
-                            ) {
-                              clienttype = "Customer / Supplier";
-                            } else if (
-                              iscustomer == true &&
-                              issupplier == true
-                            ) {
-                              clienttype = "Customer / Supplier";
-                            } else if (iscustomer == true) {
-                              if (
-                                data.terpcombinedcontactsvs1[i].name
-                                  .toLowerCase()
-                                  .indexOf("^") >= 0
-                              ) {
-                                clienttype = "Job";
-                              } else {
-                                clienttype = "Customer";
-                              }
-                              // clienttype = "Customer";
-                            } else if (isEmployee == true) {
-                              clienttype = "Employee";
-                            } else if (issupplier == true) {
-                              clienttype = "Supplier";
-                            } else if (isprospect == true) {
-                              clienttype = "Lead";
-                            } else {
-                              clienttype = " ";
-                            }
-                            // if(data.terpcombinedcontactsvs1[i].IsCustomer == true){
-                            //   clienttype = "Customer";
-                            // }else if(data.terpcombinedcontactsvs1[i].IsSupplier == true){
-                            //   clienttype = "Supplier";
-                            // };
-
-                            let arBalance =
-                              utilityService.modifynegativeCurrencyFormat(
-                                data.terpcombinedcontactsvs1[i].ARBalance
-                              ) || 0.0;
-                            let creditBalance =
-                              utilityService.modifynegativeCurrencyFormat(
-                                data.terpcombinedcontactsvs1[i].CreditBalance
-                              ) || 0.0;
-                            let balance =
-                              utilityService.modifynegativeCurrencyFormat(
-                                data.terpcombinedcontactsvs1[i].Balance
-                              ) || 0.0;
-                            let creditLimit =
-                              utilityService.modifynegativeCurrencyFormat(
-                                data.terpcombinedcontactsvs1[i].CreditLimit
-                              ) || 0.0;
-                            let salesOrderBalance =
-                              utilityService.modifynegativeCurrencyFormat(
-                                data.terpcombinedcontactsvs1[i]
-                                  .SalesOrderBalance
-                              ) || 0.0;
-                            if (
-                              isNaN(data.terpcombinedcontactsvs1[i].ARBalance)
-                            ) {
-                              arBalance = Currency + "0.00";
-                            }
-
-                            if (
-                              isNaN(
-                                data.terpcombinedcontactsvs1[i].CreditBalance
-                              )
-                            ) {
-                              creditBalance = Currency + "0.00";
-                            }
-                            if (
-                              isNaN(data.terpcombinedcontactsvs1[i].Balance)
-                            ) {
-                              balance = Currency + "0.00";
-                            }
-                            if (
-                              isNaN(data.terpcombinedcontactsvs1[i].CreditLimit)
-                            ) {
-                              creditLimit = Currency + "0.00";
-                            }
-
-                            if (
-                              isNaN(
-                                data.terpcombinedcontactsvs1[i]
-                                  .SalesOrderBalance
-                              )
-                            ) {
-                              salesOrderBalance = Currency + "0.00";
-                            }
-
-                            var dataList = {
-                              id: data.terpcombinedcontactsvs1[i].ID || "",
-                              employeeno:
-                                data.terpcombinedcontactsvs1[i].printname || "",
-                              clientname:
-                                data.terpcombinedcontactsvs1[i].name || "",
-                              phone:
-                                data.terpcombinedcontactsvs1[i].phone || "",
-                              mobile:
-                                data.terpcombinedcontactsvs1[i].mobile || "",
-                              arbalance: arBalance || 0.0,
-                              creditbalance: creditBalance || 0.0,
-                              balance: balance || 0.0,
-                              creditlimit: creditLimit || 0.0,
-                              salesorderbalance: salesOrderBalance || 0.0,
-                              email:
-                                data.terpcombinedcontactsvs1[i].email || "",
-                              address:
-                                data.terpcombinedcontactsvs1[i].street || "",
-                              // country: data.terpcombinedcontactsvs1[i].Country || '',
-                              // department: data.terpcombinedcontactsvs1[i].DefaultClassName || '',
-                              type: clienttype || "",
-                              custFld1:
-                                data.terpcombinedcontactsvs1[i].CUSTFLD1 || "",
-                              custFld2:
-                                data.terpcombinedcontactsvs1[i].CUSTFLD2 || "",
-                            };
-
-                            if (
-                              data.terpcombinedcontactsvs1[i].name.replace(
-                                /\s/g,
-                                ""
-                              ) !== ""
-                            ) {
-                              dataTableList.push(dataList);
-                            }
-
-                            //}
-                          }
-                          templateObject.datatablerecords.set(dataTableList);
-
-                          templateObject.datatablerecords.set(dataTableList);
-                          $(".dataTables_info").html(
-                            "Showing 1 to " +
-                              data.terpcombinedcontactsvs1.length +
-                              " of " +
-                              data.terpcombinedcontactsvs1.length +
-                              " entries"
-                          );
-                          $(".fullScreenSpin").css("display", "none");
-                        })
-                        .catch(function (err) {
-                          $(".fullScreenSpin").css("display", "none");
-                        });
+                      $(".fullScreenSpin").css("display", "none");
                     }
                   } else {
                     if (
@@ -1598,21 +1258,6 @@ Template.contactoverview.onRendered(function () {
                 countTableData = data.terpcombinedcontactsvs1.length || 1;
               }
 
-              if (data.terpcombinedcontactsvs1.length > 0) {
-                $("#tblcontactoverview_info").html(
-                  "Showing 1 to " +
-                    data.terpcombinedcontactsvs1.length +
-                    " of " +
-                    countTableData +
-                    " entries"
-                );
-              } else {
-                $("#tblcontactoverview_info").html(
-                  "Showing 0 to " +
-                    data.terpcombinedcontactsvs1.length +
-                    " of 0 entries"
-                );
-              }
               /* End Add count functionality to table */
             }, 0);
 

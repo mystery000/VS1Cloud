@@ -1309,7 +1309,6 @@ Template.taxRatesSettings.events({
     $('#edtTaxDesc').val('Sales Tax Default');
     let templateObject = Template.instance();
 
-    console.log('adding tax rate dialog');
     if (templateObject.isChkUSRegionTax.get()) {
       let newSubTaxLines = [{
         RowId: `subtax_0`,
@@ -1348,7 +1347,7 @@ Template.taxRatesSettings.events({
     } else {
       templateObject.subtaxlines.set([]);
     }
-    
+
   },
   "click #subTaxList td.clickable": (e) => SubTaxEditListener(e),
   "click #subTaxList .table-remove": (e) => {
