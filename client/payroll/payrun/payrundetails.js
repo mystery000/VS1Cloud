@@ -378,8 +378,11 @@ Template.payrundetails.events({
 
 Template.payrundetails.helpers({
   countEmployees: () => {
-    const employees = (Template.instance().payRunDetails.get()).employees;
-    return employees.length;
+    const payRunDetails = (Template.instance().payRunDetails.get()).employees;
+    if(payRunDetails) {
+      return 0;
+    }
+    return payRunDetails.employees.length;
   },
   payRunDetails: () => {
     return Template.instance().payRunDetails.get();
