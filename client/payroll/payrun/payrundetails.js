@@ -277,6 +277,7 @@ Template.payrundetails.onRendered(function () {
 
     await GlobalFunctions.asyncForEach(payRunDetails.employees, async (employee, index) => {
       await employee.getEarnings();
+      await employee.getSuperAnnuations();
       
     });
   

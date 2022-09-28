@@ -3,6 +3,7 @@ import {ContactService} from "../../../contacts/contact-service";
 import CachedHttp from "../../../lib/global/CachedHttp";
 import erpObject from "../../../lib/global/erp-objects";
 import EmployeePayrollApi from "../EmployeePayrollApi";
+import PayTemplateSuperannuationLine from "./PayTemplateSuperannuationLine";
 import UserModel from "./User";
 
 export default class Employee {
@@ -84,6 +85,19 @@ export default class Employee {
     // let data = await CachedHttp.get(erpObject.TSuperannuation, async () => {
     //   return await new SideBarService().getSuperannuationByName(dataSearchName)
     // })
+
+    let data = [];
+    let dataObject = await getVS1Data('TPayTemplateSuperannuationLine')
+    data = JSON.parse(dataObject[0].data);
+    let useData = PayTemplateSuperannuationLine.fromList(
+        data.tpaytemplatesuperannuationline
+    ).filter((item) => {
+        if ( parseInt( item.fields.EmployeeID ) == parseInt(this.fields.ID) ) {
+            return item;
+        }
+    });
+   
+    this.superAnnuations = useData;
   }
 }
 
