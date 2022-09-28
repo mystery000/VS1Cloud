@@ -124,6 +124,7 @@ Template.receiptsoverview.onRendered(function() {
         });
     };
     function setReceiptCategory(data) {
+        console.log('data', data)
         for (let i in data.treceiptcategory){
             if (data.treceiptcategory.hasOwnProperty(i)) {
                 categories.push(data.treceiptcategory[i].CategoryName);

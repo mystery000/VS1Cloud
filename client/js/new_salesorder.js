@@ -2440,6 +2440,7 @@ Template.new_salesorder.onRendered(() => {
                             $('#edtCustomerName').val(data.fields.CustomerName);
                             templateObject.CleintName.set(data.fields.CustomerName);
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                             $('#sltStatus').val(data.fields.SalesStatus);
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(data.fields.SaleClassName);
@@ -2775,6 +2776,7 @@ Template.new_salesorder.onRendered(() => {
                                 $('#edtCustomerName').val(useData[d].fields.CustomerName);
                                 templateObject.CleintName.set(useData[d].fields.CustomerName);
                                 $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
+                                $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
                                 $('#sltStatus').val(useData[d].fields.SalesStatus);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(useData[d].fields.SaleClassName);
@@ -3048,6 +3050,7 @@ Template.new_salesorder.onRendered(() => {
                                     $('#edtCustomerName').val(data.fields.CustomerName);
                                     templateObject.CleintName.set(data.fields.CustomerName);
                                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                                    $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                                     $('#sltStatus').val(data.fields.SalesStatus);
                                     $('#sltTerms').val(data.fields.TermsName);
                                     $('#sltDept').val(data.fields.SaleClassName);
@@ -3329,6 +3332,7 @@ Template.new_salesorder.onRendered(() => {
                         $('#edtCustomerName').val(data.fields.CustomerName);
                         templateObject.CleintName.set(data.fields.CustomerName);
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                        $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                         $('#sltStatus').val(data.fields.SalesStatus);
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(data.fields.SaleClassName);
@@ -3779,6 +3783,7 @@ Template.new_salesorder.onRendered(() => {
                     $('#edtCustomerName').val(data.fields.CustomerName);
                     templateObject.CleintName.set(data.fields.CustomerName);
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                    $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                     $('#sltStatus').val(data.fields.SalesStatus);
                     $('#sltTerms').val(data.fields.TermsName);
                     $('#sltDept').val(data.fields.SaleClassName);
@@ -4074,6 +4079,7 @@ Template.new_salesorder.onRendered(() => {
                             $('#edtCustomerName').val(data.fields.CustomerName);
                             templateObject.CleintName.set(data.fields.CustomerName);
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                             $('#sltStatus').val(data.fields.SalesStatus);
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(data.fields.SaleClassName);
@@ -4360,6 +4366,7 @@ Template.new_salesorder.onRendered(() => {
                                 $('#edtCustomerName').val(useData[d].fields.CustomerName);
                                 templateObject.CleintName.set(useData[d].fields.CustomerName);
                                 $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
+                                $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
                                 $('#sltStatus').val(useData[d].fields.SalesStatus);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(useData[d].fields.SaleClassName);
@@ -4630,6 +4637,7 @@ Template.new_salesorder.onRendered(() => {
                         $('#edtCustomerName').val(data.fields.CustomerName);
                         templateObject.CleintName.set(data.fields.CustomerName);
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                        $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                         $('#sltStatus').val(data.fields.SalesStatus);
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(data.fields.SaleClassName);
@@ -9646,6 +9654,7 @@ Template.new_salesorder.events({
             var currentSalesOrder = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             var objDetails = '';
             if (getso_id[1]) {
                 currentSalesOrder = parseInt(currentSalesOrder);
@@ -9655,6 +9664,7 @@ Template.new_salesorder.events({
                         ID: currentSalesOrder,
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -9679,6 +9689,7 @@ Template.new_salesorder.events({
                     fields: {
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -11013,6 +11024,7 @@ Template.new_salesorder.events({
                     var currentSalesOrder = getso_id[getso_id.length - 1];
                     let uploadedItems = templateObject.uploadedFiles.get();
                     var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                    let ForeignExchangeRate = $('#exchange_rate').val();
                     var objDetails = '';
                     if (getso_id[1]) {
                         currentSalesOrder = parseInt(currentSalesOrder);
@@ -11022,6 +11034,7 @@ Template.new_salesorder.events({
                                 ID: currentSalesOrder,
                                 CustomerName: customer,
                                 ForeignExchangeCode: currencyCode,
+                                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
                                 SaleDate: saleDate,
@@ -11046,6 +11059,7 @@ Template.new_salesorder.events({
                             fields: {
                                 CustomerName: customer,
                                 ForeignExchangeCode: currencyCode,
+                                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
                                 SaleDate: saleDate,
@@ -11701,6 +11715,7 @@ Template.new_salesorder.events({
             var currentSalesOrder = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             var objDetails = '';
             if (getso_id[1]) {
                 currentSalesOrder = parseInt(currentSalesOrder);
@@ -11710,6 +11725,7 @@ Template.new_salesorder.events({
                         ID: currentSalesOrder,
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -11734,6 +11750,7 @@ Template.new_salesorder.events({
                     fields: {
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -11960,6 +11977,7 @@ Template.new_salesorder.events({
             var currentSalesOrder = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             var objDetails = '';
             if (getso_id[1]) {
                 currentSalesOrder = parseInt(currentSalesOrder);
@@ -11969,6 +11987,7 @@ Template.new_salesorder.events({
                         ID: currentSalesOrder,
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -11994,6 +12013,7 @@ Template.new_salesorder.events({
                     fields: {
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,

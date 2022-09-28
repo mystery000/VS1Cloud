@@ -1266,6 +1266,7 @@ Template.creditcard.onRendered(() => {
                             $('#edtSupplierName').val(data.fields.SupplierName);
                             templateObject.CleintName.set(data.fields.SupplierName);
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(getDepartmentVal);
                             $('#sltStatus').val(data.fields.OrderStatus);
@@ -1493,6 +1494,7 @@ Template.creditcard.onRendered(() => {
                                 $('#edtSupplierName').val(useData[d].fields.SupplierName);
                                 templateObject.CleintName.set(useData[d].fields.SupplierName);
                                 $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
+                                $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(useData[d].fields.OrderStatus);
@@ -1722,6 +1724,7 @@ Template.creditcard.onRendered(() => {
                                 $('#edtSupplierName').val(data.fields.SupplierName);
                                 templateObject.CleintName.set(data.fields.SupplierName);
                                 $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                                 $('#sltTerms').val(data.fields.TermsName);
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(data.fields.OrderStatus);
@@ -1966,6 +1969,7 @@ Template.creditcard.onRendered(() => {
                         $('#edtSupplierName').val(data.fields.SupplierName);
                         templateObject.CleintName.set(data.fields.SupplierName);
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                        $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(getDepartmentVal);
                         $('#sltStatus').val(data.fields.OrderStatus);
@@ -6845,6 +6849,7 @@ Template.creditcard.events({
             var currentCredit = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             var objDetails = '';
             if (getso_id[1]) {
                 currentCredit = parseInt(currentCredit);
@@ -6854,6 +6859,7 @@ Template.creditcard.events({
                         ID: currentCredit,
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         Deleted: false,
@@ -6880,6 +6886,7 @@ Template.creditcard.events({
                     fields: {
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         OrderDate: saleDate,
@@ -7913,6 +7920,7 @@ Template.creditcard.events({
             var currentCredit = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             var objDetails = '';
             if (getso_id[1]) {
                 currentCredit = parseInt(currentCredit);
@@ -7922,6 +7930,7 @@ Template.creditcard.events({
                         ID: currentCredit,
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         OrderDate: saleDate,
@@ -7946,6 +7955,7 @@ Template.creditcard.events({
                     fields: {
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         Deleted: false,

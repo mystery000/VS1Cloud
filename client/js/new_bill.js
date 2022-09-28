@@ -1083,7 +1083,7 @@ Template.billcard.onRendered(() => {
 
 };
 
-    function getSupplierData(supplierID) {
+    async function getSupplierData(supplierID) {
         getVS1Data('TSupplierVS1').then(function (dataObject) {
             if (dataObject.length === 0) {
                 contactService.getOneSupplierDataEx(supplierID).then(function (data) {
@@ -1223,6 +1223,11 @@ Template.billcard.onRendered(() => {
                                 lineItems.push(lineItemObj);
                             }
 
+                            let isPartialPaid = false;
+                            if(useData[d].fields.TotalPaid > 0){
+                                isPartialPaid = true;
+                            }
+
                             let billrecord = {
                                 id: data.fields.ID,
                                 lid: 'Edit Bill' + ' ' + data.fields.ID,
@@ -1265,11 +1270,12 @@ Template.billcard.onRendered(() => {
 
                             $('#edtSupplierName').val(data.fields.SupplierName);
                             templateObject.CleintName.set(data.fields.SupplierName);
-                            $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(getDepartmentVal);
                             $('#sltStatus').val(data.fields.OrderStatus);
                             $('#shipvia').val(data.fields.Shipping);
+                            $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -1491,8 +1497,9 @@ Template.billcard.onRendered(() => {
                                 $('#sltDept').val(useData[d].fields.Lines[0].fields.LineClassName);
                                 $('#sltStatus').val(useData[d].fields.OrderStatus);
                                 templateObject.CleintName.set(useData[d].fields.SupplierName);
-                                $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
                                 $('#shipvia').val(useData[d].fields.Shipping);
+                                $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
+                                $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
 
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
@@ -1717,11 +1724,12 @@ Template.billcard.onRendered(() => {
 
                                 $('#edtSupplierName').val(data.fields.SupplierName);
                                 templateObject.CleintName.set(data.fields.SupplierName);
-                                $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                                 $('#sltTerms').val(data.fields.TermsName);
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(data.fields.OrderStatus);
                                 $('#shipvia').val(data.fields.Shipping);
+                                $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                                 templateObject.attachmentCount.set(0);
                                 if (data.fields.Attachments) {
@@ -1940,11 +1948,12 @@ Template.billcard.onRendered(() => {
 
                         $('#edtSupplierName').val(data.fields.SupplierName);
                         templateObject.CleintName.set(data.fields.SupplierName);
-                        $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(getDepartmentVal);
                         $('#sltStatus').val(data.fields.OrderStatus);
                         $('#shipvia').val(data.fields.Shipping);
+                        $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                        $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -7426,6 +7435,8 @@ Template.billcard.events({
             var currentBill = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
+
             var objDetails = '';
             if ($('#sltDept').val() === '') {
                 swal('Department has not been selected!', '', 'warning');
@@ -7441,6 +7452,7 @@ Template.billcard.events({
                         ID: currentBill,
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         Deleted: false,
@@ -7467,6 +7479,7 @@ Template.billcard.events({
                     fields: {
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         OrderDate: saleDate,
@@ -8497,6 +8510,7 @@ Template.billcard.events({
                 var currentBill = getso_id[getso_id.length - 1];
                 let uploadedItems = templateObject.uploadedFiles.get();
                 var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                let ForeignExchangeRate = $('#exchange_rate').val();
                 var objDetails = '';
                 if (getso_id[1]) {
                     currentBill = parseInt(currentBill);
@@ -8506,6 +8520,7 @@ Template.billcard.events({
                             ID: currentBill,
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
+                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
                             OrderDate: saleDate,
@@ -8531,6 +8546,7 @@ Template.billcard.events({
                         fields: {
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
+                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
                             OrderDate: saleDate,
