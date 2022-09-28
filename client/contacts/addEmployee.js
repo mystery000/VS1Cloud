@@ -1462,7 +1462,6 @@ Template.employeescard.onRendered(function () {
         }
     }
     function setEmployeeData(data) {
-        console.log(data);
         $('.fullScreenSpin').css('display', 'none');
         let lineItems = [];
         let empEmail = '';

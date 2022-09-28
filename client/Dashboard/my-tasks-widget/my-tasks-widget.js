@@ -90,7 +90,10 @@ Template.myTasksWidget.helpers({
 
 // Listen to event to update reactive variable
 Template.myTasksWidget.events({
-
+    "click .taskline": (e) => {
+        let task_id = $(e.currentTarget).attr("taskid");
+        FlowRouter.go('/crmoverview?taskid='+task_id);
+    },
 });
 
 function sortArray(array, key, desc=true) {

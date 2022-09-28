@@ -35,7 +35,7 @@ export class OrganisationService extends BaseService {
   getCheckTcompLogoData() {
     let options = {
       PropertyList: "Id,MIMEEncodedPicture,ImageName,Pictype,ImageTypes",
-      LimitCount: "'1'"
+      LimitCount: 1
     };
     return this.getList(this.ERPObjects.TcompLogo, options);
   }

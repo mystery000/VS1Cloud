@@ -5,7 +5,7 @@ export class VS1ChartService extends BaseService {
   getOverviewAPDetails() {
       let options = {
         IgnoreDates: true,
-        LimitCount:'"'+initialReportLoad+'"'
+        LimitCount: parseInt(initialDataLoad),
           // Summary: false,
           // select: "[Pay]=false"
       };
@@ -15,7 +15,7 @@ export class VS1ChartService extends BaseService {
   getOverviewARDetails() {
       let options = {
           IgnoreDates: true,
-          LimitCount:'"'+initialReportLoad+'"'
+          LimitCount: parseInt(initialDataLoad),
           // select: "[Pay]=false"
       };
       return this.getList(this.ERPObjects.TARReport, options);
@@ -26,17 +26,17 @@ export class VS1ChartService extends BaseService {
         //select: "[Active]=true",
         //ListType:"Detail",
         DateTo: '"'+dateAsOf+'"',
-        LimitCount:'"'+initialReportLoad+'"'
+        LimitCount: parseInt(initialDataLoad),
     };
     return this.getList(this.ERPObjects.BalanceSheetReport, options);
   }
-  
+
     getBalanceSheetReport(dateAsOf) {
         let options = {
             //select: "[Active]=true",
             //ListType:"Detail",
             DateTo: '"'+dateAsOf+'"',
-            LimitCount:'"'+initialReportLoad+'"'
+            LimitCount: parseInt(initialDataLoad),
         };
         return this.getList(this.ERPObjects.BalanceSheetReport, options);
     }
@@ -45,7 +45,7 @@ export class VS1ChartService extends BaseService {
         let options = {
             select: "[Active]=true",
             ListType:"Detail",
-            LimitCount:'"'+initialReportLoad+'"'
+            LimitCount: parseInt(initialDataLoad),
             //DateTo:dateAsOf
         };
         return this.getList(this.ERPObjects.ProfitLossReport, options);
@@ -54,7 +54,7 @@ export class VS1ChartService extends BaseService {
         let options = {
             select: "[Active]=true",
             ListType:"Detail",
-            LimitCount:'"'+initialReportLoad+'"'
+            LimitCount: parseInt(initialDataLoad),
         };
         return this.getList(this.ERPObjects.BalanceSheetReport, options);
     }
@@ -67,7 +67,7 @@ export class VS1ChartService extends BaseService {
         let options = {
             PropertyList: "ID,ClientID,ClientName,Company,CurrencySymbol,ContactAddress,ContactEmail,Active",
             select: "[Active]=true",
-            LimitCount:'"'+initialBaseDataLoad+'"'
+            LimitCount: parseInt(initialDataLoad),
         };
         return this.getList(this.ERPObjects.TContact, options);
     }
@@ -79,7 +79,7 @@ export class VS1ChartService extends BaseService {
       let options = {
           ReportType: "Detail",
           IgnoreSummarised:true,
-          LimitCount:'"'+initialReportLoad+'"'
+          LimitCount: parseInt(initialDataLoad),
       };
       // return this.getList(this.ERPObjects.TAccount,options);
         return this.getList(this.ERPObjects.TAccountRunningBalanceReport,options);
@@ -90,7 +90,7 @@ export class VS1ChartService extends BaseService {
             ReportType:"Detail",
             DateTo: '"'+moment(dateTo).format('YYYY-MM-DD')+'"',
             DateFrom: '"'+moment(dateFrom).format('YYYY-MM-DD')+'"',
-            LimitCount:'"'+initialReportLoad+'"'
+            LimitCount: parseInt(initialDataLoad),
         };
         return this.getList(this.ERPObjects.TTaxSummaryReport,options);
     }
@@ -111,7 +111,7 @@ export class VS1ChartService extends BaseService {
     getAccountSummaryRedirectData() {
         let options = {
             ListType: "Detail",
-            LimitCount:'"'+initialReportLoad+'"'
+            LimitCount: parseInt(initialDataLoad),
         };
         return this.getList(this.ERPObjects.TAccount,options);
     }
@@ -122,14 +122,14 @@ export class VS1ChartService extends BaseService {
       if(ignoreDate == true){
         options = {
            IgnoreDates:true,
-           LimitCount:'"'+initialReportLoad+'"'
+           LimitCount: parseInt(initialDataLoad),
        };
      }else{
        options = {
           IgnoreDates:false,
           DateFrom: '"'+dateFrom+'"',
           DateTo: '"'+dateTo+'"',
-          LimitCount:'"'+initialReportLoad+'"'
+          LimitCount: parseInt(initialDataLoad),
       };
      }
         return this.getList(this.ERPObjects.ProfitLossReport, options);
@@ -150,14 +150,14 @@ getAgedPayableDetailsData(dateFrom, dateTo,ignoreDate) {
   if(ignoreDate == true){
     options = {
        IgnoreDates:true,
-       LimitCount:'"'+initialReportLoad+'"'
+       LimitCount: parseInt(initialDataLoad),
    };
  }else{
    options = {
       IgnoreDates:false,
       DateFrom: '"'+dateFrom+'"',
       DateTo: '"'+dateTo+'"',
-      LimitCount:'"'+initialReportLoad+'"'
+      LimitCount: parseInt(initialDataLoad),
   };
  }
     return this.getList(this.ERPObjects.TAPReport, options);
@@ -176,7 +176,7 @@ getAgedPayableDetailsSummaryData(dateFrom, dateTo,ignoreDate) {
       options = {
          IgnoreDates:true,
          ReportType: 'Summary',
-         LimitCount:'"'+initialReportLoad+'"'
+         LimitCount: parseInt(initialDataLoad),
      };
    }else{
      options = {
@@ -184,7 +184,7 @@ getAgedPayableDetailsSummaryData(dateFrom, dateTo,ignoreDate) {
         ReportType: 'Summary',
         DateFrom: '"'+dateFrom+'"',
         DateTo: '"'+dateTo+'"',
-        LimitCount:'"'+initialReportLoad+'"'
+        LimitCount: parseInt(initialDataLoad),
     };
    }
     return this.getList(this.ERPObjects.TAPReport, options);
@@ -195,14 +195,14 @@ getAgedReceivableDetailsData(dateFrom, dateTo,ignoreDate) {
   if(ignoreDate == true){
     options = {
        IgnoreDates:true,
-       LimitCount:'"'+initialReportLoad+'"'
+       LimitCount: parseInt(initialDataLoad),
    };
  }else{
    options = {
       IgnoreDates:false,
       DateFrom: '"'+dateFrom+'"',
       DateTo: '"'+dateTo+'"',
-      LimitCount:'"'+initialReportLoad+'"'
+      LimitCount: parseInt(initialDataLoad),
   };
  }
 return this.getList(this.ERPObjects.TARReport, options);
@@ -214,7 +214,7 @@ getAgedReceivableDetailsSummaryData(dateFrom, dateTo,ignoreDate) {
     options = {
        IgnoreDates:true,
        ReportType: 'Summary',
-       LimitCount:'"'+initialReportLoad+'"'
+       LimitCount: parseInt(initialDataLoad),
    };
  }else{
    options = {
@@ -222,7 +222,7 @@ getAgedReceivableDetailsSummaryData(dateFrom, dateTo,ignoreDate) {
       ReportType: 'Summary',
       DateFrom: '"'+dateFrom+'"',
       DateTo: '"'+dateTo+'"',
-      LimitCount:'"'+initialReportLoad+'"'
+      LimitCount: parseInt(initialDataLoad),
   };
  }
 return this.getList(this.ERPObjects.TARReport, options);
@@ -233,14 +233,14 @@ getGeneralLedgerDetailsData(dateFrom, dateTo,ignoreDate) {
   if(ignoreDate == true){
     options = {
        IgnoreDates:true,
-       LimitCount:'"'+initialReportLoad+'"'
+       LimitCount: parseInt(initialDataLoad),
    };
  }else{
    options = {
       IgnoreDates:false,
       DateFrom: '"'+dateFrom+'"',
       DateTo: '"'+dateTo+'"',
-      LimitCount:'"'+initialReportLoad+'"'
+      LimitCount: parseInt(initialDataLoad),
   };
  }
 return this.getList(this.ERPObjects.TGeneralLedgerReport, options);
@@ -251,14 +251,14 @@ getTrialBalanceDetailsData(dateFrom, dateTo ,ignoreDate) {
   if(ignoreDate == true){
     options = {
        IgnoreDates:true,
-       LimitCount:'"'+initialReportLoad+'"'
+       LimitCount: parseInt(initialDataLoad),
    };
  }else{
    options = {
       IgnoreDates:false,
       DateFrom: '"'+dateFrom+'"',
       DateTo: '"'+dateTo+'"',
-      LimitCount:'"'+initialReportLoad+'"'
+      LimitCount: parseInt(initialDataLoad),
   };
  }
 return this.getList(this.ERPObjects.TTrialBalanceReport, options);
@@ -271,7 +271,7 @@ if(ignoreDate == true){
   options = {
      IgnoreDates:true,
      IncludePOs:true,
-     LimitCount:'"'+initialReportLoad+'"'
+     LimitCount: parseInt(initialDataLoad),
  };
 }else{
  options = {
@@ -279,7 +279,7 @@ if(ignoreDate == true){
     IncludePOs:true,
     DateFrom: '"'+dateFrom+'"',
     DateTo: '"'+dateTo+'"',
-    LimitCount:'"'+initialReportLoad+'"'
+    LimitCount: parseInt(initialDataLoad),
 };
 }
 
@@ -294,7 +294,7 @@ if(ignoreDate == true){
      IgnoreDates:true,
      IncludePOs:true,
      ReportType: 'Summary',
-     LimitCount:'"'+initialReportLoad+'"'
+     LimitCount: parseInt(initialDataLoad),
  };
 }else{
  options = {
@@ -303,7 +303,7 @@ if(ignoreDate == true){
     ReportType: 'Summary',
     DateFrom: '"'+dateFrom+'"',
     DateTo: '"'+dateTo+'"',
-    LimitCount:'"'+initialReportLoad+'"'
+    LimitCount: parseInt(initialDataLoad),
 };
 }
 
@@ -315,14 +315,14 @@ getSalesDetailsData(dateFrom, dateTo, ignoreDate) {
   if(ignoreDate == true){
     options = {
        IgnoreDates:true,
-       LimitCount:'"'+initialReportLoad+'"'
+       LimitCount: parseInt(initialDataLoad),
    };
  }else{
    options = {
       IgnoreDates:false,
       DateFrom:'"'+dateFrom+'"',
       DateTo:'"'+dateTo+'"',
-      LimitCount:'"'+initialReportLoad+'"'
+      LimitCount: parseInt(initialDataLoad),
   };
  }
 
@@ -335,7 +335,7 @@ getSalesDetailsSummaryData(dateFrom, dateTo, ignoreDate) {
     options = {
        IgnoreDates:true,
        ListType: 'Summary',
-       LimitCount:'"'+initialReportLoad+'"'
+       LimitCount: parseInt(initialDataLoad),
    };
  }else{
    options = {
@@ -343,7 +343,7 @@ getSalesDetailsSummaryData(dateFrom, dateTo, ignoreDate) {
       ListType: 'Summary',
       DateFrom:'"'+dateFrom+'"',
       DateTo:'"'+dateTo+'"',
-      LimitCount:'"'+initialReportLoad+'"'
+      LimitCount: parseInt(initialDataLoad),
   };
  }
 
@@ -355,14 +355,14 @@ getProductSalesDetailsData(dateFrom, dateTo, ignoreDate) {
   if(ignoreDate == true){
     options = {
        IgnoreDates:true,
-       LimitCount:'"'+initialReportLoad+'"'
+       LimitCount: parseInt(initialDataLoad),
    };
  }else{
    options = {
       IgnoreDates:false,
       DateFrom:'"'+dateFrom+'"',
       DateTo:'"'+dateTo+'"',
-      LimitCount:'"'+initialReportLoad+'"'
+      LimitCount: parseInt(initialDataLoad),
   };
  }
 
@@ -376,7 +376,7 @@ getTaxSummaryData(dateFrom, dateTo,ignoreDate) {
       options = {
          IgnoreDates:true,
          ReportType: 'Summary',
-         LimitCount:'"'+initialReportLoad+'"'
+         LimitCount: parseInt(initialDataLoad),
      };
    }else{
      options = {
@@ -384,7 +384,7 @@ getTaxSummaryData(dateFrom, dateTo,ignoreDate) {
         ReportType: 'Summary',
         DateFrom: '"'+dateFrom+'"',
         DateTo: '"'+dateTo+'"',
-        LimitCount:'"'+initialReportLoad+'"'
+        LimitCount: parseInt(initialDataLoad),
     };
    }
     return this.getList(this.ERPObjects.TTaxSummaryReport, options);
@@ -395,14 +395,14 @@ getAllProductSalesDetails(dateFrom, dateTo, ignoreDate) {
   if(ignoreDate == true){
     options = {
        IgnoreDates:true,
-       LimitCount:'"'+initialReportLoad+'"'
+       LimitCount: parseInt(initialDataLoad),
    };
  }else{
    options = {
       IgnoreDates:false,
       DateFrom:'"'+dateFrom+'"',
       DateTo:'"'+dateTo+'"',
-      LimitCount:'"'+initialReportLoad+'"'
+      LimitCount: parseInt(initialDataLoad),
   };
  }
   return this.getList(this.ERPObjects.TProductSalesDetailsReport, options);
@@ -413,14 +413,14 @@ let options = '';
 if(ignoreDate == true){
   options = {
      IgnoreDates:true,
-     LimitCount:'"'+initialReportLoad+'"'
+     LimitCount: parseInt(initialDataLoad),
  };
 }else{
  options = {
     IgnoreDates:false,
     DateFrom: '"'+dateFrom+'"',
     DateTo: '"'+dateTo+'"',
-    LimitCount:'"'+initialReportLoad+'"'
+    LimitCount: parseInt(initialDataLoad),
 };
 }
 
@@ -432,7 +432,7 @@ getInvSaleByEmployee() {
   let options = {
       PropertyList: "ID,DueDate,CustomerName,SaleDate,TotalPaid,TotalBalance,deleted,IsPaid,TotalAmountInc,EmployeeName",
       select: "[deleted]=false",
-      LimitCount:'"'+initialDataLoad+'"'
+      LimitCount: parseInt(initialDataLoad),
   };
     return this.getList(this.ERPObjects.TInvoiceEx, options);
 }
@@ -440,7 +440,7 @@ getInvSaleByEmployee() {
 getSalesListData() {
   let options = {
        IgnoreDates:true,
-       LimitCount:'"'+initialReportLoad+'"'
+       LimitCount: parseInt(initialDataLoad),
    };
 
 return this.getList(this.ERPObjects.TSalesList, options);
@@ -450,7 +450,7 @@ getProfitLossPeriodReportData(dateFrom, dateTo) {
  let options = {
     DateFrom: '"'+dateFrom+'"',
     DateTo: '"'+dateTo+'"',
-    LimitCount:'"'+initialReportLoad+'"'
+    LimitCount: parseInt(initialDataLoad),
 };
 
 return this.getList(this.ERPObjects.TProfitAndLossPeriodReport, options);
@@ -460,7 +460,7 @@ getProductStocknSaleReportData(dateFrom, dateTo) {
  let options = {
     DateFrom: '"'+dateFrom+'"',
     DateTo: '"'+dateTo+'"',
-    LimitCount:'"'+initialReportLoad+'"'
+    LimitCount: parseInt(initialDataLoad),
 };
 
 return this.getList(this.ERPObjects.TProductStocknSalePeriodReport, options);

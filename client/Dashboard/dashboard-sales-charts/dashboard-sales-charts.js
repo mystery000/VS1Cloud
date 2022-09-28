@@ -119,12 +119,18 @@ Template.dashboardSalesCharts.onRendered(function () {
 
         highCharts.chart('sd-comparison-chart', {
             title: {
-                text: 'Sales Performance VS Quota'
+                text: 'Sales Performance VS Quota',
+                style: {
+                    display: 'none'
+                }
             },
             yAxis: {
                 title: {
                     text: ''
                 }
+            },
+                exporting: {
+                enabled: false
             },
             xAxis: {
                 categories
@@ -169,7 +175,13 @@ Template.dashboardSalesCharts.onRendered(function () {
                 type: 'column'
             },
             title: {
-                text: 'Open Opportunities by Stage'
+                text: 'Open Opportunities by Stage',
+                style: {
+                    display: 'none'
+                }
+            },
+            exporting: {
+                enabled: false
             },
             subtitle: {
                 text:''

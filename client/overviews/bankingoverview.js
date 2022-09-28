@@ -437,35 +437,6 @@ Template.bankingoverview.onRendered(function() {
                     templateObject.datatablerecords.set(dataTableList);
                     if (templateObject.datatablerecords.get()) {
 
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblBankingOverview', function(error, result) {
-                            if (error) {
-
-                            } else {
-                                if (result) {
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.split('.')[1];
-                                        let columnWidth = customcolumn[i].width;
-                                        let columnindex = customcolumn[i].index + 1;
-
-                                        if (hiddenColumn == true) {
-
-                                            $("." + columnClass + "").addClass('hiddenColumn');
-                                            $("." + columnClass + "").removeClass('showColumn');
-                                        } else if (hiddenColumn == false) {
-                                            $("." + columnClass + "").removeClass('hiddenColumn');
-                                            $("." + columnClass + "").addClass('showColumn');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
-
 
                         setTimeout(function() {
                             MakeNegative();

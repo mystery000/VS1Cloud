@@ -824,36 +824,7 @@ Template.crmoverview.events({
   },
 
   "click #btnAddCampaign": function (e) {
-    // swal({
-    //   title: "Add Campaign",
-    //   text: "Are you sure want to adda a new campaign?",
-    //   type: "warning",
-    //   showCancelButton: true,
-    //   confirmButtonText: "Yes",
-    //   cancelButtonText: "No",
-    // }).then((result) => {
-    //   if (result.value) {
-    //     $(".fullScreenSpin").css("display", "inline-block");
-    //     try {
-    //       var erpGet = erpDb();
-    //       Meteor.call('createCampaign', erpGet, function (error, result) {
-    //         console.log(error, result)
-    //         if (error !== undefined) {
-    //           swal("Something went wrong!", "", "error");
-    //         } else {
-    //           swal("New campaign is added successfully", "", "success");
-    //         }
-    //         $(".fullScreenSpin").css("display", "none");
-    //       });
-    //     } catch (error) {
-    //       swal("Something went wrong!", "", "error");
-    //       $(".fullScreenSpin").css("display", "none");
-    //     }
 
-    //   } else if (result.dismiss === "cancel") {
-    //   } else {
-    //   }
-    // });
 
     $('#crmMailchimpAddCampaignModal').modal();
     return;

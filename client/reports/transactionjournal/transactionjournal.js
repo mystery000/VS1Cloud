@@ -31,7 +31,7 @@ function MakeNegative() {
 Template.transactionjournallist.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
-  
+
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
     templateObject.dateAsAt.set("Current Date");
@@ -145,7 +145,7 @@ Template.transactionjournallist.onRendered(() => {
 
     let reportGroups = []; 
     if( data.ttransactionlistreport.length > 0 ){
-        for (const item of data.ttransactionlistreport) {   
+        for (const item of data.ttransactionlistreport) {
             let isExist = reportGroups.filter((subitem) => {
                 if( subitem.ACCOUNTID == item.ACCOUNTID ){
                     subitem.SubAccounts.push(item)
@@ -178,7 +178,7 @@ Template.transactionjournallist.onRendered(() => {
         });
         $(".fullScreenSpin").css("display", "none");
       }, 1000);
-    }  
+    }
     $(".fullScreenSpin").css("display", "none");
   }
 
@@ -385,7 +385,7 @@ Template.transactionjournallist.events({
     $('#dateTo').attr('readonly', true);
      templateObject.loadReport(null, null, true);
   },
-  
+
   // CURRENCY MODULE //
   ...FxGlobalFunctions.getEvents(),
   "click .currency-modal-save": (e) => {
@@ -453,8 +453,8 @@ Template.transactionjournallist.events({
    */
    "change #dateTo, change #dateFrom": (e, templateObject) => {
     templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     );
   },
@@ -481,7 +481,7 @@ Template.transactionjournallist.helpers({
     }
     return false;
   },
-  
+
   formatDate: ( date ) => {
     return ( date )? moment(date).format("YYYY/MM/DD") : '';
   },
