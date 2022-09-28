@@ -277,16 +277,15 @@ Template.payrundetails.onRendered(function () {
 
     await GlobalFunctions.asyncForEach(payRunDetails.employees, async (employee, index) => {
       await employee.getEarnings();
-      await templateObject.payRunDetails.set(payRunDetails);
-      LoadingOverlay.hide();
+      
     });
   
-    console.log(payRunDetails.employees);
   
    // templateObject.loadSuperAnnuations();
+    await templateObject.payRunDetails.set(payRunDetails);
 
     await templateObject.calculateTableTotal();
-   
+    LoadingOverlay.hide();   
   };
 
   templateObject.calculateTableTotal = async () => {
