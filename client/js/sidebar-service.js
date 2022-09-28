@@ -40,7 +40,8 @@ export class SideBarService extends BaseService {
       };
     } else {
       options = {
-        orderby: '"PARTSID desc"',
+        IgnoreDates: true,
+        OrderBy: '"PARTSID desc"',
         ListType: "Detail",
         //select: "[Active]=true",
         LimitCount: parseInt(limitcount),
@@ -389,7 +390,8 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      Search: 'PARTNAME = "' + dataSearchName + '" OR PARTSID = "' + dataSearchName + '" OR BARCODE = "' + dataSearchName + '"',
+      OrderBy: '"PARTSID desc"',
+      Search: 'PARTNAME="' + dataSearchName + '" OR PARTSID="' + dataSearchName + '" OR BARCODE="' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TProductList, options);
   }
@@ -872,28 +874,39 @@ export class SideBarService extends BaseService {
 
   getAllContactOverviewVS1ByName(dataSearchName) {
     let options = "";
-    if(dataSearchName.toLowerCase() == "supplier"){
+    if(dataSearchName.toLowerCase().indexOf("supplier") >= 0){
       options = {
         IgnoreDates:true,
-        Search: '"issupplier:true"',
+        search: 'issupplier=true',
       };
-    }else if(dataSearchName.toLowerCase() == "customer"){
+    }else if(dataSearchName.toLowerCase().indexOf("customer") >= 0){
       options = {
         IgnoreDates:true,
-        Search: '"isEmployee:true"',
+        search: 'iscustomer=true',
       };
-    }else if(dataSearchName.toLowerCase() == "employee"){
+    }else if(dataSearchName.toLowerCase().indexOf("employee") >= 0){
       options = {
         IgnoreDates:true,
-        Search: '"isEmployee:true"',
+        search: 'isemployee=true',
+      };
+    }else if(dataSearchName.toLowerCase().indexOf("lead") >= 0){
+      options = {
+        IgnoreDates:true,
+        search: 'isprospect=true',
       };
     }else{
-    options = {
-      IgnoreDates:true,
-      // Search: 'ID=' + dataSearchName + ' OR printname='+ dataSearchName + ' OR email=' + dataSearchName +'',
-      //search: "printname = '" + dataSearchName + "'",
-      search: 'ID="' + dataSearchName + '" OR printname="' + dataSearchName + '" email="' + dataSearchName + '"',
-    };
+      if($.isNumeric(dataSearchName)){
+        options = {
+          IgnoreDates:true,
+          search: 'ID='+ dataSearchName+ ' OR printname="' + dataSearchName + '"',
+        };
+      }else{
+        options = {
+          IgnoreDates:true,
+          search: 'printname="' + dataSearchName + '"',
+        };
+      }
+
     }
     return this.getList(this.ERPObjects.TERPCombinedContactsVS1, options);
   }
