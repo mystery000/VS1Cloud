@@ -280,6 +280,8 @@ Template.payrundetails.onRendered(function () {
       await employee.getSuperAnnuations();
       
     });
+
+    console.log("employees", payRunDetails);
   
   
    // templateObject.loadSuperAnnuations();

@@ -87,17 +87,30 @@ export default class Employee {
     // })
 
     let data = [];
-    let dataObject = await getVS1Data('TPayTemplateSuperannuationLine')
+    let dataObject = await getVS1Data("TPayTemplateSuperannuationLine");
     data = JSON.parse(dataObject[0].data);
-    let useData = PayTemplateSuperannuationLine.fromList(
-        data.tpaytemplatesuperannuationline
-    ).filter((item) => {
-        if ( parseInt( item.fields.EmployeeID ) == parseInt(this.fields.ID) ) {
-            return item;
-        }
+    let useData = PayTemplateSuperannuationLine.fromList(data.tpaytemplatesuperannuationline);
+
+    useData = useData.map(item => item.fields);
+
+    useData = useData.filter(item => {
+      if (parseInt(item.EmployeeID) == parseInt(this.fields.ID)) {
+        return item;
+      }
     });
-   
+
     this.superAnnuations = useData;
+    this.calculateSuperAnnuation();
+  }
+
+  calculateSuperAnnuation() {
+    this.superAnnuations.forEach(s => {
+      this.incrementSuperAnnuation(s.Amount);
+    });
+  }
+
+  incrementSuperAnnuation(amount = 0.0) {
+    this.superAnnuationTotal += amount;
   }
 }
 
