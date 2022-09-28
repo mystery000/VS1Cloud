@@ -40,7 +40,7 @@ class CachedHttp {
   /**
    * 
    * @param {String} endpoint 
-   * @param {CallableFunction} onRemoteCall 
+   * @param {CallableFunction} onRemoteCall it should return {response: ReponseObject}
    * @returns 
    */
   async get(endpoint, onRemoteCall = async () => {}, options = {
