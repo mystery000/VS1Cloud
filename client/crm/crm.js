@@ -257,6 +257,11 @@ Template.crmoverview.onRendered(function () {
     $("#customerListModal").modal();
   });
 
+  $(".crmSelectEmployeeList").editableSelect();
+  $(".crmSelectEmployeeList").editableSelect().on("click.editable-select", function (e, li) {
+    $("#employeeListModal").modal();
+  });
+
 
   $(document).on("click", "#tblContactlist tbody tr", function (e) {
     var table = $(this);
@@ -280,6 +285,21 @@ Template.crmoverview.onRendered(function () {
       return false;
     }
 
+  });
+
+  $(document).on("click", "#tblEmployeelist tbody tr", function (e) {
+    var table = $(this);
+    let colEmployeeName = table.find(".colEmployeeName").text();
+    let colID = table.find(".colID").text(); 
+ 
+    $('#employeeListModal').modal('toggle');
+
+    // for add modal
+    $('#add_assigned_name').val(colEmployeeName);
+    // for edit modal
+    $('#crmSelectEmployeeList').val(colEmployeeName);
+
+    $('#assignedID').val(colID) 
   });
   ///////////////////////////////////////////////////
 
@@ -512,10 +532,7 @@ Template.crmoverview.events({
       if (v.className.includes("hiddenColumn")) {
         columVisible = false;
       }
-      sWidth = v.style.width.replace("px", "");
-      // tempcode
-      // columVisible = false;
-      // tempcode
+      sWidth = v.style.width.replace("px", ""); 
 
       let datatablerecordObj = {
         sTitle: v.innerText || "",
@@ -909,7 +926,7 @@ function openEditTaskModal(id, type) {
   // get selected task detail via api
   crmService.getTaskDetail(id).then(function (data) {
     if (data.fields.ID == id) {
-      let selected_record = data.fields;
+      let selected_record = data.fields; 
 
       $("#txtCrmTaskID").val(selected_record.ID);
       $("#txtCrmProjectID").val(selected_record.ProjectID);
@@ -993,6 +1010,12 @@ function openEditTaskModal(id, type) {
                 ${catg}
               </a>`
       );
+
+      if(projectName) {
+        $('.taskDetailProjectName').show();
+      } else {
+        $('.taskDetailProjectName').hide();
+      }
 
       $("#taskmodalNameLabel").html(selected_record.TaskName);
       $(".activityAdded").html("Added on " + moment(selected_record.MsTimeStamp).format("MMM D h:mm A"));

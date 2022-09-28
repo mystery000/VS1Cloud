@@ -2131,7 +2131,6 @@ Template.alltaskdatatable.events({
         }, 400);
       });
 
-      // tempcode until api is updated
       selected_lbls.forEach((lbl) => {
         crmService
           .updateLabel({
@@ -2188,10 +2187,7 @@ Template.alltaskdatatable.events({
     } else if (contactType == 'Supplier') {
       supplierID = contactID
     }
-
-    // tempcode
-    // subtask api is not completed
-    // label api is not completed
+ 
     if (subTaskID) {
       var objDetails = {
         type: "Tprojecttasks",
@@ -3731,6 +3727,12 @@ function openEditTaskModal(id, type) {
               </a>`
       );
 
+      if(projectName) {
+        $('.taskDetailProjectName').show();
+      } else {
+        $('.taskDetailProjectName').hide();
+      }
+
       $("#taskmodalNameLabel").html(selected_record.TaskName);
       $(".activityAdded").html("Added on " + moment(selected_record.MsTimeStamp).format("MMM D h:mm A"));
       let due_date = selected_record.due_date ? moment(selected_record.due_date).format("D MMM") : "No Date";
@@ -4059,6 +4061,10 @@ function openEditTaskModal(id, type) {
         contactType = 'Lead';
       }
       getContactData(contactID, contactType);
+
+      // tempcode add code for getting assigned employee name
+      
+      // tempcode add code for getting assigned employee name
 
     } else {
       swal("Cannot edit this task", "", "warning");
