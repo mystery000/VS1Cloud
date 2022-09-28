@@ -494,11 +494,7 @@ Template.payrollhistoryreport.helpers({
     return Template.instance().records.get();
   },
   redirectionType(item) {
-    if(item.fields.PayID === 'PO') {
-      return '/purchaseordercard?id=' + item.Id;
-    } else {
-      return '#noInfoFound';
-    }
+      return '/employeescard?id=' + item.fields.Employeeid + '&tab-3';
   },
     formatPrice( amount ){
         let utilityService = new UtilityService();

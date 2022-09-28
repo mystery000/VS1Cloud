@@ -144,7 +144,6 @@ Template.transactionjournallist.onRendered(() => {
     data = data.response;
 
     let reportGroups = []; 
-    console.log('sad',data.ttransactionlistreport)
     if( data.ttransactionlistreport.length > 0 ){
         for (const item of data.ttransactionlistreport) {   
             let isExist = reportGroups.filter((subitem) => {
@@ -382,7 +381,8 @@ Template.transactionjournallist.events({
     // let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
     //await templateObject.setReportOptions(true);
-
+    $('#dateFrom').attr('readonly', true);
+    $('#dateTo').attr('readonly', true);
      templateObject.loadReport(null, null, true);
   },
   
