@@ -38,6 +38,8 @@ import { functionsIn } from "lodash";
 import moment from "moment";
 import LoadingOverlay from '../LoadingOverlay';
 import { jsPDF } from "jspdf";
+import erpObject from "../lib/global/erp-objects";
+import CachedHttp from "../lib/global/CachedHttp";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -47,10 +49,10 @@ let edtProductSelect = "";
 Template.employeescard.onCreated(function () {
     const templateObject = Template.instance();
     setTimeout(function () {
-        $('#period').editableSelect('add','Hourly');
-        $('#period').editableSelect('add','Daily');
-        $('#period').editableSelect('add','Weekly');
-        $('#period').editableSelect('add','Monthly');
+        // $('#period').editableSelect('add','Hourly');
+        // $('#period').editableSelect('add','Daily');
+        // $('#period').editableSelect('add','Weekly');
+        // $('#period').editableSelect('add','Monthly');
         $("#paymentDate").datepicker({
             showOn: 'button',
             buttonText: 'Show Date',
@@ -116,6 +118,10 @@ Template.employeescard.onCreated(function () {
     templateObject.isUserAddition.set(true);
     templateObject.calendarOptions = new ReactiveVar([]);
     templateObject.allrepservicedata = new ReactiveVar([]);
+
+
+    /* PayRun related vars */
+    templateObject.payPeriods = new ReactiveVar([]);
 });
 
 Template.employeescard.onRendered(function () {
@@ -3940,6 +3946,81 @@ Template.employeescard.onRendered(function () {
         }
         $('#reimbursementSettingsModal').modal('toggle');
     });
+
+
+  templateObject.loadPayRunCalendar = async () => {
+    LoadingOverlay.show();
+
+    let list = [];
+    let data = await CachedHttp.get(erpObject.TPayrollCalendars, async () => {
+      return await sideBarService.getCalender(initialBaseDataLoad, 0);
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: cachedResponse => {
+        return false;
+      }
+    });
+
+    data = data.response.tpayrollcalendars.map((obj) => {
+        return {...obj.fields}
+    });
+
+
+
+
+    // data.tpayrollcalendars.forEach(element => {
+    //   list.push(element.fields);
+    // });
+    // let splashArrayCalenderList = [];
+
+    // data.tpayrollcalendars.forEach(calendar => {
+    //   dataListAllowance = [
+    //     calendar.fields.ID || "",
+    //     calendar.fields.PayrollCalendarName || "",
+    //     calendar.fields.PayrollCalendarPayPeriod || "",
+    //     moment(calendar.fields.PayrollCalendarStartDate).format("DD/MM/YYYY") || "",
+    //     moment(calendar.fields.PayrollCalendarFirstPaymentDate).format("DD/MM/YYYY") || "",
+    //     '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    //   ];
+
+    //   splashArrayCalenderList.push(dataListAllowance);
+    // });
+
+    templateObject.payPeriods.set(data);
+    LoadingOverlay.hide();
+  };
+
+    templateObject.initPayPeriods = async () => {
+        await templateObject.loadPayRunCalendar();
+
+        let payPeriods = templateObject.payPeriods.get();
+
+      
+
+        payPeriods.forEach((period) => {
+            $('#edtPayPeriod').editableSelect(
+                'add', `${period.PayrollCalendarName} (${period.PayrollCalendarPayPeriod})`, 
+                null,
+                {
+                    name: "period-id",
+                    value: period.ID
+                },
+                {
+                    name: "period-id",
+                    value: period.ID
+                }
+                );
+        });
+
+        $('#period').editableSelect('add','Hourly');
+        $('#period').editableSelect('add','Daily');
+        $('#period').editableSelect('add','Weekly');
+        $('#period').editableSelect('add','Monthly');
+        
+    }
+
+    templateObject.initPayPeriods();
 
 });
 Template.employeescard.events({
