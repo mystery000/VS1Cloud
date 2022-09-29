@@ -19,6 +19,7 @@ import LoadingOverlay from '../LoadingOverlay';
 import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
+import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -3107,6 +3108,9 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
               });
             };
             templateObject.getInvoiceData();
+
+            FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+
         }
     } else {
         LoadingOverlay.hide();
