@@ -59,6 +59,7 @@ Template.jobprofitabilityreport.onRendered(() => {
     }
     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
+    templateObject.dateAsAt.set(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getJobProfitabilityReportData();
   };
@@ -151,7 +152,7 @@ Template.jobprofitabilityreport.onRendered(() => {
     LoadingOverlay.hide();
   }
 
-  // templateObject.setReportOptions();
+  templateObject.setReportOptions();
 
 
   templateObject.initDate();
@@ -502,6 +503,7 @@ Template.jobprofitabilityreport.events({
 
 Template.jobprofitabilityreport.helpers({
   dateAsAt: () => {
+    console.log(Template.instance().dateAsAt.get())
     return Template.instance().dateAsAt.get() || "-";
   },
   records: () => {
@@ -510,21 +512,16 @@ Template.jobprofitabilityreport.helpers({
   
   redirectionType(item) {
     if(item.TransactionType === 'Invoice') {
-      return '#noInfoFound';
       return '/invoicecard?id=' + item.SaleID;
     } else if (item.TransactionType === 'Quote') {
-      return '#noInfoFound';
-      return '/invoicecard?id=' + item.saleId;
+      return 'quotecard?id=' + item.saleId;
     } else if (item.TransactionType === 'Bill') {
-      return '#noInfoFound';
       return '/billcard?id=' + item.saleId;
     } else if (item.TransactionType === 'Timesheet') {
       return '#noInfoFound';
     } else if (item.TransactionType === 'Refund') {
-      return '#noInfoFound';
       return 'refundcard?id=' + item.SaleID;
     } else if (item.TransactionType === 'Purchase Order') {
-      return '#noInfoFound';
       return '/purchaseordercard?id=' + item.saleId;
     } else {
       return '#noInfoFound';

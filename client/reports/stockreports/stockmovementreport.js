@@ -122,28 +122,28 @@ Template.stockmovementreport.onRendered(() => {
       let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
       let ignoreDate = options.ignoreDate || false;
       data = await reportService.getStockMovementReport( dateFrom, dateTo, ignoreDate);
-      if( data.t_vs1_report_productmovement.length > 0 ){
+      if( data.tproductmovementlist.length > 0 ){
         localStorage.setItem('VS1StockMovement_Report', JSON.stringify(data)||'');
       }
     }else{
       data = JSON.parse(localStorage.getItem('VS1StockMovement_Report'));
     }
     let movementReport = [];
-    if( data.t_vs1_report_productmovement.length > 0 ){
+    if( data.tproductmovementlist.length > 0 ){
         let reportGroups = [];
-        for (const item of data.t_vs1_report_productmovement) {
+        for (const item of data.tproductmovementlist) {
             let isExist = reportGroups.filter((subitem) => {
-                if( subitem.ID == item.fields.ProductID ){
+                if( subitem.ID == item.ProductID ){
                     subitem.SubAccounts.push(item)
                     return subitem
                 }
             });
 
             if( isExist.length == 0 ){
-              if(item.fields.TranstypeDesc != 'Opening Balance'){
+              if(item.TranstypeDesc != 'Opening Balance'){
                 reportGroups.push({
-                    ID: item.fields.ProductID,
-                    ProductName: item.fields.ProductName,
+                    ID: item.ProductID,
+                    ProductName: item.ProductName,
                     SubAccounts: [item],
                     TotalRunningQty: 0,
                     TotalCurrentQty: 0,
@@ -158,12 +158,12 @@ Template.stockmovementreport.onRendered(() => {
             let TotalCurrentQty = 0;
             let TotalUnitCost = 0;
             item.SubAccounts.map((subitem) => {
-              TotalRunningQty += subitem.fields.Qty;
-              TotalCurrentQty += subitem.fields.Qty;
-              TotalUnitCost += subitem.fields.Cost;
+              TotalRunningQty += subitem.Qty;
+              TotalCurrentQty += subitem.Qty;
+              TotalUnitCost += subitem.Cost;
             });
             item.SubAccounts.sort(function(a,b){
-              return new Date(b.fields.TransactionDate) - new Date(a.fields.TransactionDate);
+              return new Date(b.TransactionDate) - new Date(a.TransactionDate);
             });
             item.TotalRunningQty = TotalRunningQty;
             item.TotalCurrentQty = TotalCurrentQty;
@@ -441,36 +441,36 @@ Template.stockmovementreport.helpers({
     return Template.instance().records.get();
   },
   redirectionType(item) {
-    if(item.fields.TranstypeDesc === 'Purchase Order') {
-      return '/purchaseordercard?id=' + item.fields.TransactionNo;
-    } else if (item.fields.TranstypeDesc === 'Invoice') {
-      return '/invoicecard?id=' + item.fields.TransactionNo;
-    } else if (item.fields.TranstypeDesc === 'Refund') {
-      return 'refundcard?id=' + item.fields.TransactionNo;
-    } else if (item.fields.TranstypeDesc === 'Stock Adjustment') {
+    if(item.TranstypeDesc === 'Purchase Order') {
+      return '/purchaseordercard?id=' + item.TransactionNo;
+    } else if (item.TranstypeDesc === 'Invoice') {
+      return '/invoicecard?id=' + item.TransactionNo;
+    } else if (item.TranstypeDesc === 'Refund') {
+      return 'refundcard?id=' + item.TransactionNo;
+    } else if (item.TranstypeDesc === 'Stock Adjustment') {
       return '#noInfoFound';
-      return '/stockadjustmentcard?id=' + item.fields.TransactionNo;
-    } else if (item.fields.TranstypeDesc === 'Sales Order') {
-      return '/salesordercard?id=' + item.fields.TransactionNo;
-    } else if (item.fields.TranstypeDesc === 'Sales Order (Man)') {
-      return '/salesordercard?id=' + item.fields.TransactionNo;
-    } else if (item.fields.TranstypeDesc === 'Opening Balance') {
+      return '/stockadjustmentcard?id=' + item.TransactionNo;
+    } else if (item.TranstypeDesc === 'Sales Order') {
+      return '/salesordercard?id=' + item.TransactionNo;
+    } else if (item.TranstypeDesc === 'Sales Order (Man)') {
+      return '/salesordercard?id=' + item.TransactionNo;
+    } else if (item.TranstypeDesc === 'Opening Balance') {
       return '#noInfoFound';
-    } else if (item.fields.TranstypeDesc === 'TMergedSalesLines') {
+    } else if (item.TranstypeDesc === 'TMergedSalesLines') {
       return '#noInfoFound';
-    } else if (item.fields.TranstypeDesc === 'Seed To Sale') {
+    } else if (item.TranstypeDesc === 'Seed To Sale') {
       return '#noInfoFound';
-    } else if (item.fields.TranstypeDesc === 'Cash Sale') {
+    } else if (item.TranstypeDesc === 'Cash Sale') {
       return '#noInfoFound';
-    } else if (item.fields.TranstypeDesc === 'POS') {
+    } else if (item.TranstypeDesc === 'POS') {
       return '#noInfoFound';
-    } else if (item.fields.TranstypeDesc === 'Return Authority') {
+    } else if (item.TranstypeDesc === 'Return Authority') {
       return '#noInfoFound';
-    } else if (item.fields.TranstypeDesc === 'Stock Transfer') {
+    } else if (item.TranstypeDesc === 'Stock Transfer') {
       return '#noInfoFound';
-    } else if (item.fields.TranstypeDesc === 'Repairs') {
+    } else if (item.TranstypeDesc === 'Repairs') {
       return '#noInfoFound';
-    } else if (item.fields.TranstypeDesc === 'Layby') {
+    } else if (item.TranstypeDesc === 'Layby') {
       return '#noInfoFound';
     } else {
       return '#noInfoFound';

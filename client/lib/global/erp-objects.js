@@ -272,7 +272,8 @@ const erpObject = {
     TJobProfitability: "TJobProfitability",
     TBasReturn: "TBasReturn",
     VS1_Customize: "VS1_Customize",
-    TProductList:"TProductList"
+    TProductList:"TProductList",
+    TProductMovementList:"TProductMovementList"
 };
 
 export default erpObject;
