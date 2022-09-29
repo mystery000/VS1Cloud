@@ -579,15 +579,6 @@ tableResize = function() {
   }, 1000);
 };
 
-setupMessagehideshow = function() {
-  let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
-    if (setupFinished == true || setupFinished == "true") {
-      $('.setupIncompleatedMsg').show();
-    } else {
-      $('.setupIncompleatedMsg').show();
-    }
-};
-setupMessagehideshow();
 // $(window).load(function() {
 //
 // });
