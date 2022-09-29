@@ -1343,5 +1343,13 @@ Template.customerlist.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
+    },
+    showSetupFinishedAlert: () => {
+        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+        if (setupFinished == true || setupFinished == "true") {
+            return false;
+        } else {
+            return true;
+        }
     }
 });
