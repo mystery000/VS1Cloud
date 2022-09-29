@@ -19,6 +19,7 @@ import { TaxRateService } from "../settings/settings-service";
 import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
+import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -3121,6 +3122,8 @@ templateObject.getLastPOData = async function() {
         }
     }
 
+
+
     templateObject.getShpVias = function() {
         getVS1Data('TShippingMethod').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -4822,6 +4825,8 @@ templateObject.getLastPOData = async function() {
         mediaQuery(x);
         x.addListener(mediaQuery)
     }, 10);
+
+    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
 });
 

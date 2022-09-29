@@ -3595,6 +3595,8 @@ Template.paymentcard.onRendered(() => {
                 });
             });
 
+            FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+
         }
 
         $('#tblPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {

@@ -19,6 +19,7 @@ import LoadingOverlay from '../LoadingOverlay';
 import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
+import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -6809,6 +6810,8 @@ Template.new_salesorder.onRendered(() => {
         mediaQuery(x)
         x.addListener(mediaQuery)
     }, 10);
+
+    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
 });
 
