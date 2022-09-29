@@ -126,134 +126,34 @@ Template.performancechart.onRendered(()=>{
   templateObject.getPerformanceReports = async () => {
     try{
       var curDate = new Date();
-      var dateFrom = new Date();
-      var dateTo = new Date();
-      dateFrom.setMonth(curDate.getMonth() - 2);
-      var pDateFrom = dateFrom.getFullYear() + '-' + ("0" + (dateFrom.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateFrom.getDate())).slice(-2);
-      dateTo.setMonth(curDate.getMonth());
-      var pDateTo = dateTo.getFullYear() + '-' + ("0" + (dateTo.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateTo.getDate())).slice(-2);
-      let periodMonths = `1 Month`;
-      let data = await reportService.getProfitandLossCompare(
-        pDateFrom,
-        pDateTo,
-        false,
-        periodMonths
-      );
-      let records = [];
-      if (data.tprofitandlossperiodcomparereport) {
-        let accountData = data.tprofitandlossperiodcomparereport;
-        let accountType = "";
-        let arrAccountTypes = ["TotalIncome", "GrossProfit", "NetIncome", "TotalCOGS"];
-        var dataList = "";
-        for (let i = 0; i < accountData.length; i++) {
-          let accountTypeDesc = accountData[i]["AccountTypeDesc"].replace(/\s/g, "");
-          if (arrAccountTypes.includes(accountTypeDesc)) {
-            accountType = accountTypeDesc;
-            let compPeriod = 2;
-            let periodAmounts = [];
-            let totalAmount = 0;
-            for (let counter = 1; counter <= compPeriod; counter++) {
-              totalAmount += accountData[i]["Amount_" + counter];
-              let AmountEx = utilityService.modifynegativeCurrencyFormat(accountData[i]["Amount_" + counter]) || 0.0;
-              let RealAmount = accountData[i]["Amount_" + counter] || 0;
-              periodAmounts.push({
-                decimalAmt: AmountEx,
-                roundAmt: RealAmount,
-              });
-            }
-            let totalAmountEx = utilityService.modifynegativeCurrencyFormat(totalAmount) || 0.0;
-            let totalRealAmount = totalAmount || 0;
-            if (accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" && accountType != "") {
-              dataList = {
-                id: accountData[i]["AccountID"] || "",
-                accounttype: accountType || "",
-                accounttypeshort: accountData[i]["AccountType"] || "",
-                accountname: accountData[i]["AccountName"] || "",
-                accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                accountno: accountData[i]["AccountNo"] || "",
-                totalamountex: "",
-                totalRealAmountex: "",
-                periodAmounts: "",
-                name: $.trim(accountData[i]["AccountName"])
-                  .split(" ")
-                  .join("_"),
-              };
-            } else {
-              dataList = {
-                id: accountData[i]["AccountID"] || "",
-                accounttype: accountType || "",
-                accounttypeshort: accountData[i]["AccountType"] || "",
-                accountname: accountData[i]["AccountName"] || "",
-                accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                accountno: accountData[i]["AccountNo"] || "",
-                totalamountex: totalAmountEx || 0.0,
-                periodAmounts: periodAmounts,
-                totalRealAmountex: totalRealAmount,
-                name: $.trim(accountData[i]["AccountName"])
-                  .split(" ")
-                  .join("_"),
-                // totaltax: totalTax || 0.00
-              };
-            }
-
-            if (accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "") {
-            } else {
-              if (dataList.totalRealAmountex !== 0) {
-                records.push(dataList);
-              }
-            }
-          }
-        }
-        var i=0;
-        for (i=0; i<2; i++) {
-          totalSales.push(records[0].periodAmounts[i].roundAmt);
-          grossProfit.push(records[1].periodAmounts[i].roundAmt);
-          totalExpense.push(records[0].periodAmounts[i].roundAmt - records[1].periodAmounts[i].roundAmt);
-          totalNetIncome.push(records[2].periodAmounts[i].roundAmt);
-          totalCOGS.push(records[3].periodAmounts[i].roundAmt);
-        }
-        for (i=0; i<2; i++) {
-          grossProfitMg[i] = totalSales[i] - totalCOGS[i];
-          netProfitMg[i] = totalSales[i] - totalExpense[i];
-        }      
-        templateObject.records.set(records);
-      }
-
+      var dateAsOf = curDate.getFullYear() + '-' + ("0" + (curDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (curDate.getDate())).slice(-2);
       
-      var dateTo1 = new Date(curDate.getFullYear(), curDate.getMonth() - 1, 0);
-      var dateTo2 = new Date(curDate.getFullYear(), curDate.getMonth(), 0);
-      var loadDate1 = moment(dateTo1).format("YYYY-MM-DD");
-      var loadDate2 = moment(dateTo2).format("YYYY-MM-DD");
-      var loadDates = [];
-      loadDates.push(loadDate1);
-      loadDates.push(loadDate2);
-
-      let TotalCurrentAsset_Liability = 0;
-      let AccountTree = "";
-      let totalEq = 0;
-      let investRet = 0;
-
-      for (var k=0; k<2; k++) {
-        let data = await reportService.getBalanceSheetReport(loadDates[k]);
-        if (data.balancesheetreport) {
-          for (let i = 0, len = data.balancesheetreport.length; i < len; i++) {
-            TotalCurrentAsset_Liability = data.balancesheetreport[i]["Total Current Asset & Liability"];
-            AccountTree = data.balancesheetreport[i]["Account Tree"];
-            
-            if (AccountTree.replace(/\s/g, "") == "TotalCapital/Equity") {
-              totalEq = TotalCurrentAsset_Liability;
-              break;
-            }
-          }
-          if (totalEq != 0) {
-            investRet = totalNetIncome[k] / totalEq;
-          }
-          investRet = investRet.toFixed(2);
-          investReturns[k] = investRet;
-        }
+      let data = await reportService.getCardDataReport(dateAsOf);
+      if (data.tcarddatareport) {
+        let resData = data.tcarddatareport[0];
+        grossProfitMg[0] = resData.Perf_GrossMargin1;
+        grossProfitMg[1] = resData.Perf_GrossMargin2;
+        netProfitMg[0] = resData.Perf_NetMargin1;
+        netProfitMg[1] = resData.Perf_NetMargin2;
+        investReturns[0] = resData.Perf_ROI1;
+        investReturns[1] = resData.Perf_ROI2;
       }
-      [grossProfitMarginPerc1, netProfitMarginPerc1, returnOnInvestmentPerc1] = templateObject.calculatePercent([grossProfitMg[0], netProfitMg[0], investReturns[0]]);
-      [grossProfitMarginPerc2, netProfitMarginPerc2, returnOnInvestmentPerc2] = templateObject.calculatePercent([grossProfitMg[1], netProfitMg[1], investReturns[1]]);
+      
+      let pArr = [];
+      for (var i=0; i<2; i++) {
+        pArr.push(grossProfitMg[i]);
+        pArr.push(netProfitMg[i]);
+        pArr.push(investReturns[i]);
+      }
+      let rArr = [];
+      rArr = templateObject.calculatePercent(pArr);
+      grossProfitMarginPerc1 = rArr[0];
+      netProfitMarginPerc1 = rArr[1];
+      returnOnInvestmentPerc1 = rArr[2];
+      grossProfitMarginPerc2 = rArr[3];
+      netProfitMarginPerc2 = rArr[4];
+      returnOnInvestmentPerc2 = rArr[5];
+
       templateObject.grossProfitMarginPerc1.set(grossProfitMarginPerc1);
       templateObject.netProfitMarginPerc1.set(netProfitMarginPerc1);
       templateObject.returnOnInvestmentPerc1.set(returnOnInvestmentPerc1);

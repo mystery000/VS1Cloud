@@ -118,50 +118,33 @@ Template.incomechart.onRendered(()=>{
   templateObject.getIncomeReports = async () => {
     try{
       var curDate = new Date();
-      var dateTo1 = new Date(curDate.getFullYear(), curDate.getMonth() - 1, 0);
-      var dateTo2 = new Date(curDate.getFullYear(), curDate.getMonth(), 0);
-      var loadDate1 = moment(dateTo1).format("YYYY-MM-DD");
-      var loadDate2 = moment(dateTo2).format("YYYY-MM-DD");
-      var loadDates = [];
-      loadDates.push(loadDate1);
-      loadDates.push(loadDate2);
-
-      var fromDates = [];
-      var toDates = [];
-      fromDates.push(dateTo1.getFullYear() + '-' + ("0" + (dateTo1.getMonth() + 1)).slice(-2) + '-' + "01");
-      toDates.push(dateTo1.getFullYear() + '-' + ("0" + (dateTo1.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateTo1.getDate())).slice(-2));
-      fromDates.push(dateTo2.getFullYear() + '-' + ("0" + (dateTo2.getMonth() + 1)).slice(-2) + '-' + "01");
-      toDates.push(dateTo2.getFullYear() + '-' + ("0" + (dateTo2.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateTo2.getDate())).slice(-2));
-      var i = 0;
-      for (var k=0; k<2; k++) {
-        let data1 = await reportService.getInvoicePaidReport(fromDates[k], toDates[k]);
-        let data2 = await reportService.getInvoiceUnpaidReport(fromDates[k], toDates[k]);
-        let data3 = await reportService.getInvoiceBOReport(fromDates[k], toDates[k]);
-        let cntInvoice = 0;
-        let amtInvoice = 0;
-        if (data1.tcustomerpaymentlist) {
-          cntInvoice += data1.tcustomerpaymentlist.length;
-          for (i=0; i<data1.tcustomerpaymentlist.length; i++) {
-            amtInvoice += data1.tcustomerpaymentlist[i].Amount;
-          }
-        }
-        if (data2.tsaleslist) {
-          cntInvoice += data2.tsaleslist.length;
-          for (i=0; i<data2.tsaleslist.length; i++) {
-            amtInvoice += data2.tsaleslist[i].TotalAmountinc;
-          }
-        }
-        if (data3.tinvoicelist) {
-          cntInvoice = cntInvoice - data3.tinvoicelist.length;
-        }
-        totalInvoiceCount[k] = cntInvoice;
-        totalInvoiceValue[k] = amtInvoice;
-        if (cntInvoice > 0)
-          averageInvoiceValue[k] = amtInvoice / cntInvoice;
-      }
+      var dateAsOf = curDate.getFullYear() + '-' + ("0" + (curDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (curDate.getDate())).slice(-2);
       
-      [totalInvoiceCountPerc1, totalInvoiceValuePerc1, averageInvoiceValuePerc1] = templateObject.calculatePercent([totalInvoiceCount[0], totalInvoiceValue[0], averageInvoiceValue[0]]);
-      [totalInvoiceCountPerc2, totalInvoiceValuePerc2, averageInvoiceValuePerc2] = templateObject.calculatePercent([totalInvoiceCount[1], totalInvoiceValue[1], averageInvoiceValue[1]]);
+      let data = await reportService.getCardDataReport(dateAsOf);
+      if (data.tcarddatareport) {
+        let resData = data.tcarddatareport[0];
+        totalInvoiceCount[0] = resData.Income_Invoices1;
+        totalInvoiceCount[1] = resData.Income_Invoices2;
+        totalInvoiceValue[0] = resData.Income_Total1;
+        totalInvoiceValue[1] = resData.Income_Total2;
+        averageInvoiceValue[0] = resData.Income_Average1;
+        averageInvoiceValue[1] = resData.Income_Average2;
+      }
+
+      let pArr = [];
+      for (var i=0; i<2; i++) {
+        pArr.push(totalInvoiceCount[i]);
+        pArr.push(totalInvoiceValue[i]);
+        pArr.push(averageInvoiceValue[i]);
+      }
+      let rArr = [];
+      rArr = templateObject.calculatePercent(pArr);
+      totalInvoiceCountPerc1 = rArr[0];
+      totalInvoiceValuePerc1 = rArr[1];
+      averageInvoiceValuePerc1 = rArr[2];
+      totalInvoiceCountPerc2 = rArr[3];
+      totalInvoiceValuePerc2 = rArr[4];
+      averageInvoiceValuePerc2 = rArr[5];
 
       templateObject.totalInvoiceCountPerc1.set(totalInvoiceCountPerc1);
       templateObject.averageInvoiceValuePerc1.set(averageInvoiceValuePerc1);
