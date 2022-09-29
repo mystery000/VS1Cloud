@@ -1079,7 +1079,7 @@
                     </div>
                     <div class="product-content">
                         <div class="d-flex productRow">
-                            <div class="colProduct form-group">
+                            <div class="colProduct form-group d-flex">
                                 <input class="edtMainProductName form-control" id="edtMainProductName" disabled style="width: 60%" value="{{productrecord.productname}}"/>
                             </div>
                             <div class="colQty form-group">
@@ -1092,7 +1092,7 @@
                                 <input type="text" class="edtProcessNote form-control w-100"/>
                             </div>
                             <div class="colAttachment">
-
+                               
                                 <a class="btn btn-primary btnAddAttachment" role="button"  data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
                                     {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments</a>
                                 <div class="attachedFiles d-none"></div>
@@ -1104,10 +1104,10 @@
                         <div class="d-flex productRow">
                             <div class="colProduct form-group d-flex">
                                 <button class="btn btn-primary btnAddProduct" style="width: 29%;">Product+</button>
-                                <select class="edtProductName edtRaw form-control" id="edtRaw" type="search" style="width: 30%"></select>
+                                <!-- <select class="edtProductName edtRaw form-control" id="edtRaw" type="search" style="width: 30%"></select> -->
                             </div>
                             <div class="colQty form-group">
-                                <input type="text" class="form-control edtQuantity w-100" value="1"/>
+                                <!-- <input type="text" class="form-control edtQuantity w-100" value="1"/> -->
                             </div>
                             <div class="colProcess form-group">
                             </div>
