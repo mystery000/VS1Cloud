@@ -1351,6 +1351,12 @@ Template.accountsoverview.events({
     "click #btnNewJournalEntry": function(event) {
         FlowRouter.go("/journalentrycard");
     },
+    "click #btnBasReturn": function(event) {
+    FlowRouter.go("/basreturnlist");
+    },
+    "click #btnNewBasReturn": function(event) {
+    FlowRouter.go("/basreturn");
+    },
     "click .chkDatatable": function(event) {
         var columns = $("#tblAccountOverview th");
         let columnDataValue = $(event.target)
