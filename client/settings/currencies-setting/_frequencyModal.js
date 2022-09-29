@@ -332,7 +332,7 @@ Template._frequencyModal.onRendered(function () {
       document.querySelector("#frequencyDaily").click(); // this is the default
       return;
     }
-    let defaultFormFrequency = new FormFrequencyModel(JSON.parse(defaultForm[0].data));
+    let defaultFormFrequency = new FormFrequencyModel(defaultForm.length > 0 ? JSON.parse(defaultForm[0].data) : {});
 
     if (defaultFormFrequency.MonthlyStartDate) {
       // it is montly

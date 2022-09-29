@@ -12,6 +12,7 @@ import PayRun from "../../js/Api/Model/PayRun";
 import LoadingOverlay from "../../LoadingOverlay";
 import "../../lib/global/indexdbstorage";
 import GlobalFunctions from "../../GlobalFunctions";
+import Employee from "../../js/Api/Model/Employee";
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -203,11 +204,16 @@ Template.payrundetails.onRendered(function () {
 
     data = data.response;
 
-    await GlobalFunctions.asyncForEach(data.temployee, async (employee, index, array) => {
+    let employees = Employee.fromList(data.temployee);
+
+    await GlobalFunctions.asyncForEach(employees, async (employee, index, array) => {
       employee.PayHistory = await getPayHistoryOfEmployee(false, employee.fields.ID);
     });
 
-    return data.temployee;
+
+    console.log("employee", employees);
+
+    return employees;
   };
 
   /**
@@ -260,17 +266,49 @@ Template.payrundetails.onRendered(function () {
           earnings: 0.0
         });
 
-        payRunsHistory.push(payRunDetails);
-
+    
+        payRunsHistory.push( payRunDetails);
+  
         localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
+      } else {
+        payRunDetails.employees = Employee.fromList(payRunDetails.employees);
       }
     }
 
-    templateObject.payRunDetails.set(payRunDetails);
-    templateObject.loadSuperAnnuations();
+    await GlobalFunctions.asyncForEach(payRunDetails.employees, async (employee, index) => {
+      await employee.getEarnings();
+      await employee.getSuperAnnuations();
+      
+    });
 
-    LoadingOverlay.hide();
+    console.log("employees", payRunDetails);
+  
+  
+   // templateObject.loadSuperAnnuations();
+    await templateObject.payRunDetails.set(payRunDetails);
+
+    await templateObject.calculateTableTotal();
+    LoadingOverlay.hide();   
   };
+
+  templateObject.calculateTableTotal = async () => {
+    let payRunData = await templateObject.payRunDetails.get();
+
+    payRunData.employees.forEach((employee) => {
+      payRunData.earnings += employee.earningTotal;
+      payRunData.taxes += employee.taxTotal;
+      payRunData.netPay += employee.netPayTotal;
+      payRunData.superAnnuation += employee.superAnnuationTotal;
+
+    });
+
+
+
+
+
+
+    templateObject.payRunDetails.set(payRunData);
+  }
 
   /**
      * save to draft at page load
@@ -342,6 +380,13 @@ Template.payrundetails.events({
 });
 
 Template.payrundetails.helpers({
+  countEmployees: () => {
+    const payRunDetails = (Template.instance().payRunDetails.get()).employees;
+    if(payRunDetails) {
+      return 0;
+    }
+    return payRunDetails.employees.length;
+  },
   payRunDetails: () => {
     return Template.instance().payRunDetails.get();
   },
@@ -358,5 +403,7 @@ Template.payrundetails.helpers({
     if (data) {
       return moment(data).format("Do MMM YYYY");
     }
-  }
+  },
+
+  formatPrice : (amount) => GlobalFunctions.formatPrice(amount),
 });

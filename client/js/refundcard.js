@@ -1988,6 +1988,7 @@ Template.refundcard.onRendered(() => {
                     $('#sltStatus').val(data.fields.SalesStatus);
                     templateObject.CleintName.set(data.fields.CustomerName);
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                    $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                     $('#sltPaymentMethod').val(data.fields.PayMethod);
 
                     // tempcode
@@ -2611,6 +2612,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     $('#sltStatus').val(data.fields.SalesStatus);
                     templateObject.CleintName.set(data.fields.CustomerName);
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                    $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                     $('#sltPaymentMethod').val(data.fields.PayMethod);
 
                     // tempcode
@@ -2929,6 +2931,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     $('#sltStatus').val(data.fields.SalesStatus);
                     templateObject.CleintName.set(data.fields.CustomerName);
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                    $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                     $('#sltPaymentMethod').val(data.fields.PayMethod);
 
                     // tempcode
@@ -7610,6 +7613,7 @@ Template.refundcard.events({
             var currentInvoice = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             var objDetails = '';
             if (getso_id[1]) {
                 currentInvoice = parseInt(currentInvoice);
@@ -7619,6 +7623,7 @@ Template.refundcard.events({
                         ID: currentInvoice,
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -7644,6 +7649,7 @@ Template.refundcard.events({
                     fields: {
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -8732,6 +8738,7 @@ Template.refundcard.events({
             var currentInvoice = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
             var objDetails = '';
             if (getso_id[1]) {
                 currentInvoice = parseInt(currentInvoice);
@@ -8741,6 +8748,7 @@ Template.refundcard.events({
                         ID: currentInvoice,
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -8765,6 +8773,7 @@ Template.refundcard.events({
                     fields: {
                         CustomerName: customer,
                         ForeignExchangeCode: currencyCode,
+                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,

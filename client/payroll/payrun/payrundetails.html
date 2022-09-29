@@ -175,19 +175,19 @@
                         <div class="row no-gutters">
                             <div class="col-6 col-md-2" style="border-right: 1px solid #e3e6f0;padding: 16px;;">
                                 <h5 style="font-size: 16px; font-weight: 700;">Earnings</h5>
-                                <p style="font-size: 24px; margin-bottom: 0px;">{{ payRunDetails.earnings }}</p>
+                                <p style="font-size: 24px; margin-bottom: 0px;">{{ formatPrice payRunDetails.earnings }}</p>
                             </div>
                             <div class="col-6 col-md-2" style="border-right: 1px solid #e3e6f0;padding: 16px;;">
                                 <h5 style="font-size: 16px; font-weight: 700;">Taxes</h5>
-                                <p style="font-size: 24px; margin-bottom: 0px;">{{ payRunDetails.taxes }}</p>
+                                <p style="font-size: 24px; margin-bottom: 0px;">{{  formatPrice payRunDetails.taxes }}</p>
                             </div>
                             <div class="col-6 col-md-2" style="border-right: 1px solid #e3e6f0;padding: 16px;;">
                                 <h5 style="font-size: 16px; font-weight: 700;">Superannuation</h5>
-                                <p style="font-size: 24px; margin-bottom: 0px;">{{ payRunDetails.superAnnuation }}</p>
+                                <p style="font-size: 24px; margin-bottom: 0px;">{{  formatPrice payRunDetails.superAnnuation }}</p>
                             </div>
                             <div class="col-6 col-md-2" style="border-right: 1px solid #e3e6f0;padding: 16px;;">
                                 <h5 style="font-size: 16px; font-weight: 700;">Net Pay</h5>
-                                <p style="font-size: 24px; margin-bottom: 0px;">{{ payRunDetails.netPay }}</p>
+                                <p style="font-size: 24px; margin-bottom: 0px;">{{  formatPrice payRunDetails.netPay }}</p>
                             </div>
                             <div class="col-6 col-md-2" style="border-right: 1px solid #e3e6f0;padding: 16px;;">
                                 <h5 style="font-size: 16px; font-weight: 700;">Status</h5>
@@ -205,7 +205,7 @@
 
         <div class="row">
             <div class="col-12">
-                <h4 style="font-weight: 600; margin-left: 32px;"><span>1 Employee</span> Included</h4>
+                <h4 style="font-weight: 600; margin-left: 32px;"><span>{{ countEmployees }} Employee</span> Included</h4>
             </div>
             <div class="col-12">
                 <div class="card-body p-5 rounded" style="padding: 0rem 2rem !important;">
@@ -271,15 +271,15 @@
                         <table id="tblPayRunDetails" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayRunDetails">
                             <thead>
                                 <tr class="dnd-moved">
-                                    <th class="th colPayRunDetailsFirstName" style="">First Name</th>
-                                    <th class="th colPayRunDetailsLastName" style="">Last Name</th>
-                                    <th class="th colPayRunDetailsEmployeeGroup" style="">Employee Group</th>
-                                    <th class="th colPayRunDetailsLastEdited" style="">Last Edited</th>
-                                    <th class="th colPayRunDetailsEarnings" style="">Earnings</th>
-                                    <th class="th colPayRunDetailsTax" style="">Tax</th>
-                                    <th class="th colPayRunDetailsSuper" style="">Super</th>
-                                    <th class="th colPayRunDetailsNetPay" style="">Net Pay</th>
-                                    <th class="th colPayRunDetailsDropdown" style="">
+                                    <th class="th colPayRunDetailsFirstName" >First Name</th>
+                                    <th class="th colPayRunDetailsLastName" >Last Name</th>
+                                    <th class="th colPayRunDetailsEmployeeGroup" >Employee Group</th>
+                                    <th class="th colPayRunDetailsLastEdited" >Last Edited</th>
+                                    <th class="th colPayRunDetailsEarnings" >Earnings</th>
+                                    <th class="th colPayRunDetailsTax" >Tax</th>
+                                    <th class="th colPayRunDetailsSuper" >Super</th>
+                                    <th class="th colPayRunDetailsNetPay" >Net Pay</th>
+                                    <th class="th colPayRunDetailsDropdown" >
                                         <div class="btn-group" style="width: 100%;">
                                             <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 Action
@@ -319,10 +319,10 @@
                                             <td class="colPayRunDetailsLastName" contenteditable="false">{{ item.fields.EmployeeName }}</td>
                                             <td class="colPayRunDetailsEmployeeGroup" contenteditable="false"></td>
                                             <td class="colPayRunDetailsLastEdited" contenteditable="false"></td>
-                                            <td class="colPayRunDetailsEarnings" contenteditable="false">{{ item.fields.earnings }}</td>
-                                            <td class="colPayRunDetailsTax" contenteditable="false">{{ item.fields.tax }}</td>
-                                            <td class="colPayRunDetailsSuper" contenteditable="false">{{ item.fields.superAnnuation }}</td>
-                                            <td class="colPayRunDetailsNetPay" contenteditable="false">{{ item.fields.netPay }}</td>
+                                            <td class="colPayRunDetailsEarnings" contenteditable="false" style="text-align: right;">{{ formatPrice item.earningTotal }}</td>
+                                            <td class="colPayRunDetailsTax" contenteditable="false" style="text-align: right;">{{ formatPrice item.taxTotal }}</td>
+                                            <td class="colPayRunDetailsSuper" contenteditable="false" style="text-align: right;">{{ formatPrice item.superAnnuationTotal }}</td>
+                                            <td class="colPayRunDetailsNetPay" contenteditable="false" style="text-align: right;">{{ formatPrice item.netPay }}</td>
                                             <td class="colPayRunDetailsDropdown" contenteditable="false">
                                                 <div class="custom-control custom-switch" style="display: inline-flex !important; margin-left: 74px;">
                                                     <input class="custom-control-input" type="checkbox" name="payrundetailsDropdown" id="payrundetailsDropdown" checked>

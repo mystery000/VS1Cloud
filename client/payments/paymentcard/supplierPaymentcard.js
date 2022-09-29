@@ -118,6 +118,27 @@ Template.supplierpaymentcard.onRendered(() => {
     templateObject.generateInvoiceData(title, number);
   });
 
+  templateObject.fetchSupplierPayment = async function () {
+      let supplierPaymentData = await getVS1Data('TSupplierPayment');
+      if( supplierPaymentData.length > 0 ){
+        var getsale_id = url.split("?id=");
+        var currentSalesID = getsale_id[getsale_id.length - 1];
+        let paymentID = parseInt(currentSalesID);
+        let useData = JSON.parse( supplierPaymentData[0].data );
+        if( useData.tsupplierpayment.length > 0 ){
+          let suppPayment =  useData.tsupplierpayment.filter(function( item ){
+              if( item.fields.ID == paymentID ){
+                return item;
+              }
+          });
+          if( suppPayment.length > 0 ){
+            $('#sltCurrency').val(suppPayment[0].fields.ForeignExchangeCode);
+            $('#exchange_rate').val(suppPayment[0].fields.ForeignExchangeRate);
+          }
+        }
+      }
+  }
+
 
     function showSuppliers(template_title,number) {
           object_invoce = [];
@@ -2082,6 +2103,7 @@ Template.supplierpaymentcard.onRendered(() => {
     if (supplierName != "") {
       templateObject.getAllSupplierPaymentData(supplierName);
     }
+    templateObject.fetchSupplierPayment();
   }, 500);
 
   $(document).on("click", "#departmentList tbody tr", function (e) {
@@ -8500,7 +8522,7 @@ Template.supplierpaymentcard.events({
      * Currency module data
      * TODO: Adding this into the saved object
      */
-    let foreignCurrency = $("#edtForeignCurrency").val();
+    let foreignCurrency = $("#sltCurrency").val();
     let foreignAmount = $("#foreignAmount").val(); // this is the foreign amount by the currency, foreign Amount
     let variation = $("#edtVariation").val(); // this is the variation field
     let appliedAmount = $("#edtApplied").val(); // this is the variation field
@@ -8569,8 +8591,8 @@ Template.supplierpaymentcard.events({
           Notes: notes,
           ReferenceNo: reference,
 
-          // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-          // ForeignExchangeRate: parseFloat(exchangeRate),
+          ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+          ForeignExchangeRate: parseFloat(exchangeRate),
           //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
         },
       };
@@ -8741,7 +8763,7 @@ Template.supplierpaymentcard.events({
                         confirmButtonText: "OK",
                       }).then((result) => {
                         if (result.value) {
-                          //Router.go('/paymentoverview?success=true');
+                          Router.go('/paymentoverview?success=true');
                         } else if (result.dismiss === "cancel") {
                         }
                       });
@@ -8817,7 +8839,7 @@ Template.supplierpaymentcard.events({
                   }
                 );
               } else {
-                Router.go('/paymentoverview?success=true');
+                // Router.go('/paymentoverview?success=true');
               }
             };
           }
@@ -8968,8 +8990,8 @@ Template.supplierpaymentcard.events({
             ReferenceNo: reference,
             AccountName: bankAccount,
 
-            // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-            // ForeignExchangeRate: parseFloat(exchangeRate),
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
@@ -9397,8 +9419,8 @@ Template.supplierpaymentcard.events({
             ReferenceNo: reference,
             AccountName: bankAccount,
 
-            // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-            // ForeignExchangeRate: parseFloat(exchangeRate),
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
@@ -9810,8 +9832,8 @@ Template.supplierpaymentcard.events({
             ReferenceNo: reference,
             AccountName: bankAccount,
 
-            // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-            // ForeignExchangeRate: parseFloat(exchangeRate),
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
@@ -10237,8 +10259,8 @@ Template.supplierpaymentcard.events({
             ReferenceNo: reference,
             AccountName: bankAccount,
 
-            // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-            // ForeignExchangeRate: parseFloat(exchangeRate),
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
@@ -10670,8 +10692,8 @@ Template.supplierpaymentcard.events({
             ReferenceNo: reference,
             AccountName: bankAccount,
 
-            // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-            // ForeignExchangeRate: parseFloat(exchangeRate),
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
@@ -11123,8 +11145,8 @@ Template.supplierpaymentcard.events({
             ReferenceNo: reference,
             AccountName: bankAccount,
 
-            // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-            // ForeignExchangeRate: parseFloat(exchangeRate),
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
@@ -11574,8 +11596,8 @@ Template.supplierpaymentcard.events({
             ReferenceNo: reference,
             AccountName: bankAccount,
 
-            // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-            // ForeignExchangeRate: parseFloat(exchangeRate),
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };

@@ -98,8 +98,10 @@ Template.inventorylist.onRendered(function() {
         { index: 13, label: "Barcode", class: "Barcode", width: "80", active: false, display: true },
         { index: 14, label: "Department", class: "Department", width: "100", active: false, display: true },
         { index: 15, label: "Purchase Description", class: "PurchaseDescription", width: "", active: false, display: true },
+        { index: 16, label: "Custom Field 1", class: "colProdCustField1", width: "", active: false, display: true },
+        { index: 17, label: "Custom Field 2", class: "colProdCustField2", width: "", active: false, display: true },
       ];
-      
+
       let isSNTrackchecked = localStorage.getItem('vs1cloudlicenselevel') == 'PLUS' || false;
       if(isSNTrackchecked) {
         reset_data[12].display = true;
@@ -128,13 +130,13 @@ Template.inventorylist.onRendered(function() {
           }).catch(function (err) {
           });
         } else {
-          let data = JSON.parse(dataObject[0].data); 
+          let data = JSON.parse(dataObject[0].data);
           // handle process here
         }
       });
     } catch (error) {
-    } 
-    return; 
+    }
+    return;
   }
 
   function showCustomFieldDisplaySettings(reset_data) {
@@ -147,7 +149,7 @@ Template.inventorylist.onRendered(function() {
       customData = {
         active: reset_data[r].active,
         id: reset_data[r].index,
-        custfieldlabel: reset_data[r].label, 
+        custfieldlabel: reset_data[r].label,
         class: reset_data[r].class,
         display: reset_data[r].display,
         width: reset_data[r].width ? reset_data[r].width : ''
@@ -157,7 +159,7 @@ Template.inventorylist.onRendered(function() {
     templateObject.displayfields.set(custFields);
   }
 
-  initCustomFieldDisplaySettings("", "tblInventory");
+  initCustomFieldDisplaySettings("", "tblInventoryOverview");
   // custom field displaysettings
 
 
@@ -261,11 +263,15 @@ Template.inventorylist.onRendered(function() {
         });
     };
 
+    templateObject.resetData = function (dataVal) {
+      window.open("/inventorylist?page=last", "_self");
+    };
+
     templateObject.getAllProductData = function(deptname) {
-        getVS1Data("TProductVS1").then(function(dataObject) {
+        getVS1Data("TProductList").then(function(dataObject) {
                 if (dataObject.length == 0) {
-                    sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(data) {
-                            addVS1Data("TProductVS1", JSON.stringify(data));
+                    sideBarService.getProductListVS1(initialBaseDataLoad, 0).then(function(data) {
+                            addVS1Data("TProductList", JSON.stringify(data));
                             // addVS1Data('TProductVS1',JSON.stringify(data));
                             //localStorage.setItem('VS1ProductList', JSON.stringify(data)||'');
                             let lineItems = [];
@@ -280,46 +286,41 @@ Template.inventorylist.onRendered(function() {
                             var dataList = {};
                             //if((deptname == 'undefined') || (deptname == 'All')){
                             departmentData = "All";
-                            for (let i = 0; i < data.tproductvs1.length; i++) {
-                                    let availableQty = 0;
-                                    let onBOOrder = 0;
-                                    if(data.tproductvs1[i].fields.ProductClass != null){
-                                    for (let a = 0; a < data.tproductvs1[i].fields.ProductClass.length; a++) {
-                                        availableQty += data.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
-                                    };
-                                  };
-                                    if(data.tproductvs1[i].fields.SNTracking == true){
-                                      checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-                                    }else if(data.tproductvs1[i].fields.Batch == true){
-                                      checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
-                                    }else{
-                                      checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
-                                    }
+                            for (let i = 0; i < data.tproductlist.length; i++) {
+                              let availableQty = data.tproductlist[i].AvailableQty||0;
+                              let onBOOrder = 0;
+                              if(data.tproductlist[i].SNTracking == true){
+                                checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
+                              }else if(data.tproductlist[i].batch == true){
+                                checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
+                              }else{
+                                checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
+                              }
 
-                                     onBOOrder = data.tproductvs1[i].fields.TotalQtyInStock - availableQty;
-                                      var dataList = [
-                                          data.tproductvs1[i].fields.ID || "",
-                                          data.tproductvs1[i].fields.ProductName || "-",
-                                          data.tproductvs1[i].fields.SalesDescription || "",
-                                          availableQty,
-                                          0,
-                                          onBOOrder,
-                                          data.tproductvs1[i].fields.TotalQtyInStock,
-                                          data.tproductvs1[i].fields.TotalQtyOnOrder,
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1CostInc * 100) /100),
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) /100),
-                                          checkIfSerialorLot||'',
-                                          data.tproductvs1[i].fields.BARCODE || "",
-                                          departmentData,
-                                          data.tproductvs1[i].fields.PurchaseDescription || "",
-                                          data.tproductvs1[i].fields.CUSTFLD1 || "",
-                                          data.tproductvs1[i].fields.CUSTFLD2 || "",
-                                      ];
-                                      splashArrayProductList.push(dataList);
-                                      dataTableList.push(dataList);
-                                  }
+                               onBOOrder = data.tproductlist[i].TotalQtyInStock - availableQty;
+                                var dataList = [
+                                    data.tproductlist[i].PARTSID || "",
+                                    data.tproductlist[i].PARTNAME || "-",
+                                    data.tproductlist[i].PARTSDESCRIPTION || "",
+                                    availableQty,
+                                    data.tproductlist[i].SOBOQty||0,
+                                    data.tproductlist[i].POBOQty||0,
+                                    data.tproductlist[i].InstockQty,
+                                    data.tproductlist[i].AllocatedBOQty,
+                                    utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COST1 * 100) / 100),
+                                    utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COSTINC1 * 100) /100),
+                                    utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICE1 * 100) / 100),
+                                    utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICEINC1 * 100) /100),
+                                    checkIfSerialorLot||'',
+                                    data.tproductlist[i].BARCODE || "",
+                                    departmentData,
+                                    data.tproductlist[i].PURCHASEDESC || "",
+                                    data.tproductlist[i].CUSTFLD1 || "",
+                                    data.tproductlist[i].CUSTFLD2 || "",
+                                ];
+                                splashArrayProductList.push(dataList);
+                                dataTableList.push(dataList);
+                            }
 
                             templateObject.datatablerecords.set(dataTableList);
                             templateObject.datatablebackuprecords.set(dataTableList);
@@ -336,83 +337,9 @@ Template.inventorylist.onRendered(function() {
 
                             $(".fullScreenSpin").css("display", "none");
                             setTimeout(function() {
-                              $("#tblInventory").dataTable({
-                                      data: splashArrayProductList,
+                              $("#tblInventoryOverview").dataTable({
+                                      //data: splashArrayProductList,
                                       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
-                                      columnDefs: [{
-                                              className: "colProductID hiddenColumn",
-                                              targets: [0],
-                                          },
-                                          {
-                                              className: "colProductName",
-                                              targets: [1],
-                                          },
-                                          {
-                                              className: "colSalesDescription",
-                                              targets: [2],
-                                          },
-                                          {
-                                              className: "colAvailable text-right",
-                                              targets: [3],
-                                          },
-                                          {
-                                              className: "colOnSO text-right",
-                                              targets: [4],
-                                          },
-                                          {
-                                              className: "colOnBO text-right",
-                                              targets: [5],
-                                          },
-                                          {
-                                              className: "colInStock text-right",
-                                              targets: [6],
-                                          },
-                                          {
-                                              className: "colOnOrder text-right",
-                                              targets: [7],
-                                          },
-                                          {
-                                              className: "colCostPrice hiddenColumn text-right",
-                                              targets: [8],
-                                          },
-                                          {
-                                              className: "colCostPriceInc  text-right",
-                                              targets: [9],
-                                          },
-                                          {
-                                              className: "colSalePrice hiddenColumn text-right",
-                                              targets: [10],
-                                          },
-                                          {
-                                              className: "colSalePriceInc  text-right",
-                                              targets: [11],
-                                          },
-                                          {
-                                              className: "colSerialNo  text-center hiddenColumn",
-                                              targets: [12],
-                                          },
-                                          {
-                                              className: "colBarcode hiddenColumn",
-                                              targets: [13],
-                                          },
-                                          {
-                                              className: "colDepartment hiddenColumn",
-                                              targets: [14],
-                                          },
-                                          {
-                                              className: "colPurchaseDescription hiddenColumn",
-                                              targets: [15],
-                                          },
-                                          {
-                                              className: "colProdCustField1 hiddenColumn",
-                                              targets: [16],
-                                          },
-                                          {
-                                              className: "colProdCustField2 hiddenColumn",
-                                              targets: [17],
-                                          },
-                                      ],
                                       select: true,
                                       destroy: true,
                                       colReorder: true,
@@ -455,11 +382,11 @@ Template.inventorylist.onRendered(function() {
                                           [0, "asc"]
                                       ],
                                       action: function() {
-                                          $("#tblInventory").DataTable().ajax.reload();
+                                          $("#tblInventoryOverview").DataTable().ajax.reload();
                                       },
                                       fnDrawCallback: function(oSettings) {
                                           $(".paginate_button.page-item").removeClass("disabled");
-                                          $("#tblInventory_ellipsis").addClass("disabled");
+                                          $("#tblInventoryOverview_ellipsis").addClass("disabled");
                                           if (oSettings._iDisplayLength == -1) {
                                               if (oSettings.fnRecordsDisplay() > 150) {}
                                               $(".fullScreenSpin").css("display", "inline-block");
@@ -474,69 +401,49 @@ Template.inventorylist.onRendered(function() {
                                           $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
                                               $(".fullScreenSpin").css("display", "inline-block");
                                               let dataLenght = oSettings._iDisplayLength;
-                                              let customerSearch = $("#tblInventory_filter input").val();
-                                              sideBarService.getNewProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                                      for (let i = 0; i < dataObjectnew.tproductvs1.length; i++) {
-                                                        let availableQty = 0;
-                                                        let onBOOrder = 0;
-                                                        if(dataObjectnew.tproductvs1[i].fields.ProductClass != null){
-                                                        for (let a = 0; a < dataObjectnew.tproductvs1[i].fields.ProductClass.length; a++) {
-                                                             availableQty += dataObjectnew.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
-                                                         };
-                                                       };
-                                                         if(dataObjectnew.tproductvs1[i].fields.SNTracking == true){
-                                                            checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-                                                          }else if(dataObjectnew.tproductvs1[i].fields.Batch == true){
-                                                            checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
-                                                          }else{
-                                                            checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
-                                                          }
-                                                          var dataListDupp = [
-                                                              dataObjectnew.tproductvs1[i].fields.ID || "",
-                                                              dataObjectnew.tproductvs1[i].fields.ProductName || "-",
-                                                              dataObjectnew.tproductvs1[i].fields.SalesDescription || "",
-                                                              availableQty,
-                                                              0,
-                                                              onBOOrder,
-                                                              dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
-                                                              dataObjectnew.tproductvs1[i].fields.TotalQtyOnOrder,
-                                                              utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                                                              utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1CostInc * 100) /100),
-                                                              utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                                                              utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1PriceInc * 100) /100),
-                                                              checkIfSerialorLot||'',
-                                                              dataObjectnew.tproductvs1[i].fields.BARCODE || "",
-                                                              departmentData,
-                                                              dataObjectnew.tproductvs1[i].fields.PurchaseDescription || "",
-                                                              dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || "",
-                                                              dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || "",
-                                                          ];
-                                                          splashArrayProductList.push(dataListDupp);
-                                                      }
-                                                      let uniqueChars = [...new Set(splashArrayProductList)];
-                                                      var datatable = $("#tblInventory").DataTable();
-                                                      datatable.clear();
-                                                      datatable.rows.add(uniqueChars);
-                                                      datatable.draw(false);
-                                                      setTimeout(function() {
-                                                          $("#tblInventory").dataTable().fnPageChange("last");
-                                                      }, 400);
+                                              let customerSearch = $("#tblInventoryOverview_filter input").val();
+                                              sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                                getVS1Data("TProductList").then(function (dataObjectold) {
+                                                    if (dataObjectold.length == 0) {
+                                                    } else {
+                                                      let dataOld = JSON.parse(dataObjectold[0].data);
 
-                                                      $(".fullScreenSpin").css("display", "none");
-                                                  })
-                                                  .catch(function(err) {
-                                                      $(".fullScreenSpin").css("display", "none");
-                                                  });
-                                          });
+                                                      var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
+                                                      let objCombineData = {
+                                                        Params: dataOld.Params,
+                                                        tproductlist: thirdaryData,
+                                                      };
+
+                                                      addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                                          templateObject.resetData(objCombineData);
+                                                          $(".fullScreenSpin").css("display", "none");
+                                                        }).catch(function (err) {
+                                                          $(".fullScreenSpin").css("display", "none");
+                                                        });
+                                                    }
+                                                }).catch(function (err) {});
+
+                                              }).catch(function(err) {
+                                                  $(".fullScreenSpin").css("display", "none");
+                                              });
+                                             });
                                           setTimeout(function() {
                                               MakeNegative();
                                           }, 100);
                                       },
                                       language: { search: "",searchPlaceholder: "Search List..." },
                                       fnInitComplete: function() {
-                                          $(
-                                              "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                                          ).insertAfter("#tblInventory_filter");
+                                        let urlParametersPage = FlowRouter.current().queryParams.page;
+                                        if (urlParametersPage) {
+                                          this.fnPageChange("last");
+                                        };
+                                          $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                                          ).insertAfter("#tblInventoryOverview_filter");
+                                      },
+                                      "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                                        let countTableData = data.Params.Count || 0; //get count from API data
+
+                                          return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
                                       },
                                   }).on("length.dt", function(e, settings, len) {
                                       $(".fullScreenSpin").css("display", "inline-block");
@@ -565,7 +472,7 @@ Template.inventorylist.onRendered(function() {
                         });
                 } else {
                     let data = JSON.parse(dataObject[0].data);
-                    let useData = data.tproductvs1;
+                    let useData = data.tproductlist;
                     let lineItems = [];
                     let lineItemObj = {};
                     let departmentData = "";
@@ -580,46 +487,41 @@ Template.inventorylist.onRendered(function() {
                     // var dataList = {};
                     //if((deptname == 'undefined') || (deptname == 'All')){
                     departmentData = "All";
-                    for (let i = 0; i < data.tproductvs1.length; i++) {
-                      let availableQty = 0;
-                      let onBOOrder = 0;
-                      if(data.tproductvs1[i].fields.ProductClass != null){
-                      for (let a = 0; a < data.tproductvs1[i].fields.ProductClass.length; a++) {
-                          availableQty += data.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
-                      };
-                    };
-                      if(data.tproductvs1[i].fields.SNTracking == true){
-                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-                      }else if(data.tproductvs1[i].fields.Batch == true){
-                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
-                      }else{
-                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
-                      }
+                for (let i = 0; i < data.tproductlist.length; i++) {
+                  let availableQty = data.tproductlist[i].AvailableQty||0;
+                  let onBOOrder = 0;
+                  if(data.tproductlist[i].SNTracking == true){
+                    checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
+                  }else if(data.tproductlist[i].batch == true){
+                    checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
+                  }else{
+                    checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
+                  }
 
-                       onBOOrder = data.tproductvs1[i].fields.TotalQtyInStock - availableQty;
-                        var dataList = [
-                            data.tproductvs1[i].fields.ID || "",
-                            data.tproductvs1[i].fields.ProductName || "-",
-                            data.tproductvs1[i].fields.SalesDescription || "",
-                            availableQty,
-                            0,
-                            onBOOrder,
-                            data.tproductvs1[i].fields.TotalQtyInStock,
-                            data.tproductvs1[i].fields.TotalQtyOnOrder,
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1CostInc * 100) /100),
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) /100),
-                            checkIfSerialorLot||'',
-                            data.tproductvs1[i].fields.BARCODE || "",
-                            departmentData,
-                            data.tproductvs1[i].fields.PurchaseDescription || "",
-                            data.tproductvs1[i].fields.CUSTFLD1 || "",
-                            data.tproductvs1[i].fields.CUSTFLD2 || "",
-                        ];
-                        splashArrayProductList.push(dataList);
-                        dataTableList.push(dataList);
-                    }
+                   onBOOrder = data.tproductlist[i].TotalQtyInStock - availableQty;
+                    var dataList = [
+                        data.tproductlist[i].PARTSID || "",
+                        data.tproductlist[i].PARTNAME || "-",
+                        data.tproductlist[i].PARTSDESCRIPTION || "",
+                        availableQty,
+                        data.tproductlist[i].SOBOQty||0,
+                        data.tproductlist[i].POBOQty||0,
+                        data.tproductlist[i].InstockQty,
+                        data.tproductlist[i].AllocatedBOQty,
+                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COST1 * 100) / 100),
+                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COSTINC1 * 100) /100),
+                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICE1 * 100) / 100),
+                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICEINC1 * 100) /100),
+                        checkIfSerialorLot||'',
+                        data.tproductlist[i].BARCODE || "",
+                        departmentData,
+                        data.tproductlist[i].PURCHASEDESC || "",
+                        data.tproductlist[i].CUSTFLD1 || "",
+                        data.tproductlist[i].CUSTFLD2 || "",
+                    ];
+                    splashArrayProductList.push(dataList);
+                    dataTableList.push(dataList);
+                }
 
                     templateObject.datatablerecords.set(dataTableList);
                     // templateObject.datatablebackuprecords.set(dataTableList);
@@ -635,83 +537,9 @@ Template.inventorylist.onRendered(function() {
 
                     $(".fullScreenSpin").css("display", "none");
                     setTimeout(function() {
-                        $("#tblInventory").dataTable({
-                                data: splashArrayProductList,
+                        $("#tblInventoryOverview").dataTable({
+                                //data: splashArrayProductList,
                                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
-                                columnDefs: [{
-                                        className: "colProductID hiddenColumn",
-                                        targets: [0],
-                                    },
-                                    {
-                                        className: "colProductName",
-                                        targets: [1],
-                                    },
-                                    {
-                                        className: "colSalesDescription",
-                                        targets: [2],
-                                    },
-                                    {
-                                        className: "colAvailable text-right",
-                                        targets: [3],
-                                    },
-                                    {
-                                        className: "colOnSO text-right",
-                                        targets: [4],
-                                    },
-                                    {
-                                        className: "colOnBO text-right",
-                                        targets: [5],
-                                    },
-                                    {
-                                        className: "colInStock text-right",
-                                        targets: [6],
-                                    },
-                                    {
-                                        className: "colOnOrder text-right",
-                                        targets: [7],
-                                    },
-                                    {
-                                        className: "colCostPrice hiddenColumn text-right",
-                                        targets: [8],
-                                    },
-                                    {
-                                        className: "colCostPriceInc  text-right",
-                                        targets: [9],
-                                    },
-                                    {
-                                        className: "colSalePrice hiddenColumn text-right",
-                                        targets: [10],
-                                    },
-                                    {
-                                        className: "colSalePriceInc  text-right",
-                                        targets: [11],
-                                    },
-                                    {
-                                        className: "colSerialNo  text-center hiddenColumn",
-                                        targets: [12],
-                                    },
-                                    {
-                                        className: "colBarcode hiddenColumn",
-                                        targets: [13],
-                                    },
-                                    {
-                                        className: "colDepartment hiddenColumn",
-                                        targets: [14],
-                                    },
-                                    {
-                                        className: "colPurchaseDescription hiddenColumn",
-                                        targets: [15],
-                                    },
-                                    {
-                                        className: "colProdCustField1 hiddenColumn",
-                                        targets: [16],
-                                    },
-                                    {
-                                        className: "colProdCustField2 hiddenColumn",
-                                        targets: [17],
-                                    },
-                                ],
                                 select: true,
                                 destroy: true,
                                 colReorder: true,
@@ -754,11 +582,11 @@ Template.inventorylist.onRendered(function() {
                                     [0, "asc"]
                                 ],
                                 action: function() {
-                                    $("#tblInventory").DataTable().ajax.reload();
+                                    $("#tblInventoryOverview").DataTable().ajax.reload();
                                 },
                                 fnDrawCallback: function(oSettings) {
                                     $(".paginate_button.page-item").removeClass("disabled");
-                                    $("#tblInventory_ellipsis").addClass("disabled");
+                                    $("#tblInventoryOverview_ellipsis").addClass("disabled");
                                     if (oSettings._iDisplayLength == -1) {
                                         if (oSettings.fnRecordsDisplay() > 150) {}
                                         $(".fullScreenSpin").css("display", "inline-block");
@@ -773,59 +601,31 @@ Template.inventorylist.onRendered(function() {
                                     $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
                                         $(".fullScreenSpin").css("display", "inline-block");
                                         let dataLenght = oSettings._iDisplayLength;
-                                        let customerSearch = $("#tblInventory_filter input").val();
-                                        sideBarService.getNewProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                                for (let i = 0; i < dataObjectnew.tproductvs1.length; i++) {
-                                                  let availableQty = 0;
-                                                  let onBOOrder = 0;
-                                                  if(dataObjectnew.tproductvs1[i].fields.ProductClass != null){
-                                                  for (let a = 0; a < dataObjectnew.tproductvs1[i].fields.ProductClass.length; a++) {
-                                                       availableQty += dataObjectnew.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
-                                                   };
-                                                 };
-                                                   if(dataObjectnew.tproductvs1[i].fields.SNTracking == true){
-                                                      checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-                                                    }else if(dataObjectnew.tproductvs1[i].fields.Batch == true){
-                                                      checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
-                                                    }else{
-                                                      checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
-                                                    }
-                                                    var dataListDupp = [
-                                                        dataObjectnew.tproductvs1[i].fields.ID || "",
-                                                        dataObjectnew.tproductvs1[i].fields.ProductName || "-",
-                                                        dataObjectnew.tproductvs1[i].fields.SalesDescription || "",
-                                                        availableQty,
-                                                        0,
-                                                        onBOOrder,
-                                                        dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
-                                                        dataObjectnew.tproductvs1[i].fields.TotalQtyOnOrder,
-                                                        utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                                                        utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1CostInc * 100) /100),
-                                                        utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                                                        utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1PriceInc * 100) /100),
-                                                        checkIfSerialorLot||'',
-                                                        dataObjectnew.tproductvs1[i].fields.BARCODE || "",
-                                                        departmentData,
-                                                        dataObjectnew.tproductvs1[i].fields.PurchaseDescription || "",
-                                                        dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || "",
-                                                        dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || "",
-                                                    ];
-                                                    splashArrayProductList.push(dataListDupp);
-                                                }
-                                                let uniqueChars = [...new Set(splashArrayProductList)];
-                                                var datatable = $("#tblInventory").DataTable();
-                                                datatable.clear();
-                                                datatable.rows.add(uniqueChars);
-                                                datatable.draw(false);
-                                                setTimeout(function() {
-                                                    $("#tblInventory").dataTable().fnPageChange("last");
-                                                }, 400);
+                                        let customerSearch = $("#tblInventoryOverview_filter input").val();
+                                        sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                          getVS1Data("TProductList").then(function (dataObjectold) {
+                                              if (dataObjectold.length == 0) {
+                                              } else {
+                                                let dataOld = JSON.parse(dataObjectold[0].data);
 
-                                                $(".fullScreenSpin").css("display", "none");
-                                            })
-                                            .catch(function(err) {
-                                                $(".fullScreenSpin").css("display", "none");
-                                            });
+                                                var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
+                                                let objCombineData = {
+                                                  Params: dataOld.Params,
+                                                  tproductlist: thirdaryData,
+                                                };
+
+                                                addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                                    templateObject.resetData(objCombineData);
+                                                    $(".fullScreenSpin").css("display", "none");
+                                                  }).catch(function (err) {
+                                                    $(".fullScreenSpin").css("display", "none");
+                                                  });
+                                              }
+                                          }).catch(function (err) {});
+
+                                        }).catch(function(err) {
+                                            $(".fullScreenSpin").css("display", "none");
+                                        });
                                     });
                                     setTimeout(function() {
                                         MakeNegative();
@@ -833,9 +633,17 @@ Template.inventorylist.onRendered(function() {
                                 },
                                 language: { search: "",searchPlaceholder: "Search List..." },
                                 fnInitComplete: function() {
-                                    $(
-                                        "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                                    ).insertAfter("#tblInventory_filter");
+                                  let urlParametersPage = FlowRouter.current().queryParams.page;
+                                  if (urlParametersPage) {
+                                    this.fnPageChange("last");
+                                  };
+                                    $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                                    ).insertAfter("#tblInventoryOverview_filter");
+                                },
+                                "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                                  let countTableData = data.Params.Count || 0; //get count from API data
+
+                                    return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
                                 },
                             }).on("length.dt", function(e, settings, len) {
                                 $(".fullScreenSpin").css("display", "inline-block");
@@ -859,8 +667,8 @@ Template.inventorylist.onRendered(function() {
                     }, 0);
                 }
             }).catch(function(err) {
-                sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(data) {
-                        addVS1Data("TProductVS1", JSON.stringify(data));
+                sideBarService.getProductListVS1(initialBaseDataLoad, 0).then(function(data) {
+                        addVS1Data("TProductList", JSON.stringify(data));
                         // addVS1Data('TProductVS1',JSON.stringify(data));
                         //localStorage.setItem('VS1ProductList', JSON.stringify(data)||'');
                         let lineItems = [];
@@ -875,42 +683,37 @@ Template.inventorylist.onRendered(function() {
                         var dataList = {};
                         //if((deptname == 'undefined') || (deptname == 'All')){
                         departmentData = "All";
-                        for (let i = 0; i < data.tproductvs1.length; i++) {
-                      let availableQty = 0;
+                        for (let i = 0; i < data.tproductlist.length; i++) {
+                      let availableQty = data.tproductlist[i].AvailableQty||0;
                       let onBOOrder = 0;
-                      if(data.tproductvs1[i].fields.ProductClass != null){
-                      for (let a = 0; a < data.tproductvs1[i].fields.ProductClass.length; a++) {
-                          availableQty += data.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
-                      };
-                    };
-                      if(data.tproductvs1[i].fields.SNTracking == true){
+                      if(data.tproductlist[i].SNTracking == true){
                         checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-                      }else if(data.tproductvs1[i].fields.Batch == true){
+                      }else if(data.tproductlist[i].batch == true){
                         checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
                       }else{
                         checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
                       }
 
-                       onBOOrder = data.tproductvs1[i].fields.TotalQtyInStock - availableQty;
+                       onBOOrder = data.tproductlist[i].TotalQtyInStock - availableQty;
                         var dataList = [
-                            data.tproductvs1[i].fields.ID || "",
-                            data.tproductvs1[i].fields.ProductName || "-",
-                            data.tproductvs1[i].fields.SalesDescription || "",
+                            data.tproductlist[i].PARTSID || "",
+                            data.tproductlist[i].PARTNAME || "-",
+                            data.tproductlist[i].PARTSDESCRIPTION || "",
                             availableQty,
-                            0,
-                            onBOOrder,
-                            data.tproductvs1[i].fields.TotalQtyInStock,
-                            data.tproductvs1[i].fields.TotalQtyOnOrder,
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1CostInc * 100) /100),
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) /100),
+                            data.tproductlist[i].SOBOQty||0,
+                            data.tproductlist[i].POBOQty||0,
+                            data.tproductlist[i].InstockQty,
+                            data.tproductlist[i].AllocatedBOQty,
+                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COST1 * 100) / 100),
+                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COSTINC1 * 100) /100),
+                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICE1 * 100) / 100),
+                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICEINC1 * 100) /100),
                             checkIfSerialorLot||'',
-                            data.tproductvs1[i].fields.BARCODE || "",
+                            data.tproductlist[i].BARCODE || "",
                             departmentData,
-                            data.tproductvs1[i].fields.PurchaseDescription || "",
-                            data.tproductvs1[i].fields.CUSTFLD1 || "",
-                            data.tproductvs1[i].fields.CUSTFLD2 || "",
+                            data.tproductlist[i].PURCHASEDESC || "",
+                            data.tproductlist[i].CUSTFLD1 || "",
+                            data.tproductlist[i].CUSTFLD2 || "",
                         ];
                         splashArrayProductList.push(dataList);
                         dataTableList.push(dataList);
@@ -930,83 +733,9 @@ Template.inventorylist.onRendered(function() {
 
                         $(".fullScreenSpin").css("display", "none");
                         setTimeout(function() {
-                          $("#tblInventory").dataTable({
-                                  data: splashArrayProductList,
+                          $("#tblInventoryOverview").dataTable({
+                                  //data: splashArrayProductList,
                                   sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
-                                  columnDefs: [{
-                                          className: "colProductID hiddenColumn",
-                                          targets: [0],
-                                      },
-                                      {
-                                          className: "colProductName",
-                                          targets: [1],
-                                      },
-                                      {
-                                          className: "colSalesDescription",
-                                          targets: [2],
-                                      },
-                                      {
-                                          className: "colAvailable text-right",
-                                          targets: [3],
-                                      },
-                                      {
-                                          className: "colOnSO text-right",
-                                          targets: [4],
-                                      },
-                                      {
-                                          className: "colOnBO text-right",
-                                          targets: [5],
-                                      },
-                                      {
-                                          className: "colInStock text-right",
-                                          targets: [6],
-                                      },
-                                      {
-                                          className: "colOnOrder text-right",
-                                          targets: [7],
-                                      },
-                                      {
-                                          className: "colCostPrice hiddenColumn text-right",
-                                          targets: [8],
-                                      },
-                                      {
-                                          className: "colCostPriceInc  text-right",
-                                          targets: [9],
-                                      },
-                                      {
-                                          className: "colSalePrice hiddenColumn text-right",
-                                          targets: [10],
-                                      },
-                                      {
-                                          className: "colSalePriceInc  text-right",
-                                          targets: [11],
-                                      },
-                                      {
-                                          className: "colSerialNo  text-center hiddenColumn",
-                                          targets: [12],
-                                      },
-                                      {
-                                          className: "colBarcode hiddenColumn",
-                                          targets: [13],
-                                      },
-                                      {
-                                          className: "colDepartment hiddenColumn",
-                                          targets: [14],
-                                      },
-                                      {
-                                          className: "colPurchaseDescription hiddenColumn",
-                                          targets: [15],
-                                      },
-                                      {
-                                          className: "colProdCustField1 hiddenColumn",
-                                          targets: [16],
-                                      },
-                                      {
-                                          className: "colProdCustField2 hiddenColumn",
-                                          targets: [17],
-                                      },
-                                  ],
                                   select: true,
                                   destroy: true,
                                   colReorder: true,
@@ -1049,11 +778,11 @@ Template.inventorylist.onRendered(function() {
                                       [0, "asc"]
                                   ],
                                   action: function() {
-                                      $("#tblInventory").DataTable().ajax.reload();
+                                      $("#tblInventoryOverview").DataTable().ajax.reload();
                                   },
                                   fnDrawCallback: function(oSettings) {
                                       $(".paginate_button.page-item").removeClass("disabled");
-                                      $("#tblInventory_ellipsis").addClass("disabled");
+                                      $("#tblInventoryOverview_ellipsis").addClass("disabled");
                                       if (oSettings._iDisplayLength == -1) {
                                           if (oSettings.fnRecordsDisplay() > 150) {}
                                           $(".fullScreenSpin").css("display", "inline-block");
@@ -1068,59 +797,31 @@ Template.inventorylist.onRendered(function() {
                                       $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
                                           $(".fullScreenSpin").css("display", "inline-block");
                                           let dataLenght = oSettings._iDisplayLength;
-                                          let customerSearch = $("#tblInventory_filter input").val();
-                                          sideBarService.getNewProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                                  for (let i = 0; i < dataObjectnew.tproductvs1.length; i++) {
-                                                    let availableQty = 0;
-                                                    let onBOOrder = 0;
-                                                    if(dataObjectnew.tproductvs1[i].fields.ProductClass != null){
-                                                    for (let a = 0; a < dataObjectnew.tproductvs1[i].fields.ProductClass.length; a++) {
-                                                         availableQty += dataObjectnew.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
-                                                     };
-                                                   };
-                                                     if(dataObjectnew.tproductvs1[i].fields.SNTracking == true){
-                                                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-                                                      }else if(dataObjectnew.tproductvs1[i].fields.Batch == true){
-                                                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
-                                                      }else{
-                                                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
-                                                      }
-                                                      var dataListDupp = [
-                                                          dataObjectnew.tproductvs1[i].fields.ID || "",
-                                                          dataObjectnew.tproductvs1[i].fields.ProductName || "-",
-                                                          dataObjectnew.tproductvs1[i].fields.SalesDescription || "",
-                                                          availableQty,
-                                                          0,
-                                                          onBOOrder,
-                                                          dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
-                                                          dataObjectnew.tproductvs1[i].fields.TotalQtyOnOrder,
-                                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1CostInc * 100) /100),
-                                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1PriceInc * 100) /100),
-                                                          checkIfSerialorLot||'',
-                                                          dataObjectnew.tproductvs1[i].fields.BARCODE || "",
-                                                          departmentData,
-                                                          dataObjectnew.tproductvs1[i].fields.PurchaseDescription || "",
-                                                          dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || "",
-                                                          dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || "",
-                                                      ];
-                                                      splashArrayProductList.push(dataListDupp);
-                                                  }
-                                                  let uniqueChars = [...new Set(splashArrayProductList)];
-                                                  var datatable = $("#tblInventory").DataTable();
-                                                  datatable.clear();
-                                                  datatable.rows.add(uniqueChars);
-                                                  datatable.draw(false);
-                                                  setTimeout(function() {
-                                                      $("#tblInventory").dataTable().fnPageChange("last");
-                                                  }, 400);
+                                          let customerSearch = $("#tblInventoryOverview_filter input").val();
+                                          sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                            getVS1Data("TProductList").then(function (dataObjectold) {
+                                                if (dataObjectold.length == 0) {
+                                                } else {
+                                                  let dataOld = JSON.parse(dataObjectold[0].data);
 
-                                                  $(".fullScreenSpin").css("display", "none");
-                                              })
-                                              .catch(function(err) {
-                                                  $(".fullScreenSpin").css("display", "none");
-                                              });
+                                                  var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
+                                                  let objCombineData = {
+                                                    Params: dataOld.Params,
+                                                    tproductlist: thirdaryData,
+                                                  };
+
+                                                  addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                                      templateObject.resetData(objCombineData);
+                                                      $(".fullScreenSpin").css("display", "none");
+                                                    }).catch(function (err) {
+                                                      $(".fullScreenSpin").css("display", "none");
+                                                    });
+                                                }
+                                            }).catch(function (err) {});
+
+                                          }).catch(function(err) {
+                                              $(".fullScreenSpin").css("display", "none");
+                                          });
                                       });
                                       setTimeout(function() {
                                           MakeNegative();
@@ -1128,9 +829,16 @@ Template.inventorylist.onRendered(function() {
                                   },
                                   language: { search: "",searchPlaceholder: "Search List..." },
                                   fnInitComplete: function() {
-                                      $(
-                                          "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                                      ).insertAfter("#tblInventory_filter");
+                                    let urlParametersPage = FlowRouter.current().queryParams.page;
+                                    if (urlParametersPage) {
+                                      this.fnPageChange("last");
+                                    };
+                                      $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventoryOverview_filter");
+                                  },
+                                  "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                                    let countTableData = data.Params.Count || 0; //get count from API data
+
+                                      return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
                                   },
                               }).on("length.dt", function(e, settings, len) {
                                   $(".fullScreenSpin").css("display", "inline-block");
@@ -1152,15 +860,15 @@ Template.inventorylist.onRendered(function() {
                                 "form-control form-control-sm"
                             );
                         }, 0);
-                    }).catch(function(err) {
-                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $(".fullScreenSpin").css("display", "none");
-                        // Meteor._reload.reload();
-                    });
+                }).catch(function(err) {
+                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                    $(".fullScreenSpin").css("display", "none");
+                    // Meteor._reload.reload();
+                });
             });
     };
 
-    $("#tblInventory tbody").on("click", "td:not(.colAvailable, .colOnSO, .colOnBO, .colInStock, .colOnOrder, .colQuantity, .colSerialNo)", function() {
+    $("#tblInventoryOverview tbody").on("click", "td:not(.colAvailable, .colOnSO, .colOnBO, .colInStock, .colOnOrder, .colQuantity, .colSerialNo)", function() {
         var listData = $(this).closest("tr").find(".colProductID").text();
         if (listData) {
             //FlowRouter.go('/productview?id=' + listData);
@@ -1168,7 +876,7 @@ Template.inventorylist.onRendered(function() {
         }
     });
 
-    $("#tblInventory tbody").on("click", "td.colAvailable", function() {
+    $("#tblInventoryOverview tbody").on("click", "td.colAvailable", function() {
         var listData = $(this).closest("tr").find(".colProductID").text();
         if (listData) {
             FlowRouter.go("/stockmovementreport?id=" + listData);
@@ -1176,7 +884,7 @@ Template.inventorylist.onRendered(function() {
         }
     });
 
-    $("#tblInventory tbody").on("click", "td.colInStock", function() {
+    $("#tblInventoryOverview tbody").on("click", "td.colInStock", function() {
         var listData = $(this).closest("tr").find(".colProductID").text();
         if (listData) {
             FlowRouter.go("/stockmovementreport?id=" + listData);
@@ -1184,7 +892,7 @@ Template.inventorylist.onRendered(function() {
         }
     });
 
-    $("#tblInventory tbody").on("click", "td.colOnBO", function() {
+    $("#tblInventoryOverview tbody").on("click", "td.colOnBO", function() {
         var listData = $(this).closest("tr").find(".colProductID").text();
         var listProductName = $(this).closest("tr").find(".colProductName").text();
         if (listData) {
@@ -1193,7 +901,7 @@ Template.inventorylist.onRendered(function() {
         }
     });
 
-    $("#tblInventory tbody").on("click", "td.colOnSO", function() {
+    $("#tblInventoryOverview tbody").on("click", "td.colOnSO", function() {
         var listData = $(this).closest("tr").find(".colProductID").text();
         var listProductName = $(this).closest("tr").find(".colProductName").text();
         if (listData) {
@@ -1202,7 +910,7 @@ Template.inventorylist.onRendered(function() {
         }
     });
 
-    $("#tblInventory tbody").on("click", "td.colOnOrder", function() {
+    $("#tblInventoryOverview tbody").on("click", "td.colOnOrder", function() {
         var listData = $(this).closest("tr").find(".colProductID").text();
         var listProductName = $(this).closest("tr").find(".colProductName").text();
         if (listData) {
@@ -1211,14 +919,14 @@ Template.inventorylist.onRendered(function() {
         }
     });
 
-    $("#tblInventory tbody").on("click", "td.colQuantity", function() {
+    $("#tblInventoryOverview tbody").on("click", "td.colQuantity", function() {
         var listData = $(this).closest("tr").find(".colProductID").text();
         if (listData) {
             FlowRouter.go("/productview?id=" + listData + "&instock=true");
         }
     });
 
-    $("#tblInventory tbody").on("click", "td.colSerialNo .btnNoBatchorSerial", function() {
+    $("#tblInventoryOverview tbody").on("click", "td.colSerialNo .btnNoBatchorSerial", function() {
         var listData = $(this).closest("tr").find(".colProductID").text();
         var selectedProductName = $(this).closest("tr").find(".colProductName").text();
         if (listData) {
@@ -1226,14 +934,14 @@ Template.inventorylist.onRendered(function() {
         }
     });
 
-    $("#tblInventory tbody").on("click", "td.colSerialNo .btnBatch", function() {
+    $("#tblInventoryOverview tbody").on("click", "td.colSerialNo .btnBatch", function() {
         var listData = $(this).closest("tr").find(".colProductID").text();
         if (listData) {
             FlowRouter.go("/lotnumberlist?id=" + listData);
         }
     });
 
-    $("#tblInventory tbody").on("click", "td.colSerialNo .btnSNTracking", function() {
+    $("#tblInventoryOverview tbody").on("click", "td.colSerialNo .btnSNTracking", function() {
         var listData = $(this).closest("tr").find(".colProductID").text();
         if (listData) {
             FlowRouter.go("/serialnumberlist?id=" + listData);
@@ -1401,7 +1109,7 @@ Template.inventorylist.helpers({
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
             userid: Session.get("mycloudLogonID"),
-            PrefName: "tblInventory",
+            PrefName: "tblInventoryOverview",
         });
     },
     productsCloudPreferenceRec: () => {
@@ -1454,12 +1162,19 @@ Template.inventorylist.helpers({
     displayfields: () => {
       return Template.instance().displayfields.get();
     },
-
+    showSetupFinishedAlert: () => {
+        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+        if (setupFinished == true || setupFinished == "true") {
+            return false;
+        } else {
+            return true;
+        }
+    }
 });
 
 Template.inventorylist.events({
     "click .chkDatatable": function(event) {
-        var columns = $("#tblInventory th");
+        var columns = $("#tblInventoryOverview th");
         let columnDataValue = $(event.target)
             .closest("div")
             .find(".divcolumn")
@@ -1482,15 +1197,15 @@ Template.inventorylist.events({
     },
     "click .resetTable": function(event) {
       let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get(); 
+      let reset_data = templateObject.reset_data.get();
       let isSNTrackchecked = localStorage.getItem('vs1cloudlicenselevel') == 'PLUS' || false;
       if(isSNTrackchecked) {
-        reset_data[12].display = true; 
+        reset_data[12].display = true;
       } else {
-        reset_data[12].display = false; 
+        reset_data[12].display = false;
       }
-      reset_data = reset_data.filter(redata => redata.display); 
-  
+      reset_data = reset_data.filter(redata => redata.display);
+
       $(".displaySettings").each(function (index) {
         let $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
@@ -1498,7 +1213,7 @@ Template.inventorylist.events({
           .find(".custom-control-input")
           .prop("checked", reset_data[index].active);
 
-        let title = $("#tblInventory").find("th").eq(index);
+        let title = $("#tblInventoryOverview").find("th").eq(index);
         if(reset_data[index].class === 'CostPrice' || reset_data[index].class === 'SalePrice') {
           $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
         } else if( reset_data[index].class === 'CostPriceInc' || reset_data[index].class === 'SalePriceInc') {
@@ -1514,13 +1229,14 @@ Template.inventorylist.events({
           $('.col' + reset_data[index].class).addClass('hiddenColumn');
           $('.col' + reset_data[index].class).removeClass('showColumn');
         }
-        $(".rngRange" + reset_data[index].class).val('');
+        $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
+        $(".col" + reset_data[index].class).css('width', reset_data[index].width);
       });
     },
     "click .saveTable": function(event) {
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
-  
+
       $(".displaySettings").each(function (index) {
         var $tblrow = $(this);
         var fieldID = $tblrow.attr("custid") || 0;
@@ -1541,20 +1257,20 @@ Template.inventorylist.events({
           class: colthClass,
           display: true
         };
-  
-        lineItems.push(lineItemObj); 
+
+        lineItems.push(lineItemObj);
       });
-  
+
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index); 
-  
+      lineItems.sort((a,b) => a.index - b.index);
+
       try {
         let erpGet = erpDb();
-        let tableName = "tblInventory";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+        let tableName = "tblInventoryOverview";
+        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
         let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
@@ -1567,7 +1283,7 @@ Template.inventorylist.events({
             }).then((result) => {
                 if (result.value) {
                    $('#myModal2').modal('hide');
-                }  
+                }
             });
         } else {
           swal("Something went wrong!", "", "error");
@@ -1575,9 +1291,9 @@ Template.inventorylist.events({
       } catch (error) {
         $(".fullScreenSpin").css("display", "none");
         swal("Something went wrong!", "", "error");
-      } 
+      }
     },
-    "blur .divcolumn": function(event) { 
+    "blur .divcolumn": function(event) {
         let columData = $(event.target).html();
         let columHeaderUpdate = $(event.target).attr("valueupdate");
         $("th.col" + columHeaderUpdate + "").html(columData);
@@ -1592,7 +1308,7 @@ Template.inventorylist.events({
         $('.colProductID').addClass('hiddenColumn');
         $('.colProductID').removeClass('showColumn');
       }
-    },    
+    },
     'click .chkProductName': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colProductName').addClass('showColumn');
@@ -1601,7 +1317,7 @@ Template.inventorylist.events({
         $('.colProductName').addClass('hiddenColumn');
         $('.colProductName').removeClass('showColumn');
       }
-    },    
+    },
     'click .chkSalesDescription': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colSalesDescription').addClass('showColumn');
@@ -1610,7 +1326,7 @@ Template.inventorylist.events({
         $('.colSalesDescription').addClass('hiddenColumn');
         $('.colSalesDescription').removeClass('showColumn');
       }
-    },    
+    },
     'click .chkAvailable': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colAvailable').addClass('showColumn');
@@ -1619,7 +1335,7 @@ Template.inventorylist.events({
         $('.colAvailable').addClass('hiddenColumn');
         $('.colAvailable').removeClass('showColumn');
       }
-    },    
+    },
     'click .chkOnSO': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colOnSO').addClass('showColumn');
@@ -1628,7 +1344,7 @@ Template.inventorylist.events({
         $('.colOnSO').addClass('hiddenColumn');
         $('.colOnSO').removeClass('showColumn');
       }
-    },    
+    },
     'click .chkOnBO': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colOnBO').addClass('showColumn');
@@ -1637,7 +1353,7 @@ Template.inventorylist.events({
         $('.colOnBO').addClass('hiddenColumn');
         $('.colOnBO').removeClass('showColumn');
       }
-    },    
+    },
     'click .chkInStock': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colInStock').addClass('showColumn');
@@ -1646,7 +1362,7 @@ Template.inventorylist.events({
         $('.colInStock').addClass('hiddenColumn');
         $('.colInStock').removeClass('showColumn');
       }
-    },    
+    },
     'click .chkOnOrder': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colOnOrder').addClass('showColumn');
@@ -1655,7 +1371,7 @@ Template.inventorylist.events({
         $('.colOnOrder').addClass('hiddenColumn');
         $('.colOnOrder').removeClass('showColumn');
       }
-    },    
+    },
     'click .chkSerialNo': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colSerialNo').addClass('showColumn');
@@ -1664,7 +1380,7 @@ Template.inventorylist.events({
         $('.colSerialNo').addClass('hiddenColumn');
         $('.colSerialNo').removeClass('showColumn');
       }
-    },    
+    },
     'click .chkBarcode': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colBarcode').addClass('showColumn');
@@ -1673,7 +1389,7 @@ Template.inventorylist.events({
         $('.colBarcode').addClass('hiddenColumn');
         $('.colBarcode').removeClass('showColumn');
       }
-    },    
+    },
     'click .chkDepartment': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colDepartment').addClass('showColumn');
@@ -1682,7 +1398,7 @@ Template.inventorylist.events({
         $('.colDepartment').addClass('hiddenColumn');
         $('.colDepartment').removeClass('showColumn');
       }
-    },    
+    },
     'click .chkPurchaseDescription': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colPurchaseDescription').addClass('showColumn');
@@ -1839,7 +1555,7 @@ Template.inventorylist.events({
       let range = $(event.target).val();
       $('.colSalePriceInc').css('width', range);
     },
-    
+
     'click .th.colCostPrice': function(event) {
       $('.colCostPrice').addClass('hiddenColumn');
       $('.colCostPrice').removeClass('showColumn');
@@ -1899,7 +1615,7 @@ Template.inventorylist.events({
             .prev()
             .find(".divcolumn")
             .text();
-        var datable = $("#tblInventory th");
+        var datable = $("#tblInventoryOverview th");
         $.each(datable, function(i, v) {
             if (v.innerText == columnDataValue) {
                 let className = v.className;
@@ -1910,7 +1626,7 @@ Template.inventorylist.events({
     },
     "click .btnOpenSettings": function(event) {
         let templateObject = Template.instance();
-        var columns = $("#tblInventory th");
+        var columns = $("#tblInventoryOverview th");
 
         const tableHeaderList = [];
         let sTible = "";
@@ -1939,7 +1655,7 @@ Template.inventorylist.events({
         });
         templateObject.tableheaderrecords.set(tableHeaderList);
     },
-    "keyup #tblInventory_filter input": function(event) {
+    "keyup #tblInventoryOverview_filter input": function(event) {
         if ($(event.target).val() != "") {
             $(".btnRefreshProduct").addClass("btnSearchAlert");
         } else {
@@ -1949,7 +1665,7 @@ Template.inventorylist.events({
             $(".btnRefreshProduct").trigger("click");
         }
     },
-    "blur #tblInventory_filter input": function(event) {
+    "blur #tblInventoryOverview_filter input": function(event) {
         if ($(event.target).val() != "") {
             $(".btnRefreshProduct").addClass("btnSearchAlert");
         } else {
@@ -1963,63 +1679,61 @@ Template.inventorylist.events({
         var splashArrayProductList = new Array();
         const lineExtaSellItems = [];
         let checkIfSerialorLot = '';
+        const dataTableList = [];
+        let tableHeaders = templateObject.displayfields.get();
         $(".fullScreenSpin").css("display", "inline-block");
-        let dataSearchName = $("#tblInventory_filter input").val();
+        let dataSearchName = $("#tblInventoryOverview_filter input").val();
         if (dataSearchName.replace(/\s/g, "") != "") {
-            sideBarService.getNewProductListVS1ByName(dataSearchName).then(function(data) {
+            sideBarService.getProductListVS1BySearch(dataSearchName).then(function(data) {
                     let records = [];
 
                     let inventoryData = [];
-                    if (data.tproductvs1.length > 0) {
-                        for (let i = 0; i < data.tproductvs1.length; i++) {
-                          let availableQty = 0;
-                          let onBOOrder = 0;
-                          if(data.tproductvs1[i].fields.ProductClass != null){
-                          for (let a = 0; a < data.tproductvs1[i].fields.ProductClass.length; a++) {
-                              availableQty += data.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
-                          };
-                        };
-                          if(data.tproductvs1[i].fields.SNTracking == true){
-                            checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-                          }else if(data.tproductvs1[i].fields.Batch == true){
-                            checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
-                          }else{
-                            checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
-                          }
+              if (data.tproductlist.length > 0) {
+              for (let i = 0; i < data.tproductlist.length; i++) {
+                let availableQty = data.tproductlist[i].AvailableQty||0;
+                let onBOOrder = 0;
+                if(data.tproductlist[i].SNTracking == true){
+                  checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
+                }else if(data.tproductlist[i].batch == true){
+                  checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
+                }else{
+                  checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
+                }
 
-                           onBOOrder = data.tproductvs1[i].fields.TotalQtyInStock - availableQty;
-
-                            var dataList = [
-                                data.tproductvs1[i].fields.ID || "",
-                                data.tproductvs1[i].fields.ProductName || "-",
-                                data.tproductvs1[i].fields.SalesDescription || "",
-                                availableQty,
-                                0,
-                                onBOOrder,
-                                data.tproductvs1[i].fields.TotalQtyInStock,
-                                data.tproductvs1[i].fields.TotalQtyOnOrder,
-                                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1CostInc * 100) /100),
-                                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) /100),
-                                checkIfSerialorLot||'',
-                                data.tproductvs1[i].fields.BARCODE || "",
-                                "All",
-                                data.tproductvs1[i].fields.PurchaseDescription || "",
-                                data.tproductvs1[i].fields.CUSTFLD1 || "",
-                                data.tproductvs1[i].fields.CUSTFLD2 || "",
-                            ];
-
-                            splashArrayProductList.push(dataList);
-                        }
+                 onBOOrder = data.tproductlist[i].TotalQtyInStock - availableQty;
+                  var dataList = [
+                      data.tproductlist[i].PARTSID || "",
+                      data.tproductlist[i].PARTNAME || "-",
+                      data.tproductlist[i].PARTSDESCRIPTION || "",
+                      availableQty,
+                      data.tproductlist[i].SOBOQty||0,
+                      data.tproductlist[i].POBOQty||0,
+                      data.tproductlist[i].InstockQty,
+                      data.tproductlist[i].AllocatedBOQty,
+                      utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COST1 * 100) / 100),
+                      utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COSTINC1 * 100) /100),
+                      utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICE1 * 100) / 100),
+                      utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICEINC1 * 100) /100),
+                      checkIfSerialorLot||'',
+                      data.tproductlist[i].BARCODE || "",
+                      departmentData,
+                      data.tproductlist[i].PURCHASEDESC || "",
+                      data.tproductlist[i].CUSTFLD1 || "",
+                      data.tproductlist[i].CUSTFLD2 || "",
+                  ];
+                  splashArrayProductList.push(dataList);
+                  dataTableList.push(dataList);
+              }
+                        templateObject.datatablerecords.set(dataTableList);
                         //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
                         $(".fullScreenSpin").css("display", "none");
-                        if (splashArrayProductList) {
-                            var datatable = $("#tblInventory").DataTable();
-                            datatable.clear();
-                            datatable.rows.add(splashArrayProductList);
-                            datatable.draw(false);
-                        }
+                        // if (splashArrayProductList) {
+                        //   $('.resetTable').trigger('click');
+                        //     var datatable = $("#tblInventoryOverview").DataTable();
+                        //     datatable.clear();
+                        //     datatable.rows.add(splashArrayProductList);
+                        //     datatable.draw(false);
+                        // }
                     } else {
                         $(".fullScreenSpin").css("display", "none");
 
@@ -2038,67 +1752,60 @@ Template.inventorylist.events({
                             }
                         });
                     }
-                })
-                .catch(function(err) {
+                }).catch(function(err) {
                     $(".fullScreenSpin").css("display", "none");
                 });
         } else {
-            sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(data) {
-                    let records = [];
-                    let inventoryData = [];
-                    for (let i = 0; i < data.tproductvs1.length; i++) {
-                      let availableQty = 0;
-                      let onBOOrder = 0;
-                      if(data.tproductvs1[i].fields.ProductClass != null){
-                      for (let a = 0; a < data.tproductvs1[i].fields.ProductClass.length; a++) {
-                          availableQty += data.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
-                      };
-                    };
-                      if(data.tproductvs1[i].fields.SNTracking == true){
-                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-                      }else if(data.tproductvs1[i].fields.Batch == true){
-                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
-                      }else{
-                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
-                      }
-
-                     onBOOrder = data.tproductvs1[i].fields.TotalQtyInStock - availableQty;
-
-                        var dataList = [
-                            data.tproductvs1[i].fields.ID || "",
-                            data.tproductvs1[i].fields.ProductName || "-",
-                            data.tproductvs1[i].fields.SalesDescription || "",
-                            availableQty,
-                            0,
-                            onBOOrder,
-                            data.tproductvs1[i].fields.TotalQtyInStock,
-                            data.tproductvs1[i].fields.TotalQtyOnOrder,
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1CostInc * 100) /100),
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) /100),
-                            checkIfSerialorLot||'',
-                            data.tproductvs1[i].fields.BARCODE || "",
-                            "All",
-                            data.tproductvs1[i].fields.PurchaseDescription || "",
-                            data.tproductvs1[i].fields.CUSTFLD1 || "",
-                            data.tproductvs1[i].fields.CUSTFLD2 || "",
-                        ];
-
-                        splashArrayProductList.push(dataList);
-                    }
-                    //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
-                    $(".fullScreenSpin").css("display", "none");
-                    if (splashArrayProductList) {
-                        var datatable = $("#tblInventory").DataTable();
-                        datatable.clear();
-                        datatable.rows.add(splashArrayProductList);
-                        datatable.draw(false);
-                    }
-                })
-                .catch(function(err) {
-                    $(".fullScreenSpin").css("display", "none");
-                });
+            $('.btnRefresh').trigger('click');
+            // sideBarService.getProductListVS1(initialBaseDataLoad, 0).then(function(data) {
+            //         let records = [];
+            //         let inventoryData = [];
+            //         for (let i = 0; i < data.tproductlist.length; i++) {
+            //       let availableQty = data.tproductlist[i].AvailableQty||0;
+            //       let onBOOrder = 0;
+            //       if(data.tproductlist[i].SNTracking == true){
+            //         checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
+            //       }else if(data.tproductlist[i].batch == true){
+            //         checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
+            //       }else{
+            //         checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
+            //       }
+            //
+            //        onBOOrder = data.tproductlist[i].TotalQtyInStock - availableQty;
+            //         var dataList = [
+            //             data.tproductlist[i].PARTSID || "",
+            //             data.tproductlist[i].PARTNAME || "-",
+            //             data.tproductlist[i].PARTSDESCRIPTION || "",
+            //             availableQty,
+            //             data.tproductlist[i].SOBOQty||0,
+            //             data.tproductlist[i].POBOQty||0,
+            //             data.tproductlist[i].InstockQty,
+            //             data.tproductlist[i].AllocatedBOQty,
+            //             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COST1 * 100) / 100),
+            //             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COSTINC1 * 100) /100),
+            //             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICE1 * 100) / 100),
+            //             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICEINC1 * 100) /100),
+            //             checkIfSerialorLot||'',
+            //             data.tproductlist[i].BARCODE || "",
+            //             "All",,
+            //             data.tproductlist[i].PURCHASEDESC || "",
+            //             data.tproductlist[i].CUSTFLD1 || "",
+            //             data.tproductlist[i].CUSTFLD2 || "",
+            //         ];
+            //         splashArrayProductList.push(dataList);
+            //         dataTableList.push(dataList);
+            //     }
+            //         //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
+            //         $(".fullScreenSpin").css("display", "none");
+            //         if (splashArrayProductList) {
+            //             var datatable = $("#tblInventoryOverview").DataTable();
+            //             datatable.clear();
+            //             datatable.rows.add(splashArrayProductList);
+            //             datatable.draw(false);
+            //         }
+            //     }).catch(function(err) {
+            //         $(".fullScreenSpin").css("display", "none");
+            //     });
         }
     },
     "click .btnRefresh": function() {
@@ -2123,47 +1830,41 @@ Template.inventorylist.events({
         var fromDate =
             currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
         let prevMonth11Date = moment().subtract(6, "months").format("YYYY-MM-DD");
-        sideBarService
-            .getProductStocknSaleReportData(prevMonth11Date, fromDate)
-            .then(function(data) {
+        sideBarService.getProductStocknSaleReportData(prevMonth11Date, fromDate).then(function(data) {
                 addVS1Data("TProductStocknSalePeriodReport", JSON.stringify(data));
-            })
-            .catch(function(err) {});
+        }).catch(function(err) {});
 
-        sideBarService
-            .getProductServiceListVS1(initialBaseDataLoad, 0)
-            .then(function(data) {
+        sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(dataProd) {
+            addVS1Data("TProductVS1", JSON.stringify(dataProd)).then(function(datareturn) {
+                }).catch(function(err) {
+                });
+        }).catch(function(err) {
+
+        });
+
+        sideBarService.getProductServiceListVS1(initialBaseDataLoad, 0).then(function(data) {
                 addVS1Data("TProductWeb", JSON.stringify(data));
-                sideBarService
-                    .getNewProductListVS1(initialBaseDataLoad, 0)
-                    .then(function(data) {
-                        addVS1Data("TProductVS1", JSON.stringify(data))
+                sideBarService.getProductListVS1(initialBaseDataLoad, 0).then(function(dataProdList) {
+                        addVS1Data("TProductList", JSON.stringify(dataProdList))
                             .then(function(datareturn) {
                                 window.open("/inventorylist", "_self");
                             })
                             .catch(function(err) {
                                 window.open("/inventorylist", "_self");
                             });
-                    })
-                    .catch(function(err) {
+                    }).catch(function(err) {
                         window.open("/inventorylist", "_self");
                     });
-            })
-            .catch(function(err) {
-                sideBarService
-                    .getNewProductListVS1(initialBaseDataLoad, 0)
-                    .then(function(data) {
-                        addVS1Data("TProductVS1", JSON.stringify(data))
-                            .then(function(datareturn) {
-                                window.open("/inventorylist", "_self");
-                            })
-                            .catch(function(err) {
-                                window.open("/inventorylist", "_self");
-                            });
-                    })
-                    .catch(function(err) {
-                        window.open("/inventorylist", "_self");
-                    });
+            }).catch(function(err) {
+                sideBarService.getProductListVS1(initialBaseDataLoad, 0).then(function(dataProdList) {
+                    addVS1Data("TProductList", JSON.stringify(dataProdList)).then(function(datareturn) {
+                            window.open("/inventorylist", "_self");
+                        }).catch(function(err) {
+                            window.open("/inventorylist", "_self");
+                        });
+                }).catch(function(err) {
+                    window.open("/inventorylist", "_self");
+                });
             });
     },
     "click #exportinv_pdf": async function() {
@@ -2172,7 +1873,7 @@ Template.inventorylist.events({
     },
     "click #exportinv_csv": async function() {
         $(".fullScreenSpin").css("display", "inline-block");
-        jQuery("#tblInventory_wrapper .dt-buttons .btntabletocsv").click();
+        jQuery("#tblInventoryOverview_wrapper .dt-buttons .btntabletocsv").click();
         $(".fullScreenSpin").css("display", "none");
     },
     "click #btnSave": async function() {
@@ -2297,7 +1998,7 @@ Template.inventorylist.events({
             $(".fullScreenSpin").css("display", "none");
         } else {
             // if ($('.chkDepartment:checked').length == $('.chkDepartment').length) {
-            //   var datatable = $('#tblInventory').DataTable();
+            //   var datatable = $('#tblInventoryOverview').DataTable();
             //   datatable.clear();
             //   datatable.rows.add(splashArrayProductList);
             //   datatable.draw(false);
@@ -2347,7 +2048,7 @@ Template.inventorylist.events({
                         dataTableList.push(dataList);
                     }
                     if (splashArrayProductListDept) {
-                        var datatable = $("#tblInventory").DataTable();
+                        var datatable = $("#tblInventoryOverview").DataTable();
                         datatable.clear();
                         datatable.rows.add(splashArrayProductListDept);
                         datatable.draw(false);
@@ -2377,7 +2078,7 @@ Template.inventorylist.events({
     },
     "click .printConfirm": function(event) {
         $(".fullScreenSpin").css("display", "inline-block");
-        jQuery("#tblInventory_wrapper .dt-buttons .btntabletopdf").click();
+        jQuery("#tblInventoryOverview_wrapper .dt-buttons .btntabletopdf").click();
         $(".fullScreenSpin").css("display", "none");
     },
     "click .btnStockAdjustment": function(event) {
@@ -2632,11 +2333,11 @@ Template.inventorylist.events({
         });
     },
     "keyup #myInputSearch, change #myInputSearch, search #myInputSearch": function(event) {
-        $(".tblInventory tbody tr").show();
+        $(".tblInventoryOverview tbody tr").show();
         let searchItem = $(event.target).val();
         if (searchItem != "") {
             var value = searchItem.toLowerCase();
-            $(".tblInventory tbody tr").each(function() {
+            $(".tblInventoryOverview tbody tr").each(function() {
                 var found = "false";
                 $(this).each(function() {
                     if (
@@ -2661,7 +2362,7 @@ Template.inventorylist.events({
                 }
             });
         } else {
-            $(".tblInventory tbody tr").show();
+            $(".tblInventoryOverview tbody tr").show();
         }
     },
     "click .lblCostEx": function(event) {

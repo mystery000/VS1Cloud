@@ -363,8 +363,8 @@ Template.employeescard.onRendered(function () {
     //     // $('#currencyLists').DataTable().column( 0 ).visible( true );
     //     $('.fullScreenSpin').css('display', 'none');
     // }, 200);
-    
-    
+
+
     setTimeout(function () {
         const redirectUrl = document.location.toString();
         if (redirectUrl.match('&')) {
@@ -372,7 +372,7 @@ Template.employeescard.onRendered(function () {
             setTimeout(function () {
                 $('.nav-tabs a[href="#payslips').tab('show');
             }, 100);
-        } 
+        }
     }, 100);
 
     // $('.nav-tabs a').on('shown.bs.tab', function (e) {
@@ -1277,6 +1277,8 @@ Template.employeescard.onRendered(function () {
         });
     }
 
+    
+
     if (currentId.id == "undefined") {
         currentDate = new Date();
         $('.fullScreenSpin').css('display', 'none');
@@ -1482,6 +1484,16 @@ Template.employeescard.onRendered(function () {
             if (data.fields.User != null) {
                 let emplineItems = [];
                 let emplineItemObj = {};
+                if (Array.isArray(data.fields.User)) {
+                  empEmail = data.fields.User[0].fields.LogonName;
+                  Session.setPersistent('cloudCurrentLogonName', data.fields.User[0].fields.LogonName);
+                  emplineItemObj = {
+                      empID: data.fields.User[0].fields.EmployeeId || '',
+                      EmployeeName: data.fields.User[0].fields.EmployeeName || '',
+                      LogonName: data.fields.User[0].fields.LogonName || '',
+                      PasswordHash: data.fields.User[0].fields.LogonPassword || ''
+                  };
+                }else{
                 empEmail = data.fields.User.fields.LogonName;
                 Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                 emplineItemObj = {
@@ -1490,6 +1502,7 @@ Template.employeescard.onRendered(function () {
                     LogonName: data.fields.User.fields.LogonName || '',
                     PasswordHash: data.fields.User.fields.LogonPassword || ''
                 };
+                }
                 emplineItems.push(emplineItemObj);
                 templateObject.empuserrecord.set(emplineItems);
             } else {
@@ -1508,6 +1521,15 @@ Template.employeescard.onRendered(function () {
             if (data.fields.User != null) {
                 let emplineItems = [];
                 let emplineItemObj = {};
+                if (Array.isArray(data.fields.User)) {
+                  Session.setPersistent('cloudCurrentLogonName', data.fields.User[0].fields.LogonName);
+                  emplineItemObj = {
+                      empID: data.fields.User[0].fields.EmployeeId || '',
+                      EmployeeName: data.fields.User[0].fields.EmployeeName || '',
+                      LogonName: data.fields.User[0].fields.LogonName || '',
+                      PasswordHash: data.fields.User[0].fields.LogonPassword || ''
+                  };
+                }else{
                 Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
                 emplineItemObj = {
                     empID: data.fields.User.fields.EmployeeId || '',
@@ -1515,6 +1537,7 @@ Template.employeescard.onRendered(function () {
                     LogonName: data.fields.User.fields.LogonName || '',
                     PasswordHash: data.fields.User.fields.LogonPassword || ''
                 };
+               }
                 emplineItems.push(emplineItemObj);
                 templateObject.empuserrecord.set(emplineItems);
             } else {
@@ -2653,6 +2676,7 @@ Template.employeescard.onRendered(function () {
     templateObject.filterPayTemplates = function ( type ) {
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+
         if(type == "earningLines"){
             let payTemplateEarningLines = [];
             let checkPayTemplateEarningLine = templateObject.payTemplateEarningLineInfo.get();
@@ -2660,7 +2684,7 @@ Template.employeescard.onRendered(function () {
                 payTemplateEarningLines = PayTemplateEarningLine.fromList(
                     checkPayTemplateEarningLine
                 ).filter((item) => {
-                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Active == true) {
+                    if ( parseInt( item.EmployeeID ) == parseInt( employeeID ) && item.Active == true) {
                         return item;
                     }
                 });
@@ -2675,7 +2699,7 @@ Template.employeescard.onRendered(function () {
                 payTemplateDeductionLines = PayTemplateDeductionLine.fromList(
                     checkPayTemplateDeductionLine
                 ).filter((item) => {
-                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Active == true ) {
+                    if ( parseInt( item.EmployeeID ) == parseInt( employeeID ) && item.Active == true ) {
                         return item;
                     }
                 });
@@ -2689,7 +2713,7 @@ Template.employeescard.onRendered(function () {
                 payTemplateSuperannuationLines = PayTemplateSuperannuationLine.fromList(
                     checkPayTemplateSuperannuationLine
                 ).filter((item) => {
-                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Active == true ) {
+                    if ( parseInt( item.EmployeeID ) == parseInt( employeeID ) && item.Active == true ) {
                         return item;
                     }
                 });
@@ -2704,7 +2728,7 @@ Template.employeescard.onRendered(function () {
                 payTemplateReiumbursementLines = PayTemplateReiumbursementLine.fromList(
                     checkPayTemplateReiumbursementLine
                 ).filter((item) => {
-                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Active == true ) {
+                    if ( parseInt( item.EmployeeID ) == parseInt( employeeID ) && item.Active == true ) {
                         return item;
                     }
                 });
@@ -2712,6 +2736,37 @@ Template.employeescard.onRendered(function () {
             return payTemplateReiumbursementLines;
         }
     };
+
+    templateObject.getEarnings = async (employeeID = null) => {
+        let data = await CachedHttp.get(erpObject.TPayTemplateEarningLine, async () => {
+            const employeePayrolApis = new EmployeePayrollApi();
+            const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TPayTemplateEarningLine
+            );
+            employeePayrolEndpoint.url.searchParams.append(
+                "ListType",
+                "'Detail'"
+            );
+
+            const response = await employeePayrolEndpoint.fetch();
+            if (response.ok == true) {
+                return await response.json();
+            }
+            return null;
+        }, {
+            useIndexDb: true, 
+            useLocalStorage: false,
+            validate: (cachedResponse) => {
+                return false;
+            }
+        });
+
+        data = data.response.tpaytemplateearningline.map((earning) => earning.fields);
+        if(employeeID) {
+            data = data.filter((item) => parseInt( item.EmployeeID ) == parseInt( employeeID ));
+        }
+        return data;
+    }
 
     templateObject.saveEarningLocalDB = async function(){
         const employeePayrolApis = new EmployeePayrollApi();
@@ -2735,28 +2790,29 @@ Template.employeescard.onRendered(function () {
     };
 
     templateObject.getPayEarningLines = async function(){
-        let data = [];
-        let dataObject = await getVS1Data('TPayTemplateEarningLine')
-        if (dataObject.length == 0) {
-            data = await templateObject.saveEarningLocalDB();
-        } else {
-            data = JSON.parse(dataObject[0].data);
-        }
-        let useData = PayTemplateEarningLine.fromList(
-            data.tpaytemplateearningline
-        ).filter((item) => {
-            if (parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
-                return item;
-            }
-        });
+        let useData = await templateObject.getEarnings(employeeID);
+        // let dataObject = await getVS1Data('TPayTemplateEarningLine')
+        // if (dataObject.length == 0) {
+        //     data = await templateObject.saveEarningLocalDB();
+        // } else {
+        //     data = JSON.parse(dataObject[0].data);
+        // }
+
+        // let useData = PayTemplateEarningLine.fromList(
+        //     data.tpaytemplateearningline
+        // ).filter((item) => {
+        //     if (parseInt( item.EmployeeID ) == parseInt( employeeID ) ) {
+        //         return item;
+        //     }
+        // });
 
         await templateObject.payTemplateEarningLineInfo.set(useData);
         await templateObject.setEarningLineDropDown();
         if( useData.length ){
             setTimeout(function () {
                 Array.prototype.forEach.call(useData, (item) => {
-                    $(`#ptEarningRate${item.fields.ID}`).val( item.fields.EarningRate );
-                    $(`#ptEarningAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(item.fields.Amount)|| 0.00 );
+                    $(`#ptEarningRate${item.ID}`).val( item.EarningRate );
+                    $(`#ptEarningAmount${item.ID}`).val( utilityService.modifynegativeCurrencyFormat(item.Amount)|| 0.00 );
                 })
             }, 500);
         }
@@ -4009,11 +4065,11 @@ Template.employeescard.onRendered(function () {
 
         let payPeriods = templateObject.payPeriods.get();
 
-      
+
 
         payPeriods.forEach((period) => {
             $('#edtPayPeriod').editableSelect(
-                'add', `${period.PayrollCalendarName} (${period.PayrollCalendarPayPeriod})`, 
+                'add', `${period.PayrollCalendarName} (${period.PayrollCalendarPayPeriod})`,
                 null,
                 {
                     name: "period-id",
@@ -4030,7 +4086,7 @@ Template.employeescard.onRendered(function () {
         $('#period').editableSelect('add','Daily');
         $('#period').editableSelect('add','Weekly');
         $('#period').editableSelect('add','Monthly');
-        
+
     }
 
     templateObject.initPayPeriods();

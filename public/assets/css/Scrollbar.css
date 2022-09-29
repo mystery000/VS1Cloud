@@ -302,7 +302,13 @@ overflow-y: auto;
     margin-top: -10px;
     margin-left: -10px;
 }
-
+.setupIncompleatedMsg h2 {
+    font-size: 22px;
+    padding: 16px 4px 0;
+    text-align: center;
+    -webkit-animation: flash linear 1s infinite;
+    animation: flash linear 1s infinite;
+}
 .btnSearchAlert {
     -webkit-animation: flash linear 1s infinite;
     animation: flash linear 1s infinite;
