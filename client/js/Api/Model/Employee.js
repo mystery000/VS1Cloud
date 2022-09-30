@@ -14,11 +14,13 @@ export default class Employee {
     this.earnings = [];
     this.earningTotal = 0.0;
 
-    this.taxtTotal = 0.0;
+    this.taxTotal = 0.0;
     this.taxes = null;
 
     this.superAnnuations = [];
     this.superAnnuationTotal = 0.0;
+
+    this.netPay = 0.0;
   }
 
   /**
@@ -138,6 +140,18 @@ export default class Employee {
     }
 
     return null;
+  }
+
+  /**
+   * TODO: We should calculate with tax
+   */
+  calculateNetPay() {
+    const earnings = this.earningTotal;
+    const tax = 0.0; // we should calculate this
+    const superAnnuation = this.superAnnuationTotal;
+    const _netPay = earnings - tax;
+
+    this.netPay = _netPay;
   }
 }
 

@@ -335,6 +335,9 @@ Template.payrundetails.onRendered(function () {
       await employee.getEarnings();
       await employee.getSuperAnnuations();
       // await employee.getTaxe(_taxes);
+
+
+      employee.calculateNetPay();
     });
 
   
@@ -432,6 +435,12 @@ Template.payrundetails.events({
   },
   'click .delete-payrun': (e, ui) => {
     ui.deletePayRun();
+  },
+
+  "click .colPayRunDetailsDropdown input": (e, ui) => {
+    const tr = $(e.currentTarget).closest('tr');
+
+    // This is there, if you want to apply a style to the tr when you toggle the button
   }
 });
 
