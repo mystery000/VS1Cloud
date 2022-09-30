@@ -24,18 +24,14 @@ let sideBarService = new SideBarService();
  */
 const getPayRuns = () => {
   return JSON.parse(localStorage.getItem("TPayRunHistory")) || [];
-}
-const setPayRuns = (items) => {
-  return localStorage.setItem("TPayRunHistory", JSON.stringify(items))
-}
+};
+const setPayRuns = items => {
+  return localStorage.setItem("TPayRunHistory", JSON.stringify(items));
+};
 
-const setPayRun = () => {
+const setPayRun = () => {};
 
-}
-
-const addPayRun = () => {
-
-}
+const addPayRun = () => {};
 
 Template.payrundetails.onCreated(function () {
   const templateObject = Template.instance();
@@ -213,8 +209,6 @@ Template.payrundetails.onRendered(function () {
       employee.PayHistory = await getPayHistoryOfEmployee(false, employee.fields.ID);
     });
 
-
-
     return employees;
   };
 
@@ -222,21 +216,21 @@ Template.payrundetails.onRendered(function () {
      * Supernnuation
      */
 
-  templateObject.loadSuperAnnuationPerEmployee = async (employee) => {
+  templateObject.loadSuperAnnuationPerEmployee = async employee => {
     let superAnnuation = 123.0;
 
-    return superAnnuation
-  }
+    return superAnnuation;
+  };
 
   templateObject.loadSuperAnnuations = async () => {
-    let payRunDetails  =  templateObject.payRunDetails.get();
+    let payRunDetails = templateObject.payRunDetails.get();
 
     payRunDetails.employees.forEach((e, index) => {
       payRunDetails.employees[index].superAnnuation = templateObject.loadSuperAnnuationPerEmployee(e);
     });
 
-    templateObject.payRunDetails.set(payRunDetails)
-  }
+    templateObject.payRunDetails.set(payRunDetails);
+  };
 
   /**
      * earnings
@@ -246,9 +240,7 @@ Template.payrundetails.onRendered(function () {
      * Taxes
      */
 
-  templateObject.loadGeneration = () => {
-
-  }
+  templateObject.loadGeneration = () => {};
 
   templateObject.loadPayRunData = async () => {
     LoadingOverlay.show();
@@ -269,26 +261,30 @@ Template.payrundetails.onRendered(function () {
           netPay: 0.0,
           superAnnuation: 0.0,
           taxes: 0.0,
-          earnings: 0.0
+          earnings: 0.0,
+          selected: false
         });
 
-
-        payRunsHistory.push( payRunDetails);
+        payRunsHistory.push(payRunDetails);
 
         localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
       } else {
         payRunDetails.employees = Employee.fromList(payRunDetails.employees);
+        payRunDetails.employees.forEach(e => {
+          e.selected = true;
+        })
       }
+
     }
 
     /**
-     * We do this so we avoid api request loop
-     * @returns [taxes]
-     */
-    const getAllTaxes = async () => {
-       /**
-         * Load EmployeePayrollApi API
+         * We do this so we avoid api request loop
+         * @returns [taxes]
          */
+    const getAllTaxes = async () => {
+      /**
+             * Load EmployeePayrollApi API
+             */
       const employeePayrollApi = new EmployeePayrollApi();
 
       const apiEndpoint = employeePayrollApi.collection.findByName(employeePayrollApi.collectionNames.TEmployeepaysettings);
@@ -300,48 +296,43 @@ Template.payrundetails.onRendered(function () {
         return data.temployeepaysettings;
       }
       return null;
-    }
+    };
     const _taxes = await getAllTaxes();
 
     await GlobalFunctions.asyncForEach(payRunDetails.employees, async (employee, index) => {
       await employee.getTaxe(_taxes);
     });
-    
 
     /**
-     * Filter the list depending on the calendar
-     */
+         * Filter the list depending on the calendar
+         */
     payRunDetails.employees = payRunDetails.employees.filter(employee => {
-      if(employee.taxes != null) {
-        if(payRunDetails.calendar.PayrollCalendarPayPeriod == employee.taxes.Payperiod) {
+      if (employee.taxes != null) {
+        if (payRunDetails.calendar.PayrollCalendarPayPeriod == employee.taxes.Payperiod) {
           return true;
         } else {
           return false;
         }
-      } 
+      }
       return false;
     });
 
     /**
-     * Filter by next pay date
-     */
+         * Filter by next pay date
+         */
     // payRunDetails.employees = payRunDetails.employees.filter(employee => {
-      
-    // });
 
-  
+    // });
 
     await GlobalFunctions.asyncForEach(payRunDetails.employees, async (employee, index) => {
       await employee.getEarnings();
       await employee.getSuperAnnuations();
       // await employee.getTaxe(_taxes);
 
-
       employee.calculateNetPay();
     });
 
-  
-   // templateObject.loadSuperAnnuations();
+    // templateObject.loadSuperAnnuations();
     await templateObject.payRunDetails.set(payRunDetails);
     templateObject.countEmployees.set(payRunDetails.employees.length);
 
@@ -352,22 +343,15 @@ Template.payrundetails.onRendered(function () {
   templateObject.calculateTableTotal = async () => {
     let payRunData = await templateObject.payRunDetails.get();
 
-    payRunData.employees.forEach((employee) => {
+    payRunData.employees.forEach(employee => {
       payRunData.earnings += employee.earningTotal;
       payRunData.taxes += employee.taxTotal;
-      payRunData.netPay += employee.netPayTotal;
+      payRunData.netPay += employee.netPay;
       payRunData.superAnnuation += employee.superAnnuationTotal;
-
     });
 
-
-
-
-
-
     templateObject.payRunDetails.set(payRunData);
-
-  }
+  };
 
   /**
      * save to draft at page load
@@ -386,8 +370,21 @@ Template.payrundetails.onRendered(function () {
 
     newPayRunDetails.stpFilling = toggleStatus();
 
-    templateObject.payRunDetails.set(newPayRunDetails);
+    // Filter the employees
 
+    let employees = newPayRunDetails.employees.filter(e => e.selected == true);
+
+    // If no employee selected
+    if (employees.length == 0) {
+      handleValidationError("You must add at least one employee!", "PayRunDetails");
+      return false;
+    }
+
+    newPayRunDetails.employees = employees;
+
+    /**
+         * UPdate the payrun
+         */
     // Get from the list
     let payRunsHistory = getPayRuns(); // we get the list and find
     // let payRunDetails = payRunsHistory.find(p => p.calendar.ID == urlParams.get("cid"));
@@ -395,14 +392,15 @@ Template.payrundetails.onRendered(function () {
     const index = payRunsHistory.findIndex(p => p.calendar.ID == urlParams.get("cid"));
     payRunsHistory[index] = newPayRunDetails;
 
-    localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
+    //templateObject.payRunDetails.set(newPayRunDetails);  no need to update this object
 
+    localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
     window.location.href = "/payrolloverview";
   };
 
   /**
-   * Delete the currency payrun
-   */
+     * Delete the currency payrun
+     */
   templateObject.deletePayRun = async () => {
     let payRuns = getPayRuns();
     const index = payRuns.findIndex(p => p.calendar.ID == urlParams.get("cid"));
@@ -411,8 +409,7 @@ Template.payrundetails.onRendered(function () {
     setPayRuns(payRuns);
 
     window.location.href = "/payrolloverview";
-
-  }
+  };
 
   templateObject.loadPayRunData();
 });
@@ -433,14 +430,23 @@ Template.payrundetails.events({
   "click .post-pay-run": (e, ui) => {
     ui.postPayRun();
   },
-  'click .delete-payrun': (e, ui) => {
+  "click .delete-payrun": (e, ui) => {
     ui.deletePayRun();
   },
 
   "click .colPayRunDetailsDropdown input": (e, ui) => {
-    const tr = $(e.currentTarget).closest('tr');
+    const tr = $(e.currentTarget).closest("tr");
+    const id = $(tr).attr("employee-id");
 
-    // This is there, if you want to apply a style to the tr when you toggle the button
+    let payRunDetails = ui.payRunDetails.get();
+
+    payRunDetails.employees.forEach(em => {
+      if (em.fields.ID == id) {
+        em.selected = $(e.currentTarget).prop("checked");
+      }
+    });
+
+    ui.payRunDetails.set(payRunDetails);
   }
 });
 
@@ -466,5 +472,5 @@ Template.payrundetails.helpers({
     }
   },
 
-  formatPrice : (amount) => GlobalFunctions.formatPrice(amount),
+  formatPrice: amount => GlobalFunctions.formatPrice(amount)
 });

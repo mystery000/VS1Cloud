@@ -317,7 +317,7 @@
                                 </tr> -->
                                 {{#if payRunDetails.employees}}
                                     {{#each item in payRunDetails.employees}}
-                                        <tr class="dnd-moved" id="{{item.fields.ID}}" name="{{item.fields.ID}}">
+                                        <tr class="dnd-moved" id="{{item.fields.ID}}" employee-id="{{item.fields.ID}}">
                                             <td class="colPayRunDetailsFirstName" contenteditable="false">{{ item.fields.EmployeeName }}</td>
                                             <td class="colPayRunDetailsLastName" contenteditable="false">{{ item.fields.EmployeeName }}</td>
                                             <td class="colPayRunDetailsEmployeeGroup" contenteditable="false"></td>
@@ -328,7 +328,7 @@
                                             <td class="colPayRunDetailsNetPay" contenteditable="false" style="text-align: right;">{{ formatPrice item.netPay }}</td>
                                             <td class="colPayRunDetailsDropdown" contenteditable="false">
                                                 <div class="custom-control custom-switch" style="display: inline-flex !important; margin-left: 74px;">
-                                                    <input class="custom-control-input" type="checkbox" name="payrundetailsDropdown-{{item.fields.ID}}" id="payrundetailsDropdown-{{item.fields.ID}}" checked>
+                                                    <input class="custom-control-input" type="checkbox" name="payrundetailsDropdown-{{item.fields.ID}}" id="payrundetailsDropdown-{{item.fields.ID}}"  checked="{{ item.selected }}">
                                                     <label class="custom-control-label" style="position: absolute; margin-top: 5px;" for="payrundetailsDropdown-{{item.fields.ID}}"></label>
                                                 </div>
                                             </td>
