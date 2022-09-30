@@ -308,7 +308,7 @@ Template.payrundetails.onRendered(function () {
     
 
     /**
-     * Filter the list depending on the our calendar
+     * Filter the list depending on the calendar
      */
     payRunDetails.employees = payRunDetails.employees.filter(employee => {
       if(employee.taxes != null) {
@@ -321,6 +321,13 @@ Template.payrundetails.onRendered(function () {
       return false;
     });
 
+    /**
+     * Filter by next pay date
+     */
+    // payRunDetails.employees = payRunDetails.employees.filter(employee => {
+      
+    // });
+
   
 
     await GlobalFunctions.asyncForEach(payRunDetails.employees, async (employee, index) => {
@@ -329,9 +336,6 @@ Template.payrundetails.onRendered(function () {
       // await employee.getTaxe(_taxes);
     });
 
-
-    console.log("employees 2", payRunDetails);
-  
   
    // templateObject.loadSuperAnnuations();
     await templateObject.payRunDetails.set(payRunDetails);
