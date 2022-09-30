@@ -894,7 +894,7 @@
                                                                     <td contenteditable="false" class="colDescription clickable">{{item.description}}</td>
                                                                     <td contenteditable="false" class="colRate clickable text-right">{{item.rate}}</td>
                                                                     <td contenteditable="false" class="colPurcDef chkBox text-center" style="width:15px;">
-                                                                        <div class="custom-control custom-radio">
+                                                                        <div class="custom-control custom-switch">
                                                                             {{#if equals defaultpurchasetaxcode item.codename}}
                                                                             <input type="radio" class="custom-control-input optradioP" name="optradioP" id="formCheckP-{{item.id}}" value="{{item.codename}}" checked><label class="custom-control-label" for="formCheckP-{{item.id}}"></label>
                                                                             {{else}}
@@ -904,7 +904,7 @@
                                                                     </td>
                                                                     <td contenteditable="false" class="colSaleDef chkBox text-center" style="width:15px;">
 
-                                                                        <div class="custom-control custom-radio">
+                                                                        <div class="custom-control custom-switch">
                                                                             {{#if equals defaultsaletaxcode item.codename}}
                                                                             <input type="radio" class="custom-control-input optradioS" name="optradioS" id="formCheckS-{{item.id}}" value="{{item.codename}}" checked><label class="custom-control-label" for="formCheckS-{{item.id}}"></label>
                                                                             {{else}}

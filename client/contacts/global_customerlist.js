@@ -249,7 +249,10 @@ Template.global_customerlist.onRendered(function() {
             data: splashArrayCustomerList,
             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             columnDefs: [
-                {className: "colCustomerID colID hiddenColumn", "targets": [0]},
+                {className: "colCustomerID colID hiddenColumn", "targets": [0],
+                createdCell: function (td, cellData, rowData, row, col) {
+                  $(td).closest("tr").attr("id", rowData[0]);
+                }},
                 {className: "colCompany", "targets": [1]},
                 {className: "colJob","targets": [2]},
                 {className: "colPhone","targets": [3]},

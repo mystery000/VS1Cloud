@@ -342,9 +342,11 @@ Template.paymentoverview.onRendered(function() {
                         };
 
                             dataTableList.push(dataList);
+                            let sortDatePayment = data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate;
+                            let formatDatePayment = data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate;
                             var dataListPaymentOverviewList = [
                                 data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate,
-                                '<span style="display:none;">'+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate+'</span> '+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate,
+                                '<span style="display:none;">' + sortDatePayment + '</span> ' + formatDatePayment || '',
                                 data.tpaymentlist[i].ClientName || '',
                                 data.tpaymentlist[i].PaymentID || '',
                                 data.tpaymentlist[i].ReferenceNo || '',
@@ -704,10 +706,11 @@ Template.paymentoverview.onRendered(function() {
                         notes: data.tpaymentlist[i].Notes || ''
                     };
                     dataTableList.push(dataList);
-
+                    let sortDatePayment = data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate;
+                    let formatDatePayment = data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate;
                     var dataListPaymentOverviewList = [
                         data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate,
-                        '<span style="display:none;">'+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate+'</span> '+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate,
+                        '<span style="display:none;">' + sortDatePayment + '</span> ' + formatDatePayment || '',
                         data.tpaymentlist[i].ClientName || '',
                         data.tpaymentlist[i].PaymentID || '',
                         data.tpaymentlist[i].ReferenceNo || '',
@@ -737,6 +740,7 @@ Template.paymentoverview.onRendered(function() {
                 }
 
                 $('.fullScreenSpin').css('display', 'none');
+                console.log(splashArrayPaymentOverviewList);
                 setTimeout(function() {
                     $('#tblPaymentOverview').DataTable({
                         data: splashArrayPaymentOverviewList,
@@ -1072,9 +1076,11 @@ Template.paymentoverview.onRendered(function() {
                     };
 
                         dataTableList.push(dataList);
+                        let sortDatePayment = data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate;
+                        let formatDatePayment = data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate;
                         var dataListPaymentOverviewList = [
                             data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate,
-                            '<span style="display:none;">'+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate+'</span> '+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate,
+                            '<span style="display:none;">' + sortDatePayment + '</span> ' + formatDatePayment || '',
                             data.tpaymentlist[i].ClientName || '',
                             data.tpaymentlist[i].PaymentID || '',
                             data.tpaymentlist[i].ReferenceNo || '',
@@ -1952,9 +1958,11 @@ Template.paymentoverview.events({
                               };
 
                                   dataTableList.push(dataList);
+                                  let sortDatePayment = data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate;
+                                  let formatDatePayment = data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate;
                                   var dataListPaymentOverviewList = [
                                       data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate,
-                                      '<span style="display:none;">'+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate+'</span> '+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate,
+                                      '<span style="display:none;">' + sortDatePayment + '</span> ' + formatDatePayment || '',
                                       data.tpaymentlist[i].ClientName || '',
                                       data.tpaymentlist[i].PaymentID || '',
                                       data.tpaymentlist[i].ReferenceNo || '',
