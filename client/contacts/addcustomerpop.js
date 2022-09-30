@@ -2178,15 +2178,18 @@ Template.addcustomerpop.helpers({
         return Template.instance().deliveryMethodList.get();
     },
     clienttypeList: () => {
-        return Template.instance().clienttypeList.get().sort(function (a, b) {
-            if (a == 'NA') {
-                return 1;
-            }
-            else if (b == 'NA') {
-                return -1;
-            }
-            return (a.toUpperCase() > b.toUpperCase()) ? 1 : -1;
-        });
+        if (Template.instance().clienttypeList.get()) {
+            return Template.instance().clienttypeList.get().sort(function (a, b) {
+                if (a == 'NA') {
+                    return 1;
+                } else if (b == 'NA') {
+                    return -1;
+                }
+                return (a.toUpperCase() > b.toUpperCase()) ? 1 : -1;
+            });
+        } else {
+            return null;
+        }
     },
     taxCodeList: () => {
         return Template.instance().taxCodeList.get();
