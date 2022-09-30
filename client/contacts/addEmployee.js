@@ -2680,10 +2680,8 @@ Template.employeescard.onRendered(function () {
         if(type == "earningLines"){
             let payTemplateEarningLines = [];
             let checkPayTemplateEarningLine = templateObject.payTemplateEarningLineInfo.get();
-            if( Array.isArray( checkPayTemplateEarningLine ) ){
-                payTemplateEarningLines = PayTemplateEarningLine.fromList(
-                    checkPayTemplateEarningLine
-                ).filter((item) => {
+            if( Array.isArray( checkPayTemplateEarningLine ) && checkPayTemplateEarningLine.length > 0 ){
+                payTemplateEarningLines = checkPayTemplateEarningLine.filter((item) => {
                     if ( parseInt( item.EmployeeID ) == parseInt( employeeID ) && item.Active == true) {
                         return item;
                     }

@@ -52,7 +52,7 @@ Template.superannuationSettings.onRendered(function() {
     if (employeePayrolEndpointResponse.ok == true) {
         employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
         if( employeePayrolEndpointJsonResponse.tsuperannuation.length ){
-            await addVS1Data('TSuperannuation', JSON.stringify(employeePayrolEndpointJsonResponse))
+            await addVS1Data('Tsuperannuation', JSON.stringify(employeePayrolEndpointJsonResponse))
         }
         return employeePayrolEndpointJsonResponse
     }
@@ -60,10 +60,10 @@ Template.superannuationSettings.onRendered(function() {
 };
 
 templateObject.getSuperannuationData = async function(){
-    try {
+    // try {
         let data = {};
         let splashArraySuperannuationList = new Array();
-        let dataObject = await getVS1Data('TSuperannuation')
+        let dataObject = await getVS1Data('Tsuperannuation')
         if ( dataObject.length == 0) {
             data = await templateObject.saveDataLocalDB();
         }else{
@@ -237,7 +237,7 @@ templateObject.getSuperannuationData = async function(){
                     } else {
                         sideBarService.getSuperannuation(dataLenght, 0).then(function (dataNonBo) {
 
-                            addVS1Data('TSuperannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                            addVS1Data('Tsuperannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                 // templateObject.resetData(dataNonBo);
                                 $('.fullScreenSpin').css('display', 'none');
                             }).catch(function (err) {
@@ -253,9 +253,9 @@ templateObject.getSuperannuationData = async function(){
                 }, 100);
             });
         }, 1000);
-    } catch (error) {
-        $('.fullScreenSpin').css('display', 'none');
-    }
+    // } catch (error) {
+    //     $('.fullScreenSpin').css('display', 'none');
+    // }
 };
 
 templateObject.getSuperannuationData();
@@ -276,7 +276,7 @@ $('.superannuationDropDown').editableSelect()
                 $('#superannuationSettingsModal').modal('show');
                 return false
             }
-            let dataObject = await getVS1Data('TSuperannuation');
+            let dataObject = await getVS1Data('Tsuperannuation');
             if ( dataObject.length == 0) {
                 data = await templateObject.saveDataLocalDB();
             }else{
@@ -447,7 +447,7 @@ Template.superannuationSettings.events({
         */
 
         let superannuationRateSettings = {
-            type: "TSuperannuation",
+            type: "Tsuperannuation",
             fields: {
                 ID: parseInt(id),
                 Superfund:fundName,
