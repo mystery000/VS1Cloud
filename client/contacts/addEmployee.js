@@ -4060,26 +4060,26 @@ Template.employeescard.onRendered(function () {
   };
 
     templateObject.initPayPeriods = async () => {
-        await templateObject.loadPayRunCalendar();
+       // await templateObject.loadPayRunCalendar();
 
-        let payPeriods = templateObject.payPeriods.get();
+        // let payPeriods = templateObject.payPeriods.get();
 
 
 
-        payPeriods.forEach((period) => {
-            $('#edtPayPeriod').editableSelect(
-                'add', `${period.PayrollCalendarName} (${period.PayrollCalendarPayPeriod})`,
-                null,
-                {
-                    name: "period-id",
-                    value: period.ID
-                },
-                {
-                    name: "period-id",
-                    value: period.ID
-                }
-                );
-        });
+        // payPeriods.forEach((period) => {
+        //     $('#edtPayPeriod').editableSelect(
+        //         'add', `${period.PayrollCalendarName} (${period.PayrollCalendarPayPeriod})`,
+        //         null,
+        //         {
+        //             name: "period-id",
+        //             value: period.ID
+        //         },
+        //         {
+        //             name: "period-id",
+        //             value: period.ID
+        //         }
+        //         );
+        // });
 
         $('#period').editableSelect('add','Hourly');
         $('#period').editableSelect('add','Daily');
@@ -10226,6 +10226,10 @@ Template.employeescard.events({
         }
         amount = utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
         $('#edtSalesQuota').val(amount);
+    },
+
+    "click input#edtPayPeriod": (e, ui) => {
+        $('#SelectPayRunModal').modal("show");
     }
 });
 
