@@ -13,6 +13,7 @@ import LoadingOverlay from "../../LoadingOverlay";
 import "../../lib/global/indexdbstorage";
 import GlobalFunctions from "../../GlobalFunctions";
 import Employee from "../../js/Api/Model/Employee";
+import EmployeePayrollApi from "../../js/Api/EmployeePayrollApi";
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -244,6 +245,10 @@ Template.payrundetails.onRendered(function () {
      * Taxes
      */
 
+  templateObject.loadGeneration = () => {
+
+  }
+
   templateObject.loadPayRunData = async () => {
     LoadingOverlay.show();
     let payRunDetails = null;
@@ -275,13 +280,57 @@ Template.payrundetails.onRendered(function () {
       }
     }
 
+    /**
+     * We do this so we avoid api request loop
+     * @returns [taxes]
+     */
+    const getAllTaxes = async () => {
+       /**
+         * Load EmployeePayrollApi API
+         */
+      const employeePayrollApi = new EmployeePayrollApi();
+
+      const apiEndpoint = employeePayrollApi.collection.findByName(employeePayrollApi.collectionNames.TEmployeepaysettings);
+      apiEndpoint.url.searchParams.append("ListType", "'Detail'");
+      const ApiResponse = await apiEndpoint.fetch();
+
+      if (ApiResponse.ok) {
+        const data = await ApiResponse.json();
+        return data.temployeepaysettings;
+      }
+      return null;
+    }
+    const _taxes = await getAllTaxes();
+
+    await GlobalFunctions.asyncForEach(payRunDetails.employees, async (employee, index) => {
+      await employee.getTaxe(_taxes);
+    });
+    
+
+    /**
+     * Filter the list depending on the our calendar
+     */
+    payRunDetails.employees = payRunDetails.employees.filter(employee => {
+      if(employee.taxes != null) {
+        if(payRunDetails.calendar.PayrollCalendarPayPeriod == employee.taxes.Payperiod) {
+          return true;
+        } else {
+          return false;
+        }
+      } 
+      return false;
+    });
+
+  
+
     await GlobalFunctions.asyncForEach(payRunDetails.employees, async (employee, index) => {
       await employee.getEarnings();
       await employee.getSuperAnnuations();
-      
+      // await employee.getTaxe(_taxes);
     });
 
-    console.log("employees", payRunDetails);
+
+    console.log("employees 2", payRunDetails);
   
   
    // templateObject.loadSuperAnnuations();

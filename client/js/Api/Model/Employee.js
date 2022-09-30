@@ -15,7 +15,7 @@ export default class Employee {
     this.earningTotal = 0.0;
 
     this.taxtTotal = 0.0;
-    this.taxes = [];
+    this.taxes = null;
 
     this.superAnnuations = [];
     this.superAnnuationTotal = 0.0;
@@ -111,6 +111,34 @@ export default class Employee {
 
   incrementSuperAnnuation(amount = 0.0) {
     this.superAnnuationTotal += amount;
+  }
+
+  async getTaxe(employeeObjs = []) {
+    if (employeeObjs.length > 0) {
+      employeeObjs = employeeObjs.map(e => e.fields);
+      const employeeObj = employeeObjs.find(s => s.Employeeid == this.fields.ID) || null;
+      this.taxes = employeeObj;
+      return employeeObj;
+    }
+    /**
+         * Load EmployeePayrollApi API
+         */
+    const employeePayrollApi = new EmployeePayrollApi();
+
+    const apiEndpoint = employeePayrollApi.collection.findByName(employeePayrollApi.collectionNames.TEmployeepaysettings);
+    apiEndpoint.url.searchParams.append("ListType", "'Detail'");
+    const ApiResponse = await apiEndpoint.fetch();
+
+    if (ApiResponse.ok) {
+      const data = await ApiResponse.json();
+
+      const employeeObjs = data.temployeepaysettings.map(e => e.fields);
+      const employeeObj = employeeObjs.find(s => s.Employeeid == this.fields.ID) || null;
+      this.taxes = employeeObj;
+      return employeeObj;
+    }
+
+    return null;
   }
 }
 

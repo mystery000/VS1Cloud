@@ -2920,6 +2920,7 @@ Template.employeescard.onRendered(function () {
         });
         await templateObject.payTemplateSuperannuationLineInfo.set(useData);
         await templateObject.setSuperannuationDropDown();
+
         if( useData.length ){
             setTimeout(function () {
                 Array.prototype.forEach.call(useData, (item) => {
@@ -3854,7 +3855,7 @@ Template.employeescard.onRendered(function () {
     }
     templateObject.setDeductionLineDropDown();
 
-    templateObject.setSuperannuationDropDown = function() {
+    templateObject.setSuperannuationDropDown = async () => {
         setTimeout(function () {
             $('.superannuationDropDown').editableSelect();
             $('.superannuationDropDown').editableSelect()
