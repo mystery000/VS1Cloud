@@ -254,7 +254,7 @@ Template.productsaleslist.onRendered(()=>{
             let datatablerecordObj = {
               sTitle: v.innerText || '',
               sWidth: sWidth || '',
-              sIndex: v.cellIndex || '',
+              sIndex: v.cellIndex || 0,
               sVisible: columVisible || false,
               sClass: v.className || ''
             };
@@ -431,7 +431,7 @@ Template.productsaleslist.onRendered(()=>{
         let datatablerecordObj = {
           sTitle: v.innerText || '',
           sWidth: sWidth || '',
-          sIndex: v.cellIndex || '',
+          sIndex: v.cellIndex || 0,
           sVisible: columVisible || false,
           sClass: v.className || ''
         };
@@ -619,7 +619,7 @@ Template.productsaleslist.events({
         let datatablerecordObj = {
           sTitle: v.innerText || '',
           sWidth: sWidth || '',
-          sIndex: v.cellIndex || '',
+          sIndex: v.cellIndex || 0,
           sVisible: columVisible || false,
           sClass: v.className || ''
         };

@@ -15,11 +15,11 @@ Template.incomechart.onCreated(()=>{
   templateObject.totalInvoiceCountPerc2 = new ReactiveVar();
   templateObject.totalInvoiceValuePerc2 = new ReactiveVar();
   templateObject.averageInvoiceValuePerc2 = new ReactiveVar();
-  
+
 });
 
 Template.incomechart.onRendered(()=>{
-  const templateObject = Template.instance();  
+  const templateObject = Template.instance();
   let reportService = new ReportService();
   let utilityService = new UtilityService();
 
@@ -69,7 +69,7 @@ Template.incomechart.onRendered(()=>{
         rArrVal[i] = Math.round(rArrAbs[i] / maxValue * 100);
         if (rArrVal[i] < minPerc)
           rArrVal[i] = minPerc;
-      } 
+      }
     }
     return rArrVal;
   }
@@ -119,7 +119,7 @@ Template.incomechart.onRendered(()=>{
     try{
       var curDate = new Date();
       var dateAsOf = curDate.getFullYear() + '-' + ("0" + (curDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (curDate.getDate())).slice(-2);
-      
+
       let data = await reportService.getCardDataReport(dateAsOf);
       if (data.tcarddatareport) {
         let resData = data.tcarddatareport[0];
@@ -164,8 +164,8 @@ Template.incomechart.onRendered(()=>{
       templateObject.setFieldVariance(averageInvoiceValue[0], averageInvoiceValue[1], "spnAverageInvoiceValueVariance", "divAverageInvoiceValueVariance");
       templateObject.setFieldVariance(totalInvoiceValue[0], totalInvoiceValue[1], "spnTotalInvoiceValueVariance", "divTotalInvoiceValueVariance");
     } catch (err) {
-      console.log(err);
-    }  
+
+    }
   };
 
   templateObject.getIncomeReports();

@@ -34,7 +34,7 @@ let defaultCurrencyCode = CountryAbbr;
 Template.purchaseordercard.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.isForeignEnabled = new ReactiveVar(false);
-    
+
     templateObject.records = new ReactiveVar();
     templateObject.CleintName = new ReactiveVar();
     templateObject.Department = new ReactiveVar();
@@ -114,9 +114,9 @@ Template.purchaseordercard.onRendered(() => {
         { index: 0, label: "Product Name", class: "ProductName", width: "300", active: true, display: true },
         { index: 1, label: "Description", class: "Description", width: "", active: true, display: true },
         { index: 2, label: "Qty", class: "Qty", width: "50", active: true, display: true },
-        { index: 3, label: "Ordered", class: "Ordered", width: "75", active: false, display: true },
-        { index: 4, label: "Shipped", class: "Shipped", width: "75", active: false, display: true },
-        { index: 5, label: "BO", class: "BackOrder", width: "75", active: false, display: true },
+        { index: 3, label: "Ordered", class: "Ordered", width: "75", active: true, display: true },
+        { index: 4, label: "Received", class: "Shipped", width: "75", active: true, display: true },
+        { index: 5, label: "BO", class: "BackOrder", width: "75", active: true, display: true },
         { index: 6, label: "Price (Ex)", class: "UnitPriceEx", width: "122", active: true, display: true },
         { index: 7, label: "Price (Inc)", class: "UnitPriceInc", width: "122", active: false, display: true },
         { index: 8, label: "Customer/Job", class: "CustomerJob", width: "110", active: true, display: true },
@@ -132,20 +132,20 @@ Template.purchaseordercard.onRendered(() => {
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       let isBOnShippedQty = Session.get("CloudPurchaseQtyOnly") || false;
       if (isBOnShippedQty) { // false
-        reset_data[2].display = true; 
+        reset_data[2].display = true;
         reset_data[3].display = false;
         reset_data[4].display = false;
         reset_data[5].display = false;
       } else {
-        reset_data[2].display = false; 
+        reset_data[2].display = false;
         reset_data[3].display = true;
         reset_data[4].display = true;
         reset_data[5].display = true;
       }
       if(isBatchSerialNoTracking) {
-        reset_data[13].display = true; 
+        reset_data[13].display = true;
       } else {
-        reset_data[13].display = false; 
+        reset_data[13].display = false;
       }
 
       let templateObject = Template.instance();
@@ -168,13 +168,13 @@ Template.purchaseordercard.onRendered(() => {
             }).catch(function (err) {
             });
           } else {
-            let data = JSON.parse(dataObject[0].data); 
+            let data = JSON.parse(dataObject[0].data);
             // handle process here
           }
         });
       } catch (error) {
-      } 
-      return; 
+      }
+      return;
     }
 
     function showCustomFieldDisplaySettings(reset_data) {
@@ -187,11 +187,11 @@ Template.purchaseordercard.onRendered(() => {
         customData = {
           active: reset_data[r].active,
           id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label, 
+          custfieldlabel: reset_data[r].label,
           class: reset_data[r].class,
           display: reset_data[r].display,
           width: reset_data[r].width ? reset_data[r].width : '',
-          colspan: ["Price (Inc)", "Tax Amt", "Amount (Ex)", "Amount (Inc)"].includes(reset_data[r].label) == true ? (templateObject.isForeignEnabled.get() == true ? 2 : 1) : 1
+          // colspan: ["Price (Inc)", "Tax Amt", "Amount (Ex)"].includes(reset_data[r].label) == true ? (templateObject.isForeignEnabled.get() == true ? 2 : 1) : 1
         };
         custFields.push(customData);
       }
@@ -200,7 +200,7 @@ Template.purchaseordercard.onRendered(() => {
 
     initCustomFieldDisplaySettings("", "tblPurchaseOrderLine");
     // custom field displaysettings
-    
+
     const purchaseService = new PurchaseBoardService();
     const clientsService = new PurchaseBoardService();
     const contactService = new ContactService();
@@ -2019,8 +2019,6 @@ templateObject.getLastPOData = async function() {
                             $('#sltDept').val(getDepartmentVal);
                             $('#sltStatus').val(data.fields.OrderStatus);
                             $('#shipvia').val(data.fields.Shipping);
-                            $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -2260,8 +2258,6 @@ templateObject.getLastPOData = async function() {
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(useData[d].fields.OrderStatus);
                                 $('#shipvia').val(useData[d].fields.Shipping);
-                                $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
@@ -2481,8 +2477,6 @@ templateObject.getLastPOData = async function() {
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(data.fields.OrderStatus);
                                 $('#shipvia').val(data.fields.Shipping);
-                                $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                                 templateObject.attachmentCount.set(0);
                                 if (data.fields.Attachments) {
@@ -2698,8 +2692,6 @@ templateObject.getLastPOData = async function() {
                         $('#sltDept').val(getDepartmentVal);
                         $('#sltStatus').val(data.fields.OrderStatus);
                         $('#shipvia').val(data.fields.Shipping);
-                        $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                        $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -2934,8 +2926,6 @@ templateObject.getLastPOData = async function() {
                 $('#sltDept').val(getDepartmentVal);
                 $('#sltStatus').val(data.fields.OrderStatus);
                 $('#shipvia').val(data.fields.Shipping);
-                $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                 templateObject.attachmentCount.set(0);
                 if (data.fields.Attachments) {
@@ -3122,8 +3112,6 @@ templateObject.getLastPOData = async function() {
         }
     }
 
-
-
     templateObject.getShpVias = function() {
         getVS1Data('TShippingMethod').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -3307,7 +3295,7 @@ templateObject.getLastPOData = async function() {
             $(".lineProductDesc", rowData).text("");
             $(".lineQty", rowData).val("");
             $(".lineOrdered", rowData).val("");
-            $(".lineBo", rowData).text("");
+            $(".lineBackOrder", rowData).text("");
             $(".lineQty", rowData).val("");
             $(".lineUnitPrice", rowData).val("");
             $(".lineTaxRate", rowData).text("");
@@ -4825,9 +4813,7 @@ templateObject.getLastPOData = async function() {
         mediaQuery(x);
         x.addListener(mediaQuery)
     }, 10);
-
     FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
-
 });
 
 Template.purchaseordercard.onRendered(function() {
@@ -5579,13 +5565,13 @@ Template.purchaseordercard.helpers({
     },
 
     displayFieldColspan: (displayfield) => {
-        if(["Price (Inc)", "Tax Amt", "Amount (Ex)", "Amount (Inc)"].includes(displayfield.custfieldlabel)) 
+        if(["Price (Inc)", "Tax Amt", "Amount (Ex)"].includes(displayfield.custfieldlabel))
         {
             if(Template.instance().isForeignEnabled.get() == true) {
                 return 2
             }
             return 1;
-        } 
+        }
         return 1;
     },
 
@@ -5700,7 +5686,7 @@ Template.purchaseordercard.events({
         var targetID = $(event.target).closest('tr').attr('id');
         if (isBOnShippedQty == true) {
             let qtyOrdered = $('#' + targetID + " .lineOrdered").val();
-            let qtyBO = $('#' + targetID + " .lineBo").val();
+            let qtyBO = $('#' + targetID + " .lineBackOrder").val();
             let qtyShipped = $('#' + targetID + " .lineQty").val();
             let boValue = '';
 
@@ -5709,10 +5695,10 @@ Template.purchaseordercard.events({
             }
             if (parseInt(qtyOrdered) < parseInt(qtyShipped)) {
                 $('#' + targetID + " .lineQty").val(qtyOrdered);
-                $('#' + targetID + " .lineBo").val(0);
+                $('#' + targetID + " .lineBackOrder").val(0);
             } else if (parseInt(qtyShipped) <= parseInt(qtyOrdered)) {
                 boValue = parseInt(qtyOrdered) - parseInt(qtyShipped);
-                $('#' + targetID + " .lineBo").text(boValue);
+                $('#' + targetID + " .lineBackOrder").text(boValue);
             }
         }
 
@@ -7576,7 +7562,7 @@ Template.purchaseordercard.events({
                 $('#' + selectLineID + " .lineProductDesc").text('');
                 $('#' + selectLineID + " .lineOrdered").val('');
                 $('#' + selectLineID + " .lineQty").val('');
-                $('#' + selectLineID + " .lineBo").val('');
+                $('#' + selectLineID + " .lineBackOrder").val('');
                 $('#' + selectLineID + " .lineUnitPrice").val('');
                 // $('#' + selectLineID + " .lineCostPrice").val('');
                 $('#' + selectLineID + " .lineSalesLinesCustField1").text('');
@@ -7624,7 +7610,7 @@ Template.purchaseordercard.events({
         $('#myModal4').modal('toggle');
     },
     'click .btnSave': (event, templateObject) => {
-     
+
         saveCurrencyHistory();
 
         let suppliername = $('#edtSupplierName');
@@ -7808,7 +7794,6 @@ Template.purchaseordercard.events({
             var currentPurchaseOrder = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val();
             var objDetails = '';
             if ($('#sltDept').val() === '') {
                 swal('Department has not been selected!', '', 'warning');
@@ -7826,7 +7811,6 @@ Template.purchaseordercard.events({
 
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -7851,7 +7835,6 @@ Template.purchaseordercard.events({
                             ID: currentPurchaseOrder,
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -7876,7 +7859,6 @@ Template.purchaseordercard.events({
                     fields: {
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         SupplierInvoiceNumber: poNumber || ' ',
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
@@ -8389,7 +8371,7 @@ Template.purchaseordercard.events({
         $('.colProductName').removeClass('showColumn');
       }
     },
-    'click .chkDescription': function(event) { 
+    'click .chkDescription': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colDescription').addClass('showColumn');
         $('.colDescription').removeClass('hiddenColumn');
@@ -8455,16 +8437,16 @@ Template.purchaseordercard.events({
     },
 
     'click .chkAmountEx': function (event) {
-      if ($(event.target).is(':checked')) {  
-          $('.chkAmountInc').prop("checked", false); 
+      if ($(event.target).is(':checked')) {
+          $('.chkAmountInc').prop("checked", false);
 
           $('.colAmountInc').addClass('hiddenColumn');
           $('.colAmountInc').removeClass('showColumn');
 
           $('.colAmountEx').addClass('showColumn');
           $('.colAmountEx').removeClass('hiddenColumn');
-        } else { 
-          $('.chkAmountInc').prop("checked", true); 
+        } else {
+          $('.chkAmountInc').prop("checked", true);
 
           $('.colAmountEx').addClass('hiddenColumn');
           $('.colAmountEx').removeClass('showColumn');
@@ -8474,16 +8456,16 @@ Template.purchaseordercard.events({
       }
     },
     'click .chkAmountInc': function(event) {
-      if ($(event.target).is(':checked')) { 
-          $('.chkAmountEx').prop("checked", false); 
+      if ($(event.target).is(':checked')) {
+          $('.chkAmountEx').prop("checked", false);
 
           $('.colAmountEx').addClass('hiddenColumn');
           $('.colAmountEx').removeClass('showColumn');
 
           $('.colAmountInc').addClass('showColumn');
           $('.colAmountInc').removeClass('hiddenColumn');
-      } else { 
-          $('.chkAmountEx').prop("checked", true); 
+      } else {
+          $('.chkAmountEx').prop("checked", true);
 
           $('.colAmountInc').addClass('hiddenColumn');
           $('.colAmountInc').removeClass('showColumn');
@@ -8494,17 +8476,17 @@ Template.purchaseordercard.events({
     },
 
     'click .chkUnitPriceEx': function (event) {
-      if ($(event.target).is(':checked')) { 
-          $('.chkUnitPriceInc').prop("checked", false); 
+      if ($(event.target).is(':checked')) {
+          $('.chkUnitPriceInc').prop("checked", false);
 
           $('.colUnitPriceInc').addClass('hiddenColumn');
           $('.colUnitPriceInc').removeClass('showColumn');
 
           $('.colUnitPriceEx').addClass('showColumn');
           $('.colUnitPriceEx').removeClass('hiddenColumn');
-          
-      } else { 
-          $('.chkUnitPriceInc').prop("checked", true); 
+
+      } else {
+          $('.chkUnitPriceInc').prop("checked", true);
 
           $('.colUnitPriceEx').addClass('hiddenColumn');
           $('.colUnitPriceEx').removeClass('showColumn');
@@ -8514,16 +8496,16 @@ Template.purchaseordercard.events({
       }
     },
     'click .chkUnitPriceInc': function(event) {
-        if ($(event.target).is(':checked')) { 
-          $('.chkUnitPriceEx').prop("checked", false); 
+        if ($(event.target).is(':checked')) {
+          $('.chkUnitPriceEx').prop("checked", false);
 
           $('.colUnitPriceEx').addClass('hiddenColumn');
           $('.colUnitPriceEx').removeClass('showColumn');
 
           $('.colUnitPriceInc').addClass('showColumn');
           $('.colUnitPriceInc').removeClass('hiddenColumn');
-        } else { 
-          $('.chkUnitPriceEx').prop("checked", true); 
+        } else {
+          $('.chkUnitPriceEx').prop("checked", true);
 
           $('.colUnitPriceInc').addClass('hiddenColumn');
           $('.colUnitPriceInc').removeClass('showColumn');
@@ -8558,10 +8540,10 @@ Template.purchaseordercard.events({
       } else {
         $('.colCustomerJob').addClass('hiddenColumn');
         $('.colCustomerJob').removeClass('showColumn');
-      } 
+      }
     },
 
-    "click .chkBackOrder": function (event) { 
+    "click .chkBackOrder": function (event) {
       if ($(event.target).is(':checked')) {
         $('.colBackOrder').addClass('showColumn');
         $('.colBackOrder').removeClass('hiddenColumn');
@@ -8570,7 +8552,7 @@ Template.purchaseordercard.events({
         $('.colBackOrder').removeClass('showColumn');
       }
     },
-    "click .chkShipped": function (event) { 
+    "click .chkShipped": function (event) {
       if ($(event.target).is(':checked')) {
         $('.colShipped').addClass('showColumn');
         $('.colShipped').removeClass('hiddenColumn');
@@ -8579,7 +8561,7 @@ Template.purchaseordercard.events({
         $('.colShipped').removeClass('showColumn');
       }
     },
-    "click .chkOrdered": function (event) { 
+    "click .chkOrdered": function (event) {
       if ($(event.target).is(':checked')) {
         $('.colOrdered').addClass('showColumn');
         $('.colOrdered').removeClass('hiddenColumn');
@@ -8590,15 +8572,15 @@ Template.purchaseordercard.events({
     },
     // display settings
     'change .rngRangeOrdered': function(event) {
-      let range = $(event.target).val(); 
+      let range = $(event.target).val();
       $('.colOrdered').css('width', range);
     },
     'change .rngRangeShipped': function(event) {
-      let range = $(event.target).val(); 
+      let range = $(event.target).val();
       $('.colShipped').css('width', range);
     },
     'change .rngRangeBackOrder': function(event) {
-      let range = $(event.target).val(); 
+      let range = $(event.target).val();
       $('.colBackOrder').css('width', range);
     },
     'change .rngRangeProductName': function(event) {
@@ -8681,7 +8663,7 @@ Template.purchaseordercard.events({
     'click .btnSaveGridSettings': function(event) {
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
-  
+
       $(".displaySettings").each(function (index) {
         var $tblrow = $(this);
         var fieldID = $tblrow.attr("custid") || 0;
@@ -8702,20 +8684,20 @@ Template.purchaseordercard.events({
           class: colthClass,
           display: true
         };
-  
-        lineItems.push(lineItemObj); 
+
+        lineItems.push(lineItemObj);
       });
-  
+
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index); 
-  
+      lineItems.sort((a,b) => a.index - b.index);
+
       try {
         let erpGet = erpDb();
         let tableName = "tblPurchaseOrderLine";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
         let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
 
         $(".fullScreenSpin").css("display", "none");
@@ -8729,7 +8711,7 @@ Template.purchaseordercard.events({
             }).then((result) => {
                 if (result.value) {
                    $('#myModal2').modal('hide');
-                }  
+                }
             });
         } else {
           swal("Something went wrong!", "", "error");
@@ -8737,19 +8719,19 @@ Template.purchaseordercard.events({
       } catch (error) {
         $(".fullScreenSpin").css("display", "none");
         swal("Something went wrong!", "", "error");
-      } 
+      }
     },
     'click .btnResetGridSettings': function(event) {
       let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get(); 
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+      let reset_data = templateObject.reset_data.get();
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       if(isBatchSerialNoTracking) {
-        reset_data[13].display = true; 
+        reset_data[11].display = true;
       } else {
-        reset_data[13].display = false; 
+        reset_data[11].display = false;
       }
-      reset_data = reset_data.filter(redata => redata.display); 
-  
+      reset_data = reset_data.filter(redata => redata.display);
+
       $(".displaySettings").each(function (index) {
         let $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
@@ -9029,7 +9011,6 @@ Template.purchaseordercard.events({
             var currentPurchaseOrder = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val();
             var objDetails = '';
             if (getso_id[1]) {
                 currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -9039,7 +9020,6 @@ Template.purchaseordercard.events({
                         ID: currentPurchaseOrder,
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         SupplierInvoiceNumber: poNumber || ' ',
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
@@ -9065,7 +9045,6 @@ Template.purchaseordercard.events({
                     fields: {
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         SupplierInvoiceNumber: poNumber || ' ',
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
@@ -9309,7 +9288,6 @@ Template.purchaseordercard.events({
                 var currentPurchaseOrder = getso_id[getso_id.length - 1];
                 let uploadedItems = templateObject.uploadedFiles.get();
                 var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                let ForeignExchangeRate = $('#exchange_rate').val();
                 var objDetails = '';
                 if (getso_id[1]) {
                     currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -9319,7 +9297,6 @@ Template.purchaseordercard.events({
                             ID: currentPurchaseOrder,
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -9345,7 +9322,6 @@ Template.purchaseordercard.events({
                         fields: {
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -9601,7 +9577,6 @@ Template.purchaseordercard.events({
             var currentPurchaseOrder = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-            let ForeignExchangeRate = $('#exchange_rate').val();
             var objDetails = '';
             if (getso_id[1]) {
                 currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -9612,7 +9587,6 @@ Template.purchaseordercard.events({
 
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -9637,7 +9611,6 @@ Template.purchaseordercard.events({
 
                             SupplierName: supplier,
                             ForeignExchangeCode: currencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -9662,7 +9635,6 @@ Template.purchaseordercard.events({
                     fields: {
                         SupplierName: supplier,
                         ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         SupplierInvoiceNumber: poNumber || ' ',
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
@@ -10064,7 +10036,6 @@ Template.purchaseordercard.events({
                         var currentPurchaseOrder = getso_id[getso_id.length - 1];
                         let uploadedItems = tpobtnpayment.uploadedFiles.get();
                         var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                        let ForeignExchangeRate = $('#exchange_rate').val();
                         var objDetails = '';
                         if (getso_id[1]) {
                             currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -10075,7 +10046,6 @@ Template.purchaseordercard.events({
 
                                         SupplierName: supplier,
                                         ForeignExchangeCode: currencyCode,
-                                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                         SupplierInvoiceNumber: poNumber || ' ',
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
@@ -10100,7 +10070,6 @@ Template.purchaseordercard.events({
                                         ID: currentPurchaseOrder,
                                         SupplierName: supplier,
                                         ForeignExchangeCode: currencyCode,
-                                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                         SupplierInvoiceNumber: poNumber || ' ',
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
@@ -10125,7 +10094,6 @@ Template.purchaseordercard.events({
                                 fields: {
                                     SupplierName: supplier,
                                     ForeignExchangeCode: currencyCode,
-                                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                     SupplierInvoiceNumber: poNumber || ' ',
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
@@ -10380,7 +10348,6 @@ Template.purchaseordercard.events({
                                 var currentPurchaseOrder = getso_id[getso_id.length - 1];
                                 let uploadedItems = tpobtnpayment.uploadedFiles.get();
                                 var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                                let ForeignExchangeRate = $('#exchange_rate').val();
                                 var objDetails = '';
                                 if (getso_id[1]) {
                                     currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -10391,7 +10358,6 @@ Template.purchaseordercard.events({
 
                                                 SupplierName: supplier,
                                                 ForeignExchangeCode: currencyCode,
-                                                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                                 SupplierInvoiceNumber: poNumber || ' ',
                                                 Lines: splashLineArray,
                                                 OrderTo: billingAddress,
@@ -10416,7 +10382,6 @@ Template.purchaseordercard.events({
                                                 ID: currentPurchaseOrder,
                                                 SupplierName: supplier,
                                                 ForeignExchangeCode: currencyCode,
-                                                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                                 SupplierInvoiceNumber: poNumber || ' ',
                                                 Lines: splashLineArray,
                                                 OrderTo: billingAddress,
@@ -10441,7 +10406,6 @@ Template.purchaseordercard.events({
                                         fields: {
                                             SupplierName: supplier,
                                             ForeignExchangeCode: currencyCode,
-                                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                             SupplierInvoiceNumber: poNumber || ' ',
                                             Lines: splashLineArray,
                                             OrderTo: billingAddress,
@@ -10703,7 +10667,6 @@ Template.purchaseordercard.events({
                         var currentPurchaseOrder = getso_id[getso_id.length - 1];
                         let uploadedItems = tpobtnpayment.uploadedFiles.get();
                         var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                        let ForeignExchangeRate = $('#exchange_rate').val();
                         var objDetails = '';
                         if (getso_id[1]) {
                             currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -10714,7 +10677,6 @@ Template.purchaseordercard.events({
 
                                         SupplierName: supplier,
                                         ForeignExchangeCode: currencyCode,
-                                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                         SupplierInvoiceNumber: poNumber || ' ',
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
@@ -10739,7 +10701,6 @@ Template.purchaseordercard.events({
                                         ID: currentPurchaseOrder,
                                         SupplierName: supplier,
                                         ForeignExchangeCode: currencyCode,
-                                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                         SupplierInvoiceNumber: poNumber || ' ',
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
@@ -10764,7 +10725,6 @@ Template.purchaseordercard.events({
                                 fields: {
                                     SupplierName: supplier,
                                     ForeignExchangeCode: currencyCode,
-                                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                     SupplierInvoiceNumber: poNumber || ' ',
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
@@ -11024,7 +10984,6 @@ Template.purchaseordercard.events({
                     var currentPurchaseOrder = getso_id[getso_id.length - 1];
                     let uploadedItems = tpobtnpayment.uploadedFiles.get();
                     var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                    let ForeignExchangeRate = $('#exchange_rate').val();
                     var objDetails = '';
                     if (getso_id[1]) {
                         currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -11035,7 +10994,6 @@ Template.purchaseordercard.events({
 
                                     SupplierName: supplier,
                                     ForeignExchangeCode: currencyCode,
-                                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                     SupplierInvoiceNumber: poNumber || ' ',
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
@@ -11060,7 +11018,6 @@ Template.purchaseordercard.events({
                                     ID: currentPurchaseOrder,
                                     SupplierName: supplier,
                                     ForeignExchangeCode: currencyCode,
-                                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                     SupplierInvoiceNumber: poNumber || ' ',
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
@@ -11085,7 +11042,6 @@ Template.purchaseordercard.events({
                             fields: {
                                 SupplierName: supplier,
                                 ForeignExchangeCode: currencyCode,
-                                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                 SupplierInvoiceNumber: poNumber || ' ',
                                 Lines: splashLineArray,
                                 OrderTo: billingAddress,
@@ -11471,13 +11427,13 @@ Template.purchaseordercard.events({
             toConvert.forEach((element) => {
                 const mainClass = element.classList[0];
                 const mainValueElement = document.querySelector(`#tblPurchaseOrderLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
-                
-                let value = mainValueElement.childElementCount > 0 ? 
-                    $(mainValueElement).find('input').val() : 
+
+                let value = mainValueElement.childElementCount > 0 ?
+                    $(mainValueElement).find('input').val() :
                     mainValueElement.innerText;
                 value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
                 $(element).text(value);
-         
+
             })
         }, 500);
 
@@ -11488,4 +11444,3 @@ Template.purchaseordercard.events({
 Template.registerHelper('equals', function(a, b) {
     return a === b;
 });
-

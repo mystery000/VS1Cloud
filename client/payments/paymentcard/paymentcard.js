@@ -1389,7 +1389,6 @@ Template.paymentcard.onRendered(() => {
 
     templateObject.getAllClients = function() {
         getVS1Data('TCustomerVS1').then(function(dataObject) {
-            console.log('dataObject', dataObject);
             if (dataObject.length == 0) {
                 clientsService.getClientVS1().then(function(data) {
                     for (let i in data.tcustomervs1) {
@@ -5120,7 +5119,7 @@ Template.paymentcard.events({
             ForeignApplied = Number(ForeignApplied.replace(/[^0-9.-]+/g,""));
         }
 
-       
+
 
         Session.setPersistent('paymentmethod', payMethod);
         Session.setPersistent('bankaccount', bankAccount);
@@ -7598,7 +7597,7 @@ Template.paymentcard.events({
                 };
                 paymentData.push(Line);
             });
-            
+
             let objDetails = {
                 type: "TCustPayments",
                 fields: {
@@ -10162,5 +10161,3 @@ Template.paymentcard.events({
     //     }, 500)
     // }
 });
-
-

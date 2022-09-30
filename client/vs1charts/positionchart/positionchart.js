@@ -51,7 +51,7 @@ Template.positionchart.onRendered(()=>{
   }
   templateObject.titleMonth1.set(currMonth1);
   templateObject.titleMonth2.set(currMonth2);
-  
+
   let avgDebtors = [0, 0];
   let avgCreditors = [0, 0];
   let shortTermCash = [0, 0];
@@ -94,7 +94,7 @@ Template.positionchart.onRendered(()=>{
         rArrVal[i] = Math.round(rArrAbs[i] / maxValue * 100);
         if (rArrVal[i] < minPerc)
           rArrVal[i] = minPerc;
-      } 
+      }
     }
     return rArrVal;
   }
@@ -139,12 +139,12 @@ Template.positionchart.onRendered(()=>{
     }
     $('.' + fieldSelector).html(fieldVariance.toFixed(1));
   }
-  
+
   templateObject.getPositionReports = async () => {
     try{
       var curDate = new Date();
       var dateAsOf = curDate.getFullYear() + '-' + ("0" + (curDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (curDate.getDate())).slice(-2);
-      
+
       let data = await reportService.getCardDataReport(dateAsOf);
       if (data.tcarddatareport) {
         let resData = data.tcarddatareport[0];
@@ -159,7 +159,7 @@ Template.positionchart.onRendered(()=>{
         termAsset[0] = resData.Sheet_AssetToLiab1;
         termAsset[1] = resData.Sheet_AssetToLiab2;
       }
-      
+
       let pArr = [];
       for (var i=0; i<2; i++) {
         pArr.push(avgDebtors[i]);
@@ -209,8 +209,8 @@ Template.positionchart.onRendered(()=>{
       templateObject.setFieldVariance(currentAsset[0], currentAsset[1], "spnCurrentAssetVariance", "divCurrentAssetVariance");
       templateObject.setFieldVariance(termAsset[0], termAsset[1], "spnTermAssetVariance", "divTermAssetVariance");
     } catch (err) {
-      console.log(err);
-    } 
+
+    }
   };
   templateObject.getPositionReports();
 });
@@ -271,4 +271,3 @@ Template.registerHelper('notEquals', function (a, b) {
 Template.registerHelper('containsequals', function (a, b) {
   return (a.indexOf(b) >= 0 );
 });
-

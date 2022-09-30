@@ -592,7 +592,6 @@ Template.timesheet.onRendered(function() {
                 let sumTotalCharge = 0;
                 let sumSumHour = 0;
                 let sumSumHourlyRate = 0;
-                console.log("===", data.ttimesheet);
                 for (let t = 0; t < data.ttimesheet.length; t++) {
 
                     if (seeOwnTimesheets == false) {

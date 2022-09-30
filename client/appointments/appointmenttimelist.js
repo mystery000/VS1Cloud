@@ -548,7 +548,7 @@ Template.appointmenttimelist.onRendered(function() {
                         let datatablerecordObj = {
                             sTitle: v.innerText || '',
                             sWidth: sWidth || '',
-                            sIndex: v.cellIndex || '',
+                            sIndex: v.cellIndex || 0,
                             sVisible: columVisible || false,
                             sClass: v.className || ''
                         };
@@ -974,7 +974,7 @@ Template.appointmenttimelist.onRendered(function() {
                 let datatablerecordObj = {
                     sTitle: v.innerText || '',
                     sWidth: sWidth || '',
-                    sIndex: v.cellIndex || '',
+                    sIndex: v.cellIndex || 0,
                     sVisible: columVisible || false,
                     sClass: v.className || ''
                 };
@@ -1203,7 +1203,7 @@ Template.appointmenttimelist.onRendered(function() {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -1629,7 +1629,7 @@ Template.appointmenttimelist.events({
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };
@@ -1711,7 +1711,6 @@ Template.appointmenttimelist.events({
         const templateObject = Template.instance();
         let selectClient = templateObject.selectedAppointment.get();
 
-        console.log("selectClient", selectClient);
         let selectAppointmentID = templateObject.selectedAppointmentID.get();
         // if (selectClient.length === 0) {
         //     swal('Please select Appointment to generate invoice for!', '', 'info');

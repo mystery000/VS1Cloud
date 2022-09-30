@@ -72,7 +72,7 @@ Template.balancesheetchart.onRendered(()=>{
         rArrVal[i] = Math.round(rArrAbs[i] / maxValue * 100);
         if (rArrVal[i] < minPerc)
           rArrVal[i] = minPerc;
-      } 
+      }
     }
     return rArrVal;
   }
@@ -116,7 +116,7 @@ Template.balancesheetchart.onRendered(()=>{
     try{
       var curDate = new Date();
       var dateAsOf = curDate.getFullYear() + '-' + ("0" + (curDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (curDate.getDate())).slice(-2);
-      
+
       let data = await reportService.getCardDataReport(dateAsOf);
       if (data.tcarddatareport) {
         let resData = data.tcarddatareport[0];
@@ -142,7 +142,7 @@ Template.balancesheetchart.onRendered(()=>{
       totalAgedReceivablesPerc2 = rArr[3];
       totalAgedPayablesPerc2 = rArr[4];
       totalNettAssetsPerc2 = rArr[5];
-      
+
       templateObject.totalAgedReceivablesPerc1.set(totalAgedReceivablesPerc1);
       templateObject.totalAgedPayablesPerc1.set(totalAgedPayablesPerc1);
       templateObject.totalNettAssetsPerc1.set(totalNettAssetsPerc1);
@@ -161,7 +161,7 @@ Template.balancesheetchart.onRendered(()=>{
       templateObject.setFieldVariance(totalAgedPayables[0], totalAgedPayables[1], "spnTotalAgedPayablesVariance", "divTotalAgedPayablesVariance");
       templateObject.setFieldVariance(totalNettAssets[0], totalNettAssets[1], "spnTotalNettAssetVariance", "divTotalNettAssetVariance");
     } catch (err) {
-      console.log(err);
+
     }
   };
   templateObject.getBalanceSheetReports();

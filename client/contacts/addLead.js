@@ -380,7 +380,7 @@ Template.leadscard.onRendered(function () {
                         let temp = dataObject.tcorrespondence.filter(item=>{
                             return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
                         })
-        
+
                         for(let i = 0; i< temp.length; i++) {
                             for (let j = i+1; j< temp.length; j++ ) {
                                 if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
@@ -388,7 +388,7 @@ Template.leadscard.onRendered(function () {
                                 }
                             }
                         }
-        
+
                         temp.map(item=>{
                             if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                                 tempArray.push(item.fields)
@@ -404,7 +404,7 @@ Template.leadscard.onRendered(function () {
                     let temp = dataObj.tcorrespondence.filter(item=>{
                         return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
                     })
-    
+
                     for(let i = 0; i< temp.length; i++) {
                         for (let j = i+1; j< temp.length; j++ ) {
                             if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
@@ -428,7 +428,7 @@ Template.leadscard.onRendered(function () {
                     let temp = dataObject.tcorrespondence.filter(item=>{
                         return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
                     })
-    
+
                     for(let i = 0; i< temp.length; i++) {
                         for (let j = i+1; j< temp.length; j++ ) {
                             if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
@@ -444,7 +444,7 @@ Template.leadscard.onRendered(function () {
                 }
                 templateObject.correspondences.set(tempArray)
             })
-        }) 
+        })
     }
 
     if (currentId.id === "undefined") {
@@ -688,7 +688,7 @@ Template.leadscard.onRendered(function () {
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };
@@ -947,7 +947,7 @@ Template.leadscard.onRendered(function () {
                                 if (result.value) {
                                     $('#addLetterTemplateModal').modal('toggle')
                                     templateObject.getReferenceLetters();
-        
+
                                 } else if (result.dismiss === 'cancel') { }
                             });
                         }).catch(function(err) {
@@ -963,7 +963,7 @@ Template.leadscard.onRendered(function () {
                                     $('#addLetterTemplateModal').modal('toggle')
                                 } else if (result.dismiss === 'cancel') { }
                             });
-                        })  
+                        })
                     })
                 }).catch(function () {
                     swal({
@@ -1488,7 +1488,7 @@ Template.leadscard.events({
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };
@@ -1893,7 +1893,7 @@ Template.leadscard.helpers({
 
         return isMobile;
     },
-    setLeadStatus: (status) => status || 'Unqualified' 
+    setLeadStatus: (status) => status || 'Unqualified'
 });
 
 function getPreviewFile(uploadedFiles, attachmentID) {
