@@ -2,13 +2,12 @@ import moment from "moment";
 import { BaseService } from "../js/base-service.js";
 
 export class ReportService extends BaseService {
-  getDashboardExecutiveReport(dateFrom, dateTo) {
+  getCardDataReport(dateAsOf) {
     let options = {
-      DateFrom: '"' + dateFrom + '"',
-      DateTo: '"' + dateTo + '"',
+      SelDate: '"' + dateAsOf + '"',
     };
     return this.getList(
-      this.ERPObjects.Vs1_DashboardExecutive,
+      this.ERPObjects.TCardDataReport,
       options
     );
   }
@@ -729,7 +728,7 @@ export class ReportService extends BaseService {
         ListType: "'Detail'"
       };
     }
-    return this.getList(this.ERPObjects.T_VS1_Report_Productmovement, options);
+    return this.getList(this.ERPObjects.TProductMovementList, options);
   }
 
   getSerialNumberReport(dateFrom, dateTo, ignoreDate = false) {

@@ -136,12 +136,15 @@ Template.allChartLists.onRendered(function () {
         // on edit mode true
         // $(".on-editor-change-mode").addClass("showelement");
         // $(".on-editor-change-mode").removeClass("hideelement");
-        $('.sortable-chart-widget-js').removeClass("col-md-8 col-md-6 col-md-4");
+        $('.sortable-chart-widget-js').removeClass("col-md-12 col-md-8 col-md-6 col-md-4");
         $('.sortable-chart-widget-js').addClass("editCharts");
         $('.sortable-chart-widget-js').each(function(){
             let className = $(this).data('default-class');
             $(this).addClass(className);
         });
+        if($('.fc-dayGridMonth-button').length > 0){
+            $('.fc-dayGridMonth-button').trigger('click');
+        }
         $(".card").addClass("dimmedChart");
         $(".py-2").removeClass("dimmedChart");
     };
@@ -164,16 +167,118 @@ Template.allChartLists.onRendered(function () {
             }
         }
         if (chartList.length > 0) {
+
+            // Add missing chart to chartList
+            //
+            chartList.forEach((chart) => {
+
+            });
+            let discountEmployeeChart = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSMCharts",
+                    ChartName: "Discount Employee",
+                    ID: 902,
+                    _chartSlug: "dsmcharts__discount_employee"
+                }
+            };
+            chartList.push(discountEmployeeChart);
+            let salesQuotaChart = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSMCharts",
+                    ChartName: "Sales Quota",
+                    ID: 903,
+                    _chartSlug: "dsmcharts__sales_quota"
+                }
+            };
+            chartList.push(salesQuotaChart);
+            let dsmAppointmentListChart = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSMCharts",
+                    ChartName: "Appointment List",
+                    ID: 904,
+                    _chartSlug: "dsmcharts__appointment_list"
+                }
+            };
+            chartList.push(dsmAppointmentListChart);
+            let dsmLeadListChart = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSMCharts",
+                    ChartName: "Lead List",
+                    ID: 905,
+                    _chartSlug: "dsmcharts__lead_list"
+                }
+            };
+            chartList.push(dsmLeadListChart);
+            let performanceQuotaChart = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSCharts",
+                    ChartName: "Performance Quota",
+                    ID: 906,
+                    _chartSlug: "dscharts__performance_quota"
+                }
+            };
+            chartList.push(performanceQuotaChart);
+            let opportunitiesSourceChart = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSCharts",
+                    ChartName: "Opportunities Source",
+                    ID: 907,
+                    _chartSlug: "dscharts__opportunities_source"
+                }
+            };
+            chartList.push(opportunitiesSourceChart);
+            let dsAppointmentListChart = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSCharts",
+                    ChartName: "Appointment List",
+                    ID: 908,
+                    _chartSlug: "dscharts__appointment_list"
+                }
+            };
+            chartList.push(dsAppointmentListChart);
+            let dsLeadListChart = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSCharts",
+                    ChartName: "Lead List",
+                    ID: 909,
+                    _chartSlug: "dscharts__lead_list"
+                }
+            };
+            chartList.push(dsLeadListChart);
+            let accountListChart = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "Dashboard",
+                    ChartName: "Account List",
+                    ID: 1002,
+                    _chartSlug: "dashboard__account_list"
+                }
+            };
+            chartList.push(accountListChart);
             // Hide all charts
             $('.sortable-chart-widget-js').addClass("hideelement");
             // the goal here is to get the right names so it can be used for preferences
             chartList.forEach((chart) => {
                 setTimeout(() => {
                     //chart.fields.active = false; // Will set evething to false
-                    chart.fields._chartSlug =
-                        chart.fields.ChartGroup.toLowerCase() +
-                        "__" +
-                        chart.fields.ChartName.toLowerCase().split(" ").join("_");
+                    if (chart.fields.ChartName == "Appointment List") {
+                        chart.fields._chartSlug = "appointment_list";
+                    } else if (chart.fields.ChartName == "Lead List") {
+                        chart.fields._chartSlug = "lead_list";
+                    } else {
+                        chart.fields._chartSlug =
+                            chart.fields.ChartGroup.toLowerCase() +
+                            "__" +
+                            chart.fields.ChartName.toLowerCase().split(" ").join("_");
+                    }
                     $(`[key='${chart.fields._chartSlug}']`).addClass("chart-visibility");
                     $(`[key='${chart.fields._chartSlug}']`).attr("pref-id", 0);
                     $(`[key='${chart.fields._chartSlug}']`).attr(
@@ -197,7 +302,6 @@ Template.allChartLists.onRendered(function () {
                     );
                     if (chart.fields.ChartGroup == _chartGroup) {
                         defaultChartList.push(chart.fields._chartSlug);
-                        console.log(chart.fields._chartSlug);
                         $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
                             "<i class='far fa-eye'></i>"
                         );
@@ -216,20 +320,9 @@ Template.allChartLists.onRendered(function () {
                         if ( chart.fields._chartSlug == 'inventory__stock_on_hand_and_demand'){
                             $(`[key='contacts__top_10_supplies']`).removeClass("hideelement");
                         }
-                        if ( _chartGroup == 'Dashboard' && ( chart.fields._chartSlug == 'dashboard__monthly_earnings' || chart.fields._chartSlug == 'dashboard__quoted_amounts_/_invoiced_amounts' ) ){
-                            $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
-                        }
-                        if ( _chartGroup == 'DSMCharts' && ( chart.fields._chartSlug == 'spd-employee-chart' || chart.fields._chartSlug == 'spd-gauge-area' ) ){
-                            console.log('DSMCharts');
-                            $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
-                        }
-                        if ( _chartGroup == 'DSCharts' && ( chart.fields._chartSlug == 'sd-comparison-chart' || chart.fields._chartSlug == 'opens-opportunities-chart' ) ){
-                            console.log('DSCharts');
-                            $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
-                        }
-                        if( _chartGroup == 'Dashboard' ){
-                            $(`[key='dashboard__account_list']`).removeClass("hideelement");
-                        }
+                        // if ( _chartGroup == 'Dashboard' && ( chart.fields._chartSlug == 'dashboard__monthly_earnings' || chart.fields._chartSlug == 'dashboard__quoted_amounts_/_invoiced_amounts' ) ){
+                        //     $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
+                        // }
                     } else {
                         $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
                             "<i class='far fa-eye-slash'></i>"
@@ -247,10 +340,17 @@ Template.allChartLists.onRendered(function () {
                         "chart-slug",
                         chart.fields._chartSlug
                     );
-                    $(`[key='${chart.fields._chartSlug}']`).attr(
-                        "chart-group",
-                        chart.fields.ChartGroup
-                    );
+                    if (chart.fields.ChartName == "Appointment List" || chart.fields.ChartName == "Lead List") {
+                        $(`[key='${chart.fields._chartSlug}']`).attr(
+                            "chart-group",
+                            _chartGroup
+                        );
+                    } else {
+                        $(`[key='${chart.fields._chartSlug}']`).attr(
+                            "chart-group",
+                            chart.fields.ChartGroup
+                        );
+                    }
                     $(`[key='${chart.fields._chartSlug}']`).attr(
                         "chart-name",
                         chart.fields.ChartName
@@ -269,7 +369,6 @@ Template.allChartLists.onRendered(function () {
 
         // Now get user preferences
         let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( _tabGroup );
-        // let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( 2 );
         if (tvs1ChartDashboardPreference.length > 0) {
             // if charts to be displayed are specified
             tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
@@ -360,6 +459,12 @@ Template.allChartLists.onRendered(function () {
             $(`[chart-group='${_chartGroup}']`).removeClass('hideelement');
             $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
             $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
+            $(`[chart-group='${_chartGroup}']`).find('.minHeight100').removeClass('minHeight100');
+            // if (_chartGroup == "DSMCharts" || _chartGroup == "DSCharts") {
+            //     $(`[chart-group='${_chartGroup}']`).find('.minHeight100').removeClass('minHeight100');
+            // }
+            //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget');
+            //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget-content');
         }
         await ChartHandler.buildPositions();
         // Handle sorting

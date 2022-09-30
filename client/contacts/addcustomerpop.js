@@ -723,7 +723,7 @@ Template.addcustomerpop.events({
             $('.addcustomerpop #edtCustomerBillingZIP').val('');
             $('.addcustomerpop #bedtCountry').val('');
         }
-        
+
     },
     'click .addcustomerpop .btnSaveCustPOP': async function (event) {
         let templateObject = Template.instance();
@@ -740,7 +740,7 @@ Template.addcustomerpop.events({
         let phone = $('.addcustomerpop #edtCustomerPhone').val();
         let mobile = $('.addcustomerpop #edtCustomerMobile').val();
         if(mobile && mobile !== '') {
-            mobile = contactService.changeMobileFormat(mobile) 
+            mobile = contactService.changeMobileFormat(mobile)
          }
         let fax = $('.addcustomerpop #edtCustomerFax').val();
         let accountno = $('.addcustomerpop #edtClientNo').val();
@@ -1014,7 +1014,7 @@ Template.addcustomerpop.events({
             });
             LoadingOverlay.hide();
         });
-       
+
     },
     'click .addcustomerpop .btnSaveJob': function (event) {
         let templateObject = Template.instance();
@@ -1468,7 +1468,7 @@ Template.addcustomerpop.events({
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };
@@ -2178,15 +2178,18 @@ Template.addcustomerpop.helpers({
         return Template.instance().deliveryMethodList.get();
     },
     clienttypeList: () => {
-        return Template.instance().clienttypeList.get().sort(function (a, b) {
-            if (a == 'NA') {
-                return 1;
-            }
-            else if (b == 'NA') {
-                return -1;
-            }
-            return (a.toUpperCase() > b.toUpperCase()) ? 1 : -1;
-        });
+        if (Template.instance().clienttypeList.get()) {
+            return Template.instance().clienttypeList.get().sort(function (a, b) {
+                if (a == 'NA') {
+                    return 1;
+                } else if (b == 'NA') {
+                    return -1;
+                }
+                return (a.toUpperCase() > b.toUpperCase()) ? 1 : -1;
+            });
+        } else {
+            return null;
+        }
     },
     taxCodeList: () => {
         return Template.instance().taxCodeList.get();

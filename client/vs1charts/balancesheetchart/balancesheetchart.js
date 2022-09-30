@@ -44,8 +44,6 @@ Template.balancesheetchart.onRendered(()=>{
   let totalAgedReceivables = [0, 0];
   let totalAgedPayables = [0, 0];
   let totalNettAssets = [0, 0];
-  let GrandTotalAsset = 0;
-  let GrandTotalLiability = 0;
 
   let totalAgedReceivablesPerc1 = 0;
   let totalAgedPayablesPerc1 = 0;
@@ -74,7 +72,7 @@ Template.balancesheetchart.onRendered(()=>{
         rArrVal[i] = Math.round(rArrAbs[i] / maxValue * 100);
         if (rArrVal[i] < minPerc)
           rArrVal[i] = minPerc;
-      } 
+      }
     }
     return rArrVal;
   }
@@ -117,46 +115,34 @@ Template.balancesheetchart.onRendered(()=>{
   templateObject.getBalanceSheetReports = async () => {
     try{
       var curDate = new Date();
-      var dateTo1 = new Date(curDate.getFullYear(), curDate.getMonth() - 1, 0);
-      var dateTo2 = new Date(curDate.getFullYear(), curDate.getMonth(), 0);
-      var loadDate1 = moment(dateTo1).format("YYYY-MM-DD");
-      var loadDate2 = moment(dateTo2).format("YYYY-MM-DD");
-      var loadDates = [];
-      loadDates.push(loadDate1);
-      loadDates.push(loadDate2);
+      var dateAsOf = curDate.getFullYear() + '-' + ("0" + (curDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (curDate.getDate())).slice(-2);
 
-      let SubAccountTotal = 0;
-      let HeaderAccountTotal = 0;
-      let TotalAsset_Liability = 0;
-      let AccountTree = "";
-      
-      for (var k=0; k<2; k++) {
-        let data = await reportService.getBalanceSheetReport(loadDates[k]);
-        if (data.balancesheetreport) {      
-          for (let i = 0, len = data.balancesheetreport.length; i < len; i++) {
-            SubAccountTotal = data.balancesheetreport[i]["Sub Account Total"];
-            HeaderAccountTotal = data.balancesheetreport[i]["Header Account Total"];
-            TotalAsset_Liability = data.balancesheetreport[i]["Total Asset & Liability"];
-
-            AccountTree = data.balancesheetreport[i]["Account Tree"];
-            if (AccountTree.replace(/\s/g, "") == "TotalAccountsReceivable") {
-              totalAgedReceivables[k] = HeaderAccountTotal;
-            } else if (AccountTree.replace(/\s/g, "") == "TotalAccountsPayable") {
-              totalAgedPayables[k] = SubAccountTotal;
-            } else if (AccountTree.replace(/\s/g, "") == "TOTALASSETS") {
-              GrandTotalAsset = TotalAsset_Liability;
-            } else if (AccountTree.replace(/\s/g, "") == "TOTALLIABILITIES&EQUITY") {
-              GrandTotalLiability = TotalAsset_Liability;
-            } else {
-
-            }
-          }
-          totalNettAssets[k] = GrandTotalAsset - GrandTotalLiability;
-        }
+      let data = await reportService.getCardDataReport(dateAsOf);
+      if (data.tcarddatareport) {
+        let resData = data.tcarddatareport[0];
+        totalAgedReceivables[0] = resData.Bal_Debtors1;
+        totalAgedReceivables[1] = resData.Bal_Debtors2;
+        totalAgedPayables[0] = resData.Bal_Creditors1;
+        totalAgedPayables[1] = resData.Bal_Creditors2;
+        totalNettAssets[0] = resData.Bal_NetAsset1;
+        totalNettAssets[1] = resData.Bal_NetAsset2;
       }
-      [totalAgedReceivablesPerc1, totalAgedPayablesPerc1, totalNettAssetsPerc1] = templateObject.calculatePercent([totalAgedReceivables[0], totalAgedPayables[0], totalNettAssets[0]]);
-      [totalAgedReceivablesPerc2, totalAgedPayablesPerc2, totalNettAssetsPerc2] = templateObject.calculatePercent([totalAgedReceivables[1], totalAgedPayables[1], totalNettAssets[1]]);
-      
+
+      let pArr = [];
+      for (var i=0; i<2; i++) {
+        pArr.push(totalAgedReceivables[i]);
+        pArr.push(totalAgedPayables[i]);
+        pArr.push(totalNettAssets[i]);
+      }
+      let rArr = [];
+      rArr = templateObject.calculatePercent(pArr);
+      totalAgedReceivablesPerc1 = rArr[0];
+      totalAgedPayablesPerc1 = rArr[1];
+      totalNettAssetsPerc1 = rArr[2];
+      totalAgedReceivablesPerc2 = rArr[3];
+      totalAgedPayablesPerc2 = rArr[4];
+      totalNettAssetsPerc2 = rArr[5];
+
       templateObject.totalAgedReceivablesPerc1.set(totalAgedReceivablesPerc1);
       templateObject.totalAgedPayablesPerc1.set(totalAgedPayablesPerc1);
       templateObject.totalNettAssetsPerc1.set(totalNettAssetsPerc1);
@@ -175,7 +161,7 @@ Template.balancesheetchart.onRendered(()=>{
       templateObject.setFieldVariance(totalAgedPayables[0], totalAgedPayables[1], "spnTotalAgedPayablesVariance", "divTotalAgedPayablesVariance");
       templateObject.setFieldVariance(totalNettAssets[0], totalNettAssets[1], "spnTotalNettAssetVariance", "divTotalNettAssetVariance");
     } catch (err) {
-      console.log(err);
+
     }
   };
   templateObject.getBalanceSheetReports();

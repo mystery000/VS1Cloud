@@ -59,6 +59,7 @@ Template.jobprofitabilityreport.onRendered(() => {
     }
     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
+    templateObject.dateAsAt.set(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getJobProfitabilityReportData();
   };
@@ -87,7 +88,7 @@ Template.jobprofitabilityreport.onRendered(() => {
     let data = await CachedHttp.get(erpObject.TJobProfitability, async () => {
       return await reportService.getJobProfitabilityReport( dateFrom, dateTo, ignoreDate);
     }, {
-      useIndexDb: true, 
+      useIndexDb: true,
       useLocalStorage: false,
       validate: (cachedResponse) => {
         return false;
@@ -99,7 +100,7 @@ Template.jobprofitabilityreport.onRendered(() => {
 
     let reportData = [];
     if( data.tjobprofitability.length > 0 ){
-      for (const item of data.tjobprofitability ) {   
+      for (const item of data.tjobprofitability ) {
         let isExist = reportData.filter((subitem) => {
           if( subitem.CompanyName == item.CompanyName ){
               subitem.SubAccounts.push(item)
@@ -116,7 +117,7 @@ Template.jobprofitabilityreport.onRendered(() => {
           });
         }
         $(".fullScreenSpin").css("display", "none");
-      }     
+      }
     }
     // let useData = reportData.filter((item) => {
     //   let TotalOrCost = 0;
@@ -128,7 +129,7 @@ Template.jobprofitabilityreport.onRendered(() => {
     //   item.TotalOrCost = TotalOrCost;
     //   item.TotalCrCost = TotalCrCost;
     //   return item;
-    // });    
+    // });
     templateObject.records.set(reportData);
     if (templateObject.records.get()) {
       setTimeout(function () {
@@ -146,20 +147,20 @@ Template.jobprofitabilityreport.onRendered(() => {
         });
         $(".fullScreenSpin").css("display", "none");
       }, 1000);
-    }  
+    }
 
     LoadingOverlay.hide();
   }
 
-  // templateObject.setReportOptions();
+  templateObject.setReportOptions();
 
 
   templateObject.initDate();
   templateObject.initUploadedImage();
 
   templateObject.loadReport(
-    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-    GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
   LoadingOverlay.hide();
@@ -492,8 +493,8 @@ Template.jobprofitabilityreport.events({
    */
     "change #dateTo, change #dateFrom": (e, templateObject) => {
       templateObject.loadReport(
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
         false
       );
     },
@@ -507,24 +508,19 @@ Template.jobprofitabilityreport.helpers({
   records: () => {
     return Template.instance().records.get();
   },
-  
+
   redirectionType(item) {
     if(item.TransactionType === 'Invoice') {
-      return '#noInfoFound';
       return '/invoicecard?id=' + item.SaleID;
     } else if (item.TransactionType === 'Quote') {
-      return '#noInfoFound';
-      return '/invoicecard?id=' + item.saleId;
+      return 'quotecard?id=' + item.saleId;
     } else if (item.TransactionType === 'Bill') {
-      return '#noInfoFound';
       return '/billcard?id=' + item.saleId;
     } else if (item.TransactionType === 'Timesheet') {
       return '#noInfoFound';
     } else if (item.TransactionType === 'Refund') {
-      return '#noInfoFound';
       return 'refundcard?id=' + item.SaleID;
     } else if (item.TransactionType === 'Purchase Order') {
-      return '#noInfoFound';
       return '/purchaseordercard?id=' + item.saleId;
     } else {
       return '#noInfoFound';

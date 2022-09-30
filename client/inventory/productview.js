@@ -4841,28 +4841,30 @@ Template.productview.events({
                             let bomIndex = objectArray.findIndex(object => {
                                 return object.fields.productName == subs[i].product
                             })
-                            if (bomIndex > -1) {
+                            // if (bomIndex > -1) {
 
                                 html +="<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>";
-                            }
+                            // }else {
+                            //     html += "<button type='button' class='btnShowSub btn btn-primary'>Create Sub</button>"
+                            // }
 
                         html += "</div>"+
                         "<div class='colQty form-group'>"+
                             "<input type='text' class='form-control edtQuantity w-100' value='"+ subs[i].qty +"'>" +
                         "</div>";
 
-                         if (bomIndex > -1) {
+                        //  if (bomIndex > -1) {
 
                                 html += "<div class='colProcess form-group'>"+
-                                "<select type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' value = '"+ subs[i].process +"' ></select></div>"+
+                                "<input type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' value = '"+ subs[i].process +"' /></div>"+
                                 "<div class='colNote form-group'>" +
                                 "<input class='w-100 form-control edtProcessNote'  type='text' value='"+subs[i].note+"'></div>" +
                                 "<div class='colAttachment form-group'><a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-"+subs[i].product.replace(/[|&;$%@"<>()+," "]/g, '')+"' id='btn_Attachment' name='btn_Attachment'><i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div></div>" 
-                        } else {
-                            html += "<div class='colProcess form-group'></div>"+
-                            "<div class='colNote form-group'></div>" +
-                            "<div class='colAttachment form-group'></div>" 
-                        }
+                        // } else {
+                        //     html += "<div class='colProcess form-group'></div>"+
+                        //     "<div class='colNote form-group'></div>" +
+                        //     "<div class='colAttachment form-group'></div>" 
+                        // }
                         
                         html += "<div class='colDelete d-flex align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>" +
                     "</div>"+
@@ -4905,44 +4907,50 @@ Template.productview.events({
     },
 
     'click #BOMSetupModal .btnAddProduct': function (event) {
-        let tempObject = Template.instance();
         let row = $(event.target).closest('.productRow');
+        let tempObject = Template.instance();
+        let parent = row.parent();
+
+
+        let grandParent = parent.parent();
+        let modalElement = $(row).closest('.modal#BOMSetupModal');
+        let topParent = modalElement.parent();
+
+        let count = $(grandParent).find('.product-content').length;
+        if(count > 1) {
+            let lastRow = $(grandParent).find('.product-content')[count-2];
+            if(lastRow && lastRow != null) {
+                if ($(lastRow).find('.edtProductName').val() == '' || $(lastRow).find('.edtProcessName').val()== '' || $(lastRow).find('.edtQuantity').val() == '') {
+                    return 
+                }
+            }
+        }
+
+        
         let colProduct = row.find('.colProduct');
         let colQty = row.find('.colQty');
         let colProcess = row.find('.colProcess');
         let colNote = row.find('.colNote');
         let colAttachment = row.find('.colAttachment');
         let colDelete = row.find('.colDelete');
+        $(colProduct).prepend("<div style='width: 29%'></div><select class='edtProductName edtRaw form-control' id='edtRaw' type='search' style='width: 30%'></select>")
+        $(event.target).remove()
+        $(colProduct).find('.edtProductName').editableSelect()
+        $(colQty).append("<input type='text' class='form-control edtQuantity w-100'/>");
+        $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
+        $(colProcess).append("<select class='edtProcessName form-control w-100' type='search' ></select>")
+        $(colProcess).find('.edtProcessName').editableSelect();
+        $(colNote).append("<input class='w-100 form-control edtProcessNote' type='text'/>");
+        $(colDelete).addClass('d-flex align-items-center justify-content-center')
+        $(colDelete).append("<button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button>")
 
-        if($('#edtRaw').val() != '') {
-            if($(colQty).find('.edtQuantity').val() != '') {
-                let quantity = $(colQty).find('.edtQuantity').val();
-                let edtRaw = colProduct.find('.edtProductName')
-                $(event.target).remove();
-                $(colDelete).addClass('d-flex align-items-center justify-content-center')
-                $(colDelete).append("<button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button>")
-                let parent = row.parent();
-                let grandParent = parent.parent();
-                let modalElement = $(row).closest('.modal#BOMSetupModal');
-                let topParent = modalElement.parent();
-                let bomProducts = tempObject.bomProducts.get();
-                let exist = false;
-                bomProducts.map(product=>{
-                    if(product.fields.productName == $('#edtRaw').val()) {
-                        exist = true
-                    }
-                })
-                if (exist == false) {
-                    while ($('#edtRaw').length) {
-                        $('#edtRaw').removeAttr('id');
-                    }
-                    grandParent.append("<div class='product-content'><div class='d-flex productRow'>" +
+       
+
+        grandParent.append("<div class='product-content'><div class='d-flex productRow'>" +
                         "<div class='colProduct  d-flex form-group'>" +
                         "<button class='btn btn-primary btnAddProduct' style='width: 29%;'>Product+</button>" +
-                        "<input class='edtProductName  edtRaw form-control' id='edtRaw' type='search' style='width: 30%'/>" +
                         "</div>" +
                         "<div class='colQty form-group'>" +
-                        "<input type='text' class='edtQuantity w-100 form-control' value='1'/>" +
                         "</div>" +
                         "<div class='colProcess form-group'>" +
                         "</div>" +
@@ -4952,53 +4960,27 @@ Template.productview.events({
                         "<div class='colDelete'>" +
                         "</div>" +
                         "</div></div>")
-                } else {
-                    while($('#edtRaw').length) {
-                        $('#edtRaw').removeAttr('id');
-                    }
+        let productContentCount = $(grandParent).find('.product-content').length;
 
-                    $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>" )
-                    $(colQty).find('.edtQuantity').val('1');
-                    $(colProcess).append("<select class='edtProcessName form-control w-100' type='search' ></select>")
-                    $(colProcess).find('.edtProcessName').editableSelect()
-                    $(colProcess).find('.edtProcessName').val(subStructure.process)
-                    $(colNote).append("<input class='w-100 form-control edtProcessNote' type='text'/>");
-                    let pName = $(edtRaw).val()
-                    $(colAttachment).append("<a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-"+pName.replace(/[|&;$%@"<>()+," "]/g, '')+"' id='btn_Attachment' name='btn_Attachment'>"+
+        $(colAttachment).append("<a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-"+productContentCount+"' id='btn_Attachment' name='btn_Attachment'>"+
                     "<i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div>")
 
-                  
-                    grandParent.append("<div class='product-content'><div class='d-flex productRow'>" +
-                        "<div class='colProduct d-flex form-group'>" +
-                        "<button class='btn btn-primary btnAddProduct' style='width: 29%;'>Product+</button>" +
-                        "<input class='edtProductName form-control edtRaw' id='edtRaw' type='search'  style='width: 30%'/>" +
+        let attachModalHtml = "<div class='modal fade' role='dialog' tabindex='-1' id='myModalAttachment-"+productContentCount+"'>" +
+        "<div class='modal-dialog modal-dialog-centered' role='document'>" +
+            "<div class='modal-content'>" +
+                "<div class='modal-header'>" +
+                    "<h4>Upload Attachments</h4><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>" +
+                "</div>" +
+                "<div class='modal-body' style='padding: 0px;'>" +
+                    "<div class='divTable file-display'>" +
+                        "<div class='col inboxcol1'>" +
+                            "<img src='/icons/nofiles_icon.jpg' class=' style='width:100%;'>" +
                         "</div>" +
-                        "<div class='colQty form-group'>" +
-                        "<input type='text' class='edtQuantity form-control w-100' value='1'/>" +
-                        "</div>" +
-                        "<div class='colProcess form-group'>" +
-                        "</div>" +
-                        "<div class='colNote form-group'>" +
-                        "</div>" +
-                        "<div class='colAttachment'></div>" +
-                        "<div class='colDelete'></div>" +
-                        "</div></div>")
-                    let attachModalHtml = "<div class='modal fade' role='dialog' tabindex='-1' id='myModalAttachment-"+pName.replace(/[|&;$%@"<>()+," "]/g, '')+"'>" +
-                    "<div class='modal-dialog modal-dialog-centered' role='document'>" +
-                        "<div class='modal-content'>" +
-                            "<div class='modal-header'>" +
-                                "<h4>Upload Attachments</h4><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>" +
-                            "</div>" +
-                            "<div class='modal-body' style='padding: 0px;'>" +
-                                "<div class='divTable file-display'>" +
-                                    "<div class='col inboxcol1'>" +
-                                        "<img src='/icons/nofiles_icon.jpg' class=' style='width:100%;'>" +
-                                    "</div>" +
-                                    "<div class='col inboxcol2' style='text-align: center;'>" +
-                                        "<div>Upload files or add files from the file library.</div>"
-                                        if(tempObject.isMobileDevices.get() == true) {
-                                            attachModalHtml = attachModalHtml +"<div>Capture copies of receipt's or take photo's of completed jobs.</div>"
-                                        }
+                        "<div class='col inboxcol2' style='text-align: center;'>" +
+                            "<div>Upload files or add files from the file library.</div>"
+                            if(tempObject.isMobileDevices.get() == true) {
+                                attachModalHtml = attachModalHtml +"<div>Capture copies of receipt's or take photo's of completed jobs.</div>"
+                            }
 
 
                                         attachModalHtml = attachModalHtml + "<p style='color: #ababab;'>Only users with access to your company can view these files</p>" +
@@ -5039,11 +5021,141 @@ Template.productview.events({
                 "</div>"
                     topParent.append(attachModalHtml);
 
-                }
-                $(colProduct).prepend("<div style='width: 29%'></div>")
-                $(colProcess).find('.edtProcessName')
-            }
-        }
+        // if($('#edtRaw').val() != '') {
+        //     if($(colQty).find('.edtQuantity').val() != '') {
+        //         let quantity = $(colQty).find('.edtQuantity').val();
+        //         let edtRaw = colProduct.find('.edtProductName')
+        //         $(event.target).remove();
+        //         $(colDelete).addClass('d-flex align-items-center justify-content-center')
+        //         $(colDelete).append("<button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button>")
+        //         let parent = row.parent();
+        //         let grandParent = parent.parent();
+        //         let modalElement = $(row).closest('.modal#BOMSetupModal');
+        //         let topParent = modalElement.parent();
+        //         let bomProducts = tempObject.bomProducts.get();
+        //         let exist = false;
+        //         bomProducts.map(product=>{
+        //             if(product.fields.productName == $('#edtRaw').val()) {
+        //                 exist = true
+        //             }
+        //         })
+        //         if (exist == false) {
+        //             while ($('#edtRaw').length) {
+        //                 $('#edtRaw').removeAttr('id');
+        //             }
+
+        //             $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
+        //             $(colProcess).append("<select class='edtProcessName form-control w-100' type='search' ></select>")
+        //             $(colProcess).find('.edtProcessName').editableSelect();
+        //             $(colNote).append("<input class='w-100 form-control edtProcessNote' type='text'/>");
+        //             grandParent.append("<div class='product-content'><div class='d-flex productRow'>" +
+        //                 "<div class='colProduct  d-flex form-group'>" +
+        //                 "<button class='btn btn-primary btnAddProduct' style='width: 29%;'>Product+</button>" +
+        //                 "<input class='edtProductName  edtRaw form-control' id='edtRaw' type='search' style='width: 30%'/>" +
+        //                 "</div>" +
+        //                 "<div class='colQty form-group'>" +
+        //                 "<input type='text' class='edtQuantity w-100 form-control' value='1'/>" +
+        //                 "</div>" +
+        //                 "<div class='colProcess form-group'>" +
+        //                 "</div>" +
+        //                 "<div class='colNote form-group'>" +
+        //                 "</div>" +
+        //                 "<div class='colAttachment form-group'></div>" +
+        //                 "<div class='colDelete'>" +
+        //                 "</div>" +
+        //                 "</div></div>")
+        //         } else {
+        //             while($('#edtRaw').length) {
+        //                 $('#edtRaw').removeAttr('id');
+        //             }
+
+        //             $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>" )
+        //             $(colQty).find('.edtQuantity').val('1');
+        //             $(colProcess).append("<select class='edtProcessName form-control w-100' type='search' ></select>")
+        //             $(colProcess).find('.edtProcessName').editableSelect()
+        //             $(colProcess).find('.edtProcessName').val(subStructure.process)
+        //             $(colNote).append("<input class='w-100 form-control edtProcessNote' type='text'/>");
+        //             let pName = $(edtRaw).val()
+        //             $(colAttachment).append("<a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-"+pName.replace(/[|&;$%@"<>()+," "]/g, '')+"' id='btn_Attachment' name='btn_Attachment'>"+
+        //             "<i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div>")
+
+                  
+        //             grandParent.append("<div class='product-content'><div class='d-flex productRow'>" +
+        //                 "<div class='colProduct d-flex form-group'>" +
+        //                 "<button class='btn btn-primary btnAddProduct' style='width: 29%;'>Product+</button>" +
+        //                 "<input class='edtProductName form-control edtRaw' id='edtRaw' type='search'  style='width: 30%'/>" +
+        //                 "</div>" +
+        //                 "<div class='colQty form-group'>" +
+        //                 "<input type='text' class='edtQuantity form-control w-100' value='1'/>" +
+        //                 "</div>" +
+        //                 "<div class='colProcess form-group'>" +
+        //                 "</div>" +
+        //                 "<div class='colNote form-group'>" +
+        //                 "</div>" +
+        //                 "<div class='colAttachment'></div>" +
+        //                 "<div class='colDelete'></div>" +
+        //                 "</div></div>")
+        //             let attachModalHtml = "<div class='modal fade' role='dialog' tabindex='-1' id='myModalAttachment-"+pName.replace(/[|&;$%@"<>()+," "]/g, '')+"'>" +
+        //             "<div class='modal-dialog modal-dialog-centered' role='document'>" +
+        //                 "<div class='modal-content'>" +
+        //                     "<div class='modal-header'>" +
+        //                         "<h4>Upload Attachments</h4><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>" +
+        //                     "</div>" +
+        //                     "<div class='modal-body' style='padding: 0px;'>" +
+        //                         "<div class='divTable file-display'>" +
+        //                             "<div class='col inboxcol1'>" +
+        //                                 "<img src='/icons/nofiles_icon.jpg' class=' style='width:100%;'>" +
+        //                             "</div>" +
+        //                             "<div class='col inboxcol2' style='text-align: center;'>" +
+        //                                 "<div>Upload files or add files from the file library.</div>"
+        //                                 if(tempObject.isMobileDevices.get() == true) {
+        //                                     attachModalHtml = attachModalHtml +"<div>Capture copies of receipt's or take photo's of completed jobs.</div>"
+        //                                 }
+
+
+        //                                 attachModalHtml = attachModalHtml + "<p style='color: #ababab;'>Only users with access to your company can view these files</p>" +
+        //                             "</div>" +
+        //                         "</div>" +
+        //                     "</div>"+
+        //                     "<div class='modal-footer'>";
+        //                     if(tempObject.isMobileDevices.get() == true) {
+        //                         attachModalHtml = attachModalHtml +"<input type='file' class='img-attachment-upload' id='img-attachment-upload' style='display:none' accept='image/*' capture='camera'>" +
+        //                         "<button class='btn btn-primary btnUploadFile img_new_attachment_btn' type='button'><i class='fas fa-camera' style='margin-right: 5px;'></i>Capture</button>" +
+
+        //                         "<input type='file' class='attachment-upload' id='attachment-upload' style='display:none' multiple accept='.jpg,.gif,.png'>"
+        //                     }else {
+        //                         attachModalHtml = attachModalHtml + "<input type='file' class='attachment-upload' id='attachment-upload' style='display:none' multiple accept='.jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt," +
+        //                         ".pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef," +
+        //                         ".pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg," +
+        //                         "image/gif,image/png,image/bmp,image/tiff,application/pdf," +
+        //                         "application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document," +
+        //                         "application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet," +
+        //                         "application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation," +
+        //                         "application/vnd.oasis.opendocument.formula,text/csv,text/plain,text/rtf,message/rfc822," +
+        //                         "application/vnd.ms-outlook,application/vnd.oasis.opendocument.spreadsheet," +
+        //                         "application/vnd.oasis.opendocument.text,application/x-iwork-keynote-sffkey," +
+        //                         "application/vnd.apple.keynote,application/x-iwork-pages-sffpages," +
+        //                         "application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers," +
+        //                         "application/vnd.apple.numbers,application/zip,application/rar," +
+        //                         "application/x-zip-compressed,application/x-zip,application/x-7z-compressed'>"
+        //                     }
+        //                     attachModalHtml = attachModalHtml +
+        //                         "<button class='btn btn-primary btnUploadFile new_attachment_btn' type='button'><i class='fa fa-cloud-upload' style='margin-right: 5px;'></i>Upload</button>" +
+        //                         "<button class='btn btn-success closeModal' data-dismiss='modal' type='button' style='margin-right: 5px;' autocomplete='off'>" +
+        //                             "<i class='fa fa-save' style='padding-right: 8px;'></i>Save" +
+        //                         "</button>" +
+        //                         "<button class='btn btn-secondary' data-dismiss='modal' type='button'><i class='fa fa-remove' style='margin-right: 5px;'></i>Close</button>" +
+        //                     "</div>"+
+        //                 "</div>"+
+        //             "</div>"+
+        //         "</div>"
+        //             topParent.append(attachModalHtml);
+
+        //         }
+        //         $(colProduct).prepend("<div style='width: 29%'></div>")
+        //         $(colProcess).find('.edtProcessName')
+        //     }
+        // }
 
         // let colProductName = $(colProduct).find('.edtProductName');
         // $(colProductName).attr('id', 'edtRaw');
@@ -5056,37 +5168,55 @@ Template.productview.events({
         let templateObject = Template.instance();
         let bomProducts = templateObject.bomProducts.get();
         let productName = $(event.target).closest('.productRow').find('.edtProductName').val();
+        let processName = $(event.target).closest('.productRow').find('.edtProcessName').val();
+        let quantity = $(event.target).closest('.productRow').find('.edtQuantity').val();
         let bomIndex = bomProducts.findIndex(product=>{
             return product.fields.productName == templateObject.records.get().productname
         })
+        if(productName == '' || quantity == '' || processName == '') {
+            return
+        }
 
-        let index = bomProducts[bomIndex].fields.subs.findIndex(product => {
-            return product.product == productName;
-        });
-        let subs = bomProducts[bomIndex].fields.subs[index].raws
-        if(index > -1) {
-            $(event.target).remove()
-                for (let i = 0; i < subs.length; i++) {
-                    $(row).append("<div class='d-flex productRow'>" +
-                        "<div class= 'd-flex colProduct form-group'>" +
-                        "<div style='width: 60%'></div>" +
-                        "<select class='edtProductName edtRaw form-control' type='search' style='width: 40%'></select>" +
-                        "</div>" +
-                        "<div class='colQty form-group'>" +
-                        "<input type='text' class='edtQuantity w-100 form-control' value='" + subs[i].rawQty + "'/>" +
-                        "</div>" +
-                        "<div class='colProcess form-group'></div>" +
-                        "<div class='colNote form-group'></div>" +
-                        "<div class='colAttachment'></div>" +
-                        "<div class='d-flex colDelete align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>" +
-                        "</div>")
-                        
-                    let elements = $(row).find('.edtProductName')
-                    $(elements[elements.length - 1]).editableSelect();
-                    let inputElements = $(row).find('input.edtProductName');
-                        $(inputElements[inputElements.length - 1]).val(subs[i].rawName)
+        if(bomIndex > -1) {
+            let index = bomProducts[bomIndex].fields.subs.findIndex(product => {
+                return product.product == productName;
+            });
+            let subs = bomProducts[bomIndex].fields.subs[index].raws
+            if(index > -1) {
+                $(event.target).remove()
+                if(subs && subs.length) {
+                    for (let i = 0; i < subs.length; i++) {
+                        $(row).append("<div class='d-flex productRow'>" +
+                            "<div class= 'd-flex colProduct form-group'>" +
+                            "<div style='width: 60%'></div>" +
+                            "<select class='edtProductName edtRaw form-control' type='search' style='width: 40%'></select>" +
+                            "</div>" +
+                            "<div class='colQty form-group'>" +
+                            "<input type='text' class='edtQuantity w-100 form-control' value='" + subs[i].rawQty + "'/>" +
+                            "</div>" +
+                            "<div class='colProcess form-group'>"+
+                            "<select type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' ></select>"+
+                            "</div>" +
+                            "<div class='colNote form-group'></div>" +
+                            "<div class='colAttachment'></div>" +
+                            "<div class='d-flex colDelete align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>" +
+                            "</div>")
+                            
+                        let elements = $(row).find('.edtProductName')
+                        $(elements[elements.length - 1]).editableSelect();
+                        let inputElements = $(row).find('input.edtProductName');
+                            $(inputElements[inputElements.length - 1]).val(subs[i].rawName)
+                        let processes = $(row).find('.edtProcessName');
+                        $(processes[processes.length - 1]).editableSelect();
+                        let processElements = $(row).find('input.edtProcessName');
+                        $(processElements[processElements.length - 1]).val(subs[i].rawProcess)
+                    }
                 }
-                $(row).append("<div class='d-flex productRow'>"+
+                    
+            }
+        }
+
+        $(row).append("<div class='d-flex productRow'>"+
                         "<div class='d-flex colProduct form-group'>"+
                         "<div class='d-flex align-items-center justify-content-end form-group' style='width: 60%'>"+
                         "<button class='btn btn-primary w-25 d-flex align-items-center justify-content-center form-control btnAddSubProduct'><span class='fas fa-plus'></span></button>" +
@@ -5096,17 +5226,21 @@ Template.productview.events({
                         "<div class='colQty'>" +
                         "<input type='text' class='edtQuantity w-100 form-control' />" +
                         "</div>"+
-                        "<div class='colProcess form-group'></div>" +
+                        "<div class='colProcess form-group'>"+
+                        "<select type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' ></select>"+
+                        "</div>" +
                         "<div class='colNote form-group'></div>" +
                         "<div class='colAttachment'></div>" +
                         "<div class='colDelete'></div>"+
                         "</div>")
                         let eles = $(row).find('.edtProductName')
                         $(eles[eles.length - 1]).editableSelect();
-        }
+                        let edtprocesses = $(row).find('.edtProcessName')
+                        $(edtprocesses[edtprocesses.length-1]).editableSelect()
     },
 
     'click #BOMSetupModal .btnAddSubProduct': function(event) {
+        let button  = $(event.target).closest('button.btnAddSubProduct');
         let tempObject = Template.instance();
         let row = $(event.target).closest('.productRow');
         let colProduct = row.find('.colProduct');
@@ -5121,6 +5255,7 @@ Template.productview.events({
                 let quantity = $(colQty).find('.edtQuantity').val();
                 let edtRaw = colProduct.find('.edtProductName')
                 $(event.target).remove();
+                $(button).remove();
                 $(colDelete).addClass('d-flex align-items-center justify-content-center')
                 $(colDelete).append("<button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button>")
                 let parent = row.parent();
@@ -5135,13 +5270,17 @@ Template.productview.events({
                 "<div class='colQty'>" +
                 "<input type='text' class='edtQuantity w-100 form-control' />" +
                 "</div>"+
-                "<div class='colProcess form-group'></div>" +
+                "<div class='colProcess form-group'>"+
+                "<select type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' ></select>"+
+                "</div>" +
                 "<div class='colNote form-group'></div>" +
                 "<div class='colAttachment'></div>" +
                 "<div class='colDelete'></div>"+
                 "</div>")
                 let eles = $(parent).find('.edtProductName')
                 $(eles[eles.length - 1]).editableSelect();
+                let procElements = $(parent).find('.edtProcessName')
+                $(procElements[procElements.length -1]).editableSelect()
             }
         }
     },
@@ -5232,26 +5371,26 @@ Template.productview.events({
         for(let i = 1; i< products.length - 1; i ++) {
             let productRows = products[i].querySelectorAll('.productRow')
             let objectDetail;
-            if(productRows.length == 1) {
-                let _name = $(productRows[0]).find('.edtProductName').val();
-                let _qty = $(productRows[0]).find('.edtQuantity').val();
-                objectDetail = {
-                    product: _name,
-                    quantity: _qty,
-                }
-                //check if this sub product is manufactured or not (currently with localStorage)
-                let bomProductIndex = bomProducts.findIndex(product => {
-                    return product.fields.productName == _name
-                })
+            // if(productRows.length == 1) {
+            //     let _name = $(productRows[0]).find('.edtProductName').val();
+            //     let _qty = $(productRows[0]).find('.edtQuantity').val();
+            //     objectDetail = {
+            //         product: _name,
+            //         quantity: _qty,
+            //     }
+            //     //check if this sub product is manufactured or not (currently with localStorage)
+            //     let bomProductIndex = bomProducts.findIndex(product => {
+            //         return product.fields.productName == _name
+            //     })
 
-                if(bomProductIndex > -1) {
-                    objectDetail.process = $(productRows[0]).find('.edtProcessName').val();
-                    objectDetail.note = $(productRows[0]).find('.edtProcessNote').val();
-                    objectDetail.attachments = JSON.parse($(productRows[0]).find('.attachedFiles').text() != ''?$(productRows[0]).find('.attachedFiles').text(): '[]').uploadedFilesArray || []
-                    objectDetail.raws = bomProducts[bomProductIndex].fields.raws || []
-                }
+            //     // if(bomProductIndex > -1) {
+            //         objectDetail.process = $(productRows[0]).find('.edtProcessName').val();
+            //         objectDetail.note = $(productRows[0]).find('.edtProcessNote').val();
+            //         objectDetail.attachments = JSON.parse($(productRows[0]).find('.attachedFiles').text() != ''?$(productRows[0]).find('.attachedFiles').text(): '[]').uploadedFilesArray || []
+            //         objectDetail.raws = bomProducts[bomProductIndex].fields.raws || []
+            //     // }
 
-            } else {
+            // } else {
                 let _name = $(productRows[0]).find('.edtProductName').val();
                 let _qty = $(productRows[0]).find('.edtQuantity').val();
                 let _process = $(productRows[0]).find('.edtProcessName').val();
@@ -5265,15 +5404,19 @@ Template.productview.events({
                     attachments: _attachments,
                     raws:[]
                 }
-                for(let j = 1; j<productRows.length -1; j++) {
+                for(let j = 1; j<productRows.length; j++) {
                     let _productName = $(productRows[j]).find('.edtProductName').val();
                     let _productQty = $(productRows[j]).find('.edtQuantity').val();
-                    objectDetail.raws.push ({
-                        rawName: _productName,
-                        rawQty: _productQty
-                    })
+                    let _rawProcess = $(productRows[j]).find('.edtProcessName').val();
+                    if(_productName != '' && _productQty != '' && _rawProcess != '') {
+                        objectDetail.raws.push ({
+                            rawName: _productName,
+                            rawQty: _productQty,
+                            rawProcess: _rawProcess
+                        })
+                    }
                 }
-            }
+            // }
             objDetails.subs.push(objectDetail);
         }
 
@@ -5309,7 +5452,10 @@ Template.productview.events({
         document.title = 'Product BOM Setup';
         $("#BOMSetupModal .modal-body").print({
             // title   :  document.title +" | Product Sales Report | "+loggedCompany,
-            // noPrintSelector : ".addSummaryEditor",
+            noPrintSelector : ".btnAddProduct",
+            noPrintSelector : ".btnAddSubProduct",
+            noPrintSelector : ".btn-remove-raw",
+            noPrintSelector : ".btnAddAttachment",
         })
     },
 

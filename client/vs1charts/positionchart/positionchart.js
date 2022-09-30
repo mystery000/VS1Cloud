@@ -51,7 +51,7 @@ Template.positionchart.onRendered(()=>{
   }
   templateObject.titleMonth1.set(currMonth1);
   templateObject.titleMonth2.set(currMonth2);
-  
+
   let avgDebtors = [0, 0];
   let avgCreditors = [0, 0];
   let shortTermCash = [0, 0];
@@ -94,7 +94,7 @@ Template.positionchart.onRendered(()=>{
         rArrVal[i] = Math.round(rArrAbs[i] / maxValue * 100);
         if (rArrVal[i] < minPerc)
           rArrVal[i] = minPerc;
-      } 
+      }
     }
     return rArrVal;
   }
@@ -139,186 +139,78 @@ Template.positionchart.onRendered(()=>{
     }
     $('.' + fieldSelector).html(fieldVariance.toFixed(1));
   }
-  
+
   templateObject.getPositionReports = async () => {
-    var curDate = new Date();
-    var dateTo1 = new Date(curDate.getFullYear(), curDate.getMonth() - 1, 0);
-    var dateTo2 = new Date(curDate.getFullYear(), curDate.getMonth(), 0);
-    
-    var loadDate1 = moment(dateTo1).format("YYYY-MM-DD");
-    var loadDate2 = moment(dateTo2).format("YYYY-MM-DD");
-    var loadDates = [];
-    loadDates.push(loadDate1);
-    loadDates.push(loadDate2);
+    try{
+      var curDate = new Date();
+      var dateAsOf = curDate.getFullYear() + '-' + ("0" + (curDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (curDate.getDate())).slice(-2);
 
-    var fromDates = [];
-    var toDates = [];
-    fromDates.push(dateTo1.getFullYear() + '-' + ("0" + (dateTo1.getMonth() + 1)).slice(-2) + '-' + "01");
-    toDates.push(dateTo1.getFullYear() + '-' + ("0" + (dateTo1.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateTo1.getDate())).slice(-2));
-    fromDates.push(dateTo2.getFullYear() + '-' + ("0" + (dateTo2.getMonth() + 1)).slice(-2) + '-' + "01");
-    toDates.push(dateTo2.getFullYear() + '-' + ("0" + (dateTo2.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateTo2.getDate())).slice(-2));
-    
-    let SubAccountTotal = 0;
-    let HeaderAccountTotal = 0;
-    let TotalCurrentAsset_Liability = 0;
-    let TotalAsset_Liability = 0;
-    let AccountTree = "";
-
-    let agedReceivables = 0;
-    let agedPayables = 0;
-    let cntPayment = 0;
-    let dueDate = "";
-    let paymentDate = "";
-    let orderDate = "";
-    let debtorDays = 0;
-    let creditorDays = 0;
-    let totalDebtorDays = 0;
-    let totalCreditorDays = 0;
-    var i = 0, k = 0, j = 0, m = 0, n = 0;
-    for (k=0; k<2; k++) {
-      agedReceivables = 0;
-      agedPayables = 0;
-      cntPayment = 0;
-      dueDate = "";
-      paymentDate = "";
-      orderDate = "";
-      debtorDays = 0;
-      creditorDays = 0;
-      let data1 = await reportService.getAgedReceivableDetailsSummaryData(fromDates[k], toDates[k], "false", '');
-      let data2 = await reportService.getAgedPayableDetailsSummaryData(fromDates[k], toDates[k], "false", '');      
-      let data = await reportService.getBalanceSheetReport(loadDates[k]);
-
-      if (data1.tarreport) {
-        for (i=0; i<data1.tarreport.length; i++) {
-          agedReceivables += data1.tarreport[i].AmountDue;
-          let data101 = await reportService.getAgedReceivableDetailsData(fromDates[k], toDates[k], "false", data1.tarreport[i].ClientID);
-          if (data101.tarreport) {
-            for (j=0; j<data101.tarreport.length; j++){
-              dueDate = data101.tarreport[j].DueDate;
-              let data102 = await salesService.getCheckPaymentDetailsByName(data101.tarreport[i].Printname);
-              if (data102.tcustomerpayment) {
-                for (m=0; m<data102.tcustomerpayment.length; m++){
-                  paymentDate = data102.tcustomerpayment[m].fields.PaymentDate;
-                }
-              }
-              cntPayment++;
-              if (paymentDate == "")
-                debtorDays = 0;
-              else if (dueDate == "") 
-                debtorDays = 0;
-              else {
-                let arrDate1 = paymentDate.split(" ");
-                let strDate1 = arrDate1[0];
-                let arrStrDate1 = strDate1.split("-");
-                let date1 = new Date(arrStrDate1[0], arrStrDate1[1], arrStrDate1[2]);
-                let arrDate2 = dueDate.split(" ");
-                let strDate2 = arrDate2[0];
-                let arrStrDate2 = strDate2.split("-");
-                let date2 = new Date(arrStrDate2[0], arrStrDate2[1], arrStrDate2[2]);
-                debtorDays = Math.round((date2 - date1) / (1000 * 60 * 60 * 24));
-                if (debtorDays < 0)
-                  debtorDays = 0;
-              }
-              totalDebtorDays += debtorDays;
-            }
-          }
-        }
+      let data = await reportService.getCardDataReport(dateAsOf);
+      if (data.tcarddatareport) {
+        let resData = data.tcarddatareport[0];
+        avgDebtors[0] = resData.Pos_AvgDebtDays1;
+        avgDebtors[1] = resData.Pos_AvgDebtDays2;
+        avgCreditors[0] = resData.Pos_AvgCredDays1;
+        avgCreditors[1] = resData.Pos_AvgCredDays2;
+        shortTermCash[0] = resData.Pos_CashForecast1;
+        shortTermCash[1] = resData.Pos_CashForecast2;
+        currentAsset[0] = resData.Pos_AssetToLiab1;
+        currentAsset[1] = resData.Pos_AssetToLiab2;
+        termAsset[0] = resData.Sheet_AssetToLiab1;
+        termAsset[1] = resData.Sheet_AssetToLiab2;
       }
-      if (cntPayment > 0)
-        avgDebtors[k] = Math.round(totalDebtorDays / cntPayment);
-      cntPayment = 0;
-      if (data2.tarreport) {
-        for (i=0; i<data2.tarreport.length; i++) {
-          agedPayables += data2.tarreport[i].AmountDue;
-          let data201 = await sideBarService.getTAPReportPage(fromDates[k], toDates[k], "false", data2.tarreport[i].ClientID);
-          for (j=0; j<data201.tarreport.length; j++){
-            dueDate = data201.tarreport[j].DueDate;
-            let data202 = contactService.getAllTransListBySupplier(data201.tarreport[i].Printname);
-            if (data202.tbillreport) {
-              for (m=0; m<data202.tbillreport.length; m++){
-                orderDate = data202.tbillreport[m].OrderDate;
-              }
-            }
-            cntPayment++;
-            if (orderDate == "")
-              creditorDays = 0;
-            else if (dueDate == "") 
-              creditorDays = 0;
-            else {
-              let arrDate1 = orderDate.split(" ");
-              let strDate1 = arrDate1[0];
-              let arrStrDate1 = strDate1.split("-");
-              let date1 = new Date(arrStrDate1[0], arrStrDate1[1], arrStrDate1[2]);
-              let arrDate2 = dueDate.split(" ");
-              let strDate2 = arrDate2[0];
-              let arrStrDate2 = strDate2.split("-");
-              let date2 = new Date(arrStrDate2[0], arrStrDate2[1], arrStrDate2[2]);
-              creditorDays = Math.round((date2 - date1) / (1000 * 60 * 60 * 24));
-              if (creditorDays < 0)
-                creditorDays = 0;
-            }
-            totalCreditorDays += creditorDays;
-          }
-        }
-      }
-      if (cntPayment > 0)
-        avgCreditors[k] = Math.round(totalCreditorDays / cntPayment);
-      shortTermCash[k] = agedReceivables - agedPayables;
-      if (data.balancesheetreport) {
-        for (i = 0, len = data.balancesheetreport.length; i < len; i++) {
-          SubAccountTotal = data.balancesheetreport[i]["Sub Account Total"];
-          HeaderAccountTotal = data.balancesheetreport[i]["Header Account Total"];
-          TotalCurrentAsset_Liability = data.balancesheetreport[i]["Total Current Asset & Liability"];
-          TotalAsset_Liability = data.balancesheetreport[i]["Total Asset & Liability"];
 
-          AccountTree = data.balancesheetreport[i]["Account Tree"];
-          if (AccountTree.replace(/\s/g, "") == "TotalCurrentAssets") {
-            totalCurrentAsset = TotalCurrentAsset_Liability;
-          } else if (AccountTree.replace(/\s/g, "") == "TotalCurrentLiabilities") {
-            totalCurrentLiability = TotalCurrentAsset_Liability;
-          } else if (AccountTree.replace(/\s/g, "") == "TotalOtherCurrentAsset") {
-            totalOtherAsset = HeaderAccountTotal;
-          } else if (AccountTree.replace(/\s/g, "") == "TotalOtherCurrentLiability") {
-            totalOtherLiability = HeaderAccountTotal;
-          } else {
-
-          }
-        }
-        currentAsset[k] = totalCurrentAsset - totalCurrentLiability;
-        termAsset[k] = totalOtherAsset - totalOtherLiability;
+      let pArr = [];
+      for (var i=0; i<2; i++) {
+        pArr.push(avgDebtors[i]);
+        pArr.push(avgCreditors[i]);
+        pArr.push(shortTermCash[i]);
+        pArr.push(currentAsset[i]);
+        pArr.push(termAsset[i]);
       }
+      let rArr = [];
+      rArr = templateObject.calculatePercent(pArr);
+      avgDebtorsPerc1 = rArr[0];
+      avgCreditorsPerc1 = rArr[1];
+      shortTermCashPerc1 = rArr[2];
+      currentAssetPerc1 = rArr[3];
+      termAssetPerc1 = rArr[4];
+      avgDebtorsPerc2 = rArr[5];
+      avgCreditorsPerc2 = rArr[6];
+      shortTermCashPerc2 = rArr[7];
+      currentAssetPerc2 = rArr[8];
+      termAssetPerc2 = rArr[9];
+
+      templateObject.avgDebtorsPerc1.set(avgDebtorsPerc1);
+      templateObject.avgCreditorsPerc1.set(avgCreditorsPerc1);
+      templateObject.shortTermCashPerc1.set(shortTermCashPerc1);
+      templateObject.currentAssetPerc1.set(currentAssetPerc1);
+      templateObject.termAssetPerc1.set(termAssetPerc1);
+      templateObject.avgDebtorsPerc2.set(avgDebtorsPerc2);
+      templateObject.avgCreditorsPerc2.set(avgCreditorsPerc2);
+      templateObject.shortTermCashPerc2.set(shortTermCashPerc2);
+      templateObject.currentAssetPerc2.set(currentAssetPerc2);
+      templateObject.termAssetPerc2.set(termAssetPerc2);
+
+      templateObject.setFieldValue(avgDebtors[0], "spnAverageDebtors");
+      templateObject.setFieldValue(avgCreditors[0], "spnAverageCreditors");
+      templateObject.setFieldValue(shortTermCash[0], "spnShortTermCash");
+      templateObject.setFieldValue(currentAsset[0], "spnCurrentAsset");
+      templateObject.setFieldValue(termAsset[0], "spnTermAsset");
+      templateObject.setFieldValue(avgDebtors[1], "spnAverageDebtors2");
+      templateObject.setFieldValue(avgCreditors[1], "spnAverageCreditors2");
+      templateObject.setFieldValue(shortTermCash[1], "spnShortTermCash2");
+      templateObject.setFieldValue(currentAsset[1], "spnCurrentAsset2");
+      templateObject.setFieldValue(termAsset[1], "spnTermAsset2");
+
+      templateObject.setFieldVariance(avgDebtors[0], avgDebtors[1], "spnAverageDebtorsVariance", "divAverageDebtorsVariance");
+      templateObject.setFieldVariance(avgCreditors[0], avgCreditors[1], "spnAverageCreditorsVariance", "divAverageCreditorsVariance");
+      templateObject.setFieldVariance(shortTermCash[0], shortTermCash[1], "spnShortTermCashVariance", "divShortTermCashVariance");
+      templateObject.setFieldVariance(currentAsset[0], currentAsset[1], "spnCurrentAssetVariance", "divCurrentAssetVariance");
+      templateObject.setFieldVariance(termAsset[0], termAsset[1], "spnTermAssetVariance", "divTermAssetVariance");
+    } catch (err) {
+
     }
-
-    [avgDebtorsPerc1, avgCreditorsPerc1, shortTermCashPerc1, currentAssetPerc1, termAssetPerc1] = templateObject.calculatePercent([avgDebtors[0], avgCreditors[0], shortTermCash[0], currentAsset[0], termAsset[0]]);
-    [avgDebtorsPerc2, avgCreditorsPerc2, shortTermCashPerc2, currentAssetPerc2, termAssetPerc2] = templateObject.calculatePercent([avgDebtors[1], avgCreditors[1], shortTermCash[1], currentAsset[1], termAsset[1]]);
-
-    templateObject.avgDebtorsPerc1.set(avgDebtorsPerc1);
-    templateObject.avgCreditorsPerc1.set(avgCreditorsPerc1);
-    templateObject.shortTermCashPerc1.set(shortTermCashPerc1);
-    templateObject.currentAssetPerc1.set(currentAssetPerc1);
-    templateObject.termAssetPerc1.set(termAssetPerc1);
-    templateObject.avgDebtorsPerc2.set(avgDebtorsPerc2);
-    templateObject.avgCreditorsPerc2.set(avgCreditorsPerc2);
-    templateObject.shortTermCashPerc2.set(shortTermCashPerc2);
-    templateObject.currentAssetPerc2.set(currentAssetPerc2);
-    templateObject.termAssetPerc2.set(termAssetPerc2);
-
-    templateObject.setFieldValue(avgDebtors[0], "spnAverageDebtors");
-    templateObject.setFieldValue(avgCreditors[0], "spnAverageCreditors");
-    templateObject.setFieldValue(shortTermCash[0], "spnShortTermCash");
-    templateObject.setFieldValue(currentAsset[0], "spnCurrentAsset");
-    templateObject.setFieldValue(termAsset[0], "spnTermAsset");
-    templateObject.setFieldValue(avgDebtors[1], "spnAverageDebtors2");
-    templateObject.setFieldValue(avgCreditors[1], "spnAverageCreditors2");
-    templateObject.setFieldValue(shortTermCash[1], "spnShortTermCash2");
-    templateObject.setFieldValue(currentAsset[1], "spnCurrentAsset2");
-    templateObject.setFieldValue(termAsset[1], "spnTermAsset2");
-
-    templateObject.setFieldVariance(avgDebtors[0], avgDebtors[1], "spnAverageDebtorsVariance", "divAverageDebtorsVariance");
-    templateObject.setFieldVariance(avgCreditors[0], avgCreditors[1], "spnAverageCreditorsVariance", "divAverageCreditorsVariance");
-    templateObject.setFieldVariance(shortTermCash[0], shortTermCash[1], "spnShortTermCashVariance", "divShortTermCashVariance");
-    templateObject.setFieldVariance(currentAsset[0], currentAsset[1], "spnCurrentAssetVariance", "divCurrentAssetVariance");
-    templateObject.setFieldVariance(termAsset[0], termAsset[1], "spnTermAssetVariance", "divTermAssetVariance");
   };
   templateObject.getPositionReports();
 });
@@ -379,4 +271,3 @@ Template.registerHelper('notEquals', function (a, b) {
 Template.registerHelper('containsequals', function (a, b) {
   return (a.indexOf(b) >= 0 );
 });
-

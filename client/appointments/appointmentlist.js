@@ -928,7 +928,7 @@ Template.appointmentlist.onRendered(async function() {
                         let datatablerecordObj = {
                             sTitle: v.innerText || '',
                             sWidth: sWidth || '',
-                            sIndex: v.cellIndex || '',
+                            sIndex: v.cellIndex || 0,
                             sVisible: columVisible || false,
                             sClass: v.className || ''
                         };
@@ -1429,7 +1429,7 @@ Template.appointmentlist.onRendered(async function() {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -1862,7 +1862,7 @@ Template.appointmentlist.onRendered(async function() {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -3182,7 +3182,7 @@ Template.appointmentlist.events({
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };
@@ -3377,7 +3377,6 @@ Template.appointmentlist.events({
         } else {
             let appointmentService = new AppointmentService();
             var erpGet = erpDb();
-            // console.log("===", URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_InvoiceAppt"');
             var oPost = new XMLHttpRequest();
             oPost.open("POST", URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_InvoiceAppt"', true);
             oPost.setRequestHeader("database", erpGet.ERPDatabase);
@@ -3402,7 +3401,6 @@ Template.appointmentlist.events({
                                     Status: "Converted"
                                 }
                             };
-                            // console.log("objectDataConverted", objectDataConverted);
                             appointmentService.saveAppointment(objectDataConverted).then(function(data) {
                                 FlowRouter.go('/invoicelist?success=true&apptId=' + parseInt(selectAppointmentID));
                             }).catch(function(err) {

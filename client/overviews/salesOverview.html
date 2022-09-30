@@ -261,20 +261,20 @@
 
         <!-- <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 16px;">
             <div class="col d-xl-flex flex-grow-1 align-items-xl-start">
-                <button id="btnRefresh" class="btn btn-primary btnRefresh float-left" type="button" style="margin: 16px;min-width: 117.016px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
-                <div class="btn-group float-left" style="margin: 16px;"><a class="btn btn-primary QuoteList" role="button" href="/quoteslist" style="min-width: 117.016px; background-color: #00A3D3; border-color: #00A3D3;">Quotes</a><button
+                <button id="btnRefresh" class="btn btn-primary btnRefresh float-left" type="button" style="margin: 12px;min-width: 117.016px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                <div class="btn-group float-left" style="margin: 12px;"><a class="btn btn-primary QuoteList" role="button" href="/quoteslist" style="min-width: 117.016px; background-color: #00A3D3; border-color: #00A3D3;">Quotes</a><button
                         class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"></button>
                     <div class="dropdown-menu" role="menu"><a class="dropdown-item QuoteList" role="presentation" href="/quoteslist">Quote List</a><a class="dropdown-item" role="presentation" href="/quotecard" id="newQuote" name="newQuote">+ New
                             Quote</a></div>
                 </div>
-                <div class="btn-group float-left" style="margin: 16px;"><a class="btn btn-primary salesOrderList" role="button" style="color: rgb(255,255,255);min-width: 125px; background-color: #00A3D3; border-color: #00A3D3;"
+                <div class="btn-group float-left" style="margin: 12px;"><a class="btn btn-primary salesOrderList" role="button" style="color: rgb(255,255,255);min-width: 125px; background-color: #00A3D3; border-color: #00A3D3;"
                         href="/salesorderslist" id="salesOrderList" name="salesOrderList">Sales Orders</a><button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"
                         style="background-color: #00A3D3; border-color: #00A3D3;"></button>
                     <div class="dropdown-menu" role="menu"><a class="dropdown-item salesOrderList" role="presentation" href="/salesorderslist">Sales Order List</a><a class="dropdown-item" role="presentation" href="/salesordercard" id="newSalesOrder"
                             name="newSalesOrder">+ New Sales Order</a>
                     </div>
                 </div>
-                <div class="btn-group float-left" style="margin: 16px;"><a class="btn btn-primary invoiceList" role="button" href="/invoicelist" id="invoiceList" name="invoiceList"
+                <div class="btn-group float-left" style="margin: 12px;"><a class="btn btn-primary invoiceList" role="button" href="/invoicelist" id="invoiceList" name="invoiceList"
                         style="min-width: 117.016px; background-color: #00A3D3; border-color: #00A3D3;">Invoices</a><button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"
                         style="background-color: #00A3D3; border-color: #00A3D3;"></button>
                     <div class="dropdown-menu" role="menu"><a class="dropdown-item invoiceList" role="presentation" href="/invoicelist">Invoice List</a>
@@ -353,7 +353,7 @@
                                                             padding-right: 0px !important;
                                                         }
                                                     </style>
-                                                    
+
                                                     {{#each displayfield in displayfields}}
                                                       {{#if displayfield.display}}
                                                       <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
@@ -366,7 +366,7 @@
                                                             <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                             <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
                                                         </div>
-                                                      </div> 
+                                                      </div>
                                                       {{/if}}
                                                     {{/each}}
                                                 </div>
@@ -465,16 +465,16 @@
                     </div>
                     <table id="tblSalesOverview" class="dataTable table table-striped table-bordered tblSalesOverview">
                         <thead>
-                          <tr class="dnd-moved"> 
+                          <tr class="dnd-moved">
                             <th class="th colSortDate hiddenColumn">id</th>
                             {{#each displayfield in displayfields}}
                               {{#if displayfield.display}}
                               <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
-                                  {{displayfield.custfieldlabel}} 
+                                  {{displayfield.custfieldlabel}}
                                 </th>
                               {{/if}}
                             {{/each}}
-                          </tr> 
+                          </tr>
                         </thead>
                         <tbody>
                             {{#if datatablerecords}}
@@ -579,9 +579,9 @@
                                             <th class="th colSaleDate text-nowrap text-left">Sale Date</th>
                                             <th class="th colSalesNo text-nowrap text-left">Sales No.</th>
                                             <th class="th colCustomer text-nowrap text-left">Customer</th>
-                                            <th class="th colAmountEx text-nowrap text-left">Amount(Ex)</th>
+                                            <th class="th colAmountEx text-nowrap text-left">Amount (Ex)</th>
                                             <th class="th colTax text-nowrap text-left">Tax</th>
-                                            <th class="th colAmount text-nowrap text-left">Amount</th>
+                                            <th class="th colAmount text-nowrap text-left">Amount (Inc)</th>
                                             <th class="th colPaid text-nowrap text-left">Paid</th>
                                             <th class="th colBalanceOutstanding text-nowrap text-left">Balance
                                                 Outstanding</th>

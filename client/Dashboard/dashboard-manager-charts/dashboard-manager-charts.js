@@ -181,7 +181,7 @@ Template.dashboardManagerCharts.onRendered(function () {
                 plotBackgroundColor: null,
                 plotBackgroundImage: null,
                 plotBorderWidth: 0,
-                plotShadow: false,
+                plotShadow: false
             },
             title: {
                 text: empData.name,
@@ -265,9 +265,16 @@ Template.dashboardManagerCharts.onRendered(function () {
                     thickness: 30
                 }]
             },
+            plotOptions: {
+                series: {
+                    dataLabels: {
+                        verticalAlign: 'bottom'
+                    }
+                }
+            },
             series: [{
                 name: 'Total Sales ',
-                data: [empData.totalSales],
+                data: [Math.round(empData.totalSales,2)],
                 dial: {
                     radius: '80%',
                     backgroundColor: 'gray',
@@ -278,9 +285,9 @@ Template.dashboardManagerCharts.onRendered(function () {
                 dataLabels: {
                     useHTML: true,
                     enabled: true,
-                    align: 'center',
-                    x: 0,
-                    y: 65,
+                    verticalAlign: 'bottom',
+                    // x: 0,
+                    y: 90,
                     overflow: "allow",
                     borderWidth: 0,
                     className: 'rev-counter',
@@ -317,9 +324,8 @@ Template.dashboardManagerCharts.onRendered(function () {
         });
     };
 
-    templateObject.getDashboardData = async function () {
+    templateObject.getDashboardData = async function (fromDate,toDate,ignoreDate) {
         const employeeObject = await getVS1Data('TEmployee');
-        // const employeeObject = await getVS1Data('TCustomerVS1');
         let employeeNames = [];
         let employeeSalesQuota = [];
         if (employeeObject.length) {
@@ -331,59 +337,46 @@ Template.dashboardManagerCharts.onRendered(function () {
                     // employeeNames.push(employee.fields.EmployeeName);
                     employeeNames.push(employee.fields.FirstName + " " + employee.fields.LastName);
                     employeeSalesQuota.push(parseInt(employee.fields.CustFld12));
-                    // employeeNames.push(employee.fields.CustomerName);
-                    // employeeSalesQuota.push(parseInt(employee.fields.CUSTFLD12));
                 }
             });
             templateObject.employees.set(employees);
         }
-        // if (employeeObject.length) {
-        //     let { tcustomervs1 = [] } = JSON.parse(employeeObject[0].data);
-        //     let employees = [];
-        //     tcustomervs1.forEach(employee => {
-        //         employees.push(employee.fields);
-        //         if(!(isNaN(parseInt(employee.fields.CUSTFLD12)) || parseInt(employee.fields.CUSTFLD12) == 0)) {
-        //             // employeeNames.push(employee.fields.EmployeeName);
-        //             employeeNames.push(employee.fields.ClientName);
-        //             employeeSalesQuota.push(parseInt(employee.fields.CUSTFLD12));
-        //         }
-        //     });
-        //     templateObject.employees.set(employees);
-        // }
+
+        let startUnix = moment().subtract(1, 'months').unix();
+        let endUnix = moment().unix();
+        if (fromDate != "") {
+            let startDate = new Date(fromDate);
+            startUnix = moment(startDate).unix();
+        }
+        if (toDate != "") {
+            let endDate = new Date(toDate);
+            endUnix = moment(endDate).unix();
+        }
 
         getVS1Data('TInvoiceList').then(function (dataObject) {
             if (dataObject.length) {
                 let { tinvoicelist } = JSON.parse(dataObject[0].data);
                 const tinvoicelistGroupBy = _.groupBy(tinvoicelist, 'EmployeeName');
-                // const tinvoicelistGroupBy = _.groupBy(tinvoicelist, 'CustomerName');
                 let employeesByTotalSales = [];
                 _.each(templateObject.employees.get(), employee => {
-                    let lastMonthUnix = moment().subtract(1, 'months').unix();
                     let empName = employee.FirstName + " " + employee.LastName;
                     let employeeData = { name: empName, totalSales: 0, salesQuota: 0, totalDiscount: 0 };
                     if (employee.CustFld12 && Number(employee.CustFld12) != 'NaN' && Number(employee.CustFld12) > 0) {
                         employeeData.salesQuota = Number(employee.CustFld12);
                     }
-                    // let employeeData = { name: employee.ClientName, totalSales: 0, salesQuota: 0, totalDiscount: 0 };
-                    // if (employee.CUSTFLD12 && Number(employee.CUSTFLD12) != 'NaN' && Number(employee.CUSTFLD12) > 0) {
-                    //     employeeData.salesQuota = Number(employee.CUSTFLD12);
-                    // }
                     if (tinvoicelistGroupBy[empName]) {
                         _.each(tinvoicelistGroupBy[empName], invoiceData => {
-                            if (moment(invoiceData.SaleDate).unix() > lastMonthUnix) {
+                            if (ignoreDate) {
                                 employeeData.totalSales += invoiceData.TotalAmountInc;
                                 employeeData.totalDiscount += invoiceData.TotalDiscount;
+                            } else {
+                                if (moment(invoiceData.SaleDate).unix() > startUnix && moment(invoiceData.SaleDate).unix() < endUnix) {
+                                    employeeData.totalSales += invoiceData.TotalAmountInc;
+                                    employeeData.totalDiscount += invoiceData.TotalDiscount;
+                                }
                             }
                         });
                     }
-                    // if(tinvoicelistGroupBy[employee.ClientName]) {
-                    //     _.each(tinvoicelistGroupBy[employee.ClientName], invoiceData => {
-                    //         // if (moment(invoiceData.SaleDate).unix() > lastMonthUnix) {
-                    //             employeeData.totalSales += invoiceData.TotalAmountInc
-                    //             employeeData.totalDiscount += invoiceData.TotalDiscount
-                    //         // }
-                    //     });
-                    // }
                     employeesByTotalSales.push(employeeData);
                 });
                 templateObject.employeesByTotalSales.set(employeesByTotalSales);
@@ -393,8 +386,35 @@ Template.dashboardManagerCharts.onRendered(function () {
         }).catch(function (err) {
         });
     };
-    
-    templateObject.getDashboardData();
+
+    templateObject.setDateVal = function () {
+        const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+        const dateTo = new Date($("#dateTo").datepicker("getDate"));
+        let formatDateFrom =
+            dateFrom.getFullYear() +
+            "-" +
+            (dateFrom.getMonth() + 1) +
+            "-" +
+            dateFrom.getDate();
+        let formatDateTo =
+            dateTo.getFullYear() +
+            "-" +
+            (dateTo.getMonth() + 1) +
+            "-" +
+            dateTo.getDate();
+        if (
+            $("#dateFrom").val().replace(/\s/g, "") == "" &&
+            $("#dateFrom").val().replace(/\s/g, "") == ""
+        ) {
+            templateObject.getDashboardData(formatDateFrom, formatDateTo, true);
+        } else {
+            templateObject.getDashboardData(formatDateFrom, formatDateTo, false);
+        }
+    }
+
+    setTimeout(function(){
+        templateObject.setDateVal();
+    },500);
 });
 
 Template.dashboardManagerCharts.events({
@@ -430,5 +450,5 @@ Template.dashboardManagerCharts.events({
         const fromDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
         const toDate = moment().format('DD-MM-YYYY');
         FlowRouter.go(`/invoicelist?fromDate${fromDate}&toDate=${toDate}`);
-    },
+    }
 });

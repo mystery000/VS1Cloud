@@ -37,7 +37,6 @@ export default class Employee {
 
   static async loadFromId(id) {
     const employee = await new ContactService().getOneEmployeeDataEx(id);
-    console.log("employee");
     return new Employee(employee);
   }
 

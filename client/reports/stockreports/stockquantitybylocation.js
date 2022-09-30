@@ -567,9 +567,10 @@ Template.stockquantitybylocation.helpers({
     return Template.instance().records.get();
   },
   redirectionType(item) {
+    return 'productview?id=' + item.PartsId;
     if(item.type === 'PO') {
       return '#';
-      return '/purchaseordercard?id=' + item.SaleID;
+      
     } else {
       return '#';
       return '#noInfoFound';
