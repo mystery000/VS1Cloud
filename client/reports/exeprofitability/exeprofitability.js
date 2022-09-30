@@ -162,7 +162,7 @@ Template.exeprofitabilityreport.onRendered(() => {
             templateObject.setFieldVariance(totalExpense[0], totalExpense[1], "spnTotalExpenseVariance");
             templateObject.setFieldVariance(nettProfit[0], nettProfit[1], "spnNettProfitVariance");
         } catch (err) {
-            console.log(err);
+
         }
         LoadingOverlay.hide();
     };

@@ -335,9 +335,9 @@ Template.leadlistchart.events({
                                                                        customFields:lineItems,
                                                                        updatedAt: new Date() }}, function(err, idTag) {
                 if (err) {
-                    $('#myModal2').modal('toggle');
+                    $('#myLeadChartModal').modal('toggle');
                 } else {
-                    $('#myModal2').modal('toggle');
+                    $('#myLeadChartModal').modal('toggle');
                 }
             });
         } else {
@@ -346,13 +346,13 @@ Template.leadlistchart.events({
                                     customFields:lineItems,
                                     createdAt: new Date() }, function(err, idTag) {
                 if (err) {
-                    $('#myModal2').modal('toggle');
+                    $('#myLeadChartModal').modal('toggle');
                 } else {
-                    $('#myModal2').modal('toggle');
+                    $('#myLeadChartModal').modal('toggle');
                 }
             });
         }
-        $('#myModal2').modal('toggle');
+        $('#myLeadChartModal').modal('toggle');
     },
     'blur .divcolumn' : function(event){
         let columData = $(event.target).text();

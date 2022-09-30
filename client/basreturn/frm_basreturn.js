@@ -6,6 +6,7 @@ import { UtilityService } from "../utility-service";
 import { ProductService } from "../product/product-service";
 import { AccountService } from "../accounts/account-service";
 import { ReportService } from "../reports/report-service";
+import { OrganisationService } from '../js/organisation-service';
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
@@ -19,6 +20,7 @@ import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let reportService = new ReportService();
+let organisationService = new OrganisationService();
 var times = 0;
 
 Template.basreturn.onCreated(() => {
@@ -222,18 +224,82 @@ Template.basreturn.onRendered(function() {
                         if($("#previousStartDate").val() == "" && dataList.tab1startDate != "" && dataList.tab1endDate != ""){
                             $("#previousStartDate").val(dataList.tab1startDate);
                             $("#previousEndDate").val(dataList.tab1endDate);
+
+                            var fromDate = new Date(dataList.tab1endDate.split("-")[0], parseInt(dataList.tab1endDate.split("-")[1]), 1);
+                            fromDate = moment(fromDate).format("YYYY-MM-DD");
+                            $("#beginmonthlydate").val(fromDate.split("-")[1]+"-01");
+                            $("#currentyear").val(fromDate.split("-")[0]);
+                            if ($("#datemethod1").prop('checked') == true) {                                
+                                var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate").val(toDate);
+                            } else {
+                                var endMonth = parseInt(fromDate.split("-")[1]);
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate").val(toDate);
+                            }
                         }
                         if($("#previousStartDate-t2").val() == "" && dataList.tab2startDate != "" && dataList.tab2endDate != ""){
                             $("#previousStartDate-t2").val(dataList.tab2startDate);
                             $("#previousEndDate-t2").val(dataList.tab2endDate);
+
+                            var fromDate = new Date(dataList.tab2endDate.split("-")[0], parseInt(dataList.tab2endDate.split("-")[1]), 1);
+                            fromDate = moment(fromDate).format("YYYY-MM-DD");
+                            $("#beginmonthlydate-t2").val(fromDate.split("-")[1]+"-01");
+                            $("#currentyear-t2").val(fromDate.split("-")[0]);
+                            if ($("#datemethod1-t2").prop('checked') == true) {                                
+                                var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t2").val(toDate);
+                            } else {
+                                var endMonth = parseInt(fromDate.split("-")[1]);
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t2").val(toDate);
+                            }
                         }
                         if($("#previousStartDate-t2-2").val() == "" && dataList.tab2startDate2 != "" && dataList.tab2endDate2 != ""){
                             $("#previousStartDate-t2-2").val(dataList.tab2startDate2);
                             $("#previousEndDate-t2-2").val(dataList.tab2endDate2);
+
+                            var fromDate = new Date(dataList.tab2endDate2.split("-")[0], parseInt(dataList.tab2endDate2.split("-")[1]), 1);
+                            fromDate = moment(fromDate).format("YYYY-MM-DD");
+                            $("#beginmonthlydate-t2-2").val(fromDate.split("-")[1]+"-01");
+                            $("#currentyear-t2-2").val(fromDate.split("-")[0]);
+                            if ($("#datemethod1-t2-2").prop('checked') == true) {                                
+                                var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t2-2").val(toDate);
+                            } else {
+                                var endMonth = parseInt(fromDate.split("-")[1]);
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t2-2").val(toDate);
+                            }
                         }
                         if($("#previousStartDate-t3").val() == "" && dataList.tab3startDate != "" && dataList.tab3endDate != ""){
                             $("#previousStartDate-t3").val(dataList.tab3startDate);
                             $("#previousEndDate-t3").val(dataList.tab3endDate);
+
+                            var fromDate = new Date(dataList.tab3endDate.split("-")[0], parseInt(dataList.tab3endDate.split("-")[1]), 1);
+                            fromDate = moment(fromDate).format("YYYY-MM-DD");
+                            $("#beginmonthlydate-t3").val(fromDate.split("-")[1]+"-01");
+                            $("#currentyear-t3").val(fromDate.split("-")[0]);
+                            if ($("#datemethod1-t3").prop('checked') == true) {                                
+                                var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t3").val(toDate);
+                            } else {
+                                var endMonth = parseInt(fromDate.split("-")[1]);
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t3").val(toDate);
+                            }
                         }
                     }
                     else{
@@ -1354,6 +1420,15 @@ Template.basreturn.onRendered(function() {
     setTimeout(function() {
         $(document).ready(function() {
             $('.fullScreenSpin').css('display', 'inline-block');
+            organisationService.getOrganisationDetail().then(function(data) {
+                let mainData = data.tcompanyinfo[0];
+                console.log("mainData", mainData);
+                $("#prt_companyName").html(mainData.CompanyName);
+                $("#prt_companyAddress").html(mainData.Address);
+                $("#prt_companyCity").html(mainData.City);
+                $("#prt_companyZipState").html(mainData.PoState+" "+mainData.Postcode);
+                $("#prt_companyPhoneNumber").html(mainData.PhoneNumber);
+            });
             var url = FlowRouter.current().path;
             if (url.indexOf('?id=') > 0) {
                 var getid = url.split('?id=');
@@ -2651,7 +2726,7 @@ Template.basreturn.events({
 
         setTimeout(function() {
             $("a").attr("href", "#");
-            $(".printBasReturn").hide();
+            // $(".printBasReturn").hide();
         }, 100);
     },
     'click .btnRemove': function(event) {
@@ -3222,59 +3297,6 @@ Template.basreturn.events({
             $('.colMemo').css('display', 'none');
         }
     },
-    'click .chkcolCreditEx': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colCreditEx').css('display', 'table-cell');
-            $('.colCreditEx').css('padding', '.75rem');
-            $('.colCreditEx').css('vertical-align', 'top');
-        } else {
-            $('.colCreditEx').css('display', 'none');
-        }
-    },
-    'click .chkcolDebitEx': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colDebitEx').css('display', 'table-cell');
-            $('.colDebitEx').css('padding', '.75rem');
-            $('.colDebitEx').css('vertical-align', 'top');
-        } else {
-            $('.colDebitEx').css('display', 'none');
-        }
-    },
-    'change .rngRangeAccountName': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthAccountName").html(range + '%');
-        $('.colAccountName').css('width', range + '%');
-
-    },
-    'change .rngRangeAccountNo': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthAccountNo").html(range + '%');
-        $('.colAccountNo').css('width', range + '%');
-
-    },
-    'change .rngRangeMemo': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthMemo").html(range + '%');
-        $('.colMemo').css('width', range + '%');
-
-    },
-    'change .rngRangeCreditEx': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthCreditEx").html(range + '%');
-        $('.colCreditEx').css('width', range + '%');
-
-    },
-    'change .rngRangeDebitEx': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthDebitEx").html(range + '%');
-        $('.colDebitEx').css('width', range + '%');
-
-    },
     'blur .divcolumn': function(event) {
         let columData = $(event.target).html();
         let columHeaderUpdate = $(event.target).attr("valueupdate");
@@ -3432,126 +3454,9 @@ Template.basreturn.events({
             }
         }
     },
-    'click .new_attachment_btn': function(event) {
-        $('#attachment-upload').trigger('click');
-
-    },
-    'change #attachment-upload': function(e) {
-        let templateObj = Template.instance();
-        let saveToTAttachment = false;
-        let lineIDForAttachment = false;
-        let uploadedFilesArray = templateObj.uploadedFiles.get();
-
-        let myFiles = $('#attachment-upload')[0].files;
-        let uploadData = utilityService.attachmentUpload(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
-        templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
-        templateObj.attachmentCount.set(uploadData.totalAttachments);
-    },
-    'click .img_new_attachment_btn': function(event) {
-        $('#img-attachment-upload').trigger('click');
-
-    },
-    'change #img-attachment-upload': function(e) {
-        let templateObj = Template.instance();
-        let saveToTAttachment = false;
-        let lineIDForAttachment = false;
-        let uploadedFilesArray = templateObj.uploadedFiles.get();
-
-        let myFiles = $('#img-attachment-upload')[0].files;
-        let uploadData = utilityService.attachmentUpload(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
-        templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
-        templateObj.attachmentCount.set(uploadData.totalAttachments);
-    },
-    'click .remove-attachment': function(event, ui) {
-        let tempObj = Template.instance();
-        let attachmentID = parseInt(event.target.id.split('remove-attachment-')[1]);
-        if (tempObj.$("#confirm-action-" + attachmentID).length) {
-            tempObj.$("#confirm-action-" + attachmentID).remove();
-        } else {
-            let actionElement = '<div class="confirm-action" id="confirm-action-' + attachmentID + '"><a class="confirm-delete-attachment btn btn-default" id="delete-attachment-' + attachmentID + '">' +
-                'Delete</a><button class="save-to-library btn btn-default">Remove & save to File Library</button></div>';
-            tempObj.$('#attachment-name-' + attachmentID).append(actionElement);
-        }
-        tempObj.$("#new-attachment2-tooltip").show();
-
-    },
-    'click .file-name': function(event) {
-        let attachmentID = parseInt(event.currentTarget.parentNode.id.split('attachment-name-')[1]);
-        let templateObj = Template.instance();
-        let uploadedFiles = templateObj.uploadedFiles.get();
-        $('#myModalAttachment').modal('hide');
-        let previewFile = {};
-        let input = uploadedFiles[attachmentID].fields.Description;
-        previewFile.link = 'data:' + input + ';base64,' + uploadedFiles[attachmentID].fields.Attachment;
-        previewFile.name = uploadedFiles[attachmentID].fields.AttachmentName;
-        let type = uploadedFiles[attachmentID].fields.Description;
-        if (type === 'application/pdf') {
-            previewFile.class = 'pdf-class';
-        } else if (type === 'application/msword' || type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-            previewFile.class = 'docx-class';
-        } else if (type === 'application/vnd.ms-excel' || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-            previewFile.class = 'excel-class';
-        } else if (type === 'application/vnd.ms-powerpoint' || type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
-            previewFile.class = 'ppt-class';
-        } else if (type === 'application/vnd.oasis.opendocument.formula' || type === 'text/csv' || type === 'text/plain' || type === 'text/rtf') {
-            previewFile.class = 'txt-class';
-        } else if (type === 'application/zip' || type === 'application/rar' || type === 'application/x-zip-compressed' || type === 'application/x-zip,application/x-7z-compressed') {
-            previewFile.class = 'zip-class';
-        } else {
-            previewFile.class = 'default-class';
-        }
-
-        if (type.split('/')[0] === 'image') {
-            previewFile.image = true
-        } else {
-            previewFile.image = false
-        }
-        templateObj.uploadedFile.set(previewFile);
-
-        $('#files_view').modal('show');
-
-        return;
-    },
-    'click .confirm-delete-attachment': function(event, ui) {
-        let tempObj = Template.instance();
-        tempObj.$("#new-attachment2-tooltip").show();
-        let attachmentID = parseInt(event.target.id.split('delete-attachment-')[1]);
-        let uploadedArray = tempObj.uploadedFiles.get();
-        let attachmentCount = tempObj.attachmentCount.get();
-        $('#attachment-upload').val('');
-        uploadedArray.splice(attachmentID, 1);
-        tempObj.uploadedFiles.set(uploadedArray);
-        attachmentCount--;
-        if (attachmentCount === 0) {
-            let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
-            $('#file-display').html(elementToAdd);
-        }
-        tempObj.attachmentCount.set(attachmentCount);
-        if (uploadedArray.length > 0) {
-            let utilityService = new UtilityService();
-            utilityService.showUploadedAttachment(uploadedArray);
-        } else {
-            $(".attchment-tooltip").show();
-        }
-    },
-    'click .save-to-library': function(event, ui) {
-        $('.confirm-delete-attachment').trigger('click');
-    },
-    'click #btn_Attachment': function() {
-        let templateInstance = Template.instance();
-        let uploadedFileArray = templateInstance.uploadedFiles.get();
-        if (uploadedFileArray.length > 0) {
-            let utilityService = new UtilityService();
-            utilityService.showUploadedAttachment(uploadedFileArray);
-        } else {
-            $(".attchment-tooltip").show();
-        }
-    },
     'click .btnBack': function(event) {
         event.preventDefault();
         history.back(1);
-
-
     }
 
 });

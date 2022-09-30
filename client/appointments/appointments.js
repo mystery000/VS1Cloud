@@ -73,6 +73,8 @@ Template.appointments.onCreated(function () {
   };
   templateObject.repeatDays.set(dayObj);
   templateObject.toupdatelogid = new ReactiveVar();
+  templateObject.isAccessLevels = new ReactiveVar();
+  templateObject.productFees = new ReactiveVar([]);
 });
 
 async function sendAppointmentEmail() {
@@ -937,7 +939,7 @@ Template.appointments.onRendered(function () {
             //$("#btnHold").prop("disabled", true);
           }
 
-          if (result[0].aEndTime != "") {
+          if (result[0].aEndTime != "" && templateObject.isAccessLevels.get() == false) {
             $("#btnHold").prop("disabled", true);
             $("#btnStartAppointment").prop("disabled", true);
             $("#btnStopAppointment").prop("disabled", true);
@@ -1588,7 +1590,7 @@ Template.appointments.onRendered(function () {
             //$("#btnHold").prop("disabled", true);
           }
 
-          if (result[0].aEndTime != "") {
+          if (result[0].aEndTime != "" && templateObject.isAccessLevels.get() == false) {
             $("#btnHold").prop("disabled", true);
             $("#btnStartAppointment").prop("disabled", true);
             $("#btnStopAppointment").prop("disabled", true);
@@ -3223,7 +3225,7 @@ Template.appointments.onRendered(function () {
                     $("#btnHold").prop("disabled", false);
                   }
 
-                  if (result[0].aEndTime != "") {
+                  if (result[0].aEndTime != "" && templateObject.isAccessLevels.get() == false) {
                     $("#btnHold").prop("disabled", true);
                     $("#btnStartAppointment").prop("disabled", true);
                     $("#btnStopAppointment").prop("disabled", true);
@@ -4804,7 +4806,7 @@ Template.appointments.onRendered(function () {
                 $("#btnHold").prop("disabled", false);
               }
 
-              if (result[0].aEndTime != "") {
+              if (result[0].aEndTime != "" && templateObject.isAccessLevels.get() == false) {
                 $("#btnHold").prop("disabled", true);
                 $("#btnStartAppointment").prop("disabled", true);
                 $("#btnStopAppointment").prop("disabled", true);
@@ -9408,7 +9410,7 @@ Template.appointments.onRendered(function () {
                   ) {
                     //$("#btnHold").prop("disabled", true);
                   }
-                  if (result[0].aEndTime != "") {
+                  if (result[0].aEndTime != "" && templateObject.isAccessLevels.get() == false) {
                     $("#btnHold").prop("disabled", true);
                     $("#btnStartAppointment").prop("disabled", true);
                     $("#btnStopAppointment").prop("disabled", true);
@@ -11094,7 +11096,7 @@ Template.appointments.events({
           //$("#btnHold").prop("disabled", true);
         }
 
-        if (result[0].aEndTime != "") {
+        if (result[0].aEndTime != "" && templateObject.isAccessLevels.get() == false) {
           $("#btnHold").prop("disabled", true);
           $("#btnStartAppointment").prop("disabled", true);
           $("#btnStopAppointment").prop("disabled", true);
@@ -11104,16 +11106,16 @@ Template.appointments.events({
           $("#tActualEndTime").prop("disabled", true);
           $("#txtActualHoursSpent").prop("disabled", true);
         }
-        if (result[0].aEndTime != "") {
-          $("#btnHold").prop("disabled", true);
-          $("#btnStartAppointment").prop("disabled", true);
-          $("#btnStopAppointment").prop("disabled", true);
-          $("#startTime").prop("disabled", true);
-          $("#endTime").prop("disabled", true);
-          $("#tActualStartTime").prop("disabled", true);
-          $("#tActualEndTime").prop("disabled", true);
-          $("#txtActualHoursSpent").prop("disabled", true);
-        }
+        // if (result[0].aEndTime != "") {
+        //   $("#btnHold").prop("disabled", true);
+        //   $("#btnStartAppointment").prop("disabled", true);
+        //   $("#btnStopAppointment").prop("disabled", true);
+        //   $("#startTime").prop("disabled", true);
+        //   $("#endTime").prop("disabled", true);
+        //   $("#tActualStartTime").prop("disabled", true);
+        //   $("#tActualEndTime").prop("disabled", true);
+        //   $("#txtActualHoursSpent").prop("disabled", true);
+        // }
 
         // $(".paused").hide();
         // $("#btnHold").prop("disabled", false);
@@ -16553,6 +16555,34 @@ Template.appointments.events({
       //}, 500);
     }
   },
+  'click #sidebarToggleAppointments': function(event) {
+       var newnav = document.getElementById("colEmployeeList");
+       if (window.getComputedStyle(newnav).display === "none") {
+           document.getElementById("colEmployeeList").style.display = "block";
+       } else {
+           document.getElementById("colEmployeeList").style.display = "none";
+           document.getElementById("colCalendar").style.width = "100vw";
+       }
+   },
+   'click .addAppointmentEmp': function(event) {
+       let empID = $(event.currentTarget).attr('id').split("_")[1];
+       $('#employee_name').val($("#employeeName_" + empID).text());
+   },
+   'click .chkServiceCard': function(event) {
+       templateObject = Template.instance();
+       let productFees = templateObject.productFees.get();
+       let productFeesID = $(event.target).attr('id').split("-")[1];
+       productFeesID = productFeesID.split("x")[0];
+       if ($(event.target).prop('checked') == true) {
+           productFees.push(productFeesID);
+       } else {
+           productFees.splice(productFees.indexOf(productFeesID), 1);
+       }
+       templateObject.productFees.set(productFees);
+   },
+   'click #btnselProductFees': function(event) {
+       templateObject = Template.instance();
+   }
 });
 
 Template.appointments.helpers({

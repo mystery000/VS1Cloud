@@ -281,7 +281,7 @@ Template.supplierpayment.onRendered(function() {
                 let datatablerecordObj = {
                     sTitle: v.innerText || '',
                     sWidth: sWidth || '',
-                    sIndex: v.cellIndex || '',
+                    sIndex: v.cellIndex || 0,
                     sVisible: columVisible || false,
                     sClass: v.className || ''
                 };
@@ -562,7 +562,7 @@ Template.supplierpayment.onRendered(function() {
                         let datatablerecordObj = {
                             sTitle: v.innerText || '',
                             sWidth: sWidth || '',
-                            sIndex: v.cellIndex || '',
+                            sIndex: v.cellIndex || 0,
                             sVisible: columVisible || false,
                             sClass: v.className || ''
                         };
@@ -841,7 +841,7 @@ Template.supplierpayment.onRendered(function() {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -1116,7 +1116,7 @@ Template.supplierpayment.onRendered(function() {
                   let datatablerecordObj = {
                       sTitle: v.innerText || '',
                       sWidth: sWidth || '',
-                      sIndex: v.cellIndex || '',
+                      sIndex: v.cellIndex || 0,
                       sVisible: columVisible || false,
                       sClass: v.className || ''
                   };
@@ -1454,7 +1454,7 @@ Template.supplierpayment.events({
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };
@@ -1799,15 +1799,15 @@ Template.supplierpayment.events({
             toConvert.forEach((element) => {
                 const mainClass = element.classList[0];
                 const mainValueElement = document.querySelector(`#tblSupplierPaymentcard tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
-                
-                let value = mainValueElement.childElementCount > 0 ? 
-                    $(mainValueElement).find('input').val() : 
+
+                let value = mainValueElement.childElementCount > 0 ?
+                    $(mainValueElement).find('input').val() :
                     mainValueElement.innerText;
 
                 $(element).attr("value", convertToForeignAmount(value, rate, false));
                 value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
                 $(element).text(value);
-        
+
             })
         }, 500);
 

@@ -19,7 +19,7 @@ let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 
 /**
- * 
+ *
  * @returns {Array} []
  */
 const getPayRuns = () => {
@@ -212,7 +212,6 @@ Template.payrundetails.onRendered(function () {
     });
 
 
-    console.log("employee", employees);
 
     return employees;
   };
@@ -271,9 +270,9 @@ Template.payrundetails.onRendered(function () {
           earnings: 0.0
         });
 
-    
+
         payRunsHistory.push( payRunDetails);
-  
+
         localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
       } else {
         payRunDetails.employees = Employee.fromList(payRunDetails.employees);
@@ -341,7 +340,7 @@ Template.payrundetails.onRendered(function () {
     await templateObject.payRunDetails.set(payRunDetails);
 
     await templateObject.calculateTableTotal();
-    LoadingOverlay.hide();   
+    LoadingOverlay.hide();
   };
 
   templateObject.calculateTableTotal = async () => {
@@ -406,7 +405,7 @@ Template.payrundetails.onRendered(function () {
 
     window.location.href = "/payrolloverview";
 
-  } 
+  }
 
   templateObject.loadPayRunData();
 });
@@ -435,9 +434,6 @@ Template.payrundetails.events({
 Template.payrundetails.helpers({
   countEmployees: () => {
     const payRunDetails = (Template.instance().payRunDetails.get()).employees;
-    if(payRunDetails) {
-      return 0;
-    }
     return payRunDetails.employees.length;
   },
   payRunDetails: () => {

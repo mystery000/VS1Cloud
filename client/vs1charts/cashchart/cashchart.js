@@ -8,7 +8,7 @@ Template.cashchart.onCreated(()=>{
   const templateObject = Template.instance();
   templateObject.titleMonth1 = new ReactiveVar();
   templateObject.titleMonth2 = new ReactiveVar();
-  
+
   templateObject.cashReceivedPerc1 = new ReactiveVar();
   templateObject.cashSpentPerc1 = new ReactiveVar();
   templateObject.cashSurplusPerc1 = new ReactiveVar();
@@ -20,7 +20,7 @@ Template.cashchart.onCreated(()=>{
 });
 
 Template.cashchart.onRendered(()=>{
-  const templateObject = Template.instance();  
+  const templateObject = Template.instance();
   let reportService = new ReportService();
   let utilityService = new UtilityService();
 
@@ -74,7 +74,7 @@ Template.cashchart.onRendered(()=>{
         rArrVal[i] = Math.round(rArrAbs[i] / maxValue * 100);
         if (rArrVal[i] < minPerc)
           rArrVal[i] = minPerc;
-      } 
+      }
     }
     return rArrVal;
   }
@@ -113,12 +113,12 @@ Template.cashchart.onRendered(()=>{
     }
     $('.' + fieldSelector).html(fieldVariance.toFixed(1));
   }
-  
+
   templateObject.getCashReports = async () => {
     try{
       var curDate = new Date();
       var dateAsOf = curDate.getFullYear() + '-' + ("0" + (curDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (curDate.getDate())).slice(-2);
-      
+
       let data = await reportService.getCardDataReport(dateAsOf);
       if (data.tcarddatareport) {
         let resData = data.tcarddatareport[0];
@@ -131,7 +131,7 @@ Template.cashchart.onRendered(()=>{
         bankBalance[0] = resData.Cash_Balance1;
         bankBalance[1] = resData.Cash_Balance2;
       }
-      
+
       let pArr = [];
       for (var i=0; i<2; i++) {
         pArr.push(cashReceived[i]);
@@ -173,8 +173,8 @@ Template.cashchart.onRendered(()=>{
       templateObject.setFieldVariance(cashSurplus[0], cashSurplus[1], "spnCashSurplusVariance", "divCashSurplusVariance");
       templateObject.setFieldVariance(bankBalance[0], bankBalance[1], "spnBankBalanceVariance", "divBankBalanceVariance");
     } catch (err) {
-      console.log(err);
-    }  
+
+    }
   };
   templateObject.getCashReports();
 });

@@ -391,7 +391,8 @@ export class SideBarService extends BaseService {
     options = {
       ListType: "Detail",
       OrderBy: '"PARTSID desc"',
-      Search: 'PARTNAME="' + dataSearchName + '" OR PARTSID="' + dataSearchName + '" OR BARCODE="' + dataSearchName + '"',
+      LimitCount: parseInt(initialReportLoad),
+      search: 'PARTNAME="'+ dataSearchName+ '" OR BARCODE="' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TProductList, options);
   }
@@ -548,14 +549,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSupplierPayment, options);
   }
 
-  getNewCustomerByNameOrID(dataSearchName) {
-    let options = "";
-    options = {
-      ListType: "Detail",
-      select:'[Companyname] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
-    };
-    return this.getList(this.ERPObjects.TCustomerVS1, options);
-  }
+
 
   getNewEmployeeByNameOrID(dataSearchName) {
     let options = "";
@@ -853,6 +847,15 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TCustomerVS1, options);
   }
 
+  getNewCustomerByNameOrID(dataSearchName) {
+    let options = "";
+    options = {
+      ListType: "Detail",
+      select:'[Companyname] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
+    };
+    return this.getList(this.ERPObjects.TCustomerVS1, options);
+  }
+
   checkAllowanceByName(earningName) {
     let options = {
       ListType: "Detail",
@@ -867,7 +870,7 @@ export class SideBarService extends BaseService {
       //ListType: "Detail",
       //select: '[name] f7like "' + dataSearchName + '"',
       IgnoreDates:true,
-      Search: 'Company = "' + dataSearchName + '" OR Employeename = "' + dataSearchName + '"',
+      search: 'Company='+ dataSearchName+ ' OR Employeename="' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TERPCombinedContactsVS1, options);
   }

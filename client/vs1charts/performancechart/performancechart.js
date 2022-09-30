@@ -8,7 +8,7 @@ Template.performancechart.onCreated(()=>{
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
   templateObject.dateAsAt = new ReactiveVar();
-  
+
   templateObject.grossProfitMarginPerc1 = new ReactiveVar();
   templateObject.netProfitMarginPerc1 = new ReactiveVar();
   templateObject.returnOnInvestmentPerc1 = new ReactiveVar();
@@ -23,7 +23,7 @@ Template.performancechart.onRendered(()=>{
   const templateObject = Template.instance();
   let reportService = new ReportService();
   let utilityService = new UtilityService();
-  
+
   var currentDate = new Date();
   const monSml = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   var currMonth1 = "", currMonth2 = "";
@@ -77,7 +77,7 @@ Template.performancechart.onRendered(()=>{
         rArrVal[i] = Math.round(rArrAbs[i] / maxValue * 100);
         if (rArrVal[i] < minPerc)
           rArrVal[i] = minPerc;
-      } 
+      }
     }
     return rArrVal;
   }
@@ -127,7 +127,7 @@ Template.performancechart.onRendered(()=>{
     try{
       var curDate = new Date();
       var dateAsOf = curDate.getFullYear() + '-' + ("0" + (curDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (curDate.getDate())).slice(-2);
-      
+
       let data = await reportService.getCardDataReport(dateAsOf);
       if (data.tcarddatareport) {
         let resData = data.tcarddatareport[0];
@@ -138,7 +138,7 @@ Template.performancechart.onRendered(()=>{
         investReturns[0] = resData.Perf_ROI1;
         investReturns[1] = resData.Perf_ROI2;
       }
-      
+
       let pArr = [];
       for (var i=0; i<2; i++) {
         pArr.push(grossProfitMg[i]);
@@ -172,7 +172,7 @@ Template.performancechart.onRendered(()=>{
       templateObject.setFieldVariance(netProfitMg[0], netProfitMg[1], "spnNetProfitMarginVariance", "divNetProfitMarginVariance");
       templateObject.setFieldVariance(investReturns[0], investReturns[1], "spnReturnInvestVariance", "divReturnInvestVariance");
     } catch (err) {
-      console.log(err);
+
     }
   };
   templateObject.getPerformanceReports();
@@ -222,4 +222,3 @@ Template.registerHelper('notEquals', function (a, b) {
 Template.registerHelper('containsequals', function (a, b) {
   return (a.indexOf(b) >= 0 );
 });
-

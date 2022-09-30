@@ -154,7 +154,7 @@ Template.exebalancesheetreport.onRendered(() => {
             templateObject.setFieldVariance(totalAgedPayables[0], totalAgedPayables[1], "spnTotalAgedPayablesVariance");
             templateObject.setFieldVariance(totalNettAssets[0], totalNettAssets[1], "spnTotalNettAssetVariance");
         } catch (err) {
-            console.log(err);
+
         }
         LoadingOverlay.hide();
     };

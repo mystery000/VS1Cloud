@@ -320,9 +320,9 @@ Template.allChartLists.onRendered(function () {
                         if ( chart.fields._chartSlug == 'inventory__stock_on_hand_and_demand'){
                             $(`[key='contacts__top_10_supplies']`).removeClass("hideelement");
                         }
-                        if ( _chartGroup == 'Dashboard' && ( chart.fields._chartSlug == 'dashboard__monthly_earnings' || chart.fields._chartSlug == 'dashboard__quoted_amounts_/_invoiced_amounts' ) ){
-                            $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
-                        }
+                        // if ( _chartGroup == 'Dashboard' && ( chart.fields._chartSlug == 'dashboard__monthly_earnings' || chart.fields._chartSlug == 'dashboard__quoted_amounts_/_invoiced_amounts' ) ){
+                        //     $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
+                        // }
                     } else {
                         $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
                             "<i class='far fa-eye-slash'></i>"
@@ -340,10 +340,17 @@ Template.allChartLists.onRendered(function () {
                         "chart-slug",
                         chart.fields._chartSlug
                     );
-                    $(`[key='${chart.fields._chartSlug}']`).attr(
-                        "chart-group",
-                        chart.fields.ChartGroup
-                    );
+                    if (chart.fields.ChartName == "Appointment List" || chart.fields.ChartName == "Lead List") {
+                        $(`[key='${chart.fields._chartSlug}']`).attr(
+                            "chart-group",
+                            _chartGroup
+                        );
+                    } else {
+                        $(`[key='${chart.fields._chartSlug}']`).attr(
+                            "chart-group",
+                            chart.fields.ChartGroup
+                        );
+                    }
                     $(`[key='${chart.fields._chartSlug}']`).attr(
                         "chart-name",
                         chart.fields.ChartName
@@ -453,6 +460,9 @@ Template.allChartLists.onRendered(function () {
             $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
             $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
             $(`[chart-group='${_chartGroup}']`).find('.minHeight100').removeClass('minHeight100');
+            // if (_chartGroup == "DSMCharts" || _chartGroup == "DSCharts") {
+            //     $(`[chart-group='${_chartGroup}']`).find('.minHeight100').removeClass('minHeight100');
+            // }
             //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget');
             //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget-content');
         }

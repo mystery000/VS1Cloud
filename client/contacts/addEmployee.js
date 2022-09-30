@@ -879,7 +879,7 @@ Template.employeescard.onRendered(function () {
                         let datatablerecordObj = {
                             sTitle: v.innerText || '',
                             sWidth: sWidth || '',
-                            sIndex: v.cellIndex || '',
+                            sIndex: v.cellIndex || 0,
                             sVisible: columVisible || false,
                             sClass: v.className || ''
                         };
@@ -1047,7 +1047,7 @@ Template.employeescard.onRendered(function () {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -1205,7 +1205,7 @@ Template.employeescard.onRendered(function () {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -1277,7 +1277,7 @@ Template.employeescard.onRendered(function () {
         });
     }
 
-    
+
 
     if (currentId.id == "undefined") {
         currentDate = new Date();
@@ -2680,10 +2680,8 @@ Template.employeescard.onRendered(function () {
         if(type == "earningLines"){
             let payTemplateEarningLines = [];
             let checkPayTemplateEarningLine = templateObject.payTemplateEarningLineInfo.get();
-            if( Array.isArray( checkPayTemplateEarningLine ) ){
-                payTemplateEarningLines = PayTemplateEarningLine.fromList(
-                    checkPayTemplateEarningLine
-                ).filter((item) => {
+            if( Array.isArray( checkPayTemplateEarningLine ) && checkPayTemplateEarningLine.length > 0 ){
+                payTemplateEarningLines = checkPayTemplateEarningLine.filter((item) => {
                     if ( parseInt( item.EmployeeID ) == parseInt( employeeID ) && item.Active == true) {
                         return item;
                     }
@@ -2754,7 +2752,7 @@ Template.employeescard.onRendered(function () {
             }
             return null;
         }, {
-            useIndexDb: true, 
+            useIndexDb: true,
             useLocalStorage: false,
             validate: (cachedResponse) => {
                 return false;
@@ -9330,7 +9328,7 @@ Template.employeescard.events({
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };

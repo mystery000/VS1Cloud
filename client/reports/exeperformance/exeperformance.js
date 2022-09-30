@@ -154,7 +154,7 @@ Template.exeperformancereport.onRendered(() => {
             templateObject.setFieldVariance(netProfitMg[0], netProfitMg[1], "spnNetProfitMarginVariance");
             templateObject.setFieldVariance(investReturns[0], investReturns[1], "spnReturnInvestVariance");
         } catch (err) {
-            console.log(err);
+
         }
         LoadingOverlay.hide();
     };
