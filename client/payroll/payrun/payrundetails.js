@@ -41,6 +41,8 @@ Template.payrundetails.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.calendarPeriod = new ReactiveVar([]);
   templateObject.payRunDetails = new ReactiveVar();
+
+  templateObject.countEmployees = new ReactiveVar(0);
 });
 
 Template.payrundetails.onRendered(function () {
@@ -338,6 +340,7 @@ Template.payrundetails.onRendered(function () {
   
    // templateObject.loadSuperAnnuations();
     await templateObject.payRunDetails.set(payRunDetails);
+    templateObject.countEmployees.set(payRunDetails.employees.length);
 
     await templateObject.calculateTableTotal();
     LoadingOverlay.hide();
@@ -360,6 +363,7 @@ Template.payrundetails.onRendered(function () {
 
 
     templateObject.payRunDetails.set(payRunData);
+
   }
 
   /**
@@ -433,8 +437,7 @@ Template.payrundetails.events({
 
 Template.payrundetails.helpers({
   countEmployees: () => {
-    const payRunDetails = (Template.instance().payRunDetails.get()).employees;
-    return payRunDetails.employees.length;
+    return Template.instance().countEmployees.get();
   },
   payRunDetails: () => {
     return Template.instance().payRunDetails.get();
