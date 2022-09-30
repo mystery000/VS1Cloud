@@ -181,7 +181,7 @@ Template.dashboardManagerCharts.onRendered(function () {
                 plotBackgroundColor: null,
                 plotBackgroundImage: null,
                 plotBorderWidth: 0,
-                plotShadow: false,
+                plotShadow: false
             },
             title: {
                 text: empData.name,
@@ -265,6 +265,13 @@ Template.dashboardManagerCharts.onRendered(function () {
                     thickness: 30
                 }]
             },
+            plotOptions: {
+                series: {
+                    dataLabels: {
+                        verticalAlign: 'bottom'
+                    }
+                }
+            },
             series: [{
                 name: 'Total Sales ',
                 data: [Math.round(empData.totalSales,2)],
@@ -278,9 +285,9 @@ Template.dashboardManagerCharts.onRendered(function () {
                 dataLabels: {
                     useHTML: true,
                     enabled: true,
-                    align: 'center',
-                    x: 0,
-                    y: 65,
+                    verticalAlign: 'bottom',
+                    // x: 0,
+                    y: 90,
                     overflow: "allow",
                     borderWidth: 0,
                     className: 'rev-counter',
