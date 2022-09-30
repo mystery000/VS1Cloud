@@ -174,18 +174,24 @@
         {{#if equals isaccountoverview true}}
 
         {{else}}
-        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="26" data-default-class="col-md-12" chart-group="Dashboard" card-active="true" key="dashboard__account_list">
+        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="26" data-default-class="col-md-12" key="dashboard__account_list">
             {{> accountslistchart}}
         </div>
         {{/if}}
         <!-- position 17 to 18 -->
         {{> dashboardManagerCharts}}
-        <!-- position 21, 22 -->
-        {{> dashboardSalesCharts}}
-        <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="27" data-default-class="col-md-4" chart-group="AppointmentList" card-active="true" key="appointment_list">
+        <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="24" data-default-class="col-md-4" key="dsmcharts__appointment_list">
             {{> appointmentsWidget}}
         </div>
-        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="28" data-default-class="col-md-12" chart-group="LeadList" card-active="true" key="lead_list">
+        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="25" data-default-class="col-md-12" key="dsm_charts__lead_list">
+            {{> leadlistchart}}
+        </div>
+        <!-- position 27, 28 -->
+        {{> dashboardSalesCharts}}
+        <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="29" data-default-class="col-md-4" key="dscharts__appointment_list">
+            {{> appointmentsWidget}}
+        </div>
+        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="30" data-default-class="col-md-12" key="ds_charts__lead_list">
             {{> leadlistchart}}
         </div>
     </div>
