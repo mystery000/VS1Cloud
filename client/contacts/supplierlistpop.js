@@ -411,7 +411,7 @@ Template.supplierlistpop.onRendered(function () {
                         let datatablerecordObj = {
                             sTitle: v.innerText || '',
                             sWidth: sWidth || '',
-                            sIndex: v.cellIndex || '',
+                            sIndex: v.cellIndex || 0,
                             sVisible: columVisible || false,
                             sClass: v.className || ''
                         };
@@ -913,7 +913,7 @@ Template.supplierlistpop.onRendered(function () {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -1299,7 +1299,7 @@ Template.supplierlistpop.onRendered(function () {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -1730,7 +1730,7 @@ Template.supplierlistpop.events({
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };

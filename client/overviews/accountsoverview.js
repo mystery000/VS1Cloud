@@ -1493,9 +1493,9 @@ Template.accountsoverview.events({
                         },
                         function(err, idTag) {
                             if (err) {
-                                $("#myModal2").modal("toggle");
+                                $("#myAccountModal").modal("toggle");
                             } else {
-                                $("#myModal2").modal("toggle");
+                                $("#myAccountModal").modal("toggle");
                             }
                         }
                     );
@@ -1512,16 +1512,16 @@ Template.accountsoverview.events({
                         },
                         function(err, idTag) {
                             if (err) {
-                                $("#myModal2").modal("toggle");
+                                $("#myAccountModal").modal("toggle");
                             } else {
-                                $("#myModal2").modal("toggle");
+                                $("#myAccountModal").modal("toggle");
                             }
                         }
                     );
                 }
             }
         }
-        $("#myModal2").modal("toggle");
+        $("#myAccountModal").modal("toggle");
         //Meteor._reload.reload();
     },
     "blur .divcolumn": function(event) {

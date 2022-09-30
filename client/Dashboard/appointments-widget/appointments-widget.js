@@ -4888,6 +4888,7 @@ Template.appointmentsWidget.onRendered(function () {
         saveAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
         stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service]."
     };
+    /*
     smsService.getSMSSettings().then((result) => {
     if (result.terppreference.length > 0) {
         for (let i = 0; i < result.terppreference.length; i++) {
@@ -4905,7 +4906,64 @@ Template.appointmentsWidget.onRendered(function () {
     }
     }).catch((error) => {
 
+    });*/
+
+    getVS1Data('TERPPreference').then(function(dataObject) {
+        if (dataObject.length == 0) {
+            smsService.getSMSSettings().then((result) => {
+              addVS1Data('TERPPreference', JSON.stringify(result));
+              if (result.terppreference.length > 0) {
+                  for (let i = 0; i < result.terppreference.length; i++) {
+                      switch(result.terppreference[i].PrefName) {
+                          case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
+                          case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
+                          case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                          case "VS1HEADERSMSMSG": smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
+                          case "VS1SAVESMSMSG": smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
+                          case "VS1STARTSMSMSG": smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
+                          case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+                      }
+                  }
+                  templateObject.defaultSMSSettings.set(smsSettings);
+              }
+            });
+        } else {
+            let result = JSON.parse(dataObject[0].data);
+            if (result.terppreference.length > 0) {
+                for (let i = 0; i < result.terppreference.length; i++) {
+                    switch(result.terppreference[i].PrefName) {
+                        case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
+                        case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
+                        case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                        case "VS1HEADERSMSMSG": smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
+                        case "VS1SAVESMSMSG": smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
+                        case "VS1STARTSMSMSG": smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
+                        case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+                    }
+                }
+                templateObject.defaultSMSSettings.set(smsSettings);
+            }
+        }
+    }).catch(function(err) {
+        smsService.getSMSSettings().then((result) => {
+          addVS1Data('TERPPreference', JSON.stringify(result));
+          if (result.terppreference.length > 0) {
+              for (let i = 0; i < result.terppreference.length; i++) {
+                  switch(result.terppreference[i].PrefName) {
+                      case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
+                      case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
+                      case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                      case "VS1HEADERSMSMSG": smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
+                      case "VS1SAVESMSMSG": smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
+                      case "VS1STARTSMSMSG": smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
+                      case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+                  }
+              }
+              templateObject.defaultSMSSettings.set(smsSettings);
+          }
+        });
     });
+
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
         return new Promise(async (resolve, reject) => {
             const smsSettings = templateObject.defaultSMSSettings.get();
@@ -9445,7 +9503,7 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                         }
                     }
                     document.getElementById("appID").value = max + 1;
-        
+
                 } else {
                     document.getElementById("appID").value = 1;
                 }
@@ -9474,7 +9532,7 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             //   }
             //
             // }
-        
+
             //templateObject.getAllProductData();
             }
             $('#customerListModal').modal('hide');
@@ -9515,7 +9573,7 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                         }
                     }
                     document.getElementById("appID").value = max + 1;
-        
+
                 } else {
                     document.getElementById("appID").value = 1;
                 }
@@ -9544,7 +9602,7 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             //   }
             //
             // }
-        
+
             //templateObject.getAllProductData();
             }
             $('#customerListModal').modal('hide');
@@ -9585,7 +9643,7 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                         }
                     }
                     document.getElementById("appID").value = max + 1;
-        
+
                 } else {
                     document.getElementById("appID").value = 1;
                 }
@@ -9614,7 +9672,7 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             //   }
             //
             // }
-        
+
             //templateObject.getAllProductData();
             }
             $('#customerListModal').modal('hide');

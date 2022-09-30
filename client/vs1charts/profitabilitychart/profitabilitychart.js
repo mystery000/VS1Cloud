@@ -47,7 +47,7 @@ Template.profitabilitychart.onRendered(() => {
   let grossProfit = [0, 0];
   let totalExpense = [0, 0];
   let nettProfit = [0, 0];
-  
+
   let totalSalesPerc1 = 0;
   let grossProfitPerc1 = 0;
   let totalExpensePerc1 = 0;
@@ -77,7 +77,7 @@ Template.profitabilitychart.onRendered(() => {
         rArrVal[i] = Math.round(rArrAbs[i] / maxValue * 100);
         if (rArrVal[i] < minPerc)
           rArrVal[i] = minPerc;
-      } 
+      }
     }
     return rArrVal;
   }
@@ -133,7 +133,7 @@ Template.profitabilitychart.onRendered(() => {
     try {
       var curDate = new Date();
       var dateAsOf = curDate.getFullYear() + '-' + ("0" + (curDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (curDate.getDate())).slice(-2);
-      
+
       let data = await reportService.getCardDataReport(dateAsOf);
       if (data.tcarddatareport) {
         let resData = data.tcarddatareport[0];
@@ -146,7 +146,7 @@ Template.profitabilitychart.onRendered(() => {
         nettProfit[0] = resData.Prof_Net1;
         nettProfit[1] = resData.Prof_Net2;
       }
-      
+
       let pArr = [];
       for (var i=0; i<2; i++) {
         pArr.push(totalSales[i]);
@@ -182,13 +182,13 @@ Template.profitabilitychart.onRendered(() => {
       templateObject.setFieldValue(grossProfit[1], "spnGrossProfit2");
       templateObject.setFieldValue(totalExpense[1], "spnTotalExpense2");
       templateObject.setFieldValue(nettProfit[1], "spnTotalnetincome2");
-      
+
       templateObject.setFieldVariance(totalSales[0], totalSales[1], "spnTotalSalesVariance", "divTotalSalesVariance");
       templateObject.setFieldVariance(grossProfit[0], grossProfit[1], "spnGrossProfitVariance", "divGrossProfitVariance");
       templateObject.setFieldVariance(totalExpense[0], totalExpense[1], "spnTotalExpenseVariance", "divTotalExpenseVariance");
       templateObject.setFieldVariance(nettProfit[0], nettProfit[1], "spnNettProfitVariance", "divNettProfitVariance");
     } catch (err) {
-      console.log(err);
+
     }
   }
   templateObject.getValuesForProfitability();
@@ -244,4 +244,3 @@ Template.registerHelper('notEquals', function (a, b) {
 Template.registerHelper('containsequals', function (a, b) {
   return (a.indexOf(b) >= 0);
 });
-

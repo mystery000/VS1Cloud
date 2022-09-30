@@ -8215,7 +8215,6 @@ Template.new_invoice.onRendered(function() {
 
     $("#tblStatusPopList_filter .form-control-sm").val("");
     setTimeout(function () {
-      $(".btnRefreshStatus").trigger("click");
       $(".fullScreenSpin").css("display", "none");
     }, 1000);
   });
@@ -8528,7 +8527,6 @@ Template.new_invoice.onRendered(function() {
     $("#tblCustomerlist_filter .form-control-sm").val("");
     setTimeout(function () {
       //$('#tblCustomerlist_filter .form-control-sm').focus();
-      $(".btnRefreshCustomer").trigger("click");
       $(".fullScreenSpin").css("display", "none");
     }, 1000);
     // }
@@ -9214,7 +9212,6 @@ Template.new_invoice.onRendered(function() {
     $("#tblInventory_filter .form-control-sm").val("");
     setTimeout(function () {
       //$('#tblCustomerlist_filter .form-control-sm').focus();
-      $(".btnRefreshProduct").trigger("click");
       $(".fullScreenSpin").css("display", "none");
     }, 1000);
   });
@@ -9447,7 +9444,6 @@ Template.new_invoice.onRendered(function() {
 
     $("#tblStatusPopList_filter .form-control-sm").val("");
     setTimeout(function () {
-      $(".btnRefreshStatus").trigger("click");
       $(".fullScreenSpin").css("display", "none");
     }, 1000);
   });
@@ -9764,7 +9760,6 @@ Template.new_invoice.onRendered(function() {
     $("#tblCustomerlist_filter .form-control-sm").val("");
     setTimeout(function () {
       //$('#tblCustomerlist_filter .form-control-sm').focus();
-      $(".btnRefreshCustomer").trigger("click");
       $(".fullScreenSpin").css("display", "none");
     }, 1000);
     // }
@@ -12911,7 +12906,7 @@ Template.new_invoice.onRendered(function () {
                       datatable.draw(false);
 
                       $(".fullScreenSpin").css("display", "none");
-    
+
                       $(".fullScreenSpin").css("display", "none");
                     });
                 } else {

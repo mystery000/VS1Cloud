@@ -578,7 +578,7 @@ Template.contactoverview.onRendered(function () {
                 let datatablerecordObj = {
                   sTitle: v.innerText || "",
                   sWidth: sWidth || "",
-                  sIndex: v.cellIndex || "",
+                  sIndex: v.cellIndex || 0,
                   sVisible: columVisible || false,
                   sClass: v.className || "",
                 };
@@ -939,7 +939,7 @@ Template.contactoverview.onRendered(function () {
             let datatablerecordObj = {
               sTitle: v.innerText || "",
               sWidth: sWidth || "",
-              sIndex: v.cellIndex || "",
+              sIndex: v.cellIndex || 0,
               sVisible: columVisible || false,
               sClass: v.className || "",
             };
@@ -1280,7 +1280,7 @@ Template.contactoverview.onRendered(function () {
               let datatablerecordObj = {
                 sTitle: v.innerText || "",
                 sWidth: sWidth || "",
-                sIndex: v.cellIndex || "",
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || "",
               };
@@ -2027,9 +2027,9 @@ Template.contactoverview.events({
             },
             function (err, idTag) {
               if (err) {
-                $("#myModal2").modal("toggle");
+                $("#myContactOverviewModal").modal("toggle");
               } else {
-                $("#myModal2").modal("toggle");
+                $("#myContactOverviewModal").modal("toggle");
               }
             }
           );
@@ -2047,9 +2047,9 @@ Template.contactoverview.events({
             },
             function (err, idTag) {
               if (err) {
-                $("#myModal2").modal("toggle");
+                $("#myContactOverviewModal").modal("toggle");
               } else {
-                $("#myModal2").modal("toggle");
+                $("#myContactOverviewModal").modal("toggle");
               }
             }
           );
@@ -2112,7 +2112,7 @@ Template.contactoverview.events({
       let datatablerecordObj = {
         sTitle: v.innerText || "",
         sWidth: sWidth || "",
-        sIndex: v.cellIndex || "",
+        sIndex: v.cellIndex || 0,
         sVisible: columVisible || false,
         sClass: v.className || "",
       };

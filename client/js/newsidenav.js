@@ -1311,40 +1311,6 @@ Template.newsidenav.onRendered(function() {
     }
 
     templateObject.getAllProductData = function() {
-        sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(data) {
-          countObjectTimes++;
-          progressPercentage = (countObjectTimes * 100) / allDataToLoad;
-          $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
-          //$(".progressBarInner").text("Products "+Math.round(progressPercentage)+"%");
-          $(".progressBarInner").text(Math.round(progressPercentage)+"%");
-          $(".progressName").text("Products ");
-          if((progressPercentage > 0) && (Math.round(progressPercentage) != 100)){
-            if($('.headerprogressbar').hasClass("headerprogressbarShow")){
-              $('.headerprogressbar').removeClass('headerprogressbarHidden');
-            }else{
-              $('.headerprogressbar').addClass('headerprogressbarShow');
-              $('.headerprogressbar').removeClass('headerprogressbarHidden');
-            }
-
-          }else if(Math.round(progressPercentage) >= 100){
-              $('.checkmarkwrapper').removeClass("hide");
-            setTimeout(function() {
-              if($('.headerprogressbar').hasClass("headerprogressbarShow")){
-                $('.headerprogressbar').removeClass('headerprogressbarShow');
-                $('.headerprogressbar').addClass('headerprogressbarHidden');
-              }else{
-                $('.headerprogressbar').removeClass('headerprogressbarShow');
-                $('.headerprogressbar').addClass('headerprogressbarHidden');
-              }
-
-            }, 1000);
-          }
-            addVS1Data('TProductVS1', JSON.stringify(data));
-            $("<span class='process'>Products Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
-        }).catch(function(err) {
-
-        });
-
         sideBarService.getProductListVS1(initialBaseDataLoad, 0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
@@ -6246,7 +6212,7 @@ Template.newsidenav.onRendered(function() {
                       templateObject.getFollowedContactDetailsPull();
                   });
               });
-
+              templateObject.getAllProductData();
               getVS1Data('TProductStocknSalePeriodReport').then(function(dataObject) {
                   if (dataObject.length == 0) {
                       templateObject.getAllTProductStocknSalePeriodReportData();
@@ -6478,7 +6444,7 @@ Template.newsidenav.onRendered(function() {
                     templateObject.getFollowedContactDetailsPull();
                 });
             });
-
+            templateObject.getAllProductData();
             getVS1Data('TProductStocknSalePeriodReport').then(function(dataObject) {
                 if (dataObject.length == 0) {
                     templateObject.getAllTProductStocknSalePeriodReportData();
