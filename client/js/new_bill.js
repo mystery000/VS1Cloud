@@ -22,6 +22,7 @@ import LoadingOverlay from '../LoadingOverlay';
 import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
+import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 
 var template_list = [
     "Bills",
@@ -1275,6 +1276,8 @@ Template.billcard.onRendered(() => {
                             $('#sltStatus').val(data.fields.OrderStatus);
                             $('#shipvia').val(data.fields.Shipping);
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                            FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
                             $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                             templateObject.attachmentCount.set(0);
@@ -1499,6 +1502,8 @@ Template.billcard.onRendered(() => {
                                 templateObject.CleintName.set(useData[d].fields.SupplierName);
                                 $('#shipvia').val(useData[d].fields.Shipping);
                                 $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
+                                FxGlobalFunctions.handleChangedCurrency(useData[d].fields.ForeignExchangeCode, defaultCurrencyCode);
+
                                 $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
 
                                 templateObject.attachmentCount.set(0);
@@ -1729,6 +1734,8 @@ Template.billcard.onRendered(() => {
                                 $('#sltStatus').val(data.fields.OrderStatus);
                                 $('#shipvia').val(data.fields.Shipping);
                                 $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                                FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
                                 $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                                 templateObject.attachmentCount.set(0);
@@ -1953,6 +1960,7 @@ Template.billcard.onRendered(() => {
                         $('#sltStatus').val(data.fields.OrderStatus);
                         $('#shipvia').val(data.fields.Shipping);
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                        FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
                         $('#exchange_rate').val(data.fields.ForeignExchangeRate);
 
                         templateObject.attachmentCount.set(0);
@@ -5078,6 +5086,9 @@ Template.billcard.onRendered(function() {
     };
 
     tempObj.getSubTaxCodes();
+
+
+
 });
 
 Template.billcard.helpers({

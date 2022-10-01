@@ -6,6 +6,7 @@ import { UtilityService } from "../utility-service";
 import { ProductService } from "../product/product-service";
 import { AccountService } from "../accounts/account-service";
 import { ReportService } from "../reports/report-service";
+import { OrganisationService } from '../js/organisation-service';
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
@@ -19,6 +20,7 @@ import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let reportService = new ReportService();
+let organisationService = new OrganisationService();
 var times = 0;
 
 Template.basreturn.onCreated(() => {
@@ -83,6 +85,7 @@ Template.basreturn.onCreated(() => {
     templateObject.getId = new ReactiveVar();
     templateObject.reasonT4 = new ReactiveVar([]);
     templateObject.reasonF4 = new ReactiveVar([]);
+    templateObject.basreturnData = new ReactiveVar([]);
 });
 
 Template.basreturn.onRendered(function() {
@@ -96,6 +99,7 @@ Template.basreturn.onRendered(function() {
     let categoryAccountList = [];
     let usedCategories = [];
     const accountTypeList = [];
+    const dataTableList = [];
 
     let reasonT4 = [
         { val: "T4-1", title: "Mergers, acquisitions and takeovers" },
@@ -126,6 +130,269 @@ Template.basreturn.onRendered(function() {
     templateObject.reasonT4.set(reasonT4);
     templateObject.reasonF4.set(reasonF4);
 
+    templateObject.getAllBasReturnData = function() {
+
+        var url = FlowRouter.current().path;
+        var getid = "";
+        if (url.indexOf('?id=') > 0) {
+            getid = url.split('?id=');
+            if (getid[1]) {
+                getid = getid[1];
+            }
+            else{
+                getid = "";
+            }
+        }
+        
+        getVS1Data('TBasReturn').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
+                //     let lineItems = [];
+                //     let lineItemObj = {};
+                //     addVS1Data('TJournalEntryList', JSON.stringify(data));
+                //     if (data.Params.IgnoreDates == true) {
+                //         $('#dateFrom').attr('readonly', true);
+                //         $('#dateTo').attr('readonly', true);
+                //         //FlowRouter.go('/journalentrylist?ignoredate=true');
+                //     } else {
+                //         $('#dateFrom').attr('readonly', false);
+                //         $('#dateTo').attr('readonly', false);
+                //         $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+                //         $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+                //     }
+                //     for (let i = 0; i < data.tjournalentrylist.length; i++) {
+                //         let totalDebitAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].DebitAmount) || 0.00;
+                //         let totalCreditAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].CreditAmount) || 0.00;
+                //         // Currency+''+data.tjournalentry[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                //         let totalTaxAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].TaxAmount) || 0.00;
+                //         let orderstatus = data.tjournalentrylist[i].Deleted || '';
+                //         if (data.tjournalentrylist[i].Deleted == true) {
+                //             orderstatus = "Deleted";
+                //         } else if (data.tjournalentrylist[i].IsOnHOLD == true) {
+                //             orderstatus = "On Hold";
+                //         } else if (data.tjournalentrylist[i].Reconciled == true) {
+                //             orderstatus = "Rec";
+                //         }
+
+                //         var dataList = {
+                //             id: data.tjournalentrylist[i].GJID || '',
+                //             employee: data.tjournalentrylist[i].EmployeeName || '',
+                //             sortdate: data.tjournalentrylist[i].TransactionDate != '' ? moment(data.tjournalentrylist[i].TransactionDate).format("YYYY/MM/DD") : data.tjournalentrylist[i].TransactionDate,
+                //             transactiondate: data.tjournalentrylist[i].TransactionDate != '' ? moment(data.tjournalentrylist[i].TransactionDate).format("DD/MM/YYYY") : data.tjournalentrylist[i].TransactionDate,
+                //             accountname: data.tjournalentrylist[i].AccountName || '',
+                //             department: data.tjournalentrylist[i].ClassName || '',
+                //             entryno: data.tjournalentrylist[i].GJID || '',
+                //             debitamount: totalDebitAmount || 0.00,
+                //             creditamount: totalCreditAmount || 0.00,
+                //             taxamount: totalTaxAmount || 0.00,
+                //             orderstatus: orderstatus || '',
+                //             accountno: data.tjournalentrylist[i].AccountNumber || '',
+                //             employeename: data.tjournalentrylist[i].EmployeeName || '',
+
+                //             memo: data.tjournalentrylist[i].Memo || '',
+                //         };
+                //         dataTableList.push(dataList);
+                //         templateObject.basreturnData.set(dataTableList);
+                //     }
+
+                //     $('.fullScreenSpin').css('display', 'none');
+                // }).catch(function(err) {
+                $('.fullScreenSpin').css('display', 'none');
+                // });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                for (let i = 0; i < data.length; i++) {
+                    var dataList = {
+                        basnumber: data[i].basNumber || '',
+                        description: data[i].description || '',
+                        tab1datemethod: (data[i].basReturnTab1.datemethod == "q") ? "Quarterly" : "Monthly",
+                        tab1startDate: (data[i].basReturnTab1.startDate == "0000-00-00") ? "" : data[i].basReturnTab1.startDate,
+                        tab1endDate: (data[i].basReturnTab1.startDate == "0000-00-00") ? "" : data[i].basReturnTab1.endDate,
+                        tab2datemethod: (data[i].basReturnTab2.datemethod == "q") ? "Quarterly" : "Monthly",
+                        tab2startDate: (data[i].basReturnTab2.startDate == "0000-00-00") ? "" : data[i].basReturnTab2.startDate,
+                        tab2endDate: (data[i].basReturnTab2.startDate == "0000-00-00") ? "" : data[i].basReturnTab2.endDate,
+                        tab2datemethod2: (data[i].basReturnTab2.datemethod_2 == "q") ? "Quarterly" : "Monthly",
+                        tab2startDate2: (data[i].basReturnTab2.startDate_2 == "0000-00-00") ? "" : data[i].basReturnTab2.startDate_2,
+                        tab2endDate2: (data[i].basReturnTab2.startDate_2 == "0000-00-00") ? "" : data[i].basReturnTab2.endDate_2,
+                        tab3datemethod: (data[i].basReturnTab3.datemethod == "q") ? "Quarterly" : "Monthly",
+                        tab3startDate: (data[i].basReturnTab3.startDate == "0000-00-00") ? "" : data[i].basReturnTab3.startDate,
+                        tab3endDate: (data[i].basReturnTab3.startDate == "0000-00-00") ? "" : data[i].basReturnTab3.endDate,
+                    };
+                    dataTableList.push(dataList);
+
+                    if(getid == ""){
+                        if($("#previousStartDate").val() == "" && dataList.tab1startDate != "" && dataList.tab1endDate != ""){
+                            $("#previousStartDate").val(dataList.tab1startDate);
+                            $("#previousEndDate").val(dataList.tab1endDate);
+
+                            var fromDate = new Date(dataList.tab1endDate.split("-")[0], parseInt(dataList.tab1endDate.split("-")[1]), 1);
+                            fromDate = moment(fromDate).format("YYYY-MM-DD");
+                            $("#beginmonthlydate").val(fromDate.split("-")[1]+"-01");
+                            $("#currentyear").val(fromDate.split("-")[0]);
+                            if ($("#datemethod1").prop('checked') == true) {                                
+                                var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate").val(toDate);
+                            } else {
+                                var endMonth = parseInt(fromDate.split("-")[1]);
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate").val(toDate);
+                            }
+                        }
+                        if($("#previousStartDate-t2").val() == "" && dataList.tab2startDate != "" && dataList.tab2endDate != ""){
+                            $("#previousStartDate-t2").val(dataList.tab2startDate);
+                            $("#previousEndDate-t2").val(dataList.tab2endDate);
+
+                            var fromDate = new Date(dataList.tab2endDate.split("-")[0], parseInt(dataList.tab2endDate.split("-")[1]), 1);
+                            fromDate = moment(fromDate).format("YYYY-MM-DD");
+                            $("#beginmonthlydate-t2").val(fromDate.split("-")[1]+"-01");
+                            $("#currentyear-t2").val(fromDate.split("-")[0]);
+                            if ($("#datemethod1-t2").prop('checked') == true) {                                
+                                var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t2").val(toDate);
+                            } else {
+                                var endMonth = parseInt(fromDate.split("-")[1]);
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t2").val(toDate);
+                            }
+                        }
+                        if($("#previousStartDate-t2-2").val() == "" && dataList.tab2startDate2 != "" && dataList.tab2endDate2 != ""){
+                            $("#previousStartDate-t2-2").val(dataList.tab2startDate2);
+                            $("#previousEndDate-t2-2").val(dataList.tab2endDate2);
+
+                            var fromDate = new Date(dataList.tab2endDate2.split("-")[0], parseInt(dataList.tab2endDate2.split("-")[1]), 1);
+                            fromDate = moment(fromDate).format("YYYY-MM-DD");
+                            $("#beginmonthlydate-t2-2").val(fromDate.split("-")[1]+"-01");
+                            $("#currentyear-t2-2").val(fromDate.split("-")[0]);
+                            if ($("#datemethod1-t2-2").prop('checked') == true) {                                
+                                var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t2-2").val(toDate);
+                            } else {
+                                var endMonth = parseInt(fromDate.split("-")[1]);
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t2-2").val(toDate);
+                            }
+                        }
+                        if($("#previousStartDate-t3").val() == "" && dataList.tab3startDate != "" && dataList.tab3endDate != ""){
+                            $("#previousStartDate-t3").val(dataList.tab3startDate);
+                            $("#previousEndDate-t3").val(dataList.tab3endDate);
+
+                            var fromDate = new Date(dataList.tab3endDate.split("-")[0], parseInt(dataList.tab3endDate.split("-")[1]), 1);
+                            fromDate = moment(fromDate).format("YYYY-MM-DD");
+                            $("#beginmonthlydate-t3").val(fromDate.split("-")[1]+"-01");
+                            $("#currentyear-t3").val(fromDate.split("-")[0]);
+                            if ($("#datemethod1-t3").prop('checked') == true) {                                
+                                var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t3").val(toDate);
+                            } else {
+                                var endMonth = parseInt(fromDate.split("-")[1]);
+                                toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
+                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                $("#endDate-t3").val(toDate);
+                            }
+                        }
+                    }
+                    else{
+                        if(getid > dataList.basnumber){
+                            if($("#previousStartDate").val() == "" && dataList.tab1startDate != "" && dataList.tab1endDate != ""){
+                                $("#previousStartDate").val(dataList.tab1startDate);
+                                $("#previousEndDate").val(dataList.tab1endDate);
+                            }
+                            if($("#previousStartDate-t2").val() == "" && dataList.tab2startDate != "" && dataList.tab2endDate != ""){
+                                $("#previousStartDate-t2").val(dataList.tab2startDate);
+                                $("#previousEndDate-t2").val(dataList.tab2endDate);
+                            }
+                            if($("#previousStartDate-t2-2").val() == "" && dataList.tab2startDate2 != "" && dataList.tab2endDate2 != ""){
+                                $("#previousStartDate-t2-2").val(dataList.tab2startDate2);
+                                $("#previousEndDate-t2-2").val(dataList.tab2endDate2);
+                            }
+                            if($("#previousStartDate-t3").val() == "" && dataList.tab3startDate != "" && dataList.tab3endDate != ""){
+                                $("#previousStartDate-t3").val(dataList.tab3startDate);
+                                $("#previousEndDate-t3").val(dataList.tab3endDate);
+                            }
+                        }
+                    }
+                }
+                templateObject.basreturnData.set(dataTableList);
+
+                $('.fullScreenSpin').css('display', 'none');                
+            }
+        }).catch(function(err) {
+            // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
+            //     let lineItems = [];
+            //     let lineItemObj = {};
+            //     addVS1Data('TJournalEntryList', JSON.stringify(data));
+            //     if (data.Params.IgnoreDates == true) {
+            //         $('#dateFrom').attr('readonly', true);
+            //         $('#dateTo').attr('readonly', true);
+            //         //FlowRouter.go('/journalentrylist?ignoredate=true');
+            //     } else {
+            //         $('#dateFrom').attr('readonly', false);
+            //         $('#dateTo').attr('readonly', false);
+            //         $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+            //         $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+            //     }
+            //     for (let i = 0; i < data.tjournalentrylist.length; i++) {
+            //         let totalDebitAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].DebitAmount) || 0.00;
+            //         let totalCreditAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].CreditAmount) || 0.00;
+            //         // Currency+''+data.tjournalentry[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+            //         let totalTaxAmount = utilityService.modifynegativeCurrencyFormat(data.tjournalentrylist[i].TaxAmount) || 0.00;
+            //         let orderstatus = data.tjournalentrylist[i].Deleted || '';
+            //         if (data.tjournalentrylist[i].Deleted == true) {
+            //             orderstatus = "Deleted";
+            //         } else if (data.tjournalentrylist[i].IsOnHOLD == true) {
+            //             orderstatus = "On Hold";
+            //         } else if (data.tjournalentrylist[i].Reconciled == true) {
+            //             orderstatus = "Rec";
+            //         }
+
+            //         var dataList = {
+            //             id: data.tjournalentrylist[i].GJID || '',
+            //             employee: data.tjournalentrylist[i].EmployeeName || '',
+            //             sortdate: data.tjournalentrylist[i].TransactionDate != '' ? moment(data.tjournalentrylist[i].TransactionDate).format("YYYY/MM/DD") : data.tjournalentrylist[i].TransactionDate,
+            //             transactiondate: data.tjournalentrylist[i].TransactionDate != '' ? moment(data.tjournalentrylist[i].TransactionDate).format("DD/MM/YYYY") : data.tjournalentrylist[i].TransactionDate,
+            //             accountname: data.tjournalentrylist[i].AccountName || '',
+            //             department: data.tjournalentrylist[i].ClassName || '',
+            //             entryno: data.tjournalentrylist[i].GJID || '',
+            //             debitamount: totalDebitAmount || 0.00,
+            //             creditamount: totalCreditAmount || 0.00,
+            //             taxamount: totalTaxAmount || 0.00,
+            //             orderstatus: orderstatus || '',
+            //             accountno: data.tjournalentrylist[i].AccountNumber || '',
+            //             employeename: data.tjournalentrylist[i].EmployeeName || '',
+
+            //             memo: data.tjournalentrylist[i].Memo || '',
+            //         };
+            //         dataTableList.push(dataList);
+            //         templateObject.datatablerecords.set(dataTableList);
+            //     }
+
+            //     if (templateObject.datatablerecords.get()) {
+            //         setTimeout(function() {
+            //             MakeNegative();
+            //         }, 100);
+            //     }
+
+            //     $('.fullScreenSpin').css('display', 'none');
+            // }).catch(function(err) {
+            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+            $('.fullScreenSpin').css('display', 'none');
+            // Meteor._reload.reload();
+            // });
+        });
+    }
+    templateObject.getAllBasReturnData();
+
     templateObject.getReceiptCategoryList = function() {
         getVS1Data('TReceiptCategory').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -153,7 +420,7 @@ Template.basreturn.onRendered(function() {
         }
 
         $('.fullScreenSpin').css('display', 'none');
-        templateObject.getAccountLists();
+        // templateObject.getAccountLists();
     }
     templateObject.getReceiptCategoryList();
 
@@ -362,7 +629,9 @@ Template.basreturn.onRendered(function() {
 
         }).catch(function(err) {
             $('.fullScreenSpin').css('display', 'none');
-            templateObject.accountsSummaryList.set([]);
+            templateObject.accountsSummaryListT2.set([]);
+            templateObject.accountsSummaryListT2_2.set([]);
+            templateObject.accountsSummaryListT3.set([]);
         });
     };
 
@@ -380,8 +649,69 @@ Template.basreturn.onRendered(function() {
                                 TaxRate: taxRate || 0,
                             };
                             taxRateList.push(dataList);
-                            templateObject.taxRateList.set(taxRateList);
                         }
+                        templateObject.taxRateList.set(taxRateList);
+
+                        setTimeout(function() {
+                            if(taxRateList.length > 0){
+                                $(".tblTaxRate").DataTable({
+                                    // data: splashArrayTaxRateList,
+                                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                    columnDefs: [{
+                                            orderable: false,
+                                            targets: 0
+                                        },
+                                        {
+                                            className: "colCodeName",
+                                            "targets": [1]
+                                        },
+                                        {
+                                            className: "colDescription",
+                                            "targets": [2]
+                                        },
+                                        {
+                                            className: "colTaxRate text-right",
+                                            "targets": [3]
+                                        }
+                                    ],
+                                    select: true,
+                                    destroy: true,
+                                    colReorder: true,
+                                    pageLength: initialDatatableLoad,
+                                    lengthMenu: [
+                                        [initialDatatableLoad, -1],
+                                        [initialDatatableLoad, "All"],
+                                    ],
+                                    info: true,
+                                    responsive: true,
+                                    order: [
+                                        [0, "asc"]
+                                    ],
+                                    action: function() {
+                                        $(".tblTaxRate").DataTable().ajax.reload();
+                                    },
+                                    fnDrawCallback: function(oSettings) {
+                                        // $('.dataTables_paginate').css('display', 'none');
+                                    },
+                                    language: { search: "",searchPlaceholder: "Search List..." },
+                                    fnInitComplete: function() {},
+                                })
+                                .on("page", function() {
+                                    // setTimeout(function() {
+                                    //     MakeNegative();
+                                    // }, 100);
+                                    let draftRecord = templateObject.taxRateList.get();
+                                    templateObject.taxRateList.set(draftRecord);
+                                })
+                                .on("column-reorder", function() {})
+                                .on("length.dt", function(e, settings, len) {
+                                    // setTimeout(function() {
+                                    //     MakeNegative();
+                                    // }, 100);
+                                });;  
+                                $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
+                            }
+                        }, 10);
                         $('.fullScreenSpin').css('display', 'none');
                     }).catch(function(err) {
                         $('.fullScreenSpin').css('display', 'none');
@@ -399,8 +729,70 @@ Template.basreturn.onRendered(function() {
                         };
 
                         taxRateList.push(dataList);
-                        templateObject.taxRateList.set(taxRateList);
                     }
+                    templateObject.taxRateList.set(taxRateList);
+
+                    setTimeout(function() {
+                        if(taxRateList.length > 0){
+                            $(".tblTaxRate").DataTable({
+                                // data: splashArrayTaxRateList,
+                                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                columnDefs: [{
+                                        orderable: false,
+                                        targets: 0
+                                    },
+                                    {
+                                        className: "colCodeName",
+                                        "targets": [1]
+                                    },
+                                    {
+                                        className: "colDescription",
+                                        "targets": [2]
+                                    },
+                                    {
+                                        className: "colTaxRate text-right",
+                                        "targets": [3]
+                                    }
+                                ],
+                                select: true,
+                                destroy: true,
+                                colReorder: true,
+                                pageLength: initialDatatableLoad,
+                                lengthMenu: [
+                                    [initialDatatableLoad, -1],
+                                    [initialDatatableLoad, "All"],
+                                ],
+                                info: true,
+                                responsive: true,
+                                order: [
+                                    [0, "asc"]
+                                ],
+                                action: function() {
+                                    $(".tblTaxRate").DataTable().ajax.reload();
+                                },
+                                fnDrawCallback: function(oSettings) {
+                                    // $('.dataTables_paginate').css('display', 'none');
+                                },
+                                language: { search: "",searchPlaceholder: "Search List..." },
+                                fnInitComplete: function() {},
+                            })
+                            .on("page", function() {
+                                // setTimeout(function() {
+                                //     MakeNegative();
+                                // }, 100);
+                                let draftRecord = templateObject.taxRateList.get();
+                                templateObject.taxRateList.set(draftRecord);
+                            })
+                            .on("column-reorder", function() {})
+                            .on("length.dt", function(e, settings, len) {
+                                // setTimeout(function() {
+                                //     MakeNegative();
+                                // }, 100);
+                            });;  
+                            $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
+                        }
+                    }, 10);
+                    $('.fullScreenSpin').css('display', 'none');
                 }
             })
             .catch(function(err) {
@@ -415,8 +807,69 @@ Template.basreturn.onRendered(function() {
                         };
 
                         taxRateList.push(dataList);
-                        templateObject.taxRateList.set(taxRateList);
                     }
+                    templateObject.taxRateList.set(taxRateList);
+
+                    setTimeout(function() {
+                        if(taxRateList.length > 0){
+                            $(".tblTaxRate").DataTable({
+                                // data: splashArrayTaxRateList,
+                                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                columnDefs: [{
+                                        orderable: false,
+                                        targets: 0
+                                    },
+                                    {
+                                        className: "colCodeName",
+                                        "targets": [1]
+                                    },
+                                    {
+                                        className: "colDescription",
+                                        "targets": [2]
+                                    },
+                                    {
+                                        className: "colTaxRate text-right",
+                                        "targets": [3]
+                                    }
+                                ],
+                                select: true,
+                                destroy: true,
+                                colReorder: true,
+                                pageLength: initialDatatableLoad,
+                                lengthMenu: [
+                                    [initialDatatableLoad, -1],
+                                    [initialDatatableLoad, "All"],
+                                ],
+                                info: true,
+                                responsive: true,
+                                order: [
+                                    [0, "asc"]
+                                ],
+                                action: function() {
+                                    $(".tblTaxRate").DataTable().ajax.reload();
+                                },
+                                fnDrawCallback: function(oSettings) {
+                                    // $('.dataTables_paginate').css('display', 'none');
+                                },
+                                language: { search: "",searchPlaceholder: "Search List..." },
+                                fnInitComplete: function() {},
+                            })
+                            .on("page", function() {
+                                // setTimeout(function() {
+                                //     MakeNegative();
+                                // }, 100);
+                                let draftRecord = templateObject.taxRateList.get();
+                                templateObject.taxRateList.set(draftRecord);
+                            })
+                            .on("column-reorder", function() {})
+                            .on("length.dt", function(e, settings, len) {
+                                // setTimeout(function() {
+                                //     MakeNegative();
+                                // }, 100);
+                            });;  
+                            $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
+                        }
+                    }, 10);                
                 });
             });
     }
@@ -590,8 +1043,8 @@ Template.basreturn.onRendered(function() {
                     }
                 });
             }
-
-            $("#tblAccountOverview")
+            
+            $(".tblAccountOverview")
                 .DataTable({
                     columnDefs: [
                         // { type: 'currency', targets: 4 }
@@ -645,34 +1098,31 @@ Template.basreturn.onRendered(function() {
                         [0, "asc"]
                     ],
                     action: function() {
-                        $("#tblAccountOverview").DataTable().ajax.reload();
+                        $(".tblAccountOverview").DataTable().ajax.reload();
                     },
                     fnDrawCallback: function(oSettings) {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
+                        // setTimeout(function() {
+                        //     MakeNegative();
+                        // }, 100);
                     },
-                    fnInitComplete: function() {
-                        $(
-                            "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                        ).insertAfter("#tblAccountOverview_filter");
-                    },
+                    fnInitComplete: function() {},
                 })
                 .on("page", function() {
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                    let draftRecord = templateObject.accountsList.get();
-                    templateObject.accountsList.set(draftRecord);
+                    // setTimeout(function() {
+                    //     MakeNegative();
+                    // }, 100);
+                    let draftRecord = templateObject.datatablerecords.get();
+                    templateObject.datatablerecords.set(draftRecord);
                 })
                 .on("column-reorder", function() {})
                 .on("length.dt", function(e, settings, len) {
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
+                    // setTimeout(function() {
+                    //     MakeNegative();
+                    // }, 100);
                 });
-            // $('.fullScreenSpin').css('display','none');
-        }, 10);
+
+            $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccountOverview_wrapper .dataTables_filter");
+        }, 50);
 
         var columns = $("#tblAccountOverview th");
         let sTible = "";
@@ -970,6 +1420,15 @@ Template.basreturn.onRendered(function() {
     setTimeout(function() {
         $(document).ready(function() {
             $('.fullScreenSpin').css('display', 'inline-block');
+            organisationService.getOrganisationDetail().then(function(data) {
+                let mainData = data.tcompanyinfo[0];
+                console.log("mainData", mainData);
+                $("#prt_companyName").html(mainData.CompanyName);
+                $("#prt_companyAddress").html(mainData.Address);
+                $("#prt_companyCity").html(mainData.City);
+                $("#prt_companyZipState").html(mainData.PoState+" "+mainData.Postcode);
+                $("#prt_companyPhoneNumber").html(mainData.PhoneNumber);
+            });
             var url = FlowRouter.current().path;
             if (url.indexOf('?id=') > 0) {
                 var getid = url.split('?id=');
@@ -1001,20 +1460,17 @@ Template.basreturn.onRendered(function() {
                                         $("#accountingmethod2").prop('checked', true);
                                     }
                                     let tab1startDate = data[i].basReturnTab1.startDate.split("-");
+                                    let endDate = (data[i].basReturnTab1.endDate != "" && data[i].basReturnTab1.endDate != "0000-00-00") ? data[i].basReturnTab1.endDate : "";
                                     if (data[i].basReturnTab1.datemethod == "q") {
                                         $("#datemethod1").prop('checked', true);
                                         $("#datemethod2").prop('checked', false);
-                                        $("#beginquarterlydate").css("display", "block");
-                                        $("#beginmonthlydate").css("display", "none");
-                                        $("#beginquarterlydate").val(tab1startDate[1] + "-" + tab1startDate[2]);
                                     } else {
                                         $("#datemethod1").prop('checked', false);
                                         $("#datemethod2").prop('checked', true);
-                                        $("#beginquarterlydate").css("display", "none");
-                                        $("#beginmonthlydate").css("display", "block");
-                                        $("#beginmonthlydate").val(tab1startDate[1] + "-" + tab1startDate[2]);
                                     }
+                                    $("#beginmonthlydate").val(tab1startDate[1] + "-" + tab1startDate[2]);
                                     $("#currentyear").val(tab1startDate[0]);
+                                    $("#endDate").val(endDate);
                                     $("#prt_beginningDate").html(data[i].basReturnTab1.startDate);
                                     $("#gst1cost").val(data[i].basReturnTab1.tab1G1.amount);
                                     $("#prt_gst1cost").html("$" + data[i].basReturnTab1.tab1G1.amount);
@@ -1092,36 +1548,30 @@ Template.basreturn.onRendered(function() {
                                     });
                                     // }
                                     let tab2startDate = data[i].basReturnTab2.startDate.split("-");
+                                    let tab2endDate = (data[i].basReturnTab2.endDate != "" && data[i].basReturnTab2.endDate != "0000-00-00") ? data[i].basReturnTab2.endDate : "";
                                     if (data[i].basReturnTab2.datemethod == "q") {
                                         $("#datemethod1-t2").prop('checked', true);
                                         $("#datemethod2-t2").prop('checked', false);
-                                        $("#beginquarterlydate-t2").css("display", "block");
-                                        $("#beginmonthlydate-t2").css("display", "none");
-                                        $("#beginquarterlydate-t2").val(tab2startDate[1] + "-" + tab2startDate[2]);
                                     } else {
                                         $("#datemethod1-t2").prop('checked', false);
                                         $("#datemethod2-t2").prop('checked', true);
-                                        $("#beginquarterlydate-t2").css("display", "none");
-                                        $("#beginmonthlydate-t2").css("display", "block");
-                                        $("#beginmonthlydate-t2").val(tab2startDate[1] + "-" + tab2startDate[2]);
                                     }
+                                    $("#beginmonthlydate-t2").val(tab2startDate[1] + "-" + tab2startDate[2]);
                                     $("#currentyear-t2").val(tab2startDate[0]);
+                                    $("#endDate-t2").val(tab2endDate);
                                     $("#prt_beginningDateT2").html(data[i].basReturnTab2.startDate);
                                     let tab2startDate2 = data[i].basReturnTab2.startDate_2.split("-");
+                                    let tab2endDate2 = (data[i].basReturnTab2.endDate_2 != "" && data[i].basReturnTab2.endDate_2 != "0000-00-00") ? data[i].basReturnTab2.endDate_2 : "";
                                     if (data[i].basReturnTab2.datemethod_2 == "q") {
                                         $("#datemethod1-t2-2").prop('checked', true);
                                         $("#datemethod2-t2-2").prop('checked', false);
-                                        $("#beginquarterlydate-t2-2").css("display", "block");
-                                        $("#beginmonthlydate-t2-2").css("display", "none");
-                                        $("#beginquarterlydate-t2-2").val(tab2startDate2[1] + "-" + tab2startDate2[2]);
                                     } else {
                                         $("#datemethod1-t2-2").prop('checked', false);
                                         $("#datemethod2-t2-2").prop('checked', true);
-                                        $("#beginquarterlydate-t2-2").css("display", "none");
-                                        $("#beginmonthlydate-t2-2").css("display", "block");
-                                        $("#beginmonthlydate-t2-2").val(tab2startDate2[1] + "-" + tab2startDate2[2]);
                                     }
+                                    $("#beginmonthlydate-t2-2").val(tab2startDate2[1] + "-" + tab2startDate2[2]);
                                     $("#currentyear-t2-2").val(tab2startDate2[0]);
+                                    $("#endDate-t2-2").val(tab2endDate2);
                                     $("#prt_beginningDateT2-2").html(data[i].basReturnTab2.startDate_2);
                                     $("#accounts1cost").val(data[i].basReturnTab2.tab2W1.amount);
                                     $("#prt_accounts1cost").html("$" + data[i].basReturnTab2.tab2W1.amount);
@@ -1171,20 +1621,17 @@ Template.basreturn.onRendered(function() {
                                         $("#f-5-" + item).prop('checked', true);
                                     });
                                     let tab3startDate = data[i].basReturnTab3.startDate.split("-");
+                                    let tab3endDate = (data[i].basReturnTab3.endDate != "" && data[i].basReturnTab3.endDate != "0000-00-00") ? data[i].basReturnTab3.endDate : "";
                                     if (data[i].basReturnTab3.datemethod == "q") {
                                         $("#datemethod1-t3").prop('checked', true);
                                         $("#datemethod2-t3").prop('checked', false);
-                                        $("#beginquarterlydate-t3").css("display", "block");
-                                        $("#beginmonthlydate-t3").css("display", "none");
-                                        $("#beginquarterlydate-t3").val(tab3startDate[1] + "-" + tab3startDate[2]);
                                     } else {
                                         $("#datemethod1-t3").prop('checked', false);
                                         $("#datemethod2-t3").prop('checked', true);
-                                        $("#beginquarterlydate-t3").css("display", "none");
-                                        $("#beginmonthlydate-t3").css("display", "block");
-                                        $("#beginmonthlydate-t3").val(tab3startDate[1] + "-" + tab3startDate[2]);
                                     }
+                                    $("#beginmonthlydate-t3").val(tab3startDate[1] + "-" + tab3startDate[2]);
                                     $("#currentyear-t3").val(tab3startDate[0]);
+                                    $("#endDate-t3").val(tab3endDate);
                                     $("#prt_beginningDateT3").html(data[i].basReturnTab3.startDate);
                                     $("#t3taxcodes1cost").val(data[i].basReturnTab3.tab31C.amount);
                                     $("#prt_t3taxcodes1cost").html("$" + data[i].basReturnTab3.tab31C.amount);
@@ -1448,124 +1895,106 @@ Template.basreturn.events({
         }
     },
     "click #datemethod1": (e) => {
-        $("#beginquarterlydate").css("display", "block");
-        $("#beginmonthlydate").css("display", "none");
+        
     },
     "click #datemethod2": (e) => {
-        $("#beginquarterlydate").css("display", "none");
-        $("#beginmonthlydate").css("display", "block");
+        
     },
     "click #datemethod1-t2": (e) => {
-        $("#beginquarterlydate-t2").css("display", "block");
-        $("#beginmonthlydate-t2").css("display", "none");
+        
     },
     "click #datemethod2-t2": (e) => {
-        $("#beginquarterlydate-t2").css("display", "none");
-        $("#beginmonthlydate-t2").css("display", "block");
+        
     },
     "click #datemethod1-t2-2": (e) => {
-        $("#beginquarterlydate-t2-2").css("display", "block");
-        $("#beginmonthlydate-t2-2").css("display", "none");
+        
     },
     "click #datemethod2-t2-2": (e) => {
-        $("#beginquarterlydate-t2-2").css("display", "none");
-        $("#beginmonthlydate-t2-2").css("display", "block");
+        
     },
     "click #datemethod1-t3": (e) => {
-        $("#beginquarterlydate-t3").css("display", "block");
-        $("#beginmonthlydate-t3").css("display", "none");
+        
     },
     "click #datemethod2-t3": (e) => {
-        $("#beginquarterlydate-t3").css("display", "none");
-        $("#beginmonthlydate-t3").css("display", "block");
+        
     },
-    'change #beginquarterlydate, change #beginmonthlydate, change #currentyear': function(event) {
-        let templateObject = Template.instance();
-        let fromDate = "0000-00-00";
+    'click #datemethod1, click #datemethod2, change #beginmonthlydate, change #currentyear': function(event) {
         let toDate = new Date();
         toDate = moment(toDate).format("YYYY-MM-DD");
 
         if ($("#datemethod1").prop('checked') == true) {
-            if ($("#beginquarterlydate").val() != "" && $("#currentyear").val() != "" && $("#beginquarterlydate").val() != null && $("#currentyear").val() != null) {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                fromDate = new Date($("#currentyear").val() + "-" + $("#beginquarterlydate").val());
-                fromDate = moment(fromDate).format("YYYY-MM-DD");
-                Template.instance().getTaxSummaryReports(fromDate, toDate, false, "t1");
+            if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
+                var endMonth = Math.ceil(parseInt($("#beginmonthlydate").val().split("-")[0]) / 3) * 3;
+                toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
+                toDate = moment(toDate).format("YYYY-MM-DD");
+                $("#endDate").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                fromDate = new Date($("#currentyear").val() + "-" + $("#beginmonthlydate").val());
-                fromDate = moment(fromDate).format("YYYY-MM-DD");
-                Template.instance().getTaxSummaryReports(fromDate, toDate, false, "t1");
+                var endMonth = parseInt($("#beginmonthlydate").val().split("-")[0]);
+                toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
+                toDate = moment(toDate).format("YYYY-MM-DD");
+                $("#endDate").val(toDate);
             }
         }
     },
-    'change #beginquarterlydate-t2, change #beginmonthlydate-t2, change #currentyear-t2': function(event) {
-        let templateObject = Template.instance();
-        let fromDate = "0000-00-00";
+    'click #datemethod1-t2, click #datemethod2-t2, change #beginmonthlydate-t2, change #currentyear-t2': function(event) {
         let toDate = new Date();
         toDate = moment(toDate).format("YYYY-MM-DD");
 
         if ($("#datemethod1-t2").prop('checked') == true) {
-            if ($("#beginquarterlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginquarterlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                fromDate = new Date($("#currentyear-t2").val() + "-" + $("#beginquarterlydate-t2").val());
-                fromDate = moment(fromDate).format("YYYY-MM-DD");
-                Template.instance().getAccountsSummaryReports(fromDate, toDate, 't2');
+            if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
+                var endMonth = Math.ceil(parseInt($("#beginmonthlydate-t2").val().split("-")[0]) / 3) * 3;
+                toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
+                toDate = moment(toDate).format("YYYY-MM-DD");
+                $("#endDate-t2").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                fromDate = new Date($("#currentyear-t2").val() + "-" + $("#beginmonthlydate-t2").val());
-                fromDate = moment(fromDate).format("YYYY-MM-DD");
-                Template.instance().getAccountsSummaryReports(fromDate, toDate, 't2');
+                var endMonth = parseInt($("#beginmonthlydate-t2").val().split("-")[0]);
+                toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
+                toDate = moment(toDate).format("YYYY-MM-DD");
+                $("#endDate-t2").val(toDate);
             }
         }
     },
-    'change #beginquarterlydate-t2-2, change #beginmonthlydate-t2-2, change #currentyear-t2-2': function(event) {
-        let templateObject = Template.instance();
-        let fromDate = "0000-00-00";
+    'click #datemethod1-t2-2, click #datemethod2-t2-2, change #beginmonthlydate-t2-2, change #currentyear-t2-2': function(event) {
         let toDate = new Date();
         toDate = moment(toDate).format("YYYY-MM-DD");
 
         if ($("#datemethod1-t2-2").prop('checked') == true) {
-            if ($("#beginquarterlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginquarterlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                fromDate = new Date($("#currentyear-t2-2").val() + "-" + $("#beginquarterlydate-t2-2").val());
-                fromDate = moment(fromDate).format("YYYY-MM-DD");
-                Template.instance().getAccountsSummaryReports(fromDate, toDate, 't2-2');
+            if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
+                var endMonth = Math.ceil(parseInt($("#beginmonthlydate-t2-2").val().split("-")[0]) / 3) * 3;
+                toDate = new Date($("#currentyear-t2-2").val(), (parseInt(endMonth)), 0);
+                toDate = moment(toDate).format("YYYY-MM-DD");
+                $("#endDate-t2-2").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                fromDate = new Date($("#currentyear-t2-2").val() + "-" + $("#beginmonthlydate-t2-2").val());
-                fromDate = moment(fromDate).format("YYYY-MM-DD");
-                Template.instance().getAccountsSummaryReports(fromDate, toDate, 't2-2');
+                var endMonth = parseInt($("#beginmonthlydate-t2-2").val().split("-")[0]);
+                toDate = new Date($("#currentyear-t2-2").val(), (parseInt(endMonth)), 0);
+                toDate = moment(toDate).format("YYYY-MM-DD");
+                $("#endDate-t2-2").val(toDate);
             }
         }
     },
-    'change #beginquarterlydate-t3, change #beginmonthlydate-t3, change #currentyear-t3': function(event) {
-        let templateObject = Template.instance();
-        let fromDate = "0000-00-00";
+    'click #datemethod1-t3, click #datemethod2-t3, change #beginmonthlydate-t3, change #currentyear-t3': function(event) {
         let toDate = new Date();
         toDate = moment(toDate).format("YYYY-MM-DD");
 
         if ($("#datemethod1-t3").prop('checked') == true) {
-            if ($("#beginquarterlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginquarterlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                fromDate = new Date($("#currentyear-t3").val() + "-" + $("#beginquarterlydate-t3").val());
-                fromDate = moment(fromDate).format("YYYY-MM-DD");
-                Template.instance().getTaxSummaryReports(fromDate, toDate, false, "t3");
-                Template.instance().getAccountsSummaryReports(fromDate, toDate, 't3');
+            if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
+                var endMonth = Math.ceil(parseInt($("#beginmonthlydate-t3").val().split("-")[0]) / 3) * 3;
+                toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
+                toDate = moment(toDate).format("YYYY-MM-DD");
+                $("#endDate-t3").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                fromDate = new Date($("#currentyear-t3").val() + "-" + $("#beginmonthlydate-t3").val());
-                fromDate = moment(fromDate).format("YYYY-MM-DD");
-                Template.instance().getTaxSummaryReports(fromDate, toDate, false, "t3");
-                Template.instance().getAccountsSummaryReports(fromDate, toDate, 't3');
+                var endMonth = parseInt($("#beginmonthlydate-t3").val().split("-")[0]);
+                toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
+                toDate = moment(toDate).format("YYYY-MM-DD");
+                $("#endDate-t3").val(toDate);
             }
         }
     },
@@ -1710,21 +2139,18 @@ Template.basreturn.events({
                         }
                         let datemethod = "q";
                         let startDate = "0000-00-00";
+                        let endDate = "0000-00-00";
                         if ($("#datemethod1").prop('checked') == true) {
                             datemethod = "q";
-                            if ($("#beginquarterlydate").val() != "" && $("#currentyear").val() != "" && $("#beginquarterlydate").val() != null && $("#currentyear").val() != null) {
-                                startDate = new Date($("#currentyear").val() + "-" + $("#beginquarterlydate").val());
-                                startDate = moment(startDate).format("YYYY-MM-DD");
-                            }
                         } else {
-                            datemethod = "m";
-                            if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
-                                startDate = new Date($("#currentyear").val() + "-" + $("#beginmonthlydate").val());
-                                startDate = moment(startDate).format("YYYY-MM-DD");
-                            }
+                            datemethod = "m";                            
                         }
-                        var endDate = new Date();
-                        endDate = moment(endDate).format("YYYY-MM-DD");
+                        if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
+                            startDate = new Date($("#currentyear").val() + "-" + $("#beginmonthlydate").val());
+                            startDate = moment(startDate).format("YYYY-MM-DD");
+                            endDate = $("#endDate").val();
+                        }
+                        
                         let gst1cost = $('#gst1cost').val();
                         let gst2cost = $('#gst2cost').val();
                         let gst3cost = $('#gst3cost').val();
@@ -1798,38 +2224,30 @@ Template.basreturn.events({
                         }
                         let datemethodT2 = "q";
                         let startDateT2 = "0000-00-00";
+                        var endDateT2 = "0000-00-00";
                         if ($("#datemethod1-t2").prop('checked') == true) {
                             datemethodT2 = "q";
-                            if ($("#beginquarterlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginquarterlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
-                                startDateT2 = new Date($("#currentyear-t2").val() + "-" + $("#beginquarterlydate-t2").val());
-                                startDateT2 = moment(startDateT2).format("YYYY-MM-DD");
-                            }
                         } else {
-                            datemethodT2 = "m";
-                            if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
-                                startDateT2 = new Date($("#currentyear-t2").val() + "-" + $("#beginmonthlydate-t2").val());
-                                startDateT2 = moment(startDateT2).format("YYYY-MM-DD");
-                            }
+                            datemethodT2 = "m";                            
                         }
-                        var endDateT2 = new Date();
-                        endDateT2 = moment(endDate).format("YYYY-MM-DD");
+                        if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
+                            startDateT2 = new Date($("#currentyear-t2").val() + "-" + $("#beginmonthlydate-t2").val());
+                            startDateT2 = moment(startDateT2).format("YYYY-MM-DD");
+                            endDateT2 = $("#endDate-t2").val();
+                        }                        
                         let datemethodT2_2 = "q";
                         let startDateT2_2 = "0000-00-00";
+                        var endDateT2_2 = "0000-00-00";
                         if ($("#datemethod1-t2-2").prop('checked') == true) {
                             datemethodT2_2 = "q";
-                            if ($("#beginquarterlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginquarterlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
-                                startDateT2_2 = new Date($("#currentyear-t2-2").val() + "-" + $("#beginquarterlydate-t2-2").val());
-                                startDateT2_2 = moment(startDateT2_2).format("YYYY-MM-DD");
-                            }
                         } else {
-                            datemethodT2_2 = "m";
-                            if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
-                                startDateT2_2 = new Date($("#currentyear-t2-2").val() + "-" + $("#beginmonthlydate-t2-2").val());
-                                startDateT2_2 = moment(startDateT2_2).format("YYYY-MM-DD");
-                            }
+                            datemethodT2_2 = "m";                            
                         }
-                        var endDateT2_2 = new Date();
-                        endDateT2_2 = moment(endDate).format("YYYY-MM-DD");
+                        if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
+                            startDateT2_2 = new Date($("#currentyear-t2-2").val() + "-" + $("#beginmonthlydate-t2-2").val());
+                            startDateT2_2 = moment(startDateT2_2).format("YYYY-MM-DD");
+                            endDateT2_2 = $("#endDate-t2-2").val();
+                        }                        
                         let accounts1cost = $('#accounts1cost').val();
                         let accounts2cost = $('#accounts2cost').val();
                         let accounts3cost = $('#accounts3cost').val();
@@ -1870,21 +2288,17 @@ Template.basreturn.events({
                         }
                         let datemethodT3 = "q";
                         let startDateT3 = "0000-00-00";
+                        var endDateT3 = "0000-00-00";
                         if ($("#datemethod1-t3").prop('checked') == true) {
                             datemethodT3 = "q";
-                            if ($("#beginquarterlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginquarterlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
-                                startDateT3 = new Date($("#currentyear-t3").val() + "-" + $("#beginquarterlydate-t3").val());
-                                startDateT3 = moment(startDateT3).format("YYYY-MM-DD");
-                            }
                         } else {
-                            datemethodT3 = "m";
-                            if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
-                                startDateT3 = new Date($("#currentyear-t3").val() + "-" + $("#beginmonthlydate-t3").val());
-                                startDateT3 = moment(startDateT3).format("YYYY-MM-DD");
-                            }
+                            datemethodT3 = "m";                            
                         }
-                        var endDateT3 = new Date();
-                        endDateT3 = moment(endDate).format("YYYY-MM-DD");
+                        if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
+                            startDateT3 = new Date($("#currentyear-t3").val() + "-" + $("#beginmonthlydate-t3").val());
+                            startDateT3 = moment(startDateT3).format("YYYY-MM-DD");
+                            endDateT3 = $("#endDate-t3").val();
+                        }
                         let t3taxcodes1cost = $('#t3taxcodes1cost').val();
                         let t3taxcodes2cost = $('#t3taxcodes2cost').val();
                         let t3taxcodes3cost = $('#t3taxcodes3cost').val();
@@ -2266,11 +2680,39 @@ Template.basreturn.events({
     },
 
 
+    
+    'click .btnRefresh': function(event) {
+        let templateObject = Template.instance();
+        let fromDate = "0000-00-00";
+        let toDate = new Date();
+        toDate = moment(toDate).format("YYYY-MM-DD");
 
-
-
-    'click #accountListModal #refreshpagelist': function() {
-        Meteor._reload.reload();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
+            fromDate = new Date($("#currentyear").val() + "-" + $("#beginmonthlydate").val());
+            fromDate = moment(fromDate).format("YYYY-MM-DD");
+            toDate = $("#endDate").val();
+            templateObject.getTaxSummaryReports(fromDate, toDate, false, "t1");
+        }
+        if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
+            fromDate = new Date($("#currentyear-t2").val() + "-" + $("#beginmonthlydate-t2").val());
+            fromDate = moment(fromDate).format("YYYY-MM-DD");
+            toDate = $("#endDate-t2").val();            
+            templateObject.getAccountsSummaryReports(fromDate, toDate, 't2');
+        }
+        if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
+            fromDate = new Date($("#currentyear-t2-2").val() + "-" + $("#beginmonthlydate-t2-2").val());
+            fromDate = moment(fromDate).format("YYYY-MM-DD");
+            toDate = $("#endDate-t2-2").val();
+            templateObject.getAccountsSummaryReports(fromDate, toDate, 't2-2');
+        }
+        if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
+            fromDate = new Date($("#currentyear-t3").val() + "-" + $("#beginmonthlydate-t3").val());
+            fromDate = moment(fromDate).format("YYYY-MM-DD");
+            toDate = $("#endDate-t3").val();            
+            templateObject.getTaxSummaryReports(fromDate, toDate, false, "t3");
+            templateObject.getAccountsSummaryReports(fromDate, toDate, 't3');
+        }
     },
     'click .printConfirm': function(event) {
         $(".printBasReturn").show();
@@ -2284,7 +2726,7 @@ Template.basreturn.events({
 
         setTimeout(function() {
             $("a").attr("href", "#");
-            $(".printBasReturn").hide();
+            // $(".printBasReturn").hide();
         }, 100);
     },
     'click .btnRemove': function(event) {
@@ -2385,21 +2827,17 @@ Template.basreturn.events({
         }
         let datemethod = "q";
         let startDate = "0000-00-00";
+        let endDate = "0000-00-00";
         if ($("#datemethod1").prop('checked') == true) {
             datemethod = "q";
-            if ($("#beginquarterlydate").val() != "" && $("#currentyear").val() != "" && $("#beginquarterlydate").val() != null && $("#currentyear").val() != null) {
-                startDate = new Date($("#currentyear").val() + "-" + $("#beginquarterlydate").val());
-                startDate = moment(startDate).format("YYYY-MM-DD");
-            }
         } else {
-            datemethod = "m";
-            if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
-                startDate = new Date($("#currentyear").val() + "-" + $("#beginmonthlydate").val());
-                startDate = moment(startDate).format("YYYY-MM-DD");
-            }
+            datemethod = "m";            
         }
-        var endDate = new Date();
-        endDate = moment(endDate).format("YYYY-MM-DD");
+        if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
+            startDate = new Date($("#currentyear").val() + "-" + $("#beginmonthlydate").val());
+            startDate = moment(startDate).format("YYYY-MM-DD");
+            endDate = $("#endDate").val();
+        }        
         let gst1cost = $('#gst1cost').val();
         let gst2cost = $('#gst2cost').val();
         let gst3cost = $('#gst3cost').val();
@@ -2473,40 +2911,30 @@ Template.basreturn.events({
         }
         let datemethodT2 = "q";
         let startDateT2 = "0000-00-00";
+        let endDateT2 = "0000-00-00";
         if ($("#datemethod1-t2").prop('checked') == true) {
             datemethodT2 = "q";
-            if ($("#beginquarterlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginquarterlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
-                alert($("#beginquarterlydate-t2").val());
-                alert($("#currentyear-t2").val());
-                startDateT2 = new Date($("#currentyear-t2").val() + "-" + $("#beginquarterlydate-t2").val());
-                startDateT2 = moment(startDateT2).format("YYYY-MM-DD");
-            }
         } else {
-            datemethodT2 = "m";
-            if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
-                startDateT2 = new Date($("#currentyear-t2").val() + "-" + $("#beginmonthlydate-t2").val());
-                startDateT2 = moment(startDateT2).format("YYYY-MM-DD");
-            }
+            datemethodT2 = "m";            
         }
-        var endDateT2 = new Date();
-        endDateT2 = moment(endDate).format("YYYY-MM-DD");
+        if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
+            startDateT2 = new Date($("#currentyear-t2").val() + "-" + $("#beginmonthlydate-t2").val());
+            startDateT2 = moment(startDateT2).format("YYYY-MM-DD");
+            endDateT2 = $("#endDate-t2").val();
+        }
         let datemethodT2_2 = "q";
         let startDateT2_2 = "0000-00-00";
+        let endDateT2_2 = "0000-00-00";
         if ($("#datemethod1-t2-2").prop('checked') == true) {
             datemethodT2_2 = "q";
-            if ($("#beginquarterlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginquarterlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
-                startDateT2_2 = new Date($("#currentyear-t2-2").val() + "-" + $("#beginquarterlydate-t2-2").val());
-                startDateT2_2 = moment(startDateT2_2).format("YYYY-MM-DD");
-            }
         } else {
-            datemethodT2_2 = "m";
-            if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
-                startDateT2_2 = new Date($("#currentyear-t2-2").val() + "-" + $("#beginmonthlydate-t2-2").val());
-                startDateT2_2 = moment(startDateT2_2).format("YYYY-MM-DD");
-            }
+            datemethodT2_2 = "m";            
         }
-        var endDateT2_2 = new Date();
-        endDateT2_2 = moment(endDate).format("YYYY-MM-DD");
+        if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
+            startDateT2_2 = new Date($("#currentyear-t2-2").val() + "-" + $("#beginmonthlydate-t2-2").val());
+            startDateT2_2 = moment(startDateT2_2).format("YYYY-MM-DD");
+            endDateT2_2 = $("#endDate-t2-2").val();
+        }
         let accounts1cost = $('#accounts1cost').val();
         let accounts2cost = $('#accounts2cost').val();
         let accounts3cost = $('#accounts3cost').val();
@@ -2547,21 +2975,17 @@ Template.basreturn.events({
         }
         let datemethodT3 = "q";
         let startDateT3 = "0000-00-00";
+        var endDateT3 = "0000-00-00";
         if ($("#datemethod1-t3").prop('checked') == true) {
             datemethodT3 = "q";
-            if ($("#beginquarterlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginquarterlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
-                startDateT3 = new Date($("#currentyear-t3").val() + "-" + $("#beginquarterlydate-t3").val());
-                startDateT3 = moment(startDateT3).format("YYYY-MM-DD");
-            }
         } else {
-            datemethodT3 = "m";
-            if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
-                startDateT3 = new Date($("#currentyear-t3").val() + "-" + $("#beginmonthlydate-t3").val());
-                startDateT3 = moment(startDateT3).format("YYYY-MM-DD");
-            }
+            datemethodT3 = "m";            
         }
-        var endDateT3 = new Date();
-        endDateT3 = moment(endDate).format("YYYY-MM-DD");
+        if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
+            startDateT3 = new Date($("#currentyear-t3").val() + "-" + $("#beginmonthlydate-t3").val());
+            startDateT3 = moment(startDateT3).format("YYYY-MM-DD");
+            endDateT3 = $("#endDate-t3").val();
+        }
         let t3taxcodes1cost = $('#t3taxcodes1cost').val();
         let t3taxcodes2cost = $('#t3taxcodes2cost').val();
         let t3taxcodes3cost = $('#t3taxcodes3cost').val();
@@ -2873,59 +3297,6 @@ Template.basreturn.events({
             $('.colMemo').css('display', 'none');
         }
     },
-    'click .chkcolCreditEx': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colCreditEx').css('display', 'table-cell');
-            $('.colCreditEx').css('padding', '.75rem');
-            $('.colCreditEx').css('vertical-align', 'top');
-        } else {
-            $('.colCreditEx').css('display', 'none');
-        }
-    },
-    'click .chkcolDebitEx': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colDebitEx').css('display', 'table-cell');
-            $('.colDebitEx').css('padding', '.75rem');
-            $('.colDebitEx').css('vertical-align', 'top');
-        } else {
-            $('.colDebitEx').css('display', 'none');
-        }
-    },
-    'change .rngRangeAccountName': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthAccountName").html(range + '%');
-        $('.colAccountName').css('width', range + '%');
-
-    },
-    'change .rngRangeAccountNo': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthAccountNo").html(range + '%');
-        $('.colAccountNo').css('width', range + '%');
-
-    },
-    'change .rngRangeMemo': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthMemo").html(range + '%');
-        $('.colMemo').css('width', range + '%');
-
-    },
-    'change .rngRangeCreditEx': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthCreditEx").html(range + '%');
-        $('.colCreditEx').css('width', range + '%');
-
-    },
-    'change .rngRangeDebitEx': function(event) {
-
-        let range = $(event.target).val();
-        $(".spWidthDebitEx").html(range + '%');
-        $('.colDebitEx').css('width', range + '%');
-
-    },
     'blur .divcolumn': function(event) {
         let columData = $(event.target).html();
         let columHeaderUpdate = $(event.target).attr("valueupdate");
@@ -3083,126 +3454,9 @@ Template.basreturn.events({
             }
         }
     },
-    'click .new_attachment_btn': function(event) {
-        $('#attachment-upload').trigger('click');
-
-    },
-    'change #attachment-upload': function(e) {
-        let templateObj = Template.instance();
-        let saveToTAttachment = false;
-        let lineIDForAttachment = false;
-        let uploadedFilesArray = templateObj.uploadedFiles.get();
-
-        let myFiles = $('#attachment-upload')[0].files;
-        let uploadData = utilityService.attachmentUpload(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
-        templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
-        templateObj.attachmentCount.set(uploadData.totalAttachments);
-    },
-    'click .img_new_attachment_btn': function(event) {
-        $('#img-attachment-upload').trigger('click');
-
-    },
-    'change #img-attachment-upload': function(e) {
-        let templateObj = Template.instance();
-        let saveToTAttachment = false;
-        let lineIDForAttachment = false;
-        let uploadedFilesArray = templateObj.uploadedFiles.get();
-
-        let myFiles = $('#img-attachment-upload')[0].files;
-        let uploadData = utilityService.attachmentUpload(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
-        templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
-        templateObj.attachmentCount.set(uploadData.totalAttachments);
-    },
-    'click .remove-attachment': function(event, ui) {
-        let tempObj = Template.instance();
-        let attachmentID = parseInt(event.target.id.split('remove-attachment-')[1]);
-        if (tempObj.$("#confirm-action-" + attachmentID).length) {
-            tempObj.$("#confirm-action-" + attachmentID).remove();
-        } else {
-            let actionElement = '<div class="confirm-action" id="confirm-action-' + attachmentID + '"><a class="confirm-delete-attachment btn btn-default" id="delete-attachment-' + attachmentID + '">' +
-                'Delete</a><button class="save-to-library btn btn-default">Remove & save to File Library</button></div>';
-            tempObj.$('#attachment-name-' + attachmentID).append(actionElement);
-        }
-        tempObj.$("#new-attachment2-tooltip").show();
-
-    },
-    'click .file-name': function(event) {
-        let attachmentID = parseInt(event.currentTarget.parentNode.id.split('attachment-name-')[1]);
-        let templateObj = Template.instance();
-        let uploadedFiles = templateObj.uploadedFiles.get();
-        $('#myModalAttachment').modal('hide');
-        let previewFile = {};
-        let input = uploadedFiles[attachmentID].fields.Description;
-        previewFile.link = 'data:' + input + ';base64,' + uploadedFiles[attachmentID].fields.Attachment;
-        previewFile.name = uploadedFiles[attachmentID].fields.AttachmentName;
-        let type = uploadedFiles[attachmentID].fields.Description;
-        if (type === 'application/pdf') {
-            previewFile.class = 'pdf-class';
-        } else if (type === 'application/msword' || type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-            previewFile.class = 'docx-class';
-        } else if (type === 'application/vnd.ms-excel' || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-            previewFile.class = 'excel-class';
-        } else if (type === 'application/vnd.ms-powerpoint' || type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
-            previewFile.class = 'ppt-class';
-        } else if (type === 'application/vnd.oasis.opendocument.formula' || type === 'text/csv' || type === 'text/plain' || type === 'text/rtf') {
-            previewFile.class = 'txt-class';
-        } else if (type === 'application/zip' || type === 'application/rar' || type === 'application/x-zip-compressed' || type === 'application/x-zip,application/x-7z-compressed') {
-            previewFile.class = 'zip-class';
-        } else {
-            previewFile.class = 'default-class';
-        }
-
-        if (type.split('/')[0] === 'image') {
-            previewFile.image = true
-        } else {
-            previewFile.image = false
-        }
-        templateObj.uploadedFile.set(previewFile);
-
-        $('#files_view').modal('show');
-
-        return;
-    },
-    'click .confirm-delete-attachment': function(event, ui) {
-        let tempObj = Template.instance();
-        tempObj.$("#new-attachment2-tooltip").show();
-        let attachmentID = parseInt(event.target.id.split('delete-attachment-')[1]);
-        let uploadedArray = tempObj.uploadedFiles.get();
-        let attachmentCount = tempObj.attachmentCount.get();
-        $('#attachment-upload').val('');
-        uploadedArray.splice(attachmentID, 1);
-        tempObj.uploadedFiles.set(uploadedArray);
-        attachmentCount--;
-        if (attachmentCount === 0) {
-            let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
-            $('#file-display').html(elementToAdd);
-        }
-        tempObj.attachmentCount.set(attachmentCount);
-        if (uploadedArray.length > 0) {
-            let utilityService = new UtilityService();
-            utilityService.showUploadedAttachment(uploadedArray);
-        } else {
-            $(".attchment-tooltip").show();
-        }
-    },
-    'click .save-to-library': function(event, ui) {
-        $('.confirm-delete-attachment').trigger('click');
-    },
-    'click #btn_Attachment': function() {
-        let templateInstance = Template.instance();
-        let uploadedFileArray = templateInstance.uploadedFiles.get();
-        if (uploadedFileArray.length > 0) {
-            let utilityService = new UtilityService();
-            utilityService.showUploadedAttachment(uploadedFileArray);
-        } else {
-            $(".attchment-tooltip").show();
-        }
-    },
     'click .btnBack': function(event) {
         event.preventDefault();
         history.back(1);
-
-
     }
 
 });

@@ -958,6 +958,12 @@
                                     -ms-user-select: none;
                                     user-select: none;
                                 }
+                                .dataTables_scrollHeadInner {
+                                    min-width: calc(100% - 10px);
+                                }
+                                .tblBillLine tbody tr td {
+                                    background: transparent !important;
+                                }
                             </style>
 
                             <table id="tblBillLine" style="width:100%" class="table table-striped table-bordered tblBillLine">
@@ -1002,9 +1008,9 @@
                                             <td contenteditable="false" class="colAccountName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}"><input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}"></td>
                                             <td contenteditable="true" class="lineMemo colMemo {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">{{item.memo}}</td>
 
-                                            <td class="colAmountEx {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input class="lineAmount colAmount highlightInput colAmountExChange" type="text" value="{{item.unitPrice}}"></td>
+                                            <td style="min-width: 170px;" class="colAmountEx {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input class="lineAmount colAmount highlightInput colAmountExChange" type="text" value="{{item.unitPrice}}"></td>
                                             {{#if isForeignEnabled}}
-                                                <td class="colAmountEx convert-to-foreign {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPrice}}</td>
+                                                <td style="min-width: 170px;" class="colAmountEx convert-to-foreign {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPrice}}</td>
                                             {{/if}}
                                             <td class="colAmountInc  {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input class="lineAmount colAmount highlightInput colAmountIncChange" type="text" value="{{item.unitPriceInc}}"></td>
                                             {{#if isForeignEnabled}}
@@ -1016,9 +1022,9 @@
                                             </td>
                                             <td contenteditable="false" class="lineTaxRate colTaxRate  {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;cursor: pointer;">{{item.taxRate}}</td>
                                             <td contenteditable="false" class="colTaxCode {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
-                                            <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style=" ">{{item.TaxTotal}}</td>
+                                            <td style="min-width: 170px;" contenteditable="false" class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{item.TaxTotal}}</td>
                                             {{#if isForeignEnabled}}
-                                                <td contenteditable="false" class="lineTaxAmount convert-to-foreign colTaxAmount pointer {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" >{{ convertToForeignAmount item.TaxTotal}}</td>
+                                                <td style="min-width: 170px;" contenteditable="false" class="lineTaxAmount convert-to-foreign colTaxAmount pointer {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" >{{ convertToForeignAmount item.TaxTotal}}</td>
                                             {{/if}}
                                             
                                             <td contenteditable="true" class="lineCustomField1 colCustomField1  {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">{{item.CustomField1}}</td>

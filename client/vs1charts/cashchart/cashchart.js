@@ -8,7 +8,7 @@ Template.cashchart.onCreated(()=>{
   const templateObject = Template.instance();
   templateObject.titleMonth1 = new ReactiveVar();
   templateObject.titleMonth2 = new ReactiveVar();
-  
+
   templateObject.cashReceivedPerc1 = new ReactiveVar();
   templateObject.cashSpentPerc1 = new ReactiveVar();
   templateObject.cashSurplusPerc1 = new ReactiveVar();
@@ -20,7 +20,7 @@ Template.cashchart.onCreated(()=>{
 });
 
 Template.cashchart.onRendered(()=>{
-  const templateObject = Template.instance();  
+  const templateObject = Template.instance();
   let reportService = new ReportService();
   let utilityService = new UtilityService();
 
@@ -74,7 +74,7 @@ Template.cashchart.onRendered(()=>{
         rArrVal[i] = Math.round(rArrAbs[i] / maxValue * 100);
         if (rArrVal[i] < minPerc)
           rArrVal[i] = minPerc;
-      } 
+      }
     }
     return rArrVal;
   }
@@ -113,66 +113,42 @@ Template.cashchart.onRendered(()=>{
     }
     $('.' + fieldSelector).html(fieldVariance.toFixed(1));
   }
-  
+
   templateObject.getCashReports = async () => {
     try{
       var curDate = new Date();
-      var dateTo1 = new Date(curDate.getFullYear(), curDate.getMonth() - 1, 0);
-      var dateTo2 = new Date(curDate.getFullYear(), curDate.getMonth(), 0);
-      var loadDate1 = moment(dateTo1).format("YYYY-MM-DD");
-      var loadDate2 = moment(dateTo2).format("YYYY-MM-DD");
-      var loadDates = [];
-      loadDates.push(loadDate1);
-      loadDates.push(loadDate2);
+      var dateAsOf = curDate.getFullYear() + '-' + ("0" + (curDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (curDate.getDate())).slice(-2);
 
-      var fromDates = [];
-      var toDates = [];
-      fromDates.push(dateTo1.getFullYear() + '-' + ("0" + (dateTo1.getMonth() + 1)).slice(-2) + '-' + "01");
-      toDates.push(dateTo1.getFullYear() + '-' + ("0" + (dateTo1.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateTo1.getDate())).slice(-2));
-      fromDates.push(dateTo2.getFullYear() + '-' + ("0" + (dateTo2.getMonth() + 1)).slice(-2) + '-' + "01");
-      toDates.push(dateTo2.getFullYear() + '-' + ("0" + (dateTo2.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateTo2.getDate())).slice(-2));
-
-      let SubAccountTotal = 0;
-      let HeaderAccountTotal = 0;
-      let TotalAsset_Liability = 0;
-      let AccountTree = "";
-      let i = 0;
-      let aVal = 0;
-      for (var k=0; k<2; k++) {
-        let data = await reportService.getCashReceivedData(fromDates[k], toDates[k]);
-        let data1 = await reportService.getCashSpentData(fromDates[k], toDates[k]);
-        aVal = 0;
-        if (data.tcustomerpaymentlist) {
-          for (i=0, len=data.tcustomerpaymentlist.length; i<len; i++) {
-            aVal += data.tcustomerpaymentlist[i].Amount;
-          }
-          cashReceived[k] = aVal;
-        }
-        aVal = 0;
-        if (data1.tsupplierpaymentlist) {
-          for (i=0, len=data1.tsupplierpaymentlist.length; i<len; i++) {
-            aVal += data1.tsupplierpaymentlist[i].Amount;
-          }
-          cashSpent[k] = aVal;
-        }
-        cashSurplus[k] = cashReceived[k] - cashSpent[k];
-        let data2 = await reportService.getBalanceSheetReport(loadDates[k]);
-        if (data2.balancesheetreport) {      
-          for (i=0, len=data2.balancesheetreport.length; i<len; i++) {
-            SubAccountTotal = data2.balancesheetreport[i]["Sub Account Total"];
-            HeaderAccountTotal = data2.balancesheetreport[i]["Header Account Total"];
-            TotalAsset_Liability = data2.balancesheetreport[i]["Total Asset & Liability"];
-
-            AccountTree = data2.balancesheetreport[i]["Account Tree"];
-            if (AccountTree.replace(/\s/g, "") == "BANK") {
-              bankBalance[k] = SubAccountTotal;
-            }
-          }
-        }
+      let data = await reportService.getCardDataReport(dateAsOf);
+      if (data.tcarddatareport) {
+        let resData = data.tcarddatareport[0];
+        cashReceived[0] = resData.Cash_Received1;
+        cashReceived[1] = resData.Cash_Received2;
+        cashSpent[0] = resData.Cash_Spent1;
+        cashSpent[1] = resData.Cash_Spent2;
+        cashSurplus[0] = resData.Cash_Surplus1;
+        cashSurplus[1] = resData.Cash_Surplus2;
+        bankBalance[0] = resData.Cash_Balance1;
+        bankBalance[1] = resData.Cash_Balance2;
       }
 
-      [cashReceivedPerc1, cashSpentPerc1, cashSurplusPerc1, bankBalancePerc1] = templateObject.calculatePercent([cashReceived[0], cashSpent[0], cashSurplus[0], bankBalance[0]]);
-      [cashReceivedPerc2, cashSpentPerc2, cashSurplusPerc2, bankBalancePerc2] = templateObject.calculatePercent([cashReceived[1], cashSpent[1], cashSurplus[1], bankBalance[1]]);
+      let pArr = [];
+      for (var i=0; i<2; i++) {
+        pArr.push(cashReceived[i]);
+        pArr.push(cashSpent[i]);
+        pArr.push(cashSurplus[i]);
+        pArr.push(bankBalance[i]);
+      }
+      let rArr = [];
+      rArr = templateObject.calculatePercent(pArr);
+      cashReceivedPerc1 = rArr[0];
+      cashSpentPerc1 = rArr[1];
+      cashSurplusPerc1 = rArr[2];
+      bankBalancePerc1 = rArr[3];
+      cashReceivedPerc2 = rArr[4];
+      cashSpentPerc2 = rArr[5];
+      cashSurplusPerc2 = rArr[6];
+      bankBalancePerc2 = rArr[7];
 
       templateObject.cashReceivedPerc1.set(cashReceivedPerc1);
       templateObject.cashSpentPerc1.set(cashSpentPerc1);
@@ -197,8 +173,8 @@ Template.cashchart.onRendered(()=>{
       templateObject.setFieldVariance(cashSurplus[0], cashSurplus[1], "spnCashSurplusVariance", "divCashSurplusVariance");
       templateObject.setFieldVariance(bankBalance[0], bankBalance[1], "spnBankBalanceVariance", "divBankBalanceVariance");
     } catch (err) {
-      console.log(err);
-    }  
+
+    }
   };
   templateObject.getCashReports();
 });

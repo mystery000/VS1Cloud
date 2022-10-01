@@ -821,7 +821,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-4">
                           
                             <div class="col-12">
                                 <div class="row justify-content-center desktopButtons">
@@ -940,10 +940,10 @@
                             <div class="d-flex productRow">
                                 <div class="colProduct form-group d-flex">
                                     <button class="btn btn-primary btnAddProduct" style="width: 29%;">Product+</button>
-                                    <select class="edtProductName edtRaw form-control" id="edtRaw" type="search" style="width: 30%"></select>
+                                    <!-- <select class="edtProductName edtRaw form-control" id="edtRaw" type="search" style="width: 30%"></select> -->
                                 </div>
                                 <div class="colQty form-group">
-                                    <input type="text" class="form-control edtQuantity w-100" value="1"/>
+                                    <!-- <input type="text" class="form-control edtQuantity w-100" value="1"/> -->
                                 </div>
                                 <div class="colProcess form-group">
                                 </div>
@@ -961,6 +961,15 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+
+        <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
+            {{> productlistpop}}
+        </div>
+        <div class="modal fade" role="dialog" tabindex="-1" id="processListModal">
+            {{> processlistpopup}}
+            <!-- {{> statuspop}} -->
         </div>
     </div>
 </template>

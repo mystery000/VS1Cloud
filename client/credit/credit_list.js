@@ -25,36 +25,36 @@ Template.creditlist.onRendered(function() {
 
 
     // set initial table rest_data
-    function init_reset_data() {  
+    function init_reset_data() {
       let reset_data = [
         { index: 0, label: 'Sort Date', class:'SortDate', active: false, display: false, width: "0" },
         { index: 1, label: "Order Date", class: "OrderDate", active: true, display: true, width: "" },
-        { index: 2, label: "Credit No.", class: "PurchaseNo", active: true, display: true, width: "" }, 
+        { index: 2, label: "Credit No.", class: "PurchaseNo", active: true, display: true, width: "" },
         { index: 3, label: "Supplier", class: "Supplier", active: true, display: true, width: "" },
-        { index: 4, label: "Amount(Ex)", class: "AmountEx", active: true, display: true, width: "" },
+        { index: 4, label: "Amount (Ex)", class: "AmountEx", active: true, display: true, width: "" },
         { index: 5, label: "Tax", class: "Tax", active: true, display: true, width: "" },
-        { index: 6, label: "Amount", class: "Amount", active: true, display: true, width: "" }, 
+        { index: 6, label: "Amount (Inc)", class: "Amount", active: true, display: true, width: "" },
         { index: 7, label: "Paid", class: "Paid", active: true, display: true, width: "" },
-        { index: 8, label: "Outstanding", class: "BalanceOutstanding", active: false, display: true, width: "" }, 
-        { index: 9, label: "Status", class: "Status", active: true, display: true, width: "" }, 
-        { index: 10, label: "Employee", class: "Employee", active: true, display: true, width: "" }, 
+        { index: 8, label: "Outstanding", class: "BalanceOutstanding", active: false, display: true, width: "" },
+        { index: 9, label: "Status", class: "Status", active: true, display: true, width: "" },
+        { index: 10, label: "Employee", class: "Employee", active: true, display: true, width: "" },
         { index: 11, label: "Comments", class: "Comments", active: false, display: true, width: "" },
       ];
-  
+
       let templateObject = Template.instance();
       templateObject.reset_data.set(reset_data);
     }
     init_reset_data();
     // set initial table rest_data
-  
+
     // custom field displaysettings
     function initCustomFieldDisplaySettings(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       showCustomFieldDisplaySettings(reset_data);
-  
+
       try {
-        getVS1Data("VS1_Customize").then(function (dataObject) { 
+        getVS1Data("VS1_Customize").then(function (dataObject) {
           if (dataObject.length == 0) {
             sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
                 // reset_data = data.ProcessLog.CustomLayout.Columns;
@@ -63,25 +63,25 @@ Template.creditlist.onRendered(function() {
             }).catch(function (err) {
             });
           } else {
-            let data = JSON.parse(dataObject[0].data); 
+            let data = JSON.parse(dataObject[0].data);
             // handle process here
           }
         });
       } catch (error) {
-      } 
-      return; 
+      }
+      return;
     }
-  
+
     function showCustomFieldDisplaySettings(reset_data) {
       let custFields = [];
       let customData = {};
       let customFieldCount = reset_data.length;
-  
+
       for (let r = 0; r < customFieldCount; r++) {
         customData = {
           active: reset_data[r].active,
           id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label, 
+          custfieldlabel: reset_data[r].label,
           class: reset_data[r].class,
           display: reset_data[r].display,
           width: reset_data[r].width ? reset_data[r].width : ''
@@ -460,7 +460,7 @@ Template.creditlist.onRendered(function() {
 
 
                   }, 0);
- 
+
                   $('div.dataTables_filter input').addClass('form-control form-control-sm');
                   $('#tblcreditlist tbody').on( 'click', 'tr', function () {
                       var listData = $(this).closest('tr').attr('id');
@@ -754,7 +754,7 @@ Template.creditlist.onRendered(function() {
 
 
                 }, 0);
- 
+
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 $('#tblcreditlist tbody').on( 'click', 'tr', function () {
                     var listData = $(this).closest('tr').attr('id');
@@ -1044,7 +1044,7 @@ Template.creditlist.onRendered(function() {
 
 
               }, 0);
- 
+
               $('div.dataTables_filter input').addClass('form-control form-control-sm');
               $('#tblcreditlist tbody').on( 'click', 'tr', function () {
                   var listData = $(this).closest('tr').attr('id');
@@ -1136,9 +1136,9 @@ Template.creditlist.onRendered(function() {
       { label: 'Order Date', class: 'colOrderDate', active: true },
       { label: 'Credit No.', class: 'colPurchaseNo', active: true },
       { label: 'Supplier', class: 'colSupplier', active: true },
-      { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
+      { label: 'Amount (Ex)', class: 'colAmountEx', active: true },
       { label: 'Tax', class: 'colTax', active: true },
-      { label: 'Amount', class: 'colAmount', active: true },
+      { label: 'Amount (Inc)', class: 'colAmount', active: true },
       { label: 'Paid', class: 'colPaid', active: true },
       { label: 'Outstanding', class: 'colBalanceOutstanding', active: false },
       { label: 'Status', class: 'colStatus', active: true },
@@ -1359,17 +1359,17 @@ Template.creditlist.events({
     },
     'click .resetTable' : function(event){
       let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();  
-      reset_data = reset_data.filter(redata => redata.display); 
-  
+      let reset_data = templateObject.reset_data.get();
+      reset_data = reset_data.filter(redata => redata.display);
+
       $(".displaySettings").each(function (index) {
         let $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
         $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
-  
+
         let title = $("#tblcreditlist").find("th").eq(index+1);
-        $(title).html(reset_data[index].label); 
-  
+        $(title).html(reset_data[index].label);
+
         if (reset_data[index].active) {
           $('.col' + reset_data[index].class).addClass('showColumn');
           $('.col' + reset_data[index].class).removeClass('hiddenColumn');
@@ -1405,19 +1405,19 @@ Template.creditlist.events({
           display: true
         };
 
-        lineItems.push(lineItemObj); 
+        lineItems.push(lineItemObj);
       });
 
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index); 
+      lineItems.sort((a,b) => a.index - b.index);
 
       try {
         let erpGet = erpDb();
         let tableName = "tblcreditlist";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
         let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
@@ -1430,7 +1430,7 @@ Template.creditlist.events({
             }).then((result) => {
                 if (result.value) {
                   $('#myModal2').modal('hide');
-                }  
+                }
             });
         } else {
           swal("Something went wrong!", "", "error");
@@ -1438,7 +1438,7 @@ Template.creditlist.events({
       } catch (error) {
         $(".fullScreenSpin").css("display", "none");
         swal("Something went wrong!", "", "error");
-      } 
+      }
     },
     // 'blur .divcolumn' : function(event){
     //     let columData = $(event.target).text();
@@ -1459,7 +1459,7 @@ Template.creditlist.events({
         $('.colSaleDate').removeClass('showColumn');
       }
     },
-    'click .chkSalesNo': function(event) { 
+    'click .chkSalesNo': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colSalesNo').addClass('showColumn');
         $('.colSalesNo').removeClass('hiddenColumn');
@@ -1525,10 +1525,10 @@ Template.creditlist.events({
     },
 
     'click .chkBalanceOutstanding': function(event) {
-      if ($(event.target).is(':checked')) { 
+      if ($(event.target).is(':checked')) {
         $('.colBalanceOutstanding').addClass('showColumn');
         $('.colBalanceOutstanding').removeClass('hiddenColumn');
-      } else { 
+      } else {
           $('.colBalanceOutstanding').addClass('hiddenColumn');
           $('.colBalanceOutstanding').removeClass('showColumn');
       }
@@ -1590,36 +1590,36 @@ Template.creditlist.events({
 
 
     'click .chkOrderDate': function(event) {
-      if ($(event.target).is(':checked')) { 
+      if ($(event.target).is(':checked')) {
         $('.colOrderDate').addClass('showColumn');
         $('.colOrderDate').removeClass('hiddenColumn');
-      } else { 
+      } else {
           $('.colOrderDate').addClass('hiddenColumn');
           $('.colOrderDate').removeClass('showColumn');
       }
     },
 
     'click .chkPurchaseNo': function(event) {
-      if ($(event.target).is(':checked')) { 
+      if ($(event.target).is(':checked')) {
         $('.colPurchaseNo').addClass('showColumn');
         $('.colPurchaseNo').removeClass('hiddenColumn');
-      } else { 
+      } else {
           $('.colPurchaseNo').addClass('hiddenColumn');
           $('.colPurchaseNo').removeClass('showColumn');
       }
     },
 
     'click .chkSupplier': function(event) {
-      if ($(event.target).is(':checked')) { 
+      if ($(event.target).is(':checked')) {
         $('.colSupplier').addClass('showColumn');
         $('.colSupplier').removeClass('hiddenColumn');
-      } else { 
+      } else {
           $('.colSupplier').addClass('hiddenColumn');
           $('.colSupplier').removeClass('showColumn');
       }
     },
     // display settings
-    
+
 
     'change .rngRangeSaleDate': function(event) {
         let range = $(event.target).val();
@@ -1712,7 +1712,7 @@ Template.creditlist.events({
             }
         });
 
-    }, 
+    },
     'click #exportbtn': function () {
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblcreditlist_wrapper .dt-buttons .btntabletocsv').click();

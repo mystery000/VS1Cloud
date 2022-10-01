@@ -2037,14 +2037,17 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                                         <tr id="{{item.id}}">
                                             <td>
                                                 <div class='fc-event fc-daygrid-event fc-daygrid-block-event'>
+                                                  <a role="button" id="addAppointment_{{item.id}}" data-toggle="modal" href="#customerListModal" class="btn btn-primary addAppointmentEmp" style="width: 24px; height: 24px; text-align: center; float: left; margin-right:5px; padding:0">
+                                                        <i class="icon ion-plus"></i>
+                                                    </a>
                                                     {{#if item.color}}
                                                         <div class='fc-event-main'>
                                                             <span class="empColor" style="background: {{item.color}};">
                                                                 <span class="empPriority">{{item.priority}}</span>
                                                             </span>
                                                             {{item.employeeName}}
-                                                            <span id="employeeID" class="employeeID" style="display: none;">{{item.id}}</span>
-                                                            <span id="employeeName" class="employeeName" style="display: none;">{{item.employeeName}}</span>
+                                                            <span id="employeeID_{{item.id}}" class="employeeID" style="display: none;">{{item.id}}</span>
+                                                            <span id="employeeName_{{item.id}}" class="employeeName" style="display: none;">{{item.employeeName}}</span>
                                                         </div>
                                                     {{else}}
                                                         <div class='fc-event-main'>
@@ -3933,8 +3936,14 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                     /* natural color for navlinks */
 
                 }
-            </style>
 
+                #sidebarToggleAppointments:hover{
+                   background-color: #eaecf4;
+               }
+            </style>
+            <div style="float:left; margin-top: 25px;">
+              <button class="btn btn-link d-md rounded-circle mr-3" id="sidebarToggleAppointments" type="button"><i class="fas fa-bars" style="color: #00A3D3;"></i></button>
+            </div>
             <div id='calendar'></div>
 
         </div>

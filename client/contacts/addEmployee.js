@@ -879,7 +879,7 @@ Template.employeescard.onRendered(function () {
                         let datatablerecordObj = {
                             sTitle: v.innerText || '',
                             sWidth: sWidth || '',
-                            sIndex: v.cellIndex || '',
+                            sIndex: v.cellIndex || 0,
                             sVisible: columVisible || false,
                             sClass: v.className || ''
                         };
@@ -1047,7 +1047,7 @@ Template.employeescard.onRendered(function () {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -1205,7 +1205,7 @@ Template.employeescard.onRendered(function () {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -1277,7 +1277,7 @@ Template.employeescard.onRendered(function () {
         });
     }
 
-    
+
 
     if (currentId.id == "undefined") {
         currentDate = new Date();
@@ -2680,10 +2680,8 @@ Template.employeescard.onRendered(function () {
         if(type == "earningLines"){
             let payTemplateEarningLines = [];
             let checkPayTemplateEarningLine = templateObject.payTemplateEarningLineInfo.get();
-            if( Array.isArray( checkPayTemplateEarningLine ) ){
-                payTemplateEarningLines = PayTemplateEarningLine.fromList(
-                    checkPayTemplateEarningLine
-                ).filter((item) => {
+            if( Array.isArray( checkPayTemplateEarningLine ) && checkPayTemplateEarningLine.length > 0 ){
+                payTemplateEarningLines = checkPayTemplateEarningLine.filter((item) => {
                     if ( parseInt( item.EmployeeID ) == parseInt( employeeID ) && item.Active == true) {
                         return item;
                     }
@@ -2754,7 +2752,7 @@ Template.employeescard.onRendered(function () {
             }
             return null;
         }, {
-            useIndexDb: true, 
+            useIndexDb: true,
             useLocalStorage: false,
             validate: (cachedResponse) => {
                 return false;
@@ -2920,6 +2918,7 @@ Template.employeescard.onRendered(function () {
         });
         await templateObject.payTemplateSuperannuationLineInfo.set(useData);
         await templateObject.setSuperannuationDropDown();
+
         if( useData.length ){
             setTimeout(function () {
                 Array.prototype.forEach.call(useData, (item) => {
@@ -3854,7 +3853,7 @@ Template.employeescard.onRendered(function () {
     }
     templateObject.setDeductionLineDropDown();
 
-    templateObject.setSuperannuationDropDown = function() {
+    templateObject.setSuperannuationDropDown = async () => {
         setTimeout(function () {
             $('.superannuationDropDown').editableSelect();
             $('.superannuationDropDown').editableSelect()
@@ -4061,26 +4060,26 @@ Template.employeescard.onRendered(function () {
   };
 
     templateObject.initPayPeriods = async () => {
-        await templateObject.loadPayRunCalendar();
+       // await templateObject.loadPayRunCalendar();
 
-        let payPeriods = templateObject.payPeriods.get();
+        // let payPeriods = templateObject.payPeriods.get();
 
 
 
-        payPeriods.forEach((period) => {
-            $('#edtPayPeriod').editableSelect(
-                'add', `${period.PayrollCalendarName} (${period.PayrollCalendarPayPeriod})`,
-                null,
-                {
-                    name: "period-id",
-                    value: period.ID
-                },
-                {
-                    name: "period-id",
-                    value: period.ID
-                }
-                );
-        });
+        // payPeriods.forEach((period) => {
+        //     $('#edtPayPeriod').editableSelect(
+        //         'add', `${period.PayrollCalendarName} (${period.PayrollCalendarPayPeriod})`,
+        //         null,
+        //         {
+        //             name: "period-id",
+        //             value: period.ID
+        //         },
+        //         {
+        //             name: "period-id",
+        //             value: period.ID
+        //         }
+        //         );
+        // });
 
         $('#period').editableSelect('add','Hourly');
         $('#period').editableSelect('add','Daily');
@@ -7564,7 +7563,7 @@ Template.employeescard.events({
             let TFNExemption = $("#edtTfnExemption").val();
             let EmploymentBasis = $("#edtEmploymentBasis").val();
             let ResidencyStatus = $("#edtResidencyStatus").val();
-            let EdtPayPeriod = $("#edtPayPeriod").val();
+            let EdtPayPeriod = $("#edtPayPeriod").attr('calendar-id') || '';
             let FirstPayDate = $("#edtFirstPayDate").val();
             let StartingDate = $("#dtStartingDate").val();
             let FirstName = $("#edtFirstName").val();
@@ -7744,7 +7743,7 @@ Template.employeescard.events({
             let bankAccountName = $("#bankAccountName").val();
             let bankAccountBSB = $("#bankAccountBSB").val();
             let bankAccountNo = $("#bankAccountNo").val();
-            let EdtPayPeriod = $("#edtPayPeriod").val();
+            let EdtPayPeriod = $("#edtPayPeriod").attr('calendar-id') || '';;
             let FirstPayDate = $("#edtFirstPayDate").val();
             if( FirstPayDate == "" ){
                 handleValidationError('Please select First Pay Date in Taxes Tab!', 'edtFirstPayDate');
@@ -9329,7 +9328,7 @@ Template.employeescard.events({
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };
@@ -10227,6 +10226,10 @@ Template.employeescard.events({
         }
         amount = utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
         $('#edtSalesQuota').val(amount);
+    },
+
+    "click input#edtPayPeriod": (e, ui) => {
+        $('#SelectPayRunModal').modal("show");
     }
 });
 

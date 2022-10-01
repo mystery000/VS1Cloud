@@ -761,6 +761,9 @@
                                         display: flex !important;
                                     }
                                 }
+                                .tblPaymentcard tbody tr td {
+                                    background: transparent !important;
+                                }
                             </style>
 
                             <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
@@ -793,13 +796,13 @@
                                         <th class="th colType" style="width: 130px;">Type</th>
                                         <th class="th colTransNo" style="width: 100px;">Trans No.</th>
                                         <th class="th lineOrginalamount" style="width: 80px; text-align: left!important;">Original</th>
-                                        <th class="th lineAmountdue" style="width: 80px; text-align: left!important;">Due</th>
+                                        <th class="th lineAmountdue" style="min-width: 150px; text-align: left!important;">Due</th>
                                         {{#if isForeignEnabled}}
-                                            <th colspan="2" class="th linePaymentamount pointer" style="width: 120px; text-align: left!important;">Payment <i class="fa fa-pencil-square-o"></i></th>
-                                            <th colspan="2" class="th lineOutstandingAmount" style="width: 80px; text-align: left!important;">Outstanding</th>
+                                            <th colspan="2" class="th linePaymentamount pointer" style="width: 170px; text-align: left!important;">Payment <i class="fa fa-pencil-square-o"></i></th>
+                                            <th colspan="2" class="th lineOutstandingAmount" style="width: 170px; text-align: left!important;">Outstanding</th>
                                         {{else}}
-                                            <th class="th linePaymentamount pointer" style="width: 120px; text-align: left!important;">Payment <i class="fa fa-pencil-square-o"></i></th>
-                                            <th class="th lineOutstandingAmount" style="width: 80px; text-align: left!important;">Outstanding</th>
+                                            <th class="th linePaymentamount pointer" style="width: 170px; text-align: left!important;">Payment <i class="fa fa-pencil-square-o"></i></th>
+                                            <th class="th lineOutstandingAmount" style="width: 170px; text-align: left!important;">Outstanding</th>
                                         {{/if}}
 
                                         <th class="th colComments">Comments on Transaction form</th>
@@ -812,10 +815,10 @@
                                             <th></th>
                                             <th></th>
                                             <th></th>
-                                            <th>{{ getDefaultCurrency }}</th>
-                                            <th>Foreign</th>
-                                            <th>{{ getDefaultCurrency }}</th>
-                                            <th>Foreign</th>
+                                            <th style="min-width: 170px">{{ getDefaultCurrency }}</th>
+                                            <th style="min-width: 170px">Foreign</th>
+                                            <th style="min-width: 170px">{{ getDefaultCurrency }}</th>
+                                            <th style="min-width: 170px">Foreign</th>
                                             <th></th>
                                             <th></th>
                                         </tr>

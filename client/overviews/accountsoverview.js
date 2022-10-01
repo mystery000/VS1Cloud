@@ -1351,6 +1351,12 @@ Template.accountsoverview.events({
     "click #btnNewJournalEntry": function(event) {
         FlowRouter.go("/journalentrycard");
     },
+    "click #btnBasReturn": function(event) {
+    FlowRouter.go("/basreturnlist");
+    },
+    "click #btnNewBasReturn": function(event) {
+    FlowRouter.go("/basreturn");
+    },
     "click .chkDatatable": function(event) {
         var columns = $("#tblAccountOverview th");
         let columnDataValue = $(event.target)
@@ -1487,9 +1493,9 @@ Template.accountsoverview.events({
                         },
                         function(err, idTag) {
                             if (err) {
-                                $("#myModal2").modal("toggle");
+                                $("#myAccountModal").modal("toggle");
                             } else {
-                                $("#myModal2").modal("toggle");
+                                $("#myAccountModal").modal("toggle");
                             }
                         }
                     );
@@ -1506,16 +1512,16 @@ Template.accountsoverview.events({
                         },
                         function(err, idTag) {
                             if (err) {
-                                $("#myModal2").modal("toggle");
+                                $("#myAccountModal").modal("toggle");
                             } else {
-                                $("#myModal2").modal("toggle");
+                                $("#myAccountModal").modal("toggle");
                             }
                         }
                     );
                 }
             }
         }
-        $("#myModal2").modal("toggle");
+        $("#myAccountModal").modal("toggle");
         //Meteor._reload.reload();
     },
     "blur .divcolumn": function(event) {
@@ -2622,4 +2628,12 @@ Template.accountsoverview.helpers({
         }
         return transactionTableLastUpdated;
     },
+    showSetupFinishedAlert: () => {
+        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+        if (setupFinished == true || setupFinished == "true") {
+            return false;
+        } else {
+            return true;
+        }
+    }
 });

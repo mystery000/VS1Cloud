@@ -1491,7 +1491,7 @@
                                                                     <div class="col-12 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Pay Period</label>
-                                                                            <input type="search" class="form-control" name="edtPayPeriod" id="edtPayPeriod" />
+                                                                            <input type="search" class="form-control paste-selected-pay-period-js" name="edtPayPeriod" id="edtPayPeriod" />
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12 col-md-3">
@@ -2071,7 +2071,7 @@
                                                                                     max-width: 8px !important;
                                                                                     width: 8px !important;
                                                                                 }
-                                                                                
+
                                                                             </style>
                                                                             <table id="tblLeaveRequests" style="width:100%" class="table table-striped table-bordered">
                                                                                 <thead>
@@ -3611,7 +3611,7 @@
                                                                     <th class="th colSaleDate" style="width:80px;">Sale Date</th>
                                                                     <th class="th colSalesNo" style="width:80px;">Sales No.</th>
                                                                     <th class="th colCustomer" style="width:200px;">Customer</th>
-                                                                    <th class="th colAmountEx" style="width:80px;">Amount(Ex)</th>
+                                                                    <th class="th colAmountEx" style="width:80px;">Amount (Ex)</th>
                                                                     <th class="th colTax" style="width:80px;">Tax</th>
                                                                     <th class="th colAmount" style="width:80px;">Amount</th>
                                                                     <th class="th colPaid" style="width:80px;">Paid</th>
@@ -3800,6 +3800,8 @@
             </div>
         </div>
     </div>
+
+    {{> SelectPayCalendar }}
 
     <script>
         modalDraggable();

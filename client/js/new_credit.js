@@ -20,6 +20,7 @@ import { TaxRateService } from "../settings/settings-service";
 import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
+import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -1266,6 +1267,8 @@ Template.creditcard.onRendered(() => {
                             $('#edtSupplierName').val(data.fields.SupplierName);
                             templateObject.CleintName.set(data.fields.SupplierName);
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                            FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
                             $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(getDepartmentVal);
@@ -1494,6 +1497,8 @@ Template.creditcard.onRendered(() => {
                                 $('#edtSupplierName').val(useData[d].fields.SupplierName);
                                 templateObject.CleintName.set(useData[d].fields.SupplierName);
                                 $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
+                                FxGlobalFunctions.handleChangedCurrency(useData[d].fields.ForeignExchangeCode, defaultCurrencyCode);
+
                                 $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(getDepartmentVal);
@@ -1724,6 +1729,8 @@ Template.creditcard.onRendered(() => {
                                 $('#edtSupplierName').val(data.fields.SupplierName);
                                 templateObject.CleintName.set(data.fields.SupplierName);
                                 $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                                FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
                                 $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                                 $('#sltTerms').val(data.fields.TermsName);
                                 $('#sltDept').val(getDepartmentVal);
@@ -1969,6 +1976,8 @@ Template.creditcard.onRendered(() => {
                         $('#edtSupplierName').val(data.fields.SupplierName);
                         templateObject.CleintName.set(data.fields.SupplierName);
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                        FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
                         $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(getDepartmentVal);

@@ -971,70 +971,90 @@ Template.newproductpop.helpers({
     return Template.instance().recentTrasactions.get();
   },
   coggsaccountrecords: () => {
-    return Template.instance()
-      .coggsaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase()
-          ? 1
-          : -1;
-      });
+    if (Template.instance().coggsaccountrecords.get()) {
+      return Template.instance()
+          .coggsaccountrecords.get()
+          .sort(function (a, b) {
+            if (a.accountname == "NA") {
+              return 1;
+            } else if (b.accountname == "NA") {
+              return -1;
+            }
+            return a.accountname.toUpperCase() > b.accountname.toUpperCase()
+                ? 1
+                : -1;
+          });
+    } else {
+      return null;
+    }
   },
   salesaccountrecords: () => {
-    return Template.instance()
-      .salesaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase()
-          ? 1
-          : -1;
-      });
+    if (Template.instance().salesaccountrecords.get()) {
+      return Template.instance()
+        .salesaccountrecords.get()
+        .sort(function (a, b) {
+          if (a.accountname == "NA") {
+            return 1;
+          } else if (b.accountname == "NA") {
+            return -1;
+          }
+          return a.accountname.toUpperCase() > b.accountname.toUpperCase()
+            ? 1
+            : -1;
+        });
+    } else {
+      return null;
+    }
   },
   inventoryaccountrecords: () => {
-    return Template.instance()
-      .inventoryaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase()
-          ? 1
-          : -1;
-      });
+    if (Template.instance().inventoryaccountrecords.get()) {
+      return Template.instance()
+          .inventoryaccountrecords.get()
+          .sort(function (a, b) {
+            if (a.accountname == "NA") {
+              return 1;
+            } else if (b.accountname == "NA") {
+              return -1;
+            }
+            return a.accountname.toUpperCase() > b.accountname.toUpperCase()
+                ? 1
+                : -1;
+          });
+    } else {
+      return null;
+    }
   },
   productqtyrecords: () => {
-    return Template.instance()
-      .productqtyrecords.get()
-      .sort(function (a, b) {
-        if (a.department == "NA") {
-          return 1;
-        } else if (b.department == "NA") {
-          return -1;
-        }
-        return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
-      });
+    if (Template.instance().productqtyrecords.get()) {
+      return Template.instance()
+          .productqtyrecords.get()
+          .sort(function (a, b) {
+            if (a.department == "NA") {
+              return 1;
+            } else if (b.department == "NA") {
+              return -1;
+            }
+            return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
+          });
+    } else {
+      return null;
+    }
   },
   productExtraSell: () => {
-    return Template.instance()
-      .productExtraSell.get()
-      .sort(function (a, b) {
-        if (a.clienttype == "NA") {
-          return 1;
-        } else if (b.clienttype == "NA") {
-          return -1;
-        }
-        return a.clienttype.toUpperCase() > b.clienttype.toUpperCase() ? 1 : -1;
-      });
+    if (Template.instance().productExtraSell.get()) {
+      return Template.instance()
+          .productExtraSell.get()
+          .sort(function (a, b) {
+            if (a.clienttype == "NA") {
+              return 1;
+            } else if (b.clienttype == "NA") {
+              return -1;
+            }
+            return a.clienttype.toUpperCase() > b.clienttype.toUpperCase() ? 1 : -1;
+          });
+    } else {
+      return null;
+    }
   },
   totaldeptquantity: () => {
     return Template.instance().totaldeptquantity.get();
@@ -1057,16 +1077,20 @@ Template.newproductpop.helpers({
     return Template.instance().includeInventory.get();
   },
   clienttypeList: () => {
-    return Template.instance()
-      .clienttypeList.get()
-      .sort(function (a, b) {
-        if (a == "NA") {
-          return 1;
-        } else if (b == "NA") {
-          return -1;
-        }
-        return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
-      });
+    if (Template.instance().clienttypeList.get()) {
+      return Template.instance()
+          .clienttypeList.get()
+          .sort(function (a, b) {
+            if (a == "NA") {
+              return 1;
+            } else if (b == "NA") {
+              return -1;
+            }
+            return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
+          });
+    } else {
+      return null;
+    }
   },
 });
 

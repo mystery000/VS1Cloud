@@ -43,11 +43,11 @@ Template.profitabilitychart.onRendered(() => {
   templateObject.titleMonth1.set(currMonth1);
   templateObject.titleMonth2.set(currMonth2);
 
-  let totalSales = [];
-  let grossProfit = [];
-  let totalExpense = [];
-  let nettProfit = [];
-  
+  let totalSales = [0, 0];
+  let grossProfit = [0, 0];
+  let totalExpense = [0, 0];
+  let nettProfit = [0, 0];
+
   let totalSalesPerc1 = 0;
   let grossProfitPerc1 = 0;
   let totalExpensePerc1 = 0;
@@ -77,7 +77,7 @@ Template.profitabilitychart.onRendered(() => {
         rArrVal[i] = Math.round(rArrAbs[i] / maxValue * 100);
         if (rArrVal[i] < minPerc)
           rArrVal[i] = minPerc;
-      } 
+      }
     }
     return rArrVal;
   }
@@ -131,95 +131,39 @@ Template.profitabilitychart.onRendered(() => {
 
   templateObject.getValuesForProfitability = async function () {
     try {
-      var dateFrom = new Date();
-      var dateTo = new Date();
-      dateFrom.setMonth(currentDate.getMonth() - 2);
-      var pDateFrom = dateFrom.getFullYear() + '-' + ("0" + (dateFrom.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateFrom.getDate())).slice(-2);
-      dateTo.setMonth(currentDate.getMonth());
-      var pDateTo = dateTo.getFullYear() + '-' + ("0" + (dateTo.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateTo.getDate())).slice(-2);
-      let periodMonths = `1 Month`;
-      let data = await reportService.getProfitandLossCompare(
-        pDateFrom,
-        pDateTo,
-        false,
-        periodMonths
-      );
-      let records = [];
-      if (data.tprofitandlossperiodcomparereport) {
-        let accountData = data.tprofitandlossperiodcomparereport;
-        let accountType = "";
-        let arrAccountTypes = ["TotalIncome", "GrossProfit", "NetIncome"];
-        var dataList = "";
-        for (let i = 0; i < accountData.length; i++) {
-          let accountTypeDesc = accountData[i]["AccountTypeDesc"].replace(/\s/g, "");
-          if (arrAccountTypes.includes(accountTypeDesc)) {
-            accountType = accountTypeDesc;
-            let compPeriod = 2;
-            let periodAmounts = [];
-            let totalAmount = 0;
-            for (let counter = 1; counter <= compPeriod; counter++) {
-              totalAmount += accountData[i]["Amount_" + counter];
-              let AmountEx = utilityService.modifynegativeCurrencyFormat(accountData[i]["Amount_" + counter]) || 0.0;
-              let RealAmount = accountData[i]["Amount_" + counter] || 0;
-              periodAmounts.push({
-                decimalAmt: AmountEx,
-                roundAmt: RealAmount,
-              });
-            }
-            let totalAmountEx = utilityService.modifynegativeCurrencyFormat(totalAmount) || 0.0;
-            let totalRealAmount = totalAmount || 0;
-            if (accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" && accountType != "") {
-              dataList = {
-                id: accountData[i]["AccountID"] || "",
-                accounttype: accountType || "",
-                accounttypeshort: accountData[i]["AccountType"] || "",
-                accountname: accountData[i]["AccountName"] || "",
-                accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                accountno: accountData[i]["AccountNo"] || "",
-                totalamountex: "",
-                totalRealAmountex: "",
-                periodAmounts: "",
-                name: $.trim(accountData[i]["AccountName"])
-                  .split(" ")
-                  .join("_"),
-              };
-            } else {
-              dataList = {
-                id: accountData[i]["AccountID"] || "",
-                accounttype: accountType || "",
-                accounttypeshort: accountData[i]["AccountType"] || "",
-                accountname: accountData[i]["AccountName"] || "",
-                accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                accountno: accountData[i]["AccountNo"] || "",
-                totalamountex: totalAmountEx || 0.0,
-                periodAmounts: periodAmounts,
-                totalRealAmountex: totalRealAmount,
-                name: $.trim(accountData[i]["AccountName"])
-                  .split(" ")
-                  .join("_"),
-                // totaltax: totalTax || 0.00
-              };
-            }
+      var curDate = new Date();
+      var dateAsOf = curDate.getFullYear() + '-' + ("0" + (curDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (curDate.getDate())).slice(-2);
 
-            if (accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "") {
-            } else {
-              if (dataList.totalRealAmountex !== 0) {
-                records.push(dataList);
-              }
-            }
-          }
-        }
-        for (var i = 0; i < 2; i++) {
-          totalSales.push(records[0].periodAmounts[i].roundAmt);
-          grossProfit.push(records[1].periodAmounts[i].roundAmt);
-          totalExpense.push(records[0].periodAmounts[i].roundAmt - records[1].periodAmounts[i].roundAmt);
-          nettProfit.push(records[2].periodAmounts[i].roundAmt);
-        }  
-        templateObject.records.set(records);
+      let data = await reportService.getCardDataReport(dateAsOf);
+      if (data.tcarddatareport) {
+        let resData = data.tcarddatareport[0];
+        totalSales[0] = resData.Prof_Income1;
+        totalSales[1] = resData.Prof_Income2;
+        grossProfit[0] = resData.Prof_Gross1;
+        grossProfit[1] = resData.Prof_Gross2;
+        totalExpense[0] = resData.Prof_Expenses1;
+        totalExpense[1] = resData.Prof_Expenses2;
+        nettProfit[0] = resData.Prof_Net1;
+        nettProfit[1] = resData.Prof_Net2;
       }
 
-      [totalSalesPerc1, grossProfitPerc1, totalExpensePerc1, nettProfitPerc1] = templateObject.calculatePercent([totalSales[0], grossProfit[0], totalExpense[0], nettProfit[0]]);
-      [totalSalesPerc2, grossProfitPerc2, totalExpensePerc2, nettProfitPerc2] = templateObject.calculatePercent([totalSales[1], grossProfit[1], totalExpense[1], nettProfit[1]]);
+      let pArr = [];
+      for (var i=0; i<2; i++) {
+        pArr.push(totalSales[i]);
+        pArr.push(grossProfit[i]);
+        pArr.push(totalExpense[i]);
+        pArr.push(nettProfit[i]);
+      }
+      let rArr = [];
+      rArr = templateObject.calculatePercent(pArr);
+      totalSalesPerc1 = rArr[0];
+      grossProfitPerc1 = rArr[1];
+      totalExpensePerc1 = rArr[2];
+      nettProfitPerc1 = rArr[3];
+      totalSalesPerc2 = rArr[4];
+      grossProfitPerc2 = rArr[5];
+      totalExpensePerc2 = rArr[6];
+      nettProfitPerc2 = rArr[7];
 
       templateObject.totalSalesPerc1.set(totalSalesPerc1);
       templateObject.grossProfitPerc1.set(grossProfitPerc1);
@@ -238,13 +182,13 @@ Template.profitabilitychart.onRendered(() => {
       templateObject.setFieldValue(grossProfit[1], "spnGrossProfit2");
       templateObject.setFieldValue(totalExpense[1], "spnTotalExpense2");
       templateObject.setFieldValue(nettProfit[1], "spnTotalnetincome2");
-      
+
       templateObject.setFieldVariance(totalSales[0], totalSales[1], "spnTotalSalesVariance", "divTotalSalesVariance");
       templateObject.setFieldVariance(grossProfit[0], grossProfit[1], "spnGrossProfitVariance", "divGrossProfitVariance");
       templateObject.setFieldVariance(totalExpense[0], totalExpense[1], "spnTotalExpenseVariance", "divTotalExpenseVariance");
       templateObject.setFieldVariance(nettProfit[0], nettProfit[1], "spnNettProfitVariance", "divNettProfitVariance");
     } catch (err) {
-      console.log(err);
+
     }
   }
   templateObject.getValuesForProfitability();
@@ -300,4 +244,3 @@ Template.registerHelper('notEquals', function (a, b) {
 Template.registerHelper('containsequals', function (a, b) {
   return (a.indexOf(b) >= 0);
 });
-

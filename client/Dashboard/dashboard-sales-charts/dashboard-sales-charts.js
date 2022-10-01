@@ -14,8 +14,7 @@ Template.dashboardSalesCharts.onCreated(function () {
 Template.dashboardSalesCharts.onRendered(function () {
     const templateObject = Template.instance();
 
-    async function renderCharts() {
-
+    async function renderCharts(formatDateFrom, formatDateTo, ignoreDate) {
         const dataInvoiceObject = await getVS1Data('TInvoiceList');
         let totalInvoiceValue2ndLastQuater = 0;
         let totalInvoiceValueLastQuater = 0;
@@ -34,7 +33,6 @@ Template.dashboardSalesCharts.onRendered(function () {
                 }
             });
         }
-    
         const dataQuoteObject = await getVS1Data('TQuoteList');
         let totalQuotesValue2ndLastQuater = 0;
         let totalQuotesValueLastQuater = 0;
@@ -53,7 +51,6 @@ Template.dashboardSalesCharts.onRendered(function () {
                 }
             });
         }
-
         const dataSaleObject = await getVS1Data('TSalesList');
         let totalSalesValue2ndLastQuater = 0;
         let totalSalesValueLastQuater = 0;
@@ -203,7 +200,34 @@ Template.dashboardSalesCharts.onRendered(function () {
             }
         });
     }
-    setTimeout(() => renderCharts(), 500);
+    templateObject.setDateVal = function () {
+        const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+        const dateTo = new Date($("#dateTo").datepicker("getDate"));
+        let formatDateFrom =
+            dateFrom.getFullYear() +
+            "-" +
+            (dateFrom.getMonth() + 1) +
+            "-" +
+            dateFrom.getDate();
+        let formatDateTo =
+            dateTo.getFullYear() +
+            "-" +
+            (dateTo.getMonth() + 1) +
+            "-" +
+            dateTo.getDate();
+        if (
+            $("#dateFrom").val().replace(/\s/g, "") == "" &&
+            $("#dateFrom").val().replace(/\s/g, "") == ""
+        ) {
+            renderCharts(formatDateFrom, formatDateTo, true);
+        } else {
+            renderCharts(formatDateFrom, formatDateTo, false);
+        }
+    }
+
+    setTimeout(function(){
+        templateObject.setDateVal();
+    },500);
 });
 
 Template.dashboardSalesCharts.events({

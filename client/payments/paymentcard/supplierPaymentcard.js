@@ -133,10 +133,14 @@ Template.supplierpaymentcard.onRendered(() => {
           });
           if( suppPayment.length > 0 ){
             $('#sltCurrency').val(suppPayment[0].fields.ForeignExchangeCode);
+
             $('#exchange_rate').val(suppPayment[0].fields.ForeignExchangeRate);
           }
         }
       }
+
+      FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+
   }
 
 

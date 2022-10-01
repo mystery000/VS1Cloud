@@ -154,6 +154,12 @@ Template.inventorylist.onRendered(function() {
         display: reset_data[r].display,
         width: reset_data[r].width ? reset_data[r].width : ''
       };
+
+      if(reset_data[r].active == true){
+        $('#tblInventoryOverview_wrapper .'+reset_data[r].class).removeClass('hiddenColumn');
+      }else if(reset_data[r].active == false){
+        $('#tblInventoryOverview_wrapper .'+reset_data[r].class).addClass('hiddenColumn');
+      };
       custFields.push(customData);
     }
     templateObject.displayfields.set(custFields);
@@ -338,8 +344,81 @@ Template.inventorylist.onRendered(function() {
                             $(".fullScreenSpin").css("display", "none");
                             setTimeout(function() {
                               $("#tblInventoryOverview").dataTable({
-                                      //data: splashArrayProductList,
+                                      data: splashArrayProductList,
                                       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                      columnDefs: [{
+                                        className: "colProductID hiddenColumn",
+                                        targets: [0],
+                                    },
+                                    {
+                                        className: "colProductName",
+                                        targets: [1],
+                                    },
+                                    {
+                                        className: "colSalesDescription",
+                                        targets: [2],
+                                    },
+                                    {
+                                        className: "colAvailable text-right",
+                                        targets: [3],
+                                    },
+                                    {
+                                        className: "colOnSO text-right",
+                                        targets: [4],
+                                    },
+                                    {
+                                        className: "colOnBO text-right",
+                                        targets: [5],
+                                    },
+                                    {
+                                        className: "colInStock text-right",
+                                        targets: [6],
+                                    },
+                                    {
+                                        className: "colOnOrder text-right",
+                                        targets: [7],
+                                    },
+                                    {
+                                        className: "colCostPrice hiddenColumn text-right",
+                                        targets: [8],
+                                    },
+                                    {
+                                        className: "colCostPriceInc  text-right",
+                                        targets: [9],
+                                    },
+                                    {
+                                        className: "colSalePrice hiddenColumn text-right",
+                                        targets: [10],
+                                    },
+                                    {
+                                        className: "colSalePriceInc  text-right",
+                                        targets: [11],
+                                    },
+                                    {
+                                        className: "colSerialNo  text-center hiddenColumn",
+                                        targets: [12],
+                                    },
+                                    {
+                                        className: "colBarcode hiddenColumn",
+                                        targets: [13],
+                                    },
+                                    {
+                                        className: "colDepartment hiddenColumn",
+                                        targets: [14],
+                                    },
+                                    {
+                                        className: "colPurchaseDescription hiddenColumn",
+                                        targets: [15],
+                                    },
+                                    {
+                                        className: "colProdCustField1 hiddenColumn",
+                                        targets: [16],
+                                    },
+                                    {
+                                        className: "colProdCustField2 hiddenColumn",
+                                        targets: [17],
+                                    },
+                                ],
                                       select: true,
                                       destroy: true,
                                       colReorder: true,
@@ -538,8 +617,81 @@ Template.inventorylist.onRendered(function() {
                     $(".fullScreenSpin").css("display", "none");
                     setTimeout(function() {
                         $("#tblInventoryOverview").dataTable({
-                                //data: splashArrayProductList,
+                                data: splashArrayProductList,
                                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                columnDefs: [{
+                                        className: "colProductID hiddenColumn",
+                                        targets: [0],
+                                    },
+                                    {
+                                        className: "colProductName",
+                                        targets: [1],
+                                    },
+                                    {
+                                        className: "colSalesDescription",
+                                        targets: [2],
+                                    },
+                                    {
+                                        className: "colAvailable text-right",
+                                        targets: [3],
+                                    },
+                                    {
+                                        className: "colOnSO text-right",
+                                        targets: [4],
+                                    },
+                                    {
+                                        className: "colOnBO text-right",
+                                        targets: [5],
+                                    },
+                                    {
+                                        className: "colInStock text-right",
+                                        targets: [6],
+                                    },
+                                    {
+                                        className: "colOnOrder text-right",
+                                        targets: [7],
+                                    },
+                                    {
+                                        className: "colCostPrice hiddenColumn text-right",
+                                        targets: [8],
+                                    },
+                                    {
+                                        className: "colCostPriceInc  text-right",
+                                        targets: [9],
+                                    },
+                                    {
+                                        className: "colSalePrice hiddenColumn text-right",
+                                        targets: [10],
+                                    },
+                                    {
+                                        className: "colSalePriceInc  text-right",
+                                        targets: [11],
+                                    },
+                                    {
+                                        className: "colSerialNo  text-center hiddenColumn",
+                                        targets: [12],
+                                    },
+                                    {
+                                        className: "colBarcode hiddenColumn",
+                                        targets: [13],
+                                    },
+                                    {
+                                        className: "colDepartment hiddenColumn",
+                                        targets: [14],
+                                    },
+                                    {
+                                        className: "colPurchaseDescription hiddenColumn",
+                                        targets: [15],
+                                    },
+                                    {
+                                        className: "colProdCustField1 hiddenColumn",
+                                        targets: [16],
+                                    },
+                                    {
+                                        className: "colProdCustField2 hiddenColumn",
+                                        targets: [17],
+                                    },
+                                ],
                                 select: true,
                                 destroy: true,
                                 colReorder: true,
@@ -734,8 +886,81 @@ Template.inventorylist.onRendered(function() {
                         $(".fullScreenSpin").css("display", "none");
                         setTimeout(function() {
                           $("#tblInventoryOverview").dataTable({
-                                  //data: splashArrayProductList,
+                                  data: splashArrayProductList,
                                   sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                  columnDefs: [{
+                                        className: "colProductID hiddenColumn",
+                                        targets: [0],
+                                    },
+                                    {
+                                        className: "colProductName",
+                                        targets: [1],
+                                    },
+                                    {
+                                        className: "colSalesDescription",
+                                        targets: [2],
+                                    },
+                                    {
+                                        className: "colAvailable text-right",
+                                        targets: [3],
+                                    },
+                                    {
+                                        className: "colOnSO text-right",
+                                        targets: [4],
+                                    },
+                                    {
+                                        className: "colOnBO text-right",
+                                        targets: [5],
+                                    },
+                                    {
+                                        className: "colInStock text-right",
+                                        targets: [6],
+                                    },
+                                    {
+                                        className: "colOnOrder text-right",
+                                        targets: [7],
+                                    },
+                                    {
+                                        className: "colCostPrice hiddenColumn text-right",
+                                        targets: [8],
+                                    },
+                                    {
+                                        className: "colCostPriceInc  text-right",
+                                        targets: [9],
+                                    },
+                                    {
+                                        className: "colSalePrice hiddenColumn text-right",
+                                        targets: [10],
+                                    },
+                                    {
+                                        className: "colSalePriceInc  text-right",
+                                        targets: [11],
+                                    },
+                                    {
+                                        className: "colSerialNo  text-center hiddenColumn",
+                                        targets: [12],
+                                    },
+                                    {
+                                        className: "colBarcode hiddenColumn",
+                                        targets: [13],
+                                    },
+                                    {
+                                        className: "colDepartment hiddenColumn",
+                                        targets: [14],
+                                    },
+                                    {
+                                        className: "colPurchaseDescription hiddenColumn",
+                                        targets: [15],
+                                    },
+                                    {
+                                        className: "colProdCustField1 hiddenColumn",
+                                        targets: [16],
+                                    },
+                                    {
+                                        className: "colProdCustField2 hiddenColumn",
+                                        targets: [17],
+                                    },
+                                ],
                                   select: true,
                                   destroy: true,
                                   colReorder: true,
@@ -1162,7 +1387,14 @@ Template.inventorylist.helpers({
     displayfields: () => {
       return Template.instance().displayfields.get();
     },
-
+    showSetupFinishedAlert: () => {
+        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+        if (setupFinished == true || setupFinished == "true") {
+            return false;
+        } else {
+            return true;
+        }
+    }
 });
 
 Template.inventorylist.events({
@@ -1275,7 +1507,7 @@ Template.inventorylist.events({
               confirmButtonText: 'OK'
             }).then((result) => {
                 if (result.value) {
-                   $('#myModal2').modal('hide');
+                   $('#myInventoryModal').modal('hide');
                 }
             });
         } else {
@@ -1738,13 +1970,13 @@ Template.inventorylist.events({
                         templateObject.datatablerecords.set(dataTableList);
                         //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
                         $(".fullScreenSpin").css("display", "none");
-                        // if (splashArrayProductList) {
-                        //   $('.resetTable').trigger('click');
-                        //     var datatable = $("#tblInventoryOverview").DataTable();
-                        //     datatable.clear();
-                        //     datatable.rows.add(splashArrayProductList);
-                        //     datatable.draw(false);
-                        // }
+                        if (splashArrayProductList) {
+                          $('.resetTable').trigger('click');
+                            var datatable = $("#tblInventoryOverview").DataTable();
+                            datatable.clear();
+                            datatable.rows.add(splashArrayProductList);
+                            datatable.draw(false);
+                        }
                     } else {
                         $(".fullScreenSpin").css("display", "none");
 

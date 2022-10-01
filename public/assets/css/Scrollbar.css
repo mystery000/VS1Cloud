@@ -236,6 +236,7 @@ a.btnOpenSettingsJob:focus,.btn-link:hover, .btn-link:focus,
 }
 .dataTables_length {
     float: right !important;
+    margin-right: 12px;
 }
 
 a.btnOpenSettings, .btn-link.dropdown-toggle, .btnoptionsmodal {
@@ -302,7 +303,13 @@ overflow-y: auto;
     margin-top: -10px;
     margin-left: -10px;
 }
-
+.setupIncompleatedMsg h2 {
+    font-size: 22px;
+    padding: 16px 4px 0;
+    text-align: center;
+    -webkit-animation: flash linear 1s infinite;
+    animation: flash linear 1s infinite;
+}
 .btnSearchAlert {
     -webkit-animation: flash linear 1s infinite;
     animation: flash linear 1s infinite;
@@ -337,16 +344,32 @@ overflow-y: auto;
 
 #myModal2 > .modal-dialog > .modal-content > .modal-body {
     max-height: 500px !important;
-    /* overflow-x: scroll !important; */
-    overflow-x: hidden !important;
-    overflow-y: scroll !important;
+    overflow-x: scroll !important;
 }
 
-.myModalAccountList > .modal-dialog > .modal-content > .modal-body {
+#myModalAccountList > .modal-dialog > .modal-content > .modal-body {
     max-height: 500px !important;
-    /* overflow-x: scroll !important; */
-    overflow-x: hidden !important;
-    overflow-y: scroll !important;
+    overflow-x: scroll !important;
+}
+
+#myContactOverviewModal > .modal-dialog > .modal-content > .modal-body {
+    max-height: 500px !important;
+    overflow-x: scroll !important;
+}
+
+#myLeadChartModal > .modal-dialog > .modal-content > .modal-body {
+    max-height: 500px !important;
+    overflow-x: scroll !important;
+}
+
+#myAccountModal > .modal-dialog > .modal-content > .modal-body {
+    max-height: 500px !important;
+    overflow-x: scroll !important;
+}
+
+#myInventoryModal > .modal-dialog > .modal-content > .modal-body {
+    max-height: 500px !important;
+    overflow-x: scroll !important;
 }
 
 .btn-sm.btn-danger {

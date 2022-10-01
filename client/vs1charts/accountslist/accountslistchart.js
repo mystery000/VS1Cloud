@@ -329,7 +329,7 @@ Template.accountslistchart.onRendered(()=>{
                                   targets: [3],
                               },
                           ],
-                          colReorder: true,
+                          // colReorder: true,
 
                           pageLength: initialDatatableLoad,
                           lengthMenu: [
@@ -402,7 +402,7 @@ Template.accountslistchart.onRendered(()=>{
                               targets: [3],
                           },
                       ],
-                      colReorder: true,
+                      // colReorder: true,
 
                       pageLength: initialDatatableLoad,
                       lengthMenu: [
@@ -475,7 +475,7 @@ Template.accountslistchart.onRendered(()=>{
                               targets: [3],
                           },
                       ],
-                      colReorder: true,
+                      // colReorder: true,
 
                       pageLength: initialDatatableLoad,
                       lengthMenu: [
@@ -735,9 +735,6 @@ Template.accountslistchart.onRendered(()=>{
                   { className: "colTaxCode", "targets": [4] },
                   { className: "colAccountID hiddenColumn", "targets": [5] }
               ],
-              select: true,
-              destroy: true,
-              colReorder: true,
               "order": [
                   [0, "asc"]
               ],
@@ -757,13 +754,10 @@ Template.accountslistchart.onRendered(()=>{
               }
           });
           // //$.fn.dataTable.moment('DD/MM/YY');
-          $("#tblDashboardAccountList").DataTable({
+          $("#tblDashboardAccountChartList").DataTable({
                   columnDefs: [
                       // { type: 'currency', targets: 4 }
                   ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
                   sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                   buttons: [{
                           extend: "csvHtml5",
@@ -820,7 +814,7 @@ Template.accountslistchart.onRendered(()=>{
                   ],
                   // "aaSorting": [[1,'desc']],
                   action: function() {
-                      $("#tblDashboardAccountList").DataTable().ajax.reload();
+                      $("#tblDashboardAccountChartList").DataTable().ajax.reload();
                   },
                   language: { search: "",searchPlaceholder: "Search List..." },
                   fnDrawCallback: function(oSettings) {
@@ -831,7 +825,7 @@ Template.accountslistchart.onRendered(()=>{
                   fnInitComplete: function() {
                       $(
                           "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                      ).insertAfter("#tblDashboardAccountList_filter");
+                      ).insertAfter("#tblDashboardAccountChartList_filter");
                   },
               })
               .on("page", function() {
@@ -850,7 +844,7 @@ Template.accountslistchart.onRendered(()=>{
           // $('.fullScreenSpin').css('display','none');
       }, 10);
 
-      const columns = $("#tblDashboardAccountList th");
+      const columns = $("#tblDashboardAccountChartList th");
       let sTible = "";
       let sWidth = "";
       let sIndex = "";
@@ -960,7 +954,7 @@ Template.accountslistchart.onRendered(()=>{
       }, 200);
   }
 
-  $("#tblDashboardAccountList tbody").on("click","tr .colAccountName, tr .colAccountName, tr .colDescription, tr .colAccountNo, tr .colType, tr .colTaxCode, tr .colBankAccountName, tr .colBSB, tr .colBankAccountNo, tr .colExtra, tr .colAPCANumber",function() {
+  $("#tblDashboardAccountChartList tbody").on("click","tr .colAccountName, tr .colAccountName, tr .colDescription, tr .colAccountNo, tr .colType, tr .colTaxCode, tr .colBankAccountName, tr .colBSB, tr .colBankAccountNo, tr .colExtra, tr .colAPCANumber",function() {
           var listData = $(this).closest("tr").attr("id");
           var tabletaxtcode = $(event.target).closest("tr").find(".colTaxCode").text();
           var accountName = $(event.target).closest("tr").find(".colAccountName").text();
@@ -1052,7 +1046,7 @@ Template.accountslistchart.onRendered(()=>{
           }
     });
 
-  $("#tblDashboardAccountList tbody").on("click", "tr .colBalance", async function() {
+  $("#tblDashboardAccountChartList tbody").on("click", "tr .colBalance", async function() {
       var listData = $(this).closest("tr").attr("id");
       var accountName = $(event.target).closest("tr").find(".colAccountName").text();
       let columnBalClass = $(event.target).attr("class");
@@ -1072,7 +1066,7 @@ Template.accountslistchart.onRendered(()=>{
        FlowRouter.go("/journalentrycard");
    },
    "click .accountslistchart .chkDatatable": function(event) {
-       var columns = $("#tblDashboardAccountList th");
+       var columns = $("#tblDashboardAccountChartList th");
        let columnDataValue = $(event.target)
            .closest("div")
            .find(".divcolumn")
@@ -1105,7 +1099,7 @@ Template.accountslistchart.onRendered(()=>{
                var clientEmail = getcurrentCloudDetails.cloudEmail;
                var checkPrefDetails = CloudPreference.findOne({
                    userid: clientID,
-                   PrefName: "tblDashboardAccountList",
+                   PrefName: "tblDashboardAccountChartList",
                });
                if (checkPrefDetails) {
                    CloudPreference.remove({
@@ -1123,7 +1117,7 @@ Template.accountslistchart.onRendered(()=>{
    },
    "click .accountslistchart .saveTable": function(event) {
        let lineItems = [];
-       //let datatable =$('#tblDashboardAccountList').DataTable();
+       //let datatable =$('#tblDashboardAccountChartList').DataTable();
        $(".columnSettings").each(function(index) {
            var $tblrow = $(this);
            var colTitle = $tblrow.find(".divcolumn").text() || "";
@@ -1158,7 +1152,7 @@ Template.accountslistchart.onRendered(()=>{
                var clientEmail = getcurrentCloudDetails.cloudEmail;
                var checkPrefDetails = CloudPreference.findOne({
                    userid: clientID,
-                   PrefName: "tblDashboardAccountList",
+                   PrefName: "tblDashboardAccountChartList",
                });
                if (checkPrefDetails) {
                    CloudPreference.update({
@@ -1169,7 +1163,7 @@ Template.accountslistchart.onRendered(()=>{
                                username: clientUsername,
                                useremail: clientEmail,
                                PrefGroup: "salesform",
-                               PrefName: "tblDashboardAccountList",
+                               PrefName: "tblDashboardAccountChartList",
                                published: true,
                                customFields: lineItems,
                                updatedAt: new Date(),
@@ -1189,7 +1183,7 @@ Template.accountslistchart.onRendered(()=>{
                            username: clientUsername,
                            useremail: clientEmail,
                            PrefGroup: "salesform",
-                           PrefName: "tblDashboardAccountList",
+                           PrefName: "tblDashboardAccountChartList",
                            published: true,
                            customFields: lineItems,
                            createdAt: new Date(),
@@ -1215,7 +1209,7 @@ Template.accountslistchart.onRendered(()=>{
            .closest("div.columnSettings")
            .attr("id");
 
-       var datable = $("#tblDashboardAccountList").DataTable();
+       var datable = $("#tblDashboardAccountChartList").DataTable();
        var title = datable.column(columnDatanIndex).header();
        $(title).html(columData);
    },
@@ -1229,7 +1223,7 @@ Template.accountslistchart.onRendered(()=>{
            .prev()
            .find(".divcolumn")
            .text();
-       var datable = $("#tblDashboardAccountList th");
+       var datable = $("#tblDashboardAccountChartList th");
        $.each(datable, function(i, v) {
            if (v.innerText == columnDataValue) {
                let className = v.className;
@@ -1240,7 +1234,7 @@ Template.accountslistchart.onRendered(()=>{
    },
    "click .accountslistchart .btnOpenSettings": function(event) {
        let templateObject = Template.instance();
-       var columns = $("#tblDashboardAccountList th");
+       var columns = $("#tblDashboardAccountChartList th");
 
        const tableHeaderList = [];
        let sTible = "";
@@ -1271,12 +1265,12 @@ Template.accountslistchart.onRendered(()=>{
    },
    "click .accountslistchart .exportbtn": function() {
        $(".fullScreenSpin").css("display", "inline-block");
-       jQuery("#tblDashboardAccountList_wrapper .dt-buttons .btntabletocsv").click();
+       jQuery("#tblDashboardAccountChartList_wrapper .dt-buttons .btntabletocsv").click();
        $(".fullScreenSpin").css("display", "none");
    },
    "click .accountslistchart .exportbtnExcel": function() {
        $(".fullScreenSpin").css("display", "inline-block");
-       jQuery("#tblDashboardAccountList_wrapper .dt-buttons .btntabletoexcel").click();
+       jQuery("#tblDashboardAccountChartList_wrapper .dt-buttons .btntabletoexcel").click();
        $(".fullScreenSpin").css("display", "none");
    },
    "click .accountslistchart .btnRefresh": function() {
@@ -1535,7 +1529,7 @@ Template.accountslistchart.onRendered(()=>{
    },
    "click .accountslistchart .printConfirm": function(event) {
        $(".fullScreenSpin").css("display", "inline-block");
-       jQuery("#tblDashboardAccountList_wrapper .dt-buttons .btntabletopdf").click();
+       jQuery("#tblDashboardAccountChartList_wrapper .dt-buttons .btntabletopdf").click();
        $(".fullScreenSpin").css("display", "none");
    },
    "click .accountslistchart .templateDownload": function() {
@@ -2249,7 +2243,7 @@ Template.accountslistchart.onRendered(()=>{
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({
             userid: Session.get("mycloudLogonID"),
-            PrefName: "tblDashboardAccountList",
+            PrefName: "tblDashboardAccountChartList",
         });
     },
     taxraterecords: () => {

@@ -19,6 +19,7 @@ import LoadingOverlay from '../LoadingOverlay';
 import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
+import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -3107,6 +3108,9 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
               });
             };
             templateObject.getInvoiceData();
+
+            FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+
         }
     } else {
         LoadingOverlay.hide();
@@ -5878,20 +5882,20 @@ Template.refundcard.helpers({
         convertToForeignAmount: (amount) => {
             return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
         },
-    
+
         displayFieldColspan: (displayfield) => {
-            if(["Amount (Ex)", "Amount (Inc)", "Tax Amt", "Unit Price (Ex)", "Unit Price (Inc)"].includes(displayfield.custfieldlabel)) 
+            if(["Amount (Ex)", "Amount (Inc)", "Tax Amt", "Unit Price (Ex)", "Unit Price (Inc)"].includes(displayfield.custfieldlabel))
             {
                 if(Template.instance().isForeignEnabled.get() == true) {
                     return 2
                 }
                 return 1;
-            } 
+            }
             return 1;
         },
-    
+
         subHeaderForeign: (displayfield) => {
-    
+
             if(["Amount (Ex)", "Amount (Inc)", "Tax Amt", "Unit Price (Ex)", "Unit Price (Inc)"].includes(displayfield.custfieldlabel)) {
                 return true;
             }
@@ -9116,15 +9120,15 @@ Template.refundcard.events({
                 const mainClass = element.classList[0];
                 const mainValueElement = document.querySelector(`#tblInvoiceLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
             // const footerValueElement = document.querySelector(`#tblJournalEntryLine tfoot td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
-                
-                let value = mainValueElement.childElementCount > 0 ? 
-                    $(mainValueElement).find('input').val() : 
+
+                let value = mainValueElement.childElementCount > 0 ?
+                    $(mainValueElement).find('input').val() :
                     mainValueElement.innerText;
 
                 $(element).attr("value", convertToForeignAmount(value, rate, false));
                 value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
                 $(element).text(value);
-        
+
             })
         }, 500);
 
@@ -9132,9 +9136,8 @@ Template.refundcard.events({
 
     "change input.colUnitPriceEx": (e, ui) => {
         const td = $(e.currentTarget).parent('tr');
-        console.log(td);
         $('.colUnitPriceEx.convert-to-foreign');
-    }   
+    }
 
 });
 

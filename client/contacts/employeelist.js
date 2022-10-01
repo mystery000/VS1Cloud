@@ -213,7 +213,7 @@ Template.employeelist.onRendered(function() {
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };
@@ -514,7 +514,7 @@ Template.employeelist.events({
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };
@@ -763,5 +763,13 @@ Template.employeelist.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
+    },
+    showSetupFinishedAlert: () => {
+        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+        if (setupFinished == true || setupFinished == "true") {
+            return false;
+        } else {
+            return true;
+        }
     }
 });

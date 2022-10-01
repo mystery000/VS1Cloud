@@ -81,7 +81,8 @@ export class ProductService extends BaseService {
   getGlobalSearchPayment(searchName){
       let options = {
         IgnoreDates:true,
-        select: "[PaymentID]='"+searchName+"'",
+        ///select: "[PaymentID]='"+searchName+"'",
+        search: 'PaymentID='+ searchName+ '',
         // PaymentID:"'"+searchName+"'"
       };
       return this.getList(this.ERPObjects.TPaymentList, options);

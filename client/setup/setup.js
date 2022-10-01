@@ -814,6 +814,7 @@ Template.setup.onRendered(function () {
             .then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
+              let dataTableListPaymentMethod = []
               for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                 // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
                 var dataList = {
@@ -978,6 +979,7 @@ Template.setup.onRendered(function () {
               let sVisible = "";
               let columVisible = false;
               let sClass = "";
+              let tableHeaderListPaymentMethod = []
               $.each(columns, function (i, v) {
                 if (v.hidden == false) {
                   columVisible = true;
@@ -1013,6 +1015,7 @@ Template.setup.onRendered(function () {
           let useData = data.tpaymentmethodvs1;
           let lineItems = [];
           let lineItemObj = {};
+          let dataTableListPaymentMethod = []
           for (let i = 0; i < useData.length; i++) {
             // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
             var dataList = {
@@ -1168,6 +1171,7 @@ Template.setup.onRendered(function () {
           let sVisible = "";
           let columVisible = false;
           let sClass = "";
+          let tableHeaderListPaymentMethod = []
           $.each(columns, function (i, v) {
             if (v.hidden == false) {
               columVisible = true;
@@ -10124,9 +10128,9 @@ Template.setup.helpers({
   setupFinished: () => {
     let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
     if (setupFinished == true || setupFinished == "true") {
-      return true;
-    } else {
       return false;
+    } else {
+      return true;
     }
   },
   // Step 3 helpers
