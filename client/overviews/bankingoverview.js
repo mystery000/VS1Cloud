@@ -20,6 +20,9 @@ Template.bankingoverview.onCreated(function() {
     templateObject.overduecustpaymentCount = new ReactiveVar();
     templateObject.overduesupppaymentCount = new ReactiveVar();
     templateObject.bankaccountdatarecord = new ReactiveVar([]);
+
+    templateObject.displayfields = new ReactiveVar([]);
+    templateObject.reset_data = new ReactiveVar([]);
 });
 
 Template.bankingoverview.onRendered(function() {
@@ -46,6 +49,76 @@ Template.bankingoverview.onRendered(function() {
         fromDateDay = "0" + currentDate.getDate();
     }
     var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
+
+
+    // set initial table rest_data
+    function init_reset_data() {
+      let reset_data = [
+        { index: 0, label: "id", class: "SortDate", width: "0", active: false, display: false },
+        { index: 1, label: "Date", class: "PaymentDate", width: "80", active: true, display: true },
+        { index: 2, label: "Transaction ID", class: "AccountId", width: "80", active: true, display: true },
+        { index: 3, label: "Account", class: "BankAccount", width: "100", active: true, display: true },
+        { index: 4, label: "Type", class: "Type", width: "120", active: true, display: true },
+        { index: 5, label: "Amount", class: "PaymentAmount", width: "80", active: true, display: true },
+        { index: 6, label: "Amount (Inc)", class: "DebitEx", width: "120", active: true, display: true },
+        { index: 7, label: "Department", class: "Department", width: "80", active: true, display: true },
+        { index: 8, label: "Chq Ref No", class: "chqrefno", width: "110", active: false, display: true },
+        { index: 9, label: "Comments", class: "Notes", width: "", active: true, display: true },
+      ]; 
+
+      let templateObject = Template.instance();
+      templateObject.reset_data.set(reset_data);
+    }
+  init_reset_data();
+  // set initial table rest_data
+
+
+  // custom field displaysettings
+  function initCustomFieldDisplaySettings(data, listType) {
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    showCustomFieldDisplaySettings(reset_data);
+
+    try {
+      getVS1Data("VS1_Customize").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              showCustomFieldDisplaySettings(reset_data);
+          }).catch(function (err) {
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data); 
+          // handle process here
+        }
+      });
+    } catch (error) {
+    } 
+    return; 
+  }
+
+  function showCustomFieldDisplaySettings(reset_data) {
+
+    let custFields = [];
+    let customData = {};
+    let customFieldCount = reset_data.length;
+
+    for (let r = 0; r < customFieldCount; r++) {
+      customData = {
+        active: reset_data[r].active,
+        id: reset_data[r].index,
+        custfieldlabel: reset_data[r].label, 
+        class: reset_data[r].class,
+        display: reset_data[r].display,
+        width: reset_data[r].width ? reset_data[r].width : ''
+      };
+      custFields.push(customData);
+    }
+    templateObject.displayfields.set(custFields);
+  }
+
+  initCustomFieldDisplaySettings("", "tblBankingOverview");
+  // custom field displaysettings
 
     $("#date-input,#dateTo,#dateFrom").datepicker({
         showOn: 'button',
@@ -1654,159 +1727,179 @@ Template.bankingoverview.events({
             }
         });
     },
-    'click .resetTable': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblBankingOverview' });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({ _id: checkPrefDetails._id }, function(err, idTag) {
-                        if (err) {
+    
+    
+  // custom field displaysettings
+  "click .saveTable": function(event) {
+    let lineItems = [];
+    $(".fullScreenSpin").css("display", "inline-block");
 
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
+    $(".customDisplaySettings").each(function (index) {
+      var $tblrow = $(this);
+      var fieldID = $tblrow.attr("custid") || 0;
+      var colTitle = $tblrow.find(".divcolumn").text() || "";
+      var colWidth = $tblrow.find(".custom-range").val() || 0;
+      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+      var colHidden = false;
+      if ($tblrow.find(".custom-control-input").is(":checked")) {
+        colHidden = true;
+      } else {
+        colHidden = false;
+      }
+      let lineItemObj = {
+        index: parseInt(fieldID),
+        label: colTitle,
+        active: colHidden,
+        width: parseInt(colWidth),
+        class: colthClass,
+        display: true
+      };
 
-                }
-            }
-        }
-    },
-    'click .saveTable': function(event) {
-        let lineItems = [];
-        //let datatable =$('#tblBankingOverview').DataTable();
-        $('.columnSettings').each(function(index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || '';
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            var colHidden = false;
-            colHidden = !$tblrow.find(".custom-control-input").is(':checked');
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            };
+      lineItems.push(lineItemObj); 
+    });
 
-            lineItems.push(lineItemObj);
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    reset_data = reset_data.filter(redata => redata.display == false);
+    lineItems.push(...reset_data);
+    lineItems.sort((a,b) => a.index - b.index); 
+
+    try {
+      let erpGet = erpDb();
+      let tableName = "tblBankingOverview";
+      let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+
+      let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+      $(".fullScreenSpin").css("display", "none");
+      if(added) {
+          swal({
+            title: 'SUCCESS',
+            text: "Display settings is updated!",
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonText: 'OK'
+          }).then((result) => {
+              if (result.value) {
+                $('#myModal2').modal('hide');
+              }  
+          });
+      } else {
+        swal("Something went wrong!", "", "error");
+      }
+    } catch (error) {
+      $(".fullScreenSpin").css("display", "none");
+      swal("Something went wrong!", "", "error");
+    } 
+  },
+
+  // custom field displaysettings
+  "click .resetTable": async function (event) {
+      let templateObject = Template.instance();
+        let reset_data = templateObject.reset_data.get();  
+        reset_data = reset_data.filter(redata => redata.display); 
+    
+        $(".customDisplaySettings").each(function (index) {
+          let $tblrow = $(this);
+          $tblrow.find(".divcolumn").text(reset_data[index].label);
+          $tblrow
+            .find(".custom-control-input")
+            .prop("checked", reset_data[index].active);
+
+          let title = $("#tblQuoteLine").find("th").eq(index);
+          if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
+            $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
+          } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
+            $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
+          } else {
+            $(title).html(reset_data[index].label);
+          }
+
+
+          if (reset_data[index].active) {
+            $('.col' + reset_data[index].class).addClass('showColumn');
+            $('.col' + reset_data[index].class).removeClass('hiddenColumn');
+          } else {
+            $('.col' + reset_data[index].class).addClass('hiddenColumn');
+            $('.col' + reset_data[index].class).removeClass('showColumn');
+          }
+          $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
         });
-        //datatable.state.save();
-
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblBankingOverview' });
-                if (checkPrefDetails) {
-                    CloudPreference.update({ _id: checkPrefDetails._id }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'salesform',
-                            PrefName: 'tblBankingOverview',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'salesform',
-                        PrefName: 'tblBankingOverview',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-                        }
-                    });
-
-                }
-            }
-        }
-        $('#myModal2').modal('toggle');
     },
-    'blur .divcolumn': function(event) {
-        let columData = $(event.target).text();
-
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-
-        var datable = $('#tblBankingOverview').DataTable();
-        var title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
-
+    'change .custom-range': function(event) {
+      let range = $(event.target).val(); 
+      let colClassName = $(event.target).attr("valueclass");
+      $('.col' + colClassName).css('width', range);
     },
-    'change .rngRange': function(event) {
-        let range = $(event.target).val();
-        // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
-
-        // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#tblBankingOverview th');
-        $.each(datable, function(i, v) {
-
-            if (v.innerText === columnDataValue) {
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("." + replaceClass + "").css('width', range + 'px');
-
-            }
-        });
-
+    'click .custom-control-input': function(event) {
+      let colClassName = $(event.target).attr("id");
+      if ($(event.target).is(':checked')) {
+        $('.col' + colClassName).addClass('showColumn');
+        $('.col' + colClassName).removeClass('hiddenColumn');
+      } else {
+        $('.col' + colClassName).addClass('hiddenColumn');
+        $('.col' + colClassName).removeClass('showColumn');
+      }
     },
-    'click .btnOpenSettings': function(event) {
-        let templateObject = Template.instance();
-        var columns = $('#tblBankingOverview th');
 
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i, v) {
-            if (v.hidden === false) {
-                columVisible = true;
-            }
-            if ((v.className.includes("hiddenColumn"))) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
+    // 'blur .divcolumn': function(event) {
+    //     let columData = $(event.target).text();
 
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || 0,
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
+    //     let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
+
+    //     var datable = $('#tblBankingOverview').DataTable();
+    //     var title = datable.column(columnDatanIndex).header();
+    //     $(title).html(columData);
+
+    // },
+    // 'change .rngRange': function(event) {
+    //     let range = $(event.target).val();
+    //     // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
+
+    //     // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
+    //     let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
+    //     var datable = $('#tblBankingOverview th');
+    //     $.each(datable, function(i, v) {
+
+    //         if (v.innerText === columnDataValue) {
+    //             let className = v.className;
+    //             let replaceClass = className.replace(/ /g, ".");
+    //             $("." + replaceClass + "").css('width', range + 'px');
+
+    //         }
+    //     });
+
+    // },
+    // 'click .btnOpenSettings': function(event) {
+    //     let templateObject = Template.instance();
+    //     var columns = $('#tblBankingOverview th');
+
+    //     const tableHeaderList = [];
+    //     let sTible = "";
+    //     let sWidth = "";
+    //     let sIndex = "";
+    //     let sVisible = "";
+    //     let columVisible = false;
+    //     let sClass = "";
+    //     $.each(columns, function(i, v) {
+    //         if (v.hidden === false) {
+    //             columVisible = true;
+    //         }
+    //         if ((v.className.includes("hiddenColumn"))) {
+    //             columVisible = false;
+    //         }
+    //         sWidth = v.style.width.replace('px', "");
+
+    //         let datatablerecordObj = {
+    //             sTitle: v.innerText || '',
+    //             sWidth: sWidth || '',
+    //             sIndex: v.cellIndex || 0,
+    //             sVisible: columVisible || false,
+    //             sClass: v.className || ''
+    //         };
+    //         tableHeaderList.push(datatablerecordObj);
+    //     });
+    //     templateObject.tableheaderrecords.set(tableHeaderList);
+    // },
     'click #exportbtn': function() {
 
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -1878,7 +1971,11 @@ Template.bankingoverview.helpers({
     },
     bankaccountdatarecord: () => {
         return Template.instance().bankaccountdatarecord.get();
-    }
+    },
+    // custom field displaysettings
+    displayfields: () => {
+      return Template.instance().displayfields.get();
+    },
 });
 
 Template.registerHelper('equals', function(a, b) {
