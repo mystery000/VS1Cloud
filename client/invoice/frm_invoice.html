@@ -1227,7 +1227,7 @@
                                     {{#if isForeignEnabled}}
                                         <td class="colUnitPriceInc  convert-to-foreign {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.unitPriceInc}}</td>
                                     {{/if}}
-                                          
+
 
 
                                       <td contenteditable="false" class="lineDiscount colDiscount {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
@@ -1242,17 +1242,17 @@
                                         style="text-align: right!important;">{{item.taxRate}}</td>
                                       <td contenteditable="false" class="colTaxCode {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}"><input
                                           class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
-                                      
+
                                           <td contenteditable="false"
                                             class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"
                                             style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
 
                                             {{#if isForeignEnabled}}
-                                          
+
                                                 <td contenteditable="false"
                                                 class="lineTaxAmount convert-to-foreign colTaxAmount pointer {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"
                                                 style="text-align: right!important;cursor: pointer;">{{convertToForeignAmount item.TaxTotal}}</td>
-                                                
+
                                             {{/if}}
 
                                       {{#if equals isBatchSerialNoTracking true}}
@@ -1262,29 +1262,29 @@
                                       <td contenteditable="false"
                                         class="lineAmt colAmount colAmountEx {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}"
                                         style="text-align: right!important;">{{item.TotalAmt}}</td>
-                                      
+
                                         {{#if isForeignEnabled}}
-                                          
+
                                             <td contenteditable="false"
                                             class="lineAmt convert-to-foreign colAmount colAmountEx {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}"
                                             style="text-align: right!important;">{{convertToForeignAmount item.TotalAmt}}</td>
-                                          
+
                                         {{/if}}
 
                                         <td contenteditable="false" class="lineAmtInc colAmountInc {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}"
                                         style="text-align: right!important;">{{item.TotalAmtInc}}</td>
 
                                         {{#if isForeignEnabled}}
-                                          
+
                                             <td contenteditable="false" class="lineAmtInc convert-to-foreign  colAmountInc {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}"
                                             style="text-align: right!important;">{{convertToForeignAmount item.TotalAmtInc}}</td>
-                                        
+
                                         {{/if}}
 
                                       <td contenteditable="false"
                                         class="lineUOM colUnits pointer {{#if displayfields.[17].active}}{{else}}hiddenColumn{{/if}}"
                                         style="text-align: right!important;cursor: pointer;"><input class="es-input highlightSelect colUnits lineUOM" type="search" value="{{item.UnitOfMeasure}}"></td>
-                                      
+
                                         <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
                                               class="fa fa-remove"></i></button></span></td>
                                     </tr>

@@ -3404,7 +3404,8 @@ templateObject.getLastPOData = async function() {
             $('#' + selectLineID + " .lineProductName").val(lineProductName);
             $('#' + selectLineID + " .lineProductDesc").text(lineProductDesc);
             $('#' + selectLineID + " .lineOrdered").val(1);
-            $('#' + selectLineID + " .lineQty").val(1);
+            $('#' + selectLineID + " .lineQty").val(0);
+            $('#' + selectLineID + " .lineBackOrder").text(1);
             $('#' + selectLineID + " .lineUnitPrice").val(lineUnitPrice);
             $('#' + selectLineID + " .lineTaxCode").val(lineTaxRate);
 
@@ -5675,6 +5676,16 @@ Template.purchaseordercard.events({
     'blur .lineProductDesc': function(event) {
         var targetID = $(event.target).closest('tr').attr('id');
         $('#' + targetID + " #lineProductDesc").text($('#' + targetID + " .lineProductDesc").text());
+    },
+    'blur .lineOrdered': function(event) {
+        var targetID = $(event.target).closest('tr').attr('id');
+        let qtyOrdered = $('#' + targetID + " .lineOrdered").val();
+        if ((qtyOrdered == '') || (isNaN(qtyOrdered))) {
+            qtyOrdered = 0;
+        }
+
+        $('#' + targetID + " .lineQty").val(0);
+        $('#' + targetID + " .lineBackOrder").text(qtyOrdered);
     },
     'blur .lineQty': function(event) {
         let templateObject = Template.instance();
