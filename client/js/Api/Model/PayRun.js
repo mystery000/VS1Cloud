@@ -8,7 +8,8 @@ export default class PayRun {
     taxes = 0.0,
     earnings = 0.0,
     wages = 0.0,
-    employees = []
+    employees = [],
+    selected = false
   }) {
     this.id = id;
     this.stpFilling = stpFilling;

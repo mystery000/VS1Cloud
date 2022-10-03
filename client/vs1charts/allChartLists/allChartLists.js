@@ -167,9 +167,7 @@ Template.allChartLists.onRendered(function () {
             }
         }
         if (chartList.length > 0) {
-
             // Add missing chart to chartList
-            //
             chartList.forEach((chart) => {
 
             });
@@ -183,6 +181,7 @@ Template.allChartLists.onRendered(function () {
                 }
             };
             chartList.push(discountEmployeeChart);
+
             let salesQuotaChart = {
                 fields: {
                     Active: true,
@@ -192,12 +191,73 @@ Template.allChartLists.onRendered(function () {
                     _chartSlug: "dsmcharts__sales_quota"
                 }
             };
-            chartList.push(salesQuotaChart);
+            chartList.push(salesQuotaChart1);
+            // let salesQuotaChart1 = {
+            //     fields: {
+            //         Active: true,
+            //         ChartGroup: "DSMCharts",
+            //         ChartName: "Sales Quota 1",
+            //         ID: 903,
+            //         _chartSlug: "dsmcharts__sales_quota_1"
+            //     }
+            // };
+            // chartList.push(salesQuotaChart1);
+            // let salesQuotaChart2 = {
+            //     fields: {
+            //         Active: true,
+            //         ChartGroup: "DSMCharts",
+            //         ChartName: "Sales Quota 2",
+            //         ID: 903,
+            //         _chartSlug: "dsmcharts__sales_quota_2"
+            //     }
+            // };
+            // chartList.push(salesQuotaChart2);
+            // let salesQuotaChart3 = {
+            //     fields: {
+            //         Active: true,
+            //         ChartGroup: "DSMCharts",
+            //         ChartName: "Sales Quota 3",
+            //         ID: 903,
+            //         _chartSlug: "dsmcharts__sales_quota_3"
+            //     }
+            // };
+            // chartList.push(salesQuotaChart3);
+            // let salesQuotaChart4 = {
+            //     fields: {
+            //         Active: true,
+            //         ChartGroup: "DSMCharts",
+            //         ChartName: "Sales Quota 4",
+            //         ID: 903,
+            //         _chartSlug: "dsmcharts__sales_quota_4"
+            //     }
+            // };
+            // chartList.push(salesQuotaChart4);
+            // let salesQuotaChart5 = {
+            //     fields: {
+            //         Active: true,
+            //         ChartGroup: "DSMCharts",
+            //         ChartName: "Sales Quota 5",
+            //         ID: 903,
+            //         _chartSlug: "dsmcharts__sales_quota_5"
+            //     }
+            // };
+            // chartList.push(salesQuotaChart5);
+            // let salesQuotaChart6 = {
+            //     fields: {
+            //         Active: true,
+            //         ChartGroup: "DSMCharts",
+            //         ChartName: "Sales Quota 6",
+            //         ID: 903,
+            //         _chartSlug: "dsmcharts__sales_quota_6"
+            //     }
+            // };
+            // chartList.push(salesQuotaChart6);
+
             let dsmAppointmentListChart = {
                 fields: {
                     Active: true,
                     ChartGroup: "DSMCharts",
-                    ChartName: "Appointment List",
+                    ChartName: "Appointment List(DSM)",
                     ID: 904,
                     _chartSlug: "dsmcharts__appointment_list"
                 }
@@ -207,7 +267,7 @@ Template.allChartLists.onRendered(function () {
                 fields: {
                     Active: true,
                     ChartGroup: "DSMCharts",
-                    ChartName: "Lead List",
+                    ChartName: "Lead List(DSM)",
                     ID: 905,
                     _chartSlug: "dsmcharts__lead_list"
                 }
@@ -237,7 +297,7 @@ Template.allChartLists.onRendered(function () {
                 fields: {
                     Active: true,
                     ChartGroup: "DSCharts",
-                    ChartName: "Appointment List",
+                    ChartName: "Appointment List(DS)",
                     ID: 908,
                     _chartSlug: "dscharts__appointment_list"
                 }
@@ -247,7 +307,7 @@ Template.allChartLists.onRendered(function () {
                 fields: {
                     Active: true,
                     ChartGroup: "DSCharts",
-                    ChartName: "Lead List",
+                    ChartName: "Lead List(DS)",
                     ID: 909,
                     _chartSlug: "dscharts__lead_list"
                 }
@@ -269,16 +329,16 @@ Template.allChartLists.onRendered(function () {
             chartList.forEach((chart) => {
                 setTimeout(() => {
                     //chart.fields.active = false; // Will set evething to false
-                    if (chart.fields.ChartName == "Appointment List") {
-                        chart.fields._chartSlug = "appointment_list";
-                    } else if (chart.fields.ChartName == "Lead List") {
-                        chart.fields._chartSlug = "lead_list";
-                    } else {
+                    // if (chart.fields.ChartName == "Appointment List") {
+                    //     chart.fields._chartSlug = "appointment_list";
+                    // } else if (chart.fields.ChartName == "Lead List") {
+                    //     chart.fields._chartSlug = "lead_list";
+                    // } else {
                         chart.fields._chartSlug =
                             chart.fields.ChartGroup.toLowerCase() +
                             "__" +
                             chart.fields.ChartName.toLowerCase().split(" ").join("_");
-                    }
+                    // }
                     $(`[key='${chart.fields._chartSlug}']`).addClass("chart-visibility");
                     $(`[key='${chart.fields._chartSlug}']`).attr("pref-id", 0);
                     $(`[key='${chart.fields._chartSlug}']`).attr(
@@ -340,17 +400,17 @@ Template.allChartLists.onRendered(function () {
                         "chart-slug",
                         chart.fields._chartSlug
                     );
-                    if (chart.fields.ChartName == "Appointment List" || chart.fields.ChartName == "Lead List") {
-                        $(`[key='${chart.fields._chartSlug}']`).attr(
-                            "chart-group",
-                            _chartGroup
-                        );
-                    } else {
+                    // if (chart.fields.ChartName == "Appointment List" || chart.fields.ChartName == "Lead List") {
+                    //     $(`[key='${chart.fields._chartSlug}']`).attr(
+                    //         "chart-group",
+                    //         _chartGroup
+                    //     );
+                    // } else {
                         $(`[key='${chart.fields._chartSlug}']`).attr(
                             "chart-group",
                             chart.fields.ChartGroup
                         );
-                    }
+                    // }
                     $(`[key='${chart.fields._chartSlug}']`).attr(
                         "chart-name",
                         chart.fields.ChartName
@@ -460,9 +520,6 @@ Template.allChartLists.onRendered(function () {
             $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
             $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
             $(`[chart-group='${_chartGroup}']`).find('.minHeight100').removeClass('minHeight100');
-            // if (_chartGroup == "DSMCharts" || _chartGroup == "DSCharts") {
-            //     $(`[chart-group='${_chartGroup}']`).find('.minHeight100').removeClass('minHeight100');
-            // }
             //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget');
             //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget-content');
         }

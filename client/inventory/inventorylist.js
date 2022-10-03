@@ -96,10 +96,10 @@ Template.inventorylist.onRendered(function() {
         { index: 11, label: "Sale Price (Inc)", class: "SalePriceInc", width: "135", active: true, display: true },
         { index: 12, label: "Serial/Lot No", class: "SerialNo", width: "124", active: false, display: true },
         { index: 13, label: "Barcode", class: "Barcode", width: "80", active: false, display: true },
-        { index: 14, label: "Department", class: "Department", width: "100", active: false, display: true },
+        { index: 14, label: "Department", class: "Departmentth", width: "100", active: false, display: true },
         { index: 15, label: "Purchase Description", class: "PurchaseDescription", width: "", active: false, display: true },
-        { index: 16, label: "Custom Field 1", class: "colProdCustField1", width: "", active: false, display: true },
-        { index: 17, label: "Custom Field 2", class: "colProdCustField2", width: "", active: false, display: true },
+        { index: 16, label: "Custom Field 1", class: "ProdCustField1", width: "", active: false, display: true },
+        { index: 17, label: "Custom Field 2", class: "ProdCustField2", width: "", active: false, display: true },
       ];
 
       let isSNTrackchecked = localStorage.getItem('vs1cloudlicenselevel') == 'PLUS' || false;
@@ -1615,13 +1615,13 @@ Template.inventorylist.events({
         $('.colBarcode').removeClass('showColumn');
       }
     },
-    'click .chkDepartment': function(event) {
+    'click .chkDepartmentth': function(event) {
       if ($(event.target).is(':checked')) {
-        $('.colDepartment').addClass('showColumn');
-        $('.colDepartment').removeClass('hiddenColumn');
+        $('.colDepartmentth').addClass('showColumn');
+        $('.colDepartmentth').removeClass('hiddenColumn');
       } else {
-        $('.colDepartment').addClass('hiddenColumn');
-        $('.colDepartment').removeClass('showColumn');
+        $('.colDepartmentth').addClass('hiddenColumn');
+        $('.colDepartmentth').removeClass('showColumn');
       }
     },
     'click .chkPurchaseDescription': function(event) {
@@ -1631,6 +1631,24 @@ Template.inventorylist.events({
       } else {
         $('.colPurchaseDescription').addClass('hiddenColumn');
         $('.colPurchaseDescription').removeClass('showColumn');
+      }
+    },
+    'click .chkProdCustField1': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colProdCustField1').addClass('showColumn');
+        $('.colProdCustField1').removeClass('hiddenColumn');
+      } else {
+        $('.colProdCustField1').addClass('hiddenColumn');
+        $('.colProdCustField1').removeClass('showColumn');
+      }
+    },
+    'click .chkProdCustField2': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colProdCustField2').addClass('showColumn');
+        $('.colProdCustField2').removeClass('hiddenColumn');
+      } else {
+        $('.colProdCustField2').addClass('hiddenColumn');
+        $('.colProdCustField2').removeClass('showColumn');
       }
     },
 
