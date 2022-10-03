@@ -287,7 +287,7 @@ Template.dashboardManagerCharts.onRendered(function () {
                     enabled: true,
                     verticalAlign: 'bottom',
                     // x: 0,
-                    y: 90,
+                    // y: 90,
                     overflow: "allow",
                     borderWidth: 0,
                     className: 'rev-counter',

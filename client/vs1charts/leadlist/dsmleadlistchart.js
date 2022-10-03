@@ -7,14 +7,14 @@ import {UtilityService} from "../../utility-service";
 
 let sideBarService = new SideBarService();
 
-Template.leadlistchart.onCreated(function(){
+Template.dsmleadlistchart.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.selectedFile = new ReactiveVar();
 });
 
-Template.leadlistchart.onRendered(function() {
+Template.dsmleadlistchart.onRendered(function() {
     $('.fullScreenSpin').css('display','inline-block');
     let contactService = new ContactService();
     let templateObject = Template.instance();
@@ -74,7 +74,7 @@ Template.leadlistchart.onRendered(function() {
         }
         templateObject.datatablerecords.set(splashArrayLeadList);
         if (templateObject.datatablerecords.get()){
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblLeadChartList', function(error, result){
+            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblDSMLeadChartList', function(error, result){
                 if(error){
 
                 } else {
@@ -97,7 +97,7 @@ Template.leadlistchart.onRendered(function() {
             });
         }
         setTimeout(function () {
-            $('#tblLeadChartList').DataTable({
+            $('#tblDSMLeadChartList').DataTable({
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 buttons: [
                     {
@@ -145,11 +145,11 @@ Template.leadlistchart.onRendered(function() {
                 responsive: true,
                 "order": [[ 1, "asc" ]],
                 action: function () {
-                    $('#tblLeadChartList').DataTable().ajax.reload();
+                    $('#tblDSMLeadChartList').DataTable().ajax.reload();
                 },
                 language: { search: "",searchPlaceholder: "Search List..." },
                 "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnRefreshLeads' type='button' id='btnRefreshLeads' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeadChartList_filter");
+                    $("<button class='btn btn-primary btnRefreshLeads' type='button' id='btnRefreshLeads' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDSMLeadChartList_filter");
                 }
 
             }).on('page', function () {
@@ -160,7 +160,7 @@ Template.leadlistchart.onRendered(function() {
 
             });
         }, 0);
-        const columns = $('#tblLeadChartList th');
+        const columns = $('#tblDSMLeadChartList th');
         let sWidth = "";
         let columVisible = false;
         $.each(columns, function(i,v) {
@@ -184,9 +184,10 @@ Template.leadlistchart.onRendered(function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
         $('.fullScreenSpin').css('display', 'none');
     }
-    templateObject.getLeads();
-
-    $('#tblLeadChartList tbody').on( 'click', 'tr', function () {
+    setTimeout(() => {
+        templateObject.getLeads();
+    }, 500);
+    $('#tblDSMLeadChartList tbody').on( 'click', 'tr', function () {
         const listData = $(this).closest('tr').attr('id');
         if(listData){
             $('.fullScreenSpin').css('display', 'inline-block');
@@ -204,11 +205,11 @@ Template.leadlistchart.onRendered(function() {
     tableResize();
 });
 
-Template.leadlistchart.events({
+Template.dsmleadlistchart.events({
     'click #btnNewLead':function(event){
         FlowRouter.go('/leadscard');
     },
-    'keyup #tblLeadChartList_filter input': function (event) {
+    'keyup #tblDSMLeadChartList_filter input': function (event) {
           if($(event.target).val() !== ''){
             $(".btnRefreshLeads").addClass('btnSearchAlert');
           }else{
@@ -223,7 +224,7 @@ Template.leadlistchart.events({
         let templateObject = Template.instance();
         const dataTableList = [];
         $('.fullScreenSpin').css('display', 'inline-block');
-        let dataSearchName = $('#tblLeadChartList_filter input').val();
+        let dataSearchName = $('#tblDSMLeadChartList_filter input').val();
         if (dataSearchName.replace(/\s/g, '') !== '') {
             sideBarService.getLeadByNameOrID(dataSearchName).then(function (data) {
                 $(".btnRefreshLeads").removeClass('btnSearchAlert');
@@ -254,10 +255,10 @@ Template.leadlistchart.events({
                     let item = templateObject.datatablerecords.get();
                     $('.fullScreenSpin').css('display', 'none');
                     if (dataTableList) {
-                        const datatable = $('#tblLeadChartList').DataTable();
-                        $("#tblLeadChartList > tbody").empty();
+                        const datatable = $('#tblDSMLeadChartList').DataTable();
+                        $("#tblDSMLeadChartList > tbody").empty();
                         for (let x = 0; x < item.length; x++) {
-                            $("#tblLeadChartList > tbody").append(
+                            $("#tblDSMLeadChartList > tbody").append(
                                 ' <tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
                                 '<td contenteditable="false" class="colLeadId hiddenColumn">' + item[x].id + '</td>' +
                                 '<td contenteditable="false" class="colLeadName" >' + item[x].employeeName + '</td>' +
@@ -331,7 +332,7 @@ Template.leadlistchart.events({
         let checkPrefDetails = getCheckPrefDetails();
         if (checkPrefDetails) {
             CloudPreference.update({_id: checkPrefDetails._id},{$set: { userid: clientID,username:clientUsername,useremail:clientEmail,
-                                                                       PrefGroup:'salesform',PrefName:'tblLeadChartList',published:true,
+                                                                       PrefGroup:'salesform',PrefName:'tblDSMLeadChartList',published:true,
                                                                        customFields:lineItems,
                                                                        updatedAt: new Date() }}, function(err, idTag) {
                 if (err) {
@@ -357,7 +358,7 @@ Template.leadlistchart.events({
     'blur .divcolumn' : function(event){
         let columData = $(event.target).text();
         let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        const datable = $('#tblLeadChartList').DataTable();
+        const datable = $('#tblDSMLeadChartList').DataTable();
         const title = datable.column(columnDatanIndex).header();
         $(title).html(columData);
     },
@@ -366,7 +367,7 @@ Template.leadlistchart.events({
         $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
         let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
         let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        const datable = $('#tblLeadChartList th');
+        const datable = $('#tblDSMLeadChartList th');
         $.each(datable, function(i,v) {
             if(v.innerText === columnDataValue){
                 let className = v.className;
@@ -378,7 +379,7 @@ Template.leadlistchart.events({
     },
     'click .btnOpenSettings' : function(event){
         let templateObject = Template.instance();
-        const columns = $('#tblLeadChartList th');
+        const columns = $('#tblDSMLeadChartList th');
         const tableHeaderList = [];
         let sTible = "";
         let sWidth = "";
@@ -407,12 +408,12 @@ Template.leadlistchart.events({
     },
     'click .exportbtn': function () {
         $('.fullScreenSpin').css('display','inline-block');
-        jQuery('#tblLeadChartList_wrapper .dt-buttons .btntabletocsv').click();
+        jQuery('#tblDSMLeadChartList_wrapper .dt-buttons .btntabletocsv').click();
         $('.fullScreenSpin').css('display','none');
     },
     'click .exportbtnExcel': function () {
         $('.fullScreenSpin').css('display','inline-block');
-        jQuery('#tblLeadChartList_wrapper .dt-buttons .btntabletoexcel').click();
+        jQuery('#tblDSMLeadChartList_wrapper .dt-buttons .btntabletoexcel').click();
         $('.fullScreenSpin').css('display','none');
     },
     'click .btnRefresh': function () {
@@ -435,7 +436,7 @@ Template.leadlistchart.events({
     },
     'click .printConfirm' : function(event){
         $('.fullScreenSpin').css('display','inline-block');
-        jQuery('#tblLeadChartList_wrapper .dt-buttons .btntabletopdf').click();
+        jQuery('#tblDSMLeadChartList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
     },
     'click .templateDownload': function () {
@@ -576,7 +577,7 @@ Template.leadlistchart.events({
     }
 });
 
-Template.leadlistchart.helpers({
+Template.dsmleadlistchart.helpers({
     datatablerecords : () => {
         return Template.instance().datatablerecords.get().sort(function(a, b){
             if (a.employeeName === 'NA') {
@@ -592,7 +593,7 @@ Template.leadlistchart.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblLeadChartList'});
+        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblDSMLeadChartList'});
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
@@ -610,7 +611,7 @@ function getCheckPrefDetails() {
             const clientID = getcurrentCloudDetails._id;
             const clientUsername = getcurrentCloudDetails.cloudUsername;
             const clientEmail = getcurrentCloudDetails.cloudEmail;
-            checkPrefDetails = CloudPreference.findOne({userid: clientID, PrefName: 'tblLeadChartList'});
+            checkPrefDetails = CloudPreference.findOne({userid: clientID, PrefName: 'tblDSMLeadChartList'});
         }
     }
     return checkPrefDetails;

@@ -1,9 +1,9 @@
-<template name="leadlistchart">
+<template name="dsleadlistchart">
     <style type="text/css">
-        .hideleadlistchart {
+        .hidedsleadlistchart {
             display: none;
         }
-        .showleadlistchart {
+        .showdsleadlistchart {
             display: block;
         }
         <!-- .hideelement {
@@ -15,10 +15,10 @@
         } -->
     </style>
     <div style="margin-top: -24px;">
-        <div class="minHeight100 leadlistchart" id="leadlistchart">
+        <div class="minHeight100 dsleadlistchart" id="dsleadlistchart">
             <div class="overflow-hidden card shadow mb-4 portlet">
                 <div class="card-header leadlistheader d-flex justify-content-between align-items-center">
-                    <h6 class="text-primary font-weight-bold m-0">Lead List</h6>
+                    <h6 class="text-info font-weight-bold m-0">Lead List (My Performance Dashboard)</h6>
                     <div class="dropdown no-arrow" style="display: inline-flex;">
                         <a id="leadlisthide" class="on-editor-change-mode hideelement leadlistedit btn btn-link" role="presentation" href="">Hide</a>
                         <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" id="" data-toggle="dropdown"
@@ -166,8 +166,7 @@
                                             opacity: 1;
                                         }
                                     </style>
-
-                                    <table id="tblLeadChartList" class="dataTable table table-hover table-striped table-bordered tblLeadChartList">
+                                    <table id="tblDSLeadChartList" class="dataTable table table-hover table-striped table-bordered tblDSLeadChartList">
                                         <thead>
                                             <tr class="dnd-moved">
                                                 <th class="th colLeadId hiddenColumn"></th>
