@@ -100,6 +100,7 @@ Template.basreturn.onRendered(function() {
     let usedCategories = [];
     const accountTypeList = [];
     const dataTableList = [];
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     let reasonT4 = [
         { val: "T4-1", title: "Mergers, acquisitions and takeovers" },
@@ -129,6 +130,18 @@ Template.basreturn.onRendered(function() {
 
     templateObject.reasonT4.set(reasonT4);
     templateObject.reasonF4.set(reasonF4);
+
+    accountService
+        .getBASReturnDetail()
+        .then(function(data) {
+            console.log("============", data);
+        })
+        .catch(function(err) {
+            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+            $(".fullScreenSpin").css("display", "none");
+            console.log("=", err);
+            // Meteor._reload.reload();
+        });
 
     templateObject.getAllBasReturnData = function() {
 
@@ -524,6 +537,8 @@ Template.basreturn.onRendered(function() {
                         $("#gst9cost").val(gst9cost.toFixed(2));
                         $("#prt_gst9cost").html("$" + gst9cost.toFixed(2));
                         $("#debits1cost").val(gst9cost.toFixed(2));
+                        $("#prt_gst21cost").html("$" + gst9cost.toFixed(2));
+                        $("#prt_gst23cost").html("$" + gst9cost.toFixed(2));
                         $("#prt_debits1cost").html("$" + gst9cost.toFixed(2));
                         let debits2A = gst9cost + parseFloat($("#debits2cost").val()) + parseFloat($("#debits3cost").val());
                         $("#debits4cost").val(debits2A.toFixed(2));
@@ -641,14 +656,16 @@ Template.basreturn.onRendered(function() {
                 if (dataObject.length === 0) {
                     productService.getTaxCodesVS1().then(function(data) {
                         for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                            let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                            var dataList = {
-                                Id: data.ttaxcodevs1[i].Id || '',
-                                CodeName: data.ttaxcodevs1[i].CodeName || '',
-                                Description: data.ttaxcodevs1[i].Description || '-',
-                                TaxRate: taxRate || 0,
-                            };
-                            taxRateList.push(dataList);
+                            if(data.ttaxcodevs1[i].RegionName == "Australia"){
+                                let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                                var dataList = {
+                                    Id: data.ttaxcodevs1[i].Id || '',
+                                    CodeName: data.ttaxcodevs1[i].CodeName || '',
+                                    Description: data.ttaxcodevs1[i].Description || '-',
+                                    TaxRate: taxRate || 0,
+                                };
+                                taxRateList.push(dataList);
+                            }
                         }
                         templateObject.taxRateList.set(taxRateList);
 
@@ -720,15 +737,17 @@ Template.basreturn.onRendered(function() {
                     let data = JSON.parse(dataObject[0].data);
                     let useData = data.ttaxcodevs1;
                     for (let i = 0; i < useData.length; i++) {
-                        let taxRate = (useData[i].Rate * 100).toFixed(2);
-                        var dataList = {
-                            Id: useData[i].Id || '',
-                            CodeName: useData[i].CodeName || '',
-                            Description: useData[i].Description || '-',
-                            TaxRate: taxRate || 0,
-                        };
+                        if(useData[i].RegionName == "Australia"){
+                            let taxRate = (useData[i].Rate * 100).toFixed(2);
+                            var dataList = {
+                                Id: useData[i].Id || '',
+                                CodeName: useData[i].CodeName || '',
+                                Description: useData[i].Description || '-',
+                                TaxRate: taxRate || 0,
+                            };
 
-                        taxRateList.push(dataList);
+                            taxRateList.push(dataList);
+                        }
                     }
                     templateObject.taxRateList.set(taxRateList);
 
@@ -798,15 +817,17 @@ Template.basreturn.onRendered(function() {
             .catch(function(err) {
                 productService.getTaxCodesVS1().then(function(data) {
                     for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                        let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                        var dataList = {
-                            Id: data.ttaxcodevs1[i].Id || '',
-                            CodeName: data.ttaxcodevs1[i].CodeName || '',
-                            Description: data.ttaxcodevs1[i].Description || '-',
-                            TaxRate: taxRate || 0,
-                        };
+                        if(data.ttaxcodevs1[i].RegionName == "Australia"){
+                            let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                            var dataList = {
+                                Id: data.ttaxcodevs1[i].Id || '',
+                                CodeName: data.ttaxcodevs1[i].CodeName || '',
+                                Description: data.ttaxcodevs1[i].Description || '-',
+                                TaxRate: taxRate || 0,
+                            };
 
-                        taxRateList.push(dataList);
+                            taxRateList.push(dataList);
+                        }
                     }
                     templateObject.taxRateList.set(taxRateList);
 
@@ -1173,6 +1194,7 @@ Template.basreturn.onRendered(function() {
         }
         $("#gst" + pan + "cost").val(total_tax.toFixed(2));
         $("#prt_gst" + pan + "cost").html("$" + total_tax.toFixed(2));
+        $(".prt_gst" + pan + "cost").html("$" + total_tax.toFixed(2));
     };
 
     templateObject.selAccountant = function(pan) {
@@ -1196,6 +1218,7 @@ Template.basreturn.onRendered(function() {
         if (pan == 2 || pan == 3 || pan == 4) {
             let debits4 = parseFloat($("#accounts2cost").val()) + parseFloat($("#accounts3cost").val()) + parseFloat($("#accounts4cost").val());
             $("#debits6cost").val(debits4.toFixed(2));
+            $("#prt_accounts2+3+4cost").html("$" + debits4.toFixed(2));
             $("#prt_debits6cost").html("$" + debits4.toFixed(2));
             let debits8A = parseFloat($("#debits1cost").val()) + parseFloat($("#debits6cost").val()) + parseFloat($("#debits7cost").val()) + parseFloat($("#debits9cost").val());
             $("#debits10cost").val(debits8A.toFixed(2));
@@ -1235,6 +1258,8 @@ Template.basreturn.onRendered(function() {
         $("#prt_accounts" + pan + "cost").html("$" + total_amounts.toFixed(2));
 
         $("#debits7cost").val(total_amounts.toFixed(2));
+        $("#prt_accountsT7cost").html("$" + total_amounts.toFixed(2));
+        $("#prt_accountsT11cost").html("$" + total_amounts.toFixed(2));
         $("#prt_debits7cost").html("$" + total_amounts.toFixed(2));
         let debits8A = parseFloat($("#debits1cost").val()) + parseFloat($("#debits6cost").val()) + parseFloat($("#debits7cost").val()) + parseFloat($("#debits9cost").val());
         $("#debits10cost").val(debits8A.toFixed(2));
@@ -1422,7 +1447,6 @@ Template.basreturn.onRendered(function() {
             $('.fullScreenSpin').css('display', 'inline-block');
             organisationService.getOrganisationDetail().then(function(data) {
                 let mainData = data.tcompanyinfo[0];
-                console.log("mainData", mainData);
                 $("#prt_companyName").html(mainData.CompanyName);
                 $("#prt_companyAddress").html(mainData.Address);
                 $("#prt_companyCity").html(mainData.City);
@@ -1459,6 +1483,7 @@ Template.basreturn.onRendered(function() {
                                         $("#accountingmethod1").prop('checked', false);
                                         $("#accountingmethod2").prop('checked', true);
                                     }
+                                    $("#prt_accountingMethod").html(data[i].accountingMethod);
                                     let tab1startDate = data[i].basReturnTab1.startDate.split("-");
                                     let endDate = (data[i].basReturnTab1.endDate != "" && data[i].basReturnTab1.endDate != "0000-00-00") ? data[i].basReturnTab1.endDate : "";
                                     if (data[i].basReturnTab1.datemethod == "q") {
@@ -1471,47 +1496,47 @@ Template.basreturn.onRendered(function() {
                                     $("#beginmonthlydate").val(tab1startDate[1] + "-" + tab1startDate[2]);
                                     $("#currentyear").val(tab1startDate[0]);
                                     $("#endDate").val(endDate);
-                                    $("#prt_beginningDate").html(data[i].basReturnTab1.startDate);
+                                    $("#prt_beginningDate").html(months[parseInt(tab1startDate[1])-1]+" "+tab1startDate[0]);
                                     $("#gst1cost").val(data[i].basReturnTab1.tab1G1.amount);
-                                    $("#prt_gst1cost").html("$" + data[i].basReturnTab1.tab1G1.amount);
+                                    $(".prt_gst1cost").html("$" + data[i].basReturnTab1.tab1G1.amount);
                                     $("#gst2cost").val(data[i].basReturnTab1.tab1G2.amount);
                                     $("#prt_gst2cost").html("$" + data[i].basReturnTab1.tab1G2.amount);
                                     $("#gst3cost").val(data[i].basReturnTab1.tab1G3.amount);
                                     $("#prt_gst3cost").html("$" + data[i].basReturnTab1.tab1G3.amount);
                                     $("#gst4cost").val(data[i].basReturnTab1.tab1G4.amount);
-                                    $("#prt_gst4cost").html("$" + data[i].basReturnTab1.tab1G4.amount);
+                                    // $("#prt_gst4cost").html("$" + data[i].basReturnTab1.tab1G4.amount);
                                     $("#gst5cost").val(data[i].basReturnTab1.tab1G5.amount);
-                                    $("#prt_gst5cost").html("$" + data[i].basReturnTab1.tab1G5.amount);
+                                    // $("#prt_gst5cost").html("$" + data[i].basReturnTab1.tab1G5.amount);
                                     $("#gst6cost").val(data[i].basReturnTab1.tab1G6.amount);
-                                    $("#prt_gst6cost").html("$" + data[i].basReturnTab1.tab1G6.amount);
+                                    // $("#prt_gst6cost").html("$" + data[i].basReturnTab1.tab1G6.amount);
                                     $("#gst7cost").val(data[i].basReturnTab1.tab1G7.amount);
-                                    $("#prt_gst7cost").html("$" + data[i].basReturnTab1.tab1G7.amount);
+                                    // $("#prt_gst7cost").html("$" + data[i].basReturnTab1.tab1G7.amount);
                                     $("#gst8cost").val(data[i].basReturnTab1.tab1G8.amount);
-                                    $("#prt_gst8cost").html("$" + data[i].basReturnTab1.tab1G8.amount);
+                                    // $("#prt_gst8cost").html("$" + data[i].basReturnTab1.tab1G8.amount);
                                     $("#gst9cost").val(data[i].basReturnTab1.tab1G9.amount);
-                                    $("#prt_gst9cost").html("$" + data[i].basReturnTab1.tab1G9.amount);
+                                    // $("#prt_gst9cost").html("$" + data[i].basReturnTab1.tab1G9.amount);
                                     $("#gst10cost").val(data[i].basReturnTab1.tab1G10.amount);
                                     $("#prt_gst10cost").html("$" + data[i].basReturnTab1.tab1G10.amount);
                                     $("#gst11cost").val(data[i].basReturnTab1.tab1G11.amount);
                                     $("#prt_gst11cost").html("$" + data[i].basReturnTab1.tab1G11.amount);
                                     $("#gst12cost").val(data[i].basReturnTab1.tab1G12.amount);
-                                    $("#prt_gst12cost").html("$" + data[i].basReturnTab1.tab1G12.amount);
+                                    // $("#prt_gst12cost").html("$" + data[i].basReturnTab1.tab1G12.amount);
                                     $("#gst13cost").val(data[i].basReturnTab1.tab1G13.amount);
-                                    $("#prt_gst13cost").html("$" + data[i].basReturnTab1.tab1G13.amount);
+                                    // $("#prt_gst13cost").html("$" + data[i].basReturnTab1.tab1G13.amount);
                                     $("#gst14cost").val(data[i].basReturnTab1.tab1G14.amount);
-                                    $("#prt_gst14cost").html("$" + data[i].basReturnTab1.tab1G14.amount);
+                                    // $("#prt_gst14cost").html("$" + data[i].basReturnTab1.tab1G14.amount);
                                     $("#gst15cost").val(data[i].basReturnTab1.tab1G15.amount);
-                                    $("#prt_gst15cost").html("$" + data[i].basReturnTab1.tab1G15.amount);
+                                    // $("#prt_gst15cost").html("$" + data[i].basReturnTab1.tab1G15.amount);
                                     $("#gst16cost").val(data[i].basReturnTab1.tab1G16.amount);
-                                    $("#prt_gst16cost").html("$" + data[i].basReturnTab1.tab1G16.amount);
+                                    // $("#prt_gst16cost").html("$" + data[i].basReturnTab1.tab1G16.amount);
                                     $("#gst17cost").val(data[i].basReturnTab1.tab1G17.amount);
-                                    $("#prt_gst17cost").html("$" + data[i].basReturnTab1.tab1G17.amount);
+                                    // $("#prt_gst17cost").html("$" + data[i].basReturnTab1.tab1G17.amount);
                                     $("#gst18cost").val(data[i].basReturnTab1.tab1G18.amount);
-                                    $("#prt_gst18cost").html("$" + data[i].basReturnTab1.tab1G18.amount);
+                                    // $("#prt_gst18cost").html("$" + data[i].basReturnTab1.tab1G18.amount);
                                     $("#gst19cost").val(data[i].basReturnTab1.tab1G19.amount);
-                                    $("#prt_gst19cost").html("$" + data[i].basReturnTab1.tab1G19.amount);
+                                    // $("#prt_gst19cost").html("$" + data[i].basReturnTab1.tab1G19.amount);
                                     $("#gst20cost").val(data[i].basReturnTab1.tab1G20.amount);
-                                    $("#prt_gst20cost").html("$" + data[i].basReturnTab1.tab1G20.amount);
+                                    // $("#prt_gst20cost").html("$" + data[i].basReturnTab1.tab1G20.amount);
                                     // for (var i = 0; i < taxRateList.length; i++) {
                                     data[i].basReturnTab1.tab1G1.taxcodes.forEach((item, j) => {
                                         $("#t-1-" + item).prop('checked', true);
@@ -1559,7 +1584,7 @@ Template.basreturn.onRendered(function() {
                                     $("#beginmonthlydate-t2").val(tab2startDate[1] + "-" + tab2startDate[2]);
                                     $("#currentyear-t2").val(tab2startDate[0]);
                                     $("#endDate-t2").val(tab2endDate);
-                                    $("#prt_beginningDateT2").html(data[i].basReturnTab2.startDate);
+                                    // $("#prt_beginningDateT2").html(data[i].basReturnTab2.startDate);
                                     let tab2startDate2 = data[i].basReturnTab2.startDate_2.split("-");
                                     let tab2endDate2 = (data[i].basReturnTab2.endDate_2 != "" && data[i].basReturnTab2.endDate_2 != "0000-00-00") ? data[i].basReturnTab2.endDate_2 : "";
                                     if (data[i].basReturnTab2.datemethod_2 == "q") {
@@ -1572,7 +1597,7 @@ Template.basreturn.onRendered(function() {
                                     $("#beginmonthlydate-t2-2").val(tab2startDate2[1] + "-" + tab2startDate2[2]);
                                     $("#currentyear-t2-2").val(tab2startDate2[0]);
                                     $("#endDate-t2-2").val(tab2endDate2);
-                                    $("#prt_beginningDateT2-2").html(data[i].basReturnTab2.startDate_2);
+                                    // $("#prt_beginningDateT2-2").html(data[i].basReturnTab2.startDate_2);
                                     $("#accounts1cost").val(data[i].basReturnTab2.tab2W1.amount);
                                     $("#prt_accounts1cost").html("$" + data[i].basReturnTab2.tab2W1.amount);
                                     $("#accounts2cost").val(data[i].basReturnTab2.tab2W2.amount);
@@ -1582,15 +1607,15 @@ Template.basreturn.onRendered(function() {
                                     $("#accounts4cost").val(data[i].basReturnTab2.tab2W4.amount);
                                     $("#prt_accounts4cost").html("$" + data[i].basReturnTab2.tab2W4.amount);
                                     $("#accounts5cost").val(data[i].basReturnTab2.tab2T1.amount);
-                                    $("#prt_accounts5cost").html("$" + data[i].basReturnTab2.tab2T1.amount);
+                                    $("#prt_accountsT1cost").html("$" + data[i].basReturnTab2.tab2T1.amount);
                                     $("#accounts6cost").val(data[i].basReturnTab2.tab2T2.amount);
-                                    $("#prt_accounts6cost").html(data[i].basReturnTab2.tab2T2.amount + "%");
+                                    $("#prt_accountsT2cost").html(data[i].basReturnTab2.tab2T2.amount + "%");
                                     $("#accounts7cost").val(data[i].basReturnTab2.tab2T3.amount);
-                                    $("#prt_accounts7cost").html(data[i].basReturnTab2.tab2T3.amount + "%");
+                                    $("#prt_accountsT3cost").html(data[i].basReturnTab2.tab2T3.amount + "%");
                                     $("#reasonT4").val(data[i].basReturnTab2.tab2T4.reason);
                                     templateObject.reasonT4.get().forEach((item, j) => {
                                         if (item.val == data[i].basReturnTab2.tab2T4.reason) {
-                                            $("#prt_reasonT4").html(item.title);
+                                            $(".prt_reasonT4").html(item.title);
                                         }
                                     });
                                     $("#accounts9cost").val(data[i].basReturnTab2.tab2F1.amount);
@@ -1632,7 +1657,7 @@ Template.basreturn.onRendered(function() {
                                     $("#beginmonthlydate-t3").val(tab3startDate[1] + "-" + tab3startDate[2]);
                                     $("#currentyear-t3").val(tab3startDate[0]);
                                     $("#endDate-t3").val(tab3endDate);
-                                    $("#prt_beginningDateT3").html(data[i].basReturnTab3.startDate);
+                                    // $("#prt_beginningDateT3").html(data[i].basReturnTab3.startDate);
                                     $("#t3taxcodes1cost").val(data[i].basReturnTab3.tab31C.amount);
                                     $("#prt_t3taxcodes1cost").html("$" + data[i].basReturnTab3.tab31C.amount);
                                     $("#t3taxcodes2cost").val(data[i].basReturnTab3.tab31E.amount);
@@ -1664,6 +1689,8 @@ Template.basreturn.onRendered(function() {
                                         $("#f3-1-" + item).prop('checked', true);
                                     });
                                     $("#debits1cost").val(data[i].basReturnTab4.tab41A.amount);
+                                    $("#prt_gst21cost").html("$" + data[i].basReturnTab4.tab41A.amount);
+                                    $("#prt_gst23cost").html("$" + data[i].basReturnTab4.tab41A.amount);
                                     $("#prt_debits1cost").html("$" + data[i].basReturnTab4.tab41A.amount);
                                     $("#debits2cost").val(data[i].basReturnTab4.tab41C.amount);
                                     $("#prt_debits2cost").html("$" + data[i].basReturnTab4.tab41C.amount);
@@ -1674,8 +1701,11 @@ Template.basreturn.onRendered(function() {
                                     $("#debits5cost").val(data[i].basReturnTab4.tab43.amount);
                                     $("#prt_debits5cost").html("$" + data[i].basReturnTab4.tab43.amount);
                                     $("#debits6cost").val(data[i].basReturnTab4.tab44.amount);
+                                    $("#prt_accounts2+3+4cost").html("$" + data[i].basReturnTab4.tab44.amount);
                                     $("#prt_debits6cost").html("$" + data[i].basReturnTab4.tab44.amount);
                                     $("#debits7cost").val(data[i].basReturnTab4.tab45A.amount);
+                                    $("#prt_accountsT7cost").html("$" + data[i].basReturnTab4.tab45A.amount);
+                                    $("#prt_accountsT11cost").html("$" + data[i].basReturnTab4.tab45A.amount);
                                     $("#prt_debits7cost").html("$" + data[i].basReturnTab4.tab45A.amount);
                                     $("#debits8cost").val(data[i].basReturnTab4.tab46A.amount);
                                     $("#prt_debits8cost").html("$" + data[i].basReturnTab4.tab46A.amount);
@@ -2017,6 +2047,8 @@ Template.basreturn.events({
         $("#gst9cost").val(gst9cost.toFixed(2));
         $("#prt_gst9cost").html("$" + gst9cost.toFixed(2));
         $("#debits1cost").val(gst9cost.toFixed(2));
+        $("#prt_gst21cost").html("$" + gst9cost.toFixed(2));
+        $("#prt_gst23cost").html("$" + gst9cost.toFixed(2));
         $("#prt_debits1cost").html("$" + gst9cost.toFixed(2));
         let debits2A = gst9cost + parseFloat($("#debits2cost").val()) + parseFloat($("#debits3cost").val());
         $("#debits4cost").val(debits2A.toFixed(2));
@@ -2726,7 +2758,7 @@ Template.basreturn.events({
 
         setTimeout(function() {
             $("a").attr("href", "#");
-            // $(".printBasReturn").hide();
+            $(".printBasReturn").hide();
         }, 100);
     },
     'click .btnRemove': function(event) {

@@ -220,6 +220,7 @@ Template.invoicelist.onRendered(function () {
     let prevMonth11Date = moment()
       .subtract(reportsloadMonths, "months")
       .format("YYYY-MM-DD");
+      let invoiceAppointmentIDs = localStorage.getItem("invoiceAppointmentIDs");
 
     getVS1Data("TInvoiceList")
       .then(function (dataObject) {
@@ -283,6 +284,15 @@ Template.invoicelist.onRendered(function () {
                 } else if (data.tinvoicelist[i].CustomerName == "") {
                   salestatus = "Deleted";
                 }
+
+                if (FlowRouter.current().queryParams.success == undefined && i == 0) {
+                    if (localStorage.getItem("convertAppointmentID") != undefined && localStorage.getItem("convertAppointmentID") != "null") {
+                        invoiceAppointmentIDs += data.tinvoicelist[i].SaleID + "-" + localStorage.getItem("convertAppointmentID") + ",";
+                        localStorage.setItem("convertAppointmentID", null);
+                        localStorage.setItem("invoiceAppointmentIDs", invoiceAppointmentIDs);
+                    }
+                }
+
                 var dataList = {
                   id: data.tinvoicelist[i].SaleID || "",
                   employee: data.tinvoicelist[i].EmployeeName || "",
@@ -701,9 +711,16 @@ Template.invoicelist.onRendered(function () {
                       "info"
                     );
                   } else {
-                    let apptId = FlowRouter.current().queryParams.apptId;
+                    // let apptId = FlowRouter.current().queryParams.apptId;
+                    let apptId = 689;
+                    invoiceAppointmentIDs = invoiceAppointmentIDs.split(",");
+                    invoiceAppointmentIDs.forEach((item, j) => {
+                        if (item.split("-")[0] == listData) {
+                            apptId = item.split("-")[1];
+                        }
+                    });
                     FlowRouter.go(
-                      "/invoicecard?id=" + listData + "&apptId=" + apptId
+                        "/invoicecard?id=" + listData + "&apptId=" + apptId
                     );
                   }
                 }
@@ -765,6 +782,15 @@ Template.invoicelist.onRendered(function () {
             } else if (data.tinvoicelist[i].CustomerName == "") {
               salestatus = "Deleted";
             }
+
+            if (FlowRouter.current().queryParams.success == undefined && i == 0) {
+                if (localStorage.getItem("convertAppointmentID") != undefined && localStorage.getItem("convertAppointmentID") != "null") {
+                    invoiceAppointmentIDs += data.tinvoicelist[i].SaleID + "-" + localStorage.getItem("convertAppointmentID") + ",";
+                    localStorage.setItem("convertAppointmentID", null);
+                    localStorage.setItem("invoiceAppointmentIDs", invoiceAppointmentIDs);
+                }
+            }
+
             var dataList = {
               id: data.tinvoicelist[i].SaleID || "",
               employee: data.tinvoicelist[i].EmployeeName || "",
@@ -1150,9 +1176,16 @@ Template.invoicelist.onRendered(function () {
                   "info"
                 );
               } else {
-                let apptId = FlowRouter.current().queryParams.apptId;
+                let apptId = 689;
+                invoiceAppointmentIDs = invoiceAppointmentIDs.split(",");
+                invoiceAppointmentIDs.forEach((item, j) => {
+                    if (item.split("-")[0] == listData) {
+                        apptId = item.split("-")[1];
+                    }
+                });
+
                 FlowRouter.go(
-                  "/invoicecard?id=" + listData + "&apptId=" + apptId
+                    "/invoicecard?id=" + listData + "&apptId=" + apptId
                 );
               }
             }
@@ -1221,6 +1254,15 @@ Template.invoicelist.onRendered(function () {
               } else if (data.tinvoicelist[i].CustomerName == "") {
                 salestatus = "Deleted";
               }
+
+              if (FlowRouter.current().queryParams.success == undefined && i == 0) {
+                  if (localStorage.getItem("convertAppointmentID") != undefined && localStorage.getItem("convertAppointmentID") != "null") {
+                      invoiceAppointmentIDs += data.tinvoicelist[i].SaleID + "-" + localStorage.getItem("convertAppointmentID") + ",";
+                      localStorage.setItem("convertAppointmentID", null);
+                      localStorage.setItem("invoiceAppointmentIDs", invoiceAppointmentIDs);
+                  }
+              }
+
               var dataList = {
                 id: data.tinvoicelist[i].SaleID || "",
                 employee: data.tinvoicelist[i].EmployeeName || "",
@@ -1590,9 +1632,15 @@ Template.invoicelist.onRendered(function () {
                     "info"
                   );
                 } else {
-                  let apptId = FlowRouter.current().queryParams.apptId;
+                  let apptId = 689;
+                  invoiceAppointmentIDs = invoiceAppointmentIDs.split(",");
+                  invoiceAppointmentIDs.forEach((item, j) => {
+                      if (item.split("-")[0] == listData) {
+                          apptId = item.split("-")[1];
+                      }
+                  });
                   FlowRouter.go(
-                    "/invoicecard?id=" + listData + "&apptId=" + apptId
+                      "/invoicecard?id=" + listData + "&apptId=" + apptId
                   );
                 }
               }
@@ -1836,6 +1884,15 @@ Template.invoicelist.events({
               } else if (data.tinvoiceex[i].fields.CustomerName == "") {
                 salestatus = "Deleted";
               }
+
+              if (FlowRouter.current().queryParams.success == undefined && i == 0) {
+                  if (localStorage.getItem("convertAppointmentID") != undefined && localStorage.getItem("convertAppointmentID") != "null") {
+                      invoiceAppointmentIDs += data.tinvoiceex[i].fields.ID + "-" + localStorage.getItem("convertAppointmentID") + ",";
+                      localStorage.setItem("convertAppointmentID", null);
+                      localStorage.setItem("invoiceAppointmentIDs", invoiceAppointmentIDs);
+                  }
+              }
+
               var dataList = {
                 id: data.tinvoiceex[i].fields.ID || "",
                 employee: data.tinvoiceex[i].fields.EmployeeName || "",
