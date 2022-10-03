@@ -252,6 +252,7 @@ Template.global_customerlist.onRendered(function() {
                 {className: "colCustomerID colID hiddenColumn", "targets": [0],
                 createdCell: function (td, cellData, rowData, row, col) {
                   $(td).closest("tr").attr("id", rowData[0]);
+                  $(td).closest("tr").attr("isjob", rowData[2]);
                 }},
                 {className: "colCompany", "targets": [1]},
                 {className: "colJob","targets": [2]},

@@ -17,7 +17,6 @@ export class ProductService extends BaseService {
         SearchName: "'"+searchName+"'",
         IgnoreDates:true,
         QuerySearchMode: "'smSearchEngineLike'"
-        //LimitCount:'"'+initialReportLoad+'"'
       };
       return this.getList(this.ERPObjects.TGlobalSearchReport, options);
   }

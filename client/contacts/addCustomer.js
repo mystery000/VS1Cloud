@@ -2642,30 +2642,57 @@ Template.customerscard.events({
         if (company == '') {
             swal('Please provide the compamy name !', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');
+            $('#edtCustomerCompany').focus();
             e.preventDefault();
             return false;
         }
         if (firstname == '') {
             swal('Please provide the first name !', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');
+            $('#edtFirstName').focus();
             e.preventDefault();
             return false;
         }
         if (lastname == '') {
             swal('Please provide the last name !', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');
+            $('#edtLastName').focus();
             e.preventDefault();
             return false;
         }
         if (sltTermsName == '') {
-            swal("Terms has not been selected!", "", "warning");
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Terms has not been selected!",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                   $('.bilingTab').trigger('click');
+                    $('#sltTerms').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
+
+
             e.preventDefault();
             return false;
         }
         if (sltTaxCodeName == '') {
-            swal("Tax Code has not been selected!", "", "warning");
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Tax Code has not been selected!",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('.taxTab').trigger('click');
+                    $('#sltTaxCode').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
             e.preventDefault();
             return false;
         }
