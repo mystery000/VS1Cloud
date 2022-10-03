@@ -1080,7 +1080,7 @@
                                                 <div class="col">
                                                     <button class="btn btn-primary float-right printConfirm" type="button" style="margin:16px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"
                                                             style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
-                                                    <button class="btn btn-primary export float-right" type="button" style="margin: 16px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export"
+                                                    <button class="btn btn-primary export float-right" type="button" style="margin: 12px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export"
                                                             style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
                                                 </div>
                                             </div>
@@ -1161,19 +1161,11 @@
 
                                                                                                     {{#if equals item.sVisible true}}
                                                                                                         <script>
-                                                                                                            $("#" + {
-                                                                                                                {
-                                                                                                                    item.sIndex
-                                                                                                                }
-                                                                                                            } + ".chkDatatable").attr("checked", "checked");
+                                                                                                            $("#" + {{ item.sIndex }} + ".chkDatatable").attr("checked", "checked");
                                                                                                         </script>
                                                                                                     {{else}}
                                                                                                         <script>
-                                                                                                            $("#" + {
-                                                                                                                {
-                                                                                                                    item.sIndex
-                                                                                                                }
-                                                                                                            } + ".chkDatatable").removeAttr("checked");
+                                                                                                            $("#" + {{ item.sIndex }} + ".chkDatatable").removeAttr("checked");
                                                                                                         </script>
                                                                                                     {{/if}}
 
@@ -1237,7 +1229,7 @@
                                                                     <th class="th colOrderDate">Order Date</th>
                                                                     <th class="th colPurchaseNo">P/O No.</th>
                                                                     <th class="th colSupplier">Supplier</th>
-                                                                    <th class="th colAmountEx">Amount(Ex)</th>
+                                                                    <th class="th colAmountEx">Amount (Ex)</th>
                                                                     <th class="th colTax">Tax</th>
                                                                     <th class="th colAmount">Amount</th>
                                                                     <th class="th colPaid">Paid</th>
@@ -1303,7 +1295,7 @@
                                                 <div class="col">
                                                     <button class="btn btn-primary float-right printConfirm" type="button" style="margin:16px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"
                                                             style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
-                                                    <button class="btn btn-primary export float-right" type="button" style="margin: 16px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export"
+                                                    <button class="btn btn-primary export float-right" type="button" style="margin: 12px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export"
                                                             style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
                                                 </div>
                                             </div>
@@ -1383,19 +1375,11 @@
 
                                                                                                     {{#if equals item.sVisible true}}
                                                                                                         <script>
-                                                                                                            $("#" + {
-                                                                                                                {
-                                                                                                                    item.sIndex
-                                                                                                                }
-                                                                                                            } + ".chkDatatable").attr("checked", "checked");
+                                                                                                            $("#" + {{ item.sIndex }} + ".chkDatatable").attr("checked", "checked");
                                                                                                         </script>
                                                                                                     {{else}}
                                                                                                         <script>
-                                                                                                            $("#" + {
-                                                                                                                {
-                                                                                                                    item.sIndex
-                                                                                                                }
-                                                                                                            } + ".chkDatatable").removeAttr("checked");
+                                                                                                            $("#" + {{ item.sIndex }} + ".chkDatatable").removeAttr("checked");
                                                                                                         </script>
                                                                                                     {{/if}}
 

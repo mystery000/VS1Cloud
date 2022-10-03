@@ -14,11 +14,13 @@ export default class Employee {
     this.earnings = [];
     this.earningTotal = 0.0;
 
-    this.taxtTotal = 0.0;
-    this.taxes = [];
+    this.taxTotal = 0.0;
+    this.taxes = null;
 
     this.superAnnuations = [];
     this.superAnnuationTotal = 0.0;
+
+    this.netPay = 0.0;
   }
 
   /**
@@ -37,7 +39,6 @@ export default class Employee {
 
   static async loadFromId(id) {
     const employee = await new ContactService().getOneEmployeeDataEx(id);
-    console.log("employee");
     return new Employee(employee);
   }
 
@@ -111,6 +112,46 @@ export default class Employee {
 
   incrementSuperAnnuation(amount = 0.0) {
     this.superAnnuationTotal += amount;
+  }
+
+  async getTaxe(employeeObjs = []) {
+    if (employeeObjs.length > 0) {
+      employeeObjs = employeeObjs.map(e => e.fields);
+      const employeeObj = employeeObjs.find(s => s.Employeeid == this.fields.ID) || null;
+      this.taxes = employeeObj;
+      return employeeObj;
+    }
+    /**
+         * Load EmployeePayrollApi API
+         */
+    const employeePayrollApi = new EmployeePayrollApi();
+
+    const apiEndpoint = employeePayrollApi.collection.findByName(employeePayrollApi.collectionNames.TEmployeepaysettings);
+    apiEndpoint.url.searchParams.append("ListType", "'Detail'");
+    const ApiResponse = await apiEndpoint.fetch();
+
+    if (ApiResponse.ok) {
+      const data = await ApiResponse.json();
+
+      const employeeObjs = data.temployeepaysettings.map(e => e.fields);
+      const employeeObj = employeeObjs.find(s => s.Employeeid == this.fields.ID) || null;
+      this.taxes = employeeObj;
+      return employeeObj;
+    }
+
+    return null;
+  }
+
+  /**
+   * TODO: We should calculate with tax
+   */
+  calculateNetPay() {
+    const earnings = this.earningTotal;
+    const tax = 0.0; // we should calculate this
+    const superAnnuation = this.superAnnuationTotal;
+    const _netPay = earnings - tax;
+
+    this.netPay = _netPay;
   }
 }
 

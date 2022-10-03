@@ -2144,7 +2144,6 @@ Template.alltaskdatatable.events({
       });
     }
   },
-
   // submit save new task add task
   "click .btnSaveAddTask": function (e) {
     let task_name = $("#add_task_name").val();

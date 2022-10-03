@@ -406,7 +406,7 @@ Template.purchaseorderlistBO.onRendered(function() {
                         let datatablerecordObj = {
                             sTitle: v.innerText || '',
                             sWidth: sWidth || '',
-                            sIndex: v.cellIndex || '',
+                            sIndex: v.cellIndex || 0,
                             sVisible: columVisible || false,
                             sClass: v.className || ''
                         };
@@ -711,7 +711,7 @@ Template.purchaseorderlistBO.onRendered(function() {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -1013,7 +1013,7 @@ Template.purchaseorderlistBO.onRendered(function() {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -1176,7 +1176,7 @@ Template.purchaseorderlistBO.events({
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };

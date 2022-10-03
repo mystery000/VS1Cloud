@@ -2,13 +2,12 @@ import moment from "moment";
 import { BaseService } from "../js/base-service.js";
 
 export class ReportService extends BaseService {
-  getDashboardExecutiveReport(dateFrom, dateTo) {
+  getCardDataReport(dateAsOf) {
     let options = {
-      DateFrom: '"' + dateFrom + '"',
-      DateTo: '"' + dateTo + '"',
+      SelDate: '"' + dateAsOf + '"',
     };
     return this.getList(
-      this.ERPObjects.Vs1_DashboardExecutive,
+      this.ERPObjects.TCardDataReport,
       options
     );
   }

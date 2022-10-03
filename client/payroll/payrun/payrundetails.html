@@ -204,9 +204,12 @@
         </div>
 
         <div class="row">
-            <div class="col-12">
-                <h4 style="font-weight: 600; margin-left: 32px;"><span>{{ countEmployees }} Employee</span> Included</h4>
-            </div>
+            {{#if payRunDetails.employees }}
+                <div class="col-12">
+                    <h4 style="font-weight: 600; margin-left: 32px;"><span>{{ countEmployees }} Employee</span> Included</h4>
+                </div>
+            {{/if}}
+         
             <div class="col-12">
                 <div class="card-body p-5 rounded" style="padding: 0rem 2rem !important;">
                     <style>
@@ -296,7 +299,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="dnd-moved" id="" name="">
+                                <!-- <tr class="dnd-moved" id="" name="">
                                     <td class="colPayRunDetailsFirstName" contenteditable="false">Simon</td>
                                     <td class="colPayRunDetailsLastName" contenteditable="false">Clive</td>
                                     <td class="colPayRunDetailsEmployeeGroup" contenteditable="false"> (static user) </td>
@@ -311,10 +314,10 @@
                                             <label class="custom-control-label" style="position: absolute; margin-top: 5px;" for="payrundetailsDropdown"></label>
                                         </div>
                                     </td>
-                                </tr>
+                                </tr> -->
                                 {{#if payRunDetails.employees}}
                                     {{#each item in payRunDetails.employees}}
-                                        <tr class="dnd-moved" id="{{item.id}}" name="{{item.id}}">
+                                        <tr class="dnd-moved" id="{{item.fields.ID}}" employee-id="{{item.fields.ID}}">
                                             <td class="colPayRunDetailsFirstName" contenteditable="false">{{ item.fields.EmployeeName }}</td>
                                             <td class="colPayRunDetailsLastName" contenteditable="false">{{ item.fields.EmployeeName }}</td>
                                             <td class="colPayRunDetailsEmployeeGroup" contenteditable="false"></td>
@@ -325,8 +328,8 @@
                                             <td class="colPayRunDetailsNetPay" contenteditable="false" style="text-align: right;">{{ formatPrice item.netPay }}</td>
                                             <td class="colPayRunDetailsDropdown" contenteditable="false">
                                                 <div class="custom-control custom-switch" style="display: inline-flex !important; margin-left: 74px;">
-                                                    <input class="custom-control-input" type="checkbox" name="payrundetailsDropdown" id="payrundetailsDropdown" checked>
-                                                    <label class="custom-control-label" style="position: absolute; margin-top: 5px;" for="payrundetailsDropdown"></label>
+                                                    <input class="custom-control-input" type="checkbox" name="payrundetailsDropdown-{{item.fields.ID}}" id="payrundetailsDropdown-{{item.fields.ID}}"  checked="{{ item.selected }}">
+                                                    <label class="custom-control-label" style="position: absolute; margin-top: 5px;" for="payrundetailsDropdown-{{item.fields.ID}}"></label>
                                                 </div>
                                             </td>
                                         </tr>

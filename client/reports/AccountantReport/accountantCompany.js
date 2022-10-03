@@ -1549,7 +1549,6 @@ Template.accountant_company.events({
         endDate = endDate.split("-");
         fromDate = fromDate[0] + " " + months[parseInt(fromDate[1]) - 1] + " " + fromDate[2];
         endDate = endDate[0] + " " + months[parseInt(endDate[1]) - 1] + " " + endDate[2];
-        // console.log(endDate);
 
         Template.instance().fromDate.set(fromDate);
         Template.instance().endDate.set(endDate);

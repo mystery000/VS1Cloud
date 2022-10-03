@@ -20,7 +20,7 @@ Template.salesorderslistpop.onCreated(()=>{
 
 Template.salesorderslistpop.onRendered(()=>{
     const templateObject = Template.instance();
-   
+
     function MakeNegative() {
         $('td').each(function(){
             if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
@@ -45,20 +45,20 @@ Template.salesorderslistpop.onRendered(()=>{
         } else {
             fromDateMonth = (currentBeginDate.getMonth() + 1);
         }
-  
+
         if (currentBeginDate.getDate() < 10) {
             fromDateDay = "0" + currentBeginDate.getDate();
         }
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
-  
+
           getVS1Data('TSalesOrderList').then(function (dataObject) {
               if(dataObject.length == 0){
                   sideBarService.getAllTSalesOrderListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                       let lineItems = [];
                       let lineItemObj = {};
                       addVS1Data('TSalesOrderList',JSON.stringify(data));
-                     
+
                       for(let i=0; i<data.tsalesorderlist.length; i++){
                           let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tsalesorderlist[i].TotalAmount)|| 0.00;
                           let totalTax = utilityService.modifynegativeCurrencyFormat(data.tsalesorderlist[i].TotalTax) || 0.00;
@@ -91,24 +91,24 @@ Template.salesorderslistpop.onRendered(()=>{
                               comments: data.tsalesorderlist[i].Comments || '',
                               isConverted: data.tsalesorderlist[i].Converted
                           };
-  
+
                           //if(data.tsalesorderex[i].fields.Deleted == false && data.tsalesorderex[i].fields.CustomerName.replace(/\s/g, '') != ''){
                               dataTableList.push(dataList);
                           //}
-  
+
                           //}
                       }
-  
+
                       templateObject.datatablerecords.set(dataTableList);
-  
+
                       if(templateObject.datatablerecords.get()){
-  
-  
+
+
                           setTimeout(function () {
                               MakeNegative();
                           }, 100);
                       }
-  
+
                       $('.fullScreenSpin').css('display','none');
                       setTimeout(function () {
                           $('#tblSalesOrderlist').DataTable({
@@ -135,9 +135,9 @@ Template.salesorderslistpop.onRendered(()=>{
                                                       var res = data.split("</span>");
                                                       data = res[1];
                                                   }
-  
+
                                                   return column === 1 ? data.replace(/<.*?>/ig, ""): data;
-  
+
                                               }
                                           }
                                       }
@@ -165,45 +165,45 @@ Template.salesorderslistpop.onRendered(()=>{
                               },
                               "fnDrawCallback": function (oSettings) {
                                 let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-  
+
                                 $('.paginate_button.page-item').removeClass('disabled');
                                 $('#tblquotelist_ellipsis').addClass('disabled');
-  
+
                                 if(oSettings._iDisplayLength == -1){
                                   if(oSettings.fnRecordsDisplay() > 150){
                                     $('.paginate_button.page-item.previous').addClass('disabled');
                                     $('.paginate_button.page-item.next').addClass('disabled');
                                   }
                                 }else{
-  
+
                                 }
                                 if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
                                     $('.paginate_button.page-item.next').addClass('disabled');
                                 }
-  
+
                                 $('.paginate_button.next:not(.disabled)', this.api().table().container())
                                  .on('click', function(){
                                    $('.fullScreenSpin').css('display','inline-block');
                                    let dataLenght = oSettings._iDisplayLength;
                                    var dateFrom = new Date();
                                    var dateTo = new Date();
-  
+
                                    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                      sideBarService.getAllTSalesOrderListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                        getVS1Data('TSalesOrderList').then(function (dataObjectold) {
                                          if(dataObjectold.length == 0){
-  
+
                                          }else{
                                            let dataOld = JSON.parse(dataObjectold[0].data);
-  
+
                                            var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesorderlist), dataOld.tsalesorderlist);
                                            let objCombineData = {
                                              Params: dataOld.Params,
                                              tsalesorderlist:thirdaryData
                                            }
-  
-  
+
+
                                              addVS1Data('TSalesOrderList',JSON.stringify(objCombineData)).then(function (datareturn) {
                                             //    templateObject.resetData(objCombineData);
                                             templateObject.getAllSalesOrderData();
@@ -211,19 +211,19 @@ Template.salesorderslistpop.onRendered(()=>{
                                              }).catch(function (err) {
                                              $('.fullScreenSpin').css('display','none');
                                              });
-  
+
                                          }
                                         }).catch(function (err) {
-  
+
                                         });
-  
+
                                      }).catch(function(err) {
                                        $('.fullScreenSpin').css('display','none');
                                      });
-                                   
-  
+
+
                                  });
-  
+
                                   setTimeout(function () {
                                       MakeNegative();
                                   }, 100);
@@ -240,10 +240,10 @@ Template.salesorderslistpop.onRendered(()=>{
                            },
                            "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                              let countTableData = data.Params.Count || 0; //get count from API data
-  
+
                                return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
                            }
-  
+
                           }).on('page', function () {
                               setTimeout(function () {
                                   MakeNegative();
@@ -251,18 +251,18 @@ Template.salesorderslistpop.onRendered(()=>{
                               let draftRecord = templateObject.datatablerecords.get();
                               templateObject.datatablerecords.set(draftRecord);
                           }).on('column-reorder', function () {
-  
+
                           }).on( 'length.dt', function ( e, settings, len ) {
                               setTimeout(function () {
                                   MakeNegative();
                               }, 100);
                           });
-  
+
                           // $('#tblSalesOrderlist').DataTable().column( 0 ).visible( true );
                           $('.fullScreenSpin').css('display','none');
-  
+
                       }, 0);
-  
+
                       var columns = $('#tblSalesOrderlist th');
                       let sTible = "";
                       let sWidth = "";
@@ -278,13 +278,13 @@ Template.salesorderslistpop.onRendered(()=>{
                               columVisible = false;
                           }
                           sWidth = v.style.width.replace('px', "");
-  
-  
+
+
                           let datatablerecordObj = {
                               custid: $(this).attr("custid") || 0,
                               sTitle: v.innerText || '',
                               sWidth: sWidth || '',
-                              sIndex: v.cellIndex || '',
+                              sIndex: v.cellIndex || 0,
                               sVisible: columVisible || false,
                               sClass: v.className || ''
                           };
@@ -303,7 +303,7 @@ Template.salesorderslistpop.onRendered(()=>{
                     //         }
                     //       }
                     //   });
-  
+
                   }).catch(function (err) {
                       // Bert.alert('<strong>' + err + '</strong>!', 'danger');
                       $('.fullScreenSpin').css('display','none');
@@ -315,7 +315,7 @@ Template.salesorderslistpop.onRendered(()=>{
                   let useData = data.tsalesorderlist;
                   let lineItems = [];
                   let lineItemObj = {};
-              
+
                   for(let i=0; i<data.tsalesorderlist.length; i++){
                       let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tsalesorderlist[i].TotalAmount)|| 0.00;
                       let totalTax = utilityService.modifynegativeCurrencyFormat(data.tsalesorderlist[i].TotalTax) || 0.00;
@@ -348,23 +348,23 @@ Template.salesorderslistpop.onRendered(()=>{
                           comments: data.tsalesorderlist[i].Comments || '',
                           isConverted: data.tsalesorderlist[i].Converted
                       };
-  
+
                       //if(data.tsalesorderex[i].fields.Deleted == false && data.tsalesorderex[i].fields.CustomerName.replace(/\s/g, '') != ''){
                           dataTableList.push(dataList);
                       //}
-  
+
                       //}
                   }
-  
+
                   templateObject.datatablerecords.set(dataTableList);
-  
+
                   if(templateObject.datatablerecords.get()){
-  
+
                       setTimeout(function () {
                           MakeNegative();
                       }, 100);
                   }
-  
+
                   $('.fullScreenSpin').css('display','none');
                   setTimeout(function () {
                       $('#tblSalesOrderlist').DataTable({
@@ -391,9 +391,9 @@ Template.salesorderslistpop.onRendered(()=>{
                                                   var res = data.split("</span>");
                                                   data = res[1];
                                               }
-  
+
                                               return column === 1 ? data.replace(/<.*?>/ig, ""): data;
-  
+
                                           }
                                       }
                                   }
@@ -421,46 +421,46 @@ Template.salesorderslistpop.onRendered(()=>{
                           },
                           "fnDrawCallback": function (oSettings) {
                             let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-  
+
                             $('.paginate_button.page-item').removeClass('disabled');
                             $('#tblquotelist_ellipsis').addClass('disabled');
 
-  
+
                             if(oSettings._iDisplayLength == -1){
                               if(oSettings.fnRecordsDisplay() > 150){
                                 $('.paginate_button.page-item.previous').addClass('disabled');
                                 $('.paginate_button.page-item.next').addClass('disabled');
                               }
                             }else{
-  
+
                             }
                             if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
                                 $('.paginate_button.page-item.next').addClass('disabled');
                             }
-  
+
                             $('.paginate_button.next:not(.disabled)', this.api().table().container())
                              .on('click', function(){
                                $('.fullScreenSpin').css('display','inline-block');
                                let dataLenght = oSettings._iDisplayLength;
                                var dateFrom = new Date();
                                var dateTo = new Date();
-  
+
                                let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                  sideBarService.getAllTSalesOrderListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                    getVS1Data('TSalesOrderList').then(function (dataObjectold) {
                                      if(dataObjectold.length == 0){
-  
+
                                      }else{
                                        let dataOld = JSON.parse(dataObjectold[0].data);
-  
+
                                        var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesorderlist), dataOld.tsalesorderlist);
                                        let objCombineData = {
                                          Params: dataOld.Params,
                                          tsalesorderlist:thirdaryData
                                        }
-  
-  
+
+
                                          addVS1Data('TSalesOrderList',JSON.stringify(objCombineData)).then(function (datareturn) {
                                         //    templateObject.resetData(objCombineData);
                                             templateObject.getAllSalesOrderData()
@@ -468,19 +468,19 @@ Template.salesorderslistpop.onRendered(()=>{
                                          }).catch(function (err) {
                                          $('.fullScreenSpin').css('display','none');
                                          });
-  
+
                                      }
                                     }).catch(function (err) {
-  
+
                                     });
-  
+
                                  }).catch(function(err) {
                                    $('.fullScreenSpin').css('display','none');
                                  });
-                             
-  
+
+
                              });
-  
+
                               setTimeout(function () {
                                   MakeNegative();
                               }, 100);
@@ -497,10 +497,10 @@ Template.salesorderslistpop.onRendered(()=>{
                        },
                        "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                          let countTableData = data.Params.Count || 0; //get count from API data
-  
+
                            return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
                        }
-  
+
                       }).on('page', function () {
                           setTimeout(function () {
                               MakeNegative();
@@ -508,18 +508,18 @@ Template.salesorderslistpop.onRendered(()=>{
                           let draftRecord = templateObject.datatablerecords.get();
                           templateObject.datatablerecords.set(draftRecord);
                       }).on('column-reorder', function () {
-  
+
                       }).on( 'length.dt', function ( e, settings, len ) {
                           setTimeout(function () {
                               MakeNegative();
                           }, 100);
                       });
-  
+
                       // $('#tblSalesOrderlist').DataTable().column( 0 ).visible( true );
                       $('.fullScreenSpin').css('display','none');
-  
+
                   }, 0);
-  
+
                   var columns = $('#tblSalesOrderlist th');
                   let sTible = "";
                   let sWidth = "";
@@ -527,7 +527,7 @@ Template.salesorderslistpop.onRendered(()=>{
                   let sVisible = "";
                   let columVisible = false;
                   let sClass = "";
-  
+
                   $.each(columns, function(i,v) {
                       if(v.hidden == false){
                           columVisible =  true;
@@ -536,12 +536,12 @@ Template.salesorderslistpop.onRendered(()=>{
                           columVisible = false;
                       }
                       sWidth = v.style.width.replace('px', "");
-  
+
                       let datatablerecordObj = {
                           custid: $(this).attr("custid") || 0,
                           sTitle: v.innerText || '',
                           sWidth: sWidth || '',
-                          sIndex: v.cellIndex || '',
+                          sIndex: v.cellIndex || 0,
                           sVisible: columVisible || false,
                           sClass: v.className || ''
                       };
@@ -561,9 +561,9 @@ Template.salesorderslistpop.onRendered(()=>{
                 //         }
                 //       }
                 //   });
-  
+
                 //   templateObject.getCustomFieldData();
-  
+
               }
           }).catch(function (err) {
             sideBarService.getAllTSalesOrderListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
@@ -611,22 +611,22 @@ Template.salesorderslistpop.onRendered(()=>{
                         comments: data.tsalesorderlist[i].Comments || '',
                         isConverted: data.tsalesorderlist[i].Converted
                     };
-  
+
                     //if(data.tsalesorderex[i].fields.Deleted == false && data.tsalesorderex[i].fields.CustomerName.replace(/\s/g, '') != ''){
                         dataTableList.push(dataList);
                     //}
-  
+
                     //}
                 }
                 templateObject.datatablerecords.set(dataTableList);
-  
+
                 if(templateObject.datatablerecords.get()){
-  
+
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
                 }
-  
+
                 $('.fullScreenSpin').css('display','none');
                 setTimeout(function () {
                     $('#tblSalesOrderlist').DataTable({
@@ -653,9 +653,9 @@ Template.salesorderslistpop.onRendered(()=>{
                                                 var res = data.split("</span>");
                                                 data = res[1];
                                             }
-  
+
                                             return column === 1 ? data.replace(/<.*?>/ig, ""): data;
-  
+
                                         }
                                     }
                                 }
@@ -683,45 +683,45 @@ Template.salesorderslistpop.onRendered(()=>{
                         },
                         "fnDrawCallback": function (oSettings) {
                           let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-  
+
                           $('.paginate_button.page-item').removeClass('disabled');
                           $('#tblquotelist_ellipsis').addClass('disabled');
-  
+
                           if(oSettings._iDisplayLength == -1){
                             if(oSettings.fnRecordsDisplay() > 150){
                               $('.paginate_button.page-item.previous').addClass('disabled');
                               $('.paginate_button.page-item.next').addClass('disabled');
                             }
                           }else{
-  
+
                           }
                           if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
                               $('.paginate_button.page-item.next').addClass('disabled');
                           }
-  
+
                           $('.paginate_button.next:not(.disabled)', this.api().table().container())
                            .on('click', function(){
                              $('.fullScreenSpin').css('display','inline-block');
                              let dataLenght = oSettings._iDisplayLength;
                              var dateFrom = new Date();
                              var dateTo = new Date();
-  
+
                              let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                              let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                sideBarService.getAllTSalesOrderListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                  getVS1Data('TSalesOrderList').then(function (dataObjectold) {
                                    if(dataObjectold.length == 0){
-  
+
                                    }else{
                                      let dataOld = JSON.parse(dataObjectold[0].data);
-  
+
                                      var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesorderlist), dataOld.tsalesorderlist);
                                      let objCombineData = {
                                        Params: dataOld.Params,
                                        tsalesorderlist:thirdaryData
                                      }
-  
-  
+
+
                                        addVS1Data('TSalesOrderList',JSON.stringify(objCombineData)).then(function (datareturn) {
                                         //  templateObject.resetData(objCombineData);
                                         templateObject.getAllSalesOrderData()
@@ -729,19 +729,19 @@ Template.salesorderslistpop.onRendered(()=>{
                                        }).catch(function (err) {
                                        $('.fullScreenSpin').css('display','none');
                                        });
-  
+
                                    }
                                   }).catch(function (err) {
-  
+
                                   });
-  
+
                                }).catch(function(err) {
                                  $('.fullScreenSpin').css('display','none');
                                });
-                            
-  
+
+
                            });
-  
+
                             setTimeout(function () {
                                 MakeNegative();
                             }, 100);
@@ -758,10 +758,10 @@ Template.salesorderslistpop.onRendered(()=>{
                      },
                      "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                        let countTableData = data.Params.Count || 0; //get count from API data
-  
+
                          return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
                      }
-  
+
                     }).on('page', function () {
                         setTimeout(function () {
                             MakeNegative();
@@ -769,18 +769,18 @@ Template.salesorderslistpop.onRendered(()=>{
                         let draftRecord = templateObject.datatablerecords.get();
                         templateObject.datatablerecords.set(draftRecord);
                     }).on('column-reorder', function () {
-  
+
                     }).on( 'length.dt', function ( e, settings, len ) {
                         setTimeout(function () {
                             MakeNegative();
                         }, 100);
                     });
-  
+
                     // $('#tblSalesOrderlist').DataTable().column( 0 ).visible( true );
                     $('.fullScreenSpin').css('display','none');
-  
+
                 }, 0);
-  
+
                 var columns = $('#tblSalesOrderlist th');
                 let sTible = "";
                 let sWidth = "";
@@ -796,13 +796,13 @@ Template.salesorderslistpop.onRendered(()=>{
                         columVisible = false;
                     }
                     sWidth = v.style.width.replace('px', "");
-  
-  
+
+
                     let datatablerecordObj = {
                         custid: $(this).attr("custid") || 0,
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -828,9 +828,9 @@ Template.salesorderslistpop.onRendered(()=>{
                 // Meteor._reload.reload();
             });
           });
-  
+
     }
-  
+
     templateObject.getAllSalesOrderData();
 
     templateObject.resetData = function (dataVal) {
@@ -844,7 +844,7 @@ Template.salesorderslistpop.onRendered(()=>{
           location.reload();
         }
       }
-  
+
 })
 
 Template.salesorderslistpop.events({

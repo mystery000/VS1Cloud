@@ -734,7 +734,7 @@ Template.productlistpopwithcheckboxes.onRendered(function () {
                 language: { search: "", searchPlaceholder: "Search List..." },
                 fnInitComplete: function () {
                   $(
-                    "<a class='btn btn-primary scanProdBarcodePOP' href='' id='scanProdBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>"
+                    "<a class='btn btn-primary scanProdBarcodePOP' href='' id='scanProdBarcodePOP' role='button' style='margin-left: 12px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>"
                   ).insertAfter("#tblInventory_filter");
                   $(
                     "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"

@@ -124,7 +124,6 @@ Template.receiptsoverview.onRendered(function() {
         });
     };
     function setReceiptCategory(data) {
-        console.log('data', data)
         for (let i in data.treceiptcategory){
             if (data.treceiptcategory.hasOwnProperty(i)) {
                 categories.push(data.treceiptcategory[i].CategoryName);
@@ -3683,7 +3682,6 @@ Template.receiptsoverview.events({
     "keyup #exchange_rate": e => onExhangeRateChanged(e),
     "change #exchange_rate": e => onExhangeRateChanged(e),
     "click #newReceiptModal .btnSave": (e, ui) => {
-        console.log($(".nav-link.active"));
         const nav = $(".nav-link.active");
         if(nav.attr('href') == "#nav-expense") {
             saveCurrencyHistory(
@@ -3694,7 +3692,7 @@ Template.receiptsoverview.events({
                 GlobalFunctions.convertYearMonthDay($('#nav-time .dtReceiptDate').val())
             );
         }
-  
+
     }
 });
 

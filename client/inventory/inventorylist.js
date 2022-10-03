@@ -96,10 +96,10 @@ Template.inventorylist.onRendered(function() {
         { index: 11, label: "Sale Price (Inc)", class: "SalePriceInc", width: "135", active: true, display: true },
         { index: 12, label: "Serial/Lot No", class: "SerialNo", width: "124", active: false, display: true },
         { index: 13, label: "Barcode", class: "Barcode", width: "80", active: false, display: true },
-        { index: 14, label: "Department", class: "Department", width: "100", active: false, display: true },
+        { index: 14, label: "Department", class: "Departmentth", width: "100", active: false, display: true },
         { index: 15, label: "Purchase Description", class: "PurchaseDescription", width: "", active: false, display: true },
-        { index: 16, label: "Custom Field 1", class: "colProdCustField1", width: "", active: false, display: true },
-        { index: 17, label: "Custom Field 2", class: "colProdCustField2", width: "", active: false, display: true },
+        { index: 16, label: "Custom Field 1", class: "ProdCustField1", width: "", active: false, display: true },
+        { index: 17, label: "Custom Field 2", class: "ProdCustField2", width: "", active: false, display: true },
       ];
 
       let isSNTrackchecked = localStorage.getItem('vs1cloudlicenselevel') == 'PLUS' || false;
@@ -153,6 +153,12 @@ Template.inventorylist.onRendered(function() {
         class: reset_data[r].class,
         display: reset_data[r].display,
         width: reset_data[r].width ? reset_data[r].width : ''
+      };
+
+      if(reset_data[r].active == true){
+        $('#tblInventoryOverview_wrapper .'+reset_data[r].class).removeClass('hiddenColumn');
+      }else if(reset_data[r].active == false){
+        $('#tblInventoryOverview_wrapper .'+reset_data[r].class).addClass('hiddenColumn');
       };
       custFields.push(customData);
     }
@@ -338,8 +344,81 @@ Template.inventorylist.onRendered(function() {
                             $(".fullScreenSpin").css("display", "none");
                             setTimeout(function() {
                               $("#tblInventoryOverview").dataTable({
-                                      //data: splashArrayProductList,
+                                      data: splashArrayProductList,
                                       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                      columnDefs: [{
+                                        className: "colProductID hiddenColumn",
+                                        targets: [0],
+                                    },
+                                    {
+                                        className: "colProductName",
+                                        targets: [1],
+                                    },
+                                    {
+                                        className: "colSalesDescription",
+                                        targets: [2],
+                                    },
+                                    {
+                                        className: "colAvailable text-right",
+                                        targets: [3],
+                                    },
+                                    {
+                                        className: "colOnSO text-right",
+                                        targets: [4],
+                                    },
+                                    {
+                                        className: "colOnBO text-right",
+                                        targets: [5],
+                                    },
+                                    {
+                                        className: "colInStock text-right",
+                                        targets: [6],
+                                    },
+                                    {
+                                        className: "colOnOrder text-right",
+                                        targets: [7],
+                                    },
+                                    {
+                                        className: "colCostPrice hiddenColumn text-right",
+                                        targets: [8],
+                                    },
+                                    {
+                                        className: "colCostPriceInc  text-right",
+                                        targets: [9],
+                                    },
+                                    {
+                                        className: "colSalePrice hiddenColumn text-right",
+                                        targets: [10],
+                                    },
+                                    {
+                                        className: "colSalePriceInc  text-right",
+                                        targets: [11],
+                                    },
+                                    {
+                                        className: "colSerialNo  text-center hiddenColumn",
+                                        targets: [12],
+                                    },
+                                    {
+                                        className: "colBarcode hiddenColumn",
+                                        targets: [13],
+                                    },
+                                    {
+                                        className: "colDepartment hiddenColumn",
+                                        targets: [14],
+                                    },
+                                    {
+                                        className: "colPurchaseDescription hiddenColumn",
+                                        targets: [15],
+                                    },
+                                    {
+                                        className: "colProdCustField1 hiddenColumn",
+                                        targets: [16],
+                                    },
+                                    {
+                                        className: "colProdCustField2 hiddenColumn",
+                                        targets: [17],
+                                    },
+                                ],
                                       select: true,
                                       destroy: true,
                                       colReorder: true,
@@ -538,8 +617,81 @@ Template.inventorylist.onRendered(function() {
                     $(".fullScreenSpin").css("display", "none");
                     setTimeout(function() {
                         $("#tblInventoryOverview").dataTable({
-                                //data: splashArrayProductList,
+                                data: splashArrayProductList,
                                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                columnDefs: [{
+                                        className: "colProductID hiddenColumn",
+                                        targets: [0],
+                                    },
+                                    {
+                                        className: "colProductName",
+                                        targets: [1],
+                                    },
+                                    {
+                                        className: "colSalesDescription",
+                                        targets: [2],
+                                    },
+                                    {
+                                        className: "colAvailable text-right",
+                                        targets: [3],
+                                    },
+                                    {
+                                        className: "colOnSO text-right",
+                                        targets: [4],
+                                    },
+                                    {
+                                        className: "colOnBO text-right",
+                                        targets: [5],
+                                    },
+                                    {
+                                        className: "colInStock text-right",
+                                        targets: [6],
+                                    },
+                                    {
+                                        className: "colOnOrder text-right",
+                                        targets: [7],
+                                    },
+                                    {
+                                        className: "colCostPrice hiddenColumn text-right",
+                                        targets: [8],
+                                    },
+                                    {
+                                        className: "colCostPriceInc  text-right",
+                                        targets: [9],
+                                    },
+                                    {
+                                        className: "colSalePrice hiddenColumn text-right",
+                                        targets: [10],
+                                    },
+                                    {
+                                        className: "colSalePriceInc  text-right",
+                                        targets: [11],
+                                    },
+                                    {
+                                        className: "colSerialNo  text-center hiddenColumn",
+                                        targets: [12],
+                                    },
+                                    {
+                                        className: "colBarcode hiddenColumn",
+                                        targets: [13],
+                                    },
+                                    {
+                                        className: "colDepartment hiddenColumn",
+                                        targets: [14],
+                                    },
+                                    {
+                                        className: "colPurchaseDescription hiddenColumn",
+                                        targets: [15],
+                                    },
+                                    {
+                                        className: "colProdCustField1 hiddenColumn",
+                                        targets: [16],
+                                    },
+                                    {
+                                        className: "colProdCustField2 hiddenColumn",
+                                        targets: [17],
+                                    },
+                                ],
                                 select: true,
                                 destroy: true,
                                 colReorder: true,
@@ -734,8 +886,81 @@ Template.inventorylist.onRendered(function() {
                         $(".fullScreenSpin").css("display", "none");
                         setTimeout(function() {
                           $("#tblInventoryOverview").dataTable({
-                                  //data: splashArrayProductList,
+                                  data: splashArrayProductList,
                                   sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                  columnDefs: [{
+                                        className: "colProductID hiddenColumn",
+                                        targets: [0],
+                                    },
+                                    {
+                                        className: "colProductName",
+                                        targets: [1],
+                                    },
+                                    {
+                                        className: "colSalesDescription",
+                                        targets: [2],
+                                    },
+                                    {
+                                        className: "colAvailable text-right",
+                                        targets: [3],
+                                    },
+                                    {
+                                        className: "colOnSO text-right",
+                                        targets: [4],
+                                    },
+                                    {
+                                        className: "colOnBO text-right",
+                                        targets: [5],
+                                    },
+                                    {
+                                        className: "colInStock text-right",
+                                        targets: [6],
+                                    },
+                                    {
+                                        className: "colOnOrder text-right",
+                                        targets: [7],
+                                    },
+                                    {
+                                        className: "colCostPrice hiddenColumn text-right",
+                                        targets: [8],
+                                    },
+                                    {
+                                        className: "colCostPriceInc  text-right",
+                                        targets: [9],
+                                    },
+                                    {
+                                        className: "colSalePrice hiddenColumn text-right",
+                                        targets: [10],
+                                    },
+                                    {
+                                        className: "colSalePriceInc  text-right",
+                                        targets: [11],
+                                    },
+                                    {
+                                        className: "colSerialNo  text-center hiddenColumn",
+                                        targets: [12],
+                                    },
+                                    {
+                                        className: "colBarcode hiddenColumn",
+                                        targets: [13],
+                                    },
+                                    {
+                                        className: "colDepartment hiddenColumn",
+                                        targets: [14],
+                                    },
+                                    {
+                                        className: "colPurchaseDescription hiddenColumn",
+                                        targets: [15],
+                                    },
+                                    {
+                                        className: "colProdCustField1 hiddenColumn",
+                                        targets: [16],
+                                    },
+                                    {
+                                        className: "colProdCustField2 hiddenColumn",
+                                        targets: [17],
+                                    },
+                                ],
                                   select: true,
                                   destroy: true,
                                   colReorder: true,
@@ -1282,7 +1507,7 @@ Template.inventorylist.events({
               confirmButtonText: 'OK'
             }).then((result) => {
                 if (result.value) {
-                   $('#myModal2').modal('hide');
+                   $('#myInventoryModal').modal('hide');
                 }
             });
         } else {
@@ -1390,13 +1615,13 @@ Template.inventorylist.events({
         $('.colBarcode').removeClass('showColumn');
       }
     },
-    'click .chkDepartment': function(event) {
+    'click .chkDepartmentth': function(event) {
       if ($(event.target).is(':checked')) {
-        $('.colDepartment').addClass('showColumn');
-        $('.colDepartment').removeClass('hiddenColumn');
+        $('.colDepartmentth').addClass('showColumn');
+        $('.colDepartmentth').removeClass('hiddenColumn');
       } else {
-        $('.colDepartment').addClass('hiddenColumn');
-        $('.colDepartment').removeClass('showColumn');
+        $('.colDepartmentth').addClass('hiddenColumn');
+        $('.colDepartmentth').removeClass('showColumn');
       }
     },
     'click .chkPurchaseDescription': function(event) {
@@ -1406,6 +1631,24 @@ Template.inventorylist.events({
       } else {
         $('.colPurchaseDescription').addClass('hiddenColumn');
         $('.colPurchaseDescription').removeClass('showColumn');
+      }
+    },
+    'click .chkProdCustField1': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colProdCustField1').addClass('showColumn');
+        $('.colProdCustField1').removeClass('hiddenColumn');
+      } else {
+        $('.colProdCustField1').addClass('hiddenColumn');
+        $('.colProdCustField1').removeClass('showColumn');
+      }
+    },
+    'click .chkProdCustField2': function(event) {
+      if ($(event.target).is(':checked')) {
+        $('.colProdCustField2').addClass('showColumn');
+        $('.colProdCustField2').removeClass('hiddenColumn');
+      } else {
+        $('.colProdCustField2').addClass('hiddenColumn');
+        $('.colProdCustField2').removeClass('showColumn');
       }
     },
 
@@ -1727,13 +1970,13 @@ Template.inventorylist.events({
                         templateObject.datatablerecords.set(dataTableList);
                         //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
                         $(".fullScreenSpin").css("display", "none");
-                        // if (splashArrayProductList) {
-                        //   $('.resetTable').trigger('click');
-                        //     var datatable = $("#tblInventoryOverview").DataTable();
-                        //     datatable.clear();
-                        //     datatable.rows.add(splashArrayProductList);
-                        //     datatable.draw(false);
-                        // }
+                        if (splashArrayProductList) {
+                          $('.resetTable').trigger('click');
+                            var datatable = $("#tblInventoryOverview").DataTable();
+                            datatable.clear();
+                            datatable.rows.add(splashArrayProductList);
+                            datatable.draw(false);
+                        }
                     } else {
                         $(".fullScreenSpin").css("display", "none");
 

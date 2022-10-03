@@ -23,7 +23,8 @@
         }
         .currency-value {
             font-size: 28px;
-            color: rgb(133 135 150);
+            /*color: rgb(133 135 150);*/
+            color:rgb(221,223,235)
         }
         .fs-18 {
             font-size: 18px !important;
@@ -31,17 +32,55 @@
         .fs-24 {
             font-size: 24px !important;
         }
+        .btn-daterange::after {
+             display: none;
+        }
+        .dateSelectMobile {
+            float: right !important;
+            margin-right: 0 !important;
+        }
+        .btn-daterange {
+            float: right !important;
+        }
     </style>
     <div class="container-fluid">
         {{#if includeDashboard}}
             <div class="row mb-2">
-                <div class="col-12 col-md-12">
+                <div class="col-md-8">
                     <header class="pt-1 pb-1 d-flex justify-content-center">
                         <h2>Sales Performance Dashboard</h2>
                     </header>
-                    <hr>
+                </div>
+                <div class="col-md-4">
+                    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                        <div class="dropdown dropdownMobile" style="margin: 8px; margin-top: 0px;">
+                            <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            {{> daterangedropdownoption}}
+                        </div>
+                        <div class="form-group dateSelectMobile" style="margin: 0 8px 8px;display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 16px;">From</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateFrom" name="dateFrom" value="">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group dateSelectMobile" style="margin: 0px 0px 8px 8px;display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 16px;">To</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateTo" name="dateTo" value="">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <hr>
             <div class="row pt-3 pb-3">
                 <div class="col-md-8" data-default-class="col-md-10">
                     {{> allCardsLists tabGroupID="10" chartGroup="dashboardSalesManager" type="dashboardSalesManager"}}
@@ -54,16 +93,9 @@
             </div>
             <hr>
             <div class="row pt-3 pb-3">
-                <div class="col-md-8">
+                <div class="col-md-12">
                     {{> allChartLists  tabGroupID="10" chartGroup="DSMCharts" }}
                 </div>
-                <div class="col-md-4">
-                    {{> appointmentsWidget}}
-                </div>
-            </div>
-            <hr>
-            <div class="pt-3 pb-3" style="overflow: hidden;">
-                {{> leadlist}}
             </div>
         {{/if}}
     </div>

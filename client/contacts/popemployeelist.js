@@ -197,7 +197,7 @@ Template.popemployeelist.onRendered(function() {
                 let datatablerecordObj = {
                   sTitle: v.innerText || '',
                   sWidth: sWidth || '',
-                  sIndex: v.cellIndex || '',
+                  sIndex: v.cellIndex || 0,
                   sVisible: columVisible || false,
                   sClass: v.className || ''
                 };
@@ -365,7 +365,7 @@ Template.popemployeelist.onRendered(function() {
     let datatablerecordObj = {
       sTitle: v.innerText || '',
       sWidth: sWidth || '',
-      sIndex: v.cellIndex || '',
+      sIndex: v.cellIndex || 0,
       sVisible: columVisible || false,
       sClass: v.className || ''
     };
@@ -527,7 +527,7 @@ Template.popemployeelist.onRendered(function() {
               let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
               };
@@ -721,7 +721,7 @@ Template.popemployeelist.events({
         let datatablerecordObj = {
           sTitle: v.innerText || '',
           sWidth: sWidth || '',
-          sIndex: v.cellIndex || '',
+          sIndex: v.cellIndex || 0,
           sVisible: columVisible || false,
           sClass: v.className || ''
         };

@@ -305,7 +305,7 @@ Template.invoiceemail.onRendered(function() {
                 let datatablerecordObj = {
                   sTitle: v.innerText || '',
                   sWidth: sWidth || '',
-                  sIndex: v.cellIndex || '',
+                  sIndex: v.cellIndex || 0,
                   sVisible: columVisible || false,
                   sClass: v.className || ''
                 };
@@ -496,7 +496,7 @@ setTimeout(function () {
     let datatablerecordObj = {
       sTitle: v.innerText || '',
       sWidth: sWidth || '',
-      sIndex: v.cellIndex || '',
+      sIndex: v.cellIndex || 0,
       sVisible: columVisible || false,
       sClass: v.className || ''
     };
@@ -682,7 +682,7 @@ templateObject.tableheaderrecords.set(tableHeaderList);
                 let datatablerecordObj = {
                   sTitle: v.innerText || '',
                   sWidth: sWidth || '',
-                  sIndex: v.cellIndex || '',
+                  sIndex: v.cellIndex || 0,
                   sVisible: columVisible || false,
                   sClass: v.className || ''
                 };
@@ -901,7 +901,7 @@ Template.invoiceemail.events({
         let datatablerecordObj = {
           sTitle: v.innerText || '',
           sWidth: sWidth || '',
-          sIndex: v.cellIndex || '',
+          sIndex: v.cellIndex || 0,
           sVisible: columVisible || false,
           sClass: v.className || ''
         };

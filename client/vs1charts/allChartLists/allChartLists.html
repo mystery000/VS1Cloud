@@ -42,21 +42,30 @@
             min-height: 110px;
             max-height: 100%;
         }
+        .col-md-3 .minHeight100 .canvasParentDiv.canvasHeight100,
         .col-md-4 .minHeight100 .canvasParentDiv.canvasHeight100,
+        .col-md-5 .minHeight100 .canvasParentDiv.canvasHeight100,
         .col-md-6 .minHeight100 .canvasParentDiv.canvasHeight100,
-        .col-md-8 .minHeight100 .canvasParentDiv.canvasHeight100 {
+        .col-md-8 .minHeight100 .canvasParentDiv.canvasHeight100,
+        .col-md-12 .minHeight100 .canvasParentDiv.canvasHeight100 {
             height: 45vh !important;
             float: left;
             width: 100%;
         }
+        .col-md-3 .minHeight100 .portlet.card,
         .col-md-4 .minHeight100 .portlet.card,
+        .col-md-5 .minHeight100 .portlet.card,
         .col-md-6 .minHeight100 .portlet.card,
-        .col-md-8 .minHeight100 .portlet.card {
+        .col-md-8 .minHeight100 .portlet.card,
+        .col-md-12 .minHeight100 .portlet.card {
             height: 100% !important;
         }
+        .col-md-3 .minHeight100 .canvasParentDiv,
         .col-md-4 .minHeight100 .canvasParentDiv,
+        .col-md-5 .minHeight100 .canvasParentDiv,
         .col-md-6 .minHeight100 .canvasParentDiv,
-        .col-md-8 .minHeight100 .canvasParentDiv {
+        .col-md-8 .minHeight100 .canvasParentDiv,
+        .col-md-12 .minHeight100 .canvasParentDiv {
             height: calc(45vh - 52.8px) !important;
             position: relative;
             max-height: 100%;
@@ -79,7 +88,7 @@
             margin-bottom: 30px !important;
         }
         .minHeight100 .card.mb-4 {
-            margin: 0px !important;
+            margin: 0 !important;
         }
         .resizeAfterChart .card {
             max-width: 100%;
@@ -171,14 +180,26 @@
         {{#if equals isaccountoverview true}}
 
         {{else}}
-        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="26" position="26" data-default-class="col-md-12" chartgroup="Dashboard" card-active="true" key="dashboard__account_list">
+        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="26" data-default-class="col-md-12" key="dashboard__account_list">
             {{> accountslistchart}}
         </div>
         {{/if}}
-        <!-- position 17 to 23 -->
+        <!-- position 17 to 18 -->
         {{> dashboardManagerCharts}}
-        <!-- position 24, 25 -->
+        <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="24" data-default-class="col-md-4" key="dsmcharts__appointment_list">
+            {{> dsmAppointmentsWidget}}
+        </div>
+        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="25" data-default-class="col-md-12" key="dsmcharts__lead_list">
+            {{> dsmleadlistchart}}
+        </div>
+        <!-- position 27, 28 -->
         {{> dashboardSalesCharts}}
+        <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="29" data-default-class="col-md-4" key="dscharts__appointment_list">
+            {{> dsAppointmentsWidget}}
+        </div>
+        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="30" data-default-class="col-md-12" key="dscharts__lead_list">
+            {{> dsleadlistchart}}
+        </div>
     </div>
     <div class="row no-gutters justify-content-center">
         <button class="btn btn-success float-right hideelement" id="btnDone" type="button" style="margin:0 8px 16px;">

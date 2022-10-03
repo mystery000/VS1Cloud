@@ -105,6 +105,11 @@ export default class FxGlobalFunctions {
     LoadingOverlay.hide();
   }
 
+  static handleChangedCurrency(currency = "AUD", defaultCurrencyCode) {
+    if(currency != defaultCurrencyCode) {
+      $("#sltCurrency").trigger('change');
+    }
+  }
 
   /**
    * 

@@ -88,7 +88,7 @@ Template.jobprofitabilityreport.onRendered(() => {
     let data = await CachedHttp.get(erpObject.TJobProfitability, async () => {
       return await reportService.getJobProfitabilityReport( dateFrom, dateTo, ignoreDate);
     }, {
-      useIndexDb: true, 
+      useIndexDb: true,
       useLocalStorage: false,
       validate: (cachedResponse) => {
         return false;
@@ -100,7 +100,7 @@ Template.jobprofitabilityreport.onRendered(() => {
 
     let reportData = [];
     if( data.tjobprofitability.length > 0 ){
-      for (const item of data.tjobprofitability ) {   
+      for (const item of data.tjobprofitability ) {
         let isExist = reportData.filter((subitem) => {
           if( subitem.CompanyName == item.CompanyName ){
               subitem.SubAccounts.push(item)
@@ -117,7 +117,7 @@ Template.jobprofitabilityreport.onRendered(() => {
           });
         }
         $(".fullScreenSpin").css("display", "none");
-      }     
+      }
     }
     // let useData = reportData.filter((item) => {
     //   let TotalOrCost = 0;
@@ -129,7 +129,7 @@ Template.jobprofitabilityreport.onRendered(() => {
     //   item.TotalOrCost = TotalOrCost;
     //   item.TotalCrCost = TotalCrCost;
     //   return item;
-    // });    
+    // });
     templateObject.records.set(reportData);
     if (templateObject.records.get()) {
       setTimeout(function () {
@@ -147,7 +147,7 @@ Template.jobprofitabilityreport.onRendered(() => {
         });
         $(".fullScreenSpin").css("display", "none");
       }, 1000);
-    }  
+    }
 
     LoadingOverlay.hide();
   }
@@ -159,8 +159,8 @@ Template.jobprofitabilityreport.onRendered(() => {
   templateObject.initUploadedImage();
 
   templateObject.loadReport(
-    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-    GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
   LoadingOverlay.hide();
@@ -493,8 +493,8 @@ Template.jobprofitabilityreport.events({
    */
     "change #dateTo, change #dateFrom": (e, templateObject) => {
       templateObject.loadReport(
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
         false
       );
     },
@@ -503,13 +503,12 @@ Template.jobprofitabilityreport.events({
 
 Template.jobprofitabilityreport.helpers({
   dateAsAt: () => {
-    console.log(Template.instance().dateAsAt.get())
     return Template.instance().dateAsAt.get() || "-";
   },
   records: () => {
     return Template.instance().records.get();
   },
-  
+
   redirectionType(item) {
     if(item.TransactionType === 'Invoice') {
       return '/invoicecard?id=' + item.SaleID;

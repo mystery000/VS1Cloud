@@ -314,7 +314,7 @@ Template.lotnumberlist.onRendered(function() {
                 let datatablerecordObj = {
                     sTitle: v.innerText || '',
                     sWidth: sWidth || '',
-                    sIndex: v.cellIndex || '',
+                    sIndex: v.cellIndex || 0,
                     sVisible: columVisible || false,
                     sClass: v.className || ''
                 };
@@ -359,9 +359,9 @@ Template.lotnumberlist.onRendered(function() {
                         expirydate: data.tserialnumberlistcurrentreport[i].BatchExpiryDate !=''? moment(data.tserialnumberlistcurrentreport[i].BatchExpiryDate).format("YYYY/MM/DD"): data.tserialnumberlistcurrentreport[i].BatchExpiryDate,
                         cssclass: tclass
                     };
-    
+
                     dataTableList.push(dataList);
-    
+
                 }
 
                 templateObject.datatablerecords.set(dataTableList);
@@ -502,7 +502,7 @@ Template.lotnumberlist.onRendered(function() {
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
+                        sIndex: v.cellIndex || 0,
                         sVisible: columVisible || false,
                         sClass: v.className || ''
                     };
@@ -721,7 +721,7 @@ Template.lotnumberlist.events({
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
+                sIndex: v.cellIndex || 0,
                 sVisible: columVisible || false,
                 sClass: v.className || ''
             };

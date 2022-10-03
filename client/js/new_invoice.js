@@ -18,6 +18,7 @@ import { TaxRateService } from "../settings/settings-service";
 import { saveCurrencyHistory } from "../packages/currency/CurrencyWidget";
 import { getCurrentCurrencySymbol } from "../popUps/currnecypopup";
 import { convertToForeignAmount } from "../payments/paymentcard/supplierPaymentcard";
+import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -1177,6 +1178,7 @@ Template.new_invoice.onRendered(function() {
             $("#sltTerms").val(data.fields.TermsName);
             $("#sltDept").val(data.fields.SaleClassName);
             $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+            FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
             $('#exchange_rate').val(data.fields.ForeignExchangeRate);
             $("#sltStatus").val(data.fields.SalesStatus);
             templateObject.CleintName.set(data.fields.CustomerName);
@@ -1684,6 +1686,8 @@ Template.new_invoice.onRendered(function() {
                   $("#sltTerms").val(data.fields.TermsName);
                   $("#sltDept").val(data.fields.SaleClassName);
                   $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+                  FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
                   $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                   $("#sltStatus").val(data.fields.SalesStatus);
                   templateObject.CleintName.set(data.fields.CustomerName);
@@ -2283,6 +2287,8 @@ Template.new_invoice.onRendered(function() {
                   $("#sltTerms").val(useData[d].fields.TermsName);
                   $("#sltDept").val(useData[d].fields.SaleClassName);
                   $("#sltCurrency").val(useData[d].fields.ForeignExchangeCode);
+                  FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
                   $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
                   $("#sltStatus").val(useData[d].fields.SalesStatus);
                   templateObject.CleintName.set(useData[d].fields.CustomerName);
@@ -2817,6 +2823,8 @@ Template.new_invoice.onRendered(function() {
                     $("#sltStatus").val(data.fields.SalesStatus);
                     $("#sltDept").val(data.fields.SaleClassName);
                     $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+                    FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
                     $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                     $("#sltTerms").val(data.fields.TermsName);
                     templateObject.CleintName.set(data.fields.CustomerName);
@@ -3420,6 +3428,8 @@ Template.new_invoice.onRendered(function() {
                 $("#sltStatus").val(data.fields.SalesStatus);
                 $("#sltDept").val(data.fields.SaleClassName);
                 $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+                FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
                 $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                 $("#sltTerms").val(data.fields.TermsName);
                 templateObject.CleintName.set(data.fields.CustomerName);
@@ -4055,6 +4065,8 @@ Template.new_invoice.onRendered(function() {
                   $("#sltStatus").val(data.fields.SalesStatus);
                   $("#sltDept").val(data.fields.SaleClassName);
                   $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+                  FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
                   $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                   $("#sltTerms").val(data.fields.TermsName);
                   templateObject.CleintName.set(data.fields.CustomerName);
@@ -4652,6 +4664,8 @@ Template.new_invoice.onRendered(function() {
                   $("#sltTerms").val(useData[d].fields.TermsName);
                   $("#sltDept").val(useData[d].fields.SaleClassName);
                   $("#sltCurrency").val(useData[d].fields.ForeignExchangeCode);
+                  FxGlobalFunctions.handleChangedCurrency(useData[d].fields.ForeignExchangeCode, defaultCurrencyCode);
+
                   $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
                   $("#sltStatus").val(useData[d].fields.SalesStatus);
                   templateObject.CleintName.set(useData[d].fields.CustomerName);
@@ -5192,6 +5206,8 @@ Template.new_invoice.onRendered(function() {
                     $("#sltStatus").val(data.fields.SalesStatus);
                     $("#sltDept").val(data.fields.SaleClassName);
                     $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+                    FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
                     $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                     $("#sltTerms").val(data.fields.TermsName);
                     templateObject.CleintName.set(data.fields.CustomerName);
@@ -5670,6 +5686,8 @@ Template.new_invoice.onRendered(function() {
                 $("#sltStatus").val(data.fields.SalesStatus);
                 $("#sltDept").val(data.fields.SaleClassName);
                 $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+                FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
                 $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                 $("#sltTerms").val(data.fields.TermsName);
                 templateObject.CleintName.set(data.fields.CustomerName);
@@ -6167,6 +6185,8 @@ Template.new_invoice.onRendered(function() {
             $("#sltStatus").val(data.fields.SalesStatus);
             $("#sltDept").val(data.fields.SaleClassName);
             $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+            FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
             $('#exchange_rate').val(data.fields.ForeignExchangeRate);
             $("#sltTerms").val(data.fields.TermsName);
             templateObject.CleintName.set(data.fields.CustomerName);
@@ -6611,6 +6631,8 @@ Template.new_invoice.onRendered(function() {
             $("#sltStatus").val(data.fields.SalesStatus);
             $("#sltDept").val(data.fields.SaleClassName);
             $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+            FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+
             $('#exchange_rate').val(data.fields.ForeignExchangeRate);
             $("#sltTerms").val(data.fields.TermsName);
             templateObject.CleintName.set(data.fields.CustomerName);
@@ -8193,7 +8215,6 @@ Template.new_invoice.onRendered(function() {
 
     $("#tblStatusPopList_filter .form-control-sm").val("");
     setTimeout(function () {
-      $(".btnRefreshStatus").trigger("click");
       $(".fullScreenSpin").css("display", "none");
     }, 1000);
   });
@@ -8506,7 +8527,6 @@ Template.new_invoice.onRendered(function() {
     $("#tblCustomerlist_filter .form-control-sm").val("");
     setTimeout(function () {
       //$('#tblCustomerlist_filter .form-control-sm').focus();
-      $(".btnRefreshCustomer").trigger("click");
       $(".fullScreenSpin").css("display", "none");
     }, 1000);
     // }
@@ -9192,7 +9212,6 @@ Template.new_invoice.onRendered(function() {
     $("#tblInventory_filter .form-control-sm").val("");
     setTimeout(function () {
       //$('#tblCustomerlist_filter .form-control-sm').focus();
-      $(".btnRefreshProduct").trigger("click");
       $(".fullScreenSpin").css("display", "none");
     }, 1000);
   });
@@ -9425,7 +9444,6 @@ Template.new_invoice.onRendered(function() {
 
     $("#tblStatusPopList_filter .form-control-sm").val("");
     setTimeout(function () {
-      $(".btnRefreshStatus").trigger("click");
       $(".fullScreenSpin").css("display", "none");
     }, 1000);
   });
@@ -9742,7 +9760,6 @@ Template.new_invoice.onRendered(function() {
     $("#tblCustomerlist_filter .form-control-sm").val("");
     setTimeout(function () {
       //$('#tblCustomerlist_filter .form-control-sm').focus();
-      $(".btnRefreshCustomer").trigger("click");
       $(".fullScreenSpin").css("display", "none");
     }, 1000);
     // }
@@ -12889,7 +12906,7 @@ Template.new_invoice.onRendered(function () {
                       datatable.draw(false);
 
                       $(".fullScreenSpin").css("display", "none");
-    
+
                       $(".fullScreenSpin").css("display", "none");
                     });
                 } else {
@@ -18838,9 +18855,7 @@ Template.new_invoice.events({
     $(".displaySettings").each(function (index) {
       let $tblrow = $(this);
       $tblrow.find(".divcolumn").text(reset_data[index].label);
-      $tblrow
-        .find(".custom-control-input")
-        .prop("checked", reset_data[index].active);
+      $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
 
       let title = $("#tblInvoiceLine").find("th").eq(index);
       if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {

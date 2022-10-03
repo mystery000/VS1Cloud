@@ -2152,3 +2152,57 @@ authenticatedRoutes.route('/workorderlist', {
         })
     }
 })
+
+authenticatedRoutes.route('/exebalancesheetreport', {
+    name: 'exebalancesheetreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'exebalancesheetreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/execashreport', {
+    name: 'execashreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'execashreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/exeincomereport', {
+    name: 'exeincomereport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'exeincomereport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/exeperformancereport', {
+    name: 'exeperformancereport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'exeperformancereport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/exepositionreport', {
+    name: 'exepositionreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'exepositionreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/exeprofitabilityreport', {
+    name: 'exeprofitabilityreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'exeprofitabilityreport'
+        });
+    }
+});
