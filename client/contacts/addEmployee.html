@@ -1236,18 +1236,24 @@
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
-                                                                                <!-- {{#if selectedproducts}}
+                                                                                {{#if selectedproducts}}
                                                                                     {{#each item in selectedproducts}}
-                                                                                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                                            <td contenteditable="false" class="colServiceName">{{item.productname}}</td>
-                                                                                            <td contenteditable="false" class="colServiceDescription">{{item.productdesc}}</td>
-                                                                                            <td contenteditable="true" class=" text-right"><input class="colServiceCostPrice highlightInput" type="text" value="{{item.rate}}"></td>
-                                                                                            <td contenteditable="true" class=" text-right"><input class="colServiceSalesPrice  highlightInput" type="text" value="{{item.payrate}}"></td>
-                                                                                            <td contenteditable="false" class="colServiceDelete"><span class="table-remove colServiceDelete"><button type="button"
-                                                                                                        class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
+                                                                                        <tr class="dnd-moved" id="{{item.Id}}" style="cursor: pointer;">
+                                                                                            <td contenteditable="false" class="colServiceName">{{item.ProductName}}</td>
+                                                                                            <td contenteditable="false" class="colServiceDescription">{{item.ProductDesc}}</td>
+                                                                                            <td contenteditable="true" class=" text-right"><input class="colServiceCostPrice highlightInput" type="text" value="{{item.Rate}}"></td>
+                                                                                            <td contenteditable="true" class=" text-right"><input class="colServiceSalesPrice  highlightInput" type="text" value="{{item.PayRate}}"></td>
+                                                                                            <td contenteditable="false" class="colServiceDelete">
+                                                                                                <span class="table-remove colServiceDelete">
+                                                                                                    <button type="button"
+                                                                                                        class="btn btn-danger btn-rounded btn-sm my-0">
+                                                                                                        <i class="fa fa-remove"></i>
+                                                                                                    </button>
+                                                                                                </span>
+                                                                                            </td>
                                                                                         </tr>
                                                                                     {{/each}}
-                                                                                {{/if}} -->
+                                                                                {{/if}}
 
                                                                             </tbody>
 
