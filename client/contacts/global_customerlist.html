@@ -35,36 +35,36 @@
                         <table id="tblCustomerlist" name="tblCustomerlist" class="dataTable table table-hover table-striped table-bordered tblCustomerlist">
                             <thead>
                                 <tr class="dnd-moved">
-                                  {{#each displayfield in displayfields}}
+                                  {{#each displayfield in custdisplayfields}}
                                     {{#if displayfield.display}}
                                     <th class="th {{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px;">{{displayfield.custfieldlabel}}</th>
                                     {{/if}}
                                   {{/each}}
-                                    <!-- <th class="th colCompany {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[1].width}}px{{/if}};">Company</th>
-                                    <th class="th colJob {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[2].width}}px{{/if}};">Job</th>
-                                    <th class="th colPhone {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[3].width}}px{{/if}};">Phone</th>
-                                    <th class="th colMobile {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[4].width}}px{{/if}};">Mobile</th>
-                                    <th class="th colARBalance {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[5].width}}px;{{/if}}; text-align:left!important;">AR Balance</th>
-                                    <th class="th colCreditBalance {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[6].width}}px{{/if}}; text-align:left!important;">Credit Balance</th>
-                                    <th class="th colBalance {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[7].width}}px{{/if}}; text-align:left!important;">Balance</th>
-                                    <th class="th colCreditLimit {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[8].width}}px{{/if}}; text-align:left!important;">Credit Limit</th>
-                                    <th class="th colSalesOrderBalance {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[9].width}}px{{/if}}; text-align:left!important;">Order Balance</th>
-                                    <th class="th colStreetAddress {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[10].width}}px{{/if}};">Street Address</th>
-                                    <th class="th colSuburb colCity {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[11].width}}px{{/if}};">City/Suburb</th>
-                                    <th class="th colState {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[12].width}}px{{/if}};">State</th>
-                                    <th class="th colZipCode {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[14].width}}px{{/if}};">Zip Code</th>
-                                    <th class="th colCountry {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[14].width}}px{{/if}};">Country</th>
-                                    <th class="th colEmail {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[15].width}}px{{/if}};">Email</th>
-                                    <th class="th colAccountNo {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[16].width}}px{{/if}};">Account No</th>
-                                    <th class="th colCustomerType {{#if displayfields.[17].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[17].width}}px{{/if}};">Customer Type</th>
-                                    <th class="th colCustomerDiscount {{#if displayfields.[18].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[18].width}}px{{/if}};">Discount</th>
-                                    <th class="th colCustomerTermName {{#if displayfields.[19].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[19].width}}px{{/if}};">Term Name</th>
-                                    <th class="th colCustomerFirstName {{#if displayfields.[20].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[20].width}}px{{/if}};">First Name</th>
-                                    <th class="th colCustomerLastName {{#if displayfields.[21].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[21].width}}px{{/if}};">Last Name</th>
-                                    <th class="th colCustomerTaxCode {{#if displayfields.[22].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[22].width}}px{{/if}};">Tax Code</th>
-                                    <th class="th colClientNo {{#if displayfields.[23].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[23].width}}px{{/if}};">Custom Field 1</th>
-                                    <th class="th colJobTitle {{#if displayfields.[24].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[24].width}}px{{/if}};">Custom Field 2</th>
-                                    <th class="th colNotes {{#if displayfields.[25].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if displayfields.[25].width}}px{{/if}};">Notes</th> -->
+                                    <!-- <th class="th colCompany {{#if custdisplayfields.[1].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[1].width}}px{{/if}};">Company</th>
+                                    <th class="th colJob {{#if custdisplayfields.[2].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[2].width}}px{{/if}};">Job</th>
+                                    <th class="th colPhone {{#if custdisplayfields.[3].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[3].width}}px{{/if}};">Phone</th>
+                                    <th class="th colMobile {{#if custdisplayfields.[4].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[4].width}}px{{/if}};">Mobile</th>
+                                    <th class="th colARBalance {{#if custdisplayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[5].width}}px;{{/if}}; text-align:left!important;">AR Balance</th>
+                                    <th class="th colCreditBalance {{#if custdisplayfields.[6].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[6].width}}px{{/if}}; text-align:left!important;">Credit Balance</th>
+                                    <th class="th colBalance {{#if custdisplayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[7].width}}px{{/if}}; text-align:left!important;">Balance</th>
+                                    <th class="th colCreditLimit {{#if custdisplayfields.[8].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[8].width}}px{{/if}}; text-align:left!important;">Credit Limit</th>
+                                    <th class="th colSalesOrderBalance {{#if custdisplayfields.[9].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[9].width}}px{{/if}}; text-align:left!important;">Order Balance</th>
+                                    <th class="th colStreetAddress {{#if custdisplayfields.[10].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[10].width}}px{{/if}};">Street Address</th>
+                                    <th class="th colSuburb colCity {{#if custdisplayfields.[11].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[11].width}}px{{/if}};">City/Suburb</th>
+                                    <th class="th colState {{#if custdisplayfields.[12].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[12].width}}px{{/if}};">State</th>
+                                    <th class="th colZipCode {{#if custdisplayfields.[13].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[14].width}}px{{/if}};">Zip Code</th>
+                                    <th class="th colCountry {{#if custdisplayfields.[14].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[14].width}}px{{/if}};">Country</th>
+                                    <th class="th colEmail {{#if custdisplayfields.[15].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[15].width}}px{{/if}};">Email</th>
+                                    <th class="th colAccountNo {{#if custdisplayfields.[16].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[16].width}}px{{/if}};">Account No</th>
+                                    <th class="th colCustomerType {{#if custdisplayfields.[17].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[17].width}}px{{/if}};">Customer Type</th>
+                                    <th class="th colCustomerDiscount {{#if custdisplayfields.[18].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[18].width}}px{{/if}};">Discount</th>
+                                    <th class="th colCustomerTermName {{#if custdisplayfields.[19].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[19].width}}px{{/if}};">Term Name</th>
+                                    <th class="th colCustomerFirstName {{#if custdisplayfields.[20].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[20].width}}px{{/if}};">First Name</th>
+                                    <th class="th colCustomerLastName {{#if custdisplayfields.[21].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[21].width}}px{{/if}};">Last Name</th>
+                                    <th class="th colCustomerTaxCode {{#if custdisplayfields.[22].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[22].width}}px{{/if}};">Tax Code</th>
+                                    <th class="th colClientNo {{#if custdisplayfields.[23].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[23].width}}px{{/if}};">Custom Field 1</th>
+                                    <th class="th colJobTitle {{#if custdisplayfields.[24].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[24].width}}px{{/if}};">Custom Field 2</th>
+                                    <th class="th colNotes {{#if custdisplayfields.[25].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[25].width}}px{{/if}};">Notes</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -155,9 +155,9 @@
                                                                                 }
                                                                             }
                                                                         </style>
-                                                                        {{#each displayfield in displayfields}}
+                                                                        {{#each displayfield in custdisplayfields}}
                                                                          {{#if displayfield.display}}
-                                                                         <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
+                                                                         <div class="columnSettings custdisplaySettings" custid="{{displayfield.id}}">
                                                                            <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                                <input class="custom-control-input chk{{displayfield.class}}" type="checkbox" id="formCheck-0{{displayfield.id}}" checked="{{displayfield.active}}">
                                                                                <label class="custom-control-label" for="formCheck-0{{displayfield.id}}"></label>

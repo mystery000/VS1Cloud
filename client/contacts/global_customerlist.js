@@ -15,7 +15,7 @@ Template.global_customerlist.onCreated(function(){
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.selectedFile = new ReactiveVar();
-    templateObject.displayfields = new ReactiveVar([]);
+    templateObject.custdisplayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
 });
 
@@ -120,7 +120,7 @@ Template.global_customerlist.onRendered(function() {
       };
       custFields.push(customData);
     }
-    templateObject.displayfields.set(custFields);
+    templateObject.custdisplayfields.set(custFields);
   }
   initCustomFieldDisplaySettings("", "tblCustomerlist");
 
@@ -647,7 +647,7 @@ Template.global_customerlist.events({
       //reset_data[9].display = false;
       reset_data = reset_data.filter(redata => redata.display);
 
-    $(".displaySettings").each(function (index) {
+    $(".custdisplaySettings").each(function (index) {
       let $tblrow = $(this);
       $tblrow.find(".divcolumn").text(reset_data[index].label);
       $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
@@ -670,7 +670,7 @@ Template.global_customerlist.events({
     let lineItems = [];
     $(".fullScreenSpin").css("display", "inline-block");
 
-    $(".displaySettings").each(function (index) {
+    $(".custdisplaySettings").each(function (index) {
       var $tblrow = $(this);
       var fieldID = $tblrow.attr("custid") || 0;
       var colTitle = $tblrow.find(".divcolumn").text() || "";
@@ -750,7 +750,7 @@ Template.global_customerlist.helpers({
           return true;
       }
   },
-  displayfields: () => {
-    return Template.instance().displayfields.get();
+  custdisplayfields: () => {
+    return Template.instance().custdisplayfields.get();
   }
 });

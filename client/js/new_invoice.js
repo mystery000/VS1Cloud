@@ -18855,9 +18855,7 @@ Template.new_invoice.events({
     $(".displaySettings").each(function (index) {
       let $tblrow = $(this);
       $tblrow.find(".divcolumn").text(reset_data[index].label);
-      $tblrow
-        .find(".custom-control-input")
-        .prop("checked", reset_data[index].active);
+      $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
 
       let title = $("#tblInvoiceLine").find("th").eq(index);
       if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
