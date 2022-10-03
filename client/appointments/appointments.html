@@ -617,7 +617,7 @@
                                         <div class="col-12 colNotes" id="colNotes" style="padding-left: 2px; padding-right: 0px;">
                                             <div class="form-group flex-grow-1" style="margin: 8px 0px;">
                                                 <label>Notes</label>
-                                                <textarea class="border rounded form-control" rows="5" id="txtNotes" name="txtNotes" style="width: 100%; border: 1px solid #d1d3e2 !important;"></textarea>
+                                                <textarea class="border rounded form-control txtNotes" rows="5" id="txtNotes" name="txtNotes" style="width: 100%; border: 1px solid #d1d3e2 !important;"></textarea>
                                             </div>
                                         </div>
                                     {{/if}}
@@ -691,7 +691,7 @@
                                 <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Product /
                                         Service for Appointment</label>
 
-                                        <select type="search" id="product-list" name="product-list" class="form-control" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                        <select type="search" id="product-list" name="product-list" class="form-control product-list" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                         <!-- {{#if datatablerecords}}
                                             {{#each item in datatablerecords}}
                                                 <option value="{{item.id}}">{{item.productname}}</option>
@@ -1297,6 +1297,48 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
     </div>
 
     <!-- Modal print-button -modal -->
+    <div class="modal fade stopAppointment" role="dialog" tabindex="-1" id="stopAppointment">
+        <div class="modal-dialog modal-sm" role="document" style="max-width: 500px;">
+            <div class="modal-content">
+                <div class="modal-header" style="padding-bottom: 8px;">
+                    <h4>Stop Appointment</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="swal2-icon swal2-warning" style="display: block;">!</div>
+                    <div class="swal2-contentwrapper">
+                        <!-- <h2 class="swal2-title" id="swal2-title">Stop Appointment</h2> -->
+                        <div id="swal2-content" class="swal2-content" style="display: block; text-align:center">Once an appointment has ended, it cannot be restarted.</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-8 colProductService2" id="colProductService2">
+                            <div class="form-group flex-grow-1" style="margin: 20px 0px;">
+                                <label>Product / Service for Appointment</label>
+                                <input type="search" autocomplete="off" id="product-list-1" name="product-list-1" class="form-control es-input product-list" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                <ul class="es-list" style="top: 77px; left: 12px; width: 350px;"></ul>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 colProductService1" id="colProductService1" style="padding-top: 44px;">
+                            <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment-1" autocomplete="off"> 0 <i class="fa fa-paperclip"></i></button>
+                            <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera-1" autocomplete="off"><i class="fa fa-camera" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col colNotes" id="colNotes">
+                            <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                <label>Enter Extra Work Done and Materials Used</label>
+                                <textarea class="border rounded form-control txtNotes" rows="5" id="txtNotes-1" name="txtNotes-1" style="width: 100%; border: 1px solid #d1d3e2 !important;"></textarea>
+                            </div>
+                        </div>                                
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 6px;">
+                    <button class="btn btn-primary" type="button" id="btnEndAppointment" autocomplete="off">End Appointment</button>
+                    <button class="btn btn-light" data-dismiss="modal" type="button" id="btnCloseStopAppointment">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
         {{> payrollproductlistpop}}
     </div>
