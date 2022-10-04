@@ -1231,7 +1231,7 @@
                                                                                     <th class="th colServiceCostPrice" style="width: 8% !important;text-align: left!important;">Cost Price</th>
                                                                                     <th class="th colServiceSalesPrice" style="width: 8% !important;text-align: left!important;">Sale Price</th>
                                                                                     <!-- <th class="th colPurcDef" style="width:20px">Purchase Default</th>-->
-                                                                                    <th class="th colID hiddenColumn" style="width:20px">ID</th>
+                                                                                    <!-- <th class="th colID hiddenColumn" style="width:20px">ID</th> -->
                                                                                     <th class="th colServiceDelete" style="width: 2% !important;"></th>
                                                                                 </tr>
                                                                             </thead>
@@ -1239,13 +1239,19 @@
                                                                                 {{#if selectedproducts}}
                                                                                     {{#each item in selectedproducts}}
                                                                                         <tr class="dnd-moved" id="{{item.Id}}" style="cursor: pointer;">
-                                                                                            <td contenteditable="false" class="colServiceName">{{item.ProductName}}</td>
-                                                                                            <td contenteditable="false" class="colServiceDescription">{{item.ProductDesc}}</td>
-                                                                                            <td contenteditable="true" class=" text-right"><input class="colServiceCostPrice highlightInput" type="text" value="{{item.Rate}}"></td>
-                                                                                            <td contenteditable="true" class=" text-right"><input class="colServiceSalesPrice  highlightInput" type="text" value="{{item.PayRate}}"></td>
+                                                                                            <td contenteditable="false" class="colServiceName">{{item.product.ProductName}}</td>
+                                                                                            <td contenteditable="false" class="colServiceDescription">{{item.product.ProductDesc}}</td>
+                                                                                            <td contenteditable="true" class=" text-right">
+                                                                                                <!-- <input class="colServiceCostPrice highlightInput" type="text" value="{{item.Rate}}"> -->
+                                                                                                {{ formatPrice item.product.BuyQty1Cost}}
+                                                                                            </td>
+                                                                                            <td contenteditable="true" class=" text-right">
+                                                                                                <!-- <input class="colServiceSalesPrice  highlightInput" type="text" value="{{item.PayRate}}"> -->
+                                                                                                {{ formatPrice item.product.SellQty1Price}}
+                                                                                            </td>
                                                                                             <td contenteditable="false" class="colServiceDelete">
                                                                                                 <span class="table-remove colServiceDelete">
-                                                                                                    <button type="button"
+                                                                                                    <button data-id="{{item.Id}}" type="button"
                                                                                                         class="btn btn-danger btn-rounded btn-sm my-0">
                                                                                                         <i class="fa fa-remove"></i>
                                                                                                     </button>

@@ -499,76 +499,75 @@ Template.employeescard.onRendered(function () {
 
         const products = await templateObject.allProducts.get();
  
-        objects.forEach((obj) => {
-            obj.ProductName = obj.ServiceDesc || '';
-            obj.ProductDesc = obj.ServiceDesc || '';
-            console.log("seaching", obj.ID , "in", products);
-            obj.product = products.filter(p => p.ProductName == obj.ServiceDesc);
+        objects.forEach((obj, index) => {
+            objects[index] = {
+                obj,
+                product: products.find(p => p.ProductName == obj.ServiceDesc)
+            }
         });
 
         console.log("employee products", objects);
 
         templateObject.selectedproducts.set(objects);
-        setTimeout(() => {
+        if(templateObject.selectedproducts.get()) {
+            setTimeout(() => {
                 $("#tblEmpServiceList").DataTable({
-                //data: splashArrayRepServiceList,
-                // columnDefs: [
-                //           {contenteditable:"false", className: "colServiceName", targets: 0},
-                //           {contenteditable:"false", className: "colServiceDescription", targets: 1},
-                //           {contenteditable:"true", targets: 2},
-                //           {contenteditable:"true", targets: 3},
-                //           {contenteditable:"false", className: "colID hiddenColumn", targets: 4},
-                //           {contenteditable:"false", "orderable": false, className: "colServiceDelete", targets: -1}
-                //       ],
-                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                select: true,
-                destroy: true,
-                //   colReorder: {
-                //           fixedColumnsRight: 1
-                //       },
-                pageLength: 25,
-                // lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                paging: true,
-                // "scrollY": "400px",
-                info: true,
-                //   pageLength: -1,
-                //   lengthMenu: [ [ -1], ["All"] ],
-                responsive: true,
-                // order: [
-                //     [0, "asc"]
-                // ],
-                action: function () {
-                    $("#tblEmpServiceList").DataTable().ajax.reload();
-                },
-                fnDrawCallback: function (oSettings) {
-                    setTimeout(function () {
-                    MakeNegative();
-                    }, 100);
-                },
-                fnInitComplete: function () {
-                    $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#productListModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpServiceList_filter");
-                    $("<button class='btn btn-primary btnRefreshProductService' type='button' id='btnRefreshProductService' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpServiceList_filter");
-                }
-                }).on("page", function () {
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-                let draftRecord = templateObject.datatablerecords.get();
-                templateObject.datatablerecords.set(draftRecord);
-                }).on("search.dt", function (eventSearch, searchdata) {
-                let dataSearchName = $("#tblEmpServiceList_filter input").val();
-                if (searchdata.fnRecordsDisplay() > 0) {} else {
-                    if (dataSearchName.replace(/\s/g, "") != "") {
-                    $("#productListModal").modal();
-                    setTimeout(function () {
-                        $("#tblInventoryService_filter .form-control-sm").focus();
-                        $("#tblInventoryService_filter .form-control-sm").val(dataSearchName);
-                        $("#tblInventoryService_filter .form-control-sm").trigger("input");
+                    // "searching": true,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                  
+                        select: true,
+                        destroy: true,
+                        colReorder: {
+                                fixedColumnsRight: 1
+                            },
+                        // pageLength: initialDatatableLoad,
+                        // lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                        paging: false,
+                        // "scrollY": "400px",
+                        info: true,
+                        pageLength: -1,
+                        lengthMenu: [ [ -1], ["All"] ],
+                        responsive: true,
+                        "order": [[0, "asc"]],
+                        action: function () {
+                            $('#tblEmpServiceList').DataTable().ajax.reload();
+                        },
+                        "fnDrawCallback": function (oSettings) {
+                            setTimeout(function () {
+                                MakeNegative();
+                            }, 100);
+                        },
+                        "fnInitComplete": function () {
+                            $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#productListModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpServiceList_filter");
+                            $("<button class='btn btn-primary btnRefreshProductService' type='button' id='btnRefreshProductService' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpServiceList_filter");
+                        }
+
+              }).on('page', function () {
+                  setTimeout(function () {
+                      MakeNegative();
+                  }, 100);
+                  let draftRecord = templateObject.datatablerecords.get();
+                  templateObject.datatablerecords.set(draftRecord);
+              }).on('search.dt', function (eventSearch, searchdata) {
+                  let dataSearchName = $('#tblEmpServiceList_filter input').val();
+                  if (searchdata.fnRecordsDisplay() > 0) {
+
+                  }else {
+                    if(dataSearchName.replace(/\s/g, '') != ''){
+                     $('#productListModal').modal();
+                    setTimeout(function() {
+                        $('#tblInventoryService_filter .form-control-sm').focus();
+                        $('#tblInventoryService_filter .form-control-sm').val(dataSearchName);
+                        $('#tblInventoryService_filter .form-control-sm').trigger("input");
+
                     }, 500);
-                    }
-                }
-                }).on("column-reorder", function () {});
-        }, 500);
+                  }
+                  }
+              }).on('column-reorder', function () {});
+    
+            }, 1000);
+        }
+     
 
         LoadingOverlay.hide();
     }
@@ -786,6 +785,90 @@ Template.employeescard.onRendered(function () {
     }
 
 
+    templateObject.addSelectedProduct = async () => {
+
+        let productIds = $('#tblInventoryService input.chkServiceCard:checked');
+
+        // productIds = productIds.map(input => input.getAttribute('product-id'));
+
+        $(productIds).each((input) => {
+            console.log("input", input);
+        })
+
+        console.log("new selected products", productIds);
+
+        return;
+
+
+
+        let trepserviceObjects = templateObject.selectedemployeeproducts.get();
+        let getselectedproducts = templateObject.selectedproducts.get();
+        let productService = new ProductService();
+        const splashArrayRepServiceListGet = new Array();
+        let tempCurrenctTRePService = templateObject.allrepservicedata.get() || '';
+        //var splashArrayRepServiceList = new Array();
+        //var splashArrayRepServiceList = new Array();
+        let tokenid = Random.id();
+        const tblInventoryService = $(".tblInventoryService").dataTable();
+        let dataserviceList = {};
+        let productservicelist = [];
+
+        $(".chkServiceCard:checked", tblInventoryService.fnGetNodes()).each(function() {
+            let productServiceID = $(this).closest('tr').find('.colProuctPOPID').text()||'';
+            let productServiceName = $(this).closest('tr').find('.productName').text()||'';
+            let productServiceDesc = $(this).closest('tr').find('.productDesc').text()||'';
+            let productServicerate = $(this).closest('tr').find('.costPrice').text()||'';
+            let productServicecost = $(this).closest('tr').find('.salePrice').text()||'';
+            let objServiceDetails = {
+                type:"TServices",
+                fields:
+                {
+                    ProductId:parseInt(productServiceID),
+                    ServiceDesc:productServiceName,
+                    StandardRate:parseFloat(productServicerate.replace(/[^0-9.-]+/g,"")) || 0,
+                }
+            };
+            productService.saveProductService(objServiceDetails).then(function (objServiceDetails) { });
+
+            dataserviceList = {
+                id: tokenid||'',
+                employee: Session.get('mySessionEmployee') || '',
+                productname: productServiceName || '',
+                productdesc: productServiceDesc || '',
+                rate: productServicerate || 0,
+                payrate:productServicecost || 0
+            };
+            const dataListService = [
+                productServiceName || '',
+                productServiceDesc || '',
+                '<input class="colServiceCostPrice highlightInput" type="text" value="' + productServicerate + '">' || '',
+                '<input class="colServiceSalesPrice highlightInput" type="text" value="' + productServicecost + '">' || '',
+                tokenid || '',
+                '<span class="table-remove colServiceDelete"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>' || ''
+                // JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null
+            ];
+            let checkServiceArray = getselectedproducts.filter(function(prodData){ return prodData.productname === productServiceName })||'';
+            if (checkServiceArray.length > 0) {
+
+            }else{
+                splashArrayRepServiceListGet.push(dataListService);
+                getselectedproducts.push(dataserviceList);
+            }
+        });
+        templateObject.selectedproducts.set(getselectedproducts);
+        const thirdaryData = $.merge($.merge([], tempCurrenctTRePService), splashArrayRepServiceListGet);
+        if(thirdaryData){
+            templateObject.allrepservicedata.set(thirdaryData);
+            let uniqueChars = [...new Set(thirdaryData)];
+            const datatable = $('#tblEmpServiceList').DataTable();
+            datatable.clear();
+            datatable.rows.add(uniqueChars);
+            datatable.draw(false);
+        }
+        //$('#tblEmpServiceList_info').html('Showing 1 to '+getselectedproducts.length+ ' of ' +getselectedproducts.length+ ' entries');
+        $('#productListModal').modal('toggle');
+
+    }
 
 
     templateObject.getAllProductData = function () {
@@ -4915,73 +4998,8 @@ Template.employeescard.events({
             $('.activeProductEmployee').css('display', 'block');
         }
     },
-    'click .btnSelectProducts': async function (event) {
-        let templateObject = Template.instance();
-        let trepserviceObjects = templateObject.selectedemployeeproducts.get();
-        let getselectedproducts = templateObject.selectedproducts.get();
-        let productService = new ProductService();
-        const splashArrayRepServiceListGet = new Array();
-        let tempCurrenctTRePService = templateObject.allrepservicedata.get() || '';
-        //var splashArrayRepServiceList = new Array();
-        //var splashArrayRepServiceList = new Array();
-        let tokenid = Random.id();
-        const tblInventoryService = $(".tblInventoryService").dataTable();
-        let dataserviceList = {};
-        let productservicelist = [];
-        $(".chkServiceCard:checked", tblInventoryService.fnGetNodes()).each(function() {
-            let productServiceID = $(this).closest('tr').find('.colProuctPOPID').text()||'';
-            let productServiceName = $(this).closest('tr').find('.productName').text()||'';
-            let productServiceDesc = $(this).closest('tr').find('.productDesc').text()||'';
-            let productServicerate = $(this).closest('tr').find('.costPrice').text()||'';
-            let productServicecost = $(this).closest('tr').find('.salePrice').text()||'';
-            let objServiceDetails = {
-                type:"TServices",
-                fields:
-                {
-                    ProductId:parseInt(productServiceID),
-                    ServiceDesc:productServiceName,
-                    StandardRate:parseFloat(productServicerate.replace(/[^0-9.-]+/g,"")) || 0,
-                }
-            };
-            productService.saveProductService(objServiceDetails).then(function (objServiceDetails) { });
-
-            dataserviceList = {
-                id: tokenid||'',
-                employee: Session.get('mySessionEmployee') || '',
-                productname: productServiceName || '',
-                productdesc: productServiceDesc || '',
-                rate: productServicerate || 0,
-                payrate:productServicecost || 0
-            };
-            const dataListService = [
-                productServiceName || '',
-                productServiceDesc || '',
-                '<input class="colServiceCostPrice highlightInput" type="text" value="' + productServicerate + '">' || '',
-                '<input class="colServiceSalesPrice highlightInput" type="text" value="' + productServicecost + '">' || '',
-                tokenid || '',
-                '<span class="table-remove colServiceDelete"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>' || ''
-                // JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null
-            ];
-            let checkServiceArray = getselectedproducts.filter(function(prodData){ return prodData.productname === productServiceName })||'';
-            if (checkServiceArray.length > 0) {
-
-            }else{
-                splashArrayRepServiceListGet.push(dataListService);
-                getselectedproducts.push(dataserviceList);
-            }
-        });
-        templateObject.selectedproducts.set(getselectedproducts);
-        const thirdaryData = $.merge($.merge([], tempCurrenctTRePService), splashArrayRepServiceListGet);
-        if(thirdaryData){
-            templateObject.allrepservicedata.set(thirdaryData);
-            let uniqueChars = [...new Set(thirdaryData)];
-            const datatable = $('#tblEmpServiceList').DataTable();
-            datatable.clear();
-            datatable.rows.add(uniqueChars);
-            datatable.draw(false);
-        }
-        //$('#tblEmpServiceList_info').html('Showing 1 to '+getselectedproducts.length+ ' of ' +getselectedproducts.length+ ' entries');
-        $('#productListModal').modal('toggle');
+    'click .btnSelectProducts': (event, templateObject) => {
+       templateObject.addSelectedProduct();
     },
     'click .btnSave': async function (event) {
         let templateObject = Template.instance();

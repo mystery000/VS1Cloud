@@ -93,7 +93,7 @@ Template.employeeproductlistpop.onRendered(function () {
                           }
                       }
                         var dataList = [
-                             '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
+                             '<div  class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input product-id="' + data.tproductvs1[i].fields.ID + '" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
                             data.tproductvs1[i].fields.ProductName || '-',
                             data.tproductvs1[i].fields.SalesDescription || '',
                             data.tproductvs1[i].fields.BARCODE || '',
@@ -193,7 +193,7 @@ Template.employeeproductlistpop.onRendered(function () {
                                         for(let i=0; i<dataObjectnew.tproductvs1.length; i++){
 
                                            var dataListDupp = [
-                                             '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
+                                             '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input product-id="' + data.tproductvs1[i].fields.ID + '" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
                                              data.tproductvs1[i].fields.ProductName || '-',
                                              data.tproductvs1[i].fields.SalesDescription || '',
                                              utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
@@ -277,7 +277,7 @@ Template.employeeproductlistpop.onRendered(function () {
                       }
                   }
                     var dataList = [
-                        '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
+                        '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input product-id="' + data.tproductvs1[i].fields.ID + '" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
                         data.tproductvs1[i].fields.ProductName || '-',
                         data.tproductvs1[i].fields.SalesDescription || '',
                         data.tproductvs1[i].fields.BARCODE || '',
@@ -379,7 +379,7 @@ Template.employeeproductlistpop.onRendered(function () {
                                       for(let i=0; i<dataObjectnew.tproductvs1.length; i++){
 
                                          var dataListDupp = [
-                                          '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+dataObjectnew.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+dataObjectnew.tproductvs1[i].fields.ID+'"></label></div>',
+                                          '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input product-id="' + data.tproductvs1[i].fields.ID + '" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+dataObjectnew.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+dataObjectnew.tproductvs1[i].fields.ID+'"></label></div>',
                                            dataObjectnew.tproductvs1[i].fields.ProductName || '-',
                                            dataObjectnew.tproductvs1[i].fields.SalesDescription || '',
                                            dataObjectnew.tproductvs1[i].fields.BARCODE || '',
@@ -466,7 +466,7 @@ Template.employeeproductlistpop.onRendered(function () {
                       }
                   }
                     var dataList = [
-                        '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
+                        '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input product-id="' + data.tproductvs1[i].fields.ID + '" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
                         data.tproductvs1[i].fields.ProductName || '-',
                         data.tproductvs1[i].fields.SalesDescription || '',
                         data.tproductvs1[i].fields.BARCODE || '',
@@ -567,7 +567,7 @@ Template.employeeproductlistpop.onRendered(function () {
                                     for(let i=0; i<dataObjectnew.tproductvs1.length; i++){
 
                                       var dataListDupp = [
-                                       '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+dataObjectnew.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+dataObjectnew.tproductvs1[i].fields.ID+'"></label></div>',
+                                       '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input product-id="' + data.tproductvs1[i].fields.ID + '" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+dataObjectnew.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+dataObjectnew.tproductvs1[i].fields.ID+'"></label></div>',
                                         dataObjectnew.tproductvs1[i].fields.ProductName || '-',
                                         dataObjectnew.tproductvs1[i].fields.SalesDescription || '',
                                         dataObjectnew.tproductvs1[i].fields.BARCODE || '',
@@ -692,7 +692,7 @@ Template.employeeproductlistpop.events({
         if(data.tproductvs1.length > 0){
         for (let i = 0; i < data.tproductvs1.length; i++) {
             var dataList = [
-                '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
+                '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input product-id="' + data.tproductvs1[i].fields.ID + '" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
                 data.tproductvs1[i].fields.ProductName || '-',
                 data.tproductvs1[i].fields.SalesDescription || '',
                 data.tproductvs1[i].fields.BARCODE || '',
@@ -758,7 +758,7 @@ Template.employeeproductlistpop.events({
           let inventoryData = [];
           for (let i = 0; i < data.tproductvs1.length; i++) {
               var dataList = [
-                  '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
+                  '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input product-id="' + data.tproductvs1[i].fields.ID + '" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
                   data.tproductvs1[i].fields.ProductName || '-',
                   data.tproductvs1[i].fields.SalesDescription || '',
                   data.tproductvs1[i].fields.BARCODE || '',
