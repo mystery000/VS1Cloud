@@ -1778,7 +1778,18 @@ Template.supplierscard.events({
         }
 
         if (firstname == '') {
-            swal('Please provide the first name !', '', 'warning');
+            //swal('Please provide the first name !', '', 'warning');
+            swal({
+                title: "Please provide the first name !",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#edtSupplierFirstName').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
             $('.fullScreenSpin').css('display', 'none');
             e.preventDefault();
             return false;
@@ -1786,14 +1797,37 @@ Template.supplierscard.events({
 
 
         if (lastname == '') {
-            swal('Please provide the last name !', '', 'warning');
+            //swal('Please provide the last name !', '', 'warning');
+            swal({
+                title: "Please provide the last name !",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#edtSupplierLastName').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
             $('.fullScreenSpin').css('display', 'none');
             e.preventDefault();
             return false;
         }
 
         if (sltTermsName == '') {
-            swal("Terms has not been selected!", "", "warning");
+            //swal("Terms has not been selected!", "", "warning");
+            swal({
+                title: "Terms has not been selected!",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                   $('.bilingTab').trigger('click');
+                    $('#sltTerms').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
             $('.fullScreenSpin').css('display', 'none');
             e.preventDefault();
             return false;

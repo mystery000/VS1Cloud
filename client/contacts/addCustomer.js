@@ -1389,7 +1389,9 @@ Template.customerscard.onRendered(function () {
         templateObject.getAllCrm(data.fields.ClientName);
         //templateObject.uploadedFiles.set(attachmentData);
         // $('.fullScreenSpin').css('display','none');
+
         setTimeout(function () {
+            $('#edtCustomerCompany').attr('readonly', true);
             $('#sltPreferredPayment').val(lineItemObj.preferedpayment);
             $('#sltTerms').val(lineItemObj.terms);
             $('#sltCustomerType').val(lineItemObj.custometype);
@@ -1443,7 +1445,9 @@ Template.customerscard.onRendered(function () {
             discount:0
         };
         await templateObject.getTermsList();
+
         setTimeout(function () {
+            $('#edtCustomerCompany').attr('readonly', false);
             $('#sltPreferredPayment').val(lineItemObj.preferedpayment);
             $('#sltTerms').val(lineItemObj.terms);
             $('#sltCustomerType').val(lineItemObj.custometype);
@@ -2640,23 +2644,53 @@ Template.customerscard.events({
         let salesQuota = $('#edtSalesQuota').val()||'';
 
         if (company == '') {
-            swal('Please provide the compamy name !', '', 'warning');
-            $('.fullScreenSpin').css('display', 'none');
-            $('#edtCustomerCompany').focus();
+          $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Please provide the compamy name !",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#edtCustomerCompany').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
+
+
             e.preventDefault();
             return false;
         }
         if (firstname == '') {
-            swal('Please provide the first name !', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');
-            $('#edtFirstName').focus();
+            swal({
+                title: "Please provide the first name !",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#edtFirstName').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
+
             e.preventDefault();
             return false;
         }
         if (lastname == '') {
-            swal('Please provide the last name !', '', 'warning');
-            $('.fullScreenSpin').css('display', 'none');
-            $('#edtLastName').focus();
+          $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Please provide the last name !",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#edtLastName').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
             e.preventDefault();
             return false;
         }
@@ -2674,8 +2708,6 @@ Template.customerscard.events({
 
                 }
             });
-
-
             e.preventDefault();
             return false;
         }

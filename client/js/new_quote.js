@@ -3624,7 +3624,7 @@ Template.new_quote.onRendered(() => {
             $(".lineTaxCode", rowData).val("");
             $(".lineAmt", rowData).text("");
             $(".lineTaxAmount", rowData).text("");
-            $(".lineDiscount", rowData).text("");
+            $(".lineDiscount", rowData).val("");
             $(".lineProductName", rowData).attr("prodid", '');
             rowData.attr('id', tokenid);
             $("#tblQuoteLine tbody").append(rowData);
@@ -3720,7 +3720,7 @@ Template.new_quote.onRendered(() => {
                 discountAmount = getCustomerDiscount;
             }
 
-            $('#' + selectLineID + " .lineDiscount").text(discountAmount);
+            $('#' + selectLineID + " .lineDiscount").val(discountAmount);
 
             let lineTaxCode = 0;
             let lineAmount = 0;
@@ -3793,7 +3793,7 @@ Template.new_quote.onRendered(() => {
 
                 var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
                 var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+                var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
                 let lineTotalAmount = subTotal + taxTotal;
 
                 let lineDiscountTotal = lineDiscountPerc / 100;
@@ -3926,7 +3926,7 @@ Template.new_quote.onRendered(() => {
 
                 var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
                 var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+                var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
                 let lineTotalAmount = subTotal + taxTotal;
 
                 let lineDiscountTotal = lineDiscountPerc / 100;
@@ -4117,7 +4117,7 @@ Template.new_quote.onRendered(() => {
                     }
                     const subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
                     const taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                    const lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+                    const lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
                     let lineTotalAmount = subTotal + taxTotal;
                     let lineDiscountTotal = lineDiscountPerc / 100;
                     const discountTotal = lineTotalAmount * lineDiscountTotal;
@@ -5648,13 +5648,13 @@ Template.new_quote.helpers({
     },
 
     displayFieldColspan: (displayfield) => {
-        if(foreignCols.includes(displayfield.custfieldlabel)) 
+        if(foreignCols.includes(displayfield.custfieldlabel))
         {
             if(Template.instance().isForeignEnabled.get() == true) {
                 return 2
             }
             return 1;
-        } 
+        }
         return 1;
     },
 
@@ -5802,7 +5802,132 @@ Template.new_quote.events({
 
             var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
             var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-            var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+            var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
+            let lineTotalAmount = subTotal + taxTotal;
+
+            let lineDiscountTotal = lineDiscountPerc / 100;
+
+            var discountTotal = lineTotalAmount * lineDiscountTotal;
+            var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+            var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
+            var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+            var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+            if (!isNaN(discountTotal)) {
+                subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+
+                document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+            }
+            $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
+
+            let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
+            let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
+            let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
+            $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+            $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
+
+            if (!isNaN(subTotal)) {
+              $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+              $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+                subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
+                subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+                document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+            }
+
+            if (!isNaN(taxTotal)) {
+                taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
+                taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+                document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+            }
+
+
+
+            if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+                let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+                let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
+                document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+                document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+
+            }
+        });
+
+        if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+            $printrows.each(function(index) {
+                var $printrows = $(this);
+                var qty = $printrows.find("#lineQty").text() || 0;
+                var price = $printrows.find("#lineUnitPrice").text() || "0";
+                var taxrateamount = 0;
+                var taxRate = $printrows.find("#lineTaxCode").text();
+                if (taxcodeList) {
+                    for (var i = 0; i < taxcodeList.length; i++) {
+                        if (taxcodeList[i].codename == taxRate) {
+                            taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+                        }
+                    }
+                }
+
+                var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+                var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+                $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
+                if (!isNaN(subTotal)) {
+                    $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                    subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+                    document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
+                }
+
+                if (!isNaN(taxTotal)) {
+                    taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+                }
+                if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+                    let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+                    document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
+                    //document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
+                    //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                    document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+
+                }
+            });
+        }
+    },
+    'blur .lineDiscount': function(event) {
+        let templateObject = Template.instance();
+        let taxcodeList = templateObject.taxraterecords.get();
+        let utilityService = new UtilityService();
+        let $tblrows = $("#tblQuoteLine tbody tr");
+        let $printrows = $(".quote_print tbody tr");
+        var targetID = $(event.target).closest('tr').attr('id');
+
+        let lineAmount = 0;
+        let subGrandTotal = 0;
+        let taxGrandTotal = 0;
+        let subDiscountTotal = 0; // New Discount
+        let taxGrandTotalPrint = 0;
+
+        if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+            $('#' + targetID + " #lineQty").text($('#' + targetID + " .lineQty").val());
+        }
+
+        let subGrandTotalNet = 0;
+        let taxGrandTotalNet = 0;
+        $tblrows.each(function(index) {
+            var $tblrow = $(this);
+            var qty = $tblrow.find(".lineQty").val() || 0;
+            var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+            var taxRate = $tblrow.find(".lineTaxCode").val();
+
+            var taxrateamount = 0;
+            if (taxcodeList) {
+                for (var i = 0; i < taxcodeList.length; i++) {
+                    if (taxcodeList[i].codename == taxRate) {
+                        taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+                    }
+                }
+            }
+
+            var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+            var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+            var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
             let lineTotalAmount = subTotal + taxTotal;
 
             let lineDiscountTotal = lineDiscountPerc / 100;
@@ -5942,7 +6067,7 @@ Template.new_quote.events({
 
             var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
             var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-            var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+            var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
             let lineTotalAmount = subTotal + taxTotal;
 
             let lineDiscountTotal = lineDiscountPerc / 100;
@@ -6075,7 +6200,7 @@ Template.new_quote.events({
             var subTotalExQty = (parseFloat(price.replace(/[^0-9.-]+/g, "")) / (taxRateAmountCalc)) || 0;
             var taxTotalExQty = parseFloat(price.replace(/[^0-9.-]+/g, "")) - parseFloat(subTotalExQty) ||0;
 
-            var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+            var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
             let lineTotalAmount = subTotal + taxTotal;
 
             let lineDiscountTotal = lineDiscountPerc / 100;
@@ -6951,7 +7076,7 @@ Template.new_quote.events({
 
                     var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
                     var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                    var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+                    var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
                     let lineTotalAmount = subTotal + taxTotal;
 
                     let lineDiscountTotal = lineDiscountPerc / 100;
@@ -7131,7 +7256,7 @@ Template.new_quote.events({
 
                 var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
                 var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+                var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
                 let lineTotalAmount = subTotal + taxTotal;
 
                 let lineDiscountTotal = lineDiscountPerc / 100;
@@ -7303,7 +7428,7 @@ Template.new_quote.events({
                             LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                             Headershipdate: saleDate,
                             LineTaxCode: tdtaxCode || '',
-                            DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                            DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").val()) || 0
                         }
                     };
                     // Feature/ser-lot number tracking: Save Serial Numbers
@@ -8685,7 +8810,7 @@ Template.new_quote.events({
                                     LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                     Headershipdate: saleDate,
                                     LineTaxCode: tdtaxCode || '',
-                                    DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                                    DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").val()) || 0
                                 }
                             };
                             lineItemsForm.push(lineItemObjForm);
@@ -9272,7 +9397,7 @@ Template.new_quote.events({
                             LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                             Headershipdate: saleDate,
                             LineTaxCode: tdtaxCode || '',
-                            DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                            DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").val()) || 0
                         }
                     };
                     lineItemsForm.push(lineItemObjForm);
@@ -9529,7 +9654,7 @@ Template.new_quote.events({
                                 LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                 Headershipdate: saleDate,
                                 LineTaxCode: tdtaxCode || '',
-                                DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                                DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").val()) || 0
                             }
                         };
                         lineItemsForm.push(lineItemObjForm);
@@ -9780,7 +9905,7 @@ Template.new_quote.events({
                                 LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                 Headershipdate: saleDate,
                                 LineTaxCode: tdtaxCode || '',
-                                DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                                DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").val()) || 0
                             }
                         };
                         lineItemsForm.push(lineItemObjForm);

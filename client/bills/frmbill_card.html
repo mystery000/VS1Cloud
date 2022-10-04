@@ -796,7 +796,7 @@
                                                                     display: none !important;
                                                                 }
                                                             </style>
-                                                            
+
                                                             {{#each displayfield in displayfields}}
                                                             {{#if displayfield.display}}
                                                             <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
@@ -809,7 +809,7 @@
                                                                   <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                                   <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
                                                               </div>
-                                                            </div> 
+                                                            </div>
                                                             {{/if}}
                                                             {{/each}}
 
@@ -967,15 +967,15 @@
                             </style>
 
                             <table id="tblBillLine" style="width:100%" class="table table-striped table-bordered tblBillLine">
-                                <thead> 
-                                    <tr  class="dnd-moved"> 
+                                <thead>
+                                    <tr  class="dnd-moved">
                                       {{#each displayfield in displayfields}}
                                         {{#if displayfield.display}}
                                         <th colspan="{{displayFieldColspan displayfield}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
                                           {{displayfield.custfieldlabel}}
                                           {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>
                                             {{else}}
-                                            {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>   
+                                            {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>
                                             {{/if}}
                                           {{/if}}
                                         </th>
@@ -1016,7 +1016,7 @@
                                             {{#if isForeignEnabled}}
                                                 <td class="colAmountInc convert-to-foreign   {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{ convertToForeignAmount item.unitPriceInc}}</td>
                                             {{/if}}
-                                            
+
                                             <td contenteditable="false" class="colCustomerJob {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}">
                                               <input class="es-input highlightSelect lineCustomerJob" type="search" value="{{item.customerJob}}">
                                             </td>
@@ -1026,7 +1026,7 @@
                                             {{#if isForeignEnabled}}
                                                 <td style="min-width: 170px;" contenteditable="false" class="lineTaxAmount convert-to-foreign colTaxAmount pointer {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" >{{ convertToForeignAmount item.TaxTotal}}</td>
                                             {{/if}}
-                                            
+
                                             <td contenteditable="true" class="lineCustomField1 colCustomField1  {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">{{item.CustomField1}}</td>
                                             <td contenteditable="true" class="lineCustomField2 colCustomField2  {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.CustomField2}}</td>
                                             <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
