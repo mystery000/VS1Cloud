@@ -277,7 +277,7 @@ Template.companyappsettingsdup.onRendered(function () {
                 });
                 e.isPurchased = false
                 if (matchingItemsMonth.length === 0) {
-                    if( purchaedAdModuleList.includes(monthArr[i].moduleName) == false ){
+                    if( purchaedAdModuleList.includes(monthArr[i].moduleName) == true ){
                         e.isPurchased = true                        
                     }
                     monthResult.push(e);

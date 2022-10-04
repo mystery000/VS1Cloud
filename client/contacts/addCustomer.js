@@ -1298,11 +1298,13 @@ Template.customerscard.onRendered(function () {
             website: data.fields.URL || '',
             shippingaddress: data.fields.Street || '',
             scity: data.fields.Street2 || '',
+            ssuburb: data.fields.Suburb || '',
             sstate: data.fields.State || '',
             spostalcode: data.fields.Postcode || '',
             scountry: data.fields.Country || LoggedCountry,
             billingaddress: data.fields.BillStreet || '',
             bcity: data.fields.BillStreet2 || '',
+            bsuburb: data.fields.Billsuburb || '',
             bstate: data.fields.BillState || '',
             bpostalcode: data.fields.BillPostcode || '',
             bcountry: data.fields.Billcountry || '',
@@ -1423,12 +1425,14 @@ Template.customerscard.onRendered(function () {
             website: '',
             shippingaddress: '',
             scity: '',
+            ssuburb: '',
             sstate: '',
             terms: loggedTermsSales|| '',
             spostalcode: '',
             scountry: LoggedCountry || '',
             billingaddress: '',
             bcity: '',
+            bsuburb: '',
             bstate: '',
             bpostalcode: '',
             bcountry: LoggedCountry || '',
@@ -2593,6 +2597,7 @@ Template.customerscard.events({
         let website = $('#edtCustomerWebsite').val()||'';
         let streetAddress = $('#edtCustomerShippingAddress').val()||'';
         let city = $('#edtCustomerShippingCity').val()||'';
+        let suburb = $('#edtCustomerShippingSuburb').val()||'';
         let state = $('#edtCustomerShippingState').val()||'';
         let postalcode = $('#edtCustomerShippingZIP').val()||'';
 
@@ -2765,7 +2770,7 @@ Template.customerscard.events({
                 // Position: position,
                 Street: streetAddress,
                 Street2: city,
-                Suburb: city,
+                Suburb: suburb,
                 State: state,
                 PostCode: postalcode,
                 Country: country,
