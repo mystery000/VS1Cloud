@@ -8,6 +8,8 @@ import {SideBarService} from "../../js/sidebar-service";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let formatDateFrom;
+let formatDateTo;
 
 Template.dashboardManagerCharts.onCreated(function() {
     const templateObject = Template.instance();
@@ -17,7 +19,6 @@ Template.dashboardManagerCharts.onCreated(function() {
 
 Template.dashboardManagerCharts.onRendered(function () {
     const templateObject = Template.instance();
-
     function formatPrice(amount){
         if( isNaN(amount) || !amount){
             amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
@@ -77,93 +78,95 @@ Template.dashboardManagerCharts.onRendered(function () {
             }
         });
         */
-        const ctx = document.getElementById("spd-employee-chart").getContext("2d");
-        const myChart = new Chart(ctx, {
-            type: "horizontalBar",
-            data: {
-                labels: employeeNames,
-                datasets: [
-                    {
-                        label: "Earnings",
-                        data: employeesTotalDiscount,
-                        backgroundColor: [
-                            "#f6c23e",
-                            "#f6c23e",
-                            "#f6c23e",
-                            "#f6c23e",
-                            "#f6c23e",
-                            "#f6c23e",
-                        ],
-                        borderColor: [
-                            "rgba(78,115,223,0)",
-                            "rgba(78,115,223,0)",
-                            "rgba(78,115,223,0)",
-                            "rgba(78,115,223,0)",
-                            "rgba(78,115,223,0)",
-                            "rgba(78,115,223,0)",
-                        ],
-                        borderWidth: 1,
-                    },
-                ],
-            },
-            options: {
-                onClick: chartClickEvent,
-                maintainAspectRatio: false,
-                responsive: true,
-                tooltips: {
-                    callbacks: {
-                        label: function (tooltipItem, data) {
-                            return (
-                                utilityService.modifynegativeCurrencyFormat(
-                                    tooltipItem.xLabel
-                                ) || 0.0
-                            );
-                        },
-                    },
-                },
-                legend: {
-                    display: false,
-                },
-                title: {},
-                scales: {
-                    xAxes: [
+        if (employeeNames.length > 0) {
+            const ctx = document.getElementById("spd-employee-chart").getContext("2d");
+            const myChart = new Chart(ctx, {
+                type: "horizontalBar",
+                data: {
+                    labels: employeeNames,
+                    datasets: [
                         {
-                            gridLines: {
-                                color: "rgb(234, 236, 244)",
-                                zeroLineColor: "rgb(234, 236, 244)",
-                                drawBorder: false,
-                                drawTicks: false,
-                                borderDash: ["2"],
-                                zeroLineBorderDash: ["2"],
-                                drawOnChartArea: false,
-                            },
-                            ticks: {
-                                fontColor: "#858796",
-                                beginAtZero: true,
-                                padding: 20,
-                            },
-                        },
-                    ],
-                    yAxes: [
-                        {
-                            gridLines: {
-                                color: "rgb(234, 236, 244)",
-                                zeroLineColor: "rgb(234, 236, 244)",
-                                drawBorder: false,
-                                drawTicks: false,
-                                borderDash: ["2"],
-                                zeroLineBorderDash: ["2"],
-                            },
-                            ticks: {
-                                fontColor: "#858796",
-                                beginAtZero: true,
-                                padding: 20,
-                            },
+                            label: "Earnings",
+                            data: employeesTotalDiscount,
+                            backgroundColor: [
+                                "#f6c23e",
+                                "#f6c23e",
+                                "#f6c23e",
+                                "#f6c23e",
+                                "#f6c23e",
+                                "#f6c23e",
+                            ],
+                            borderColor: [
+                                "rgba(78,115,223,0)",
+                                "rgba(78,115,223,0)",
+                                "rgba(78,115,223,0)",
+                                "rgba(78,115,223,0)",
+                                "rgba(78,115,223,0)",
+                                "rgba(78,115,223,0)",
+                            ],
+                            borderWidth: 1,
                         },
                     ],
                 },
-            },
-        });
+                options: {
+                    onClick: chartClickEvent,
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                return (
+                                    utilityService.modifynegativeCurrencyFormat(
+                                        tooltipItem.xLabel
+                                    ) || 0.0
+                                );
+                            },
+                        },
+                    },
+                    legend: {
+                        display: false,
+                    },
+                    title: {},
+                    scales: {
+                        xAxes: [
+                            {
+                                gridLines: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: false,
+                                    drawTicks: false,
+                                    borderDash: ["2"],
+                                    zeroLineBorderDash: ["2"],
+                                    drawOnChartArea: false,
+                                },
+                                ticks: {
+                                    fontColor: "#858796",
+                                    beginAtZero: true,
+                                    padding: 20,
+                                },
+                            },
+                        ],
+                        yAxes: [
+                            {
+                                gridLines: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: false,
+                                    drawTicks: false,
+                                    borderDash: ["2"],
+                                    zeroLineBorderDash: ["2"],
+                                },
+                                ticks: {
+                                    fontColor: "#858796",
+                                    beginAtZero: true,
+                                    padding: 20,
+                                },
+                            },
+                        ],
+                    },
+                },
+            });
+        }
     }
 
     function chartClickEvent() {
@@ -390,13 +393,13 @@ Template.dashboardManagerCharts.onRendered(function () {
     templateObject.setDateVal = function () {
         const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         const dateTo = new Date($("#dateTo").datepicker("getDate"));
-        let formatDateFrom =
+        formatDateFrom =
             dateFrom.getFullYear() +
             "-" +
             (dateFrom.getMonth() + 1) +
             "-" +
             dateFrom.getDate();
-        let formatDateTo =
+        formatDateTo =
             dateTo.getFullYear() +
             "-" +
             (dateTo.getMonth() + 1) +
@@ -419,36 +422,55 @@ Template.dashboardManagerCharts.onRendered(function () {
 
 Template.dashboardManagerCharts.events({
     "click #spd-employee-chart": () => {
-        FlowRouter.go('/employeelist');
+        // FlowRouter.go('/employeelist');
+        window.open("/employeelist", '_self');
     },
     "click #spd-gauge-area1": () => {
-        const fromDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
-        const toDate = moment().format('DD-MM-YYYY');
-        FlowRouter.go(`/invoicelist?fromDate${fromDate}&toDate=${toDate}`);
+        let fromDate = new Date(formatDateFrom);
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
+        let toDate = new Date(formatDateTo);
+        toDate = moment().format('DD-MM-YYYY');
+        // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #spd-gauge-area2": () => {
-        const fromDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
-        const toDate = moment().format('DD-MM-YYYY');
-        FlowRouter.go(`/invoicelist?fromDate${fromDate}&toDate=${toDate}`);
+        let fromDate = new Date(formatDateFrom);
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
+        let toDate = new Date(formatDateTo);
+        toDate = moment().format('DD-MM-YYYY');
+        // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #spd-gauge-area3": () => {
-        const fromDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
-        const toDate = moment().format('DD-MM-YYYY');
-        FlowRouter.go(`/invoicelist?fromDate${fromDate}&toDate=${toDate}`);
+        let fromDate = new Date(formatDateFrom);
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
+        let toDate = new Date(formatDateTo);
+        toDate = moment().format('DD-MM-YYYY');
+        // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #spd-gauge-area4": () => {
-        const fromDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
-        const toDate = moment().format('DD-MM-YYYY');
-        FlowRouter.go(`/invoicelist?fromDate${fromDate}&toDate=${toDate}`);
+        let fromDate = new Date(formatDateFrom);
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
+        let toDate = new Date(formatDateTo);
+        toDate = moment().format('DD-MM-YYYY');
+        // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #spd-gauge-area5": () => {
-        const fromDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
-        const toDate = moment().format('DD-MM-YYYY');
-        FlowRouter.go(`/invoicelist?fromDate${fromDate}&toDate=${toDate}`);
+        let fromDate = new Date(formatDateFrom);
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
+        let toDate = new Date(formatDateTo);
+        toDate = moment().format('DD-MM-YYYY');
+        // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #spd-gauge-area6": () => {
-        const fromDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
-        const toDate = moment().format('DD-MM-YYYY');
-        FlowRouter.go(`/invoicelist?fromDate${fromDate}&toDate=${toDate}`);
+        let fromDate = new Date(formatDateFrom);
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
+        let toDate = new Date(formatDateTo);
+        toDate = moment().format('DD-MM-YYYY');
+        // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     }
 });

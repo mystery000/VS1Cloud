@@ -1364,7 +1364,6 @@ Template.dsmAppointmentsWidget.onRendered(function () {
     templateObject.getAllSelectedProducts = function (employeeID) {
         let productlist = [];
         templateObject.datatablerecords.set([]);
-        const splashArrayProductServiceList = [];
         const splashArrayProductServiceListGet = [];
         //$('#product-list').editableSelect('clear');
         sideBarService.getSelectedProducts(employeeID).then(function (data) {
@@ -1419,7 +1418,6 @@ Template.dsmAppointmentsWidget.onRendered(function () {
     templateObject.getAllProductData = function () {
         productList = [];
         templateObject.datatablerecords.set([]);
-        const splashArrayProductServiceList = [];
         //  $('#product-list').editableSelect('clear');
         getVS1Data('TProductWeb').then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -1439,6 +1437,7 @@ Template.dsmAppointmentsWidget.onRendered(function () {
     function setProductServiceListVS1(data){
         addVS1Data('TProductWeb',JSON.stringify(data));
         let dataList = {};
+        const splashArrayProductServiceList = [];
         for (let i = 0; i < data.tproductvs1.length; i++) {
             dataList = {
                 id: data.tproductvs1[i].fields.ID || '',

@@ -4,6 +4,8 @@ const highCharts = require('highcharts');
 require('highcharts/modules/exporting')(highCharts);
 require('highcharts/highcharts-more')(highCharts);
 let _ = require("lodash");
+let formatDateFrom;
+let formatDateTo;
 
 Template.dashboardSalesCharts.onCreated(function () {
     const templateObject = Template.instance();
@@ -203,13 +205,13 @@ Template.dashboardSalesCharts.onRendered(function () {
     templateObject.setDateVal = function () {
         const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         const dateTo = new Date($("#dateTo").datepicker("getDate"));
-        let formatDateFrom =
+        formatDateFrom =
             dateFrom.getFullYear() +
             "-" +
             (dateFrom.getMonth() + 1) +
             "-" +
             dateFrom.getDate();
-        let formatDateTo =
+        formatDateTo =
             dateTo.getFullYear() +
             "-" +
             (dateTo.getMonth() + 1) +
@@ -231,5 +233,16 @@ Template.dashboardSalesCharts.onRendered(function () {
 });
 
 Template.dashboardSalesCharts.events({
-
+    "click #sd-comparison-chart": () => {
+        let fromDate = new Date(formatDateFrom);
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
+        let toDate = new Date(formatDateTo);
+        toDate = moment().format('DD-MM-YYYY');
+        // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
+    },
+    "click #opens-opportunities-chart": () => {
+        // FlowRouter.go('/leadlist');
+        window.open("/leadlist", '_self');
+    },
 });

@@ -60,6 +60,7 @@ Template.dashboardsales.onRendered(function () {
             $("#dateFrom").val(null);
             $("#dateTo").val(null);
         }
+        $('[data-toggle="tooltip"]').tooltip();
     },500);
 });
 

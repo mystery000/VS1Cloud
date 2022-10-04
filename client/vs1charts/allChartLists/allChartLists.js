@@ -141,7 +141,7 @@ Template.allChartLists.onRendered(function () {
         $('.sortable-chart-widget-js').each(function(){
             let className = $(this).data('default-class');
             $(this).addClass(className);
-            $(this).addClass('minHeight100');
+            $(this).find('.portlet').addClass('minHeight100');
         });
         if($('.fc-dayGridMonth-button').length > 0){
             $('.fc-dayGridMonth-button').trigger('click');

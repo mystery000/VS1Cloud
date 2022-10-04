@@ -2,7 +2,6 @@ import _ from "lodash";
 
 Template.dashboardManagerCards.onRendered(()=>{
     let templateObject = Template.instance();
-    
     templateObject.getDashboardData = async function () {
         getVS1Data('TProspectEx').then(function (dataObject) {
             if(dataObject.length) {
@@ -70,30 +69,33 @@ Template.dashboardManagerCards.onRendered(()=>{
         });
     };
     templateObject.getDashboardData();
+});
 
-    $('.new-leads-month').on('click', function() {
-        FlowRouter.go('/leadlist?range=month');
-    });
-
-    $('.new-deals-month').on('click', function() {
-        FlowRouter.go('/quoteslist?range=month');
-    });
-
-    $('.closed-deals-month').on('click', function() {
-        FlowRouter.go('/invoicelist?range=month');
-    });
-
-    $('.closed-deals-year').on('click', function() {
-        FlowRouter.go('/invoicelist?range=year');
-    });
-
-    $('.sales-winrate').on('click', function() {
-        FlowRouter.go('/quoteslist?filter=converted');
-    });
-
-    $('.avg-sales-cycle').on('click', function() {
-        FlowRouter.go('/quoteslist');
-    });
+Template.dashboardManagerCards.events({
+    "click #new-leads-month": (e) => {
+        // FlowRouter.go('/leadlist?range=month');
+        window.open("/leadlist?range=month", '_self');
+    },
+    "click #new-deals-month": (e) => {
+        // FlowRouter.go('/quoteslist?range=month');
+        window.open("/quoteslist?range=month", '_self');
+    },
+    "click #closed-deals-month": (e) => {
+        // FlowRouter.go('/invoicelist?range=month');
+        window.open("/invoicelist?range=month", '_self');
+    },
+    "click #closed-deals-year": (e) => {
+        // FlowRouter.go('/invoicelist?range=year');
+        window.open("/invoicelist?range=year", '_self');
+    },
+    "click #sales-winrate": (e) => {
+        // FlowRouter.go('/quoteslist?filter=converted');
+        window.open("/quoteslist?filter=converted", '_self');
+    },
+    "click #avg-sales-cycle": (e) => {
+        // FlowRouter.go('/quoteslist');
+        window.open("/quoteslist", '_self');
+    },
 });
 
 Template.registerHelper('equals', function (a, b) {

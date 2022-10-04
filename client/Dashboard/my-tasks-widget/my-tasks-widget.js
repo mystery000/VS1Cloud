@@ -68,11 +68,14 @@ Template.myTasksWidget.onRendered(function () {
                     } else {
                         strPriority = "Low";
                     }
+                    let dueDate = all_records[i].fields.due_date.substring(0, 10);
+                    dueDate = new Date(dueDate);
+                    dueDate = moment(dueDate).format('DD/MM/YYYY');
                     const pdata = {
                         id: all_records[i].fields.ID,
                         taskName: all_records[i].fields.TaskName,
                         description: all_records[i].fields.TaskDescription,
-                        dueDate: all_records[i].fields.due_date.substring(0, 10),
+                        dueDate: dueDate,
                         priority: strPriority,
                     }
                     task_list.push(pdata);
@@ -560,11 +563,10 @@ Template.myTasksWidget.onRendered(function () {
             swal("Please select valid type of contact", "", "error");
             return false;
         }
-
     });
 
     $(document).on("click", "#tblEmployeelist tbody tr", function (e) {
-        var table = $(this);
+        const table = $(this);
         let colEmployeeName = table.find(".colEmployeeName").text();
         let colID = table.find(".colID").text();
 
