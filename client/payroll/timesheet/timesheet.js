@@ -223,8 +223,10 @@ Template.timesheet.onRendered(function() {
         }
 
         getVS1Data('TTimeSheet').then(function(dataObject) {
+            console.log("timesheet", dataObject.data);
             if (dataObject == 0) {
                 sideBarService.getAllTimeSheetList().then(function(data) {
+                    
                     addVS1Data('TTimeSheet', JSON.stringify(data));
                     $('.fullScreenSpin').css('display', 'none');
                     let lineItems = [];
@@ -305,6 +307,7 @@ Template.timesheet.onRendered(function() {
                         let timesheetdate = data.ttimesheet[t].fields.TimeSheetDate != '' ? moment(data.ttimesheet[t].fields.TimeSheetDate).format("DD/MM/YYYY") : data.ttimesheet[t].fields.TimeSheetDate;
                         let checkStatus = data.ttimesheet[t].fields.Status || 'Unprocessed';
 
+                      
                         var dataListTimeSheet = [
                             '<div class="custom-control custom-checkbox pointer"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + data.ttimesheet[t].fields.ID + '" name="' + data.ttimesheet[t].fields.ID + '"> <label class="custom-control-label" for="f-' + data.ttimesheet[t].fields.ID + '"></label></div>' || '',
                             data.ttimesheet[t].fields.ID || '',
@@ -1053,6 +1056,7 @@ Template.timesheet.onRendered(function() {
 
         }).catch(function(err) {
             sideBarService.getAllTimeSheetList().then(function(data) {
+                console.log("timesheet -", data);
                 addVS1Data('TTimeSheet', JSON.stringify(data));
                 $('.fullScreenSpin').css('display', 'none');
                 let lineItems = [];

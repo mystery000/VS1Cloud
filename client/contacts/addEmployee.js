@@ -34,7 +34,7 @@ import PaySlips from "../js/Api/Model/PaySlips";
 import PaySlipsFields from "../js/Api/Model/PaySlipsFields";
 import 'jquery-editable-select';
 import '../lib/global/indexdbstorage.js';
-import { functionsIn } from "lodash";
+import { functionsIn, template } from "lodash";
 import moment from "moment";
 import LoadingOverlay from '../LoadingOverlay';
 import { jsPDF } from "jspdf";
@@ -122,6 +122,8 @@ Template.employeescard.onCreated(function () {
 
     /* PayRun related vars */
     templateObject.payPeriods = new ReactiveVar([]);
+
+    templateObject.allProducts = new ReactiveVar([]);
 });
 
 Template.employeescard.onRendered(function () {
@@ -457,8 +459,28 @@ Template.employeescard.onRendered(function () {
     //     }
     // }, 1000);
 
+
+    templateObject.loadAllProducts = async () => {
+        let data = await CachedHttp.get(erpObject.TProductVS1, async () => {
+            return await productService.getNewProductListVS1();
+        }, {
+            useIndexDb: true, 
+            useLocalStorage: false,
+            fallBackToLocal: true, 
+            validate: (cachedResponse) => {
+                return false;
+            }
+        });
+        data = data.response;
+        let products = data.tproductvs1;
+        templateObject.allProducts.set(products); // we store the product in memory
+    }
+    
+
+
     templateObject.getEmployeeProducts = async (employeeName = null) => {
         LoadingOverlay.show();
+       // await templateObject.loadAllProducts();
 
         let data = await CachedHttp.get(erpObject.TRepServices, async () => {
             return await sideBarService.getSelectedProducts(employeeName);
@@ -472,11 +494,16 @@ Template.employeescard.onRendered(function () {
         });
 
         data = data.response;
-        let objects = data.trepservices;
+        let objects = data.trepservices.map(s => s.fields);
 
+
+        const products = await templateObject.allProducts.get();
+ 
         objects.forEach((obj) => {
             obj.ProductName = obj.ServiceDesc || '';
             obj.ProductDesc = obj.ServiceDesc || '';
+            console.log("seaching", obj.ID , "in", products);
+            obj.product = products.filter(p => p.ProductName == obj.ServiceDesc);
         });
 
         console.log("employee products", objects);
@@ -507,9 +534,9 @@ Template.employeescard.onRendered(function () {
                 //   pageLength: -1,
                 //   lengthMenu: [ [ -1], ["All"] ],
                 responsive: true,
-                order: [
-                    [0, "asc"]
-                ],
+                // order: [
+                //     [0, "asc"]
+                // ],
                 action: function () {
                     $("#tblEmpServiceList").DataTable().ajax.reload();
                 },
@@ -541,10 +568,12 @@ Template.employeescard.onRendered(function () {
                     }
                 }
                 }).on("column-reorder", function () {});
-        }, 100);
+        }, 500);
 
         LoadingOverlay.hide();
     }
+
+
 
     templateObject.getAllSelectedProducts = function (employeeName) {
         let productlist = [];
@@ -755,6 +784,10 @@ Template.employeescard.onRendered(function () {
             }, 0);
             });
     }
+
+
+
+
     templateObject.getAllProductData = function () {
         let productList = [];
         getVS1Data('TProductVS1').then(function (dataObject) {
@@ -1368,6 +1401,17 @@ Template.employeescard.onRendered(function () {
 
 
 
+    templateObject.initData = async () => {
+        await templateObject.loadAllProducts();
+
+        if(currentId.id) await templateObject.getEmployeeProducts(employeeID);
+
+
+       
+    }
+
+    templateObject.initData();
+
     if (currentId.id == "undefined") {
         currentDate = new Date();
         $('.fullScreenSpin').css('display', 'none');
@@ -1431,7 +1475,7 @@ Template.employeescard.onRendered(function () {
         if (!isNaN(currentId.id)) {
             employeeID = currentId.id;
             // templateObject.getAllSelectedProducts(employeeID);
-            templateObject.getEmployeeProducts(employeeID);
+            //templateObject.getEmployeeProducts(employeeID);
             templateObject.getEmployeeData = function () {
                 getVS1Data('TEmployee').then(function (dataObject) {
                     if (dataObject.length == 0) {
@@ -1559,6 +1603,8 @@ Template.employeescard.onRendered(function () {
             }, 100);
         }
     }
+
+   
     function setEmployeeData(data) {
         $('.fullScreenSpin').css('display', 'none');
         let lineItems = [];
