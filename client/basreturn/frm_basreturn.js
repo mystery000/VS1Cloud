@@ -131,17 +131,17 @@ Template.basreturn.onRendered(function() {
     templateObject.reasonT4.set(reasonT4);
     templateObject.reasonF4.set(reasonF4);
 
-    accountService
-        .getBASReturnDetail()
-        .then(function(data) {
-            console.log("============", data);
-        })
-        .catch(function(err) {
-            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $(".fullScreenSpin").css("display", "none");
-            console.log("=", err);
-            // Meteor._reload.reload();
-        });
+    // accountService
+    //     .getBASReturnDetail()
+    //     .then(function(data) {
+    //         console.log("============", data);
+    //     })
+    //     .catch(function(err) {
+    //         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    //         $(".fullScreenSpin").css("display", "none");
+    //         console.log("=", err);
+    //         // Meteor._reload.reload();
+    //     });
 
     templateObject.getAllBasReturnData = function() {
 
@@ -1749,6 +1749,7 @@ Template.basreturn.onRendered(function() {
     $(document).on("click", "#departmentList tbody tr", function(e) {
         $('#sltDepartment').val($(this).find(".colDeptName").text());
         $('#departmentModal').modal('toggle');
+        $("#allDepart").prop('checked', false);
     });
 });
 
@@ -1915,15 +1916,20 @@ Template.basreturn.helpers({
 
 Template.basreturn.events({
     "click #loadBasOption": (e) => {
-        $("#basoptionmodal").modal("toggle");
-    },
-    "click #allDepart": (e) => {
-        if ($("#allDepart").prop('checked') == true) {
-            $("#sltDepartment").attr("disabled", "disabled");
-        } else {
-            $("#sltDepartment").removeAttr("disabled");
+        if ($("#allDepart").prop('checked') == false && $('#sltDepartment').val() == "") {
+            swal('Department cannot be blank!', '', 'warning');
+        }
+        else{
+            $("#basoptionmodal").modal("toggle");
         }
     },
+    // "click #allDepart": (e) => {
+    //     if ($("#allDepart").prop('checked') == true) {
+    //         $("#sltDepartment").attr("disabled", "disabled");
+    //     } else {
+    //         $("#sltDepartment").removeAttr("disabled");
+    //     }
+    // },
     "click #datemethod1": (e) => {
         
     },
@@ -2850,7 +2856,10 @@ Template.basreturn.events({
 
         let dataArray = [];
         let description = $('#description').val();
-        let departmentId = $('#sltDepartment').val();
+        let departmentId = "all";
+        if ($("#allDepart").prop('checked') == false) {
+            departmentId = $('#sltDepartment').val();
+        }        
         let accountingMethod = "Accrual";
         if ($("#accountingmethod1").prop('checked') == true) {
             accountingMethod = "Accrual";
