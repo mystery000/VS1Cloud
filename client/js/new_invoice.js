@@ -1324,46 +1324,7 @@ Template.new_invoice.onRendered(function() {
             templateObject.invoicerecord.set(invoicerecord);
             templateObject.selectedCurrency.set(invoicerecord.currency);
             templateObject.inputSelectedCurrency.set(invoicerecord.currency);
-            if (templateObject.invoicerecord.get()) {
-              Meteor.call(
-                "readPrefMethod",
-                Session.get("mycloudLogonID"),
-                "tblInvoiceLine",
-                function (error, result) {
-                  if (error) {
-                  } else {
-                    if (result) {
-                      for (let i = 0; i < result.customFields.length; i++) {
-                        let customcolumn = result.customFields;
-                        let columData = customcolumn[i].label;
-                        let columHeaderUpdate = customcolumn[i].thclass;
-                        let hiddenColumn = customcolumn[i].hidden;
-                        let columnClass = columHeaderUpdate.substring(
-                          columHeaderUpdate.indexOf(".") + 1
-                        );
-                        let columnWidth = customcolumn[i].width;
 
-                        $("" + columHeaderUpdate + "").html(columData);
-                        if (columnWidth != 0) {
-                          $("" + columHeaderUpdate + "").css(
-                            "width",
-                            columnWidth + "%"
-                          );
-                        }
-
-                        if (hiddenColumn == true) {
-                          $("." + columnClass + "").addClass("hiddenColumn");
-                          $("." + columnClass + "").removeClass("showColumn");
-                        } else if (hiddenColumn == false) {
-                          $("." + columnClass + "").removeClass("hiddenColumn");
-                          $("." + columnClass + "").addClass("showColumn");
-                        }
-                      }
-                    }
-                  }
-                }
-              );
-            }
           })
           .catch(function (err) {
             swal({
@@ -1919,57 +1880,7 @@ Template.new_invoice.onRendered(function() {
                   templateObject.inputSelectedCurrency.set(
                     invoicerecord.currency
                   );
-                  if (templateObject.invoicerecord.get()) {
-                    Meteor.call(
-                      "readPrefMethod",
-                      Session.get("mycloudLogonID"),
-                      "tblInvoiceLine",
-                      function (error, result) {
-                        if (error) {
-                          if (result) {
-                            for (
-                              let i = 0;
-                              i < result.customFields.length;
-                              i++
-                            ) {
-                              let customcolumn = result.customFields;
-                              let columData = customcolumn[i].label;
-                              let columHeaderUpdate = customcolumn[i].thclass;
-                              let hiddenColumn = customcolumn[i].hidden;
-                              let columnClass = columHeaderUpdate.substring(
-                                columHeaderUpdate.indexOf(".") + 1
-                              );
-                              let columnWidth = customcolumn[i].width;
 
-                              $("" + columHeaderUpdate + "").html(columData);
-                              if (columnWidth != 0) {
-                                $("" + columHeaderUpdate + "").css(
-                                  "width",
-                                  columnWidth + "%"
-                                );
-                              }
-
-                              if (hiddenColumn == true) {
-                                $("." + columnClass + "").addClass(
-                                  "hiddenColumn"
-                                );
-                                $("." + columnClass + "").removeClass(
-                                  "showColumn"
-                                );
-                              } else if (hiddenColumn == false) {
-                                $("." + columnClass + "").removeClass(
-                                  "hiddenColumn"
-                                );
-                                $("." + columnClass + "").addClass(
-                                  "showColumn"
-                                );
-                              }
-                            }
-                          }
-                        }
-                      }
-                    );
-                  }
                 })
                 .catch(function (err) {
                   swal({
@@ -2483,58 +2394,7 @@ Template.new_invoice.onRendered(function() {
                   templateObject.inputSelectedCurrency.set(
                     invoicerecord.currency
                   );
-                  if (templateObject.invoicerecord.get()) {
-                    Meteor.call(
-                      "readPrefMethod",
-                      Session.get("mycloudLogonID"),
-                      "tblInvoiceLine",
-                      function (error, result) {
-                        if (error) {
-                        } else {
-                          if (result) {
-                            for (
-                              let i = 0;
-                              i < result.customFields.length;
-                              i++
-                            ) {
-                              let customcolumn = result.customFields;
-                              let columData = customcolumn[i].label;
-                              let columHeaderUpdate = customcolumn[i].thclass;
-                              let hiddenColumn = customcolumn[i].hidden;
-                              let columnClass = columHeaderUpdate.substring(
-                                columHeaderUpdate.indexOf(".") + 1
-                              );
-                              let columnWidth = customcolumn[i].width;
 
-                              $("" + columHeaderUpdate + "").html(columData);
-                              if (columnWidth != 0) {
-                                $("" + columHeaderUpdate + "").css(
-                                  "width",
-                                  columnWidth + "%"
-                                );
-                              }
-
-                              if (hiddenColumn == true) {
-                                $("." + columnClass + "").addClass(
-                                  "hiddenColumn"
-                                );
-                                $("." + columnClass + "").removeClass(
-                                  "showColumn"
-                                );
-                              } else if (hiddenColumn == false) {
-                                $("." + columnClass + "").removeClass(
-                                  "hiddenColumn"
-                                );
-                                $("." + columnClass + "").addClass(
-                                  "showColumn"
-                                );
-                              }
-                            }
-                          }
-                        }
-                      }
-                    );
-                  }
                 }
               }
               if (!added) {
@@ -3032,58 +2892,7 @@ Template.new_invoice.onRendered(function() {
                     templateObject.inputSelectedCurrency.set(
                       invoicerecord.currency
                     );
-                    if (templateObject.invoicerecord.get()) {
-                      Meteor.call(
-                        "readPrefMethod",
-                        Session.get("mycloudLogonID"),
-                        "tblInvoiceLine",
-                        function (error, result) {
-                          if (error) {
-                          } else {
-                            if (result) {
-                              for (
-                                let i = 0;
-                                i < result.customFields.length;
-                                i++
-                              ) {
-                                let customcolumn = result.customFields;
-                                let columData = customcolumn[i].label;
-                                let columHeaderUpdate = customcolumn[i].thclass;
-                                let hiddenColumn = customcolumn[i].hidden;
-                                let columnClass = columHeaderUpdate.substring(
-                                  columHeaderUpdate.indexOf(".") + 1
-                                );
-                                let columnWidth = customcolumn[i].width;
 
-                                $("" + columHeaderUpdate + "").html(columData);
-                                if (columnWidth != 0) {
-                                  $("" + columHeaderUpdate + "").css(
-                                    "width",
-                                    columnWidth + "%"
-                                  );
-                                }
-
-                                if (hiddenColumn == true) {
-                                  $("." + columnClass + "").addClass(
-                                    "hiddenColumn"
-                                  );
-                                  $("." + columnClass + "").removeClass(
-                                    "showColumn"
-                                  );
-                                } else if (hiddenColumn == false) {
-                                  $("." + columnClass + "").removeClass(
-                                    "hiddenColumn"
-                                  );
-                                  $("." + columnClass + "").addClass(
-                                    "showColumn"
-                                  );
-                                }
-                              }
-                            }
-                          }
-                        }
-                      );
-                    }
                   })
                   .catch(function (err) {
                     swal({
@@ -3516,52 +3325,7 @@ Template.new_invoice.onRendered(function() {
                 templateObject.inputSelectedCurrency.set(
                   invoicerecord.currency
                 );
-                if (templateObject.invoicerecord.get()) {
-                  Meteor.call(
-                    "readPrefMethod",
-                    Session.get("mycloudLogonID"),
-                    "tblInvoiceLine",
-                    function (error, result) {
-                      if (error) {
-                      } else {
-                        if (result) {
-                          for (let i = 0; i < result.customFields.length; i++) {
-                            let customcolumn = result.customFields;
-                            let columData = customcolumn[i].label;
-                            let columHeaderUpdate = customcolumn[i].thclass;
-                            let hiddenColumn = customcolumn[i].hidden;
-                            let columnClass = columHeaderUpdate.substring(
-                              columHeaderUpdate.indexOf(".") + 1
-                            );
-                            let columnWidth = customcolumn[i].width;
 
-                            $("" + columHeaderUpdate + "").html(columData);
-                            if (columnWidth != 0) {
-                              $("" + columHeaderUpdate + "").css(
-                                "width",
-                                columnWidth + "%"
-                              );
-                            }
-
-                            if (hiddenColumn == true) {
-                              $("." + columnClass + "").addClass(
-                                "hiddenColumn"
-                              );
-                              $("." + columnClass + "").removeClass(
-                                "showColumn"
-                              );
-                            } else if (hiddenColumn == false) {
-                              $("." + columnClass + "").removeClass(
-                                "hiddenColumn"
-                              );
-                              $("." + columnClass + "").addClass("showColumn");
-                            }
-                          }
-                        }
-                      }
-                    }
-                  );
-                }
               })
               .catch(function (err) {
                 swal({
@@ -4263,58 +4027,6 @@ Template.new_invoice.onRendered(function() {
                   templateObject.inputSelectedCurrency.set(
                     invoicerecord.currency
                   );
-                  if (templateObject.invoicerecord.get()) {
-                    Meteor.call(
-                      "readPrefMethod",
-                      Session.get("mycloudLogonID"),
-                      "tblInvoiceLine",
-                      function (error, result) {
-                        if (error) {
-                        } else {
-                          if (result) {
-                            for (
-                              let i = 0;
-                              i < result.customFields.length;
-                              i++
-                            ) {
-                              let customcolumn = result.customFields;
-                              let columData = customcolumn[i].label;
-                              let columHeaderUpdate = customcolumn[i].thclass;
-                              let hiddenColumn = customcolumn[i].hidden;
-                              let columnClass = columHeaderUpdate.substring(
-                                columHeaderUpdate.indexOf(".") + 1
-                              );
-                              let columnWidth = customcolumn[i].width;
-
-                              $("" + columHeaderUpdate + "").html(columData);
-                              if (columnWidth != 0) {
-                                $("" + columHeaderUpdate + "").css(
-                                  "width",
-                                  columnWidth + "%"
-                                );
-                              }
-
-                              if (hiddenColumn == true) {
-                                $("." + columnClass + "").addClass(
-                                  "hiddenColumn"
-                                );
-                                $("." + columnClass + "").removeClass(
-                                  "showColumn"
-                                );
-                              } else if (hiddenColumn == false) {
-                                $("." + columnClass + "").removeClass(
-                                  "hiddenColumn"
-                                );
-                                $("." + columnClass + "").addClass(
-                                  "showColumn"
-                                );
-                              }
-                            }
-                          }
-                        }
-                      }
-                    );
-                  }
                 })
                 .catch(function (err) {
                   swal({
@@ -4349,15 +4061,13 @@ Template.new_invoice.onRendered(function() {
                       cust_data.customername == useData[d].fields.ClientName
                     );
                   });
-
+                  /*
                   getVS1Data("TAppointment").then(function (dataObject) {
                     let appointments = JSON.parse(dataObject[0].data);
                     let allAppointments = appointments.tappointmentex;
                     let apptId = FlowRouter.current().queryParams.apptId;
                     let appointmentAttachments = (appointmentAttachments =
-                      allAppointments.find(
-                        (x) => x.fields.ID === parseInt(apptId)
-                      ).fields.Attachments);
+                      allAppointments.find((x) => x.fields.ID === parseInt(apptId)).fields.Attachments);
                     if (appointmentAttachments.length > 0) {
                       templateObject.attachmentCount.set(
                         appointmentAttachments.length
@@ -4365,6 +4075,7 @@ Template.new_invoice.onRendered(function() {
                       templateObject.uploadedFiles.set(appointmentAttachments);
                     }
                   });
+                  */
                   templateObject.singleInvoiceData.set(useData[d]);
                   let lineItems = [];
                   let lineItemObj = {};
@@ -4863,58 +4574,6 @@ Template.new_invoice.onRendered(function() {
                   templateObject.inputSelectedCurrency.set(
                     invoicerecord.currency
                   );
-                  if (templateObject.invoicerecord.get()) {
-                    Meteor.call(
-                      "readPrefMethod",
-                      Session.get("mycloudLogonID"),
-                      "tblInvoiceLine",
-                      function (error, result) {
-                        if (error) {
-                        } else {
-                          if (result) {
-                            for (
-                              let i = 0;
-                              i < result.customFields.length;
-                              i++
-                            ) {
-                              let customcolumn = result.customFields;
-                              let columData = customcolumn[i].label;
-                              let columHeaderUpdate = customcolumn[i].thclass;
-                              let hiddenColumn = customcolumn[i].hidden;
-                              let columnClass = columHeaderUpdate.substring(
-                                columHeaderUpdate.indexOf(".") + 1
-                              );
-                              let columnWidth = customcolumn[i].width;
-
-                              $("" + columHeaderUpdate + "").html(columData);
-                              if (columnWidth != 0) {
-                                $("" + columHeaderUpdate + "").css(
-                                  "width",
-                                  columnWidth + "%"
-                                );
-                              }
-
-                              if (hiddenColumn == true) {
-                                $("." + columnClass + "").addClass(
-                                  "hiddenColumn"
-                                );
-                                $("." + columnClass + "").removeClass(
-                                  "showColumn"
-                                );
-                              } else if (hiddenColumn == false) {
-                                $("." + columnClass + "").removeClass(
-                                  "hiddenColumn"
-                                );
-                                $("." + columnClass + "").addClass(
-                                  "showColumn"
-                                );
-                              }
-                            }
-                          }
-                        }
-                      }
-                    );
-                  }
                 }
               }
               if (!added) {
@@ -5339,58 +4998,7 @@ Template.new_invoice.onRendered(function() {
                     templateObject.inputSelectedCurrency.set(
                       invoicerecord.currency
                     );
-                    if (templateObject.invoicerecord.get()) {
-                      Meteor.call(
-                        "readPrefMethod",
-                        Session.get("mycloudLogonID"),
-                        "tblInvoiceLine",
-                        function (error, result) {
-                          if (error) {
-                          } else {
-                            if (result) {
-                              for (
-                                let i = 0;
-                                i < result.customFields.length;
-                                i++
-                              ) {
-                                let customcolumn = result.customFields;
-                                let columData = customcolumn[i].label;
-                                let columHeaderUpdate = customcolumn[i].thclass;
-                                let hiddenColumn = customcolumn[i].hidden;
-                                let columnClass = columHeaderUpdate.substring(
-                                  columHeaderUpdate.indexOf(".") + 1
-                                );
-                                let columnWidth = customcolumn[i].width;
 
-                                $("" + columHeaderUpdate + "").html(columData);
-                                if (columnWidth != 0) {
-                                  $("" + columHeaderUpdate + "").css(
-                                    "width",
-                                    columnWidth + "%"
-                                  );
-                                }
-
-                                if (hiddenColumn == true) {
-                                  $("." + columnClass + "").addClass(
-                                    "hiddenColumn"
-                                  );
-                                  $("." + columnClass + "").removeClass(
-                                    "showColumn"
-                                  );
-                                } else if (hiddenColumn == false) {
-                                  $("." + columnClass + "").removeClass(
-                                    "hiddenColumn"
-                                  );
-                                  $("." + columnClass + "").addClass(
-                                    "showColumn"
-                                  );
-                                }
-                              }
-                            }
-                          }
-                        }
-                      );
-                    }
                   })
                   .catch(function (err) {
                     swal({
@@ -5411,8 +5019,7 @@ Template.new_invoice.onRendered(function() {
                   });
               }
             }
-          })
-          .catch(function (err) {
+          }).catch(function (err) {
             let customerData = templateObject.clientrecords.get();
             accountService
               .getOneInvoicedataEx(currentInvoice)
@@ -5873,52 +5480,7 @@ Template.new_invoice.onRendered(function() {
                 templateObject.inputSelectedCurrency.set(
                   invoicerecord.currency
                 );
-                if (templateObject.invoicerecord.get()) {
-                  Meteor.call(
-                    "readPrefMethod",
-                    Session.get("mycloudLogonID"),
-                    "tblInvoiceLine",
-                    function (error, result) {
-                      if (error) {
-                      } else {
-                        if (result) {
-                          for (let i = 0; i < result.customFields.length; i++) {
-                            let customcolumn = result.customFields;
-                            let columData = customcolumn[i].label;
-                            let columHeaderUpdate = customcolumn[i].thclass;
-                            let hiddenColumn = customcolumn[i].hidden;
-                            let columnClass = columHeaderUpdate.substring(
-                              columHeaderUpdate.indexOf(".") + 1
-                            );
-                            let columnWidth = customcolumn[i].width;
 
-                            $("" + columHeaderUpdate + "").html(columData);
-                            if (columnWidth != 0) {
-                              $("" + columHeaderUpdate + "").css(
-                                "width",
-                                columnWidth + "%"
-                              );
-                            }
-
-                            if (hiddenColumn == true) {
-                              $("." + columnClass + "").addClass(
-                                "hiddenColumn"
-                              );
-                              $("." + columnClass + "").removeClass(
-                                "showColumn"
-                              );
-                            } else if (hiddenColumn == false) {
-                              $("." + columnClass + "").removeClass(
-                                "hiddenColumn"
-                              );
-                              $("." + columnClass + "").addClass("showColumn");
-                            }
-                          }
-                        }
-                      }
-                    }
-                  );
-                }
               })
               .catch(function (err) {
                 swal({
@@ -6329,46 +5891,7 @@ Template.new_invoice.onRendered(function() {
             templateObject.invoicerecord.set(invoicerecord);
             templateObject.selectedCurrency.set(invoicerecord.currency);
             templateObject.inputSelectedCurrency.set(invoicerecord.currency);
-            if (templateObject.invoicerecord.get()) {
-              Meteor.call(
-                "readPrefMethod",
-                Session.get("mycloudLogonID"),
-                "tblInvoiceLine",
-                function (error, result) {
-                  if (error) {
-                  } else {
-                    if (result) {
-                      for (let i = 0; i < result.customFields.length; i++) {
-                        let customcolumn = result.customFields;
-                        let columData = customcolumn[i].label;
-                        let columHeaderUpdate = customcolumn[i].thclass;
-                        let hiddenColumn = customcolumn[i].hidden;
-                        let columnClass = columHeaderUpdate.substring(
-                          columHeaderUpdate.indexOf(".") + 1
-                        );
-                        let columnWidth = customcolumn[i].width;
 
-                        $("" + columHeaderUpdate + "").html(columData);
-                        if (columnWidth != 0) {
-                          $("" + columHeaderUpdate + "").css(
-                            "width",
-                            columnWidth + "%"
-                          );
-                        }
-
-                        if (hiddenColumn == true) {
-                          $("." + columnClass + "").addClass("hiddenColumn");
-                          $("." + columnClass + "").removeClass("showColumn");
-                        } else if (hiddenColumn == false) {
-                          $("." + columnClass + "").removeClass("hiddenColumn");
-                          $("." + columnClass + "").addClass("showColumn");
-                        }
-                      }
-                    }
-                  }
-                }
-              );
-            }
           })
           .catch(function (err) {
             swal({
@@ -6777,46 +6300,7 @@ Template.new_invoice.onRendered(function() {
             templateObject.invoicerecord.set(invoicerecord);
             templateObject.selectedCurrency.set(invoicerecord.currency);
             templateObject.inputSelectedCurrency.set(invoicerecord.currency);
-            if (templateObject.invoicerecord.get()) {
-              Meteor.call(
-                "readPrefMethod",
-                Session.get("mycloudLogonID"),
-                "tblInvoiceLine",
-                function (error, result) {
-                  if (error) {
-                  } else {
-                    if (result) {
-                      for (let i = 0; i < result.customFields.length; i++) {
-                        let customcolumn = result.customFields;
-                        let columData = customcolumn[i].label;
-                        let columHeaderUpdate = customcolumn[i].thclass;
-                        let hiddenColumn = customcolumn[i].hidden;
-                        let columnClass = columHeaderUpdate.substring(
-                          columHeaderUpdate.indexOf(".") + 1
-                        );
-                        let columnWidth = customcolumn[i].width;
 
-                        $("" + columHeaderUpdate + "").html(columData);
-                        if (columnWidth != 0) {
-                          $("" + columHeaderUpdate + "").css(
-                            "width",
-                            columnWidth + "%"
-                          );
-                        }
-
-                        if (hiddenColumn == true) {
-                          $("." + columnClass + "").addClass("hiddenColumn");
-                          $("." + columnClass + "").removeClass("showColumn");
-                        } else if (hiddenColumn == false) {
-                          $("." + columnClass + "").removeClass("hiddenColumn");
-                          $("." + columnClass + "").addClass("showColumn");
-                        }
-                      }
-                    }
-                  }
-                }
-              );
-            }
           })
           .catch(function (err) {
             swal({
@@ -6924,45 +6408,6 @@ Template.new_invoice.onRendered(function() {
     }, 200);
 
     templateObject.invoicerecord.set(invoicerecord);
-    if (templateObject.invoicerecord.get()) {
-      Meteor.call(
-        "readPrefMethod",
-        Session.get("mycloudLogonID"),
-        "tblInvoiceLine",
-        function (error, result) {
-          if (error) {
-          } else {
-            if (result) {
-              for (let i = 0; i < result.customFields.length; i++) {
-                let customcolumn = result.customFields;
-                let columData = customcolumn[i].label;
-                let columHeaderUpdate = customcolumn[i].thclass;
-                let hiddenColumn = customcolumn[i].hidden;
-                let columnClass = columHeaderUpdate.substring(
-                  columHeaderUpdate.indexOf(".") + 1
-                );
-                let columnWidth = customcolumn[i].width;
-
-                $("" + columHeaderUpdate + "").html(columData);
-                if (columnWidth != 0) {
-                  $("" + columHeaderUpdate + "").css(
-                    "width",
-                    columnWidth + "%"
-                  );
-                }
-                if (hiddenColumn === true) {
-                  $("." + columnClass + "").addClass("hiddenColumn");
-                  $("." + columnClass + "").removeClass("showColumn");
-                } else if (hiddenColumn === false) {
-                  $("." + columnClass + "").removeClass("hiddenColumn");
-                  $("." + columnClass + "").addClass("showColumn");
-                }
-              }
-            }
-          }
-        }
-      );
-    }
   }
 
   function showInvoice1(template_title, number) {
@@ -17834,9 +17279,7 @@ Template.new_invoice.events({
         event.preventDefault();
         return false;
       }
-      salesService
-        .saveInvoiceEx(objDetails)
-        .then(function (objDetails) {
+      salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
           // add to custom field
           // add to custom field
 
