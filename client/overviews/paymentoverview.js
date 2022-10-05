@@ -20,6 +20,8 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import CachedHttp from '../lib/global/CachedHttp';
+import erpObject from '../lib/global/erp-objects';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -1435,6 +1437,16 @@ Template.paymentoverview.onRendered(function() {
         }
     }
     tableResize();
+
+
+    templateObject.loadTimeSheet = async () => {
+        let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
+            return await sideBarService.getAllTimeSheetList();
+        }, {
+
+        });
+        
+    }
 
 });
 

@@ -1,4 +1,5 @@
 <template name="CurrencyWidget">
+    {{#if isCurrencyEnable}}
     <style>
         .currency-module {
             display: flex;
@@ -40,4 +41,5 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="countryModal">
         {{> CountryModal}}
     </div>
+    {{/if}}
 </template>

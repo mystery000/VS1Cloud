@@ -5,6 +5,8 @@ import { ContactService } from "../../contacts/contact-service";
 import { ProductService } from "../../product/product-service";
 import { SideBarService } from '../../js/sidebar-service';
 import 'jquery-editable-select';
+import CachedHttp from '../../lib/global/CachedHttp';
+import erpObject from '../../lib/global/erp-objects';
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 Template.timesheet.onCreated(function() {
@@ -221,6 +223,8 @@ Template.timesheet.onRendered(function() {
             $("#dateFrom").val(fromDate != '' ? moment(fromDate).format("DD/MM/YYYY") : fromDate);
             $("#dateTo").val(toDate != '' ? moment(toDate).format("DD/MM/YYYY") : toDate);
         }
+
+     
 
         getVS1Data('TTimeSheet').then(function(dataObject) {
             console.log("timesheet", dataObject.data);

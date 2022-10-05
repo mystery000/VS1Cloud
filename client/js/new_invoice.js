@@ -13118,6 +13118,8 @@ Template.new_invoice.helpers({
         }
         return false;
     },
+
+    isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
 });
 
 Template.new_invoice.events({

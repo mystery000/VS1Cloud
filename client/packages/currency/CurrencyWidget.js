@@ -72,14 +72,10 @@ export const onExhangeRateChanged = e => {
 };
 
 Template.CurrencyWidget.helpers({
-  isCurrencyEnable: () => {
-    return Session.get("CloudUseForeignLicence");
-  }
+  isCurrencyEnable: () => isCurrencyEnable()
 });
 
-export const isCurrencyEnable = () => {
-  return Session.get("CloudUseForeignLicence");
-};
+export const isCurrencyEnable = () => FxGlobalFunctions.isCurrencyEnabled();
 
 
 export const saveCurrencyHistory = async (date = null) => {
