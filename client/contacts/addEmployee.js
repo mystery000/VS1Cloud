@@ -5495,9 +5495,14 @@ Template.employeescard.events({
         let DOB = $('#dtDOB').val();
         let doc = new jsPDF();
         doc.setFontSize(16);
-        doc.text(PayPeriod, 20,40);
-        doc.text(PaymentDate, 30,40);
-        doc.text(TotalPay, 40,40);
+        doc.text(EmployeeName, 20,40);
+        doc.text(EmployeeEmail, 50,40);
+        doc.text(DOB, 20,50);
+        doc.text(Phone, 50,50);
+        doc.text(EmployeeName, 20,70);
+        doc.text(PaymentDate, 50,70);
+        doc.text(PayPeriod, 20,80);
+        doc.text(TotalPay, 50,80);
         doc.setFontType('bold');
         doc.save("Payslip.pdf");
     },
