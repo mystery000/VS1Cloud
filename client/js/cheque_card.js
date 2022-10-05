@@ -2181,7 +2181,7 @@ Template.chequecard.onRendered(() => {
     }, 1000);
   });
 
-  $(document).on("click", "#tblAccount tbody tr", function (e) {
+  $(document).on("click", ".chequecard #tblAccount tbody tr", function (e) {
     $(".colAccountName").removeClass("boldtablealertsborder");
     let selectLineID = $("#selectLineID").val();
     let taxcodeList = templateObject.taxraterecords.get();

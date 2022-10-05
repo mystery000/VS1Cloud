@@ -1691,9 +1691,7 @@ Template.receiptsoverview.onRendered(function() {
     };
     tableResize();
 
-
     templateObject.loadDefaultCurrency(defaultCurrencyCode);
-
 });
 
 Template.receiptsoverview.events({
@@ -2717,7 +2715,6 @@ Template.receiptsoverview.events({
                     receipts.push(expenseClaim);
                 }
             }
-
             $('.fullScreenSpin').css('display', 'inline-block');
             for (let i = 0; i < receipts.length; i++) {
                 accountService.saveReceipt(receipts[i]).then(function(data) {
@@ -2761,7 +2758,6 @@ Template.receiptsoverview.events({
                     }
                 }]
             }
-
             let employeeId = $(parentElement + ' .employees').attr('data-id');
             let employeeName = $(parentElement + ' .employees').val() || ' ';
             let transactionTypeId = $(parentElement + ' .transactionTypes').attr('data-id');
@@ -3681,19 +3677,18 @@ Template.receiptsoverview.events({
 
     "keyup #exchange_rate": e => onExhangeRateChanged(e),
     "change #exchange_rate": e => onExhangeRateChanged(e),
-    "click #newReceiptModal .btnSave": (e, ui) => {
-        const nav = $(".nav-link.active");
-        if(nav.attr('href') == "#nav-expense") {
-            saveCurrencyHistory(
-                GlobalFunctions.convertYearMonthDay($('#nav-expense .dtReceiptDate').val())
-            );
-        } else if (nav.attr('href') == "#nav-time") {
-            saveCurrencyHistory(
-                GlobalFunctions.convertYearMonthDay($('#nav-time .dtReceiptDate').val())
-            );
-        }
-
-    }
+    // "click #newReceiptModal .btnSave": (e, ui) => {
+    //     const nav = $(".nav-link.active");
+    //     if(nav.attr('href') == "#nav-expense") {
+    //         saveCurrencyHistory(
+    //             GlobalFunctions.convertYearMonthDay($('#nav-expense .dtReceiptDate').val())
+    //         );
+    //     } else if (nav.attr('href') == "#nav-time") {
+    //         saveCurrencyHistory(
+    //             GlobalFunctions.convertYearMonthDay($('#nav-time .dtReceiptDate').val())
+    //         );
+    //     }
+    // }
 });
 
 Template.receiptsoverview.helpers({

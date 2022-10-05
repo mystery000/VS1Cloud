@@ -207,9 +207,7 @@
                             <!-- <div class="custom-control custom-switch" style="margin: 4px;"><input class="custom-control-input" type="checkbox" id="activeChk" checked><label class="custom-control-label" for="activeChk"></label></div> -->
 
                             <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 customerInfo" id="customerInfo" style="color: #00A3D3;">
-                                  {{#if notEquals record.id ''}}
-                                    CUS-{{record.id}} -
-                                  {{/if}}
+
                                    {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}}
                                     {{record.joblastname}} -
                                     {{record.jobphone}}
@@ -219,6 +217,11 @@
                             </h6>
                             <!--here-->
                             <div>
+                              <span class="font-weight-bold m-0" style="color: #00A3D3;">
+                              {{#if notEquals record.id ''}}
+                                CUS-{{record.id}}
+                              {{/if}}
+                             </span>
                                 <button type="button" class="btn btn-success btnReceiveCustomerPayment" id="btnReceiveCustomerPayment"><i class="fas fa-hand-holding-usd" style="margin-right: 5px;"></i>Receive Payment</button>
                                 <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"><i class="fas fa-ellipsis-v text-gray-400"></i></a>
                             </div>
@@ -497,7 +500,7 @@
                                                     <ul class="nav nav-tabs nav-justified">
                                                         <li class="nav-item"><a class="nav-link active" role="tab" data-toggle="tab" data-target="#tab-Job4">Address</a></li>
                                                         <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job5">Notes</a></li>
-                                                        <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job6">Billing</a></li>
+                                                        <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job6">Invoicing</a></li>
                                                         <li class="nav-item attachmentTabJobNoPOP"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job8">{{#if attachmentCountJobNoPOP}}<span
                                                                         id="attachment-count">{{attachmentCountJobNoPOP}}</span>{{/if}} Attachments</a></li>
                                                         <!-- <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job9">Custom Fields</a></li> -->
@@ -636,6 +639,13 @@
                                                         <div class="tab-pane border rounded-0 tab-Job6" role="tabpanel" id="tab-Job6" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                             <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start" style="margin: 12px;">
                                                                 <div class="col d-xl-flex align-items-xl-end">
+                                                                  <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Customer Type</label>
+
+                                                                      <select type="search" class="form-control" id="sltJobCustomerType" name="sltJobCustomerType" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                      </select>
+
+                                                                  </div>
+
                                                                     <div class="form-group d-xl-flex flex-column align-items-xl-start" style="margin: 4px;"><label class="text-nowrap">Preferred Payment Method</label>
                                                                         <!-- <select class="form-control" style="width: 260px;" id="sltJobPreferredPayment" name="sltJobPreferredPayment">
                                                                                                     {{#each item in preferedPaymentList}}
@@ -663,22 +673,7 @@
                                                                         </select>
                                                                     </div>
 
-                                                                    <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Customer Type</label>
-                                                                        <!-- <select class="form-control customerTypeSelect" style="width: 260px; cursor: pointer;" id="sltJobCustomerType" name="sltJobCustomerType">
 
-                                                                                                    {{#each itemclientJob in clienttypeList}}
-                                                                                                        {{#if equals itemclientJob record.clienttype }}
-                                                                                                            <option value="{{record.jobclienttype}}" selected="">{{record.jobclienttype}}</option>
-                                                                                                        {{else}}
-                                                                                                            <option value="{{itemclientJob}}">{{itemclientJob}}</option>
-                                                                                                        {{/if}}
-                                                                                                    {{/each}}
-
-                                                                                                </select> -->
-                                                                        <select type="search" class="form-control" id="sltJobCustomerType" name="sltJobCustomerType" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                        </select>
-
-                                                                    </div>
 
                                                                     <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px; disply:none;"><label class="text-nowrap">% Discount</label>
                                                                         <input type="text" class="form-control pointer" id="edtJobCustomerCardDiscount" name="edtJobCustomerCardDiscount" value="{{record.jobdiscount}}">
@@ -932,7 +927,7 @@
                                                     </div>
                                                     <div class="form-group col-md-3">
                                                         <label for="leadStatus">Status</label>
-                                                        <input type="search" class="form-control es-input" id="leadStatus" name="leadStatus" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{setLeadStatus record.status}}">
+                                                        <input type="search" class="form-control es-input" id="leadStatus" name="leadStatus" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.status}}">
                                                     </div>
                                                     <div class="form-group col-md-2">
                                                         <label>Sales Quota</label>
@@ -1037,11 +1032,11 @@
                                                     <ul class="nav nav-tabs nav-justified">
                                                         <li class="nav-item" style="cursor: pointer;"><a class="nav-link active" role="tab" data-toggle="tab" data-target="#tab-4">Address</a></li>
                                                         <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-5">Notes</a></li>
-                                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-6">Billing</a></li>
+                                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link bilingTab" role="tab" data-toggle="tab" data-target="#tab-6">Invoicing</a></li>
                                                         <li class="nav-item attachmentTab" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-8">{{#if attachmentCount}}<span
                                                                         id="attachment-count">{{attachmentCount}}</span>{{/if}} Attachments</a></li>
                                                         <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-9">Custom Fields</a></li>
-                                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-10">Tax</a></li>
+                                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link taxTab" role="tab" data-toggle="tab" data-target="#tab-10">Tax</a></li>
                                                     </ul>
                                                     <script>
                                                         setTimeout(function() {
@@ -1100,6 +1095,10 @@
                                                                         <div class="col d-xl-flex align-items-xl-start colAddressDetails" id="colAddressDetails" style="padding: 0;">
                                                                             <div class="row no-gutters d-xl-flex flex-column flex-grow-1 justify-content-xl-start">
                                                                                 <div class="col d-xl-flex flex-grow-1 align-items-xl-start">
+                                                                                    <div class="form-group flex-grow-1" style="margin: 4px;">
+                                                                                        <label>Suburb</label>
+                                                                                        <input type="text" class="form-control" id="edtCustomerShippingSuburb" name="edtCustomerShippingSuburb" value="{{record.ssuburb}}">
+                                                                                    </div>
                                                                                     <div class="form-group flex-grow-1" style="margin: 4px;">
                                                                                         <label>City / Town</label>
                                                                                         <input type="text" class="form-control" id="edtCustomerShippingCity" name="edtCustomerShippingCity" value="{{record.scity}}">
@@ -1227,58 +1226,29 @@
                                                         </div>
                                                         <div class="tab-pane border rounded-0" role="tabpanel" id="tab-6" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                             <div class="row" style="margin: 12px;">
+                                                              <div class="col-md-2 col-6" style="padding: 0;">
+                                                                  <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Customer Type</label>
+
+                                                                      <select type="search" class="form-control" id="sltCustomerType" name="sltCustomerType" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                      </select>
+
+                                                                  </div>
+                                                              </div>
                                                                 <div class="col-md-2 col-6" style="padding: 0;">
                                                                     <div class="form-group d-xl-flex flex-column align-items-xl-start" style="margin: 4px;"><label class="text-nowrap">Preferred Payment Method</label>
-                                                                        <!-- <select class="form-control preferredPaymentMethodSelect" style="cursor: pointer;" id="sltPreferredPayment" name="sltPreferredPayment">
-                                                                                            {{#each item in preferedPaymentList}}
-                                                                                                {{#if equals item record.preferedpayment }}
-                                                                                                    <option value="{{record.preferedpayment}}" selected="">{{record.preferedpayment}}</option>
-                                                                                                {{else}}
-                                                                                                    <option value="{{item}}">{{item}}</option>
-                                                                                                {{/if}}
-                                                                                            {{/each}}
-                                                                                        </select> -->
+
                                                                         <select type="search" class="form-control preferredPaymentMethodSelect" id="sltPreferredPayment" name="sltPreferredPayment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-2 col-6" style="padding: 0;">
-                                                                    <!-- <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Terms</label>
-                                                                                        <select class="form-control termsSelect" style="cursor: pointer;" id="sltTerms" name="sltTerms">
-                                                                                            {{record.terms}}
-                                                                                            {{#each item in termsList}}
-                                                                                                {{#if equals item record.terms }}
-                                                                                                    <option value="{{record.terms}}" selected="">{{record.terms}}</option>
-                                                                                                {{else}}
-                                                                                                    <option value="{{item}}">{{item}}</option>
-                                                                                                {{/if}}
-                                                                                            {{/each}}
-                                                                                        </select>
-                                                                                    </div> -->
                                                                     <div class="form-group" style="margin: 4px;">
                                                                         <label>Terms</label>
                                                                         <select type="search" class="form-control" id="sltTerms" name="sltTerms" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                         </select>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-2 col-6" style="padding: 0;">
-                                                                    <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Customer Type</label>
-                                                                        <!-- <select class="form-control customerTypeSelect" style="cursor: pointer;" id="sltCustomerType" name="sltCustomerType">
 
-                                                                                            {{#each itemclient in clienttypeList}}
-                                                                                                {{#if equals itemclient record.clienttype }}
-                                                                                                    <option value="{{record.clienttype}}" selected="">{{record.clienttype}}</option>
-                                                                                                {{else}}
-                                                                                                    <option value="{{itemclient}}">{{itemclient}}</option>
-                                                                                                {{/if}}
-                                                                                            {{/each}}
-
-                                                                                        </select> -->
-                                                                        <select type="search" class="form-control" id="sltCustomerType" name="sltCustomerType" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                        </select>
-
-                                                                    </div>
-                                                                </div>
                                                                 <div class="col-md-2 col-6" style="padding: 0;">
                                                                     <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">% Discount</label>
                                                                         <input type="text" class="form-control pointer" id="edtCustomerCardDiscount" name="edtCustomerCardDiscount" value="{{record.discount}}">
@@ -1917,7 +1887,7 @@
                                                                     <ul class="nav nav-tabs nav-justified">
                                                                         <li class="nav-item" style=" cursor: pointer;"><a class="nav-link active" role="tab" data-toggle="tab" data-target="#tab-Job11">Address</a></li>
                                                                         <li class="nav-item" style=" cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job12">Notes</a></li>
-                                                                        <li class="nav-item" style=" cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job13">Billing</a></li>
+                                                                        <li class="nav-item" style=" cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job13">Invoicing</a></li>
                                                                         <li class="nav-item attachmentTabJobPOP" style=" cursor: pointer;">
                                                                             <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-Job14">
                                                                                 {{#if attachmentCount}}<span id="attachment-countJob">{{attachmentCountJob}}</span>{{/if}}
@@ -2051,6 +2021,12 @@
                                                                         <div class="tab-pane border rounded-0" role="tabpanel" id="tab-Job13" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                                             <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start" style="margin: 12px;">
                                                                                 <div class="col d-xl-flex align-items-xl-end">
+                                                                                  <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Customer Type</label>
+
+                                                                                      <select type="search" class="form-control" id="sltJobCustomerType" name="sltJobCustomerType" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                                      </select>
+                                                                                  </div>
+
                                                                                     <div class="form-group d-xl-flex flex-column align-items-xl-start" style="margin: 4px;"><label class="text-nowrap">Preferred Payment
                                                                                             Method</label>
                                                                                         <!-- <select class="form-control" style="width: 260px;" id="sltJobPreferredPayment" name="sltJobPreferredPayment">
@@ -2081,21 +2057,7 @@
                                                                                         </select>
                                                                                     </div>
 
-                                                                                    <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Customer Type</label>
-                                                                                        <!-- <select class="form-control customerTypeSelect" style="width: 260px; cursor: pointer;" id="sltJobCustomerType" name="sltJobCustomerType">
 
-                                                                                                            {{#each jobitemclient in clienttypeList}}
-                                                                                                                {{#if equals jobitemclient record.clienttype }}
-                                                                                                                    <option value="{{record.jobclienttype}}" selected="">{{record.jobclienttype}}</option>
-                                                                                                                {{else}}
-                                                                                                                    <option value="{{jobitemclient}}">{{jobitemclient}}</option>
-                                                                                                                {{/if}}
-                                                                                                            {{/each}}
-
-                                                                                                        </select> -->
-                                                                                        <select type="search" class="form-control" id="sltJobCustomerType" name="sltJobCustomerType" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                                        </select>
-                                                                                    </div>
 
                                                                                     <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">% Discount</label>
                                                                                         <input type="text" class="form-control pointer" id="edtJobCustomerCardDiscount" name="edtJobCustomerCardDiscount" value="{{record.jobdiscount}}">

@@ -49,7 +49,7 @@
         </header>
         <!-- All charts list -->
         {{#if isStockonHandDemandChart}}
-        {{> allChartLists  tabGroupID="5" chartGroup="Inventory" }}
+            {{> allChartLists  tabGroupID="5" chartGroup="Inventory" }}
         {{/if}}
         <style>
             @media screen and (max-width: 450px) {
@@ -57,25 +57,31 @@
                     width: 100% !important;
                     margin: 12px 0px !important;
                 }
+
                 .btnNavDropdown {
                     margin: 12px 0px !important;
                 }
+
                 .btnOpenSettingsDesktop {
                     display: none !important;
                 }
+
                 .btnOpenSettingsMobile {
                     display: block !important;
                     margin: 12px 0px !important;
                 }
             }
+
             .negativeVolume {
                 color: #e74a3b !important;
                 font-weight: 700 !important;
             }
+
             .positiveVolume {
                 color: #1cc88a !important;
                 font-weight: 700 !important;
             }
+
             .neutralVolume {
                 color: #f6c23e !important;
                 font-weight: 700 !important;
@@ -83,10 +89,10 @@
         </style>
 
         <div class="row justify-content-between">
-            <div class="col-5 col-md-5">
+            <div class="col-5 col-md-6">
                 <button class="btn btnNav btn-primary btnRefresh float-left" type="button" style="margin: 12px; margin-left: 0"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                 {{#if isNewProduct}}
-                <a class="btn btnNav btn-primary float-left btnNewProduct" href="/productview" style="margin: 12px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>New Product</a>
+                    <a class="btn btnNav btn-primary float-left btnNewProduct" href="/productview" style="margin: 12px;"><i class="fa fa-plus" style="margin-right: 5px;"></i>Product</a>
                 {{/if}}
                 {{#if includeStockAdjustment}}
                     <button class="btn btnNav btn-primary btnStockAdjustment" id="btnStockAdjustment" type="button" style="margin: 12px;"><i class="fas fa-wrench" style="padding-right: 5px;"></i>Stock Adjustments</button>
@@ -95,7 +101,7 @@
                     <button class="btn btnNav btn-primary btnStockTrans" id="btnStockTrans" type="button" style="margin: 12px;"><i class="fas fa-exchange-alt" style="padding-right: 5px;"></i>Stock Transfers</button>
                 {{/if}}
                 {{#if equals isSNTrackchecked true}}
-                    <div class="dropdown btnNav" style="margin: 16px; display: inline;">
+                    <div class="dropdown btnNav" style="margin: 12px; display: inline;">
                         <button class="btn btnNavDropdown btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Serial/Lot Tracking
                         </button>
@@ -115,13 +121,13 @@
                 <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right" role="button" data-toggle="modal" href="#myInventoryModal" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
                 <button class="btn btnNav btn-primary float-right printConfirm" type="button" style="margin: 12px;"><i class="fas fa-print" style="padding-right: 5px;"></i>Print</button>
                 {{#if isImportProduct}}
-                <button class="btn btnNav btn-primary float-right" type="button" style="margin: 12px;" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                    <button class="btn btnNav btn-primary float-right" type="button" style="margin: 12px;" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
                 {{/if}}
                 {{#if isExportProduct}}
-                <button class="btn btnNav btn-primary float-right exportinv_csv" type="button" style="margin: 12px;" id="exportinv_csv" name="exportinv_csv"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
+                    <button class="btn btnNav btn-primary float-right exportinv_csv" type="button" style="margin: 12px;" id="exportinv_csv" name="exportinv_csv"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
                 {{/if}}
                 <a class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#myModalDepartment" style="margin: 12px;"><i class="fas fa-users-cog" style="padding-right: 5px;"></i>Department</a>
-                <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myInventoryModal" style="margin: 16px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
+                <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myInventoryModal" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
 
             <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
@@ -396,66 +402,66 @@
                                 </div>
                                 <div class="modal-body">
                                     <div>
-                                            <form class="d-xl-flex align-items-xl-center">
-                                                <div class="flex-grow-1">
-                                                    <style>
-                                                        .groove {
-                                                            border-style: solid;
-                                                            border-width: 1px;
-                                                            width: 200px;
-                                                            padding: 2px;
-                                                            border-radius: .35rem;
+                                        <form class="d-xl-flex align-items-xl-center">
+                                            <div class="flex-grow-1">
+                                                <style>
+                                                    .groove {
+                                                        border-style: solid;
+                                                        border-width: 1px;
+                                                        width: 200px;
+                                                        padding: 2px;
+                                                        border-radius: .35rem;
+                                                    }
+
+                                                    .custom-control-label {
+                                                        position: absolute;
+                                                    }
+
+                                                    .rngRange {
+                                                        position: relative;
+                                                        display: flex;
+                                                        flex-direction: column;
+                                                        width: 100%;
+                                                        pointer-events: auto;
+                                                        background-color: rgb(255, 255, 255);
+                                                        background-clip: padding-box;
+                                                        border: 1px solid rgb(133, 135, 150);
+                                                        border-radius: .3rem;
+                                                        border-style: solid;
+                                                        border-width: 1px;
+                                                        padding: 2px;
+                                                        border-radius: .35rem;
+                                                        color: rgb(128, 128, 128);
+                                                        height: inherit !important;
+                                                    }
+
+                                                    @media only screen and (max-width: 480px) {
+                                                        .modal.show .modal-dialog {
+                                                            float: inherit !important;
+                                                            left: inherit !important;
+                                                            top: auto !important;
+
                                                         }
+                                                    }
+                                                </style>
 
-                                                        .custom-control-label {
-                                                            position: absolute;
-                                                        }
-
-                                                        .rngRange {
-                                                            position: relative;
-                                                            display: flex;
-                                                            flex-direction: column;
-                                                            width: 100%;
-                                                            pointer-events: auto;
-                                                            background-color: rgb(255, 255, 255);
-                                                            background-clip: padding-box;
-                                                            border: 1px solid rgb(133, 135, 150);
-                                                            border-radius: .3rem;
-                                                            border-style: solid;
-                                                            border-width: 1px;
-                                                            padding: 2px;
-                                                            border-radius: .35rem;
-                                                            color: rgb(128, 128, 128);
-                                                            height: inherit !important;
-                                                        }
-
-                                                        @media only screen and (max-width: 480px) {
-                                                            .modal.show .modal-dialog {
-                                                                float: inherit !important;
-                                                                left: inherit !important;
-                                                                top: auto !important;
-
-                                                            }
-                                                        }
-                                                    </style>
-
-                                                   {{#each displayfield in displayfields}}
+                                                {{#each displayfield in displayfields}}
                                                     {{#if displayfield.display}}
-                                                    <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
-                                                      <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                          <input class="custom-control-input chk{{displayfield.class}}" type="checkbox" id="formCheck-0{{displayfield.id}}" checked="{{displayfield.active}}">
-                                                          <label class="custom-control-label" for="formCheck-0{{displayfield.id}}"></label>
-                                                          <div contenteditable="true" class="groove divcolumn" type="text" value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">{{displayfield.custfieldlabel}}</div>
-                                                      </div>
-                                                      <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                                          <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                          <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
-                                                      </div>
-                                                    </div>
+                                                        <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
+                                                            <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                                <input class="custom-control-input chk{{displayfield.class}}" type="checkbox" id="formCheck-0{{displayfield.id}}" checked="{{displayfield.active}}">
+                                                                <label class="custom-control-label" for="formCheck-0{{displayfield.id}}"></label>
+                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">{{displayfield.custfieldlabel}}</div>
+                                                            </div>
+                                                            <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                                <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                                <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
+                                                            </div>
+                                                        </div>
                                                     {{/if}}
-                                                    {{/each}}
-                                                </div>
-                                            </form>
+                                                {{/each}}
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -598,24 +604,24 @@
                 <table id="tblInventoryOverview" style="width:100%" class="dataTable table table-striped table-bordered tblInventoryOverview">
                     <thead>
                         <tr class="dnd-moved">
-                          {{#each displayfield in displayfields}}
-                            {{#if displayfield.display}}
-                            <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
-                              {{displayfield.custfieldlabel}}
-                              {{#if equals displayfield.class 'CostPrice'}} <i class="fas fa-random"></i>
-                                {{else}}
-                                {{#if equals displayfield.class 'CostPriceInc'}} <i class="fas fa-random fa-trans"></i>
-                                  {{else}}
-                                  {{#if equals displayfield.class 'SalePrice'}} <i class="fas fa-random"></i>
-                                    {{else}}
-                                    {{#if equals displayfield.class 'SalePriceInc'}} <i class="fas fa-random fa-trans"></i>
-                                    {{/if}}
-                                  {{/if}}
+                            {{#each displayfield in displayfields}}
+                                {{#if displayfield.display}}
+                                    <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                        {{displayfield.custfieldlabel}}
+                                        {{#if equals displayfield.class 'CostPrice'}} <i class="fas fa-random"></i>
+                                        {{else}}
+                                            {{#if equals displayfield.class 'CostPriceInc'}} <i class="fas fa-random fa-trans"></i>
+                                            {{else}}
+                                                {{#if equals displayfield.class 'SalePrice'}} <i class="fas fa-random"></i>
+                                                {{else}}
+                                                    {{#if equals displayfield.class 'SalePriceInc'}} <i class="fas fa-random fa-trans"></i>
+                                                    {{/if}}
+                                                {{/if}}
+                                            {{/if}}
+                                        {{/if}}
+                                    </th>
                                 {{/if}}
-                              {{/if}}
-                            </th>
-                            {{/if}}
-                          {{/each}}
+                            {{/each}}
 
                             <!-- <th class="th colProductID hiddenColumn" style="width:3%;">#ID</th>
                             <th class="th colProductName" style="width:200px;">Product Name</th>
@@ -646,7 +652,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                      <!--
+                        <!--
                       {{#if datatablerecords}}
                             {{#each item in datatablerecords}}
                                 <tr class="dnd-moved" id="{{item.[0]}}" style="cursor: pointer;">

@@ -169,7 +169,7 @@ Template.salesoverview.onRendered(function () {
     location.reload();
   };
 
-  templateObject.getAllSalesOrderData = function () {
+  templateObject.getAllSalesOrderData = function ( deleteFilter = false ) {
     var currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
     let fromDateMonth = currentBeginDate.getMonth() + 1;
@@ -241,33 +241,35 @@ Template.salesoverview.onRendered(function () {
                   }else if(data.tsaleslist[i].CustomerName == ''){
                     salestatus = "Deleted";
                   };
-                var dataList = {
-                  id: data.tsaleslist[i].SaleId || "",
-                  employee: data.tsaleslist[i].employeename || "",
-                  sortdate:
-                    data.tsaleslist[i].SaleDate != ""
-                      ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD")
-                      : data.tsaleslist[i].SaleDate,
-                  saledate:
-                    data.tsaleslist[i].SaleDate != ""
-                      ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY")
-                      : data.tsaleslist[i].SaleDate,
-                  customername: data.tsaleslist[i].CustomerName || "",
-                  totalamountex: totalAmountEx || 0.0,
-                  totaltax: totalTax || 0.0,
-                  totalamount: totalAmount || 0.0,
-                  totalpaid: totalPaid || 0.0,
-                  totaloustanding: totalOutstanding || 0.0,
-                  salestatus: salestatus || "",
-                  custfield1: data.tsaleslist[i].SaleCustField1 || '',
-                  custfield2: data.tsaleslist[i].SaleCustField2 || '',
-                  custfield3: data.tsaleslist[i].SaleCustField3 || '',
-                  comments: data.tsaleslist[i].Comments || "",
-                  type: data.tsaleslist[i].Type || "",
-                };
-                //if(data.tsaleslist[i].Deleted == false){
-                dataTableList.push(dataList);
-                //}
+                  if( ( deleteFilter == true &&  salestatus == "Deleted" ) || salestatus !=  'Deleted' ){  
+                  var dataList = {
+                    id: data.tsaleslist[i].SaleId || "",
+                    employee: data.tsaleslist[i].employeename || "",
+                    sortdate:
+                      data.tsaleslist[i].SaleDate != ""
+                        ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD")
+                        : data.tsaleslist[i].SaleDate,
+                    saledate:
+                      data.tsaleslist[i].SaleDate != ""
+                        ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY")
+                        : data.tsaleslist[i].SaleDate,
+                    customername: data.tsaleslist[i].CustomerName || "",
+                    totalamountex: totalAmountEx || 0.0,
+                    totaltax: totalTax || 0.0,
+                    totalamount: totalAmount || 0.0,
+                    totalpaid: totalPaid || 0.0,
+                    totaloustanding: totalOutstanding || 0.0,
+                    salestatus: salestatus || "",
+                    custfield1: data.tsaleslist[i].SaleCustField1 || '',
+                    custfield2: data.tsaleslist[i].SaleCustField2 || '',
+                    custfield3: data.tsaleslist[i].SaleCustField3 || '',
+                    comments: data.tsaleslist[i].Comments || "",
+                    type: data.tsaleslist[i].Type || "",
+                  };
+                  //if(data.tsaleslist[i].Deleted == false){
+                  dataTableList.push(dataList);
+                  //}
+                }
               }
               templateObject.datatablerecords.set(dataTableList);
               if (templateObject.datatablerecords.get()) {
@@ -603,13 +605,12 @@ Template.salesoverview.onRendered(function () {
             $("#dateFrom").val(data.Params.DateFrom != ""? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
             $("#dateTo").val(data.Params.DateTo != ""? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
           }
-
+          
           let useData = data.tsaleslist;
           let lineItems = [];
           let lineItemObj = {};
           $(".fullScreenSpin").css("display", "none");
           for (let i = 0; i < useData.length; i++) {
-
             let totalAmountEx =
               utilityService.modifynegativeCurrencyFormat(
                 useData[i].TotalAmount
@@ -636,34 +637,35 @@ Template.salesoverview.onRendered(function () {
               }else if(useData[i].CustomerName == ''){
                 salestatus = "Deleted";
               };
-
-            var dataList = {
-              id: useData[i].SaleId || "",
-              employee: useData[i].employeename || "",
-              sortdate:
-                useData[i].SaleDate != ""
-                  ? moment(useData[i].SaleDate).format("YYYY/MM/DD")
-                  : useData[i].SaleDate,
-              saledate:
-                useData[i].SaleDate != ""
-                  ? moment(useData[i].SaleDate).format("DD/MM/YYYY")
-                  : useData[i].SaleDate,
-              customername: useData[i].CustomerName || "",
-              totalamountex: totalAmountEx || 0.0,
-              totaltax: totalTax || 0.0,
-              totalamount: totalAmount || 0.0,
-              totalpaid: totalPaid || 0.0,
-              totaloustanding: totalOutstanding || 0.0,
-              salestatus: salestatus || "",
-              custfield1: useData[i].SaleCustField1 || '',
-              custfield2: useData[i].SaleCustField2 || '',
-              custfield3: useData[i].SaleCustField3 || '',
-              comments: useData[i].Comments || "",
-              type: useData[i].Type || "",
-            };
-            //if(useData[i].Deleted == false){
-            dataTableList.push(dataList);
-            //}
+            if( ( deleteFilter == true &&  salestatus == "Deleted" ) || salestatus !=  'Deleted' ){  
+              var dataList = {
+                id: useData[i].SaleId || "",
+                employee: useData[i].employeename || "",
+                sortdate:
+                  useData[i].SaleDate != ""
+                    ? moment(useData[i].SaleDate).format("YYYY/MM/DD")
+                    : useData[i].SaleDate,
+                saledate:
+                  useData[i].SaleDate != ""
+                    ? moment(useData[i].SaleDate).format("DD/MM/YYYY")
+                    : useData[i].SaleDate,
+                customername: useData[i].CustomerName || "",
+                totalamountex: totalAmountEx || 0.0,
+                totaltax: totalTax || 0.0,
+                totalamount: totalAmount || 0.0,
+                totalpaid: totalPaid || 0.0,
+                totaloustanding: totalOutstanding || 0.0,
+                salestatus: salestatus || "",
+                custfield1: useData[i].SaleCustField1 || '',
+                custfield2: useData[i].SaleCustField2 || '',
+                custfield3: useData[i].SaleCustField3 || '',
+                comments: useData[i].Comments || "",
+                type: useData[i].Type || "",
+              };
+              //if(useData[i].Deleted == false){
+              dataTableList.push(dataList);
+              //}
+            }
           }
           templateObject.datatablerecords.set(dataTableList);
           if (templateObject.datatablerecords.get()) {
@@ -1435,6 +1437,20 @@ Template.salesoverview.onRendered(function () {
 });
 
 Template.salesoverview.events({
+  "click .btnViewDeleted": async function (e) {
+    e.stopImmediatePropagation();    
+    const templateObject = Template.instance();
+    $('.btnViewDeleted').css('display','none');
+    $('.btnHideDeleted').css('display','inline-block');    
+    await templateObject.getAllSalesOrderData(true);
+  },
+  "click .btnHideDeleted": async function (e) {
+    e.stopImmediatePropagation();
+    let templateObject = Template.instance();
+    $('.btnHideDeleted').css('display','none');
+    $('.btnViewDeleted').css('display','inline-block');    
+    await templateObject.getAllSalesOrderData(false);
+  },
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();

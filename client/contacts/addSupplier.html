@@ -463,7 +463,7 @@
                                                         <ul class="nav nav-tabs nav-justified">
                                                             <li class="nav-item" style="cursor: pointer;"><a class="nav-link active" role="tab" data-toggle="tab" data-target="#tab-4">Address</a></li>
                                                             <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-5">Notes</a></li>
-                                                            <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-6">Billing</a></li>
+                                                            <li class="nav-item" style="cursor: pointer;"><a class="nav-link bilingTab" role="tab" data-toggle="tab" data-target="#tab-6">Billing</a></li>
                                                             <li class="nav-item attachmentTab" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-8">{{#if attachmentCount}}<span
                                                                             id="attachment-count">{{attachmentCount}}</span>{{/if}} Attachments</a></li>
                                                             <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-9">Custom Fields</a></li>
@@ -1161,19 +1161,11 @@
 
                                                                                                     {{#if equals item.sVisible true}}
                                                                                                         <script>
-                                                                                                            $("#" + {
-                                                                                                                {
-                                                                                                                    item.sIndex
-                                                                                                                }
-                                                                                                            } + ".chkDatatable").attr("checked", "checked");
+                                                                                                            $("#" + {{ item.sIndex }} + ".chkDatatable").attr("checked", "checked");
                                                                                                         </script>
                                                                                                     {{else}}
                                                                                                         <script>
-                                                                                                            $("#" + {
-                                                                                                                {
-                                                                                                                    item.sIndex
-                                                                                                                }
-                                                                                                            } + ".chkDatatable").removeAttr("checked");
+                                                                                                            $("#" + {{ item.sIndex }} + ".chkDatatable").removeAttr("checked");
                                                                                                         </script>
                                                                                                     {{/if}}
 
@@ -1383,19 +1375,11 @@
 
                                                                                                     {{#if equals item.sVisible true}}
                                                                                                         <script>
-                                                                                                            $("#" + {
-                                                                                                                {
-                                                                                                                    item.sIndex
-                                                                                                                }
-                                                                                                            } + ".chkDatatable").attr("checked", "checked");
+                                                                                                            $("#" + {{ item.sIndex }} + ".chkDatatable").attr("checked", "checked");
                                                                                                         </script>
                                                                                                     {{else}}
                                                                                                         <script>
-                                                                                                            $("#" + {
-                                                                                                                {
-                                                                                                                    item.sIndex
-                                                                                                                }
-                                                                                                            } + ".chkDatatable").removeAttr("checked");
+                                                                                                            $("#" + {{ item.sIndex }} + ".chkDatatable").removeAttr("checked");
                                                                                                         </script>
                                                                                                     {{/if}}
 

@@ -2206,3 +2206,30 @@ authenticatedRoutes.route('/exeprofitabilityreport', {
         });
     }
 });
+
+authenticatedRoutes.route('/fixedassetsoverview', {
+  name: 'fixedassetsoverview',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'fixedassetsoverview'
+      });
+  }
+});
+
+authenticatedRoutes.route('/fixedassetlist', {
+  name: 'fixedassetlist',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'fixedassetlist'
+      });
+  }
+});
+
+authenticatedRoutes.route('/serviceloglist', {
+    name: 'serviceloglist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'serviceloglist'
+        });
+    }
+});

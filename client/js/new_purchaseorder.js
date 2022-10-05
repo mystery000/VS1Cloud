@@ -2739,42 +2739,7 @@ templateObject.getLastPOData = async function() {
                         templateObject.purchaseorderrecord.set(purchaseorderrecord);
                         templateObject.selectedCurrency.set(purchaseorderrecord.currency);
                         templateObject.inputSelectedCurrency.set(purchaseorderrecord.currency);
-                        if (templateObject.purchaseorderrecord.get()) {
 
-
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPurchaseOrderLine', function(error, result) {
-                                if (error) {
-
-                                } else {
-                                    if (result) {
-                                        for (let i = 0; i < result.customFields.length; i++) {
-                                            let customcolumn = result.customFields;
-                                            let columData = customcolumn[i].label;
-                                            let columHeaderUpdate = customcolumn[i].thclass;
-                                            let hiddenColumn = customcolumn[i].hidden;
-                                            let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                            let columnWidth = customcolumn[i].width;
-
-                                            $("" + columHeaderUpdate + "").html(columData);
-                                            if (columnWidth != 0) {
-                                                $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                            }
-
-                                            if (hiddenColumn == true) {
-
-                                                $("." + columnClass + "").addClass('hiddenColumn');
-                                                $("." + columnClass + "").removeClass('showColumn');
-                                            } else if (hiddenColumn == false) {
-                                                $("." + columnClass + "").removeClass('hiddenColumn');
-                                                $("." + columnClass + "").addClass('showColumn');
-                                            }
-
-                                        }
-                                    }
-
-                                }
-                            });
-                        }
                     }).catch(function(err) {
                         swal({
                             title: 'Oooops...',
@@ -2879,6 +2844,12 @@ templateObject.getLastPOData = async function() {
                     lineItems.push(lineItemObj);
                 }
               }
+
+              let isPartialPaid = false;
+              if(data.fields.TotalPaid > 0){
+                  isPartialPaid = true;
+              }
+
                 let purchaseorderrecord = {
                     id: data.fields.ID,
                     lid: 'New Purchase Order',
@@ -2949,45 +2920,7 @@ templateObject.getLastPOData = async function() {
                 templateObject.purchaseorderrecord.set(purchaseorderrecord);
                 templateObject.selectedCurrency.set(purchaseorderrecord.currency);
                 templateObject.inputSelectedCurrency.set(purchaseorderrecord.currency);
-                if (templateObject.purchaseorderrecord.get()) {
 
-
-
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPurchaseOrderLine', function(error, result) {
-                        if (error) {
-
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass;
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                    let columnWidth = customcolumn[i].width;
-
-
-                                    $("" + columHeaderUpdate + "").html(columData);
-                                    if (columnWidth != 0) {
-                                        $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                    }
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-                }
             }).catch(function(err) {
                 swal({
                     title: 'Oooops...',
@@ -3081,35 +3014,7 @@ templateObject.getLastPOData = async function() {
             templateObject.getLastPOData();
         }, 200);
         templateObject.purchaseorderrecord.set(purchaseorderrecord);
-        if (templateObject.purchaseorderrecord.get()) {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPurchaseOrderLine', function(error, result) {
-                if (error) {} else {
-                    if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                            let customcolumn = result.customFields;
-                            let columData = customcolumn[i].label;
-                            let columHeaderUpdate = customcolumn[i].thclass;
-                            let hiddenColumn = customcolumn[i].hidden;
-                            let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                            let columnWidth = customcolumn[i].width;
-                            $("" + columHeaderUpdate + "").html(columData);
-                            if (columnWidth != 0) {
-                                $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                            }
-                            if (hiddenColumn == true) {
-                                $("." + columnClass + "").addClass('hiddenColumn');
-                                $("." + columnClass + "").removeClass('showColumn');
-                            } else if (hiddenColumn == false) {
-                                $("." + columnClass + "").removeClass('hiddenColumn');
-                                $("." + columnClass + "").addClass('showColumn');
-                            }
 
-                        }
-                    }
-
-                }
-            });
-        }
     }
 
     templateObject.getShpVias = function() {
@@ -3404,7 +3309,8 @@ templateObject.getLastPOData = async function() {
             $('#' + selectLineID + " .lineProductName").val(lineProductName);
             $('#' + selectLineID + " .lineProductDesc").text(lineProductDesc);
             $('#' + selectLineID + " .lineOrdered").val(1);
-            $('#' + selectLineID + " .lineQty").val(1);
+            $('#' + selectLineID + " .lineQty").val(0);
+            $('#' + selectLineID + " .lineBackOrder").text(1);
             $('#' + selectLineID + " .lineUnitPrice").val(lineUnitPrice);
             $('#' + selectLineID + " .lineTaxCode").val(lineTaxRate);
 
@@ -5675,6 +5581,16 @@ Template.purchaseordercard.events({
     'blur .lineProductDesc': function(event) {
         var targetID = $(event.target).closest('tr').attr('id');
         $('#' + targetID + " #lineProductDesc").text($('#' + targetID + " .lineProductDesc").text());
+    },
+    'blur .lineOrdered': function(event) {
+        var targetID = $(event.target).closest('tr').attr('id');
+        let qtyOrdered = $('#' + targetID + " .lineOrdered").val();
+        if ((qtyOrdered == '') || (isNaN(qtyOrdered))) {
+            qtyOrdered = 0;
+        }
+
+        $('#' + targetID + " .lineQty").val(0);
+        $('#' + targetID + " .lineBackOrder").text(qtyOrdered);
     },
     'blur .lineQty': function(event) {
         let templateObject = Template.instance();

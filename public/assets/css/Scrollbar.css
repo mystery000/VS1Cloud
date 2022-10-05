@@ -314,7 +314,10 @@ overflow-y: auto;
     -webkit-animation: flash linear 1s infinite;
     animation: flash linear 1s infinite;
 }
-
+.custom-control-input {
+    z-index: 1 !important;
+    min-width: 2rem !important;
+}
 .btnSaveAlert {
     -webkit-animation: flash linear 1s infinite;
     animation: flash linear 1s infinite;

@@ -2336,11 +2336,90 @@ Template.productview.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
-                        "order": [
-                            [1, "asc"]
-                        ],
+                        "order": [[0, "desc"],[3, "desc"]],
                         action: function() {
                             $('#serialnumberlist').DataTable().ajax.reload();
+                        },
+                        "fnDrawCallback": function(oSettings) {
+                            $('.paginate_button.page-item').removeClass('disabled');
+                            $('#tblPaymentOverview_ellipsis').addClass('disabled');
+                            console.log('hghj')
+
+                            if (oSettings._iDisplayLength == -1) {
+                                if (oSettings.fnRecordsDisplay() > 150) {
+                                    $('.paginate_button.page-item.previous').addClass('disabled');
+                                    $('.paginate_button.page-item.next').addClass('disabled');
+                                }
+                            } else {}
+                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                $('.paginate_button.page-item.next').addClass('disabled');
+                            }
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                .on('click', function() {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+
+                                    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                                    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                                    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                                    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                                    if(data.Params.IgnoreDates == true){
+                                        sideBarService.getNewProductListVS1(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                            addVS1Data('TProductVS1', JSON.stringify(dataReload)).then(function(datareturn) {
+                                                if (dataObjectold.length == 0) {} else {
+                                                    let dataOld = JSON.parse(dataObjectold[0].data);
+                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.TProductVS1), dataOld.TProductVS1);
+                                                    let objCombineData = {
+                                                        Params: dataOld.Params,
+                                                        TProductVS1: thirdaryData
+                                                    }
+
+                                                    addVS1Data('TProductVS1', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                        templateObject.resetData(objCombineData);
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    }).catch(function(err) {
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    });
+
+                                                }
+                                            }).catch(function(err) {});
+
+                                        }).catch(function(err) {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        });
+                                    } else {
+                                        sideBarService.getNewProductListVS1(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                            addVS1Data('TProductVS1', JSON.stringify(dataReload)).then(function(datareturn) {
+                                                if (dataObjectold.length == 0) {} else {
+                                                    let dataOld = JSON.parse(dataObjectold[0].data);
+                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.TProductVS1), dataOld.TProductVS1);
+                                                    let objCombineData = {
+                                                        Params: dataOld.Params,
+                                                        TProductVS1: thirdaryData
+                                                    }
+
+                                                    addVS1Data('TProductVS1', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                        templateObject.resetData(objCombineData);
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    }).catch(function(err) {
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    });
+
+                                                }
+                                            }).catch(function(err) {});
+
+                                        }).catch(function(err) {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        });
+
+                                    }
+
+                                });
+
+                            //}
+                            setTimeout(function() {
+                                MakeNegative();
+                            }, 100);
                         },
 
                     }).on('page', function() {}).on('column-reorder', function() {});
@@ -2393,11 +2472,90 @@ Template.productview.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
-                        "order": [
-                            [1, "asc"]
-                        ],
+                        "order": [[0, "desc"],[3, "desc"]],
                         action: function() {
                             $('#lotnumberlist').DataTable().ajax.reload();
+                        },
+                        "fnDrawCallback": function(oSettings) {
+                            $('.paginate_button.page-item').removeClass('disabled');
+                            $('#tblPaymentOverview_ellipsis').addClass('disabled');
+                            console.log('hghj')
+
+                            if (oSettings._iDisplayLength == -1) {
+                                if (oSettings.fnRecordsDisplay() > 150) {
+                                    $('.paginate_button.page-item.previous').addClass('disabled');
+                                    $('.paginate_button.page-item.next').addClass('disabled');
+                                }
+                            } else {}
+                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                $('.paginate_button.page-item.next').addClass('disabled');
+                            }
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                .on('click', function() {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+
+                                    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                                    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                                    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                                    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                                    if(data.Params.IgnoreDates == true){
+                                        sideBarService.getNewProductListVS1(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                            addVS1Data('TProductVS1', JSON.stringify(dataReload)).then(function(datareturn) {
+                                                if (dataObjectold.length == 0) {} else {
+                                                    let dataOld = JSON.parse(dataObjectold[0].data);
+                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.TProductVS1), dataOld.TProductVS1);
+                                                    let objCombineData = {
+                                                        Params: dataOld.Params,
+                                                        TProductVS1: thirdaryData
+                                                    }
+
+                                                    addVS1Data('TProductVS1', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                        templateObject.resetData(objCombineData);
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    }).catch(function(err) {
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    });
+
+                                                }
+                                            }).catch(function(err) {});
+
+                                        }).catch(function(err) {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        });
+                                    } else {
+                                        sideBarService.getNewProductListVS1(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                            addVS1Data('TProductVS1', JSON.stringify(dataReload)).then(function(datareturn) {
+                                                if (dataObjectold.length == 0) {} else {
+                                                    let dataOld = JSON.parse(dataObjectold[0].data);
+                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.TProductVS1), dataOld.TProductVS1);
+                                                    let objCombineData = {
+                                                        Params: dataOld.Params,
+                                                        TProductVS1: thirdaryData
+                                                    }
+
+                                                    addVS1Data('TProductVS1', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                        templateObject.resetData(objCombineData);
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    }).catch(function(err) {
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    });
+
+                                                }
+                                            }).catch(function(err) {});
+
+                                        }).catch(function(err) {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        });
+
+                                    }
+
+                                });
+
+                            //}
+                            setTimeout(function() {
+                                MakeNegative();
+                            }, 100);
                         },
 
                     }).on('page', function() {}).on('column-reorder', function() {});
@@ -2442,11 +2600,94 @@ Template.productview.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
-                        "order": [
-                            [1, "asc"]
-                        ],
+                        "order": [[0, "desc"],[3, "desc"]],
                         action: function() {
                             $('#productrecentlist').DataTable().ajax.reload();
+                        },
+                        "fnDrawCallback": function(oSettings) {
+                            let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+                            //if(checkurlIgnoreDate == 'true'){
+
+                            //}else{
+                            $('.paginate_button.page-item').removeClass('disabled');
+                            $('#tblPaymentOverview_ellipsis').addClass('disabled');
+
+                            if (oSettings._iDisplayLength == -1) {
+                                if (oSettings.fnRecordsDisplay() > 150) {
+                                    $('.paginate_button.page-item.previous').addClass('disabled');
+                                    $('.paginate_button.page-item.next').addClass('disabled');
+                                }
+                            } else {}
+                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                $('.paginate_button.page-item.next').addClass('disabled');
+                            }
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                .on('click', function() {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    let dataLenght = oSettings._iDisplayLength;
+
+                                    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                                    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                                    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                                    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                                    if(data.Params.IgnoreDates == true){
+                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                            getVS1Data('TPaymentList').then(function(dataObjectold) {
+                                                if (dataObjectold.length == 0) {} else {
+                                                    let dataOld = JSON.parse(dataObjectold[0].data);
+                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                                                    let objCombineData = {
+                                                        Params: dataOld.Params,
+                                                        tpaymentlist: thirdaryData
+                                                    }
+
+                                                    addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                        templateObject.resetData(objCombineData);
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    }).catch(function(err) {
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    });
+
+                                                }
+                                            }).catch(function(err) {});
+
+                                        }).catch(function(err) {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        });
+                                    } else {
+                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                            getVS1Data('TPaymentList').then(function(dataObjectold) {
+                                                if (dataObjectold.length == 0) {} else {
+                                                    let dataOld = JSON.parse(dataObjectold[0].data);
+                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                                                    let objCombineData = {
+                                                        Params: dataOld.Params,
+                                                        tpaymentlist: thirdaryData
+                                                    }
+
+                                                    addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                        templateObject.resetData(objCombineData);
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    }).catch(function(err) {
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    });
+
+                                                }
+                                            }).catch(function(err) {});
+
+                                        }).catch(function(err) {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        });
+
+                                    }
+
+                                });
+
+                            //}
+                            setTimeout(function() {
+                                MakeNegative();
+                            }, 100);
                         },
 
                     }).on('page', function() {}).on('column-reorder', function() {});
@@ -3212,11 +3453,90 @@ Template.productview.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
-                        "order": [
-                            [1, "asc"]
-                        ],
+                        "order": [[0, "desc"],[3, "desc"]],
                         action: function() {
                             $('#productrecentlist').DataTable().ajax.reload();
+                        },
+                        "fnDrawCallback": function(oSettings) {
+                            $('.paginate_button.page-item').removeClass('disabled');
+                            $('#tblPaymentOverview_ellipsis').addClass('disabled');
+                            console.log('hghj')
+
+                            if (oSettings._iDisplayLength == -1) {
+                                if (oSettings.fnRecordsDisplay() > 150) {
+                                    $('.paginate_button.page-item.previous').addClass('disabled');
+                                    $('.paginate_button.page-item.next').addClass('disabled');
+                                }
+                            } else {}
+                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                $('.paginate_button.page-item.next').addClass('disabled');
+                            }
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                .on('click', function() {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+
+                                    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                                    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                                    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                                    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                                    if(data.Params.IgnoreDates == true){
+                                        sideBarService.getNewProductListVS1(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                            addVS1Data('TProductVS1', JSON.stringify(dataReload)).then(function(datareturn) {
+                                                if (dataObjectold.length == 0) {} else {
+                                                    let dataOld = JSON.parse(dataObjectold[0].data);
+                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.TProductVS1), dataOld.TProductVS1);
+                                                    let objCombineData = {
+                                                        Params: dataOld.Params,
+                                                        TProductVS1: thirdaryData
+                                                    }
+
+                                                    addVS1Data('TProductVS1', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                        templateObject.resetData(objCombineData);
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    }).catch(function(err) {
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    });
+
+                                                }
+                                            }).catch(function(err) {});
+
+                                        }).catch(function(err) {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        });
+                                    } else {
+                                        sideBarService.getNewProductListVS1(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                            addVS1Data('TProductVS1', JSON.stringify(dataReload)).then(function(datareturn) {
+                                                if (dataObjectold.length == 0) {} else {
+                                                    let dataOld = JSON.parse(dataObjectold[0].data);
+                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.TProductVS1), dataOld.TProductVS1);
+                                                    let objCombineData = {
+                                                        Params: dataOld.Params,
+                                                        TProductVS1: thirdaryData
+                                                    }
+
+                                                    addVS1Data('TProductVS1', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                        templateObject.resetData(objCombineData);
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    }).catch(function(err) {
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    });
+
+                                                }
+                                            }).catch(function(err) {});
+
+                                        }).catch(function(err) {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        });
+
+                                    }
+
+                                });
+
+                            //}
+                            setTimeout(function() {
+                                MakeNegative();
+                            }, 100);
                         },
 
                     }).on('page', function() {}).on('column-reorder', function() {});

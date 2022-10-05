@@ -588,7 +588,7 @@ Template.supplierpaymentcard.onRendered(() => {
      };
 
 
-     getVS1Data('TemplateSettings').then(function(dataObject) {
+     getVS1Data('TTemplateSettings').then(function(dataObject) {
 
             let data = JSON.parse(dataObject[0].data);
             let useData = data;

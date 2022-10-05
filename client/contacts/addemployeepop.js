@@ -3772,14 +3772,18 @@ Template.addemployeepop.helpers({
         });
     },
     productsdatatable: () => {
-        return Template.instance().productsdatatable.get().sort(function (a, b) {
-            if (a.productname == 'NA') {
-                return 1;
-            } else if (b.productname == 'NA') {
-                return -1;
-            }
-            return (a.productname.toUpperCase() > b.productname.toUpperCase()) ? 1 : -1;
-        });
+        if (Template.instance().productsdatatable.get()) {
+            return Template.instance().productsdatatable.get().sort(function (a, b) {
+                if (a.productname == 'NA') {
+                    return 1;
+                } else if (b.productname == 'NA') {
+                    return -1;
+                }
+                return (a.productname.toUpperCase() > b.productname.toUpperCase()) ? 1 : -1;
+            });
+        } else {
+            return null;
+        }
     },
     datatablerecords: () => {
         return Template.instance().datatablerecords.get().sort(function (a, b) {

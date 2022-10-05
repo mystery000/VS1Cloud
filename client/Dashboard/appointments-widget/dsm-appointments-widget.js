@@ -1,21 +1,20 @@
-import { ContactService } from "../../contacts/contact-service";
-import { ReactiveVar } from 'meteor/reactive-var';
-import { ProductService } from "../../product/product-service";
-import { SMSService } from '../../js/sms-settings-service';
-import { UtilityService } from "../../utility-service";
+import {ContactService} from "../../contacts/contact-service";
+import {ReactiveVar} from 'meteor/reactive-var';
+import {ProductService} from "../../product/product-service";
+import {SMSService} from '../../js/sms-settings-service';
+import {UtilityService} from "../../utility-service";
 import 'jquery-ui-dist/external/jquery/jquery';
-import { SalesBoardService } from '../../js/sales-service';
-import { AppointmentService } from '../../appointments/appointment-service';
+import {SalesBoardService} from '../../js/sales-service';
+import {AppointmentService} from '../../appointments/appointment-service';
 //Calendar
-import { Calendar, formatDate } from '@fullcalendar/core';
-import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+import {Calendar} from '@fullcalendar/core';
+import interactionPlugin, {Draggable} from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
-import { SideBarService } from '../../js/sidebar-service';
+import {SideBarService} from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
-import { client } from "braintree-web";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -23,7 +22,7 @@ let smsService = new SMSService();
 let createAppointment = Session.get('CloudAppointmentCreateAppointment') || false;
 let startAndStopAppointmentOnly = Session.get('CloudAppointmentStartStopAccessLevel') || false;
 
-Template.appointmentsWidget.onCreated(function () {
+Template.dsmAppointmentsWidget.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.employeerecords = new ReactiveVar([]);
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -67,7 +66,7 @@ Template.appointmentsWidget.onCreated(function () {
     templateObject.toupdatelogid = new ReactiveVar();
 });
 
-Template.appointmentsWidget.onRendered(function () {
+Template.dsmAppointmentsWidget.onRendered(function () {
     let seeOwnAppointments = Session.get('CloudAppointmentSeeOwnAppointmentsOnly') || false;
     let templateObject = Template.instance();
     let contactService = new ContactService();
@@ -114,365 +113,121 @@ Template.appointmentsWidget.onRendered(function () {
     getVS1Data('TERPPreference').then(function (dataObject) {
         if (dataObject.length == 0) {
             appointmentService.getGlobalSettings().then(function (data) {
-                templateObject.getAllAppointmentListData();
-                let appEndTimeDataToLoad = '19:00';
-                globalSet.defaultProduct = "";
-                globalSet.id = "";
-                for (let g = 0; g < data.terppreference.length; g++) {
-                    if (data.terppreference[g].PrefName == "ShowSundayinApptCalendar") {
-                        if (data.terppreference[g].Fieldvalue == "F") {
-                            globalSet.showSun = false;
-                        } else if (data.terppreference[g].Fieldvalue == "T") {
-                            globalSet.showSun = true;
-                        } else {
-                            globalSet.showSun = false;
-                        }
-                    } else if (data.terppreference[g].PrefName == "ShowSaturdayinApptCalendar") {
-                        if (data.terppreference[g].Fieldvalue == "F") {
-                            globalSet.showSat = false;
-                        } else if (data.terppreference[g].Fieldvalue == "T") {
-                            globalSet.showSat = true;
-                        } else {
-                            globalSet.showSat = false;
-                        }
-
-                    } else if (data.terppreference[g].PrefName == "ApptStartTime") {
-                        globalSet.apptStartTime = data.terppreference[g].Fieldvalue.split(' ')[0] || "08:00";
-                    } else if (data.terppreference[g].PrefName == "ApptEndtime") {
-                        if (data.terppreference[g].Fieldvalue.split(' ')[0] == '05:30') {
-                            globalSet.apptEndTime = "17:00";
-                            let timeSplit = globalSet.apptEndTime.split(':');
-                            let appEndTimeDataHours = parseInt(timeSplit[0]) + 2;
-                            let appEndTimeDataToLoad = appEndTimeDataHours + ':' + timeSplit[1];
-                            globalSet.apptEndTimeCal = appEndTimeDataToLoad || '19:30';
-                        } else {
-                            globalSet.apptEndTime = data.terppreference[g].Fieldvalue.split(' ')[0];
-                            let timeSplit = globalSet.apptEndTime.split(':');
-                            let appEndTimeDataHours = parseInt(timeSplit[0]) + 2;
-                            let appEndTimeDataToLoad = appEndTimeDataHours + ':' + timeSplit[1];
-                            globalSet.apptEndTimeCal = appEndTimeDataToLoad || '17:00';
-                            globalSet.apptEndTime = data.terppreference[g].Fieldvalue || "17:00";
-                        }
-                    } else if (data.terppreference[g].PrefName == "DefaultApptDuration") {
-                        if (data.terppreference[g].Fieldvalue == "120") {
-                            globalSet.DefaultApptDuration = 2;
-                        } else {
-                            globalSet.DefaultApptDuration = data.terppreference[g].Fieldvalue || 2;
-                        }
-                    } else if (data.terppreference[g].PrefName == "DefaultServiceProductID") {
-                        globalSet.productID = data.terppreference[g].Fieldvalue;
-                    } else if (data.terppreference[g].PrefName == "ShowApptDurationin") {
-                        if (data.terppreference[g].Fieldvalue == "60") {
-                            globalSet.showApptDurationin = 1;
-                        } else {
-                            globalSet.showApptDurationin = data.terppreference[g].Fieldvalue || 1;
-                        }
-
-                    } else if (data.terppreference[g].PrefName == "MinimumChargeAppointmentTime") {
-                        globalSet.chargeTime = data.terppreference[g].Fieldvalue;
-                    } else if (data.terppreference[g].PrefName == "RoundApptDurationTo") {
-                        globalSet.RoundApptDurationTo = data.terppreference[g].Fieldvalue;
-                    } else if (data.terppreference[g].PrefName == "RoundApptDurationTo") {
-                        globalSet.RoundApptDurationTo = data.terppreference[g].Fieldvalue;
-                    }
-                }
-
-                $("#showSaturday").prop('checked', globalSet.showSat);
-                $("#showSunday").prop('checked', globalSet.showSun);
-                if (globalSet.showSat === false) {
-                    hideSat = "hidesaturday";
-                }
-
-                if (globalSet.showSun === false) {
-                    hideSun = "hidesunday";
-                }
-
-                if (globalSet.chargeTime) {
-                    $('#chargeTime').prepend('<option>' + globalSet.chargeTime + ' Hour</option>');
-                }
-
-                if (globalSet.showApptDurationin) {
-                    $('#showTimeIn').prepend('<option selected>' + globalSet.showApptDurationin + ' Hour</option>');
-                }
-
-                if (globalSet.DefaultApptDuration) {
-                    $('#defaultTime').prepend('<option selected>' + globalSet.DefaultApptDuration + ' Hour</option>');
-                }
-
-                if (globalSet.apptStartTime) {
-                    $('#hoursFrom').val(globalSet.apptStartTime);
-                }
-
-                if (globalSet.apptEndTime) {
-                    $('#hoursTo').val(globalSet.apptEndTime);
-                }
-                templateObject.globalSettings.set(globalSet);
-
-                if (globalSet.productID != "") {
-                    appointmentService.getGlobalSettingsExtra().then(function (data) {
-                        for (let p = 0; p < data.terppreferenceextra.length; p++) {
-                            if (data.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
-                                globalSet.defaultProduct = data.terppreferenceextra[p].fieldValue
-                            }
-
-                            $('#productlist').prepend('<option value=' + globalSet.id + '>' + globalSet.defaultProduct + '</option>');
-                            $("#productlist")[0].options[0].selected = true;
-                        }
-                        templateObject.globalSettings.set(globalSet);
-                    })
-                } else {
-                    globalSet.defaultProduct = "";
-                    globalSet.id = "";
-                }
+                setGlobalSettings(data);
             }).catch(function (err) {});
         } else {
             let data = JSON.parse(dataObject[0].data);
-            templateObject.getAllAppointmentListData();
-            let appEndTimeDataToLoad = '19:00';
-            globalSet.defaultProduct = "";
-            globalSet.id = "";
-            for (let g = 0; g < data.terppreference.length; g++) {
-                if (data.terppreference[g].PrefName == "ShowSundayinApptCalendar") {
-                    if (data.terppreference[g].Fieldvalue == "F") {
-                        globalSet.showSun = false;
-                    } else if (data.terppreference[g].Fieldvalue == "T") {
-                        globalSet.showSun = true;
-                    } else {
-                        globalSet.showSun = false;
-                    }
-                } else if (data.terppreference[g].PrefName == "ShowSaturdayinApptCalendar") {
-                    if (data.terppreference[g].Fieldvalue == "F") {
-                        globalSet.showSat = false;
-                    } else if (data.terppreference[g].Fieldvalue == "T") {
-                        globalSet.showSat = true;
-                    } else {
-                        globalSet.showSat = false;
-                    }
-
-                } else if (data.terppreference[g].PrefName == "ApptStartTime") {
-                    globalSet.apptStartTime = data.terppreference[g].Fieldvalue.split(' ')[0] || "08:00";
-                } else if (data.terppreference[g].PrefName == "ApptEndtime") {
-                    if (data.terppreference[g].Fieldvalue.split(' ')[0] == '05:30') {
-                        globalSet.apptEndTime = "17:00";
-                        let timeSplit = globalSet.apptEndTime.split(':');
-                        let appEndTimeDataHours = parseInt(timeSplit[0]) + 2;
-                        let appEndTimeDataToLoad = appEndTimeDataHours + ':' + timeSplit[1];
-                        globalSet.apptEndTimeCal = appEndTimeDataToLoad || '19:30';
-                    } else {
-                        globalSet.apptEndTime = data.terppreference[g].Fieldvalue.split(' ')[0];
-                        let timeSplit = globalSet.apptEndTime.split(':');
-                        let appEndTimeDataHours = parseInt(timeSplit[0]) + 2;
-                        let appEndTimeDataToLoad = appEndTimeDataHours + ':' + timeSplit[1];
-                        globalSet.apptEndTimeCal = appEndTimeDataToLoad || '17:00';
-                        globalSet.apptEndTime = data.terppreference[g].Fieldvalue || "17:00";
-                    }
-                } else if (data.terppreference[g].PrefName == "DefaultApptDuration") {
-                    if (data.terppreference[g].Fieldvalue == "120") {
-                        globalSet.DefaultApptDuration = 2;
-                    } else {
-                        globalSet.DefaultApptDuration = data.terppreference[g].Fieldvalue || 2;
-                    }
-                } else if (data.terppreference[g].PrefName == "DefaultServiceProductID") {
-                    globalSet.productID = data.terppreference[g].Fieldvalue;
-                } else if (data.terppreference[g].PrefName == "ShowApptDurationin") {
-                    if (data.terppreference[g].Fieldvalue == "60") {
-                        globalSet.showApptDurationin = 1;
-                    } else {
-                        globalSet.showApptDurationin = data.terppreference[g].Fieldvalue || 1;
-                    }
-
-                } else if (data.terppreference[g].PrefName == "MinimumChargeAppointmentTime") {
-                    globalSet.chargeTime = data.terppreference[g].Fieldvalue;
-                } else if (data.terppreference[g].PrefName == "RoundApptDurationTo") {
-                    globalSet.RoundApptDurationTo = data.terppreference[g].Fieldvalue;
-                } else if (data.terppreference[g].PrefName == "RoundApptDurationTo") {
-                    globalSet.RoundApptDurationTo = data.terppreference[g].Fieldvalue;
-                }
-            }
-
-            $("#showSaturday").prop('checked', globalSet.showSat);
-            $("#showSunday").prop('checked', globalSet.showSun);
-            if (globalSet.showSat === false) {
-                hideSat = "hidesaturday";
-            }
-            if (globalSet.showSun === false) {
-                hideSun = "hidesunday";
-            }
-            if (globalSet.chargeTime) {
-                $('#chargeTime').prepend('<option>' + globalSet.chargeTime + ' Hour</option>');
-            }
-            if (globalSet.showApptDurationin) {
-                $('#showTimeIn').prepend('<option selected>' + globalSet.showApptDurationin + ' Hour</option>');
-            }
-            if (globalSet.DefaultApptDuration) {
-                $('#defaultTime').prepend('<option selected>' + globalSet.DefaultApptDuration + ' Hour</option>');
-            }
-            if (globalSet.apptStartTime) {
-                $('#hoursFrom').val(globalSet.apptStartTime);
-            }
-            if (globalSet.apptEndTime) {
-                $('#hoursTo').val(globalSet.apptEndTime);
-            }
-            templateObject.globalSettings.set(globalSet);
-
-            if (globalSet.productID != "") {
-                getVS1Data('TERPPreferenceExtra').then(function (dataObjectExtra) {
-                    if (dataObjectExtra.length == 0) {
-                        appointmentService.getGlobalSettingsExtra().then(function (data) {
-                            for (let p = 0; p < data.terppreferenceextra.length; p++) {
-                                if (data.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
-                                    globalSet.defaultProduct = data.terppreferenceextra[p].fieldValue
-                                }
-
-                                $('#productlist').prepend('<option value=' + globalSet.id + '>' + globalSet.defaultProduct + '</option>');
-                                $("#productlist")[0].options[0].selected = true;
-                            }
-                            templateObject.globalSettings.set(globalSet);
-                        })
-                    } else {
-                        let dataExtra = JSON.parse(dataObjectExtra[0].data);
-                        for (let p = 0; p < dataExtra.terppreferenceextra.length; p++) {
-                            if (dataExtra.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
-                                globalSet.defaultProduct = dataExtra.terppreferenceextra[p].fieldValue
-                            }
-
-                            $('#productlist').prepend('<option value=' + globalSet.id + '>' + globalSet.defaultProduct + '</option>');
-                            $("#productlist")[0].options[0].selected = true;
-                        }
-                        templateObject.globalSettings.set(globalSet);
-                    }
-                }).catch(function (err) {
-                    appointmentService.getGlobalSettingsExtra().then(function (data) {
-                        for (let p = 0; p < data.terppreferenceextra.length; p++) {
-                            if (data.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
-                                globalSet.defaultProduct = data.terppreferenceextra[p].fieldValue
-                            }
-
-                            $('#productlist').prepend('<option value=' + globalSet.id + '>' + globalSet.defaultProduct + '</option>');
-                            $("#productlist")[0].options[0].selected = true;
-                        }
-                        templateObject.globalSettings.set(globalSet);
-                    })
-                })
-            } else {
-                globalSet.defaultProduct = "";
-                globalSet.id = "";
-            }
+            setGlobalSettings(data);
         }
     }).catch(function (err) {
         appointmentService.getGlobalSettings().then(function (data) {
-            templateObject.getAllAppointmentListData();
-            let appEndTimeDataToLoad = '19:00';
-            globalSet.defaultProduct = "";
-            globalSet.id = "";
-            for (let g = 0; g < data.terppreference.length; g++) {
-                if (data.terppreference[g].PrefName == "ShowSundayinApptCalendar") {
-                    if (data.terppreference[g].Fieldvalue == "F") {
-                        globalSet.showSun = false;
-                    } else if (data.terppreference[g].Fieldvalue == "T") {
-                        globalSet.showSun = true;
-                    } else {
-                        globalSet.showSun = false;
-                    }
-                } else if (data.terppreference[g].PrefName == "ShowSaturdayinApptCalendar") {
-                    if (data.terppreference[g].Fieldvalue == "F") {
-                        globalSet.showSat = false;
-                    } else if (data.terppreference[g].Fieldvalue == "T") {
-                        globalSet.showSat = true;
-                    } else {
-                        globalSet.showSat = false;
-                    }
-
-                } else if (data.terppreference[g].PrefName == "ApptStartTime") {
-                    globalSet.apptStartTime = data.terppreference[g].Fieldvalue.split(' ')[0] || "08:00";
-                } else if (data.terppreference[g].PrefName == "ApptEndtime") {
-                    if (data.terppreference[g].Fieldvalue.split(' ')[0] == '05:30') {
-                        globalSet.apptEndTime = "17:00";
-                        let timeSplit = globalSet.apptEndTime.split(':');
-                        let appEndTimeDataHours = parseInt(timeSplit[0]) + 2;
-                        let appEndTimeDataToLoad = appEndTimeDataHours + ':' + timeSplit[1];
-                        globalSet.apptEndTimeCal = appEndTimeDataToLoad || '19:30';
-                    } else {
-                        globalSet.apptEndTime = data.terppreference[g].Fieldvalue.split(' ')[0];
-                        let timeSplit = globalSet.apptEndTime.split(':');
-                        let appEndTimeDataHours = parseInt(timeSplit[0]) + 2;
-                        let appEndTimeDataToLoad = appEndTimeDataHours + ':' + timeSplit[1];
-                        globalSet.apptEndTimeCal = appEndTimeDataToLoad || '17:00';
-                        globalSet.apptEndTime = data.terppreference[g].Fieldvalue || "17:00";
-                    }
-                } else if (data.terppreference[g].PrefName == "DefaultApptDuration") {
-                    if (data.terppreference[g].Fieldvalue == "120") {
-                        globalSet.DefaultApptDuration = 2;
-                    } else {
-                        globalSet.DefaultApptDuration = data.terppreference[g].Fieldvalue || 2;
-                    }
-                } else if (data.terppreference[g].PrefName == "DefaultServiceProductID") {
-                    globalSet.productID = data.terppreference[g].Fieldvalue;
-                } else if (data.terppreference[g].PrefName == "ShowApptDurationin") {
-                    if (data.terppreference[g].Fieldvalue == "60") {
-                        globalSet.showApptDurationin = 1;
-                    } else {
-                        globalSet.showApptDurationin = data.terppreference[g].Fieldvalue || 1;
-                    }
-
-                } else if (data.terppreference[g].PrefName == "MinimumChargeAppointmentTime") {
-                    globalSet.chargeTime = data.terppreference[g].Fieldvalue;
-                } else if (data.terppreference[g].PrefName == "RoundApptDurationTo") {
-                    globalSet.RoundApptDurationTo = data.terppreference[g].Fieldvalue;
-                } else if (data.terppreference[g].PrefName == "RoundApptDurationTo") {
-                    globalSet.RoundApptDurationTo = data.terppreference[g].Fieldvalue;
-                }
-            }
-
-            $("#showSaturday").prop('checked', globalSet.showSat);
-            $("#showSunday").prop('checked', globalSet.showSun);
-            if (globalSet.showSat === false) {
-                hideSat = "hidesaturday";
-            }
-
-            if (globalSet.showSun === false) {
-                hideSun = "hidesunday";
-            }
-
-            if (globalSet.chargeTime) {
-                $('#chargeTime').prepend('<option>' + globalSet.chargeTime + ' Hour</option>');
-            }
-
-            if (globalSet.showApptDurationin) {
-                $('#showTimeIn').prepend('<option selected>' + globalSet.showApptDurationin + ' Hour</option>');
-            }
-
-            if (globalSet.DefaultApptDuration) {
-                $('#defaultTime').prepend('<option selected>' + globalSet.DefaultApptDuration + ' Hour</option>');
-            }
-
-            if (globalSet.apptStartTime) {
-                $('#hoursFrom').val(globalSet.apptStartTime);
-            }
-
-            if (globalSet.apptEndTime) {
-                $('#hoursTo').val(globalSet.apptEndTime);
-            }
-            templateObject.globalSettings.set(globalSet);
-
-            if (globalSet.productID != "") {
-                appointmentService.getGlobalSettingsExtra().then(function (data) {
-                    for (let p = 0; p < data.terppreferenceextra.length; p++) {
-                        if (data.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
-                            globalSet.defaultProduct = data.terppreferenceextra[p].fieldValue
-                        }
-
-                        $('#productlist').prepend('<option value=' + globalSet.id + '>' + globalSet.defaultProduct + '</option>');
-                        $("#productlist")[0].options[0].selected = true;
-                    }
-                    templateObject.globalSettings.set(globalSet);
-                })
-            } else {
-                globalSet.defaultProduct = "";
-                globalSet.id = "";
-            }
+            setGlobalSettings(data);
         }).catch(function (err) {});
     });
+    function setGlobalSettings(data) {
+        templateObject.getAllAppointmentListData();
+        let appEndTimeDataToLoad = '19:00';
+        globalSet.defaultProduct = "";
+        globalSet.id = "";
+        for (let g = 0; g < data.terppreference.length; g++) {
+            if (data.terppreference[g].PrefName == "ShowSundayinApptCalendar") {
+                if (data.terppreference[g].Fieldvalue == "F") {
+                    globalSet.showSun = false;
+                } else if (data.terppreference[g].Fieldvalue == "T") {
+                    globalSet.showSun = true;
+                } else {
+                    globalSet.showSun = false;
+                }
+            } else if (data.terppreference[g].PrefName == "ShowSaturdayinApptCalendar") {
+                if (data.terppreference[g].Fieldvalue == "F") {
+                    globalSet.showSat = false;
+                } else if (data.terppreference[g].Fieldvalue == "T") {
+                    globalSet.showSat = true;
+                } else {
+                    globalSet.showSat = false;
+                }
+
+            } else if (data.terppreference[g].PrefName == "ApptStartTime") {
+                globalSet.apptStartTime = data.terppreference[g].Fieldvalue.split(' ')[0] || "08:00";
+            } else if (data.terppreference[g].PrefName == "ApptEndtime") {
+                if (data.terppreference[g].Fieldvalue.split(' ')[0] == '05:30') {
+                    globalSet.apptEndTime = "17:00";
+                    let timeSplit = globalSet.apptEndTime.split(':');
+                    let appEndTimeDataHours = parseInt(timeSplit[0]) + 2;
+                    let appEndTimeDataToLoad = appEndTimeDataHours + ':' + timeSplit[1];
+                    globalSet.apptEndTimeCal = appEndTimeDataToLoad || '19:30';
+                } else {
+                    globalSet.apptEndTime = data.terppreference[g].Fieldvalue.split(' ')[0];
+                    let timeSplit = globalSet.apptEndTime.split(':');
+                    let appEndTimeDataHours = parseInt(timeSplit[0]) + 2;
+                    let appEndTimeDataToLoad = appEndTimeDataHours + ':' + timeSplit[1];
+                    globalSet.apptEndTimeCal = appEndTimeDataToLoad || '17:00';
+                    globalSet.apptEndTime = data.terppreference[g].Fieldvalue || "17:00";
+                }
+            } else if (data.terppreference[g].PrefName == "DefaultApptDuration") {
+                if (data.terppreference[g].Fieldvalue == "120") {
+                    globalSet.DefaultApptDuration = 2;
+                } else {
+                    globalSet.DefaultApptDuration = data.terppreference[g].Fieldvalue || 2;
+                }
+            } else if (data.terppreference[g].PrefName == "DefaultServiceProductID") {
+                globalSet.productID = data.terppreference[g].Fieldvalue;
+            } else if (data.terppreference[g].PrefName == "ShowApptDurationin") {
+                if (data.terppreference[g].Fieldvalue == "60") {
+                    globalSet.showApptDurationin = 1;
+                } else {
+                    globalSet.showApptDurationin = data.terppreference[g].Fieldvalue || 1;
+                }
+
+            } else if (data.terppreference[g].PrefName == "MinimumChargeAppointmentTime") {
+                globalSet.chargeTime = data.terppreference[g].Fieldvalue;
+            } else if (data.terppreference[g].PrefName == "RoundApptDurationTo") {
+                globalSet.RoundApptDurationTo = data.terppreference[g].Fieldvalue;
+            } else if (data.terppreference[g].PrefName == "RoundApptDurationTo") {
+                globalSet.RoundApptDurationTo = data.terppreference[g].Fieldvalue;
+            }
+        }
+        $("#showSaturday").prop('checked', globalSet.showSat);
+        $("#showSunday").prop('checked', globalSet.showSun);
+        if (globalSet.showSat === false) {
+            hideSat = "hidesaturday";
+        }
+        if (globalSet.showSun === false) {
+            hideSun = "hidesunday";
+        }
+        if (globalSet.chargeTime) {
+            $('#chargeTime').prepend('<option>' + globalSet.chargeTime + ' Hour</option>');
+        }
+        if (globalSet.showApptDurationin) {
+            $('#showTimeIn').prepend('<option selected>' + globalSet.showApptDurationin + ' Hour</option>');
+        }
+        if (globalSet.DefaultApptDuration) {
+            $('#defaultTime').prepend('<option selected>' + globalSet.DefaultApptDuration + ' Hour</option>');
+        }
+        if (globalSet.apptStartTime) {
+            $('#hoursFrom').val(globalSet.apptStartTime);
+        }
+        if (globalSet.apptEndTime) {
+            $('#hoursTo').val(globalSet.apptEndTime);
+        }
+        templateObject.globalSettings.set(globalSet);
+
+        if (globalSet.productID != "") {
+            appointmentService.getGlobalSettingsExtra().then(function (data) {
+                for (let p = 0; p < data.terppreferenceextra.length; p++) {
+                    if (data.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
+                        globalSet.defaultProduct = data.terppreferenceextra[p].fieldValue
+                    }
+                    $('#productlist').prepend('<option value=' + globalSet.id + '>' + globalSet.defaultProduct + '</option>');
+                    $("#productlist")[0].options[0].selected = true;
+                }
+                templateObject.globalSettings.set(globalSet);
+            })
+        } else {
+            globalSet.defaultProduct = "";
+            globalSet.id = "";
+        }
+    }
     $('.fullScreenSpin').css('display', 'inline-block');
 
     const refreshPage = () => window.open('/appointments', '_self')
@@ -930,8 +685,7 @@ Template.appointmentsWidget.onRendered(function () {
         if (calendarSet.showSat == false && calendarSet.showSun == false) {
             hideDays = [0, 6];
         }
-
-        const calendarEl = document.getElementById('calendar');
+        const calendarEl = document.getElementById('DSMCalendar');
         const currentDate = new Date();
         const begunDate = moment(currentDate).format("YYYY-MM-DD");
         const calendar = new Calendar(calendarEl, {
@@ -940,7 +694,7 @@ Template.appointmentsWidget.onRendered(function () {
             initialView: 'dayGridMonth',
             hiddenDays: hideDays, // hide Sunday and Saturday
             longPressDelay: 100,
-            // height: 'auto',
+            height: 'auto',
             // contentHeight: 'auto',
             customButtons: {
                 appointments: {
@@ -1037,11 +791,11 @@ Template.appointmentsWidget.onRendered(function () {
                 $("#tActualStartTime").prop("disabled", false);
                 $("#tActualEndTime").prop("disabled", false);
                 $("#txtActualHoursSpent").prop("disabled", false);
-                var hours = '0';
-                var id = info.event.id;
+                let hours = '0';
+                const id = info.event.id;
                 let getAllEmployeeData = templateObject.employeerecords.get() || '';
-                var appointmentData = templateObject.appointmentrecords.get();
-                var result = appointmentData.filter(apmt => {
+                const appointmentData = templateObject.appointmentrecords.get();
+                const result = appointmentData.filter(apmt => {
                     return apmt.id == id
                 });
                 if (result.length > 0) {
@@ -1091,9 +845,9 @@ Template.appointmentsWidget.onRendered(function () {
                     }
                     templateObject.getAllProductData();
                     if (result[0].aStartTime != '' && result[0].aEndTime != '') {
-                        var startTime = moment(result[0].aStartDate + ' ' + result[0].aStartTime);
-                        var endTime = moment(result[0].aEndDate + ' ' + result[0].aEndTime);
-                        var duration = moment.duration(moment(endTime).diff(moment(startTime)));
+                        const startTime = moment(result[0].aStartDate + ' ' + result[0].aStartTime);
+                        const endTime = moment(result[0].aEndDate + ' ' + result[0].aEndTime);
+                        const duration = moment.duration(moment(endTime).diff(moment(startTime)));
                         hours = duration.asHours();
                     }
 
@@ -1188,7 +942,7 @@ Template.appointmentsWidget.onRendered(function () {
                     let resourceIndex = resourceData.map(function (e) {
                         return e.employeeName;
                     }).indexOf(appointmentData[index].employeename);
-                    var result = appointmentData.filter(apmt => {
+                    const result = appointmentData.filter(apmt => {
                         return apmt.id == eventDropID
                     });
                     if (result.length > 0) {
@@ -1241,6 +995,9 @@ Template.appointmentsWidget.onRendered(function () {
             },
             //Triggers modal once external object is dropped to calender.
             drop: function (event) {
+                let hoursSpent;
+                let appointmentHours;
+                let endTime;
                 let draggedEmployeeID = templateObject.empID.get();
                 let calendarData = templateObject.employeeOptions.get();
                 let calendarSet = templateObject.globalSettings.get();
@@ -1248,11 +1005,9 @@ Template.appointmentsWidget.onRendered(function () {
                 let overridesettings = employees.filter(employeeData => {
                     return employeeData.id == parseInt(draggedEmployeeID)
                 });
-
                 let empData = calendarData.filter(calendarOpt => {
                     return calendarOpt.EmployeeID == parseInt(draggedEmployeeID)
                 });
-
                 document.getElementById("frmAppointment").reset();
                 $(".paused").hide();
                 $("#btnHold").prop("disabled", false);
@@ -1263,27 +1018,26 @@ Template.appointmentsWidget.onRendered(function () {
                 $("#tActualStartTime").prop("disabled", false);
                 $("#tActualEndTime").prop("disabled", false);
                 $("#txtActualHoursSpent").prop("disabled", false);
-
                 if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
                     //$("#btnHold").prop("disabled", true);
                 }
                 document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, '');
-                var start = event.dateStr != '' ? moment(event.dateStr).format("DD/MM/YYYY") : event.dateStr;
+                const start = event.dateStr != '' ? moment(event.dateStr).format("DD/MM/YYYY") : event.dateStr;
                 document.getElementById("dtSODate").value = start;
                 document.getElementById("dtSODate2").value = start
-                var startTime = moment(event.dateStr).format("HH:mm");
+                let startTime = moment(event.dateStr).format("HH:mm");
                 document.getElementById("startTime").value = startTime;
                 if (overridesettings[0].override == "false") {
                     if (calendarSet.DefaultApptDuration) {
-                        var endTime = moment(startTime, 'HH:mm').add(parseInt(calendarSet.DefaultApptDuration), 'hours').format('HH:mm');
+                        endTime = moment(startTime, 'HH:mm').add(parseInt(calendarSet.DefaultApptDuration), 'hours').format('HH:mm');
                         document.getElementById("endTime").value = endTime;
                         let hoursFormattedStartTime = templateObject.timeFormat(calendarSet.DefaultApptDuration) || '';
                         document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
                     } else {
-                        var appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5), 'HH:mm').format('HH:mm');
-                        var endTime = moment(startTime, 'HH:mm').add(appointmentHours.substr(0, 2), 'hours').format('HH:mm');
+                        appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5), 'HH:mm').format('HH:mm');
+                        endTime = moment(startTime, 'HH:mm').add(appointmentHours.substr(0, 2), 'hours').format('HH:mm');
                         document.getElementById("endTime").value = endTime;
-                        var hoursSpent = moment(appointmentHours, 'hours').format('HH');
+                        hoursSpent = moment(appointmentHours, 'hours').format('HH');
                         let hoursFormattedStartTime = templateObject.timeFormat(hoursSpent.replace(/^0+/, '')) || '';
                         document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
                     }
@@ -1292,15 +1046,15 @@ Template.appointmentsWidget.onRendered(function () {
                     // $("#product-list")[0].options[0].selected = true;
                 } else if (overridesettings[0].override == "true") {
                     if (templateObject.empDuration.get() != "") {
-                        var endTime = moment(startTime, 'HH:mm').add(parseInt(templateObject.empDuration.get()), 'hours').format('HH:mm');
+                        endTime = moment(startTime, 'HH:mm').add(parseInt(templateObject.empDuration.get()), 'hours').format('HH:mm');
                         document.getElementById("endTime").value = endTime;
                         let hoursFormattedStartTime = templateObject.timeFormat(templateObject.empDuration.get()) || '';
                         document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
                     } else {
-                        var appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5), 'HH:mm').format('HH:mm');
-                        var endTime = moment(startTime, 'HH:mm').add(appointmentHours.substr(0, 2), 'hours').format('HH:mm');
+                        appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5), 'HH:mm').format('HH:mm');
+                        endTime = moment(startTime, 'HH:mm').add(appointmentHours.substr(0, 2), 'hours').format('HH:mm');
                         document.getElementById("endTime").value = endTime;
-                        var hoursSpent = moment(appointmentHours, 'hours').format('HH');
+                        hoursSpent = moment(appointmentHours, 'hours').format('HH');
                         let hoursFormattedStartTime = templateObject.timeFormat(hoursSpent.replace(/^0+/, '')) || '';
                         document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
                     }
@@ -1315,15 +1069,15 @@ Template.appointmentsWidget.onRendered(function () {
                     }
                 } else {
                     if (templateObject.empDuration.get() != "") {
-                        var endTime = moment(startTime, 'HH:mm').add(parseInt(templateObject.empDuration.get()), 'hours').format('HH:mm');
+                        endTime = moment(startTime, 'HH:mm').add(parseInt(templateObject.empDuration.get()), 'hours').format('HH:mm');
                         document.getElementById("endTime").value = endTime;
                         let hoursFormattedStartTime = templateObject.timeFormat(templateObject.empDuration.get()) || '';
                         document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
                     } else {
-                        var appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5), 'HH:mm').format('HH:mm');
-                        var endTime = moment(startTime, 'HH:mm').add(appointmentHours.substr(0, 2), 'hours').format('HH:mm');
+                        appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5), 'HH:mm').format('HH:mm');
+                        endTime = moment(startTime, 'HH:mm').add(appointmentHours.substr(0, 2), 'hours').format('HH:mm');
                         document.getElementById("endTime").value = endTime;
-                        var hoursSpent = moment(appointmentHours, 'hours').format('HH');
+                        hoursSpent = moment(appointmentHours, 'hours').format('HH');
                         let hoursFormattedStartTime = templateObject.timeFormat(hoursSpent.replace(/^0+/, '')) || '';
                         document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
                     }
@@ -1340,8 +1094,8 @@ Template.appointmentsWidget.onRendered(function () {
 
                 }
 
-                var endTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("endTime").value).format('DD/MM/YYYY HH:mm');
-                var startTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("startTime").value).format('DD/MM/YYYY HH:mm');
+                endTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("endTime").value).format('DD/MM/YYYY HH:mm');
+                startTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("startTime").value).format('DD/MM/YYYY HH:mm');
                 templateObject.attachmentCount.set('');
                 templateObject.uploadedFiles.set('')
                 templateObject.uploadedFile.set('');
@@ -1410,9 +1164,7 @@ Template.appointmentsWidget.onRendered(function () {
         let firstDate = new Date(year, month, 1);
         let lastDate = new Date(year, month + 1, 0);
         let numDays = lastDate.getDate();
-
         let dayOfWeekCounter = firstDate.getDay();
-
         for (let date = 1; date <= numDays; date++) {
             if (dayOfWeekCounter === 0 || weeks.length === 0) {
                 weeks.push([]);
@@ -1420,7 +1172,6 @@ Template.appointmentsWidget.onRendered(function () {
             weeks[weeks.length - 1].push(date);
             dayOfWeekCounter = (dayOfWeekCounter + 1) % 7;
         }
-
         let results = weeks
             .filter((w) => !!w.length)
             .map((w) => ({
@@ -1428,7 +1179,6 @@ Template.appointmentsWidget.onRendered(function () {
                     end: w[w.length - 1],
                     dates: w,
                 }));
-
         if (results[0].dates.length < 7) {
             let lastDay = new Date(year, month, 0);
             let addDays = lastDay.getDate();
@@ -1438,11 +1188,9 @@ Template.appointmentsWidget.onRendered(function () {
                 count++;
                 addDays--;
             }
-
             results[0].start = results[0].dates[0];
             results[0].end = results[0].dates[6];
         }
-
         if (results[results.length - 1].dates.length < 7) {
             let addDays = 1;
             let count = results[results.length - 1].dates.length;
@@ -1479,277 +1227,143 @@ Template.appointmentsWidget.onRendered(function () {
 
         }
         setTimeout(function () {
-          if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
-            $('.draggable').addClass('cardWeeekend');
-            $('.draggable').removeClass('cardHiddenWeekend');
-            $('.draggable').removeClass('cardHiddenSundayOrSaturday');
-          }
-
-          if($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == false){
-            $('.draggable').removeClass('cardWeeekend');
-            $('.draggable').addClass('cardHiddenWeekend');
-            $('.draggable').removeClass('cardHiddenSundayOrSaturday');
-          }
-
-          if(($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == true) || ($("#showSaturday").prop('checked') == true && $("#showSunday").prop('checked') == false)){
-            $('.draggable').removeClass('cardWeeekend');
-            $('.draggable').removeClass('cardHiddenWeekend');
-            $('.draggable').addClass('cardHiddenSundayOrSaturday');
-          }
+            if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
+                $('.draggable').addClass('cardWeeekend');
+                $('.draggable').removeClass('cardHiddenWeekend');
+                $('.draggable').removeClass('cardHiddenSundayOrSaturday');
+            }
+            if($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == false){
+                $('.draggable').removeClass('cardWeeekend');
+                $('.draggable').addClass('cardHiddenWeekend');
+                $('.draggable').removeClass('cardHiddenSundayOrSaturday');
+            }
+            if(($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == true) || ($("#showSaturday").prop('checked') == true && $("#showSunday").prop('checked') == false)){
+                $('.draggable').removeClass('cardWeeekend');
+                $('.draggable').removeClass('cardHiddenWeekend');
+                $('.draggable').addClass('cardHiddenSundayOrSaturday');
+            }
         }, 100);
-
     };
 
     templateObject.dateFormat = function (date) {
-        var dateParts = date.split("/");
-        var dateObject = dateParts[2] + '/' + ('0' + (dateParts[1] - 1)).toString().slice(-2) + '/' + dateParts[0];
+        const dateParts = date.split("/");
+        const dateObject = dateParts[2] + '/' + ('0' + (dateParts[1] - 1)).toString().slice(-2) + '/' + dateParts[0];
         return dateObject;
     };
 
     templateObject.timeToDecimal = function (time) {
-        var hoursMinutes = time.split(/[.:]/);
-        var hours = parseInt(hoursMinutes[0], 10);
-        var minutes = hoursMinutes[1] ? parseInt(hoursMinutes[1], 10) : 0;
+        const hoursMinutes = time.split(/[.:]/);
+        const hours = parseInt(hoursMinutes[0], 10);
+        const minutes = hoursMinutes[1] ? parseInt(hoursMinutes[1], 10) : 0;
         return hours + minutes / 60;
     };
 
     templateObject.timeFormat = function (hours) {
-        var decimalTime = parseFloat(hours).toFixed(2);
+        let decimalTime = parseFloat(hours).toFixed(2);
         decimalTime = decimalTime * 60 * 60;
-        var hours = Math.floor((decimalTime / (60 * 60)));
-        decimalTime = decimalTime - (hours * 60 * 60);
-        var minutes = Math.abs(decimalTime / 60);
+        let hoursVal = Math.floor((decimalTime / (60 * 60)));
+        decimalTime = decimalTime - (hoursVal * 60 * 60);
+        let minutes = Math.abs(decimalTime / 60);
         decimalTime = decimalTime - (minutes * 60);
-        hours = ("0" + hours).slice(-2);
+        hoursVal = ("0" + hoursVal).slice(-2);
         minutes = ("0" + Math.round(minutes)).slice(-2);
-        let time = hours + ":" + minutes;
-        return time;
+        return hoursVal + ":" + minutes;
     };
 
     templateObject.getEmployeesList = function () {
         getVS1Data('TEmployee').then(function (dataObject) {
             if (dataObject.length == 0) {
                 contactService.getAllEmployeeSideData().then(function (data) {
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    let totalUser = 0;
-                    let totAmount = 0;
-                    let totAmountOverDue = 0;
-
-                    for (let i = 0; i < data.temployee.length; i++) {
-                        let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-
-                        if (randomColor.length < 6) {
-                            randomColor = randomColor + '6';
-                        }
-                        let selectedColor = '#' + randomColor;
-                        if(Session.get('mySessionEmployee') == data.temployee[i].fields.EmployeeName){
-                          if(data.temployee[i].fields.CustFld8 == "false"){
-                            templateObject.includeAllProducts.set(false);
-                          }
-                        }
-
-                        if (seeOwnAppointments == true) {
-                            if (data.temployee[i].fields.EmployeeName == Session.get('mySessionEmployee')) {
-                                var dataList = {
-                                    id: data.temployee[i].fields.ID || '',
-                                    employeeName: data.temployee[i].fields.EmployeeName || '',
-                                    color: data.temployee[i].fields.CustFld6 || selectedColor,
-                                    priority: data.temployee[i].fields.CustFld5 || "0",
-                                    override: data.temployee[i].fields.CustFld14 || "false",
-                                    custFld7: data.temployee[i].fields.CustFld7 || '',
-                                    custFld8: data.temployee[i].fields.CustFld8 || ''
-                                };
-                                lineItems.push(dataList);
-                                allEmployees.push(dataList);
-                            }
-                        } else {
-                            var dataList = {
-                                id: data.temployee[i].fields.ID || '',
-                                employeeName: data.temployee[i].fields.EmployeeName || '',
-                                color: data.temployee[i].fields.CustFld6 || selectedColor,
-                                priority: data.temployee[i].fields.CustFld5 || "0",
-                                override: data.temployee[i].fields.CustFld14 || "false",
-                                custFld7: data.temployee[i].fields.CustFld7 || '',
-                                custFld8: data.temployee[i].fields.CustFld8 || ''
-                            };
-                            lineItems.push(dataList);
-                            allEmployees.push(dataList);
-                        }
-
-                    }
-                    lineItems.sort(function (a, b) {
-                        if (a.employeeName == 'NA') {
-                            return 1;
-                        } else if (b.employeeName == 'NA') {
-                            return -1;
-                        }
-                        return (a.employeeName.toUpperCase() > b.employeeName.toUpperCase()) ? 1 : -1;
-                    });
-                    templateObject.employeerecords.set(lineItems);
-
-                    if (templateObject.employeerecords.get()) {
-                        setTimeout(function () {
-                            $('.counter').text(lineItems.length + ' items');
-                        }, 100);
-                    }
-
-                }).catch(function (err) {});
+                    setAllEmployeeSideData(data);
+                }).catch(function (err) {
+                });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.temployee;
-                let lineItems = [];
-                let lineItemObj = {};
-                let totalUser = 0;
-
-                let totAmount = 0;
-                let totAmountOverDue = 0;
-                for (let i = 0; i < useData.length; i++) {
-                    let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-
-                    if (randomColor.length < 6) {
-                        randomColor = randomColor + '6';
-                    }
-                    let selectedColor = '#' + randomColor;
-                    if (useData[i].fields.CustFld6 == "") {
-                        objDetails = {
-                            type: "TEmployeeEx",
-                            fields: {
-                                ID: useData[i].fields.ID,
-                                CustFld6: selectedColor,
-                                Email: useData[i].fields.Email || useData[i].fields.FirstName.toLowerCase() + "@gmail.com",
-                                Sex: useData[i].fields.Sex || "M",
-                                DateStarted: useData[i].fields.DateStarted || moment().format('YYYY-MM-DD'),
-                                DOB: useData[i].fields.DOB || moment('2018-07-01').format('YYYY-MM-DD')
-                            }
-                        };
-
-                        contactService.saveEmployeeEx(objDetails).then(function (data) {});
-                    }
-
-                    if(Session.get('mySessionEmployee') == useData[i].fields.EmployeeName){
-                      if(useData[i].fields.CustFld8 == "false"){
-                        templateObject.includeAllProducts.set(false);
-                      }
-                    }
-
-                    if (seeOwnAppointments == true) {
-                        if (useData[i].fields.EmployeeName == Session.get('mySessionEmployee')) {
-                            var dataList = {
-                                id: useData[i].fields.ID || '',
-                                employeeName: useData[i].fields.EmployeeName || '',
-                                color: useData[i].fields.CustFld6 || selectedColor,
-                                priority: useData[i].fields.CustFld5 || "0",
-                                override: useData[i].fields.CustFld14 || "false",
-                                custFld7: useData[i].fields.CustFld7 || '',
-                                custFld8: useData[i].fields.CustFld8 || ''
-                            };
-                            lineItems.push(dataList);
-                        }
-                    } else {
-                        var dataList = {
-                            id: useData[i].fields.ID || '',
-                            employeeName: useData[i].fields.EmployeeName || '',
-                            color: useData[i].fields.CustFld6 || selectedColor,
-                            priority: useData[i].fields.CustFld5 || "0",
-                            override: useData[i].fields.CustFld14 || "false",
-                            custFld7: useData[i].fields.CustFld7 || '',
-                            custFld8: useData[i].fields.CustFld8 || ''
-                        };
-                        lineItems.push(dataList);
-                    }
-
-                }
-                lineItems.sort(function (a, b) {
-                    if (a.employeeName == 'NA') {
-                        return 1;
-                    } else if (b.employeeName == 'NA') {
-                        return -1;
-                    }
-                    return (a.employeeName.toUpperCase() > b.employeeName.toUpperCase()) ? 1 : -1;
-                });
-                templateObject.employeerecords.set(lineItems);
-
-                if (templateObject.employeerecords.get()) {
-
-                    setTimeout(function () {
-                        $('.counter').text(lineItems.length + ' items');
-                    }, 100);
-                }
-
+                setAllEmployeeSideData(data);
             }
         }).catch(function (err) {
             contactService.getAllEmployeeSideData().then(function (data) {
-                let lineItems = [];
-                let lineItemObj = {};
-                let totalUser = 0;
-
-                let totAmount = 0;
-                let totAmountOverDue = 0;
-                for (let i = 0; i < data.temployee.length; i++) {
-                    let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-
-                    if (randomColor.length < 6) {
-                        randomColor = randomColor + '6';
-                    }
-                    let selectedColor = '#' + randomColor;
-                    if(Session.get('mySessionEmployee') == data.temployee[i].fields.EmployeeName){
-                      if(useData[i].fields.CustFld8 == "false"){
-                        templateObject.includeAllProducts.set(false);
-                      }
-                    }
-                    if (seeOwnAppointments == true) {
-                        if (data.temployee[i].fields.EmployeeName == Session.get('mySessionEmployee')) {
-                            var dataList = {
-                                id: data.temployee[i].fields.ID || '',
-                                employeeName: data.temployee[i].fields.EmployeeName || '',
-                                color: data.temployee[i].fields.CustFld6 || selectedColor,
-                                priority: data.temployee[i].fields.CustFld5 || "0",
-                                override: data.temployee[i].fields.CustFld14 || "false",
-                                custFld7: data.temployee[i].fields.CustFld7 || '',
-                                custFld8: data.temployee[i].fields.CustFld8 || ''
-                            };
-                            lineItems.push(dataList);
-                        }
-                    } else {
-                        var dataList = {
-                            id: data.temployee[i].fields.ID || '',
-                            employeeName: data.temployee[i].fields.EmployeeName || '',
-                            color: data.temployee[i].fields.CustFld6 || selectedColor,
-                            priority: data.temployee[i].fields.CustFld5 || "0",
-                            override: data.temployee[i].fields.CustFld14 || "false",
-                            custFld7: data.temployee[i].fields.CustFld7 || '',
-                            custFld8: data.temployee[i].fields.CustFld8 || ''
-                        };
-                        lineItems.push(dataList);
-                    }
-
-                }
-                lineItems.sort(function (a, b) {
-                    if (a.employeeName == 'NA') {
-                        return 1;
-                    } else if (b.employeeName == 'NA') {
-                        return -1;
-                    }
-                    return (a.employeeName.toUpperCase() > b.employeeName.toUpperCase()) ? 1 : -1;
-                });
-                templateObject.employeerecords.set(lineItems);
-
-                if (templateObject.employeerecords.get()) {
-
-                    setTimeout(function () {
-                        $('.counter').text(lineItems.length + ' items');
-                    }, 100);
-                }
-
+                setAllEmployeeSideData(data);
             }).catch(function (err) {});
         });
     };
+    function setAllEmployeeSideData(data) {
+        let dataList;
+        let lineItems = [];
+        for (let i = 0; i < data.temployee.length; i++) {
+            let randomColor = Math.floor(Math.random() * 16777215).toString(16);
+            if (randomColor.length < 6) {
+                randomColor = randomColor + '6';
+            }
+            let selectedColor = '#' + randomColor;
+            if (data.temployee[i].fields.CustFld6 == "") {
+                let objDetails = {
+                    type: "TEmployeeEx",
+                    fields: {
+                        ID: useData[i].fields.ID,
+                        CustFld6: selectedColor,
+                        Email: useData[i].fields.Email || useData[i].fields.FirstName.toLowerCase() + "@gmail.com",
+                        Sex: useData[i].fields.Sex || "M",
+                        DateStarted: useData[i].fields.DateStarted || moment().format('YYYY-MM-DD'),
+                        DOB: useData[i].fields.DOB || moment('2018-07-01').format('YYYY-MM-DD')
+                    }
+                };
+                contactService.saveEmployeeEx(objDetails).then(function (data) {
+                });
+            }
+            if (Session.get('mySessionEmployee') == data.temployee[i].fields.EmployeeName) {
+                if (data.temployee[i].fields.CustFld8 == "false") {
+                    templateObject.includeAllProducts.set(false);
+                }
+            }
+            if (seeOwnAppointments == true) {
+                if (data.temployee[i].fields.EmployeeName == Session.get('mySessionEmployee')) {
+                    dataList = {
+                        id: data.temployee[i].fields.ID || '',
+                        employeeName: data.temployee[i].fields.EmployeeName || '',
+                        color: data.temployee[i].fields.CustFld6 || selectedColor,
+                        priority: data.temployee[i].fields.CustFld5 || "0",
+                        override: data.temployee[i].fields.CustFld14 || "false",
+                        custFld7: data.temployee[i].fields.CustFld7 || '',
+                        custFld8: data.temployee[i].fields.CustFld8 || ''
+                    };
+                    lineItems.push(dataList);
+                    allEmployees.push(dataList);
+                }
+            } else {
+                dataList = {
+                    id: data.temployee[i].fields.ID || '',
+                    employeeName: data.temployee[i].fields.EmployeeName || '',
+                    color: data.temployee[i].fields.CustFld6 || selectedColor,
+                    priority: data.temployee[i].fields.CustFld5 || "0",
+                    override: data.temployee[i].fields.CustFld14 || "false",
+                    custFld7: data.temployee[i].fields.CustFld7 || '',
+                    custFld8: data.temployee[i].fields.CustFld8 || ''
+                };
+                lineItems.push(dataList);
+                allEmployees.push(dataList);
+            }
+        }
+        lineItems.sort(function (a, b) {
+            if (a.employeeName == 'NA') {
+                return 1;
+            } else if (b.employeeName == 'NA') {
+                return -1;
+            }
+            return (a.employeeName.toUpperCase() > b.employeeName.toUpperCase()) ? 1 : -1;
+        });
+        templateObject.employeerecords.set(lineItems);
+
+        if (templateObject.employeerecords.get()) {
+            setTimeout(function () {
+                $('.counter').text(lineItems.length + ' items');
+            }, 100);
+        }
+    }
 
     templateObject.getAllSelectedProducts = function (employeeID) {
         let productlist = [];
         templateObject.datatablerecords.set([]);
-        const splashArrayProductServiceList = [];
         const splashArrayProductServiceListGet = [];
         //$('#product-list').editableSelect('clear');
         sideBarService.getSelectedProducts(employeeID).then(function (data) {
@@ -1797,393 +1411,139 @@ Template.appointmentsWidget.onRendered(function () {
                 templateObject.getAllProductData();
             }
         }).catch(function (err) {
-          templateObject.getAllProductData();
+            templateObject.getAllProductData();
         });
     };
 
     templateObject.getAllProductData = function () {
         productList = [];
         templateObject.datatablerecords.set([]);
-        const splashArrayProductServiceList = [];
         //  $('#product-list').editableSelect('clear');
         getVS1Data('TProductWeb').then(function (dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getProductServiceListVS1(initialBaseDataLoad,0).then(function (data) {
-                    addVS1Data('TProductWeb',JSON.stringify(data));
-                    let dataList = {};
-                    for (let i = 0; i < data.tproductvs1.length; i++) {
-                        dataList = {
-                            id: data.tproductvs1[i].fields.ID || '',
-                            productname: data.tproductvs1[i].fields.ProductName || ''
-                        }
-                        const prodservicedataList = [
-                            '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' + data.tproductvs1[i].fields.ID + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductvs1[i].fields.ID + '"></label></div>',
-                            data.tproductvs1[i].fields.ProductName || '-',
-                            data.tproductvs1[i].fields.SalesDescription || '',
-                            data.tproductvs1[i].fields.BARCODE || '',
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                            data.tproductvs1[i].fields.TotalQtyInStock,
-                            data.tproductvs1[i].fields.TaxCodeSales || '',
-                            data.tproductvs1[i].fields.ID || '',
-                            JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) || null,
-
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100)
-                        ];
-                        splashArrayProductServiceList.push(prodservicedataList);
-
-                        //if (data.tproductvs1[i].ProductType != 'INV') {
-                        // $('#product-list').editableSelect('add', data.tproductvs1[i].ProductName);
-                        // $('#product-list').editableSelect('add', function(){
-                        //   $(this).text(data.tproductvs1[i].ProductName);
-                        //   $(this).attr('id', data.tproductvs1[i].SellQty1Price);
-                        // });
-                            productList.push(dataList);
-                      //  }
-                    }
-                    if (splashArrayProductServiceList) {
-                      templateObject.allnoninvproducts.set(splashArrayProductServiceList);
-                      $('#tblInventoryPayrollService').dataTable({
-                          data: splashArrayProductServiceList,
-                          "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                          columnDefs: [
-                              {
-                                  className: "chkBox pointer hiddenColumn",
-                                  "orderable": false,
-                                  "targets": [0]
-                              },
-                              {
-                                  className: "productName",
-                                  "targets": [1]
-                              }, {
-                                  className: "productDesc",
-                                  "targets": [2]
-                              }, {
-                                  className: "colBarcode",
-                                  "targets": [3]
-                              }, {
-                                  className: "costPrice text-right",
-                                  "targets": [4]
-                              }, {
-                                  className: "salePrice text-right",
-                                  "targets": [5]
-                              }, {
-                                  className: "prdqty text-right",
-                                  "targets": [6]
-                              }, {
-                                  className: "taxrate",
-                                  "targets": [7]
-                              }, {
-                                  className: "colProuctPOPID hiddenColumn",
-                                  "targets": [8]
-                              }, {
-                                  className: "colExtraSellPrice hiddenColumn",
-                                  "targets": [9]
-                              }, {
-                                  className: "salePriceInc hiddenColumn",
-                                  "targets": [10]
-                              }
-                          ],
-                          select: true,
-                          destroy: true,
-                          colReorder: true,
-                          pageLength: initialDatatableLoad,
-                          lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                          info: true,
-                          responsive: true,
-                          "order": [[ 1, "asc" ]],
-                          "fnDrawCallback": function (oSettings) {
-                              $('.paginate_button.page-item').removeClass('disabled');
-                              $('#tblInventoryPayrollService_ellipsis').addClass('disabled');
-                          },
-                          "fnInitComplete": function () {
-                              $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryPayrollService_filter");
-                              $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryPayrollService_filter");
-                              $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventoryPayrollService_filter");
-                          }
-
-
-                      }).on('length.dt', function (e, settings, len) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        let dataLenght = settings._iDisplayLength;
-                        // splashArrayProductList = [];
-                        if (dataLenght == -1) {
-                          $('.fullScreenSpin').css('display', 'none');
-                        }else{
-                          if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                              $('.fullScreenSpin').css('display', 'none');
-                          } else {
-
-                              $('.fullScreenSpin').css('display', 'none');
-                          }
-
-                        }
-
-                      });
-
-                        $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-                    }
-
-                    templateObject.datatablerecords.set(productList);
-
+                    setProductServiceListVS1(data);
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.tproductvs1;
-                var dataList = {};
-                for (let i = 0; i < useData.length; i++) {
-                    dataList = {
-                        id: useData[i].fields.ID || '',
-                        productname: useData[i].fields.ProductName || ''
-                    };
-
-                    var prodservicedataList = [
-                         '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
-                        data.tproductvs1[i].fields.ProductName || '-',
-                        data.tproductvs1[i].fields.SalesDescription || '',
-                        data.tproductvs1[i].fields.BARCODE || '',
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                        data.tproductvs1[i].fields.TotalQtyInStock,
-                        data.tproductvs1[i].fields.TaxCodeSales || '',
-                        data.tproductvs1[i].fields.ID || '',
-                        JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
-
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100)
-                    ];
-
-                    splashArrayProductServiceList.push(prodservicedataList);
-                    // $('#product-list').editableSelect('add', useData[i].fields.ProductName);
-                    // $('#product-list').editableSelect('add', function(){
-                    //   $(this).val(useData[i].fields.ID);
-                    //   $(this).text(useData[i].fields.ProductName);
-                    //   $(this).attr('id', useData[i].fields.SellQty1Price);
-                    // });
-                    //if (useData[i].fields.ProductType != 'INV') {
-                        productList.push(dataList);
-                    //}
-                }
-
-                if (splashArrayProductServiceList) {
-                  templateObject.allnoninvproducts.set(splashArrayProductServiceList);
-                  $('#tblInventoryPayrollService').dataTable({
-                      data: splashArrayProductServiceList,
-
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
-                      columnDefs: [
-                          {
-                              className: "chkBox pointer hiddenColumn",
-                              "orderable": false,
-                              "targets": [0]
-
-                          },
-                          {
-                              className: "productName",
-                              "targets": [1]
-                          }, {
-                              className: "productDesc",
-                              "targets": [2]
-                          }, {
-                              className: "colBarcode",
-                              "targets": [3]
-                          }, {
-                              className: "costPrice text-right",
-                              "targets": [4]
-                          }, {
-                              className: "salePrice text-right",
-                              "targets": [5]
-                          }, {
-                              className: "prdqty text-right",
-                              "targets": [6]
-                          }, {
-                              className: "taxrate",
-                              "targets": [7]
-                          }, {
-                              className: "colProuctPOPID hiddenColumn",
-                              "targets": [8]
-                          }, {
-                              className: "colExtraSellPrice hiddenColumn",
-                              "targets": [9]
-                          }, {
-                              className: "salePriceInc hiddenColumn",
-                              "targets": [10]
-                          }
-                      ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                      info: true,
-                      responsive: true,
-                      "order": [[ 1, "asc" ]],
-                      "fnDrawCallback": function (oSettings) {
-                          $('.paginate_button.page-item').removeClass('disabled');
-                          $('#tblInventoryPayrollService_ellipsis').addClass('disabled');
-                      },
-                      "fnInitComplete": function () {
-                          $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryPayrollService_filter");
-                          $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryPayrollService_filter");
-                          $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventoryPayrollService_filter");
-                      }
-
-
-                  }).on('length.dt', function (e, settings, len) {
-                    $('.fullScreenSpin').css('display', 'inline-block');
-                    let dataLenght = settings._iDisplayLength;
-                    // splashArrayProductList = [];
-                    if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
-                    }else{
-                      if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                          $('.fullScreenSpin').css('display', 'none');
-                      } else {
-
-                          $('.fullScreenSpin').css('display', 'none');
-                      }
-
-                    }
-
-                  });
-
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-                }
-                templateObject.datatablerecords.set(productList);
-
+                setProductServiceListVS1(data);
             }
         }).catch(function (err) {
-          sideBarService.getProductServiceListVS1(initialBaseDataLoad,0).then(function (data) {
-              addVS1Data('TProductWeb',JSON.stringify(data));
-              var dataList = {};
-              for (let i = 0; i < data.tproductvs1.length; i++) {
-                  dataList = {
-                      id: data.tproductvs1[i].fields.ID || '',
-                      productname: data.tproductvs1[i].fields.ProductName || ''
-                  }
-
-                  var prodservicedataList = [
-                       '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
-                      data.tproductvs1[i].fields.ProductName || '-',
-                      data.tproductvs1[i].fields.SalesDescription || '',
-                      data.tproductvs1[i].fields.BARCODE || '',
-                      utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                      utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                      data.tproductvs1[i].fields.TotalQtyInStock,
-                      data.tproductvs1[i].fields.TaxCodeSales || '',
-                      data.tproductvs1[i].fields.ID || '',
-                      JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
-
-                      utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100)
-                  ];
-
-                  splashArrayProductServiceList.push(prodservicedataList);
-
-                  //if (data.tproductvs1[i].ProductType != 'INV') {
-                  // $('#product-list').editableSelect('add', data.tproductvs1[i].ProductName);
-                  // $('#product-list').editableSelect('add', function(){
-                  //   $(this).text(data.tproductvs1[i].ProductName);
-                  //   $(this).attr('id', data.tproductvs1[i].SellQty1Price);
-                  // });
-                      productList.push(dataList);
-                //  }
-
-              }
-
-              if (splashArrayProductServiceList) {
-                templateObject.allnoninvproducts.set(splashArrayProductServiceList);
-                $('#tblInventoryPayrollService').dataTable({
-                    data: splashArrayProductServiceList,
-
-                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
-                    columnDefs: [
-                        {
-                            className: "chkBox pointer hiddenColumn",
-                            "orderable": false,
-                            "targets": [0]
-
-                        },
-                        {
-                            className: "productName",
-                            "targets": [1]
-                        }, {
-                            className: "productDesc",
-                            "targets": [2]
-                        }, {
-                            className: "colBarcode",
-                            "targets": [3]
-                        }, {
-                            className: "costPrice text-right",
-                            "targets": [4]
-                        }, {
-                            className: "salePrice text-right",
-                            "targets": [5]
-                        }, {
-                            className: "prdqty text-right",
-                            "targets": [6]
-                        }, {
-                            className: "taxrate",
-                            "targets": [7]
-                        }, {
-                            className: "colProuctPOPID hiddenColumn",
-                            "targets": [8]
-                        }, {
-                            className: "colExtraSellPrice hiddenColumn",
-                            "targets": [9]
-                        }, {
-                            className: "salePriceInc hiddenColumn",
-                            "targets": [10]
-                        }
-                    ],
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    pageLength: initialDatatableLoad,
-                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                    info: true,
-                    responsive: true,
-                    "order": [[ 1, "asc" ]],
-                    "fnDrawCallback": function (oSettings) {
-                        $('.paginate_button.page-item').removeClass('disabled');
-                        $('#tblInventoryPayrollService_ellipsis').addClass('disabled');
+            sideBarService.getProductServiceListVS1(initialBaseDataLoad,0).then(function (data) {
+                setProductServiceListVS1(data);
+            });
+        });
+    };
+    function setProductServiceListVS1(data){
+        addVS1Data('TProductWeb',JSON.stringify(data));
+        let dataList = {};
+        const splashArrayProductServiceList = [];
+        for (let i = 0; i < data.tproductvs1.length; i++) {
+            dataList = {
+                id: data.tproductvs1[i].fields.ID || '',
+                productname: data.tproductvs1[i].fields.ProductName || ''
+            }
+            const prodservicedataList = [
+                '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' + data.tproductvs1[i].fields.ID + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductvs1[i].fields.ID + '"></label></div>',
+                data.tproductvs1[i].fields.ProductName || '-',
+                data.tproductvs1[i].fields.SalesDescription || '',
+                data.tproductvs1[i].fields.BARCODE || '',
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                data.tproductvs1[i].fields.TotalQtyInStock,
+                data.tproductvs1[i].fields.TaxCodeSales || '',
+                data.tproductvs1[i].fields.ID || '',
+                JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) || null,
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100)
+            ];
+            splashArrayProductServiceList.push(prodservicedataList);
+            //if (data.tproductvs1[i].ProductType != 'INV') {
+            // $('#product-list').editableSelect('add', data.tproductvs1[i].ProductName);
+            // $('#product-list').editableSelect('add', function(){
+            //   $(this).text(data.tproductvs1[i].ProductName);
+            //   $(this).attr('id', data.tproductvs1[i].SellQty1Price);
+            // });
+            productList.push(dataList);
+            //  }
+        }
+        if (splashArrayProductServiceList) {
+            templateObject.allnoninvproducts.set(splashArrayProductServiceList);
+            $('#tblInventoryPayrollService').dataTable({
+                data: splashArrayProductServiceList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        className: "chkBox pointer hiddenColumn",
+                        "orderable": false,
+                        "targets": [0]
                     },
-                    "fnInitComplete": function () {
-                        $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryPayrollService_filter");
-                        $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryPayrollService_filter");
-                        $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventoryPayrollService_filter");
+                    {
+                        className: "productName",
+                        "targets": [1]
+                    }, {
+                        className: "productDesc",
+                        "targets": [2]
+                    }, {
+                        className: "colBarcode",
+                        "targets": [3]
+                    }, {
+                        className: "costPrice text-right",
+                        "targets": [4]
+                    }, {
+                        className: "salePrice text-right",
+                        "targets": [5]
+                    }, {
+                        className: "prdqty text-right",
+                        "targets": [6]
+                    }, {
+                        className: "taxrate",
+                        "targets": [7]
+                    }, {
+                        className: "colProuctPOPID hiddenColumn",
+                        "targets": [8]
+                    }, {
+                        className: "colExtraSellPrice hiddenColumn",
+                        "targets": [9]
+                    }, {
+                        className: "salePriceInc hiddenColumn",
+                        "targets": [10]
                     }
-
-
-                }).on('length.dt', function (e, settings, len) {
-                  $('.fullScreenSpin').css('display', 'inline-block');
-                  let dataLenght = settings._iDisplayLength;
-                  // splashArrayProductList = [];
-                  if (dataLenght == -1) {
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[ 1, "asc" ]],
+                "fnDrawCallback": function (oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#tblInventoryPayrollService_ellipsis').addClass('disabled');
+                },
+                "fnInitComplete": function () {
+                    $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryPayrollService_filter");
+                    $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryPayrollService_filter");
+                    $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventoryPayrollService_filter");
+                }
+            }).on('length.dt', function (e, settings, len) {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                let dataLenght = settings._iDisplayLength;
+                // splashArrayProductList = [];
+                if (dataLenght == -1) {
                     $('.fullScreenSpin').css('display', 'none');
-                  }else{
+                }else{
                     if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                         $('.fullScreenSpin').css('display', 'none');
                     } else {
-
                         $('.fullScreenSpin').css('display', 'none');
                     }
-
-                  }
-
-                });
-
-                  $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-              }
-
-              templateObject.datatablerecords.set(productList);
-
-          });
-        });
-    };
+                }
+            });
+            $('div.dataTables_filter input').addClass('form-control form-control-sm');
+        }
+        templateObject.datatablerecords.set(productList);
+    }
 
     let hideSun = '';
     let hideSat = '';
@@ -2298,7 +1658,8 @@ Template.appointmentsWidget.onRendered(function () {
             let getAddress = data.tappointmentex[i].fields.ClientName + ',' + street + ',' + state + ',' + surbub + ' ' + zip;
             dataList = {
                 id: data.tappointmentex[i].fields.ID.toString() || '',
-                title: data.tappointmentex[i].fields.TrainerName + '<br>' + data.tappointmentex[i].fields.ClientName + '<br>' + street + '<br>' + surbub + '<br>' + state + ' ' + zip,
+                // title: data.tappointmentex[i].fields.TrainerName + '<br>' + data.tappointmentex[i].fields.ClientName + '<br>' + street + '<br>' + surbub + '<br>' + state + ' ' + zip,
+                title: data.tappointmentex[i].fields.ClientName,
                 start: data.tappointmentex[i].fields.StartTime || '',
                 end: data.tappointmentex[i].fields.EndTime || '',
                 description: data.tappointmentex[i].fields.Notes || '',
@@ -2332,13 +1693,12 @@ Template.appointmentsWidget.onRendered(function () {
             $("#tActualStartTime").prop("disabled", false);
             $("#tActualEndTime").prop("disabled", false);
             $("#txtActualHoursSpent").prop("disabled", false);
-            var hours = '0';
-            var appointmentData = appointmentList;
+            let hours = '0';
+            const appointmentData = appointmentList;
 
             result = appointmentData.filter(apmt => {
                 return apmt.id == appID
             });
-
             if (result.length > 0) {
                 templateObject.getAllProductData();
                 if (result[0].isPaused == "Paused") {
@@ -2348,7 +1708,6 @@ Template.appointmentsWidget.onRendered(function () {
                     $(".paused").hide();
                     $("#btnHold").prop("disabled", false);
                 }
-
                 if (result[0].aEndTime != "") {
                     $("#btnHold").prop("disabled", true);
                     $("#btnStartAppointment").prop("disabled", true);
@@ -2360,9 +1719,9 @@ Template.appointmentsWidget.onRendered(function () {
                     $("#txtActualHoursSpent").prop("disabled", true);
                 }
                 if (result[0].aStartTime != '' && result[0].aEndTime != '') {
-                    var startTime = moment(result[0].startDate.split(' ')[0] + ' ' + result[0].aStartTime);
-                    var endTime = moment(result[0].endDate.split(' ')[0] + ' ' + result[0].aEndTime);
-                    var duration = moment.duration(moment(endTime).diff(moment(startTime)));
+                    const startTime = moment(result[0].startDate.split(' ')[0] + ' ' + result[0].aStartTime);
+                    const endTime = moment(result[0].endDate.split(' ')[0] + ' ' + result[0].aEndTime);
+                    const duration = moment.duration(moment(endTime).diff(moment(startTime)));
                     hours = duration.asHours();
                 }
 
@@ -3123,84 +2482,21 @@ Template.appointmentsWidget.onRendered(function () {
     templateObject.getAllClients = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
-                clientsService.getClientVS1().then(function (data) {
-                    for (let i in data.tcustomervs1) {
-
-                        let customerrecordObj = {
-                            customerid: data.tcustomervs1[i].Id || ' ',
-                            customername: data.tcustomervs1[i].ClientName || ' ',
-                            customeremail: data.tcustomervs1[i].Email || ' ',
-                            street: data.tcustomervs1[i].Street.replace(/(?:\r\n|\r|\n)/g, ', ') || ' ',
-                            street2: data.tcustomervs1[i].Street2 || ' ',
-                            street3: data.tcustomervs1[i].Street3 || ' ',
-                            suburb: data.tcustomervs1[i].Suburb || data.tcustomervs1[i].Street2,
-                            phone: data.tcustomervs1[i].Phone || ' ',
-                            statecode: data.tcustomervs1[i].State + ' ' + data.tcustomervs1[i].Postcode || ' ',
-                            country: data.tcustomervs1[i].Country || ' ',
-                            termsName: data.tcustomervs1[i].TermsName || ''
-                        };
-                        //clientList.push(data.tcustomer[i].ClientName,customeremail: data.tcustomer[i].Email);
-                        clientList.push(customerrecordObj);
-
-                        //$('#edtCustomerName').editableSelect('add',data.tcustomervs1[i].ClientName);
-                    }
-                    templateObject.clientrecords.set(clientList);
-                    templateObject.clientrecords.set(clientList.sort(function (a, b) {
-                            if (a.customername == 'NA') {
-                                return 1;
-                            } else if (b.customername == 'NA') {
-                                return -1;
-                            }
-                            return (a.customername.toUpperCase() > b.customername.toUpperCase()) ? 1 : -1;
-                        }));
-
-                    for (var i = 0; i < clientList.length; i++) {
-                        //$('#customer').editableSelect('add', clientList[i].customername);
-                    }
-
-                });
+                setClientVS1(data);
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.tcustomervs1;
-                for (let i in useData) {
-
-                    let customerrecordObj = {
-                        customerid: useData[i].fields.ID || ' ',
-                        customername: useData[i].fields.ClientName || ' ',
-                        customeremail: useData[i].fields.Email || ' ',
-                        street: useData[i].fields.Street.replace(/(?:\r\n|\r|\n)/g, ', ') || ' ',
-                        street2: useData[i].fields.Street2 || ' ',
-                        street3: useData[i].fields.Street3 || ' ',
-                        suburb: useData[i].fields.Suburb || data.tcustomervs1[i].Street2,
-                        phone: useData[i].fields.Phone || ' ',
-                        statecode: useData[i].fields.State + ' ' + useData[i].fields.Postcode || ' ',
-                        country: useData[i].fields.Country || ' ',
-                        termsName: useData[i].fields.TermsName || ''
-                    };
-                    //clientList.push(data.tcustomer[i].ClientName,customeremail: data.tcustomer[i].Email);
-                    clientList.push(customerrecordObj);
-
-                    //$('#edtCustomerName').editableSelect('add',data.tcustomervs1[i].ClientName);
-                }
-                templateObject.clientrecords.set(clientList);
-                templateObject.clientrecords.set(clientList.sort(function (a, b) {
-                        if (a.customername == 'NA') {
-                            return 1;
-                        } else if (b.customername == 'NA') {
-                            return -1;
-                        }
-                        return (a.customername.toUpperCase() > b.customername.toUpperCase()) ? 1 : -1;
-                    }));
-
-                for (var i = 0; i < clientList.length; i++) {
-                    //$('#customer').editableSelect('add', clientList[i].customername);
-                }
-
+                setClientVS1(data);
             }
         }).catch(function (err) {
             clientsService.getClientVS1().then(function (data) {
-                for (let i in data.tcustomervs1) {
-
+                setClientVS1(data);
+            });
+        });
+    };
+    function setClientVS1(data) {
+        clientsService.getClientVS1().then(function (data) {
+            for (let i in data.tcustomervs1) {
+                if (data.tcustomervs1.hasOwnProperty(i)) {
                     let customerrecordObj = {
                         customerid: data.tcustomervs1[i].Id || ' ',
                         customername: data.tcustomervs1[i].ClientName || ' ',
@@ -3216,27 +2512,24 @@ Template.appointmentsWidget.onRendered(function () {
                     };
                     //clientList.push(data.tcustomer[i].ClientName,customeremail: data.tcustomer[i].Email);
                     clientList.push(customerrecordObj);
-
                     //$('#edtCustomerName').editableSelect('add',data.tcustomervs1[i].ClientName);
                 }
-                templateObject.clientrecords.set(clientList);
-                templateObject.clientrecords.set(clientList.sort(function (a, b) {
-                        if (a.customername == 'NA') {
-                            return 1;
-                        } else if (b.customername == 'NA') {
-                            return -1;
-                        }
-                        return (a.customername.toUpperCase() > b.customername.toUpperCase()) ? 1 : -1;
-                    }));
-
-                for (var i = 0; i < clientList.length; i++) {
-                    //$('#customer').editableSelect('add', clientList[i].customername);
+            }
+            templateObject.clientrecords.set(clientList);
+            templateObject.clientrecords.set(clientList.sort(function (a, b) {
+                if (a.customername == 'NA') {
+                    return 1;
+                } else if (b.customername == 'NA') {
+                    return -1;
                 }
+                return (a.customername.toUpperCase() > b.customername.toUpperCase()) ? 1 : -1;
+            }));
 
-            });
+            for (let i = 0; i < clientList.length; i++) {
+                //$('#customer').editableSelect('add', clientList[i].customername);
+            }
         });
-
-    };
+    }
     //templateObject.getAllClients();
     //get employee data to auto fill data on new appointment
     function populateEmployDetails(employeeName) {
@@ -3249,442 +2542,54 @@ Template.appointmentsWidget.onRendered(function () {
     });
 
     $('#customer').editableSelect().on('click.editable-select', function (e, li) {
-        const $earch = $(this);
-        const offset = $earch.offset();
+        const $each = $(this);
+        const offset = $each.offset();
         $('#edtCustomerPOPID').val('');
         //$('#edtCustomerCompany').attr('readonly', false);
         const customerDataName = e.target.value || '';
-        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-            if(FlowRouter.current().queryParams.leadid) {
-                openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
-            } else if (FlowRouter.current().queryParams.customerid){
-                openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
-            } else if (FlowRouter.current().queryParams.supplierid) {
-                openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
-            }
-            else {
-                $('#customerListModal').modal();
-            }
-            setTimeout(function () {
-              $('#tblCustomerlist_filter .form-control-sm').focus();
-              $('#tblCustomerlist_filter .form-control-sm').val('');
-              $('#tblCustomerlist_filter .form-control-sm').trigger("input");
-              var datatable = $('#tblCustomerlist').DataTable();
-              //datatable.clear();
-              //datatable.rows.add(splashArrayCustomerList);
-              datatable.draw();
-              $('#tblCustomerlist_filter .form-control-sm').trigger("input");
-              //$('#tblCustomerlist').dataTable().fnFilter(' ').draw(false);
-          }, 500);
+        if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+            initCustomerModal();
         } else {
             if (customerDataName.replace(/\s/g, '') != '') {
                 //FlowRouter.go('/customerscard?name=' + e.target.value);
                 $('#edtCustomerPOPID').val('');
                 getVS1Data('TCustomerVS1').then(function (dataObject) {
-                  if (dataObject.length == 0) {
-                      $('.fullScreenSpin').css('display', 'inline-block');
-                      sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
-                          $('.fullScreenSpin').css('display', 'none');
-                          let lineItems = [];
-                          $('#add-customer-title').text('Edit Customer');
-                          let popCustomerID = data.tcustomer[0].fields.ID || '';
-                          let popCustomerName = data.tcustomer[0].fields.ClientName || '';
-                          let popCustomerEmail = data.tcustomer[0].fields.Email || '';
-                          let popCustomerTitle = data.tcustomer[0].fields.Title || '';
-                          let popCustomerFirstName = data.tcustomer[0].fields.FirstName || '';
-                          let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || '';
-                          let popCustomerLastName = data.tcustomer[0].fields.LastName || '';
-                          let popCustomertfn = '' || '';
-                          let popCustomerPhone = data.tcustomer[0].fields.Phone || '';
-                          let popCustomerMobile = data.tcustomer[0].fields.Mobile || '';
-                          let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || '';
-                          let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || '';
-                          let popCustomerURL = data.tcustomer[0].fields.URL || '';
-                          let popCustomerStreet = data.tcustomer[0].fields.Street || '';
-                          let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || '';
-                          let popCustomerState = data.tcustomer[0].fields.State || '';
-                          let popCustomerPostcode = data.tcustomer[0].fields.Postcode || '';
-                          let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
-                          let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || '';
-                          let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || '';
-                          let popCustomerbstate = data.tcustomer[0].fields.BillState || '';
-                          let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || '';
-                          let popCustomerbcountry = data.tcustomer[0].fields.Billcountry || LoggedCountry;
-                          let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || '';
-                          let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || '';
-                          let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || '';
-                          let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || '';
-                          let popCustomernotes = data.tcustomer[0].fields.Notes || '';
-                          let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || '';
-                          let popCustomerterms = data.tcustomer[0].fields.TermsName || '';
-                          let popCustomerdeliverymethod = data.tcustomer[0].fields.ShippingMethodName || '';
-                          let popCustomeraccountnumber = data.tcustomer[0].fields.ClientNo || '';
-                          let popCustomerisContractor = data.tcustomer[0].fields.Contractor || false;
-                          let popCustomerissupplier = data.tcustomer[0].fields.IsSupplier || false;
-                          let popCustomeriscustomer = data.tcustomer[0].fields.IsCustomer || false;
-                          let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || '';
-                          let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
-                          let popCustomerType = data.tcustomer[0].fields.ClientTypeName || '';
-                          //$('#edtCustomerCompany').attr('readonly', true);
-                          $('#edtCustomerCompany').val(popCustomerName);
-                          $('#edtCustomerPOPID').val(popCustomerID);
-                          $('#edtCustomerPOPEmail').val(popCustomerEmail);
-                          $('#edtTitle').val(popCustomerTitle);
-                          $('#edtFirstName').val(popCustomerFirstName);
-                          $('#edtMiddleName').val(popCustomerMiddleName);
-                          $('#edtLastName').val(popCustomerLastName);
-                          $('#edtCustomerPhone').val(popCustomerPhone);
-                          $('#edtCustomerMobile').val(popCustomerMobile);
-                          $('#edtCustomerFax').val(popCustomerFaxnumber);
-                          $('#edtCustomerSkypeID').val(popCustomerSkypeName);
-                          $('#edtCustomerWebsite').val(popCustomerURL);
-                          $('#edtCustomerShippingAddress').val(popCustomerStreet);
-                          $('#edtCustomerShippingCity').val(popCustomerStreet2);
-                          $('#edtCustomerShippingState').val(popCustomerState);
-                          $('#edtCustomerShippingZIP').val(popCustomerPostcode);
-                          $('#sedtCountry').val(popCustomerCountry);
-                          $('#txaNotes').val(popCustomernotes);
-                          $('#sltPreferedPayment').val(popCustomerpreferedpayment);
-                          $('#sltTermsPOP').val(popCustomerterms);
-                          $('#sltCustomerType').val(popCustomerType);
-                          $('#edtCustomerCardDiscount').val(popCustomerDiscount);
-                          $('#edtCustomeField1').val(popCustomercustfield1);
-                          $('#edtCustomeField2').val(popCustomercustfield2);
-                          $('#edtCustomeField3').val(popCustomercustfield3);
-                          $('#edtCustomeField4').val(popCustomercustfield4);
-
-                          $('#sltTaxCode').val(popCustomerTaxCode);
-
-                          if ((data.tcustomer[0].fields.Street == data.tcustomer[0].fields.BillStreet) && (data.tcustomer[0].fields.Street2 == data.tcustomer[0].fields.BillStreet2) &&
-                              (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
-                              (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
-                              $('#chkSameAsShipping2').attr("checked", "checked");
-                          }
-
-                          if (data.tcustomer[0].fields.IsSupplier == true) {
-                              // $('#isformcontractor')
-                              $('#chkSameAsSupplier').attr("checked", "checked");
-                          } else {
-                              $('#chkSameAsSupplier').removeAttr("checked");
-                          }
-
-                          setTimeout(function () {
-                              $('#addCustomerModal').modal('show');
-                          }, 200);
-                      }).catch(function (err) {
-                          $('.fullScreenSpin').css('display', 'none');
-                      });
-                  } else {
-                      let data = JSON.parse(dataObject[0].data);
-                      let useData = data.tcustomervs1;
-
-                      var added = false;
-                      for (let i = 0; i < data.tcustomervs1.length; i++) {
-                          if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
-                              let lineItems = [];
-                              added = true;
-                              $('.fullScreenSpin').css('display', 'none');
-                              $('#add-customer-title').text('Edit Customer');
-                              let popCustomerID = data.tcustomervs1[i].fields.ID || '';
-                              let popCustomerName = data.tcustomervs1[i].fields.ClientName || '';
-                              let popCustomerEmail = data.tcustomervs1[i].fields.Email || '';
-                              let popCustomerTitle = data.tcustomervs1[i].fields.Title || '';
-                              let popCustomerFirstName = data.tcustomervs1[i].fields.FirstName || '';
-                              let popCustomerMiddleName = data.tcustomervs1[i].fields.CUSTFLD10 || '';
-                              let popCustomerLastName = data.tcustomervs1[i].fields.LastName || '';
-                              let popCustomertfn = '' || '';
-                              let popCustomerPhone = data.tcustomervs1[i].fields.Phone || '';
-                              let popCustomerMobile = data.tcustomervs1[i].fields.Mobile || '';
-                              let popCustomerFaxnumber = data.tcustomervs1[i].fields.Faxnumber || '';
-                              let popCustomerSkypeName = data.tcustomervs1[i].fields.SkypeName || '';
-                              let popCustomerURL = data.tcustomervs1[i].fields.URL || '';
-                              let popCustomerStreet = data.tcustomervs1[i].fields.Street || '';
-                              let popCustomerStreet2 = data.tcustomervs1[i].fields.Street2 || '';
-                              let popCustomerState = data.tcustomervs1[i].fields.State || '';
-                              let popCustomerPostcode = data.tcustomervs1[i].fields.Postcode || '';
-                              let popCustomerCountry = data.tcustomervs1[i].fields.Country || LoggedCountry;
-                              let popCustomerbillingaddress = data.tcustomervs1[i].fields.BillStreet || '';
-                              let popCustomerbcity = data.tcustomervs1[i].fields.BillStreet2 || '';
-                              let popCustomerbstate = data.tcustomervs1[i].fields.BillState || '';
-                              let popCustomerbpostalcode = data.tcustomervs1[i].fields.BillPostcode || '';
-                              let popCustomerbcountry = data.tcustomervs1[i].fields.Billcountry || LoggedCountry;
-                              let popCustomercustfield1 = data.tcustomervs1[i].fields.CUSTFLD1 || '';
-                              let popCustomercustfield2 = data.tcustomervs1[i].fields.CUSTFLD2 || '';
-                              let popCustomercustfield3 = data.tcustomervs1[i].fields.CUSTFLD3 || '';
-                              let popCustomercustfield4 = data.tcustomervs1[i].fields.CUSTFLD4 || '';
-                              let popCustomernotes = data.tcustomervs1[i].fields.Notes || '';
-                              let popCustomerpreferedpayment = data.tcustomervs1[i].fields.PaymentMethodName || '';
-                              let popCustomerterms = data.tcustomervs1[i].fields.TermsName || '';
-                              let popCustomerdeliverymethod = data.tcustomervs1[i].fields.ShippingMethodName || '';
-                              let popCustomeraccountnumber = data.tcustomervs1[i].fields.ClientNo || '';
-                              let popCustomerisContractor = data.tcustomervs1[i].fields.Contractor || false;
-                              let popCustomerissupplier = data.tcustomervs1[i].fields.IsSupplier || false;
-                              let popCustomeriscustomer = data.tcustomervs1[i].fields.IsCustomer || false;
-                              let popCustomerTaxCode = data.tcustomervs1[i].fields.TaxCodeName || '';
-                              let popCustomerDiscount = data.tcustomervs1[i].fields.Discount || 0;
-                              let popCustomerType = data.tcustomervs1[i].fields.ClientTypeName || '';
-                              //$('#edtCustomerCompany').attr('readonly', true);
-                              $('#edtCustomerCompany').val(popCustomerName);
-                              $('#edtCustomerPOPID').val(popCustomerID);
-                              $('#edtCustomerPOPEmail').val(popCustomerEmail);
-                              $('#edtTitle').val(popCustomerTitle);
-                              $('#edtFirstName').val(popCustomerFirstName);
-                              $('#edtMiddleName').val(popCustomerMiddleName);
-                              $('#edtLastName').val(popCustomerLastName);
-                              $('#edtCustomerPhone').val(popCustomerPhone);
-                              $('#edtCustomerMobile').val(popCustomerMobile);
-                              $('#edtCustomerFax').val(popCustomerFaxnumber);
-                              $('#edtCustomerSkypeID').val(popCustomerSkypeName);
-                              $('#edtCustomerWebsite').val(popCustomerURL);
-                              $('#edtCustomerShippingAddress').val(popCustomerStreet);
-                              $('#edtCustomerShippingCity').val(popCustomerStreet2);
-                              $('#edtCustomerShippingState').val(popCustomerState);
-                              $('#edtCustomerShippingZIP').val(popCustomerPostcode);
-                              $('#sedtCountry').val(popCustomerCountry);
-                              $('#txaNotes').val(popCustomernotes);
-                              $('#sltPreferedPayment').val(popCustomerpreferedpayment);
-                              $('#sltTermsPOP').val(popCustomerterms);
-                              $('#sltCustomerType').val(popCustomerType);
-                              $('#edtCustomerCardDiscount').val(popCustomerDiscount);
-                              $('#edtCustomeField1').val(popCustomercustfield1);
-                              $('#edtCustomeField2').val(popCustomercustfield2);
-                              $('#edtCustomeField3').val(popCustomercustfield3);
-                              $('#edtCustomeField4').val(popCustomercustfield4);
-
-                              $('#sltTaxCode').val(popCustomerTaxCode);
-
-                              if ((data.tcustomervs1[i].fields.Street == data.tcustomervs1[i].fields.BillStreet) && (data.tcustomervs1[i].fields.Street2 == data.tcustomervs1[i].fields.BillStreet2) &&
-                                  (data.tcustomervs1[i].fields.State == data.tcustomervs1[i].fields.BillState) && (data.tcustomervs1[i].fields.Postcode == data.tcustomervs1[i].fields.BillPostcode) &&
-                                  (data.tcustomervs1[i].fields.Country == data.tcustomervs1[i].fields.Billcountry)) {
-                                  $('#chkSameAsShipping2').attr("checked", "checked");
-                              }
-
-                              if (data.tcustomervs1[i].fields.IsSupplier == true) {
-                                  // $('#isformcontractor')
-                                  $('#chkSameAsSupplier').attr("checked", "checked");
-                              } else {
-                                  $('#chkSameAsSupplier').removeAttr("checked");
-                              }
-
-                              setTimeout(function () {
-                                  $('#addCustomerModal').modal('show');
-                              }, 200);
-
-                          }
-                      }
-                      if (!added) {
-                          $('.fullScreenSpin').css('display', 'inline-block');
-                          sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
-                              $('.fullScreenSpin').css('display', 'none');
-                              let lineItems = [];
-                              $('#add-customer-title').text('Edit Customer');
-                              let popCustomerID = data.tcustomer[0].fields.ID || '';
-                              let popCustomerName = data.tcustomer[0].fields.ClientName || '';
-                              let popCustomerEmail = data.tcustomer[0].fields.Email || '';
-                              let popCustomerTitle = data.tcustomer[0].fields.Title || '';
-                              let popCustomerFirstName = data.tcustomer[0].fields.FirstName || '';
-                              let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || '';
-                              let popCustomerLastName = data.tcustomer[0].fields.LastName || '';
-                              let popCustomertfn = '' || '';
-                              let popCustomerPhone = data.tcustomer[0].fields.Phone || '';
-                              let popCustomerMobile = data.tcustomer[0].fields.Mobile || '';
-                              let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || '';
-                              let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || '';
-                              let popCustomerURL = data.tcustomer[0].fields.URL || '';
-                              let popCustomerStreet = data.tcustomer[0].fields.Street || '';
-                              let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || '';
-                              let popCustomerState = data.tcustomer[0].fields.State || '';
-                              let popCustomerPostcode = data.tcustomer[0].fields.Postcode || '';
-                              let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
-                              let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || '';
-                              let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || '';
-                              let popCustomerbstate = data.tcustomer[0].fields.BillState || '';
-                              let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || '';
-                              let popCustomerbcountry = data.tcustomer[0].fields.Billcountry || LoggedCountry;
-                              let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || '';
-                              let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || '';
-                              let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || '';
-                              let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || '';
-                              let popCustomernotes = data.tcustomer[0].fields.Notes || '';
-                              let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || '';
-                              let popCustomerterms = data.tcustomer[0].fields.TermsName || '';
-                              let popCustomerdeliverymethod = data.tcustomer[0].fields.ShippingMethodName || '';
-                              let popCustomeraccountnumber = data.tcustomer[0].fields.ClientNo || '';
-                              let popCustomerisContractor = data.tcustomer[0].fields.Contractor || false;
-                              let popCustomerissupplier = data.tcustomer[0].fields.IsSupplier || false;
-                              let popCustomeriscustomer = data.tcustomer[0].fields.IsCustomer || false;
-                              let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || '';
-                              let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
-                              let popCustomerType = data.tcustomer[0].fields.ClientTypeName || '';
-                              //$('#edtCustomerCompany').attr('readonly', true);
-                              $('#edtCustomerCompany').val(popCustomerName);
-                              $('#edtCustomerPOPID').val(popCustomerID);
-                              $('#edtCustomerPOPEmail').val(popCustomerEmail);
-                              $('#edtTitle').val(popCustomerTitle);
-                              $('#edtFirstName').val(popCustomerFirstName);
-                              $('#edtMiddleName').val(popCustomerMiddleName);
-                              $('#edtLastName').val(popCustomerLastName);
-                              $('#edtCustomerPhone').val(popCustomerPhone);
-                              $('#edtCustomerMobile').val(popCustomerMobile);
-                              $('#edtCustomerFax').val(popCustomerFaxnumber);
-                              $('#edtCustomerSkypeID').val(popCustomerSkypeName);
-                              $('#edtCustomerWebsite').val(popCustomerURL);
-                              $('#edtCustomerShippingAddress').val(popCustomerStreet);
-                              $('#edtCustomerShippingCity').val(popCustomerStreet2);
-                              $('#edtCustomerShippingState').val(popCustomerState);
-                              $('#edtCustomerShippingZIP').val(popCustomerPostcode);
-                              $('#sedtCountry').val(popCustomerCountry);
-                              $('#txaNotes').val(popCustomernotes);
-                              $('#sltPreferedPayment').val(popCustomerpreferedpayment);
-                              $('#sltTermsPOP').val(popCustomerterms);
-                              $('#sltCustomerType').val(popCustomerType);
-                              $('#edtCustomerCardDiscount').val(popCustomerDiscount);
-                              $('#edtCustomeField1').val(popCustomercustfield1);
-                              $('#edtCustomeField2').val(popCustomercustfield2);
-                              $('#edtCustomeField3').val(popCustomercustfield3);
-                              $('#edtCustomeField4').val(popCustomercustfield4);
-
-                              $('#sltTaxCode').val(popCustomerTaxCode);
-
-                              if ((data.tcustomer[0].fields.Street == data.tcustomer[0].fields.BillStreet) && (data.tcustomer[0].fields.Street2 == data.tcustomer[0].fields.BillStreet2) &&
-                                  (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
-                                  (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
-                                  $('#chkSameAsShipping2').attr("checked", "checked");
-                              }
-
-                              if (data.tcustomer[0].fields.IsSupplier == true) {
-                                  // $('#isformcontractor')
-                                  $('#chkSameAsSupplier').attr("checked", "checked");
-                              } else {
-                                  $('#chkSameAsSupplier').removeAttr("checked");
-                              }
-
-                              setTimeout(function () {
-                                  $('#addCustomerModal').modal('show');
-                              }, 200);
-                          }).catch(function (err) {
-                              $('.fullScreenSpin').css('display', 'none');
-                          });
-                      }
-                  }
-              }).catch(function (err) {
-                  sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
-                      $('.fullScreenSpin').css('display', 'none');
-                      let lineItems = [];
-                      $('#add-customer-title').text('Edit Customer');
-                      let popCustomerID = data.tcustomer[0].fields.ID || '';
-                      let popCustomerName = data.tcustomer[0].fields.ClientName || '';
-                      let popCustomerEmail = data.tcustomer[0].fields.Email || '';
-                      let popCustomerTitle = data.tcustomer[0].fields.Title || '';
-                      let popCustomerFirstName = data.tcustomer[0].fields.FirstName || '';
-                      let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || '';
-                      let popCustomerLastName = data.tcustomer[0].fields.LastName || '';
-                      let popCustomertfn = '' || '';
-                      let popCustomerPhone = data.tcustomer[0].fields.Phone || '';
-                      let popCustomerMobile = data.tcustomer[0].fields.Mobile || '';
-                      let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || '';
-                      let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || '';
-                      let popCustomerURL = data.tcustomer[0].fields.URL || '';
-                      let popCustomerStreet = data.tcustomer[0].fields.Street || '';
-                      let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || '';
-                      let popCustomerState = data.tcustomer[0].fields.State || '';
-                      let popCustomerPostcode = data.tcustomer[0].fields.Postcode || '';
-                      let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
-                      let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || '';
-                      let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || '';
-                      let popCustomerbstate = data.tcustomer[0].fields.BillState || '';
-                      let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || '';
-                      let popCustomerbcountry = data.tcustomer[0].fields.Billcountry || LoggedCountry;
-                      let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || '';
-                      let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || '';
-                      let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || '';
-                      let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || '';
-                      let popCustomernotes = data.tcustomer[0].fields.Notes || '';
-                      let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || '';
-                      let popCustomerterms = data.tcustomer[0].fields.TermsName || '';
-                      let popCustomerdeliverymethod = data.tcustomer[0].fields.ShippingMethodName || '';
-                      let popCustomeraccountnumber = data.tcustomer[0].fields.ClientNo || '';
-                      let popCustomerisContractor = data.tcustomer[0].fields.Contractor || false;
-                      let popCustomerissupplier = data.tcustomer[0].fields.IsSupplier || false;
-                      let popCustomeriscustomer = data.tcustomer[0].fields.IsCustomer || false;
-                      let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || '';
-                      let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
-                      let popCustomerType = data.tcustomer[0].fields.ClientTypeName || '';
-                      //$('#edtCustomerCompany').attr('readonly', true);
-                      $('#edtCustomerCompany').val(popCustomerName);
-                      $('#edtCustomerPOPID').val(popCustomerID);
-                      $('#edtCustomerPOPEmail').val(popCustomerEmail);
-                      $('#edtTitle').val(popCustomerTitle);
-                      $('#edtFirstName').val(popCustomerFirstName);
-                      $('#edtMiddleName').val(popCustomerMiddleName);
-                      $('#edtLastName').val(popCustomerLastName);
-                      $('#edtCustomerPhone').val(popCustomerPhone);
-                      $('#edtCustomerMobile').val(popCustomerMobile);
-                      $('#edtCustomerFax').val(popCustomerFaxnumber);
-                      $('#edtCustomerSkypeID').val(popCustomerSkypeName);
-                      $('#edtCustomerWebsite').val(popCustomerURL);
-                      $('#edtCustomerShippingAddress').val(popCustomerStreet);
-                      $('#edtCustomerShippingCity').val(popCustomerStreet2);
-                      $('#edtCustomerShippingState').val(popCustomerState);
-                      $('#edtCustomerShippingZIP').val(popCustomerPostcode);
-                      $('#sedtCountry').val(popCustomerCountry);
-                      $('#txaNotes').val(popCustomernotes);
-                      $('#sltPreferedPayment').val(popCustomerpreferedpayment);
-                      $('#sltTermsPOP').val(popCustomerterms);
-                      $('#sltCustomerType').val(popCustomerType);
-                      $('#edtCustomerCardDiscount').val(popCustomerDiscount);
-                      $('#edtCustomeField1').val(popCustomercustfield1);
-                      $('#edtCustomeField2').val(popCustomercustfield2);
-                      $('#edtCustomeField3').val(popCustomercustfield3);
-                      $('#edtCustomeField4').val(popCustomercustfield4);
-
-                      $('#sltTaxCode').val(popCustomerTaxCode);
-
-                      if ((data.tcustomer[0].fields.Street == data.tcustomer[0].fields.BillStreet) && (data.tcustomer[0].fields.Street2 == data.tcustomer[0].fields.BillStreet2) &&
-                          (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
-                          (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
-                          $('#chkSameAsShipping2').attr("checked", "checked");
-                      }
-
-                      if (data.tcustomer[0].fields.IsSupplier == true) {
-                          // $('#isformcontractor')
-                          $('#chkSameAsSupplier').attr("checked", "checked");
-                      } else {
-                          $('#chkSameAsSupplier').removeAttr("checked");
-                      }
-
-                      setTimeout(function () {
-                          $('#addCustomerModal').modal('show');
-                      }, 200);
-                  }).catch(function (err) {
-                      $('.fullScreenSpin').css('display', 'none');
-                  });
+                    if (dataObject.length == 0) {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
+                            setOneCustomerData(data.tcustomer[0]);
+                        }).catch(function (err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let added = false;
+                        for (let i = 0; i < data.tcustomervs1.length; i++) {
+                            if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
+                                added = true;
+                                setOneCustomerData(data.tcustomervs1[i]);
+                            }
+                        }
+                        if (!added) {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
+                                setOneCustomerData(data.tcustomer[0]);
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                        }
+                    }
+                }).catch(function (err) {
+                    sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
+                        setOneCustomerData(data.tcustomer[0]);
+                    }).catch(function (err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
                 });
             } else {
-                if(FlowRouter.current().queryParams.leadid) {
-                    openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
-                } else if (FlowRouter.current().queryParams.customerid){
-                    openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
-                } else if (FlowRouter.current().queryParams.supplierid) {
-                    openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
-                }
-                else {
-                    $('#customerListModal').modal();
-                }
-              setTimeout(function () {
-                  $('#tblCustomerlist_filter .form-control-sm').focus();
-                  $('#tblCustomerlist_filter .form-control-sm').val('');
-                  $('#tblCustomerlist_filter .form-control-sm').trigger("input");
-                  var datatable = $('#tblCustomerlist').DataTable();
-                  //datatable.clear();
-                  //datatable.rows.add(splashArrayCustomerList);
-                  datatable.draw();
-                  $('#tblCustomerlist_filter .form-control-sm').trigger("input");
-                  //$('#tblCustomerlist').dataTable().fnFilter(' ').draw(false);
-              }, 500);
+                initCustomerModal();
             }
         }
-
         //let selectedCustomer = li.text();
         // var custName = li.text();
         // var newJob = clientList.filter(function (customer) {
@@ -3700,27 +2605,133 @@ Template.appointmentsWidget.onRendered(function () {
         // document.getElementById("suburb").value = newJob[0].suburb || '';
         // document.getElementById("zip").value = newJob[0].statecode || '0';
     });
+    function setOneCustomerData(data) {
+        $('.fullScreenSpin').css('display', 'none');
+        let lineItems = [];
+        $('#add-customer-title').text('Edit Customer');
+        let popCustomerID = data.fields.ID || '';
+        let popCustomerName = data.fields.ClientName || '';
+        let popCustomerEmail = data.fields.Email || '';
+        let popCustomerTitle = data.fields.Title || '';
+        let popCustomerFirstName = data.fields.FirstName || '';
+        let popCustomerMiddleName = data.fields.CUSTFLD10 || '';
+        let popCustomerLastName = data.fields.LastName || '';
+        let popCustomertfn = '' || '';
+        let popCustomerPhone = data.fields.Phone || '';
+        let popCustomerMobile = data.fields.Mobile || '';
+        let popCustomerFaxnumber = data.fields.Faxnumber || '';
+        let popCustomerSkypeName = data.fields.SkypeName || '';
+        let popCustomerURL = data.fields.URL || '';
+        let popCustomerStreet = data.fields.Street || '';
+        let popCustomerStreet2 = data.fields.Street2 || '';
+        let popCustomerState = data.fields.State || '';
+        let popCustomerPostcode = data.fields.Postcode || '';
+        let popCustomerCountry = data.fields.Country || LoggedCountry;
+        let popCustomerbillingaddress = data.fields.BillStreet || '';
+        let popCustomerbcity = data.fields.BillStreet2 || '';
+        let popCustomerbstate = data.fields.BillState || '';
+        let popCustomerbpostalcode = data.fields.BillPostcode || '';
+        let popCustomerbcountry = data.fields.Billcountry || LoggedCountry;
+        let popCustomercustfield1 = data.fields.CUSTFLD1 || '';
+        let popCustomercustfield2 = data.fields.CUSTFLD2 || '';
+        let popCustomercustfield3 = data.fields.CUSTFLD3 || '';
+        let popCustomercustfield4 = data.fields.CUSTFLD4 || '';
+        let popCustomernotes = data.fields.Notes || '';
+        let popCustomerpreferedpayment = data.fields.PaymentMethodName || '';
+        let popCustomerterms = data.fields.TermsName || '';
+        let popCustomerdeliverymethod = data.fields.ShippingMethodName || '';
+        let popCustomeraccountnumber = data.fields.ClientNo || '';
+        let popCustomerisContractor = data.fields.Contractor || false;
+        let popCustomerissupplier = data.fields.IsSupplier || false;
+        let popCustomeriscustomer = data.fields.IsCustomer || false;
+        let popCustomerTaxCode = data.fields.TaxCodeName || '';
+        let popCustomerDiscount = data.fields.Discount || 0;
+        let popCustomerType = data.fields.ClientTypeName || '';
+        //$('#edtCustomerCompany').attr('readonly', true);
+        $('#edtCustomerCompany').val(popCustomerName);
+        $('#edtCustomerPOPID').val(popCustomerID);
+        $('#edtCustomerPOPEmail').val(popCustomerEmail);
+        $('#edtTitle').val(popCustomerTitle);
+        $('#edtFirstName').val(popCustomerFirstName);
+        $('#edtMiddleName').val(popCustomerMiddleName);
+        $('#edtLastName').val(popCustomerLastName);
+        $('#edtCustomerPhone').val(popCustomerPhone);
+        $('#edtCustomerMobile').val(popCustomerMobile);
+        $('#edtCustomerFax').val(popCustomerFaxnumber);
+        $('#edtCustomerSkypeID').val(popCustomerSkypeName);
+        $('#edtCustomerWebsite').val(popCustomerURL);
+        $('#edtCustomerShippingAddress').val(popCustomerStreet);
+        $('#edtCustomerShippingCity').val(popCustomerStreet2);
+        $('#edtCustomerShippingState').val(popCustomerState);
+        $('#edtCustomerShippingZIP').val(popCustomerPostcode);
+        $('#sedtCountry').val(popCustomerCountry);
+        $('#txaNotes').val(popCustomernotes);
+        $('#sltPreferedPayment').val(popCustomerpreferedpayment);
+        $('#sltTermsPOP').val(popCustomerterms);
+        $('#sltCustomerType').val(popCustomerType);
+        $('#edtCustomerCardDiscount').val(popCustomerDiscount);
+        $('#edtCustomeField1').val(popCustomercustfield1);
+        $('#edtCustomeField2').val(popCustomercustfield2);
+        $('#edtCustomeField3').val(popCustomercustfield3);
+        $('#edtCustomeField4').val(popCustomercustfield4);
+        $('#sltTaxCode').val(popCustomerTaxCode);
 
-    $('#product-list').editableSelect().on('click.editable-select', function(e, li) {
-        const $earch = $(this);
-        const offset = $earch.offset();
+        if ((data.fields.Street == data.fields.BillStreet) && (data.fields.Street2 == data.fields.BillStreet2) &&
+            (data.fields.State == data.fields.BillState) && (data.fields.Postcode == data.fields.BillPostcode) &&
+            (data.fields.Country == data.fields.Billcountry)) {
+            $('#chkSameAsShipping2').attr("checked", "checked");
+        }
+        if (data.fields.IsSupplier == true) {
+            // $('#isformcontractor')
+            $('#chkSameAsSupplier').attr("checked", "checked");
+        } else {
+            $('#chkSameAsSupplier').removeAttr("checked");
+        }
+        setTimeout(function () {
+            $('#addCustomerModal').modal('show');
+        }, 200);
+    }
+    function initCustomerModal() {
+        if(FlowRouter.current().queryParams.leadid) {
+            openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+        } else if (FlowRouter.current().queryParams.customerid){
+            openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+        } else if (FlowRouter.current().queryParams.supplierid) {
+            openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+        } else {
+            $('#customerListModal').modal();
+        }
+        setTimeout(function () {
+            $('#tblCustomerlist_filter .form-control-sm').focus();
+            $('#tblCustomerlist_filter .form-control-sm').val('');
+            $('#tblCustomerlist_filter .form-control-sm').trigger("input");
+            const datatable = $('#tblCustomerlist').DataTable();
+            //datatable.clear();
+            //datatable.rows.add(splashArrayCustomerList);
+            datatable.draw();
+            $('#tblCustomerlist_filter .form-control-sm').trigger("input");
+            //$('#tblCustomerlist').dataTable().fnFilter(' ').draw(false);
+        }, 500);
+    }
+
+    $('#product-list').editableSelect().on('click.editable-select', function(event, li) {
+        const $each = $(this);
+        const offset = $each.offset();
         const productDataName = e.target.value || '';
         //var productDataID = el.context.value || '';
         // if(el){
         //   var productCostData = el.context.id || 0;
         //   $('#edtProductCost').val(productCostData);
         // }
-        if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
+        if (event.pageX > offset.left + $each.width() - 10) { // X button 16px wide?
             $('#productListModal').modal('toggle');
             setTimeout(function () {
                 $('#tblInventoryPayrollService_filter .form-control-sm').focus();
                 $('#tblInventoryPayrollService_filter .form-control-sm').val('');
                 $('#tblInventoryPayrollService_filter .form-control-sm').trigger("input");
-
-                var datatable = $('#tblInventoryPayrollService').DataTable();
+                const datatable = $('#tblInventoryPayrollService').DataTable();
                 datatable.draw();
                 $('#tblInventoryPayrollService_filter .form-control-sm').trigger("input");
-
             }, 500);
         } else {
             // var productDataID = $(event.target).attr('prodid').replace(/\s/g, '') || '';
@@ -3732,191 +2743,35 @@ Template.appointmentsWidget.onRendered(function () {
                 getVS1Data('TProductWeb').then(function (dataObject) {
                     if (dataObject.length == 0) {
                         sideBarService.getOneProductdatavs1byname(productDataName).then(function (data) {
-                            $('.fullScreenSpin').css('display', 'none');
-                            let lineItems = [];
-                            let lineItemObj = {};
-                            let currencySymbol = Currency;
-                            let totalquantity = 0;
-                            let productname = data.tproduct[0].fields.ProductName || '';
-                            let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
-                            let productprintName = data.tproduct[0].fields.ProductPrintName || '';
-                            let assetaccount = data.tproduct[0].fields.AssetAccount || '';
-                            let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
-                            let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
-                            let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
-                            let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
-                            let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
-                            let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
-                            let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
-                            let salesdescription = data.tproduct[0].fields.SalesDescription || '';
-                            let active = data.tproduct[0].fields.Active;
-                            let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
-                            let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
-                            let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
-                            let barcode = data.tproduct[0].fields.BARCODE || '';
-                            $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                            $('#add-product-title').text('Edit Product');
-                            $('#edtproductname').val(productname);
-                            $('#edtsellqty1price').val(sellqty1price);
-                            $('#txasalesdescription').val(salesdescription);
-                            $('#sltsalesacount').val(incomeaccount);
-                            $('#slttaxcodesales').val(taxcodesales);
-                            $('#edtbarcode').val(barcode);
-                            $('#txapurchasedescription').val(purchasedescription);
-                            $('#sltcogsaccount').val(cogsaccount);
-                            $('#slttaxcodepurchase').val(taxcodepurchase);
-                            $('#edtbuyqty1cost').val(buyqty1cost);
-
-                            setTimeout(function () {
-                                $('#newProductModal').modal('show');
-                            }, 500);
+                            setOneProductData(data.tproduct[0]);
                         }).catch(function (err) {
-
                             $('.fullScreenSpin').css('display', 'none');
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
                         let useData = data.tproductvs1;
-                        var added = false;
-
+                        let added = false;
                         for (let i = 0; i < data.tproductvs1.length; i++) {
                             if (data.tproductvs1[i].fields.ProductName === productDataName) {
                                 added = true;
-                                $('.fullScreenSpin').css('display', 'none');
-                                let lineItems = [];
-                                let lineItemObj = {};
-                                let currencySymbol = Currency;
-                                let totalquantity = 0;
-
-                                let productname = data.tproductvs1[i].fields.ProductName || '';
-                                let productcode = data.tproductvs1[i].fields.PRODUCTCODE || '';
-                                let productprintName = data.tproductvs1[i].fields.ProductPrintName || '';
-                                let assetaccount = data.tproductvs1[i].fields.AssetAccount || '';
-                                let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.BuyQty1Cost) || 0;
-                                let cogsaccount = data.tproductvs1[i].fields.CogsAccount || '';
-                                let taxcodepurchase = data.tproductvs1[i].fields.TaxCodePurchase || '';
-                                let purchasedescription = data.tproductvs1[i].fields.PurchaseDescription || '';
-                                let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.SellQty1Price) || 0;
-                                let incomeaccount = data.tproductvs1[i].fields.IncomeAccount || '';
-                                let taxcodesales = data.tproductvs1[i].fields.TaxCodeSales || '';
-                                let salesdescription = data.tproductvs1[i].fields.SalesDescription || '';
-                                let active = data.tproductvs1[i].fields.Active;
-                                let lockextrasell = data.tproductvs1[i].fields.LockExtraSell || '';
-                                let customfield1 = data.tproductvs1[i].fields.CUSTFLD1 || '';
-                                let customfield2 = data.tproductvs1[i].fields.CUSTFLD2 || '';
-                                let barcode = data.tproductvs1[i].fields.BARCODE || '';
-                                $("#selectProductID").val(data.tproductvs1[i].fields.ID).trigger("change");
-                                $('#add-product-title').text('Edit Product');
-                                $('#edtproductname').val(productname);
-                                $('#edtsellqty1price').val(sellqty1price);
-                                $('#txasalesdescription').val(salesdescription);
-                                $('#sltsalesacount').val(incomeaccount);
-                                $('#slttaxcodesales').val(taxcodesales);
-                                $('#edtbarcode').val(barcode);
-                                $('#txapurchasedescription').val(purchasedescription);
-                                $('#sltcogsaccount').val(cogsaccount);
-                                $('#slttaxcodepurchase').val(taxcodepurchase);
-                                $('#edtbuyqty1cost').val(buyqty1cost);
-
-                                setTimeout(function () {
-                                    $('#newProductModal').modal('show');
-                                }, 500);
+                                setOneProductData(data.tproductvs1[i]);
                             }
                         }
                         if (!added) {
                             sideBarService.getOneProductdatavs1byname(productDataName).then(function (data) {
-                                $('.fullScreenSpin').css('display', 'none');
-                                let lineItems = [];
-                                let lineItemObj = {};
-                                let currencySymbol = Currency;
-                                let totalquantity = 0;
-                                let productname = data.tproduct[0].fields.ProductName || '';
-                                let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
-                                let productprintName = data.tproduct[0].fields.ProductPrintName || '';
-                                let assetaccount = data.tproduct[0].fields.AssetAccount || '';
-                                let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
-                                let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
-                                let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
-                                let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
-                                let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
-                                let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
-                                let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
-                                let salesdescription = data.tproduct[0].fields.SalesDescription || '';
-                                let active = data.tproduct[0].fields.Active;
-                                let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
-                                let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
-                                let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
-                                let barcode = data.tproduct[0].fields.BARCODE || '';
-                                $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                                $('#add-product-title').text('Edit Product');
-                                $('#edtproductname').val(productname);
-                                $('#edtsellqty1price').val(sellqty1price);
-                                $('#txasalesdescription').val(salesdescription);
-                                $('#sltsalesacount').val(incomeaccount);
-                                $('#slttaxcodesales').val(taxcodesales);
-                                $('#edtbarcode').val(barcode);
-                                $('#txapurchasedescription').val(purchasedescription);
-                                $('#sltcogsaccount').val(cogsaccount);
-                                $('#slttaxcodepurchase').val(taxcodepurchase);
-                                $('#edtbuyqty1cost').val(buyqty1cost);
-
-                                setTimeout(function () {
-                                    $('#newProductModal').modal('show');
-                                }, 500);
+                                setOneProductData(data.tproduct[0]);
                             }).catch(function (err) {
-
                                 $('.fullScreenSpin').css('display', 'none');
                             });
                         }
                     }
                 }).catch(function (err) {
-
                     sideBarService.getOneProductdatavs1byname(productDataName).then(function (data) {
-                        $('.fullScreenSpin').css('display', 'none');
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        let currencySymbol = Currency;
-                        let totalquantity = 0;
-                        let productname = data.tproduct[0].fields.ProductName || '';
-                        let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
-                        let productprintName = data.tproduct[0].fields.ProductPrintName || '';
-                        let assetaccount = data.tproduct[0].fields.AssetAccount || '';
-                        let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
-                        let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
-                        let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
-                        let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
-                        let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
-                        let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
-                        let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
-                        let salesdescription = data.tproduct[0].fields.SalesDescription || '';
-                        let active = data.tproduct[0].fields.Active;
-                        let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
-                        let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
-                        let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
-                        let barcode = data.tproduct[0].fields.BARCODE || '';
-                        $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                        $('#add-product-title').text('Edit Product');
-                        $('#edtproductname').val(productname);
-                        $('#edtsellqty1price').val(sellqty1price);
-                        $('#txasalesdescription').val(salesdescription);
-                        $('#sltsalesacount').val(incomeaccount);
-                        $('#slttaxcodesales').val(taxcodesales);
-                        $('#edtbarcode').val(barcode);
-                        $('#txapurchasedescription').val(purchasedescription);
-                        $('#sltcogsaccount').val(cogsaccount);
-                        $('#slttaxcodepurchase').val(taxcodepurchase);
-                        $('#edtbuyqty1cost').val(buyqty1cost);
-
-                        setTimeout(function () {
-                            $('#newProductModal').modal('show');
-                        }, 500);
+                        setOneProductData(data.tproduct[0]);
                     }).catch(function (err) {
-
                         $('.fullScreenSpin').css('display', 'none');
                     });
-
                 });
-
                 setTimeout(function () {
                     var begin_day_value = $('#event_begin_day').attr('value');
                     $("#dtDateTo").datepicker({
@@ -3960,8 +2815,6 @@ Template.appointmentsWidget.onRendered(function () {
 
                 }, 1000);
                 //}
-
-
                 templateObject.getProductClassQtyData = function () {
                     productService.getOneProductClassQtyData(currentProductID).then(function (data) {
                         $('.fullScreenSpin').css('display', 'none');
@@ -3988,26 +2841,60 @@ Template.appointmentsWidget.onRendered(function () {
                     });
 
                 }
-
                 //templateObject.getProductClassQtyData();
                 //templateObject.getProductData();
             } else {
                 $('#productListModal').modal('toggle');
-
                 setTimeout(function () {
                     $('#tblInventoryPayrollService_filter .form-control-sm').focus();
                     $('#tblInventoryPayrollService_filter .form-control-sm').val('');
                     $('#tblInventoryPayrollService_filter .form-control-sm').trigger("input");
-
-                    var datatable = $('#tblInventoryPayrollService').DataTable();
+                    const datatable = $('#tblInventoryPayrollService').DataTable();
                     datatable.draw();
                     $('#tblInventoryPayrollService_filter .form-control-sm').trigger("input");
-
                 }, 500);
             }
-
         }
     });
+    function setOneProductData(data) {
+        $('.fullScreenSpin').css('display', 'none');
+        let lineItems = [];
+        let lineItemObj = {};
+        let currencySymbol = Currency;
+        let totalquantity = 0;
+        let productname = data.fields.ProductName || '';
+        let productcode = data.fields.PRODUCTCODE || '';
+        let productprintName = data.fields.ProductPrintName || '';
+        let assetaccount = data.fields.AssetAccount || '';
+        let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.fields.BuyQty1Cost) || 0;
+        let cogsaccount = data.fields.CogsAccount || '';
+        let taxcodepurchase = data.fields.TaxCodePurchase || '';
+        let purchasedescription = data.fields.PurchaseDescription || '';
+        let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.fields.SellQty1Price) || 0;
+        let incomeaccount = data.fields.IncomeAccount || '';
+        let taxcodesales = data.fields.TaxCodeSales || '';
+        let salesdescription = data.fields.SalesDescription || '';
+        let active = data.fields.Active;
+        let lockextrasell = data.fields.LockExtraSell || '';
+        let customfield1 = data.fields.CUSTFLD1 || '';
+        let customfield2 = data.fields.CUSTFLD2 || '';
+        let barcode = data.fields.BARCODE || '';
+        $("#selectProductID").val(data.fields.ID).trigger("change");
+        $('#add-product-title').text('Edit Product');
+        $('#edtproductname').val(productname);
+        $('#edtsellqty1price').val(sellqty1price);
+        $('#txasalesdescription').val(salesdescription);
+        $('#sltsalesacount').val(incomeaccount);
+        $('#slttaxcodesales').val(taxcodesales);
+        $('#edtbarcode').val(barcode);
+        $('#txapurchasedescription').val(purchasedescription);
+        $('#sltcogsaccount').val(cogsaccount);
+        $('#slttaxcodepurchase').val(taxcodepurchase);
+        $('#edtbuyqty1cost').val(buyqty1cost);
+        setTimeout(function () {
+            $('#newProductModal').modal('show');
+        }, 500);
+    }
 
     /* On clik Inventory Line */
     $(document).on("click", "#tblInventoryPayrollService tbody tr", function (e) {
@@ -4068,7 +2955,7 @@ Template.appointmentsWidget.onRendered(function () {
     $('.formClassDate').val(begunDate);
 
     $(document).on("dblclick", "#tblEmployeeSideList tbody tr", function () {
-        var listData = this.id;
+        const listData = this.id;
         if (listData) {
             FlowRouter.go('/employeescard?id=' + listData);
         }
@@ -4082,11 +2969,9 @@ Template.appointmentsWidget.onRendered(function () {
         let overridesettings = employee.filter(employeeData => {
             return employeeData.id == parseInt(this.id);
         });
-
         let empData = templateObject.employeeOptions.get().filter(emp => {
             return emp.EmployeeID == parseInt(this.id);
         });
-
         if (overridesettings[0].override == "" || overridesettings[0].override == "false") {
             templateObject.empDuration.set(calOptions.DefaultApptDuration);
         } else {
@@ -4115,47 +3000,47 @@ Template.appointmentsWidget.onRendered(function () {
         document.getElementById("suburb").value = $(this).find(".colCity").text();
         document.getElementById("zip").value = $(this).find(".colZipCode").text();
         if($("#updateID").val() == ""){
-        let appointmentService = new AppointmentService();
-        appointmentService.getAllAppointmentListCount().then(function (data) {
-            if (data.tappointmentex.length > 0) {
-                let max = 1;
-                for (let i = 0; i < data.tappointmentex.length; i++) {
-                    if (data.tappointmentex[i].Id > max) {
-                        max = data.tappointmentex[i].Id;
+            let appointmentService = new AppointmentService();
+            appointmentService.getAllAppointmentListCount().then(function (data) {
+                if (data.tappointmentex.length > 0) {
+                    let max = 1;
+                    for (let i = 0; i < data.tappointmentex.length; i++) {
+                        if (data.tappointmentex[i].Id > max) {
+                            max = data.tappointmentex[i].Id;
+                        }
                     }
+                    document.getElementById("appID").value = max + 1;
+    
+                } else {
+                    document.getElementById("appID").value = 1;
                 }
-                document.getElementById("appID").value = max + 1;
-
-            } else {
-                document.getElementById("appID").value = 1;
+            });
+            if (getEmployeeID != ''){
+                const filterEmpData = getAllEmployeeData.filter(empdData => {
+                    return empdData.id == getEmployeeID;
+                });
+                if(filterEmpData){
+                    if(filterEmpData[0].custFld8 == "false"){
+                        templateObject.getAllSelectedProducts(getEmployeeID);
+                    }else{
+                        templateObject.getAllProductData();
+                    }
+                } else {
+                    templateObject.getAllProductData();
+                }
             }
-        });
-        if(getEmployeeID != ''){
-        var filterEmpData = getAllEmployeeData.filter(empdData => {
-            return empdData.id == getEmployeeID;
-        });
-        if(filterEmpData){
-          if(filterEmpData[0].custFld8 == "false"){
-            templateObject.getAllSelectedProducts(getEmployeeID);
-          }else{
-            templateObject.getAllProductData();
-          }
-        }else{
-          templateObject.getAllProductData();
-        }
-      }
-        // if(checkIncludeAllProducts ==  true){
-        // templateObject.getAllProductData();
-        // }else{
-        //   if(getEmployeeID != ''){
-        //     templateObject.getAllSelectedProducts(getEmployeeID);
-        //   }else{
-        //     templateObject.getAllProductData();
-        //   }
-        //
-        // }
-
-        //templateObject.getAllProductData();
+            // if(checkIncludeAllProducts ==  true){
+            // templateObject.getAllProductData();
+            // }else{
+            //   if(getEmployeeID != ''){
+            //     templateObject.getAllSelectedProducts(getEmployeeID);
+            //   }else{
+            //     templateObject.getAllProductData();
+            //   }
+            //
+            // }
+    
+            //templateObject.getAllProductData();
         }
         $('#customerListModal').modal('hide');
         $('#event-modal').modal();
@@ -4197,7 +3082,6 @@ Template.appointmentsWidget.onRendered(function () {
         if (event.target.className.includes("droppable")) {
             event.target.style.background = "#99ccff";
         }
-
     }, false);
 
     document.addEventListener("dragleave", function (event) {
@@ -4205,7 +3089,6 @@ Template.appointmentsWidget.onRendered(function () {
         if (event.target.className.includes("droppable")) {
             event.target.style.background = "";
         }
-
     }, false);
 
     document.addEventListener("drop", function (event) {
@@ -4236,15 +3119,12 @@ Template.appointmentsWidget.onRendered(function () {
             dragged.parentNode.removeChild(dragged);
             event.target.appendChild(dragged);
         }
-        var id = dragged.id;
-
+        const id = dragged.id;
         let employeeName = draggedTr.attr('id');
-        var appointmentData = templateObject.appointmentrecords.get();
-
-        var updateData = appointmentData.filter(apmt => {
+        const appointmentData = templateObject.appointmentrecords.get();
+        const updateData = appointmentData.filter(apmt => {
             return apmt.id == id;
         });
-
         let index = appointmentData.map(function (e) {
             return e.id;
         }).indexOf(parseInt(id));
@@ -4255,23 +3135,18 @@ Template.appointmentsWidget.onRendered(function () {
         if (calendarSet.showSat == false) {
             hideDays = [6];
         }
-
         if (calendarSet.apptStartTime) {
             slotMin = calendarSet.apptStartTime;
         }
-
         if (calendarSet.apptEndTime) {
             slotMax = calendarSet.apptEndTimeCal;
         }
-
         if (calendarSet.showSun == false) {
             hideDays = [0];
         }
-
         if (calendarSet.showSat == false && calendarSet.showSun == false) {
             hideDays = [0, 6];
         }
-
         if (updateData.length > 0) {
             let objectData = {
                 type: "TAppointmentEx",
@@ -4282,7 +3157,6 @@ Template.appointmentsWidget.onRendered(function () {
                     TrainerName: employeeName || '',
                 }
             };
-
             appointmentService.saveAppointment(objectData).then(function (data) {
                 let calendarSet = templateObject.calendarOptions.get();
                 appointmentList[index].employeename = employeeName;
@@ -4294,11 +3168,11 @@ Template.appointmentsWidget.onRendered(function () {
                 appointmentData[index].startDate = allocDate + ' ' + updateCalendarData[eventIndex].start.split(' ')[1];
                 appointmentData[index].endDate = allocDate + ' ' + updateCalendarData[eventIndex].end.split(' ')[1];
                 templateObject.appointmentrecords.get(appointmentData);
-                var calendarEl = document.getElementById('calendar');
-                var currentDate = new Date();
-                var begunDate = moment(currentDate).format("YYYY-MM-DD");
+                const calendarEl = document.getElementById('calendar');
+                const currentDate = new Date();
+                const begunDate = moment(currentDate).format("YYYY-MM-DD");
                 //if(eventData.length > 0){
-                var calendar = new Calendar(calendarEl, {
+                const calendar = new Calendar(calendarEl, {
                     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, bootstrapPlugin],
                     themeSystem: 'bootstrap',
                     initialView: 'dayGridMonth',
@@ -4359,14 +3233,13 @@ Template.appointmentsWidget.onRendered(function () {
                         templateObject.attachmentCount.set('');
                         templateObject.uploadedFiles.set('');
                         templateObject.uploadedFile.set('');
-                        if(FlowRouter.current().queryParams.leadid) {
+                        if (FlowRouter.current().queryParams.leadid) {
                             openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
-                        } else if (FlowRouter.current().queryParams.customerid){
+                        } else if (FlowRouter.current().queryParams.customerid) {
                             openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
                         } else if (FlowRouter.current().queryParams.supplierid) {
                             openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
-                        }
-                        else {
+                        } else {
                             $('#customerListModal').modal();
                         }
                     },
@@ -4525,7 +3398,8 @@ Template.appointmentsWidget.onRendered(function () {
                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
                                         addVS1Data('TAppointment', JSON.stringify(dataUpdate)).then(function (datareturn) {
                                             window.open('/appointments', '_self');
-                                        }).catch(function (err) {});
+                                        }).catch(function (err) {
+                                        });
                                     }).catch(function (err) {
                                         window.open('/appointments', '_self');
                                     });
@@ -4566,7 +3440,7 @@ Template.appointmentsWidget.onRendered(function () {
                         var start = event.dateStr != '' ? moment(event.dateStr).format("DD/MM/YYYY") : event.dateStr;
                         document.getElementById("dtSODate").value = start;
                         document.getElementById("dtSODate2").value = start;
-                            var startTime = moment(event.dateStr).format("HH:mm");
+                        var startTime = moment(event.dateStr).format("HH:mm");
                         document.getElementById("startTime").value = startTime;
                         if (overridesettings[0].override == "false") {
                             if (calendarSet.DefaultApptDuration) {
@@ -4612,7 +3486,7 @@ Template.appointmentsWidget.onRendered(function () {
                             if (templateObject.empDuration.get() != "") {
                                 var endTime = moment(startTime, 'HH:mm').add(parseInt(templateObject.empDuration.get()), 'hours').format('HH:mm');
                                 document.getElementById("endTime").value = endTime;
-                                let hoursFormattedStartTime =  templateObject.timeFormat(templateObject.empDuration.get()) || '';
+                                let hoursFormattedStartTime = templateObject.timeFormat(templateObject.empDuration.get()) || '';
                                 document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
                             } else {
                                 var appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5), 'HH:mm').format('HH:mm');
@@ -4637,20 +3511,20 @@ Template.appointmentsWidget.onRendered(function () {
 
                         var endTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("endTime").value).format('DD/MM/YYYY HH:mm');
                         var startTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("startTime").value).format('DD/MM/YYYY HH:mm');
-                        if(FlowRouter.current().queryParams.leadid) {
+                        if (FlowRouter.current().queryParams.leadid) {
                             openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
-                        } else if (FlowRouter.current().queryParams.customerid){
+                        } else if (FlowRouter.current().queryParams.customerid) {
                             openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
                         } else if (FlowRouter.current().queryParams.supplierid) {
                             openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
-                        }
-                        else {
+                        } else {
                             $('#customerListModal').modal();
                         }
                     },
 
                     events: eventData,
-                    eventDidMount: function (event) {},
+                    eventDidMount: function (event) {
+                    },
                     eventContent: function (event) {
                         let title = document.createElement('p');
                         if (event.event.title) {
@@ -4669,7 +3543,6 @@ Template.appointmentsWidget.onRendered(function () {
 
                 });
                 calendar.render();
-
                 sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (data) {
                     addVS1Data('TAppointment', JSON.stringify(data)).then(function (datareturn) {}).catch(function (err) {});
                 }).catch(function (err) {});
@@ -4681,7 +3554,7 @@ Template.appointmentsWidget.onRendered(function () {
     }, false);
 
     $(document).on("click", "#check-all", function () {
-        var checkbox = document.querySelector("#check-all");
+        const checkbox = document.querySelector("#check-all");
         if (checkbox.checked) {
             $(".notevent").prop('checked', true);
         } else {
@@ -4691,16 +3564,14 @@ Template.appointmentsWidget.onRendered(function () {
 
     $(document).ready(function () {
         $("#showSaturday").change(function () {
-            var checkbox = document.querySelector("#showSunday");
-            var checkboxSaturday = document.querySelector("#showSaturday");
+            const checkbox = document.querySelector("#showSunday");
+            const checkboxSaturday = document.querySelector("#showSaturday");
             let calendarSet2 = templateObject.globalSettings.get();
             let slotMin = "06:00:00";
             let slotMax = "21:00:00";
-
             if (calendarSet2.apptStartTime) {
                 slotMin = calendarSet2.apptStartTime;
             }
-
             if (calendarSet2.apptEndTime) {
                 slotMax = calendarSet2.apptEndTimeCal;
             }
@@ -4779,13 +3650,12 @@ Template.appointmentsWidget.onRendered(function () {
 
                 setTimeout(function () {
                     templateObject.renderCalendar(slotMin, slotMax, hideDays);
-
                 }, 50);
             }
         });
         $("#showSunday").change(function () {
-            var checkbox = document.querySelector("#showSunday");
-            var checkboxSaturday = document.querySelector("#showSaturday");
+            const checkbox = document.querySelector("#showSunday");
+            const checkboxSaturday = document.querySelector("#showSaturday");
             let calendarSet2 = templateObject.globalSettings.get();
             let slotMin = "06:00:00";
             let slotMax = "21:00:00";
@@ -4793,11 +3663,9 @@ Template.appointmentsWidget.onRendered(function () {
             if (calendarSet2.apptStartTime) {
                 slotMin = calendarSet2.apptStartTime;
             }
-
             if (calendarSet2.apptEndTime) {
                 slotMax = calendarSet2.apptEndTimeCal;
             }
-
             if (checkbox.checked && (checkboxSaturday.checked)) {
                 let hideDays = '';
                 $("#allocationTable .sunday").removeClass("hidesunday");
@@ -4874,7 +3742,6 @@ Template.appointmentsWidget.onRendered(function () {
                 }, 50);
             }
         });
-
     });
 
     //TODO: Get SMS settings here
@@ -5019,7 +3886,7 @@ Template.appointmentsWidget.onRendered(function () {
         $('.btnStartIgnoreSMS').addClass('d-none');
         $('.btnSaveIgnoreSMS').addClass('d-none');
         $('.btnStopIgnoreSMS').addClass('d-none');
-    };
+    }
     templateObject.checkSMSSettings = function() {
         const accessLevel = Session.get('CloudApptSMS');
         if (!accessLevel) {
@@ -5065,7 +3932,7 @@ Template.appointmentsWidget.onRendered(function () {
     //templateObject.checkSMSSettings();
 });
 
-Template.appointmentsWidget.events({
+Template.dsmAppointmentsWidget.events({
     //  'click .holdPause': function (event) {
     //      swal({
     //                     title: 'Appointment Paused',
@@ -9370,7 +8237,7 @@ Template.appointmentsWidget.events({
     }
 });
 
-Template.appointmentsWidget.helpers({
+Template.dsmAppointmentsWidget.helpers({
     employeerecords: () => {
         return Template.instance().employeerecords.get()
         .sort(function (a, b) {

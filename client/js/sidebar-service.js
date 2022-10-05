@@ -984,15 +984,6 @@ export class SideBarService extends BaseService {
       ListType: "Detail",
       select: "[Active]=true",
     };
-    // }else{
-    //   options = {
-    //    orderby:'"AccountID desc"',
-    //    ListType: "Detail",
-    //    select: '[Active]=true',
-    //    LimitCount:'"'+limitcount+'"',
-    //    LimitFrom:'"'+limitfrom+'"'
-    //   };
-    // }
     return this.getList(this.ERPObjects.TAccountVS1, options);
   }
 
@@ -1075,8 +1066,6 @@ export class SideBarService extends BaseService {
         orderby: '"ClientID desc"',
         ListType: "Detail",
         select: "[Active]=true",
-        //LimitCount:'"'+limitcount+'"',
-        //LimitFrom:'"'+limitfrom+'"'
       };
     }
     return this.getList(this.ERPObjects.TEmployee, options);
@@ -1146,8 +1135,6 @@ export class SideBarService extends BaseService {
         orderby: '"ClientID desc"',
         ListType: "Detail",
         select: "[Active]=true",
-        //LimitCount:'"'+limitcount+'"',
-        //LimitFrom:'"'+limitfrom+'"'
       };
     }
     return this.getList(this.ERPObjects.TEmployee, options);
@@ -2629,8 +2616,6 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         select: "[Active]=true",
-        // LimitCount:'"'+limitcount+'"',
-        // LimitFrom:'"'+limitfrom+'"'
       };
     }
     return this.getList(this.ERPObjects.TDeduction, options);
@@ -2737,7 +2722,6 @@ export class SideBarService extends BaseService {
         orderby: '"DepositID desc"',
         ListType: "Detail",
         select: "[Deleted]=false",
-        // LimitCount:'"'+initialReportLoad+'"'
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
@@ -2824,7 +2808,6 @@ export class SideBarService extends BaseService {
       OrderBy: "SaleID desc",
       ListType: "Detail",
       select: '[Deleted]=false and [MsTimeStamp]>"' + msTimeStamp + '"',
-      //LimitCount:'"50"'
     };
     return this.getList(this.ERPObjects.TInvoiceEx, options);
   }
@@ -2847,25 +2830,6 @@ export class SideBarService extends BaseService {
     }
     return this.getList(this.ERPObjects.BackOrderSalesList, options);
   }
-
-  // getAllBackOrderInvoiceList(limitcount, limitfrom) {
-  //   let options = '';
-  //   if(limitcount == 'All'){
-  //    options = {
-  //      OrderBy:"SaleID desc",
-  //      PropertyList: "Id,ClientName,EmployeeName,SaleClassName,SaleDate",
-  //   };
-  // }else{
-  //   options = {
-  //     OrderBy:"SaleID desc",
-  //     PropertyList: "Id,ClientName,EmployeeName,SaleClassName,SaleDate",
-  //    //  select: "[Deleted]=false",
-  //    // //  LimitCount:'"'+limitcount+'"',
-  //    // // LimitFrom:'"'+limitfrom+'"'
-  //  };
-  // }
-  //   return this.getList(this.ERPObjects.TInvoiceBackOrder, options);
-  // }
 
   getAllBackOrderInvoiceList(limitcount, limitfrom) {
     let options = "";
@@ -3204,7 +3168,6 @@ export class SideBarService extends BaseService {
     let options = {
       ListType: "Detail",
       select: "[Active]=true",
-      //LimitCount:'"'+initialDataLoad+'"',
     };
     return this.getList(this.ERPObjects.TTimeSheet, options);
   }

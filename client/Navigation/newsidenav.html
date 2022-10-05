@@ -514,6 +514,19 @@
 <!--                </li>-->
             {{/if}}
 
+            <!-- {{#if includeFixedAssets}} -->
+            <li class="fixedAssetsLi" id="sidenavfixedAssets">
+                <a href="#fixedAssetsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader fixedAssetsLiHeader"><i class="fas fa-home faHeader"></i> Fixed Asset</a>
+                <ul class="collapse list-unstyled" id="fixedAssetsSubmenu">
+                    <li>
+                        <a class="sidenavfixedassets" id="sidenavfixedassets" name="sidenavfixedassets"><i class="fas fa-user-friends"></i> Fixed Assets</a>
+                    </li>
+                    <li>
+                        <a class="sidenavservicelogs" id="sidenavservicelogs" name="sidenavservicelogs"><i class="fas fa-server"></i> Service Logs</a>
+                    </li>
+                </ul>
+            </li>
+            <!-- {{/if}} -->
 
             <!-- {{#if includeManufacturing}} -->
                 <li class="manufacturingLi" id="sidenavmanufacturing">
