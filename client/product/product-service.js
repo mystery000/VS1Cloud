@@ -276,7 +276,7 @@ export class ProductService extends BaseService {
 
     getTaxCodes() {
         let options = {
-            PropertyList: "CodeName,Rate,Description",
+            PropertyList: "CodeName,Rate,Description,RegionName",
             select: "[Active]=true"
         };
         return this.getList(this.ERPObjects.TTaxCode, options);
@@ -284,7 +284,7 @@ export class ProductService extends BaseService {
 
     getTaxCodesVS1() {
         let options = {
-            PropertyList: "CodeName,Rate,Description",
+            PropertyList: "CodeName,Rate,Description,RegionName",
             select: "[Active]=true"
         };
         return this.getList(this.ERPObjects.TTaxcodeVS1, options);

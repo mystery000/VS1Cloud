@@ -481,9 +481,9 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-success btnSaveSettings" type="submit"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                        <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                        <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                      <button class="btn btn-success btnSaveSettings" style="margin:12px;" type="submit"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                      <button class="btn btn-warning btnResetSettings" style="margin:12px;" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                      <button class="btn btn-secondary" data-dismiss="modal" style="margin:12px;" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                     </div>
                 </form>
             </div>
@@ -2099,10 +2099,9 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                                         <tr id="{{item.id}}">
                                             <td>
                                                 <div class='fc-event fc-daygrid-event fc-daygrid-block-event'>
-                                                    <a role="button" id="addAppointment_{{item.id}}" data-toggle="modal" href="#customerListModal" class="btn btn-primary addAppointmentEmp"
-                                                        style="width: 24px; height: 24px; text-align: center; float: left; margin-right:5px; padding:0">
-                                                        <i class="icon ion-plus"></i>
-                                                    </a>
+                                                  <a role="button" id="addAppointment_{{item.id}}" data-toggle="modal" href="#" class="btn btn-primary addAppointmentEmp" style="width: 24px; height: 24px; text-align: center; float: left; margin-right:5px; padding:0">
+                                                      <i class="icon ion-plus"></i>
+                                                  </a>
                                                     {{#if item.color}}
                                                         <div class='fc-event-main'>
                                                             <span class="empColor" style="background: {{item.color}};">
@@ -2177,12 +2176,12 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                 }
 
                 .fc-toolbar-chunk {
-                    background-color: #fff;
-                    padding: 16px 32px;
-                    border-radius: .35rem;
-                    border: 1px solid #e3e6f0;
-                    background-clip: border-box;
-                    box-shadow: 0 0.15rem 1.75rem 0 rgb(58 59 69 / 15%);
+                  background-color: #fff;
+                  padding: 10px 10px;
+                  border-radius: .35rem;
+                  border: 1px solid #e3e6f0;
+                  background-clip: border-box;
+                  box-shadow: 0 0.15rem 1.75rem 0 rgb(58 59 69 / 15%);
                 }
 
                 .fc-toolbar-title::before {
