@@ -502,7 +502,6 @@ Template.employeescard.onRendered(function () {
         });
 
         data = data.response;
-        console.log('TRepService', data.trepservices);
         await templateObject.TRepServices.set(data.trepservices);
 
         let objects = data.trepservices.map(s => s.fields);
@@ -516,7 +515,7 @@ Template.employeescard.onRendered(function () {
         //     objects[index] = products.find(p => p.ProductName == obj.ServiceDesc)
         // });
 
-        console.log("employee products", selectedProducts);
+       
 
         templateObject.selectedproducts.set(selectedProducts);
         templateObject.rebuildProductTable();
@@ -847,7 +846,6 @@ Template.employeescard.onRendered(function () {
 
         
 
-        console.log('Seleted products', selectedProducts);
         $('#productListModal').modal('hide');
         return;
 
@@ -931,7 +929,7 @@ Template.employeescard.onRendered(function () {
 
         const findProductService = (searchedProduct) => {
             let product = tRepServices.find(s => searchedProduct.ProductName == s.fields.ServiceDesc);
-            console.log('service found', product);
+         
             return product;
         }
 
@@ -947,12 +945,10 @@ Template.employeescard.onRendered(function () {
                 }
             };
 
-            console.log("Obj service details: ", objServiceDetails);
 
             await productService.saveProductService(objServiceDetails);
         });
 
-        console.log("deleted products", deletedProducts);
         await GlobalFunctions.asyncForEach(deletedProducts, async (product, index) => {
             let serviceObj = findProductService(product);
 
@@ -963,8 +959,6 @@ Template.employeescard.onRendered(function () {
                     Active: false
                 }
             }
-
-            console.log('product to be deleted', objDetails);
             await contactService.saveEmployeeProducts(objDetails);
         });
 
