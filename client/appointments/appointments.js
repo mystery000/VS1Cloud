@@ -774,11 +774,10 @@ Template.appointments.onRendered(function () {
   };
   const settingsModalButton = {
     settingsmodalbutton: {
-      text: "...",
+      text: "",
       click: function () {
         $("#settingsModal").modal();
-      },
-      icon:'left-double-arrow'
+      }
     },
   };
 

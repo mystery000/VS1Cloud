@@ -2922,7 +2922,6 @@ templateObject.getLastPOData = async function() {
                 templateObject.inputSelectedCurrency.set(purchaseorderrecord.currency);
 
             }).catch(function(err) {
-              console.log(err);
                 swal({
                     title: 'Oooops...',
                     text: err,
