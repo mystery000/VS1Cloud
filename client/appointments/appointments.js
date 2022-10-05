@@ -7,6 +7,7 @@ import "jquery-ui-dist/external/jquery/jquery";
 import { SalesBoardService } from "../js/sales-service";
 import { OrganisationService } from "../js/organisation-service";
 import { AppointmentService } from "./appointment-service";
+import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import { Random } from "meteor/random";
 //Calendar
 import { Calendar, formatDate } from "@fullcalendar/core";
@@ -75,6 +76,7 @@ Template.appointments.onCreated(function () {
   templateObject.toupdatelogid = new ReactiveVar();
   templateObject.isAccessLevels = new ReactiveVar();
   templateObject.productFees = new ReactiveVar([]);
+  templateObject.leaveemployeerecords = new ReactiveVar([]);
 });
 
 async function sendAppointmentEmail() {
@@ -2090,6 +2092,16 @@ Template.appointments.onRendered(function () {
         };
       },
     });
+
+    setTimeout(() => {
+        const child1 = document.querySelector(".fc-appointments-button");
+        const parent1 = child1.parentNode;
+        const child2 = document.querySelector("h2.fc-toolbar-title");
+        const parent2 = child2.parentNode;
+        $(parent1).css("min-width", 568).css("text-align", "center");
+        $("#calendar .fc-toolbar-title").css("min-width", 238);
+        // $(parent2).css("min-width", 260)
+      }, 100);
   };
 
   const getWeeksInMonth = function (year, month) {
@@ -2255,9 +2267,48 @@ Template.appointments.onRendered(function () {
     return result;
   };
 
-  templateObject.getEmployeesList = function () {
+  templateObject.saveLeaveRequestLocalDB = async function(){
+  const employeePayrolApis = new EmployeePayrollApi();
+  // now we have to make the post request to save the data in database
+  const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+      employeePayrolApis.collectionNames.TLeavRequest
+  );
+
+  employeePayrolEndpoint.url.searchParams.append(
+      "ListType",
+      "'Detail'"
+  );
+  const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+  if (employeePayrolEndpointResponse.ok == true) {
+      const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+      if( employeePayrolEndpointJsonResponse.tleavrequest.length ){
+          await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
+      }
+      return employeePayrolEndpointJsonResponse
+  }
+  return '';
+};
+
+  templateObject.getEmployeesList = async function () {
+    let leaveArr = [];
+   let data = []
+   let dataObject = await getVS1Data('TLeavRequest')
+   if ( dataObject.length == 0) {
+       data = await templateObject.saveLeaveRequestLocalDB();
+   }else{
+       data = JSON.parse(dataObject[0].data);
+   }
+   if (data.tleavrequest.length > 0) {
+     data.tleavrequest.forEach((item) => {
+       const fields = item.fields;
+       leaveArr.push(fields);
+     });
+   }
+   templateObject.leaveemployeerecords.set(leaveArr);
+
     getVS1Data("TEmployee")
-      .then(function (dataObject) {
+      .then(async function (dataObject) {
         if (dataObject.length == 0) {
           contactService
             .getAllEmployeeSideData()
@@ -16755,8 +16806,26 @@ Template.appointments.events({
        }
    },
    'click .addAppointmentEmp': function(event) {
-       let empID = $(event.currentTarget).attr('id').split("_")[1];
-       $('#employee_name').val($("#employeeName_" + empID).text());
+     templateObject = Template.instance();
+      let empID = $(event.currentTarget).attr('id').split("_")[1];
+      let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+      var startdateGet = new Date($("#dtSODate").datepicker("getDate"));
+      var leaveFlag = false;
+      leaveemployeerecords.forEach((item) => {
+      if(item.EmployeeID == empID && startdateGet >= new Date(item.StartDate) && startdateGet <= new Date(item.EndDate)){
+        swal(
+          "They are not available due to whatever leave they took",
+          "",
+          "warning"
+        );
+        leaveFlag = true;
+      }
+      });
+
+      if(!leaveFlag){
+      $('#employee_name').val($("#employeeName_" + empID).text());
+      $('#customerListModal').modal("show");
+      }
    },
    'click .chkServiceCard': function(event) {
        templateObject = Template.instance();

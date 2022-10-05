@@ -56,7 +56,7 @@ Template.bankingoverview.onRendered(function() {
       let reset_data = [
         { index: 0, label: "id", class: "SortDate", width: "0", active: false, display: false },
         { index: 1, label: "Date", class: "PaymentDate", width: "80", active: true, display: true },
-        { index: 2, label: "Transaction ID", class: "AccountId", width: "80", active: true, display: true },
+        { index: 2, label: "Trans ID", class: "AccountId", width: "80", active: true, display: true },
         { index: 3, label: "Account", class: "BankAccount", width: "100", active: true, display: true },
         { index: 4, label: "Type", class: "Type", width: "120", active: true, display: true },
         { index: 5, label: "Amount", class: "PaymentAmount", width: "80", active: true, display: true },
@@ -64,7 +64,7 @@ Template.bankingoverview.onRendered(function() {
         { index: 7, label: "Department", class: "Department", width: "80", active: true, display: true },
         { index: 8, label: "Chq Ref No", class: "chqrefno", width: "110", active: false, display: true },
         { index: 9, label: "Comments", class: "Notes", width: "", active: true, display: true },
-      ]; 
+      ];
 
       let templateObject = Template.instance();
       templateObject.reset_data.set(reset_data);
@@ -88,13 +88,13 @@ Template.bankingoverview.onRendered(function() {
           }).catch(function (err) {
           });
         } else {
-          let data = JSON.parse(dataObject[0].data); 
+          let data = JSON.parse(dataObject[0].data);
           // handle process here
         }
       });
     } catch (error) {
-    } 
-    return; 
+    }
+    return;
   }
 
   function showCustomFieldDisplaySettings(reset_data) {
@@ -107,7 +107,7 @@ Template.bankingoverview.onRendered(function() {
       customData = {
         active: reset_data[r].active,
         id: reset_data[r].index,
-        custfieldlabel: reset_data[r].label, 
+        custfieldlabel: reset_data[r].label,
         class: reset_data[r].class,
         display: reset_data[r].display,
         width: reset_data[r].width ? reset_data[r].width : ''
@@ -474,6 +474,8 @@ Template.bankingoverview.onRendered(function() {
                             lineID = data.tbankaccountreport[i].PurchaseOrderID;
                         } else if (data.tbankaccountreport[i].Type == "Check") {
                             lineID = data.tbankaccountreport[i].PurchaseOrderID;
+                        }else {
+                            lineID = data.tbankaccountreport[i].TransID;
                         }
 
 
@@ -737,7 +739,9 @@ Template.bankingoverview.onRendered(function() {
                                 FlowRouter.go('/chequecard?id=' + listData);
                             } else if (transactiontype == "Check") {
                                 FlowRouter.go('/chequecard?id=' + listData);
-                            } else {
+                            } else if (transactiontype == "Deposit Entry") {
+                                FlowRouter.go('/depositcard?id=' + listData);
+                            }else {
                                 FlowRouter.go('/chequelist');
                             }
 
@@ -751,6 +755,7 @@ Template.bankingoverview.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
+                console.log(data);
                 let useData = data.tbankaccountreport;
                 if(data.Params.IgnoreDates == true){
                   $('#dateFrom').attr('readonly', true);
@@ -806,6 +811,8 @@ Template.bankingoverview.onRendered(function() {
                         lineID = useData[i].PurchaseOrderID;
                     } else if (useData[i].Type == "Check") {
                         lineID = useData[i].PurchaseOrderID;
+                    }else {
+                        lineID = useData[i].TransID;
                     }
 
 
@@ -1068,6 +1075,8 @@ Template.bankingoverview.onRendered(function() {
                             FlowRouter.go('/chequecard?id=' + listData);
                         } else if (transactiontype == "Check") {
                             FlowRouter.go('/chequecard?id=' + listData);
+                        } else if (transactiontype == "Deposit Entry") {
+                            FlowRouter.go('/depositcard?id=' + listData);
                         } else {
                             FlowRouter.go('/chequelist');
                         }
@@ -1123,6 +1132,8 @@ Template.bankingoverview.onRendered(function() {
                         lineID = data.tbankaccountreport[i].PurchaseOrderID;
                     } else if (data.tbankaccountreport[i].Type == "Check") {
                         lineID = data.tbankaccountreport[i].PurchaseOrderID;
+                    }else {
+                        lineID = data.tbankaccountreport[i].TransID;
                     }
 
 
@@ -1386,7 +1397,9 @@ Template.bankingoverview.onRendered(function() {
                             FlowRouter.go('/chequecard?id=' + listData);
                         } else if (transactiontype == "Check") {
                             FlowRouter.go('/chequecard?id=' + listData);
-                        } else {
+                        } else if (transactiontype == "Deposit Entry") {
+                            FlowRouter.go('/depositcard?id=' + listData);
+                        }else {
                             FlowRouter.go('/chequelist');
                         }
 
@@ -1727,8 +1740,8 @@ Template.bankingoverview.events({
             }
         });
     },
-    
-    
+
+
   // custom field displaysettings
   "click .saveTable": function(event) {
     let lineItems = [];
@@ -1755,19 +1768,19 @@ Template.bankingoverview.events({
         display: true
       };
 
-      lineItems.push(lineItemObj); 
+      lineItems.push(lineItemObj);
     });
 
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     reset_data = reset_data.filter(redata => redata.display == false);
     lineItems.push(...reset_data);
-    lineItems.sort((a,b) => a.index - b.index); 
+    lineItems.sort((a,b) => a.index - b.index);
 
     try {
       let erpGet = erpDb();
       let tableName = "tblBankingOverview";
-      let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+      let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
 
       let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
@@ -1781,7 +1794,7 @@ Template.bankingoverview.events({
           }).then((result) => {
               if (result.value) {
                 $('#myModal2').modal('hide');
-              }  
+              }
           });
       } else {
         swal("Something went wrong!", "", "error");
@@ -1789,15 +1802,15 @@ Template.bankingoverview.events({
     } catch (error) {
       $(".fullScreenSpin").css("display", "none");
       swal("Something went wrong!", "", "error");
-    } 
+    }
   },
 
   // custom field displaysettings
   "click .resetTable": async function (event) {
       let templateObject = Template.instance();
-        let reset_data = templateObject.reset_data.get();  
-        reset_data = reset_data.filter(redata => redata.display); 
-    
+        let reset_data = templateObject.reset_data.get();
+        reset_data = reset_data.filter(redata => redata.display);
+
         $(".customDisplaySettings").each(function (index) {
           let $tblrow = $(this);
           $tblrow.find(".divcolumn").text(reset_data[index].label);
@@ -1826,7 +1839,7 @@ Template.bankingoverview.events({
         });
     },
     'change .custom-range': function(event) {
-      let range = $(event.target).val(); 
+      let range = $(event.target).val();
       let colClassName = $(event.target).attr("valueclass");
       $('.col' + colClassName).css('width', range);
     },

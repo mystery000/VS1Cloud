@@ -1128,7 +1128,7 @@ Template.vs1login.onRendered(function () {
         let isTimesheetStartStop = false;
         let isTimesheetCreate = false;
         let isShowTimesheet = false;
-
+        let isFXEnabled = false;
 
         //New Access Level
         let isCRM = false;
@@ -1164,6 +1164,8 @@ Template.vs1login.onRendered(function () {
         let isReportsLicence = Session.get('CloudReportsLicence');
         let isSettingsLicence = Session.get('CloudSettingsLicence');
         let isAppointmentSchedulingLicence = Session.get('CloudAppointmentSchedulingLicence');
+
+        let isFxCurrencyLicence = Session.get('CloudUseForeignLicenceModule');
         /*End Licence Check Menu to add */
         /* End Licence Check for menu option */
         if (userAccessOptions.items) {
@@ -1191,6 +1193,10 @@ Template.vs1login.onRendered(function () {
 
                     if (optionaccess.fields.Description === "Appointment - Start and Stop Only") {
                         isAppointmentStartStop = true;
+                    }
+
+                    if (optionaccess.fields.Description === "Use Foreign Currency") {
+                        isFXEnabled = true;
                     }
 
                     if (optionaccess.fields.Description === "Appointment - Add Attachments") {
@@ -1401,6 +1407,11 @@ Template.vs1login.onRendered(function () {
                 isAppointmentStartStop = false;
                 isAppointmentSMS = false;
             }
+
+            if (!isFxCurrencyLicence) {
+                isFXEnabled = false;
+            }
+
             if (!isInventoryLicence) {
                 isInventory = false;
                 isProductCost = false;
@@ -1542,6 +1553,8 @@ Template.vs1login.onRendered(function () {
              Session.setPersistent('CloudImportProd', isImportProduct);
              Session.setPersistent('CloudStockOnHand', isStockonHandDemandChart);
              Session.setPersistent('CloudApptSMS', isAppointmentSMS);
+
+             Session.setPersistent('CloudUseForeignLicence', isFXEnabled);
 
             let userSerssion = {
                 'loggedEmpID': userAccessOptions.items[0].fields.EmployeeId,
@@ -2330,7 +2343,7 @@ Template.vs1login.onRendered(function () {
                                       Session.setPersistent('CloudAddExtraLicence', isAddExtraUserLicence);
                                       Session.setPersistent('CloudMatrixLicence', isMatrixLicence);
                                       Session.setPersistent('CloudPOSLicence', isPOSLicence);
-                                      Session.setPersistent('CloudUseForeignLicence', isFxCurrencyLicence);
+                                      Session.setPersistent('CloudUseForeignLicenceModule', isFxCurrencyLicence);
                                       Session.setPersistent('CloudWMSLicence', isWMSLicence);
                                       Session.setPersistent('CloudAppointmentSchedulingLicence', isAppointmentSchedulingLicence);
                                       /* End Remove licence */
@@ -2396,8 +2409,8 @@ Template.vs1login.onRendered(function () {
                                       .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                                       .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                                       .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/"));
-                                      $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
-                                      $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
+                                      $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
+                                      $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
                                       swal({
                                           title: 'Awaiting Email Validation',
                                           html: true,
