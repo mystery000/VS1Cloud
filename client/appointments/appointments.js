@@ -774,14 +774,6 @@ Template.appointments.onRendered(function () {
       },
     },
   };
-  const settingsModalButton = {
-    settingsmodalbutton: {
-      text: "",
-      click: function () {
-        $("#settingsModal").modal();
-      }
-    },
-  };
 
   templateObject.renderCalendar = function (slotMin, slotMax, hideDays) {
     let calendarSet = templateObject.globalSettings.get();
@@ -815,12 +807,11 @@ Template.appointments.onRendered(function () {
           },
         },
         ...refreshButton,
-        ...settingsModalButton,
       },
       headerToolbar: {
         left: "prev,next today appointments allocation refresh",
         center: "title",
-        right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
+        right: "dayGridMonth,timeGridWeek,timeGridDay",
       },
       buttonText: {
         today: "Today",
@@ -1393,24 +1384,22 @@ Template.appointments.onRendered(function () {
       },
     });
     calendar.render();
-    $('.fc-today-button').prop('disabled', false);
-
   };
 
   templateObject.renderNormalCalendar = function () {
     let calendarSet = templateObject.globalSettings.get();
     let hideDays = "";
-    let slotMin = "06:00:00";
-    let slotMax = "21:00:00";
+    let slotMin = "00:00:00";
+    let slotMax = "23:59:59";
     if (calendarSet.showSat == false) {
       hideDays = [6];
     }
-    if (calendarSet.apptStartTime) {
-      slotMin = calendarSet.apptStartTime;
-    }
-    if (calendarSet.apptEndTime) {
-      slotMax = calendarSet.apptEndTimeCal;
-    }
+    // if (calendarSet.apptStartTime) {
+    //   slotMin = calendarSet.apptStartTime;
+    // }
+    // if (calendarSet.apptEndTime) {
+    //   slotMax = calendarSet.apptEndTimeCal;
+    // }
     if (calendarSet.showSun == false) {
       hideDays = [0];
     }
@@ -1448,12 +1437,11 @@ Template.appointments.onRendered(function () {
           },
         },
         ...refreshButton,
-        ...settingsModalButton,
       },
       headerToolbar: {
         left: "prev,next today appointments allocation refresh",
         center: "title",
-        right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
+        right: "dayGridMonth,timeGridWeek,timeGridDay",
       },
       buttonText: {
         today: "Today",
@@ -2076,7 +2064,6 @@ Template.appointments.onRendered(function () {
       },
     });
     calendar.render();
-    $('.fc-today-button').prop('disabled', false);
     let draggableEl = document.getElementById("external-events-list");
     new Draggable(draggableEl, {
       itemSelector: ".fc-event",
@@ -2094,14 +2081,14 @@ Template.appointments.onRendered(function () {
     });
 
     setTimeout(() => {
-        const child1 = document.querySelector(".fc-appointments-button");
-        const parent1 = child1.parentNode;
-        const child2 = document.querySelector("h2.fc-toolbar-title");
-        const parent2 = child2.parentNode;
-        $(parent1).css("min-width", 568).css("text-align", "center");
-        $("#calendar .fc-toolbar-title").css("min-width", 238);
-        // $(parent2).css("min-width", 260)
-      }, 100);
+      const child1 = document.querySelector(".fc-appointments-button");
+      const parent1 = child1.parentNode;
+      const child2 = document.querySelector("h2.fc-toolbar-title");
+      const parent2 = child2.parentNode;
+      $(parent1).css("min-width", 568).css("text-align", "center");
+      $("#calendar .fc-toolbar-title").css("min-width", 238);
+      // $(parent2).css("min-width", 260)
+    }, 100);
   };
 
   const getWeeksInMonth = function (year, month) {
@@ -2268,44 +2255,45 @@ Template.appointments.onRendered(function () {
   };
 
   templateObject.saveLeaveRequestLocalDB = async function(){
-  const employeePayrolApis = new EmployeePayrollApi();
-  // now we have to make the post request to save the data in database
-  const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-      employeePayrolApis.collectionNames.TLeavRequest
-  );
+    const employeePayrolApis = new EmployeePayrollApi();
+    // now we have to make the post request to save the data in database
+    const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+        employeePayrolApis.collectionNames.TLeavRequest
+    );
 
-  employeePayrolEndpoint.url.searchParams.append(
-      "ListType",
-      "'Detail'"
-  );
-  const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+    employeePayrolEndpoint.url.searchParams.append(
+        "ListType",
+        "'Detail'"
+    );
+    const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
-  if (employeePayrolEndpointResponse.ok == true) {
-      const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-      if( employeePayrolEndpointJsonResponse.tleavrequest.length ){
-          await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
-      }
-      return employeePayrolEndpointJsonResponse
-  }
-  return '';
+    if (employeePayrolEndpointResponse.ok == true) {
+        const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+        if( employeePayrolEndpointJsonResponse.tleavrequest.length ){
+            await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
+        }
+        return employeePayrolEndpointJsonResponse
+    }
+    return '';
 };
 
   templateObject.getEmployeesList = async function () {
     let leaveArr = [];
-   let data = []
-   let dataObject = await getVS1Data('TLeavRequest')
-   if ( dataObject.length == 0) {
-       data = await templateObject.saveLeaveRequestLocalDB();
-   }else{
-       data = JSON.parse(dataObject[0].data);
-   }
-   if (data.tleavrequest.length > 0) {
-     data.tleavrequest.forEach((item) => {
-       const fields = item.fields;
-       leaveArr.push(fields);
-     });
-   }
-   templateObject.leaveemployeerecords.set(leaveArr);
+    let data = []
+    let dataObject = await getVS1Data('TLeavRequest')
+    if ( dataObject.length == 0) {
+        data = await templateObject.saveLeaveRequestLocalDB();
+    }else{
+        data = JSON.parse(dataObject[0].data);
+    }
+    if (data.tleavrequest.length > 0) {
+      data.tleavrequest.forEach((item) => {
+        const fields = item.fields;
+        leaveArr.push(fields);
+      });
+    }
+    templateObject.leaveemployeerecords.set(leaveArr);
+
 
     getVS1Data("TEmployee")
       .then(async function (dataObject) {
@@ -2380,6 +2368,7 @@ Template.appointments.onRendered(function () {
                   : -1;
               });
               templateObject.employeerecords.set(lineItems);
+              
 
               if (templateObject.employeerecords.get()) {
                 setTimeout(function () {
@@ -2391,12 +2380,14 @@ Template.appointments.onRendered(function () {
         } else {
           let data = JSON.parse(dataObject[0].data);
           let useData = data.temployee;
+          console.log("useData=", useData);
           let lineItems = [];
           let lineItemObj = {};
           let totalUser = 0;
 
           let totAmount = 0;
           let totAmountOverDue = 0;
+          
           for (let i = 0; i < useData.length; i++) {
             let randomColor = Math.floor(Math.random() * 16777215).toString(16);
 
@@ -2476,7 +2467,7 @@ Template.appointments.onRendered(function () {
               : -1;
           });
           templateObject.employeerecords.set(lineItems);
-
+          
           if (templateObject.employeerecords.get()) {
             setTimeout(function () {
               $(".counter").text(lineItems.length + " items");
@@ -2551,7 +2542,7 @@ Template.appointments.onRendered(function () {
                 : -1;
             });
             templateObject.employeerecords.set(lineItems);
-
+            
             if (templateObject.employeerecords.get()) {
               setTimeout(function () {
                 $(".counter").text(lineItems.length + " items");
@@ -3255,18 +3246,18 @@ Template.appointments.onRendered(function () {
                   zip;
                 var dataList = {
                   id: data.tappointmentex[i].fields.ID.toString() || "",
-                  title:
+                  title: 
                     data.tappointmentex[i].fields.TrainerName +
-                    "<br>" +
-                    data.tappointmentex[i].fields.ClientName +
-                    "<br>" +
-                    street +
-                    "<br>" +
-                    surbub +
-                    "<br>" +
-                    state +
-                    " " +
-                    zip,
+                    " - " +
+                    data.tappointmentex[i].fields.ClientName,
+                    // "<br>" +
+                    // street +
+                    // "<br>" +
+                    // surbub +
+                    // "<br>" +
+                    // state +
+                    // " " +
+                    // zip,
                   start: data.tappointmentex[i].fields.StartTime || "",
                   end: data.tappointmentex[i].fields.EndTime || "",
                   description: data.tappointmentex[i].fields.Notes || "",
@@ -4298,12 +4289,11 @@ Template.appointments.onRendered(function () {
                     },
                   },
                   ...refreshButton,
-                  ...settingsModalButton,
                 },
                 headerToolbar: {
                   left: "prev,next today appointments allocation refresh",
                   center: "title",
-                  right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
+                  right: "dayGridMonth,timeGridWeek,timeGridDay",
                 },
                 buttonText: {
                   today: "Today",
@@ -4749,7 +4739,7 @@ Template.appointments.onRendered(function () {
                 eventDidMount: function () {},
               });
               calendar.render();
-              $('.fc-today-button').prop('disabled', false);
+
               let draggableEl = document.getElementById("external-events-list");
               new Draggable(draggableEl, {
                 itemSelector: ".fc-event",
@@ -4853,16 +4843,16 @@ Template.appointments.onRendered(function () {
               id: useData[i].fields.ID.toString() || "",
               title:
                 useData[i].fields.TrainerName +
-                "<br>" +
-                useData[i].fields.ClientName +
-                "<br>" +
-                street +
-                "<br>" +
-                surbub +
-                "<br>" +
-                state +
-                " " +
-                zip,
+                " - " +
+                useData[i].fields.ClientName,
+                // "<br>" +
+                // street +
+                // "<br>" +
+                // surbub +
+                // "<br>" +
+                // state +
+                // " " +
+                // zip,
               start: useData[i].fields.StartTime || "",
               end: useData[i].fields.EndTime || "",
               description: useData[i].fields.Notes || "",
@@ -5941,16 +5931,16 @@ Template.appointments.onRendered(function () {
                 id: data.tappointmentex[i].fields.ID.toString() || "",
                 title:
                   data.tappointmentex[i].fields.TrainerName +
-                  "<br>" +
-                  data.tappointmentex[i].fields.ClientName +
-                  "<br>" +
-                  street +
-                  "<br>" +
-                  surbub +
-                  "<br>" +
-                  state +
-                  " " +
-                  zip,
+                  " - " +
+                  data.tappointmentex[i].fields.ClientName,
+                  // "<br>" +
+                  // street +
+                  // "<br>" +
+                  // surbub +
+                  // "<br>" +
+                  // state +
+                  // " " +
+                  // zip,
                 start: data.tappointmentex[i].fields.StartTime || "",
                 end: data.tappointmentex[i].fields.EndTime || "",
                 description: data.tappointmentex[i].fields.Notes || "",
@@ -6960,12 +6950,11 @@ Template.appointments.onRendered(function () {
                   },
                 },
                 ...refreshButton,
-                ...settingsModalButton,
               },
               headerToolbar: {
                 left: "prev,next today appointments allocation refresh",
                 center: "title",
-                right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
+                right: "dayGridMonth,timeGridWeek,timeGridDay",
               },
               buttonText: {
                 today: "Today",
@@ -7396,7 +7385,7 @@ Template.appointments.onRendered(function () {
               eventDidMount: function () {},
             });
             calendar.render();
-            $('.fc-today-button').prop('disabled', false);
+
             let draggableEl = document.getElementById("external-events-list");
             new Draggable(draggableEl, {
               itemSelector: ".fc-event",
@@ -9290,19 +9279,19 @@ Template.appointments.onRendered(function () {
         .indexOf(parseInt(id));
       let calendarSet = templateObject.globalSettings.get();
       let hideDays = "";
-      let slotMin = "06:00:00";
-      let slotMax = "21:00:00";
+      let slotMin = "00:00:00";
+      let slotMax = "23:59:59";
       if (calendarSet.showSat == false) {
         hideDays = [6];
       }
 
-      if (calendarSet.apptStartTime) {
-        slotMin = calendarSet.apptStartTime;
-      }
+      // if (calendarSet.apptStartTime) {
+      //   slotMin = calendarSet.apptStartTime;
+      // }
 
-      if (calendarSet.apptEndTime) {
-        slotMax = calendarSet.apptEndTimeCal;
-      }
+      // if (calendarSet.apptEndTime) {
+      //   slotMax = calendarSet.apptEndTimeCal;
+      // }
 
       if (calendarSet.showSun == false) {
         hideDays = [0];
@@ -9382,12 +9371,11 @@ Template.appointments.onRendered(function () {
                   },
                 },
                 ...refreshButton,
-                ...settingsModalButton,
               },
               headerToolbar: {
                 left: "prev,next today appointments allocation refresh",
                 center: "title",
-                right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
+                right: "dayGridMonth,timeGridWeek,timeGridDay",
               },
               buttonText: {
                 today: "Today",
@@ -9977,7 +9965,7 @@ Template.appointments.onRendered(function () {
               },
             });
             calendar.render();
-            $('.fc-today-button').prop('disabled', false);
+
             sideBarService
               .getAllAppointmentList(initialDataLoad, 0)
               .then(function (data) {
@@ -10010,16 +9998,16 @@ Template.appointments.onRendered(function () {
       var checkbox = document.querySelector("#showSunday");
       var checkboxSaturday = document.querySelector("#showSaturday");
       let calendarSet2 = templateObject.globalSettings.get();
-      let slotMin = "06:00:00";
-      let slotMax = "21:00:00";
+      let slotMin = "00:00:00";
+      let slotMax = "23:59:59";
 
-      if (calendarSet2.apptStartTime) {
-        slotMin = calendarSet2.apptStartTime;
-      }
+      // if (calendarSet2.apptStartTime) {
+      //   slotMin = calendarSet2.apptStartTime;
+      // }
 
-      if (calendarSet2.apptEndTime) {
-        slotMax = calendarSet2.apptEndTimeCal;
-      }
+      // if (calendarSet2.apptEndTime) {
+      //   slotMax = calendarSet2.apptEndTimeCal;
+      // }
       if (checkbox.checked && checkboxSaturday.checked) {
         let hideDays = "";
         $("#allocationTable .sunday").removeClass("hidesunday");
@@ -10136,16 +10124,16 @@ Template.appointments.onRendered(function () {
       var checkbox = document.querySelector("#showSunday");
       var checkboxSaturday = document.querySelector("#showSaturday");
       let calendarSet2 = templateObject.globalSettings.get();
-      let slotMin = "06:00:00";
-      let slotMax = "21:00:00";
+      let slotMin = "00:00:00";
+      let slotMax = "23:59:59";
 
-      if (calendarSet2.apptStartTime) {
-        slotMin = calendarSet2.apptStartTime;
-      }
+      // if (calendarSet2.apptStartTime) {
+      //   slotMin = calendarSet2.apptStartTime;
+      // }
 
-      if (calendarSet2.apptEndTime) {
-        slotMax = calendarSet2.apptEndTimeCal;
-      }
+      // if (calendarSet2.apptEndTime) {
+      //   slotMax = calendarSet2.apptEndTimeCal;
+      // }
 
       if (checkbox.checked && checkboxSaturday.checked) {
         let hideDays = "";
@@ -14925,7 +14913,7 @@ Template.appointments.events({
 
         // $("#customerListModal").modal("show");
         $("#stopAppointment").modal("show");
-
+        
         // swal({
         //   title: "Stop Appointment",
         //   text: "Once an appointment has ended, it cannot be restarted.",
@@ -15019,7 +15007,7 @@ Template.appointments.events({
   "click #btnCloseStopAppointment": function () {
     document.getElementById("tActualEndTime").value = "";
     document.getElementById("txtActualHoursSpent").value = "0";
-  },
+  },  
   "click #btnEndAppointment": async function () {
     const templateObject = Template.instance();
     var appointmentData = templateObject.appointmentrecords.get();
@@ -15032,7 +15020,7 @@ Template.appointments.events({
       moment().startOf("hour").format("HH") +
       ":" +
       moment().startOf("minute").format("mm");
-
+    
     let date1 = document.getElementById("dtSODate").value;
     let date2 = document.getElementById("dtSODate2").value;
     date1 = templateObject.dateFormat(date1);
@@ -15052,7 +15040,7 @@ Template.appointments.events({
     document.getElementById("txtActualHoursSpent").value = parseFloat(
       templateObject.diff_hours(endTime, startTime)
     ).toFixed(2);
-    document.getElementById("txtNotes").value = document.getElementById("txtNotes-1").value;
+    document.getElementById("txtNotes").value = document.getElementById("txtNotes-1").value;    
 
     //TODO: Stop Appointment SMS sent here
     const customerPhone = $("#mobile").val();
@@ -15097,7 +15085,7 @@ Template.appointments.events({
       $("#btnCloseStopAppointmentModal").trigger("click");
       $("#frmAppointment").trigger("submit");
     }
-  },
+  },  
   "click #btnHold": function (event) {
     // if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
     //     swal({
@@ -16806,25 +16794,26 @@ Template.appointments.events({
        }
    },
    'click .addAppointmentEmp': function(event) {
-     templateObject = Template.instance();
+      templateObject = Template.instance();
       let empID = $(event.currentTarget).attr('id').split("_")[1];
       let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+      console.log("leaveemployeerecords", leaveemployeerecords);
       var startdateGet = new Date($("#dtSODate").datepicker("getDate"));
       var leaveFlag = false;
       leaveemployeerecords.forEach((item) => {
-      if(item.EmployeeID == empID && startdateGet >= new Date(item.StartDate) && startdateGet <= new Date(item.EndDate)){
-        swal(
-          "They are not available due to whatever leave they took",
-          "",
-          "warning"
-        );
-        leaveFlag = true;
-      }
+        if(item.EmployeeID == empID && startdateGet >= new Date(item.StartDate) && startdateGet <= new Date(item.EndDate)){
+          swal(
+            "They are not available due to whatever leave they took",
+            "",
+            "warning"
+          );
+          leaveFlag = true;
+        }
       });
 
       if(!leaveFlag){
-      $('#employee_name').val($("#employeeName_" + empID).text());
-      $('#customerListModal').modal("show");
+        $('#employee_name').val($("#employeeName_" + empID).text());
+        $('#customerListModal').modal("show");
       }
    },
    'click .chkServiceCard': function(event) {
