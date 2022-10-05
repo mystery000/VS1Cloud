@@ -2207,20 +2207,29 @@ authenticatedRoutes.route('/exeprofitabilityreport', {
     }
 });
 
-authenticatedRoutes.route('/fixedassets', {
-  name: 'fixedassets',
+authenticatedRoutes.route('/fixedassetsoverview', {
+  name: 'fixedassetsoverview',
   action() {
       BlazeLayout.render('layout', {
-          yield: 'fixedassets'
+          yield: 'fixedassetsoverview'
       });
   }
 });
 
-authenticatedRoutes.route('/servicelog', {
-    name: 'servicelog',
+authenticatedRoutes.route('/fixedassetlist', {
+  name: 'fixedassetlist',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'fixedassetlist'
+      });
+  }
+});
+
+authenticatedRoutes.route('/serviceloglist', {
+    name: 'serviceloglist',
     action() {
         BlazeLayout.render('layout', {
-            yield: 'servicelog'
+            yield: 'serviceloglist'
         });
     }
 });
