@@ -370,6 +370,15 @@ authenticatedRoutes.route('/payrolloverview', {
     }
 });
 
+authenticatedRoutes.route('/timesheetdetail', {
+    name: 'timesheetdetail',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'timesheetdetail'
+        });
+    }
+});
+
 authenticatedRoutes.route('/payrun', {
     name: 'payrun',
     action() {
