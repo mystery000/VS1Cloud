@@ -13535,8 +13535,8 @@ Template.new_invoice.events({
               fields: {
                 ID: currentInvoice,
                 CustomerName: customer,
-                ForeignExchangeCode: currencyCode,
-                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                // ForeignExchangeCode: currencyCode,
+                // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                 Lines: splashLineArray,
                 InvoiceToDesc: billingAddress,
                 SaleDate: saleDate,
@@ -13559,8 +13559,8 @@ Template.new_invoice.events({
               type: "TInvoiceEx",
               fields: {
                 CustomerName: customer,
-                ForeignExchangeCode: currencyCode,
-                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                // ForeignExchangeCode: currencyCode,
+                // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                 Lines: splashLineArray,
                 InvoiceToDesc: billingAddress,
                 SaleDate: saleDate,
@@ -17226,13 +17226,14 @@ Template.new_invoice.events({
       if (splashLineArray.length > 0) {
         if (getso_id[1]) {
           currentInvoice = parseInt(currentInvoice);
+        
           objDetails = {
             type: "TInvoiceEx",
             fields: {
               ID: currentInvoice,
               CustomerName: customer,
-              ForeignExchangeCode: currencyCode,
-              ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+              // ForeignExchangeCode: currencyCode,
+              // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
               Lines: splashLineArray,
               InvoiceToDesc: billingAddress,
               SaleDate: saleDate,
@@ -17255,8 +17256,8 @@ Template.new_invoice.events({
             type: "TInvoiceEx",
             fields: {
               CustomerName: customer,
-              ForeignExchangeCode: currencyCode,
-              ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+              // ForeignExchangeCode: currencyCode,
+              // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
               Lines: splashLineArray,
               InvoiceToDesc: billingAddress,
               SaleDate: saleDate,
@@ -18794,8 +18795,8 @@ Template.new_invoice.events({
           fields: {
             ID: currentInvoice,
             CustomerName: customer,
-            ForeignExchangeCode: currencyCode,
-            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+            // ForeignExchangeCode: currencyCode,
+            // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
             Lines: splashLineArray,
             InvoiceToDesc: billingAddress,
             SaleDate: saleDate,
@@ -18818,8 +18819,8 @@ Template.new_invoice.events({
           type: "TInvoiceEx",
           fields: {
             CustomerName: customer,
-            ForeignExchangeCode: currencyCode,
-            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+            // ForeignExchangeCode: currencyCode,
+            // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
             Lines: splashLineArray,
             InvoiceToDesc: billingAddress,
             SaleDate: saleDate,
@@ -19575,8 +19576,8 @@ Template.new_invoice.events({
             fields: {
               ID: currentInvoice,
               CustomerName: customer,
-              ForeignExchangeCode: currencyCode,
-              ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+              // ForeignExchangeCode: currencyCode,
+              // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
               Lines: splashLineArray,
               InvoiceToDesc: billingAddress,
               SaleDate: saleDate,
@@ -19600,8 +19601,8 @@ Template.new_invoice.events({
             type: "TInvoiceEx",
             fields: {
               CustomerName: customer,
-              ForeignExchangeCode: currencyCode,
-              ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+              // ForeignExchangeCode: currencyCode,
+              // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
               Lines: splashLineArray,
               InvoiceToDesc: billingAddress,
               SaleDate: saleDate,

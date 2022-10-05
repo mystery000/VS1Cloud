@@ -5113,10 +5113,10 @@ Template.paymentcard.events({
                         Notes: notes,
                         exchangeRate: exchangeRate,
                         currency: currency,
-                        ForeignCurrencyAmount: ForeignCurrencyAmount,
-                        ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
-                        ForeignApplied: parseFloat(ForeignApplied)
+                        // ForeignCurrencyAmount: ForeignCurrencyAmount,
+                        // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignApplied: parseFloat(ForeignApplied)
                         //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                     }
                 };
@@ -5542,10 +5542,10 @@ Template.paymentcard.events({
 
                             ReferenceNo: reference,
 
-                            ForeignCurrencyAmount: ForeignCurrencyAmount,
-                            ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
-                            ForeignApplied: parseFloat(ForeignApplied)
+                            // ForeignCurrencyAmount: ForeignCurrencyAmount,
+                            // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
+                            // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                            // ForeignApplied: parseFloat(ForeignApplied)
                             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                         }
                     };
@@ -5966,10 +5966,10 @@ Template.paymentcard.events({
 
                             ReferenceNo: reference,
 
-                            ForeignCurrencyAmount: ForeignCurrencyAmount,
-                            ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
-                            ForeignApplied: parseFloat(ForeignApplied)
+                            // ForeignCurrencyAmount: ForeignCurrencyAmount,
+                            // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
+                            // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                            // ForeignApplied: parseFloat(ForeignApplied)
                             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
 
                         }
@@ -6421,10 +6421,10 @@ Template.paymentcard.events({
                         ReferenceNo: reference,
                         Notes: notes,
 
-                        ForeignCurrencyAmount: ForeignCurrencyAmount,
-                        ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
-                        ForeignApplied: parseFloat(ForeignApplied)
+                        // ForeignCurrencyAmount: ForeignCurrencyAmount,
+                        // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignApplied: parseFloat(ForeignApplied)
                         //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                     }
                 };
@@ -6816,10 +6816,10 @@ Template.paymentcard.events({
 
                     ReferenceNo: reference,
 
-                    ForeignCurrencyAmount: ForeignCurrencyAmount,
-                    ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
-                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
-                    ForeignApplied: parseFloat(ForeignApplied)
+                    // ForeignCurrencyAmount: ForeignCurrencyAmount,
+                    // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
+                    // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                    // ForeignApplied: parseFloat(ForeignApplied)
                 }
             };
 
@@ -7633,10 +7633,10 @@ Template.paymentcard.events({
                     // PayMethodName: payMethod,
                     Amount: Amount,
                     ReferenceNo: reference,
-                    ForeignCurrencyAmount: ForeignCurrencyAmount,
-                    ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
-                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
-                    ForeignApplied: parseFloat(ForeignApplied)
+                    // ForeignCurrencyAmount: ForeignCurrencyAmount,
+                    // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
+                    // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                    // ForeignApplied: parseFloat(ForeignApplied)
                 }
             };
 
@@ -7733,10 +7733,10 @@ Template.paymentcard.events({
 
                             ReferenceNo: reference,
 
-                            ForeignCurrencyAmount: ForeignCurrencyAmount,
-                            ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
-                            ForeignApplied: parseFloat(ForeignApplied)
+                            // ForeignCurrencyAmount: ForeignCurrencyAmount,
+                            // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
+                            // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                            // ForeignApplied: parseFloat(ForeignApplied)
                             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
 
                         }
@@ -8161,10 +8161,10 @@ Template.paymentcard.events({
 
                             ReferenceNo: reference,
 
-                            ForeignCurrencyAmount: ForeignCurrencyAmount,
-                            ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
-                            ForeignApplied: parseFloat(ForeignApplied)
+                            // ForeignCurrencyAmount: ForeignCurrencyAmount,
+                            // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
+                            // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                            // ForeignApplied: parseFloat(ForeignApplied)
                             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
 
                         }
@@ -8645,10 +8645,10 @@ Template.paymentcard.events({
                     PayMethodName: payMethod,
                     ReferenceNo: reference,
 
-                    ForeignCurrencyAmount: ForeignCurrencyAmount,
-                    ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
-                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
-                    ForeignApplied: parseFloat(ForeignApplied)
+                    // ForeignCurrencyAmount: ForeignCurrencyAmount,
+                    // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
+                    // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                    // ForeignApplied: parseFloat(ForeignApplied)
                     //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                 }
             };

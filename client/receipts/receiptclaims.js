@@ -2812,9 +2812,11 @@ Template.receiptsoverview.events({
                     // CurrencyName: currencyName,
                     // CurrencyRate: currencyBuyRate,
                     // ForeignExchangeRate: parseFloat(parseFloat(currencyBuyRate).toFixed(2)),
-                    ForeignExchangeRate: 1, // why should be 1
-                    ForeignExchangeCode: currencyName,
-                    ForeignTotalAmount: CurrencyConverter.convertAmount(totalAmount, currencyBuyRate),
+
+                    // ForeignExchangeRate: 1, // why should be 1
+                    // ForeignExchangeCode: currencyName,
+                    // ForeignTotalAmount: CurrencyConverter.convertAmount(totalAmount, currencyBuyRate),
+                    
                     TripGroup: tripGroupName
                 }
             };

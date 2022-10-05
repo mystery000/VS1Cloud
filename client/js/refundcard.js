@@ -7626,8 +7626,8 @@ Template.refundcard.events({
                     fields: {
                         ID: currentInvoice,
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -7652,8 +7652,8 @@ Template.refundcard.events({
                     type: "TRefundSale",
                     fields: {
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -8751,8 +8751,8 @@ Template.refundcard.events({
                     fields: {
                         ID: currentInvoice,
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -8776,8 +8776,8 @@ Template.refundcard.events({
                     type: "TRefundSale",
                     fields: {
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,

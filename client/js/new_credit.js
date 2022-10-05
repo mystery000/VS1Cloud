@@ -6865,8 +6865,8 @@ Template.creditcard.events({
                     fields: {
                         ID: currentCredit,
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         Deleted: false,
@@ -6892,8 +6892,8 @@ Template.creditcard.events({
                     type: "TCredit",
                     fields: {
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         OrderDate: saleDate,
@@ -7936,8 +7936,8 @@ Template.creditcard.events({
                     fields: {
                         ID: currentCredit,
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         OrderDate: saleDate,
@@ -7961,8 +7961,8 @@ Template.creditcard.events({
                     type: "TCredit",
                     fields: {
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         Deleted: false,

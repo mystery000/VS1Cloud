@@ -7562,8 +7562,8 @@ Template.billcard.events({
                     fields: {
                         ID: currentBill,
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         Deleted: false,
@@ -7590,8 +7590,8 @@ Template.billcard.events({
                     type: "TBillEx",
                     fields: {
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         OrderDate: saleDate,
@@ -8632,8 +8632,8 @@ Template.billcard.events({
                         fields: {
                             ID: currentBill,
                             SupplierName: supplier,
-                            ForeignExchangeCode: currencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                            // ForeignExchangeCode: currencyCode,
+                            // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
                             OrderDate: saleDate,
@@ -8659,8 +8659,8 @@ Template.billcard.events({
                         type: "TBillEx",
                         fields: {
                             SupplierName: supplier,
-                            ForeignExchangeCode: currencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                            // ForeignExchangeCode: currencyCode,
+                            // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
                             OrderDate: saleDate,

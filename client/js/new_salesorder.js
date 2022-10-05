@@ -9666,8 +9666,8 @@ Template.new_salesorder.events({
                     fields: {
                         ID: currentSalesOrder,
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        //  ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -9691,7 +9691,7 @@ Template.new_salesorder.events({
                     type: "TSalesOrderEx",
                     fields: {
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
@@ -11036,7 +11036,7 @@ Template.new_salesorder.events({
                             fields: {
                                 ID: currentSalesOrder,
                                 CustomerName: customer,
-                                ForeignExchangeCode: currencyCode,
+                              //  ForeignExchangeCode: currencyCode,
                                 ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
@@ -11061,7 +11061,7 @@ Template.new_salesorder.events({
                             type: "TSalesOrderEx",
                             fields: {
                                 CustomerName: customer,
-                                ForeignExchangeCode: currencyCode,
+                              //  ForeignExchangeCode: currencyCode,
                                 ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
@@ -11727,7 +11727,7 @@ Template.new_salesorder.events({
                     fields: {
                         ID: currentSalesOrder,
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
@@ -11752,7 +11752,7 @@ Template.new_salesorder.events({
                     type: "TSalesOrderEx",
                     fields: {
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
@@ -11989,7 +11989,7 @@ Template.new_salesorder.events({
                     fields: {
                         ID: currentSalesOrder,
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
@@ -12015,7 +12015,7 @@ Template.new_salesorder.events({
                     type: "TSalesOrderEx",
                     fields: {
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
