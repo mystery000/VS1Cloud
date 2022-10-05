@@ -5,6 +5,7 @@ import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import FxApi from "../../settings/currencies-setting/FxApi";
 import { isCurrencyEnable } from "./CurrencyWidget";
+import FxGlobalFunctions from "./FxGlobalFunctions";
 let sideBarService = new SideBarService();
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
@@ -22,7 +23,9 @@ Template.FxRatesButton.events({
 });
 
 Template.FxRatesButton.helpers({
-    isCurrencyEnable: () => isCurrencyEnable(),
+  isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
+
+
 });
 
 export function triggerChangeEventOnRequiredFields() {

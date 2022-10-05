@@ -7438,7 +7438,7 @@ Template.new_salesorder.onRendered(function() {
 });
 
 Template.new_salesorder.helpers({
-
+    isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
     getTemplateList: function () {
         return template_list;
     },

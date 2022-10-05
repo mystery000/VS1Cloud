@@ -4862,9 +4862,7 @@ Template.paymentcard.onRendered(() => {
 });
 
 Template.paymentcard.helpers({
-    isCurrencyEnable: () => {
-        return Session.get("CloudUseForeignLicence");
-    },
+    isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
 
     getTemplateList: function () {
         return template_list;

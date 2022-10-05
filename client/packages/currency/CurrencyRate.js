@@ -2,6 +2,7 @@ import { TaxRateService } from "../../settings/settings-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
+import FxGlobalFunctions from "./FxGlobalFunctions";
 let sideBarService = new SideBarService();
 
 
@@ -15,7 +16,6 @@ Template.CurrencyRate.onRendered(function () {
 });
 
 Template.CurrencyRate.helpers({
-  isCurrencyEnable: () => {
-    return Session.get("CloudUseForeignLicence");
-  },
+  isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
+
 });

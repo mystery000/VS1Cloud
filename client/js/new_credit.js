@@ -5166,9 +5166,7 @@ Template.creditcard.helpers({
 
         return isMobile;
     },
-    isCurrencyEnable: () => {
-        return Session.get('CloudUseForeignLicence');
-    },
+    isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
     // custom field displaysettings
     displayfields: () => {
       return Template.instance().displayfields.get();

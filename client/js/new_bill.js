@@ -5303,9 +5303,6 @@ Template.billcard.helpers({
 
         return isMobile;
     },
-    isCurrencyEnable: () => {
-        return Session.get('CloudUseForeignLicence');
-    },
 
     // custom field displaysettings
     displayfields: () => {

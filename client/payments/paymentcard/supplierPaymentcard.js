@@ -7956,9 +7956,7 @@ Template.supplierpaymentcard.helpers({
     return template_numbers;
   },
 
-  isCurrencyEnable: () => {
-    return Session.get("CloudUseForeignLicence");
-  },
+  isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
   record: () => {
     return Template.instance().record.get();
   },
@@ -8080,6 +8078,8 @@ Template.supplierpaymentcard.helpers({
   convertToForeignAmount: (amount) => {
     return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
   },
+
+
 });
 
 // function calulateApplied() {

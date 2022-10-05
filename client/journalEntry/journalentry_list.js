@@ -1487,6 +1487,7 @@ Template.journalentrylist.events({
   },
 });
 Template.journalentrylist.helpers({
+  isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
   datatablerecords: () => {
     return Template.instance().datatablerecords.get().sort(function (a, b) {
       if (a.transactiondate == "NA") {

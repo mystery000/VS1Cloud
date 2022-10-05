@@ -5665,6 +5665,8 @@ Template.new_quote.helpers({
         }
         return false;
     },
+
+    isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
 });
 
 Template.new_quote.events({

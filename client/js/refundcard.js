@@ -5702,7 +5702,7 @@ Template.refundcard.onRendered(function() {
 
 });
 Template.refundcard.helpers({
-
+    isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
     // custom field displaysettings
     displayfields: () => {
       return Template.instance().displayfields.get();

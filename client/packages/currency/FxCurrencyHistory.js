@@ -9,6 +9,7 @@ import { CountryService } from "../../js/country-service";
 import { TaxRateService } from "../../settings/settings-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import CachedHttp from "../../lib/global/CachedHttp";
+import FxGlobalFunctions from "./FxGlobalFunctions";
 
 const sideBarService = new SideBarService();
 const utilityService = new UtilityService();
@@ -1000,6 +1001,8 @@ Template.FxCurrencyHistory.helpers({
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
   },
+  isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
+
 });
 
 function sortById(a, b) {

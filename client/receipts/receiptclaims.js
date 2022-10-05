@@ -3710,9 +3710,7 @@ Template.receiptsoverview.helpers({
     sessionCurrency: () => {
         return Session.get('ERPCountryAbbr');
     },
-    isCurrencyEnable: () => {
-        return Session.get('CloudUseForeignLicence');
-    }
+    isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
 });
 
 function setCurrencyFormatForInput(target) {

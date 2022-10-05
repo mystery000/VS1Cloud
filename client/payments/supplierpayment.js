@@ -8,6 +8,7 @@ import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import { convertToForeignAmount } from './paymentcard/supplierPaymentcard';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
+import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.supplierpayment.onCreated(function(){
@@ -1831,5 +1832,6 @@ Template.supplierpayment.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblSupplierPayment'});
-    }
+    },
+    isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
 });
