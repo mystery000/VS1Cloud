@@ -1237,21 +1237,21 @@
                                                                             </thead>
                                                                             <tbody>
                                                                                 {{#if selectedproducts}}
-                                                                                    {{#each item in selectedproducts}}
-                                                                                        <tr class="dnd-moved" id="{{item.Id}}" style="cursor: pointer;">
-                                                                                            <td contenteditable="false" class="colServiceName">{{item.product.ProductName}}</td>
-                                                                                            <td contenteditable="false" class="colServiceDescription">{{item.product.ProductDesc}}</td>
+                                                                                    {{#each product in selectedproducts}}
+                                                                                        <tr class="dnd-moved" id="{{product.Id}}" style="cursor: pointer;">
+                                                                                            <td contenteditable="false" class="colServiceName">{{product.ProductName}}</td>
+                                                                                            <td contenteditable="false" class="colServiceDescription">{{product.ProductDesc}}</td>
                                                                                             <td contenteditable="true" class=" text-right">
                                                                                                 <!-- <input class="colServiceCostPrice highlightInput" type="text" value="{{item.Rate}}"> -->
-                                                                                                {{ formatPrice item.product.BuyQty1Cost}}
+                                                                                                {{ formatPrice product.BuyQty1Cost}}
                                                                                             </td>
                                                                                             <td contenteditable="true" class=" text-right">
                                                                                                 <!-- <input class="colServiceSalesPrice  highlightInput" type="text" value="{{item.PayRate}}"> -->
-                                                                                                {{ formatPrice item.product.SellQty1Price}}
+                                                                                                {{ formatPrice product.SellQty1Price}}
                                                                                             </td>
                                                                                             <td contenteditable="false" class="colServiceDelete">
                                                                                                 <span class="table-remove colServiceDelete">
-                                                                                                    <button data-id="{{item.Id}}" type="button"
+                                                                                                    <button product-id="{{product.Id}}" type="button"
                                                                                                         class="btn btn-danger btn-rounded btn-sm my-0">
                                                                                                         <i class="fa fa-remove"></i>
                                                                                                     </button>

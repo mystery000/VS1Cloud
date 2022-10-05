@@ -40,6 +40,7 @@ import LoadingOverlay from '../LoadingOverlay';
 import { jsPDF } from "jspdf";
 import erpObject from "../lib/global/erp-objects";
 import CachedHttp from "../lib/global/CachedHttp";
+import GlobalFunctions from "../GlobalFunctions";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -124,6 +125,8 @@ Template.employeescard.onCreated(function () {
     templateObject.payPeriods = new ReactiveVar([]);
 
     templateObject.allProducts = new ReactiveVar([]);
+    templateObject.deletedSelectedProducts = new ReactiveVar([]);
+    templateObject.TRepServices = new ReactiveVar([]);
 });
 
 Template.employeescard.onRendered(function () {
@@ -460,6 +463,9 @@ Template.employeescard.onRendered(function () {
     // }, 1000);
 
 
+    /***
+     * This is to load all product with it details
+     */
     templateObject.loadAllProducts = async () => {
         let data = await CachedHttp.get(erpObject.TProductVS1, async () => {
             return await productService.getNewProductListVS1();
@@ -477,7 +483,9 @@ Template.employeescard.onRendered(function () {
     }
     
 
-
+    /**
+     * This will load employee products
+     */
     templateObject.getEmployeeProducts = async (employeeName = null) => {
         LoadingOverlay.show();
        // await templateObject.loadAllProducts();
@@ -494,79 +502,25 @@ Template.employeescard.onRendered(function () {
         });
 
         data = data.response;
+        console.log('TRepService', data.trepservices);
+        await templateObject.TRepServices.set(data.trepservices);
+
         let objects = data.trepservices.map(s => s.fields);
 
 
         const products = await templateObject.allProducts.get();
+
+        let selectedProducts = objects.map(obj => products.find(p => p.ProductName == obj.ServiceDesc))
  
-        objects.forEach((obj, index) => {
-            objects[index] = {
-                obj,
-                product: products.find(p => p.ProductName == obj.ServiceDesc)
-            }
-        });
+        // objects.forEach((obj, index) => {
+        //     objects[index] = products.find(p => p.ProductName == obj.ServiceDesc)
+        // });
 
-        console.log("employee products", objects);
+        console.log("employee products", selectedProducts);
 
-        templateObject.selectedproducts.set(objects);
-        if(templateObject.selectedproducts.get()) {
-            setTimeout(() => {
-                $("#tblEmpServiceList").DataTable({
-                    // "searching": true,
-                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  
-                        select: true,
-                        destroy: true,
-                        colReorder: {
-                                fixedColumnsRight: 1
-                            },
-                        // pageLength: initialDatatableLoad,
-                        // lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        paging: false,
-                        // "scrollY": "400px",
-                        info: true,
-                        pageLength: -1,
-                        lengthMenu: [ [ -1], ["All"] ],
-                        responsive: true,
-                        "order": [[0, "asc"]],
-                        action: function () {
-                            $('#tblEmpServiceList').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function (oSettings) {
-                            setTimeout(function () {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        "fnInitComplete": function () {
-                            $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#productListModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpServiceList_filter");
-                            $("<button class='btn btn-primary btnRefreshProductService' type='button' id='btnRefreshProductService' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpServiceList_filter");
-                        }
-
-              }).on('page', function () {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-                  let draftRecord = templateObject.datatablerecords.get();
-                  templateObject.datatablerecords.set(draftRecord);
-              }).on('search.dt', function (eventSearch, searchdata) {
-                  let dataSearchName = $('#tblEmpServiceList_filter input').val();
-                  if (searchdata.fnRecordsDisplay() > 0) {
-
-                  }else {
-                    if(dataSearchName.replace(/\s/g, '') != ''){
-                     $('#productListModal').modal();
-                    setTimeout(function() {
-                        $('#tblInventoryService_filter .form-control-sm').focus();
-                        $('#tblInventoryService_filter .form-control-sm').val(dataSearchName);
-                        $('#tblInventoryService_filter .form-control-sm').trigger("input");
-
-                    }, 500);
-                  }
-                  }
-              }).on('column-reorder', function () {});
-    
-            }, 1000);
-        }
+        templateObject.selectedproducts.set(selectedProducts);
+        templateObject.rebuildProductTable();
+       
      
 
         LoadingOverlay.hide();
@@ -574,6 +528,9 @@ Template.employeescard.onRendered(function () {
 
 
 
+    /**
+     * @deprecated since 05/10/2022
+     */
     templateObject.getAllSelectedProducts = function (employeeName) {
         let productlist = [];
         LoadingOverlay.show();
@@ -785,18 +742,113 @@ Template.employeescard.onRendered(function () {
     }
 
 
+    templateObject.rebuildProductTable = (destroy = true) => {
+        //if(! $.fn.DataTable.isDataTable( '#tblEmpServiceList' )) {
+            if(templateObject.selectedproducts.get()) {
+                setTimeout(() => {
+                    $("#tblEmpServiceList").DataTable({
+                        processing: true,
+                        //serverSide: true,
+                        destroy: destroy,
+                        // "searching": true,
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                      
+                            select: true,
+                           
+                            colReorder: {
+                                    fixedColumnsRight: 1
+                                },
+                            // pageLength: initialDatatableLoad,
+                            // lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                            paging: false,
+                            // "scrollY": "400px",
+                            info: true,
+                            pageLength: -1,
+                            lengthMenu: [ [ -1], ["All"] ],
+                            responsive: true,
+                            "order": [[0, "asc"]],
+                            action: function () {
+                                $('#tblEmpServiceList').DataTable().ajax.reload();
+                            },
+                            "fnDrawCallback": function (oSettings) {
+                                setTimeout(function () {
+                                    MakeNegative();
+                                }, 100);
+                            },
+                            "fnInitComplete": function () {
+                                $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#productListModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpServiceList_filter");
+                                $("<button class='btn btn-primary btnRefreshProductService' type='button' id='btnRefreshProductService' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpServiceList_filter");
+                            }
+    
+                  }).on('page', function () {
+                      setTimeout(function () {
+                          MakeNegative();
+                      }, 100);
+                      let draftRecord = templateObject.datatablerecords.get();
+                      templateObject.datatablerecords.set(draftRecord);
+                  }).on('search.dt', function (eventSearch, searchdata) {
+                      let dataSearchName = $('#tblEmpServiceList_filter input').val();
+                      if (searchdata.fnRecordsDisplay() > 0) {
+    
+                      }else {
+                        if(dataSearchName.replace(/\s/g, '') != ''){
+                         $('#productListModal').modal();
+                        setTimeout(function() {
+                            $('#tblInventoryService_filter .form-control-sm').focus();
+                            $('#tblInventoryService_filter .form-control-sm').val(dataSearchName);
+                            $('#tblInventoryService_filter .form-control-sm').trigger("input");
+    
+                        }, 500);
+                      }
+                      }
+                  }).on('column-reorder', function () {});
+        
+                }, 1000);
+            }
+       // }
+       
+    }
+
     templateObject.addSelectedProduct = async () => {
+        const allProducts = await templateObject.allProducts.get();
 
-        let productIds = $('#tblInventoryService input.chkServiceCard:checked');
+        let selectedProducts = await templateObject.selectedproducts.get();
 
-        // productIds = productIds.map(input => input.getAttribute('product-id'));
+        /**
+         * This function will filter the product that are already in the previous list
+         */
+        const filterProducts = (productToRemove = [], productList = []) => {
+            return productList.filter(p => !productToRemove.some(pr => pr.Id == p.Id));
+        }
+        let productIds = $("#tblInventoryService").find("input.chkServiceCard:checked");
+        selectedProducts.push(...filterProducts(selectedProducts, productIds.map((index, input) => allProducts.find(p => p.Id == parseInt($(input).attr("product-id")))).toArray()));
 
-        $(productIds).each((input) => {
-            console.log("input", input);
-        })
+        await templateObject.selectedproducts.set(selectedProducts);
 
-        console.log("new selected products", productIds);
+       // templateObject.rebuildProductTable();
 
+        // selectedProducts.each((index, product) => {
+        //     let objServiceDetails = {
+        //         type:"TServices",
+        //         fields:
+        //         {
+        //             ProductId:parseInt(productServiceID),
+        //             ServiceDesc:productServiceName,
+        //             StandardRate:parseFloat(productServicerate.replace(/[^0-9.-]+/g,"")) || 0,
+        //         }
+        //     };
+
+        //     productService.saveProductService(objServiceDetails);
+
+        // });
+
+      
+
+
+        
+
+        console.log('Seleted products', selectedProducts);
+        $('#productListModal').modal('hide');
         return;
 
 
@@ -868,6 +920,89 @@ Template.employeescard.onRendered(function () {
         //$('#tblEmpServiceList_info').html('Showing 1 to '+getselectedproducts.length+ ' of ' +getselectedproducts.length+ ' entries');
         $('#productListModal').modal('toggle');
 
+    }
+
+
+    templateObject.saveSelectedProduct  = async () => {
+        LoadingOverlay.show();
+        const selectedProducts = await templateObject.selectedproducts.get();
+        const deletedProducts = await templateObject.deletedSelectedProducts.get();
+        const tRepServices = await templateObject.TRepServices.get();
+
+        const findProductService = (searchedProduct) => {
+            let product = tRepServices.find(s => searchedProduct.ProductName == s.fields.ServiceDesc);
+            console.log('service found', product);
+            return product;
+        }
+
+        await GlobalFunctions.asyncForEach(selectedProducts, async (product, index) => {
+            // This needs a review.
+            // Why using Tservices ? Shouldn't we have something like TEmployeeProducts ?
+            let objServiceDetails = {
+                type: "TServices",
+                fields: {
+                    ProductId: parseInt(product.Id), // We save this but, is it really used ?
+                    ServiceDesc: product.ProductName // Why ServiceDesc is the product Desc ??
+                    //StandardRate: product.BuyQty1Cost || 0,  The standRate property is not a costPrice nor salePrice
+                }
+            };
+
+            console.log("Obj service details: ", objServiceDetails);
+
+            await productService.saveProductService(objServiceDetails);
+        });
+
+        console.log("deleted products", deletedProducts);
+        await GlobalFunctions.asyncForEach(deletedProducts, async (product, index) => {
+            let serviceObj = findProductService(product);
+
+            let objDetails = {
+                type: serviceObj.type,
+                fields: {
+                    ID: serviceObj.fields.ID,
+                    Active: false
+                }
+            }
+
+            console.log('product to be deleted', objDetails);
+            await contactService.saveEmployeeProducts(objDetails);
+        });
+
+        LoadingOverlay.hide();
+    }
+
+
+    /**
+     * Removing a product in the list of selected products
+     * Wont be saved unless we press on save
+     * 
+     * no API used here
+     * @param {integer} productId 
+     */
+    templateObject.removeSelectedProduct = async (productId) => {
+
+        let result = await swal({
+            title: 'Delete Active Product',
+            text: "Are you sure you want to Delete this Employee Active Product?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        });
+
+        if(result.value) {
+            let selectedProducts = await templateObject.selectedproducts.get();
+            let deletedProducts = await templateObject.deletedSelectedProducts.get();
+
+            let removedProduct = selectedProducts.find(p => p.Id == productId);
+            deletedProducts.push(removedProduct);
+
+            let products = selectedProducts.filter(p => p.Id != removedProduct.Id);
+            
+            await templateObject.deletedSelectedProducts.set(deletedProducts);
+            await templateObject.selectedproducts.set(products);
+        }
+
+      
     }
 
 
@@ -4883,8 +5018,12 @@ Template.employeescard.events({
         //     $('.fullScreenSpin').css('display', 'none');
         // }
     },
-    'click .colServiceDelete': function (event) {
-        let templateObject = Template.instance();
+    'click .colServiceDelete button': async (event, templateObject) => {
+        const productId = $(event.currentTarget).attr('product-id');
+        await templateObject.removeSelectedProduct(productId);
+
+        return;
+    
         var targetID = $(event.target).closest('tr').find('.colID').text() || ''; // table row ID
         let contactService = new ContactService();
         var tblRepService = $('#tblEmpServiceList').DataTable();
@@ -5001,11 +5140,12 @@ Template.employeescard.events({
     'click .btnSelectProducts': (event, templateObject) => {
        templateObject.addSelectedProduct();
     },
-    'click .btnSave': async function (event) {
-        let templateObject = Template.instance();
+    'click .btnSave': async (e, templateObject) => {
+        await templateObject.saveSelectedProduct();
         let contactService = new ContactService();
         let appointmentService = new AppointmentService();
         LoadingOverlay.show();
+      
 
         let title = $('#edtTitle').val();
         let firstname = $('#edtFirstName').val();

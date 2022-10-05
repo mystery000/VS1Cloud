@@ -372,7 +372,7 @@ export class SideBarService extends BaseService {
   getSelectedProducts(employeeID) {
     let options = {
       ListType: "Detail",
-      //PropertyList: "ID,EmployeeName,PayRate,Rate, ServiceDesc",
+      //PropertyList: "ID,EmployeeName,PayRate,Rate, ServiceDesc, ProductId",
       select: "[Active]=true and [EmployeeID]=" + employeeID + "",
     };
     return this.getList(this.ERPObjects.TRepServices, options);
