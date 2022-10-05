@@ -127,7 +127,7 @@ export default class FxGlobalFunctions {
 
 
   static isCurrencyEnabled() {
-    return false;
+    // return false;
     return Session.get("CloudUseForeignLicence");
   }
 }

@@ -5340,6 +5340,7 @@ Template.billcard.helpers({
         }
         return false;
     },
+    isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
 });
 
 Template.billcard.events({
