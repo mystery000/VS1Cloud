@@ -191,53 +191,53 @@ Template.fixedassetchart.onRendered(() => {
 
     });
 
-    fixedAssetService.getAllLeads(dateFrom).then(function (data) {
+    // fixedAssetService.getAllLeads(dateFrom).then(function (data) {
 
-      let bar_records = [];
-      let pie_records = [];
-      if (data.tprospect.length) {
+    //   let bar_records = [];
+    //   let pie_records = [];
+    //   if (data.tprospect.length) {
 
-        let accountData = data.tprospect;
-        for (let i = 0; i < accountData.length; i++) {
-          let recordObj = {};
-          recordObj.Id = data.tprospect[i].fields.ID;
-          CreationDate = data.tprospect[i].fields.CreationDate ? data.tprospect[i].fields.CreationDate.substr(0, 10) : "";
+    //     let accountData = data.tprospect;
+    //     for (let i = 0; i < accountData.length; i++) {
+    //       let recordObj = {};
+    //       recordObj.Id = data.tprospect[i].fields.ID;
+    //       CreationDate = data.tprospect[i].fields.CreationDate ? data.tprospect[i].fields.CreationDate.substr(0, 10) : "";
 
-          recordObj.CreationDateSort = CreationDate ? CreationDate : "-";
-          recordObj.CreationDate = CreationDate ? getModdayOfCurrentWeek(CreationDate) + "~" : "-";
-          bar_records.push(recordObj);
+    //       recordObj.CreationDateSort = CreationDate ? CreationDate : "-";
+    //       recordObj.CreationDate = CreationDate ? getModdayOfCurrentWeek(CreationDate) + "~" : "-";
+    //       bar_records.push(recordObj);
 
-          let pieRecordObj = {};
-          pieRecordObj.Id = data.tprospect[i].fields.ID;
-          pieRecordObj.SourceName = data.tprospect[i].fields.SourceName ? data.tprospect[i].fields.SourceName : "-";
-          pie_records.push(pieRecordObj);
-        }
+    //       let pieRecordObj = {};
+    //       pieRecordObj.Id = data.tprospect[i].fields.ID;
+    //       pieRecordObj.SourceName = data.tprospect[i].fields.SourceName ? data.tprospect[i].fields.SourceName : "-";
+    //       pie_records.push(pieRecordObj);
+    //     }
 
-        bar_records = _.sortBy(bar_records, 'CreationDateSort');
-        bar_records = _.groupBy(bar_records, 'CreationDate');
+    //     bar_records = _.sortBy(bar_records, 'CreationDateSort');
+    //     bar_records = _.groupBy(bar_records, 'CreationDate');
 
-        pie_records = _.sortBy(pie_records, 'SourceName');
-        pie_records = _.groupBy(pie_records, 'SourceName');
+    //     pie_records = _.sortBy(pie_records, 'SourceName');
+    //     pie_records = _.groupBy(pie_records, 'SourceName');
 
-      } else {
-        let recordObj = {};
-        recordObj.Id = '';
-        recordObj.CreationDate = '-';
+    //   } else {
+    //     let recordObj = {};
+    //     recordObj.Id = '';
+    //     recordObj.CreationDate = '-';
 
-        let pieRecordObj = {};
-        pieRecordObj.Id = '';
-        pieRecordObj.SourceName = '-';
+    //     let pieRecordObj = {};
+    //     pieRecordObj.Id = '';
+    //     pieRecordObj.SourceName = '-';
 
-        bar_records.push(recordObj);
-        pie_records.push(pieRecordObj);
-      }
+    //     bar_records.push(recordObj);
+    //     pie_records.push(pieRecordObj);
+    //   }
 
-      addVS1Data("TCRMLeadBarChart", JSON.stringify(bar_records));
-      addVS1Data("TCRMLeadPieChart", JSON.stringify(pie_records));
+    //   addVS1Data("TCRMLeadBarChart", JSON.stringify(bar_records));
+    //   addVS1Data("TCRMLeadPieChart", JSON.stringify(pie_records));
 
-    }).catch(function (err) {
+    // }).catch(function (err) {
 
-    });
+    // });
   }
 
   templateObject.getLeadBarChartData();
