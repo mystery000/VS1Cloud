@@ -107,6 +107,7 @@ Template.newprofitandloss.onRendered(function () {
         departments: [],
         showDecimal: true,
         showtotal: true,
+        showPercentage:true  
       };
     }
     templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
@@ -335,9 +336,11 @@ Template.newprofitandloss.onRendered(function () {
                 totalAmount += accountData[i]["Amount_" + counter];
                 let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
                 let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
+                let Percentage = accountData[i]["Percentage_" + counter];
                 periodAmounts.push({
                   decimalAmt: AmountEx,
                   roundAmt: RoundAmount,
+                  percentage: Percentage,
                 });
               }
                 let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
@@ -384,6 +387,7 @@ Template.newprofitandloss.onRendered(function () {
             }
 
             // Set Table Data
+            options.showPercentage = true;  
             templateObject.reportOptions.set(options);
             templateObject.records.set(records);
             // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
@@ -450,9 +454,11 @@ Template.newprofitandloss.onRendered(function () {
               var totalAmount = accountData[i]["TotalAmountEx"];
               let totalAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["TotalAmountEx"] ) || 0.0;
               let totalRoundAmount = Math.round(accountData[i]["TotalAmountEx"]) || 0;
+              // let Percentage = accountData[i]["Percentage_" + counter];
               periodAmounts.push({
                 decimalAmt: totalAmountEx,
                 roundAmt: totalRoundAmount,
+                // percentage: Percentage,
               });
               if( options.departments.length ){
                 options.departments.forEach(dept => {
@@ -513,7 +519,7 @@ Template.newprofitandloss.onRendered(function () {
             }
 
             // Set Table Data
-
+            options.showPercentage = false;  
             templateObject.reportOptions.set(options);
             templateObject.records.set(records);
             // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
@@ -1970,6 +1976,13 @@ Template.newprofitandloss.events({
   },
   "click .chkAccCodes": function (event) {
     $(".tglAccCodes").toggle();
+  },
+  "click .chkPercIncome": function (event) {
+     if( $('.chkPercIncome').is(':checked') ){
+        $('.plAmountPercentage').show();
+     }else{
+        $('.plAmountPercentage').hide();
+     }
   },
   "click .rbAccrual": function (event) {
     $(".tglAccBasis").text("Accrual Basis");

@@ -1171,19 +1171,52 @@ Template.leadscard.events({
         let status = $('#leadStatus').val()||'';
 
         if (employeeName == '') {
-            swal('Please provide the lead name !', '', 'warning');
+            //swal('Please provide the lead name !', '', 'warning');
+            swal({
+                title: "Please provide the lead name !",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#edtLeadEmployeeName').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
             $('.fullScreenSpin').css('display', 'none');
             e.preventDefault();
             return false;
         }
         if (firstname == '') {
-            swal('Please provide the first name !', '', 'warning');
+            //swal('Please provide the first name !', '', 'warning');
+            swal({
+                title: "Please provide the first name !",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#edtFirstName').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
             $('.fullScreenSpin').css('display', 'none');
             e.preventDefault();
             return false;
         }
         if (lastname == '') {
-            swal('Please provide the last name !', '', 'warning');
+            //swal('Please provide the last name !', '', 'warning');
+            swal({
+                title: "Please provide the last name !",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#edtLastName').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
             $('.fullScreenSpin').css('display', 'none');
             e.preventDefault();
             return false;

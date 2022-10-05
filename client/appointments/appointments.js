@@ -772,6 +772,14 @@ Template.appointments.onRendered(function () {
       },
     },
   };
+  const settingsModalButton = {
+    settingsmodalbutton: {
+      text: "",
+      click: function () {
+        $("#settingsModal").modal();
+      }
+    },
+  };
 
   templateObject.renderCalendar = function (slotMin, slotMax, hideDays) {
     let calendarSet = templateObject.globalSettings.get();
@@ -805,11 +813,12 @@ Template.appointments.onRendered(function () {
           },
         },
         ...refreshButton,
+        ...settingsModalButton,
       },
       headerToolbar: {
         left: "prev,next today appointments allocation refresh",
         center: "title",
-        right: "dayGridMonth,timeGridWeek,timeGridDay",
+        right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
       },
       buttonText: {
         today: "Today",
@@ -1382,6 +1391,8 @@ Template.appointments.onRendered(function () {
       },
     });
     calendar.render();
+    $('.fc-today-button').prop('disabled', false);
+
   };
 
   templateObject.renderNormalCalendar = function () {
@@ -1435,11 +1446,12 @@ Template.appointments.onRendered(function () {
           },
         },
         ...refreshButton,
+        ...settingsModalButton,
       },
       headerToolbar: {
         left: "prev,next today appointments allocation refresh",
         center: "title",
-        right: "dayGridMonth,timeGridWeek,timeGridDay",
+        right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
       },
       buttonText: {
         today: "Today",
@@ -2062,6 +2074,7 @@ Template.appointments.onRendered(function () {
       },
     });
     calendar.render();
+    $('.fc-today-button').prop('disabled', false);
     let draggableEl = document.getElementById("external-events-list");
     new Draggable(draggableEl, {
       itemSelector: ".fc-event",
@@ -4234,11 +4247,12 @@ Template.appointments.onRendered(function () {
                     },
                   },
                   ...refreshButton,
+                  ...settingsModalButton,
                 },
                 headerToolbar: {
                   left: "prev,next today appointments allocation refresh",
                   center: "title",
-                  right: "dayGridMonth,timeGridWeek,timeGridDay",
+                  right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
                 },
                 buttonText: {
                   today: "Today",
@@ -4684,7 +4698,7 @@ Template.appointments.onRendered(function () {
                 eventDidMount: function () {},
               });
               calendar.render();
-
+              $('.fc-today-button').prop('disabled', false);
               let draggableEl = document.getElementById("external-events-list");
               new Draggable(draggableEl, {
                 itemSelector: ".fc-event",
@@ -6895,11 +6909,12 @@ Template.appointments.onRendered(function () {
                   },
                 },
                 ...refreshButton,
+                ...settingsModalButton,
               },
               headerToolbar: {
                 left: "prev,next today appointments allocation refresh",
                 center: "title",
-                right: "dayGridMonth,timeGridWeek,timeGridDay",
+                right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
               },
               buttonText: {
                 today: "Today",
@@ -7330,7 +7345,7 @@ Template.appointments.onRendered(function () {
               eventDidMount: function () {},
             });
             calendar.render();
-
+            $('.fc-today-button').prop('disabled', false);
             let draggableEl = document.getElementById("external-events-list");
             new Draggable(draggableEl, {
               itemSelector: ".fc-event",
@@ -9316,11 +9331,12 @@ Template.appointments.onRendered(function () {
                   },
                 },
                 ...refreshButton,
+                ...settingsModalButton,
               },
               headerToolbar: {
                 left: "prev,next today appointments allocation refresh",
                 center: "title",
-                right: "dayGridMonth,timeGridWeek,timeGridDay",
+                right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
               },
               buttonText: {
                 today: "Today",
@@ -9910,7 +9926,7 @@ Template.appointments.onRendered(function () {
               },
             });
             calendar.render();
-
+            $('.fc-today-button').prop('disabled', false);
             sideBarService
               .getAllAppointmentList(initialDataLoad, 0)
               .then(function (data) {
@@ -14858,7 +14874,7 @@ Template.appointments.events({
 
         // $("#customerListModal").modal("show");
         $("#stopAppointment").modal("show");
-        
+
         // swal({
         //   title: "Stop Appointment",
         //   text: "Once an appointment has ended, it cannot be restarted.",
@@ -14952,7 +14968,7 @@ Template.appointments.events({
   "click #btnCloseStopAppointment": function () {
     document.getElementById("tActualEndTime").value = "";
     document.getElementById("txtActualHoursSpent").value = "0";
-  },  
+  },
   "click #btnEndAppointment": async function () {
     const templateObject = Template.instance();
     var appointmentData = templateObject.appointmentrecords.get();
@@ -14965,7 +14981,7 @@ Template.appointments.events({
       moment().startOf("hour").format("HH") +
       ":" +
       moment().startOf("minute").format("mm");
-    
+
     let date1 = document.getElementById("dtSODate").value;
     let date2 = document.getElementById("dtSODate2").value;
     date1 = templateObject.dateFormat(date1);
@@ -14985,7 +15001,7 @@ Template.appointments.events({
     document.getElementById("txtActualHoursSpent").value = parseFloat(
       templateObject.diff_hours(endTime, startTime)
     ).toFixed(2);
-    document.getElementById("txtNotes").value = document.getElementById("txtNotes-1").value;    
+    document.getElementById("txtNotes").value = document.getElementById("txtNotes-1").value;
 
     //TODO: Stop Appointment SMS sent here
     const customerPhone = $("#mobile").val();
@@ -15030,7 +15046,7 @@ Template.appointments.events({
       $("#btnCloseStopAppointmentModal").trigger("click");
       $("#frmAppointment").trigger("submit");
     }
-  },  
+  },
   "click #btnHold": function (event) {
     // if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
     //     swal({

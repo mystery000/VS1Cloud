@@ -761,7 +761,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavreceipt').removeClass('active');
                 $('#sidenavfixedAssets').removeClass('active');
               $('.collapse').collapse('hide');
-            } else if ((currentLoc == "/fixedassets") || (currentLoc == "/fixedassets")) {
+            } else if ((currentLoc == "/fixedassetsoverview") || (currentLoc == "/fixedassetlist") || (currentLoc == "/serviceloglist")) {
               $('#sidenavaccounts').removeClass('active');
               $('#sidenavbanking').removeClass('active');
               $('#sidenavdashbaord').removeClass('active');
@@ -8240,19 +8240,19 @@ Template.newsidenav.events({
 
     'click .fixedAssetsLiHeader': function(event) {
       event.preventDefault();
-      FlowRouter.go('/fixedassets');
+      FlowRouter.go('/fixedassetsoverview');
       let templateObject = Template.instance();
       templateObject.getSetSideNavFocus();
     },
     'click .sidenavfixedassets': function(event) {
         event.preventDefault();
-        FlowRouter.go('/fixedassets');
+        FlowRouter.go('/fixedassetlist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click .sidenavservicelogs': function(event) {
         event.preventDefault();
-        FlowRouter.go('/servicelog');
+        FlowRouter.go('/serviceloglist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },

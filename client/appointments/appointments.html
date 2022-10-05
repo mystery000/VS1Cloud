@@ -10,7 +10,7 @@
             {{> helpbutton}}
             {{#if equals accessStartStopOnly true}}
             {{else}}
-            <a style="margin-right: 12px;" class="btn float-right btnoptionsmodal" role="button" href="#settingsModal"><i class="icon ion-android-more-horizontal"></i></a>
+                <!-- <a style="margin-right: 12px;" class="btn float-right btnoptionsmodal" role="button" href="#settingsModal"><i class="icon ion-android-more-horizontal"></i></a> -->
             {{/if}}
         </h3>
 
@@ -51,7 +51,7 @@
 
     <style>
         @media screen and (max-width: 450px) {
-            .navbar .container-fluid > :not(#sidebarToggleTop){
+            .navbar .container-fluid> :not(#sidebarToggleTop) {
                 display: none;
             }
 
@@ -511,9 +511,11 @@
                                 #colMobno .form-group {
                                     position: relative;
                                 }
+
                                 #colMobno .form-group input {
                                     padding-left: 20px;
                                 }
+
                                 #colMobno .form-group span {
                                     position: absolute;
                                     bottom: 6px;
@@ -691,13 +693,14 @@
                                 <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Product /
                                         Service for Appointment</label>
 
-                                        <select type="search" id="product-list" name="product-list" class="form-control product-list" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                    <select type="search" id="product-list" name="product-list" class="form-control product-list" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                         <!-- {{#if datatablerecords}}
                                             {{#each item in datatablerecords}}
                                                 <option value="{{item.id}}">{{item.productname}}</option>
                                             {{/each}}
                                         {{/if}} -->
-                                    </select></div>
+                                    </select>
+                                </div>
                             </div>
 
                             {{#if equals addAttachment true}}
@@ -705,16 +708,17 @@
                                     <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" autocomplete="off"> {{attachmentCount}} <i
                                             class="fa fa-paperclip"></i></button>
 
-                                            <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera" autocomplete="off"><i class="fa fa-camera" aria-hidden="true"></i></button>
+                                    <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera" autocomplete="off"><i class="fa fa-camera"
+                                            aria-hidden="true"></i></button>
                                 </div>
                             {{/if}}
                             <div class="col-xl-2 col-4 colStart" id="colStart" style="padding-top: 2em;">
                                 <button class="btn btn-success" type="button" style="margin: 8px 0px; width: 100%;" id="btnStartAppointment">Start</button>
                             </div>
                             <!-- {{#if equals accessOnHold false}} -->
-                                <div class="col-xl-2 col-4 colOnHold" id="colOnHold" style="padding-top: 2em;">
-                                    <button class="btn btn-warning" type="button" style="margin: 8px 0px; width: 100%;" id="btnHold">On Hold </button>
-                                </div>
+                            <div class="col-xl-2 col-4 colOnHold" id="colOnHold" style="padding-top: 2em;">
+                                <button class="btn btn-warning" type="button" style="margin: 8px 0px; width: 100%;" id="btnHold">On Hold </button>
+                            </div>
                             <!-- {{else}}
                                 <div class="col-xl-2 col-4 colOnHold" id="colOnHold" style="padding-top: 2em;">
                                     <button class="btn btn-warning" type="button" style="margin: 8px 0px; width: 100%;" id="btnHold"><span>On Hold</span></button>
@@ -728,10 +732,10 @@
                             </div>
 
                             <div class="row">
-                            <button class="btn btn-primary" type="button" id="addExtraProduct" style="margin-bottom: 36px; margin-left: 16px;">Extra Product / Service Fees</button>
+                                <button class="btn btn-primary" type="button" id="addExtraProduct" style="margin-bottom: 36px; margin-left: 16px;">Extra Product / Service Fees</button>
 
 
-                        </div>
+                            </div>
 
                         </div>
                     </div>
@@ -739,11 +743,11 @@
                     <div class="modal-footer">
                         <button class="btn btn-success btnSaveAppointment" type="button" style="margin: 8px;" id="btnSaveAppointment" name="btnSaveAppointment"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                         {{#if equals accessStartStopOnly true}}
-                          <button class="btn btn-danger btnDelete" type="button" style="margin: 8px;" id="btnDeleteDisbale" name="btnDeleteDisbale" disabled><i class="fas fa-trash-alt" style="margin-right: 5px;"></i><span>Delete</span></button>
-                          <button class="btn btn-warning btnOptions" type="button" style="margin: 8px;" id="btnOptionsDisable" name="btnOptionsDisable" disabled><i class="fas fa-cogs" style="margin-right: 5px;"></i><span>Options</span></button>
+                            <button class="btn btn-danger btnDelete" type="button" style="margin: 8px;" id="btnDeleteDisbale" name="btnDeleteDisbale" disabled><i class="fas fa-trash-alt" style="margin-right: 5px;"></i><span>Delete</span></button>
+                            <button class="btn btn-warning btnOptions" type="button" style="margin: 8px;" id="btnOptionsDisable" name="btnOptionsDisable" disabled><i class="fas fa-cogs" style="margin-right: 5px;"></i><span>Options</span></button>
                         {{else}}
-                        <button class="btn btn-danger btnDelete" type="button" style="margin: 8px;" id="btnDelete" name="btnDelete"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete</button>
-                        <button class="btn btn-warning btnOptions" type="button" style="margin: 8px;" id="btnOptions" name="btnOptions"><i class="fas fa-cogs" style="margin-right: 5px;"></i>Options</button>
+                            <button class="btn btn-danger btnDelete" type="button" style="margin: 8px;" id="btnDelete" name="btnDelete"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete</button>
+                            <button class="btn btn-warning btnOptions" type="button" style="margin: 8px;" id="btnOptions" name="btnOptions"><i class="fas fa-cogs" style="margin-right: 5px;"></i>Options</button>
                         {{/if}}
 
 
@@ -841,7 +845,7 @@
                                             <div class="col inboxcol2" style="text-align: center;">
                                                 <div>Upload files or add files from the file library.</div>
 
-                                                    <div>Capture copies of receipt's or take photo's of completed jobs.</div>
+                                                <div>Capture copies of receipt's or take photo's of completed jobs.</div>
 
                                                 <p style="color: #ababab;">Only users with access to your company can view these files</p>
                                             </div>
@@ -850,12 +854,12 @@
                                     <div class="modal-footer">
 
 
-                                            <input type="file" id="img-attachment-upload" style="display:none" accept="image/*" capture="camera">
-                                            <button class="btn btn-primary btnUploadFile img_new_attachment_btn" type="button"><i class="fas fa-camera" style="margin-right: 5px;"></i>Capture</button>
+                                        <input type="file" id="img-attachment-upload" style="display:none" accept="image/*" capture="camera">
+                                        <button class="btn btn-primary btnUploadFile img_new_attachment_btn" type="button"><i class="fas fa-camera" style="margin-right: 5px;"></i>Capture</button>
 
-                                            <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png">
+                                        <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png">
 
-                                            <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt,
+                                        <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt,
                                            .pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef,
                                            .pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg,
                                            image/gif,image/png,image/bmp,image/tiff,application/pdf,
@@ -872,8 +876,8 @@
 
                                         <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload</button>
                                         <button class="btn btn-success btnAddAttachmentSave" type="button" style="margin-right: 5px;" autocomplete="off">
-                        <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-                    </button>
+                                            <i class="fa fa-save" style="padding-right: 8px;"></i>Save
+                                        </button>
                                         <!-- <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button> -->
                                         <button class="btn btn-secondary closeModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                     </div>
@@ -1318,8 +1322,10 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                             </div>
                         </div>
                         <div class="col-12 col-md-4 colProductService1" id="colProductService1" style="padding-top: 44px;">
-                            <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment-1" autocomplete="off"> 0 <i class="fa fa-paperclip"></i></button>
-                            <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera-1" autocomplete="off"><i class="fa fa-camera" aria-hidden="true"></i></button>
+                            <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment-1" autocomplete="off"> 0 <i
+                                    class="fa fa-paperclip"></i></button>
+                            <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera-1" autocomplete="off"><i class="fa fa-camera"
+                                    aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="row">
@@ -1372,43 +1378,57 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
     </div>
 
     <style>
-      .fc-next-button{
-        margin-right: 12px!important;
-      }
+        .fc-next-button {
+            margin-right: 12px !important;
+        }
 
-      .fc-today-button {
-          margin: 0 12px 0 12px !important;
-      }
+        .fc-today-button {
+            margin: 0 12px 0 12px !important;
 
-      .fc-appointments-button {
-          margin: 0 12px 0 12px !important;
-      }
+        }
 
-      .fc-allocation-button {
-          margin: 0 12px 0 12px !important;
-      }
-      .fc-refresh-button {
-          margin-left: 12px!important;
-      }
+        .fc-appointments-button {
+            margin: 0 12px 0 12px !important;
+        }
 
-      .fc-next-button{
-        margin-right: 12px!important;
-      }
+        .fc-allocation-button {
+            margin: 0 12px 0 12px !important;
+        }
 
-      .fc-dayGridMonth-button{
-        margin-right: 12px!important;
-        border-radius: 0.35rem!important;
-      }
+        .fc-refresh-button {
+            margin-left: 12px !important;
+        }
 
-      .fc-timeGridWeek-button {
-          margin: 0 12px 0 12px !important;
-          border-radius: 0.35rem!important;
-      }
+        .fc-next-button {
+            margin-right: 12px !important;
+        }
 
-      .fc-timeGridDay-button{
-        margin-left: 12px!important;
-        border-radius: 0.35rem!important;
-      }
+        .fc-dayGridMonth-button {
+            margin-right: 12px !important;
+            border-radius: 0.35rem !important;
+        }
+
+
+        .fc-timeGridWeek-button {
+            margin: 0 12px 0 12px !important;
+            border-radius: 0.35rem !important;
+        }
+
+        .fc-timeGridDay-button {
+            margin: 0 12px 0 12px !important;
+            border-radius: 0.35rem !important;
+        }
+
+
+        .fc-settingsmodalbutton-button {
+            margin-left: 12px !important;
+            border-radius: 0.35rem !important;
+        }
+
+        .fc-settingsmodalbutton-button:before {
+          font-family: fontAwesome;
+          content: "\f141";
+        }
 
         .results tr[visible='false'],
         .no-result {
@@ -1847,7 +1867,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
         }
 
         @media screen and (max-width: 1366px) {
-            .fc-toolbar-chunk > * {
+            .fc-toolbar-chunk>* {
                 margin: 8px;
             }
         }
@@ -2079,7 +2099,8 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                                         <tr id="{{item.id}}">
                                             <td>
                                                 <div class='fc-event fc-daygrid-event fc-daygrid-block-event'>
-                                                  <a role="button" id="addAppointment_{{item.id}}" data-toggle="modal" href="#customerListModal" class="btn btn-primary addAppointmentEmp" style="width: 24px; height: 24px; text-align: center; float: left; margin-right:5px; padding:0">
+                                                    <a role="button" id="addAppointment_{{item.id}}" data-toggle="modal" href="#customerListModal" class="btn btn-primary addAppointmentEmp"
+                                                        style="width: 24px; height: 24px; text-align: center; float: left; margin-right:5px; padding:0">
                                                         <i class="icon ion-plus"></i>
                                                     </a>
                                                     {{#if item.color}}
@@ -3979,12 +4000,12 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
 
                 }
 
-                #sidebarToggleAppointments:hover{
-                   background-color: #eaecf4;
-               }
+                #sidebarToggleAppointments:hover {
+                    background-color: #eaecf4;
+                }
             </style>
             <div style="float:left; margin-top: 25px;">
-              <button class="btn btn-link d-md rounded-circle mr-3" id="sidebarToggleAppointments" type="button"><i class="fas fa-bars" style="color: #00A3D3;"></i></button>
+                <button class="btn btn-link d-md rounded-circle mr-3" id="sidebarToggleAppointments" type="button"><i class="fas fa-bars" style="color: #00A3D3;"></i></button>
             </div>
             <div id='calendar'></div>
 

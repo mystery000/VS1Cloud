@@ -124,7 +124,7 @@ Template.creditcard.onRendered(() => {
 
 
     // set initial table rest_data
-    function init_reset_data() { 
+    function init_reset_data() {
 
       let reset_data = [
         { index: 0, label: "Account Name", class: "AccountName", width: "300", active: true, display: true },
@@ -137,13 +137,13 @@ Template.creditcard.onRendered(() => {
         { index: 7, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
         { index: 8, label: "Custom Field 1", class: "CustomField1", width: "124", active: false, display: true },
         { index: 9, label: "Custom Field 2", class: "CustomField2", width: "124", active: false, display: true },
-      ]; 
+      ];
 
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       if(isBatchSerialNoTracking) {
-        reset_data[7].display = true; 
+        reset_data[7].display = true;
       } else {
-        reset_data[7].display = false; 
+        reset_data[7].display = false;
       }
 
       let templateObject = Template.instance();
@@ -166,13 +166,13 @@ Template.creditcard.onRendered(() => {
             }).catch(function (err) {
             });
           } else {
-            let data = JSON.parse(dataObject[0].data); 
+            let data = JSON.parse(dataObject[0].data);
             // handle process here
           }
         });
       } catch (error) {
-      } 
-      return; 
+      }
+      return;
     }
 
     function showCustomFieldDisplaySettings(reset_data) {
@@ -185,7 +185,7 @@ Template.creditcard.onRendered(() => {
         customData = {
           active: reset_data[r].active,
           id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label, 
+          custfieldlabel: reset_data[r].label,
           class: reset_data[r].class,
           display: reset_data[r].display,
           width: reset_data[r].width ? reset_data[r].width : ''
@@ -5185,13 +5185,13 @@ Template.creditcard.helpers({
     },
 
     displayFieldColspan: (displayfield) => {
-        if(["Amount (Ex)", "Amount (Inc)", "Tax Amt"].includes(displayfield.custfieldlabel)) 
+        if(["Amount (Ex)", "Amount (Inc)", "Tax Amt"].includes(displayfield.custfieldlabel))
         {
             if(Template.instance().isForeignEnabled.get() == true) {
                 return 2
             }
             return 1;
-        } 
+        }
         return 1;
     },
 
@@ -7412,7 +7412,7 @@ Template.creditcard.events({
         $('.colAccountName').removeClass('showColumn');
       }
     },
-    'click .chkMemo': function(event) { 
+    'click .chkMemo': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colMemo').addClass('showColumn');
         $('.colMemo').removeClass('hiddenColumn');
@@ -7429,7 +7429,7 @@ Template.creditcard.events({
         $('.colCustomerJob').addClass('hiddenColumn');
         $('.colCustomerJob').removeClass('showColumn');
       }
-    }, 
+    },
     'click .chkCustomField1': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colCustomField1').addClass('showColumn');
@@ -7478,16 +7478,16 @@ Template.creditcard.events({
     },
 
     'click .chkAmountEx': function (event) {
-      if ($(event.target).is(':checked')) {  
-          $('.chkAmountInc').prop("checked", false); 
+      if ($(event.target).is(':checked')) {
+          $('.chkAmountInc').prop("checked", false);
 
           $('.colAmountInc').addClass('hiddenColumn');
           $('.colAmountInc').removeClass('showColumn');
 
           $('.colAmountEx').addClass('showColumn');
           $('.colAmountEx').removeClass('hiddenColumn');
-        } else { 
-          $('.chkAmountInc').prop("checked", true); 
+        } else {
+          $('.chkAmountInc').prop("checked", true);
 
           $('.colAmountEx').addClass('hiddenColumn');
           $('.colAmountEx').removeClass('showColumn');
@@ -7497,16 +7497,16 @@ Template.creditcard.events({
       }
     },
     'click .chkAmountInc': function(event) {
-      if ($(event.target).is(':checked')) { 
-          $('.chkAmountEx').prop("checked", false); 
+      if ($(event.target).is(':checked')) {
+          $('.chkAmountEx').prop("checked", false);
 
           $('.colAmountEx').addClass('hiddenColumn');
           $('.colAmountEx').removeClass('showColumn');
 
           $('.colAmountInc').addClass('showColumn');
           $('.colAmountInc').removeClass('hiddenColumn');
-      } else { 
-          $('.chkAmountEx').prop("checked", true); 
+      } else {
+          $('.chkAmountEx').prop("checked", true);
 
           $('.colAmountInc').addClass('hiddenColumn');
           $('.colAmountInc').removeClass('showColumn');
@@ -7605,7 +7605,7 @@ Template.creditcard.events({
     'click .btnSaveGridSettings': function(event) {
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
-  
+
       $(".displaySettings").each(function (index) {
         var $tblrow = $(this);
         var fieldID = $tblrow.attr("custid") || 0;
@@ -7626,20 +7626,20 @@ Template.creditcard.events({
           class: colthClass,
           display: true
         };
-  
-        lineItems.push(lineItemObj); 
+
+        lineItems.push(lineItemObj);
       });
-  
+
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index); 
-  
+      lineItems.sort((a,b) => a.index - b.index);
+
       try {
         let erpGet = erpDb();
         let tableName = "tblCreditLine";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
         let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
@@ -7652,7 +7652,7 @@ Template.creditcard.events({
             }).then((result) => {
                 if (result.value) {
                    $('#myModal2').modal('hide');
-                }  
+                }
             });
         } else {
           swal("Something went wrong!", "", "error");
@@ -7660,19 +7660,19 @@ Template.creditcard.events({
       } catch (error) {
         $(".fullScreenSpin").css("display", "none");
         swal("Something went wrong!", "", "error");
-      } 
+      }
     },
     'click .btnResetGridSettings': function(event) {
       let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get(); 
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+      let reset_data = templateObject.reset_data.get();
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       if(isBatchSerialNoTracking) {
-        reset_data[7].display = true; 
+        reset_data[7].display = true;
       } else {
-        reset_data[7].display = false; 
+        reset_data[7].display = false;
       }
-      reset_data = reset_data.filter(redata => redata.display); 
-  
+      reset_data = reset_data.filter(redata => redata.display);
+
       $(".displaySettings").each(function (index) {
         let $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
@@ -8165,21 +8165,21 @@ Template.creditcard.events({
             toConvert.forEach((element) => {
                 const mainClass = element.classList[0];
                 const mainValueElement = document.querySelector(`#tblCreditLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
-                
-                let value = mainValueElement.childElementCount > 0 ? 
-                    $(mainValueElement).find('input').val() : 
+
+                let value = mainValueElement.childElementCount > 0 ?
+                    $(mainValueElement).find('input').val() :
                     mainValueElement.innerText;
 
                 $(element).attr("value", convertToForeignAmount(value, rate, false));
                 value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
                 $(element).text(value);
-        
+
             })
         }, 500);
 
     },
 
-  
+
 });
 
 Template.registerHelper('equals', function(a, b) {
@@ -8188,29 +8188,29 @@ Template.registerHelper('equals', function(a, b) {
 
 function updateTotal(ui) {
 
-   
+
     // const isForeignEnabled = ui.isForeignEnabled.get();
 
     // if(isForeignEnabled) {
     //     setTimeout(() => {
     //          /**
-    //          * Step 1: Update all lines with their foreign value if there is foreign enabled 
+    //          * Step 1: Update all lines with their foreign value if there is foreign enabled
     //          */
     //         const toConvert = document.querySelectorAll('.convert-to-foreign:not(.hiddenColumn)');
     //         const rate = $("#exchange_rate").val();
-    
+
     //         // toConvert.forEach((element) => {
     //         //     const mainClass = element.classList[0];
     //         //     const mainValueElement = document.querySelector(`#tblCreditLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
-                
-    //         //     let value = mainValueElement.childElementCount > 0 ? 
-    //         //         $(mainValueElement).find('input').val() : 
+
+    //         //     let value = mainValueElement.childElementCount > 0 ?
+    //         //         $(mainValueElement).find('input').val() :
     //         //         mainValueElement.innerText;
 
     //         //     $(element).attr("value", convertToForeignAmount(value, rate, false));
     //         //     value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
     //         //     $(element).text(value);
-        
+
     //         // });
 
     //         const calculateCollumn = (selector) => {
@@ -8224,7 +8224,6 @@ function updateTotal(ui) {
 
     //         function calculateTotal() {
     //             // const amountExs = $('.colAmountEx.convert-to-foreign');
-    //             // console.log("amount exs", amountExs);
     //             // let total = 0.0;
 
     //             // $(amountExs).each((index, el) => {
@@ -8238,7 +8237,7 @@ function updateTotal(ui) {
     //         $('#grandTotal').attr('value', total);
     //         $('#grandTotal').text(getCurrentCurrencySymbol() + " " +total);
 
-            
+
 
     //         function calculateSubTotal() {
     //             // let amounts = $('.lineTaxAmount.convert-to-foreign');
@@ -8260,10 +8259,10 @@ function updateTotal(ui) {
 
 
     //     }, 500);
-    
+
     // }
 
-   
+
 
 
 }

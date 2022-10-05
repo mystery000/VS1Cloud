@@ -1298,11 +1298,13 @@ Template.customerscard.onRendered(function () {
             website: data.fields.URL || '',
             shippingaddress: data.fields.Street || '',
             scity: data.fields.Street2 || '',
+            ssuburb: data.fields.Suburb || '',
             sstate: data.fields.State || '',
             spostalcode: data.fields.Postcode || '',
             scountry: data.fields.Country || LoggedCountry,
             billingaddress: data.fields.BillStreet || '',
             bcity: data.fields.BillStreet2 || '',
+            bsuburb: data.fields.Billsuburb || '',
             bstate: data.fields.BillState || '',
             bpostalcode: data.fields.BillPostcode || '',
             bcountry: data.fields.Billcountry || '',
@@ -1389,7 +1391,9 @@ Template.customerscard.onRendered(function () {
         templateObject.getAllCrm(data.fields.ClientName);
         //templateObject.uploadedFiles.set(attachmentData);
         // $('.fullScreenSpin').css('display','none');
+
         setTimeout(function () {
+            $('#edtCustomerCompany').attr('readonly', true);
             $('#sltPreferredPayment').val(lineItemObj.preferedpayment);
             $('#sltTerms').val(lineItemObj.terms);
             $('#sltCustomerType').val(lineItemObj.custometype);
@@ -1421,12 +1425,14 @@ Template.customerscard.onRendered(function () {
             website: '',
             shippingaddress: '',
             scity: '',
+            ssuburb: '',
             sstate: '',
             terms: loggedTermsSales|| '',
             spostalcode: '',
             scountry: LoggedCountry || '',
             billingaddress: '',
             bcity: '',
+            bsuburb: '',
             bstate: '',
             bpostalcode: '',
             bcountry: LoggedCountry || '',
@@ -1443,7 +1449,9 @@ Template.customerscard.onRendered(function () {
             discount:0
         };
         await templateObject.getTermsList();
+
         setTimeout(function () {
+            $('#edtCustomerCompany').attr('readonly', false);
             $('#sltPreferredPayment').val(lineItemObj.preferedpayment);
             $('#sltTerms').val(lineItemObj.terms);
             $('#sltCustomerType').val(lineItemObj.custometype);
@@ -2589,6 +2597,7 @@ Template.customerscard.events({
         let website = $('#edtCustomerWebsite').val()||'';
         let streetAddress = $('#edtCustomerShippingAddress').val()||'';
         let city = $('#edtCustomerShippingCity').val()||'';
+        let suburb = $('#edtCustomerShippingSuburb').val()||'';
         let state = $('#edtCustomerShippingState').val()||'';
         let postalcode = $('#edtCustomerShippingZIP').val()||'';
 
@@ -2640,23 +2649,53 @@ Template.customerscard.events({
         let salesQuota = $('#edtSalesQuota').val()||'';
 
         if (company == '') {
-            swal('Please provide the compamy name !', '', 'warning');
-            $('.fullScreenSpin').css('display', 'none');
-            $('#edtCustomerCompany').focus();
+          $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Please provide the compamy name !",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#edtCustomerCompany').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
+
+
             e.preventDefault();
             return false;
         }
         if (firstname == '') {
-            swal('Please provide the first name !', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');
-            $('#edtFirstName').focus();
+            swal({
+                title: "Please provide the first name !",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#edtFirstName').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
+
             e.preventDefault();
             return false;
         }
         if (lastname == '') {
-            swal('Please provide the last name !', '', 'warning');
-            $('.fullScreenSpin').css('display', 'none');
-            $('#edtLastName').focus();
+          $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Please provide the last name !",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#edtLastName').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
             e.preventDefault();
             return false;
         }
@@ -2674,8 +2713,6 @@ Template.customerscard.events({
 
                 }
             });
-
-
             e.preventDefault();
             return false;
         }
@@ -2733,7 +2770,7 @@ Template.customerscard.events({
                 // Position: position,
                 Street: streetAddress,
                 Street2: city,
-                Suburb: city,
+                Suburb: suburb,
                 State: state,
                 PostCode: postalcode,
                 Country: country,

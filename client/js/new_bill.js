@@ -89,7 +89,7 @@ Template.billcard.onRendered(() => {
     $('#choosetemplate').attr('checked', true);
 
     // set initial table rest_data
-    function init_reset_data() { 
+    function init_reset_data() {
 
       let reset_data = [
         { index: 0, label: "Account Name", class: "AccountName", width: "300", active: true, display: true },
@@ -102,7 +102,7 @@ Template.billcard.onRendered(() => {
         { index: 7, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
         { index: 8, label: "Custom Field 1", class: "CustomField1", width: "124", active: false, display: true },
         { index: 9, label: "Custom Field 2", class: "CustomField2", width: "124", active: false, display: true },
-      ]; 
+      ];
 
       let templateObject = Template.instance();
       templateObject.reset_data.set(reset_data);
@@ -124,13 +124,13 @@ Template.billcard.onRendered(() => {
             }).catch(function (err) {
             });
           } else {
-            let data = JSON.parse(dataObject[0].data); 
+            let data = JSON.parse(dataObject[0].data);
             // handle process here
           }
         });
       } catch (error) {
-      } 
-      return; 
+      }
+      return;
     }
 
     function showCustomFieldDisplaySettings(reset_data) {
@@ -143,7 +143,7 @@ Template.billcard.onRendered(() => {
         customData = {
           active: reset_data[r].active,
           id: reset_data[r].index,
-          custfieldlabel: reset_data[r].label, 
+          custfieldlabel: reset_data[r].label,
           class: reset_data[r].class,
           display: reset_data[r].display,
           width: reset_data[r].width ? reset_data[r].width : ''
@@ -3239,6 +3239,70 @@ Template.billcard.onRendered(() => {
                     }
                 });
             }
+        }else{
+          let lineProductName = table.find(".productName").text();
+          let lineProductDesc = table.find(".productDesc").text();
+
+          let lineUnitPrice = "0.00";
+          let lineTaxRate = table.find(".taxrate").text();
+          let lineAmount = 0;
+          let subGrandTotal = 0;
+          let taxGrandTotal = 0;
+          let taxGrandTotalPrint = 0;
+          $("#tblBillLine tbody>tr:first .lineTaxRate").text(0);
+          $("#tblBillLine tbody>tr:first .lineAccountName").val(lineProductName);
+          $("#tblBillLine tbody>tr:first .lineMemo").text(lineProductDesc);
+          $("#tblBillLine tbody>tr:first .colAmountExChange").val(lineUnitPrice);
+          $("#tblBillLine tbody>tr:first .lineTaxCode").val(lineTaxRate);
+          $('#accountListModal').modal('toggle');
+          if (taxcodeList) {
+              for (var i = 0; i < taxcodeList.length; i++) {
+                  if (taxcodeList[i].codename == lineTaxRate) {
+                      $(".lineTaxRate").text(taxcodeList[i].coderate || 0);
+                  }
+              }
+          };
+
+          $tblrows.each(function(index) {
+              var $tblrow = $(this);
+              var amount = $tblrow.find(".colAmountExChange").val() || "0";
+              var taxcode = $tblrow.find(".lineTaxCode").val() || 0;
+
+              var taxrateamount = 0;
+              if (taxcodeList) {
+                  for (var i = 0; i < taxcodeList.length; i++) {
+                      if (taxcodeList[i].codename == taxcode) {
+                          taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100 || 0;
+                      }
+                  }
+              }
+
+
+              var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
+              var taxTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+              $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+              if (!isNaN(subTotal)) {
+                  $tblrow.find('.colAmountExChange').val(utilityService.modifynegativeCurrencyFormat(subTotal.toFixed(2)));
+                  let totalAmountInc = (parseFloat(subTotal)) + (parseFloat(taxTotal)) || 0;
+                  $tblrow.find('.colAmountIncChange').val(utilityService.modifynegativeCurrencyFormat(totalAmountInc.toFixed(2)));
+                  subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+                  document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotal.toFixed(2));
+              }
+
+              if (!isNaN(taxTotal)) {
+                  taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
+                  document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotal.toFixed(2));
+              }
+
+              if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+                  let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+                  document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal.toFixed(2));
+                  document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal.toFixed(2));
+                  document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal.toFixed(2));
+
+              }
+          });
+
         }
 
         $('#tblAccount_filter .form-control-sm').val('');
@@ -4536,253 +4600,267 @@ Template.billcard.onRendered(function() {
     let taxCodes = new Array();
 
     tempObj.getAllProducts = function() {
-        getVS1Data('TAccountVS1').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                accountService.getAccountListVS1().then(function(data) {
+      getVS1Data('TAccountVS1').then(function(dataObject) {
+          if (dataObject.length == 0) {
+              accountService.getAccountListVS1().then(function(data) {
 
-                    let records = [];
-                    let inventoryData = [];
-                    for (let i = 0; i < data.taccountvs1.length; i++) {
-                        var dataList = [
-                            data.taccountvs1[i].AccountName || '-',
-                            data.taccountvs1[i].Description || '',
-                            data.taccountvs1[i].AccountNumber || '',
-                            data.taccountvs1[i].AccountTypeName || '',
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].Balance * 100) / 100),
-                            data.taccountvs1[i].TaxCode || ''
-                        ];
+                  let records = [];
+                  let inventoryData = [];
+                  for (let i = 0; i < data.taccountvs1.length; i++) {
+                      var dataList = [
+                          data.taccountvs1[i].AccountName || '-',
+                          data.taccountvs1[i].Description || '',
+                          data.taccountvs1[i].AccountNumber || '',
+                          data.taccountvs1[i].AccountTypeName || '',
+                          utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].Balance * 100) / 100),
+                          data.taccountvs1[i].TaxCode || ''
+                      ];
 
-                        splashArrayProductList.push(dataList);
-                    }
-                    localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
+                      splashArrayProductList.push(dataList);
+                  }
+                  localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
 
-                    if (splashArrayProductList) {
+                  if (splashArrayProductList) {
 
-                        $('#tblAccount').dataTable({
-                            data: splashArrayProductList.sort(),
+                      $('#tblAccount').dataTable({
+                          data: splashArrayProductList.sort(),
 
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            paging: true,
-                            "aaSorting": [],
-                            "orderMulti": true,
-                            columnDefs: [
+                          "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                          paging: true,
+                          "aaSorting": [],
+                          "orderMulti": true,
+                          columnDefs: [
 
-                                {
-                                    className: "productName",
-                                    "targets": [0]
-                                },
-                                {
-                                    className: "productDesc",
-                                    "targets": [1]
-                                },
-                                {
-                                    className: "accountnumber",
-                                    "targets": [2]
-                                },
-                                {
-                                    className: "salePrice",
-                                    "targets": [3]
-                                },
-                                {
-                                    className: "prdqty text-right",
-                                    "targets": [4]
-                                },
-                                {
-                                    className: "taxrate",
-                                    "targets": [5]
-                                }
-                            ],
-                            colReorder: true,
-
-
-
-                            "order": [
-                                [0, "asc"]
-                            ],
+                              {
+                                  className: "productName",
+                                  "targets": [0]
+                              },
+                              {
+                                  className: "productDesc",
+                                  "targets": [1]
+                              },
+                              {
+                                  className: "accountnumber",
+                                  "targets": [2]
+                              },
+                              {
+                                  className: "salePrice",
+                                  "targets": [3]
+                              },
+                              {
+                                  className: "prdqty text-right",
+                                  "targets": [4]
+                              },
+                              {
+                                  className: "taxrate",
+                                  "targets": [5]
+                              }
+                          ],
+                          colReorder: true,
 
 
-                            pageLength: initialDatatableLoad,
-                            lengthMenu: [
-                                [initialDatatableLoad, -1],
-                                [initialDatatableLoad, "All"]
-                            ],
-                            info: true,
-                            responsive: true,
-                            language: { search: "",searchPlaceholder: "Search List..." },
-                            "fnInitComplete": function() {
-                                $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
-                            }
 
-                        });
+                          "order": [
+                              [0, "asc"]
+                          ],
 
-                        $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-                    }
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.taccountvs1;
+                          pageLength: initialDatatableLoad,
+                          lengthMenu: [
+                              [initialDatatableLoad, -1],
+                              [initialDatatableLoad, "All"]
+                          ],
+                          info: true,
+                          responsive: true,
+                          language: { search: "",searchPlaceholder: "Search List..." },
+                          "fnInitComplete": function() {
+                              $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
+                          }
 
-                let records = [];
-                let inventoryData = [];
-                for (let i = 0; i < useData.length; i++) {
-                    if (!isNaN(useData[i].fields.Balance)) {
-                        accBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Balance) || 0.00;
-                    } else {
-                        accBalance = Currency + "0.00";
-                    }
-                    var dataList = [
-                        useData[i].fields.AccountName || '-',
-                        useData[i].fields.Description || '',
-                        useData[i].fields.AccountNumber || '',
-                        useData[i].fields.AccountTypeName || '',
-                        accBalance,
-                        useData[i].fields.TaxCode || ''
-                    ];
+                      });
 
-                    splashArrayProductList.push(dataList);
-                }
-                localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
+                      $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-                if (splashArrayProductList) {
 
-                    $('#tblAccount').dataTable({
-                        data: splashArrayProductList.sort(),
 
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        paging: true,
-                        "aaSorting": [],
-                        "orderMulti": true,
-                        columnDefs: [
 
-                            {
-                                className: "productName",
-                                "targets": [0]
-                            },
-                            {
-                                className: "productDesc",
-                                "targets": [1]
-                            },
-                            {
-                                className: "accountnumber",
-                                "targets": [2]
-                            },
-                            {
-                                className: "salePrice",
-                                "targets": [3]
-                            },
-                            {
-                                className: "prdqty text-right",
-                                "targets": [4]
-                            },
-                            {
-                                className: "taxrate",
-                                "targets": [5]
-                            }
-                        ],
-                        colReorder: true,
-                        "order": [
-                            [0, "asc"]
-                        ],
 
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [
-                            [initialDatatableLoad, -1],
-                            [initialDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true,
-                        language: { search: "",searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function() {
-                            $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
-                        }
 
-                    });
+                  }
+              });
+          } else {
+              let data = JSON.parse(dataObject[0].data);
+              let useData = data.taccountvs1;
 
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
+              let records = [];
+              let inventoryData = [];
+              for (let i = 0; i < useData.length; i++) {
+                  if (!isNaN(useData[i].fields.Balance)) {
+                      accBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Balance) || 0.00;
+                  } else {
+                      accBalance = Currency + "0.00";
+                  }
+                  var dataList = [
+                      useData[i].fields.AccountName || '-',
+                      useData[i].fields.Description || '',
+                      useData[i].fields.AccountNumber || '',
+                      useData[i].fields.AccountTypeName || '',
+                      accBalance,
+                      useData[i].fields.TaxCode || ''
+                  ];
 
-                }
-            }
-        }).catch(function(err) {
-            accountService.getAccountListVS1().then(function(data) {
+                  splashArrayProductList.push(dataList);
+              }
+              localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
 
-                let records = [];
-                let inventoryData = [];
-                for (let i = 0; i < data.taccountvs1.length; i++) {
-                    var dataList = [
-                        data.taccountvs1[i].AccountName || '-',
-                        data.taccountvs1[i].Description || '',
-                        data.taccountvs1[i].AccountNumber || '',
-                        data.taccountvs1[i].AccountTypeName || '',
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].Balance * 100) / 100),
-                        data.taccountvs1[i].TaxCode || ''
-                    ];
+              if (splashArrayProductList) {
 
-                    splashArrayProductList.push(dataList);
-                }
-                localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
+                  $('#tblAccount').dataTable({
+                      data: splashArrayProductList.sort(),
 
-                if (splashArrayProductList) {
+                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                      paging: true,
+                      "aaSorting": [],
+                      "orderMulti": true,
+                      columnDefs: [
 
-                    $('#tblAccount').dataTable({
-                        data: splashArrayProductList.sort(),
+                          {
+                              className: "productName",
+                              "targets": [0]
+                          },
+                          {
+                              className: "productDesc",
+                              "targets": [1]
+                          },
+                          {
+                              className: "accountnumber",
+                              "targets": [2]
+                          },
+                          {
+                              className: "salePrice",
+                              "targets": [3]
+                          },
+                          {
+                              className: "prdqty text-right",
+                              "targets": [4]
+                          },
+                          {
+                              className: "taxrate",
+                              "targets": [5]
+                          }
+                      ],
+                      colReorder: true,
 
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        paging: true,
-                        "aaSorting": [],
-                        "orderMulti": true,
-                        columnDefs: [
 
-                            {
-                                className: "productName",
-                                "targets": [0]
-                            },
-                            {
-                                className: "productDesc",
-                                "targets": [1]
-                            },
-                            {
-                                className: "accountnumber",
-                                "targets": [2]
-                            },
-                            {
-                                className: "salePrice",
-                                "targets": [3]
-                            },
-                            {
-                                className: "prdqty text-right",
-                                "targets": [4]
-                            },
-                            {
-                                className: "taxrate",
-                                "targets": [5]
-                            }
-                        ],
-                        colReorder: true,
 
-                        "order": [
-                            [0, "asc"]
-                        ],
+                      "order": [
+                          [0, "asc"]
+                      ],
 
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [
-                            [initialDatatableLoad, -1],
-                            [initialDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true,
-                        language: { search: "",searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function() {
-                            $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
-                        }
 
-                    });
+                      pageLength: initialDatatableLoad,
+                      lengthMenu: [
+                          [initialDatatableLoad, -1],
+                          [initialDatatableLoad, "All"]
+                      ],
+                      info: true,
+                      responsive: true,
+                      language: { search: "",searchPlaceholder: "Search List..." },
+                      "fnInitComplete": function() {
+                          $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
+                      }
 
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
+                  });
 
-                }
-            });
-        });
+                  $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+
+
+
+
+
+              }
+          }
+      }).catch(function(err) {
+          accountService.getAccountListVS1().then(function(data) {
+
+              let records = [];
+              let inventoryData = [];
+              for (let i = 0; i < data.taccountvs1.length; i++) {
+                  var dataList = [
+                      data.taccountvs1[i].AccountName || '-',
+                      data.taccountvs1[i].Description || '',
+                      data.taccountvs1[i].AccountNumber || '',
+                      data.taccountvs1[i].AccountTypeName || '',
+                      utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].Balance * 100) / 100),
+                      data.taccountvs1[i].TaxCode || ''
+                  ];
+
+                  splashArrayProductList.push(dataList);
+              }
+              localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayProductList));
+
+              if (splashArrayProductList) {
+
+                  $('#tblAccount').dataTable({
+                      data: splashArrayProductList.sort(),
+
+                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                      paging: true,
+                      "aaSorting": [],
+                      "orderMulti": true,
+                      columnDefs: [
+
+                          {
+                              className: "productName",
+                              "targets": [0]
+                          },
+                          {
+                              className: "productDesc",
+                              "targets": [1]
+                          },
+                          {
+                              className: "accountnumber",
+                              "targets": [2]
+                          },
+                          {
+                              className: "salePrice",
+                              "targets": [3]
+                          },
+                          {
+                              className: "prdqty text-right",
+                              "targets": [4]
+                          },
+                          {
+                              className: "taxrate",
+                              "targets": [5]
+                          }
+                      ],
+                      colReorder: true,
+
+
+
+                      "order": [
+                          [0, "asc"]
+                      ],
+
+
+                      pageLength: initialDatatableLoad,
+                      lengthMenu: [
+                          [initialDatatableLoad, -1],
+                          [initialDatatableLoad, "All"]
+                      ],
+                      info: true,
+                      responsive: true,
+                      language: { search: "",searchPlaceholder: "Search List..." },
+                      "fnInitComplete": function() {
+                          $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
+                      }
+                  });
+                  $('div.dataTables_filter input').addClass('form-control form-control-sm');
+              }
+          });
+      });
     };
 
     //tempObj.getAllProducts();
@@ -5245,13 +5323,13 @@ Template.billcard.helpers({
     },
 
     displayFieldColspan: (displayfield) => {
-        if(["Amount (Ex)", "Amount (Inc)", "Tax Amt"].includes(displayfield.custfieldlabel)) 
+        if(["Amount (Ex)", "Amount (Inc)", "Tax Amt"].includes(displayfield.custfieldlabel))
         {
             if(Template.instance().isForeignEnabled.get() == true) {
                 return 2
             }
             return 1;
-        } 
+        }
         return 1;
     },
 
@@ -6015,10 +6093,11 @@ Template.billcard.events({
         }
     },
     'click #accountListModal #refreshpagelist': function() {
-
-        Meteor._reload.reload();
-
-
+      $('.fullScreenSpin').css('display', 'inline-block');
+      localStorage.setItem('VS1PurchaseAccountList', '');
+      let templateObject = Template.instance();
+      Meteor._reload.reload();
+      //templateObject.getAllProducts();
     },
     'click .lineTaxRate': function(event) {
         $('#tblBillLine tbody tr .lineTaxRate').attr("data-toggle", "modal");
@@ -7188,6 +7267,7 @@ Template.billcard.events({
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
+        let billTotal = $('#grandTotal').text();
         var objDetails = '';
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
@@ -7196,8 +7276,10 @@ Template.billcard.events({
                 fields: {
                     ID: currentInvoice,
                     Deleted: true,
-                    OrderStatus: "Deleted",
-                    SupplierName: $('#edtSupplierName').val()||''
+                    // OrderStatus: "Deleted",
+                    SupplierName: $('#edtSupplierName').val()||'',
+                    BillTotal: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0,
+                    TotalAmountInc: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
                 }
             };
 
@@ -7368,12 +7450,32 @@ Template.billcard.events({
         let purchaseService = new PurchaseBoardService();
         let termname = $('#sltTerms').val() || '';
         if (termname === '') {
-            swal('Terms has not been selected!', '', 'warning');
+            swal({
+                title: "Terms has not been selected!",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#sltTerms').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
             event.preventDefault();
             return false;
         }
         if (suppliername.val() === '') {
-            swal('Supplier has not been selected!', '', 'warning');
+            swal({
+                title: "Supplier has not been selected!",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#edtSupplierName').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
             e.preventDefault();
         } else {
 
@@ -7481,7 +7583,8 @@ Template.billcard.events({
                         SalesComments: pickingInfrmation,
                         Attachments: uploadedItems,
                         OrderStatus: $('#sltStatus').val(),
-                        BillTotal: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
+                        BillTotal: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0,
+                        TotalAmountInc: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
                     }
                 };
             } else {
@@ -7507,17 +7610,18 @@ Template.billcard.events({
                         SalesComments: pickingInfrmation,
                         Attachments: uploadedItems,
                         OrderStatus: $('#sltStatus').val(),
-                        BillTotal: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
+                        BillTotal: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0,
+                        TotalAmountInc: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
                     }
                 };
             }
             if(splashLineArray.length > 0){
 
             }else{
-              swal('Account name has not been selected!', '', 'warning');
-              LoadingOverlay.hide();
-              event.preventDefault();
-              return false;
+              // swal('Account name has not been selected!', '', 'warning');
+              // LoadingOverlay.hide();
+              // event.preventDefault();
+              // return false;
             };
             purchaseService.saveBillEx(objDetails).then(function(objDetails) {
                 var supplierID = $('#edtSupplierEmail').attr('supplierid');
@@ -8009,7 +8113,7 @@ Template.billcard.events({
         $('.colAccountName').removeClass('showColumn');
       }
     },
-    'click .chkMemo': function(event) { 
+    'click .chkMemo': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colMemo').addClass('showColumn');
         $('.colMemo').removeClass('hiddenColumn');
@@ -8026,7 +8130,7 @@ Template.billcard.events({
         $('.colCustomerJob').addClass('hiddenColumn');
         $('.colCustomerJob').removeClass('showColumn');
       }
-    }, 
+    },
     'click .chkCustomField1': function(event) {
       if ($(event.target).is(':checked')) {
         $('.colCustomField1').addClass('showColumn');
@@ -8075,16 +8179,16 @@ Template.billcard.events({
     },
 
     'click .chkAmountEx': function (event) {
-      if ($(event.target).is(':checked')) {  
-          $('.chkAmountInc').prop("checked", false); 
+      if ($(event.target).is(':checked')) {
+          $('.chkAmountInc').prop("checked", false);
 
           $('.colAmountInc').addClass('hiddenColumn');
           $('.colAmountInc').removeClass('showColumn');
 
           $('.colAmountEx').addClass('showColumn');
           $('.colAmountEx').removeClass('hiddenColumn');
-        } else { 
-          $('.chkAmountInc').prop("checked", true); 
+        } else {
+          $('.chkAmountInc').prop("checked", true);
 
           $('.colAmountEx').addClass('hiddenColumn');
           $('.colAmountEx').removeClass('showColumn');
@@ -8094,16 +8198,16 @@ Template.billcard.events({
       }
     },
     'click .chkAmountInc': function(event) {
-      if ($(event.target).is(':checked')) { 
-          $('.chkAmountEx').prop("checked", false); 
+      if ($(event.target).is(':checked')) {
+          $('.chkAmountEx').prop("checked", false);
 
           $('.colAmountEx').addClass('hiddenColumn');
           $('.colAmountEx').removeClass('showColumn');
 
           $('.colAmountInc').addClass('showColumn');
           $('.colAmountInc').removeClass('hiddenColumn');
-      } else { 
-          $('.chkAmountEx').prop("checked", true); 
+      } else {
+          $('.chkAmountEx').prop("checked", true);
 
           $('.colAmountInc').addClass('hiddenColumn');
           $('.colAmountInc').removeClass('showColumn');
@@ -8189,7 +8293,7 @@ Template.billcard.events({
     'click .btnSaveGridSettings': function(event) {
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
-  
+
       $(".displaySettings").each(function (index) {
         var $tblrow = $(this);
         var fieldID = $tblrow.attr("custid") || 0;
@@ -8210,20 +8314,20 @@ Template.billcard.events({
           class: colthClass,
           display: true
         };
-  
-        lineItems.push(lineItemObj); 
+
+        lineItems.push(lineItemObj);
       });
-  
+
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index); 
-  
+      lineItems.sort((a,b) => a.index - b.index);
+
       try {
         let erpGet = erpDb();
         let tableName = "tblBillLine";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
         let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
@@ -8236,7 +8340,7 @@ Template.billcard.events({
             }).then((result) => {
                 if (result.value) {
                    $('#myModal2').modal('hide');
-                }  
+                }
             });
         } else {
           swal("Something went wrong!", "", "error");
@@ -8244,19 +8348,19 @@ Template.billcard.events({
       } catch (error) {
         $(".fullScreenSpin").css("display", "none");
         swal("Something went wrong!", "", "error");
-      } 
+      }
     },
     'click .btnResetGridSettings': function(event) {
       let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get(); 
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false; 
+      let reset_data = templateObject.reset_data.get();
+      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       if(isBatchSerialNoTracking) {
-        reset_data[11].display = true; 
+        reset_data[11].display = true;
       } else {
-        reset_data[11].display = false; 
+        reset_data[11].display = false;
       }
-      reset_data = reset_data.filter(redata => redata.display); 
-  
+      reset_data = reset_data.filter(redata => redata.display);
+
       $(".displaySettings").each(function (index) {
         let $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
@@ -8548,7 +8652,8 @@ Template.billcard.events({
                             SalesComments: pickingInfrmation,
                             Attachments: uploadedItems,
                             OrderStatus: $('#sltStatus').val(),
-                            BillTotal: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
+                            BillTotal: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0,
+                            TotalAmountInc: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
                         }
                     };
                 } else {
@@ -8574,7 +8679,8 @@ Template.billcard.events({
                             SalesComments: pickingInfrmation,
                             Attachments: uploadedItems,
                             OrderStatus: $('#sltStatus').val(),
-                            BillTotal: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
+                            BillTotal: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0,
+                            TotalAmountInc: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
                         }
                     };
                 }
@@ -8582,10 +8688,10 @@ Template.billcard.events({
                 if(splashLineArray.length > 0){
 
                 }else{
-                  swal('Account name has not been selected!', '', 'warning');
-                  LoadingOverlay.hide();
-                  event.preventDefault();
-                  return false;
+                  // swal('Account name has not been selected!', '', 'warning');
+                  // LoadingOverlay.hide();
+                  // event.preventDefault();
+                  // return false;
                 }
 
                 purchaseService.saveBillEx(objDetails).then(function(objDetails) {
@@ -8833,13 +8939,13 @@ Template.billcard.events({
             toConvert.forEach((element) => {
                 const mainClass = element.classList[0];
                 const mainValueElement = document.querySelector(`#tblBillLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
-                
-                let value = mainValueElement.childElementCount > 0 ? 
-                    $(mainValueElement).find('input').val() : 
+
+                let value = mainValueElement.childElementCount > 0 ?
+                    $(mainValueElement).find('input').val() :
                     mainValueElement.innerText;
                 value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
                 $(element).text(value);
-        
+
             })
         }, 500);
 

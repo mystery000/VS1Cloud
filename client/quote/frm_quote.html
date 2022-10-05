@@ -564,7 +564,7 @@
                                                               <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                               <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
                                                           </div>
-                                                        </div> 
+                                                        </div>
                                                         {{/if}}
                                                         {{/each}}
 
@@ -724,18 +724,18 @@
                         {{#if displayfields}}
                         <table id="tblQuoteLine" style="width:100%" class="table table-striped table-bordered tblQuoteLine">
                             <thead>
-                              <tr class="dnd-moved"> 
+                              <tr class="dnd-moved">
                                 {{#each displayfield in displayfields}}
                                   {{#if displayfield.display}}
                                   <th colspan="{{displayFieldColspan displayfield}}"  class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
                                     {{displayfield.custfieldlabel}}
                                     {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>
                                       {{else}}
-                                      {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>  
+                                      {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>
                                         {{else}}
-                                        {{#if equals displayfield.class 'UnitPriceEx'}} <i class="fas fa-random"></i> 
+                                        {{#if equals displayfield.class 'UnitPriceEx'}} <i class="fas fa-random"></i>
                                           {{else}}
-                                          {{#if equals displayfield.class 'UnitPriceInc'}} <i class="fas fa-random fa-trans"></i> 
+                                          {{#if equals displayfield.class 'UnitPriceInc'}} <i class="fas fa-random fa-trans"></i>
                                           {{/if}}
                                         {{/if}}
                                       {{/if}}
@@ -774,7 +774,7 @@
                                     {{item.description}}</td>
                                   <td class="colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input
                                       class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
-                                 
+
                                       <td class="colUnitPriceEx colUnitPrice {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input
                                       class="lineUnitPrice colUnitPrice colUnitPriceEx highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}">
                                   </td>
@@ -790,13 +790,14 @@
                                 {{#if isForeignEnabled}}
                                     <td class="colUnitPriceInc convert-to-foreign {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.unitPriceInc}}</td>
                                 {{/if}}
-                                  
-                                    <td contenteditable="false" class="lineDiscount colDiscount {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
-                                  {{item.DiscountPercent}}</td>
+
+                                    <!-- <td contenteditable="false" class="lineDiscount colDiscount {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
+                                  {{item.DiscountPercent}}</td> -->
+                                  <td class="colDiscount {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}"><input class="lineDiscount highlightInput" type="number" value="{{item.DiscountPercent}}" max="100"></td>
                                   
                                   <td class="colCostPrice {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><input
                                       class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}"></td>
-                                 
+
                                     {{#if isForeignEnabled}}
                                      <td class="colCostPrice convert-to-foreign{{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">{{convertToForeignAmount item.lineCost}}</td>
                                     {{/if}}
@@ -810,18 +811,18 @@
                                     style="text-align: right!important;">{{item.taxRate}}</td>
                                   <td contenteditable="false" class="colTaxCode {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"><input
                                       class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
-                                  
+
                                       <td contenteditable="false"
                                     class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"
                                     style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
-                                  
+
                                     {{#if isForeignEnabled}}
                                         <td contenteditable="false"
                                         class="lineTaxAmount convert-to-foreign colTaxAmount pointer {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"
                                         style="text-align: right!important;cursor: pointer;">{{convertToForeignAmount item.TaxTotal}}</td>
-                                    
+
                                     {{/if}}
-                                  
+
                                     {{#if isBatchSerialNoTracking 'true'}}
                                   <td class="th colSerialNo {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnSnLotmodal"
                                     style="margin-left: 40px; font-size: 22px;"></i></td>
@@ -839,12 +840,12 @@
 
                                   <td contenteditable="false" class="lineAmtInc colAmountInc {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"
                                     style="text-align: right!important;">{{item.TotalAmtInc}}</td>
-                                  
+
                                     {{#if isForeignEnabled}}
                                         <td contenteditable="false" class="lineAmtInc convert-to-foreign colAmountInc {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"
                                         style="text-align: right!important;">{{convertToForeignAmount item.TotalAmtInc}}</td>
                                     {{/if}}
-                                  
+
                                     <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
                                           class="fa fa-remove"></i></button></span></td>
                                 </tr>

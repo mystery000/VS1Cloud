@@ -36,7 +36,8 @@ Template.global_customerlist.onRendered(function() {
   }
 
   // set initial table rest_data
-  function init_reset_data() {
+  templateObject.init_reset_data = function(){
+  //function init_reset_data() {
     let reset_data = [
       { index: 0, label: '#ID', class:'colCustomerID', active: false, display: true, width: "0" },
       { index: 1, label: "Company", class: "colCompany", active: true, display: true, width: "200" },
@@ -69,22 +70,23 @@ Template.global_customerlist.onRendered(function() {
     let templateObject = Template.instance();
     templateObject.reset_data.set(reset_data);
   }
-  init_reset_data();
+  templateObject.init_reset_data();
   // set initial table rest_data
 
 
   // custom field displaysettings
-  function initCustomFieldDisplaySettings(data, listType) {
+  templateObject.initCustomFieldDisplaySettings = function(data, listType){
+  //function initCustomFieldDisplaySettings(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
-    showCustomFieldDisplaySettings(reset_data);
+    templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              showCustomFieldDisplaySettings(reset_data);
+              templateObject.showCustomFieldDisplaySettings(reset_data);
           }).catch(function (err) {
           });
         } else {
@@ -96,8 +98,8 @@ Template.global_customerlist.onRendered(function() {
     }
     return;
   }
-
-  function showCustomFieldDisplaySettings(reset_data) {
+  templateObject.showCustomFieldDisplaySettings = function(reset_data){
+  //function showCustomFieldDisplaySettings(reset_data) {
 
     let custFields = [];
     let customData = {};
@@ -122,7 +124,7 @@ Template.global_customerlist.onRendered(function() {
     }
     templateObject.custdisplayfields.set(custFields);
   }
-  initCustomFieldDisplaySettings("", "tblCustomerlist");
+  templateObject.initCustomFieldDisplaySettings("", "tblCustomerlist");
 
   templateObject.resetData = function (dataVal) {
       location.reload();
@@ -637,7 +639,6 @@ Template.global_customerlist.onRendered(function() {
 
   templateObject.getCustomersData();
 
-    tableResize();
 });
 
 

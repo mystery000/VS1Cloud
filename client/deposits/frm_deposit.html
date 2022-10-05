@@ -353,6 +353,17 @@
                                                                 </div>
                                                                 <div class="columnSettings">
                                                                     <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                                        <input class="custom-control-input chkcolAmount" type="checkbox" id="formCheck-08" name="formCheck-08" checked="">
+                                                                        <label class="custom-control-label" for="formCheck-08"></label>
+                                                                        <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[4].label}}{{else}}Amount{{/if}}" valueupdate="th.colDebitEx">{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[4].label}}{{else}}Amount{{/if}}</div>
+                                                                    </div>
+                                                                    <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                                        <label class="text-nowrap" style="padding-left: 0;margin-top: 8px;">Width: </label>
+                                                                        <input class="custom-range rngRange rngRangeAmount" type="number" style="margin: 8px;" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[4].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="columnSettings">
+                                                                    <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                         <input class="custom-control-input chkcolCreditEx" type="checkbox" id="formCheck-04" name="formCheck-04" checked="">
                                                                         <label class="custom-control-label" for="formCheck-04"></label>
                                                                         <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[3].label}}{{else}}Reference No{{/if}}" valueupdate="th.colCreditEx">{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[3].label}}{{else}}Reference No{{/if}}</div>
@@ -373,17 +384,7 @@
                                                                         <input class="custom-range rngRange rngRangeDebitEx" type="number" style="margin: 8px;" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[4].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                     </div>
                                                                 </div>
-                                                                <div class="columnSettings">
-                                                                    <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                        <input class="custom-control-input chkcolAmount" type="checkbox" id="formCheck-08" name="formCheck-08" checked="">
-                                                                        <label class="custom-control-label" for="formCheck-08"></label>
-                                                                        <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[4].label}}{{else}}Amount{{/if}}" valueupdate="th.colDebitEx">{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[4].label}}{{else}}Amount{{/if}}</div>
-                                                                    </div>
-                                                                    <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                                                        <label class="text-nowrap" style="padding-left: 0;margin-top: 8px;">Width: </label>
-                                                                        <input class="custom-range rngRange rngRangeAmount" type="number" style="margin: 8px;" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[4].width}}{{else}}0{{/if}}" min="0" max="1000">
-                                                                    </div>
-                                                                </div>
+
 
                                                             </div>
                                                         </form>
@@ -511,9 +512,10 @@
                                         <tr class="dnd-moved">
                                             <th class="th colAccount" style="width: 300px;">From Account</th>
                                             <th class="th colPaymentMethod" style="width: 200px;">Payment Method</th>
+                                            <th class="th colAmount  text-right" style="width: 110px;">Amount</th>
                                             <th class="th colReference" style="">Reference No</th>
                                             <th class="th colCompany"  style="width: 300px;">Received From</th>
-                                            <th class="th colAmount  text-right" style="width: 110px;">Amount</th>
+
                                             <th class="th" style="width: 25px;"></th>
                                         </tr>
                                     </thead>
@@ -524,11 +526,12 @@
                                             <td contenteditable="false" class="colAccount"><input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}" ></td>
                                             <!-- <td contenteditable="false" class="colPaymentMethod td-input">{{item.paymentmethod}}</td> -->
                                             <td contenteditable="false" class="colPaymentMethod"><input class="es-input highlightSelect linePaymentMethod" type="search" value="{{item.paymentmethod}}" ></td>
+                                            <td style="text-align: right!important;"><input class="colAmount highlightInput" type="text" value="{{item.lineamount}}"></td>
                                             <td contenteditable="true" class="colReference">{{item.memo}}</td>
                                             <td contenteditable="false" class="colCompany">
                                               <input class="es-input highlightSelect lineCompany" type="search" value="{{item.companyname}}" >
                                             </td>
-                                            <td style="text-align: right!important;"><input class="colAmount highlightInput" type="text" value="{{item.lineamount}}"></td>
+
                                             <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
                                         </tr>
                                         {{/each}}
@@ -536,9 +539,9 @@
                                     <tfoot>
                                         <tr>
                                             <td colspan="2" style="font-size: 20px; color: #696969; font-weight: 800;">Total</td>
-                                            <td></td>
-                                            <td></td>
                                             <td style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0;" id="depositTotalLine" name="depositTotalLine" >{{record.deposittotal}}</td>
+                                            <td></td>
+                                            <td></td>
                                             <td></td>
                                         </tr>
                                     </tfoot>

@@ -740,7 +740,6 @@ Template.paymentoverview.onRendered(function() {
                 }
 
                 $('.fullScreenSpin').css('display', 'none');
-                console.log(splashArrayPaymentOverviewList);
                 setTimeout(function() {
                     $('#tblPaymentOverview').DataTable({
                         data: splashArrayPaymentOverviewList,

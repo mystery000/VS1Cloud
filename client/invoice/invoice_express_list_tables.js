@@ -56,7 +56,7 @@ Template.invoicelist.onRendered(function () {
   function initCustomFieldDisplaySettings(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
-    showCustomFieldDisplaySettings(reset_data);
+    templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
       getVS1Data("VS1_Customize").then(function (dataObject) {
@@ -64,7 +64,7 @@ Template.invoicelist.onRendered(function () {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
               // reset_data = data.ProcessLog.CustomLayout.Columns;
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              showCustomFieldDisplaySettings(reset_data);
+              templateObject.showCustomFieldDisplaySettings(reset_data);
           }).catch(function (err) {
           });
         } else {
@@ -77,7 +77,8 @@ Template.invoicelist.onRendered(function () {
     return;
   }
 
-  function showCustomFieldDisplaySettings(reset_data) {
+  templateObject.showCustomFieldDisplaySettings = function(reset_data){
+  //function showCustomFieldDisplaySettings(reset_data) {
 
     let custFields = [];
     let customData = {};
@@ -2457,7 +2458,7 @@ Template.invoicelist.events({
     jQuery("#tblInvoicelist_wrapper .dt-buttons .btntabletocsv").click();
     $(".fullScreenSpin").css("display", "none");
   },
-  "click .btnRefresh": async function () {
+  "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let currentDate = new Date();
     let hours = currentDate.getHours(); //returns 0-23
@@ -2481,122 +2482,34 @@ Template.invoicelist.events({
     }
     var toDate =
       currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-    let prevMonth11Date = moment()
-      .subtract(reportsloadMonths, "months")
-      .format("YYYY-MM-DD");
+    let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
 
-    //Reload Custom Field on Page Refresh
-    sideBarService.getAllCustomFields().then(function (data) {
-      addVS1Data("TCustomFieldList", JSON.stringify(data));
-    });
 
-    sideBarService
-      .getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0)
-      .then(function (dataSales) {
-        addVS1Data("TSalesList", JSON.stringify(dataSales))
-          .then(function (datareturn) {})
-          .catch(function (err) {});
-      })
-      .catch(function (err) {});
+    sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (dataSales) {
+        addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {}).catch(function (err) {});
+      }).catch(function (err) {});
 
-    sideBarService
-      .getAllTCustomerPaymentListData(
-        prevMonth11Date,
-        toDate,
-        true,
-        initialReportLoad,
-        0
-      )
-      .then(async function (dataCustPay) {
-        addVS1Data("TCustomerPaymentList", JSON.stringify(dataCustPay))
-          .then(function (datareturn) {})
-          .catch(function (err) {});
-      })
-      .catch(function (err) {});
 
-    sideBarService
-      .getAllInvoiceList(initialDataLoad, 0)
-      .then(function (data) {
-        addVS1Data("TInvoiceEx", JSON.stringify(data))
-          .then(function (datareturn) {})
-          .catch(function (err) {});
-      })
-      .catch(function (err) {});
+    sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
+        addVS1Data("TInvoiceEx", JSON.stringify(data)).then(function (datareturn) {}).catch(function (err) {});
+      }).catch(function (err) {});
 
-    sideBarService
-      .getAllTInvoiceListData(
-        prevMonth11Date,
-        toDate,
-        true,
-        initialReportLoad,
-        0
-      )
-      .then(async function (dataInvoice) {
-        addVS1Data("TInvoiceList", JSON.stringify(dataInvoice))
-          .then(function (datareturn) {
-            sideBarService
-              .getTPaymentList(
-                prevMonth11Date,
-                toDate,
-                true,
-                initialReportLoad,
-                0,
-                ""
-              )
-              .then(async function (dataPaymentList) {
-                await addVS1Data(
-                  "TPaymentList",
-                  JSON.stringify(dataPaymentList)
-                )
-                  .then(function (datareturn) {
-                    setTimeout(function () {
+    sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (dataInvoice) {
+        addVS1Data("TInvoiceList", JSON.stringify(dataInvoice)).then(function (datareturn) {
+            sideBarService.getTPaymentList(prevMonth11Date,toDate,true,initialReportLoad,0,"").then(function (dataPaymentList) {
+               addVS1Data("TPaymentList",JSON.stringify(dataPaymentList)).then(function (datareturn) {
                       window.open("/invoicelist", "_self");
-                    }, 200);
-                  })
-                  .catch(function (err) {
-                    setTimeout(function () {
+                  }).catch(function (err) {
                       window.open("/invoicelist", "_self");
-                    }, 200);
                   });
-              })
-              .catch(function (err) {
-                setTimeout(function () {
+              }).catch(function (err) {
                   window.open("/invoicelist", "_self");
-                }, 200);
               });
-          })
-          .catch(function (err) {
-            sideBarService
-              .getAllInvoiceList(initialDataLoad, 0)
-              .then(function (data) {
-                addVS1Data("TInvoiceEx", JSON.stringify(data))
-                  .then(function (datareturn) {
-                    window.open("/invoicelist", "_self");
-                  })
-                  .catch(function (err) {
-                    window.open("/invoicelist", "_self");
-                  });
-              })
-              .catch(function (err) {
-                window.open("/invoicelist", "_self");
-              });
-          });
-      })
-      .catch(function (err) {
-        sideBarService
-          .getAllInvoiceList(initialDataLoad, 0)
-          .then(function (data) {
-            addVS1Data("TInvoiceEx", JSON.stringify(data))
-              .then(function (datareturn) {
-                window.open("/invoicelist", "_self");
-              })
-              .catch(function (err) {
-                window.open("/invoicelist", "_self");
-              });
-          })
-          .catch(function (err) {
+          }).catch(function (err) {
             window.open("/invoicelist", "_self");
           });
+      }).catch(function (err) {
+        window.open("/invoicelist", "_self");
       });
   },
   "change #dateTo": function () {

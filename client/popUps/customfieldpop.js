@@ -1071,7 +1071,7 @@ Template.customfieldpop.onRendered(() => {
           // customfield tempcode
           listType = "ltOrderLines";
           if (!isNaN(currentID)) {
-          templateObject.getChequeData(currentID);
+          //templateObject.getChequeData(currentID);
           }
         }
 
