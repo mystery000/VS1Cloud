@@ -8470,7 +8470,7 @@ Template.new_quote.events({
         $("th.col" + columHeaderUpdate + "").html(columData);
     },
     // custom field displaysettings
-    'click .btnSaveGridSettings': function(event) {
+    'click .btnSaveGridSettings': async function(event) {
         let lineItems = [];
         $(".fullScreenSpin").css("display", "inline-block");
         $(".displaySettings").each(function (index) {
@@ -8501,7 +8501,7 @@ Template.new_quote.events({
             let erpGet = erpDb();
             let tableName = "tblQuoteLine";
             let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-            let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+            let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
             $(".fullScreenSpin").css("display", "none");
             if(added) {
                 swal({

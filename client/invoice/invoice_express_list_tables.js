@@ -2098,7 +2098,7 @@ Template.invoicelist.events({
   },
 
   // custom field displaysettings
-  "click .saveTable": function (event) {
+  "click .saveTable": async function (event) {
     let lineItems = [];
     $(".fullScreenSpin").css("display", "inline-block");
 
@@ -2136,7 +2136,7 @@ Template.invoicelist.events({
       let erpGet = erpDb();
       let tableName = "tblInvoicelist";
       let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-      let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+      let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
       if(added) {
           swal({

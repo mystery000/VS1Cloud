@@ -2114,7 +2114,7 @@ Template.salesoverview.events({
       $(".rngRange" + reset_data[index].class).val('');
     });
   },
-  "click .saveTable": function (event) {
+  "click .saveTable": async function (event) {
     let lineItems = [];
     $(".fullScreenSpin").css("display", "inline-block");
 
@@ -2152,7 +2152,7 @@ Template.salesoverview.events({
       let erpGet = erpDb();
       let tableName = "tblSalesOverview";
       let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-      let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+      let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
       if(added) {
           swal({

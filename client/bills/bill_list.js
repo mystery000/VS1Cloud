@@ -1262,7 +1262,7 @@ Template.billlist.events({
       });
     },
 
-    'click .saveTable' : function(event){
+    'click .saveTable' : async function(event){
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -1300,7 +1300,7 @@ Template.billlist.events({
         let erpGet = erpDb();
         let tableName = "tblbilllist";
         let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
             swal({

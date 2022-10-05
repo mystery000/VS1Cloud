@@ -10645,7 +10645,7 @@ Template.new_salesorder.events({
     },
 
     // custom field displaysettings
-    'click .btnSaveGridSettings': function(event) {
+    'click .btnSaveGridSettings': async function(event) {
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -10683,7 +10683,7 @@ Template.new_salesorder.events({
         let erpGet = erpDb();
         let tableName = "tblSalesOrderLine";
         let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
           swal({

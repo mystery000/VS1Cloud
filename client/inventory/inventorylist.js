@@ -1458,7 +1458,7 @@ Template.inventorylist.events({
         $(".col" + reset_data[index].class).css('width', reset_data[index].width);
       });
     },
-    "click .saveTable": function(event) {
+    "click .saveTable": async function(event) {
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -1496,7 +1496,7 @@ Template.inventorylist.events({
         let erpGet = erpDb();
         let tableName = "tblInventoryOverview";
         let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
             swal({
