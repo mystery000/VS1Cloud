@@ -2380,7 +2380,6 @@ Template.appointments.onRendered(function () {
         } else {
           let data = JSON.parse(dataObject[0].data);
           let useData = data.temployee;
-          console.log("useData=", useData);
           let lineItems = [];
           let lineItemObj = {};
           let totalUser = 0;
@@ -16797,7 +16796,6 @@ Template.appointments.events({
       templateObject = Template.instance();
       let empID = $(event.currentTarget).attr('id').split("_")[1];
       let leaveemployeerecords = templateObject.leaveemployeerecords.get();
-      console.log("leaveemployeerecords", leaveemployeerecords);
       var startdateGet = new Date($("#dtSODate").datepicker("getDate"));
       var leaveFlag = false;
       leaveemployeerecords.forEach((item) => {
