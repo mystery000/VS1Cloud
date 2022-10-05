@@ -2338,7 +2338,7 @@ Template.inventorylist.events({
         FlowRouter.go("/productview");
     },
     "click .newProduct": function(event) {
-        FlowRouter.go("/newProduct");
+        FlowRouter.go("/productview");
     },
     "click .productList": function(event) {
         FlowRouter.go("/productlist");
