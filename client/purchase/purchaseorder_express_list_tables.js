@@ -48,7 +48,7 @@ Template.purchaseorderlist.onRendered(function () {
   // set initial table rest_data
 
   // custom field displaysettings
-  function initCustomFieldDisplaySettings(data, listType) {
+  templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
@@ -90,7 +90,7 @@ Template.purchaseorderlist.onRendered(function () {
     }
     templateObject.displayfields.set(custFields);
   }
-  initCustomFieldDisplaySettings("", "tblpurchaseorderlist");
+  templateObject.initCustomFieldDisplaySettings("", "tblpurchaseorderlist");
   // custom field displaysettings
 
 

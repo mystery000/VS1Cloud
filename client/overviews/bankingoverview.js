@@ -74,7 +74,7 @@ Template.bankingoverview.onRendered(function() {
 
 
   // custom field displaysettings
-  function initCustomFieldDisplaySettings(data, listType) {
+   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
@@ -117,7 +117,7 @@ Template.bankingoverview.onRendered(function() {
     templateObject.displayfields.set(custFields);
   }
 
-  initCustomFieldDisplaySettings("", "tblBankingOverview");
+  templateObject.initCustomFieldDisplaySettings("", "tblBankingOverview");
   // custom field displaysettings
 
     $("#date-input,#dateTo,#dateFrom").datepicker({

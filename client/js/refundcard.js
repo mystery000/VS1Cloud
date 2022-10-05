@@ -5623,7 +5623,7 @@ Template.refundcard.onRendered(function() {
     tempObj.getSubTaxCodes();
 
     // custom field displaysettings
-    function initCustomFieldDisplaySettings(data, listType) {
+    tempObj.initCustomFieldDisplaySettings = function(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       showCustomFieldDisplaySettings(reset_data);
@@ -5666,7 +5666,7 @@ Template.refundcard.onRendered(function() {
       tempObj.displayfields.set(custFields);
     }
 
-    initCustomFieldDisplaySettings("", "tblRefundLine");
+    tempObj.initCustomFieldDisplaySettings("", "tblRefundLine");
 
     // tempObj.getAllCustomFieldDisplaySettings = function () {
 

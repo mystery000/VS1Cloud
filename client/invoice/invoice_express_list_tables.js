@@ -53,7 +53,7 @@ Template.invoicelist.onRendered(function () {
 
 
   // custom field displaysettings
-  function initCustomFieldDisplaySettings(data, listType) {
+  templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     templateObject.showCustomFieldDisplaySettings(reset_data);
@@ -97,7 +97,7 @@ Template.invoicelist.onRendered(function () {
     }
     templateObject.displayfields.set(custFields);
   }
-  initCustomFieldDisplaySettings("", "tblInvoicelist");
+  templateObject.initCustomFieldDisplaySettings("", "tblInvoicelist");
 
 
   let accountService = new AccountService();

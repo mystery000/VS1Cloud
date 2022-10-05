@@ -152,7 +152,7 @@ Template.creditcard.onRendered(() => {
     init_reset_data();
     // set initial table rest_data
     // custom field displaysettings
-    function initCustomFieldDisplaySettings(data, listType) {
+     templateObject.initCustomFieldDisplaySettings = function(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       showCustomFieldDisplaySettings(reset_data);
@@ -194,7 +194,7 @@ Template.creditcard.onRendered(() => {
       }
       templateObject.displayfields.set(custFields);
     }
-    initCustomFieldDisplaySettings("", "tblCreditLine");
+    templateObject.initCustomFieldDisplaySettings("", "tblCreditLine");
 
 
       templateObject.getTemplateInfoNew = function(){

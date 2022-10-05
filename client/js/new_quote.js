@@ -5381,7 +5381,7 @@ Template.new_quote.onRendered(function() {
     };
     tempObj.getSubTaxCodes();
 
-    function initCustomFieldDisplaySettings(data, listType) {
+    tempObj.initCustomFieldDisplaySettings = function(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       showCustomFieldDisplaySettings(reset_data);
@@ -5423,7 +5423,7 @@ Template.new_quote.onRendered(function() {
       }
       tempObj.displayfields.set(custFields);
     }
-    initCustomFieldDisplaySettings("", "tblQuoteLine");
+    tempObj.initCustomFieldDisplaySettings("", "tblQuoteLine");
 
     // tempObj.getAllCustomFieldDisplaySettings = function () {
 

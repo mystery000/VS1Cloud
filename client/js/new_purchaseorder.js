@@ -154,7 +154,7 @@ Template.purchaseordercard.onRendered(() => {
     init_reset_data();
     // set initial table rest_data
     // custom field displaysettings
-    function initCustomFieldDisplaySettings(data, listType) {
+     templateObject.initCustomFieldDisplaySettings = function(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       showCustomFieldDisplaySettings(reset_data);
@@ -198,7 +198,7 @@ Template.purchaseordercard.onRendered(() => {
       templateObject.displayfields.set(custFields);
     }
 
-    initCustomFieldDisplaySettings("", "tblPurchaseOrderLine");
+    templateObject.initCustomFieldDisplaySettings("", "tblPurchaseOrderLine");
     // custom field displaysettings
 
     const purchaseService = new PurchaseBoardService();

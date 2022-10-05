@@ -56,7 +56,7 @@ Template.salesoverview.onRendered(function () {
 
 
   // custom field displaysettings
-  function initCustomFieldDisplaySettings(data, listType) {
+  templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
@@ -100,7 +100,7 @@ Template.salesoverview.onRendered(function () {
     templateObject.displayfields.set(custFields);
   }
 
-  initCustomFieldDisplaySettings("", "tblSalesOverview");
+  templateObject.initCustomFieldDisplaySettings("", "tblSalesOverview");
 
 
   let accountService = new AccountService();

@@ -12764,7 +12764,7 @@ Template.new_invoice.onRendered(function () {
   tempObj.getSubTaxCodes();
 
   // custom field displaysettings
-  function initCustomFieldDisplaySettings(data, listType) {
+   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
@@ -12807,7 +12807,7 @@ Template.new_invoice.onRendered(function () {
     tempObj.displayfields.set(custFields);
   }
 
-  initCustomFieldDisplaySettings("", "tblInvoiceLine");
+  templateObject.initCustomFieldDisplaySettings("", "tblInvoiceLine");
 
   // tempObj.getAllCustomFieldDisplaySettings = function () {
   //   let listType = "ltSaleslines"; // tempcode until InvoiceLines is added on backend

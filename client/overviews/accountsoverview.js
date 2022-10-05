@@ -82,7 +82,7 @@ Template.accountsoverview.onRendered(function() {
 
 
   // custom field displaysettings
-  function initCustomFieldDisplaySettings(data, listType) {
+  templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
@@ -126,7 +126,7 @@ Template.accountsoverview.onRendered(function() {
     templateObject.displayfields.set(custFields);
   }
 
-  initCustomFieldDisplaySettings("", "tblAccountOverview");
+  templateObject.initCustomFieldDisplaySettings("", "tblAccountOverview");
   // set initial table rest_data  //
 
     templateObject.getReceiptCategoryList = function() {
