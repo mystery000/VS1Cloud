@@ -92,7 +92,29 @@
             <div class="col-5 col-md-6">
                 <button class="btn btnNav btn-primary btnRefresh float-left" type="button" style="margin: 12px; margin-left: 0"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                 {{#if isNewProduct}}
-                    <a class="btn btnNav btn-primary float-left btnNewProduct" href="/productview" style="margin: 12px;"><i class="fa fa-plus" style="margin-right: 5px;"></i>Product</a>
+                    <!-- <a class="btn btnNav btn-primary float-left btnNewProduct" href="/productview" style="margin: 12px;"><i class="fa fa-plus" style="margin-right: 5px;"></i>Product</a> -->
+
+                    <!-- <div class="dropdown btnNav" style="margin: 12px; display: inline;">
+                                  <button class="btn btnNavDropdown btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                     Product
+                                  </button>
+                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                      <a class="dropdown-item btnSNTrack" id="btnSNTrack" href=""><i style="margin-right: 5px; width: 16px;"></i>Product List</a>
+                                      <a class="dropdown-item btnLotTrack" id="btnLotTrack" href=""><i class="bi bi-plus" style="margin-right: 5px; width: 16px;"></i>+New Product</a>
+                                  </div>
+                              </div> -->
+                              <div class="btn-group btnNav" style="margin: 12px;">
+                                  <a class="btn btn-primary productList" role="button" href="/productlist" id="productList"
+                                      name="productList">Product</a>
+                                  <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                                      aria-expanded="false" type="button"></button>
+                                  <div class="dropdown-menu" role="menu">
+                                      <a class="dropdown-item productList" role="presentation" href="/productlist">Product List</a>
+                                      <a class="dropdown-item" role="presentation" href="/productview" id="newProduct"
+                                          name="newProduct">+ New Product</a>
+                                      <!-- <a class="dropdown-item" role="presentation" href="/refundcard" id="newRefund" name="newRefund">+ New Refund</a> -->
+                                  </div>
+                              </div>
                 {{/if}}
                 {{#if includeStockAdjustment}}
                     <button class="btn btnNav btn-primary btnStockAdjustment" id="btnStockAdjustment" type="button" style="margin: 12px;"><i class="fas fa-wrench" style="padding-right: 5px;"></i>Stock Adjustments</button>
@@ -101,6 +123,7 @@
                     <button class="btn btnNav btn-primary btnStockTrans" id="btnStockTrans" type="button" style="margin: 12px;"><i class="fas fa-exchange-alt" style="padding-right: 5px;"></i>Stock Transfers</button>
                 {{/if}}
                 {{#if equals isSNTrackchecked true}}
+
                     <div class="dropdown btnNav" style="margin: 12px; display: inline;">
                         <button class="btn btnNavDropdown btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Serial/Lot Tracking

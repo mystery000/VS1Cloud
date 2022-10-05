@@ -2334,8 +2334,14 @@ Template.inventorylist.events({
     "click .btnSNTrack": function(event) {
         FlowRouter.go("/serialnumberlist");
     },
-    "click .btnLotTrack": function(event) {
-        FlowRouter.go("/lotnumberlist");
+    "click .newProduct": function(event) {
+        FlowRouter.go("/productview");
+    },
+    "click .newProduct": function(event) {
+        FlowRouter.go("/newProduct");
+    },
+    "click .productList": function(event) {
+        FlowRouter.go("/productlist");
     },
     "click .templateDownload": function() {
         let utilityService = new UtilityService();
