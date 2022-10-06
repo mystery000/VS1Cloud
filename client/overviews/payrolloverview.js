@@ -257,6 +257,7 @@ Template.payrolloverview.onRendered(function () {
 
     data = data.response;
     let timesheets = data.ttimesheet.map(t => t.fields);
+    console.log('timesheets', timesheets);
     templateObject.timeSheetList.set(timesheets);
   }
 
@@ -295,6 +296,57 @@ Template.payrolloverview.onRendered(function () {
 
     templateObject.payPeriods.set(calendars);
   }
+
+
+  templateObject.newTimeSheet = async () => {
+    const employees = await templateObject.employees.get();
+    const employeeId =  $('.employee-select').val();
+    const selectedEmployee = employees.find(e => e.ID == employeeId);
+
+    const payPeriods = await templateObject.payPeriods.get();
+    const payPeriodId = $('.payperiod-select').val();
+    const selectedPeriod = payPeriods.find(p => p.ID == payPeriodId);
+
+    const timesheets  = await templateObject.timeSheetList.get();
+
+
+    console.log("employees", employees);
+    console.log('employee id: ', employeeId);
+    console.log('selected employee', selectedEmployee);
+
+    console.log('payPeriods', payPeriods);
+    console.log('pay ID', payPeriodId);
+    console.log("selected period", selectedPeriod);
+
+
+    let timeSheet = {
+      type: erpObject.TTimeSheet,
+      fields: {
+        EmployeeName: selectedEmployee.EmployeeName,
+        Allowedit: true,
+        Hours: 1
+      }
+    }
+
+    let timeSheetEntry = {
+      type: erpObject.TTimeSheetEntry,
+      fields: {
+        TimeSheet: [
+          timeSheet
+        ]
+      },
+    }
+
+    console.log('object to be saved', timeSheetEntry);
+    
+    // Here i need to create a new timesheet
+    let response = await contactService.saveTimeSheet(timeSheetEntry);
+    console.log("response", response);
+
+
+    // once created, please redirect to the right page
+
+}
 
   
 
@@ -6151,7 +6203,10 @@ Template.payrolloverview.events({
       $('.payperiod-field').removeClass('hidden');
       $('.add-new-timesheet').attr('disabled', false);
     }
-  }
+  },
+  "click .add-new-timesheet": (e, ui) => {
+    ui.newTimeSheet();
+  } 
 });
 
 Template.payrolloverview.helpers({
