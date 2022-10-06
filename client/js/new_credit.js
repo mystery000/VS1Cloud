@@ -152,7 +152,7 @@ Template.creditcard.onRendered(() => {
     init_reset_data();
     // set initial table rest_data
     // custom field displaysettings
-    function initCustomFieldDisplaySettings(data, listType) {
+     templateObject.initCustomFieldDisplaySettings = function(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       showCustomFieldDisplaySettings(reset_data);
@@ -194,7 +194,7 @@ Template.creditcard.onRendered(() => {
       }
       templateObject.displayfields.set(custFields);
     }
-    initCustomFieldDisplaySettings("", "tblCreditLine");
+    templateObject.initCustomFieldDisplaySettings("", "tblCreditLine");
 
 
       templateObject.getTemplateInfoNew = function(){
@@ -6865,8 +6865,8 @@ Template.creditcard.events({
                     fields: {
                         ID: currentCredit,
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         Deleted: false,
@@ -6892,8 +6892,8 @@ Template.creditcard.events({
                     type: "TCredit",
                     fields: {
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         OrderDate: saleDate,
@@ -7600,7 +7600,7 @@ Template.creditcard.events({
         $("th.col" + columHeaderUpdate + "").html(columData);
 
     },
-    'click .btnSaveGridSettings': function(event) {
+    'click .btnSaveGridSettings': async function(event) {
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -7638,7 +7638,7 @@ Template.creditcard.events({
         let erpGet = erpDb();
         let tableName = "tblCreditLine";
         let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
             swal({
@@ -7936,8 +7936,8 @@ Template.creditcard.events({
                     fields: {
                         ID: currentCredit,
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         OrderDate: saleDate,
@@ -7961,8 +7961,8 @@ Template.creditcard.events({
                     type: "TCredit",
                     fields: {
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         Deleted: false,

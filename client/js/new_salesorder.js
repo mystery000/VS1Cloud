@@ -7358,7 +7358,7 @@ Template.new_salesorder.onRendered(function() {
     tempObj.getSubTaxCodes();
 
     // custom field displaysettings
-    function initCustomFieldDisplaySettings(data, listType) {
+     tempObj.initCustomFieldDisplaySettings = function(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       showCustomFieldDisplaySettings(reset_data);
@@ -7401,7 +7401,7 @@ Template.new_salesorder.onRendered(function() {
       tempObj.displayfields.set(custFields);
     }
 
-    initCustomFieldDisplaySettings("", "tblSalesOrderLine");
+    tempObj.initCustomFieldDisplaySettings("", "tblSalesOrderLine");
 
     // tempObj.getAllCustomFieldDisplaySettings = function () {
 
@@ -9666,8 +9666,8 @@ Template.new_salesorder.events({
                     fields: {
                         ID: currentSalesOrder,
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        //  ForeignExchangeCode: currencyCode,
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -9691,7 +9691,7 @@ Template.new_salesorder.events({
                     type: "TSalesOrderEx",
                     fields: {
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
@@ -10645,7 +10645,7 @@ Template.new_salesorder.events({
     },
 
     // custom field displaysettings
-    'click .btnSaveGridSettings': function(event) {
+    'click .btnSaveGridSettings': async function(event) {
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -10683,7 +10683,7 @@ Template.new_salesorder.events({
         let erpGet = erpDb();
         let tableName = "tblSalesOrderLine";
         let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
           swal({
@@ -11036,7 +11036,7 @@ Template.new_salesorder.events({
                             fields: {
                                 ID: currentSalesOrder,
                                 CustomerName: customer,
-                                ForeignExchangeCode: currencyCode,
+                              //  ForeignExchangeCode: currencyCode,
                                 ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
@@ -11061,7 +11061,7 @@ Template.new_salesorder.events({
                             type: "TSalesOrderEx",
                             fields: {
                                 CustomerName: customer,
-                                ForeignExchangeCode: currencyCode,
+                              //  ForeignExchangeCode: currencyCode,
                                 ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
@@ -11727,7 +11727,7 @@ Template.new_salesorder.events({
                     fields: {
                         ID: currentSalesOrder,
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
@@ -11752,7 +11752,7 @@ Template.new_salesorder.events({
                     type: "TSalesOrderEx",
                     fields: {
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
@@ -11989,7 +11989,7 @@ Template.new_salesorder.events({
                     fields: {
                         ID: currentSalesOrder,
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
@@ -12015,7 +12015,7 @@ Template.new_salesorder.events({
                     type: "TSalesOrderEx",
                     fields: {
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,

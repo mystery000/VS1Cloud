@@ -12,6 +12,8 @@ let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 let reportService = new ReportService();
 let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
+let salesService = new SalesBoardService();
+let initCurrency = Currency;
 
 Template.exebalancesheetreport.onCreated(function () {
     const templateObject = Template.instance();
@@ -33,11 +35,6 @@ Template.exebalancesheetreport.onCreated(function () {
 
 Template.exebalancesheetreport.onRendered(() => {
     const templateObject = Template.instance();
-
-    let taxRateService = new TaxRateService();
-    let salesService = new SalesBoardService();
-
-    let initCurrency = Currency;
 
     templateObject.setMonthsOnHeader = (yy, mm, dd) => {
         var currentDate = new Date(yy, mm, dd);
@@ -88,12 +85,6 @@ Template.exebalancesheetreport.onRendered(() => {
             $("#uploadedImage").attr("src", imageData);
             $("#uploadedImage").attr("width", "50%");
         }
-
-        var today = moment().format("DD/MM/YYYY");
-        var currentDate = new Date();
-        templateObject.setMonthsOnHeader(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-        templateObject.dateAsAt.set(begunDate);
     });
 
     let totalAgedReceivables = [0, 0];
@@ -105,23 +96,42 @@ Template.exebalancesheetreport.onRendered(() => {
 
     templateObject.setFieldVariance = function (fieldVal1, fieldVal2, fieldSelector) {
         var fieldVariance = 0;
-        if (fieldVal1 == 0) {
-            if (fieldVal2 > 0) {
-                fieldVariance = 100;
-                $('.' + fieldSelector).css("color", varianceGreen);
-            } else if (fieldVal2 == 0) {
-                fieldVariance = 0;
-                $('.' + fieldSelector).css("color", varianceGreen);
-            } else {
-                fieldVariance = -100;
-                $('.' + fieldSelector).css("color", varianceRed);
-            }
+        var fieldVariance = 0;
+        if (fieldVal1 == 0 && fieldVal2 == 0) {
+            fieldVariance = 0;
+        } else if (fieldVal1 == 0) {
+            fieldVariance = fieldVal2;
+        } else if (fieldVal2 == 0) {
+            fieldVariance = (-1) * fieldVal1;
         } else {
-            if (fieldVal1 > 0)
-                fieldVariance = (fieldVal2 - fieldVal1) / fieldVal1 * 100;
+            if (fieldVal1 > 0 && fieldVal2 > 0) {
+                if (fieldVal2 >= fieldVal1) {
+                    fieldVariance = (fieldVal2 / fieldVal1) * 100;
+                } else {
+                    fieldVariance = (fieldVal1 / fieldVal2) * (-100);
+                }
+            }
+            if (fieldVal1 > 0 && fieldVal2 < 0) {
+                fieldVariance = fieldVal2 - fieldVal1;
+            }
+            if (fieldVal1 < 0 && fieldVal2 > 0) {
+                fieldVariance = fieldVal2 - fieldVal1;
+            }
+            if (fieldVal1 < 0 && fieldVal2 < 0) {
+                if (fieldVal2 >= fieldVal1) {
+                    fieldVariance = (fieldVal1 / fieldVal2) * 100;
+                } else {
+                    fieldVariance = (fieldVal2 / fieldVal1) * (-100);
+                }
+            }
+        }
+        if (fieldVariance >= 0) {
+            if (fieldSelector == "spnTotalAgedPayablesVariance")
+                $('.' + fieldSelector).css("color", varianceRed);
             else
-                fieldVariance = (fieldVal2 - fieldVal1) / Math.abs(fieldVal1) * 100;
-            if (fieldVariance >= 0)
+                $('.' + fieldSelector).css("color", varianceGreen);
+        } else {
+            if (fieldSelector == "spnTotalAgedPayablesVariance")
                 $('.' + fieldSelector).css("color", varianceGreen);
             else
                 $('.' + fieldSelector).css("color", varianceRed);
@@ -135,34 +145,46 @@ Template.exebalancesheetreport.onRendered(() => {
             let data = await reportService.getCardDataReport(dateAsOf);
             if (data.tcarddatareport) {
                 let resData = data.tcarddatareport[0];
-                totalAgedReceivables[0] = resData.Bal_Debtors1;
-                totalAgedReceivables[1] = resData.Bal_Debtors2;
-                totalAgedPayables[0] = resData.Bal_Creditors1;
-                totalAgedPayables[1] = resData.Bal_Creditors2;
-                totalNettAssets[0] = resData.Bal_NetAsset1;
-                totalNettAssets[1] = resData.Bal_NetAsset2;
+                totalAgedReceivables[0] = parseFloat(resData.Bal_Debtors1);
+                totalAgedReceivables[1] = parseFloat(resData.Bal_Debtors2);
+                totalAgedPayables[0] = parseFloat(resData.Bal_Creditors1);
+                totalAgedPayables[1] = parseFloat(resData.Bal_Creditors2);
+                totalNettAssets[0] = parseFloat(resData.Bal_NetAsset1);
+                totalNettAssets[1] = parseFloat(resData.Bal_NetAsset2);
             }
 
-            templateObject.totalAgedReceivables1.set(totalAgedReceivables[0]);
-            templateObject.totalAgedPayables1.set(totalAgedPayables[0]);
-            templateObject.totalNettAssets1.set(totalNettAssets[0]);
-            templateObject.totalAgedReceivables2.set(totalAgedReceivables[1]);
-            templateObject.totalAgedPayables2.set(totalAgedPayables[1]);
-            templateObject.totalNettAssets2.set(totalNettAssets[1]);
+            templateObject.totalAgedReceivables1.set(utilityService.modifynegativeCurrencyFormat(totalAgedReceivables[0].toFixed(2)));
+            templateObject.totalAgedPayables1.set(utilityService.modifynegativeCurrencyFormat(totalAgedPayables[0].toFixed(2)));
+            templateObject.totalNettAssets1.set(utilityService.modifynegativeCurrencyFormat(totalNettAssets[0].toFixed(2)));
+            templateObject.totalAgedReceivables2.set(utilityService.modifynegativeCurrencyFormat(totalAgedReceivables[1].toFixed(2)));
+            templateObject.totalAgedPayables2.set(utilityService.modifynegativeCurrencyFormat(totalAgedPayables[1].toFixed(2)));
+            templateObject.totalNettAssets2.set(utilityService.modifynegativeCurrencyFormat(totalNettAssets[1].toFixed(2)));
 
             templateObject.setFieldVariance(totalAgedReceivables[0], totalAgedReceivables[1], "spnTotalAgedReceivablesVariance");
             templateObject.setFieldVariance(totalAgedPayables[0], totalAgedPayables[1], "spnTotalAgedPayablesVariance");
             templateObject.setFieldVariance(totalNettAssets[0], totalNettAssets[1], "spnTotalNettAssetVariance");
         } catch (err) {
-
+            console.log(err);
         }
         LoadingOverlay.hide();
     };
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    templateObject.getBalanceSheetReports(getLoadDate);
-    $("#balancedate").val(moment(currentDate2).format("DD/MM/YYYY"));
 
+    var currentDate = new Date();
+    var getLoadDate = moment(currentDate).format("YYYY-MM-DD");
+    // var getLoadDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+    let pDate = FlowRouter.current().queryParams.viewDate || getLoadDate;
+    templateObject.getBalanceSheetReports(pDate);
+    let strDate = "";
+    if (pDate.length == 10)
+        strDate = pDate;
+    else
+        strDate = pDate.substring(1, 11);
+    arrDate = strDate.split("-");
+    let newbalanceDate = new Date(arrDate[0], eval(arrDate[1]) - 1, arrDate[2]);
+    templateObject.setMonthsOnHeader(arrDate[0], eval(arrDate[1]) - 1, arrDate[2]);
+    let newbalanceDate2 = moment(newbalanceDate).format("DD/MM/YYYY")
+    $("#balancedate").val(newbalanceDate2);
+    templateObject.dateAsAt.set(newbalanceDate2);
 });
 
 function sortByAlfa(a, b) {
@@ -196,15 +218,15 @@ Template.exebalancesheetreport.helpers({
     convertAmount: (amount, currencyData) => {
         let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-        // if (!amount || amount.trim() == "") {
-        //     return "";
-        // }
-        // if (currencyData.code == defaultCurrencyCode) {
-        //     // default currency
-        //     return amount;
-        // }
+        if (!amount || amount.trim() == "") {
+            return "";
+        }
+        if (currencyData.code == defaultCurrencyCode) {
+            // default currency
+            return amount;
+        }
 
-        // amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+        amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
 
         // Lets remove the minus character
         const isMinus = amount < 0;
@@ -275,14 +297,14 @@ Template.exebalancesheetreport.helpers({
 
         // amount = amount.toLocaleString();
 
-        // let convertedAmount =
-        //     isMinus == true ?
-        //         `- ${currencyData.symbol} ${amount}` :
-        //         `${currencyData.symbol} ${amount}`;
         let convertedAmount =
             isMinus == true ?
-                `- ${amount}` :
-                `${amount}`;
+                `- ${currencyData.symbol} ${amount}` :
+                `${currencyData.symbol} ${amount}`;
+        // let convertedAmount =
+        //     isMinus == true ?
+        //         `- ${amount}` :
+        //         `${amount}`;
 
         return convertedAmount;
     },
@@ -347,7 +369,7 @@ Template.exebalancesheetreport.helpers({
 });
 
 Template.exebalancesheetreport.events({
-    "change .balancedate": function() {
+    "change .balancedate": function () {
         let templateObject = Template.instance();
         LoadingOverlay.show();
         let balanceDate = $("#balancedate").val();

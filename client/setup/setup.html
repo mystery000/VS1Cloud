@@ -85,8 +85,25 @@
             min-width: 300px !important;
             min-height: 300px !important;
         }
+        .modal {
+            transition: all 0s ease 0s !important;
+            -webkit-transition: all 0s ease 0s !important;
+            -moz-transition: all 0s ease 0s !important;
+        }
+        .modal.show {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            transition: all 0.5s ease 0s !important;
+            -webkit-transition: all 0.5s ease 0s !important;
+            -moz-transition: all 0.5s ease 0s !important;
+        }
+        .modal-dialog {
+            margin: 0 !important;
+        }
         .centerPopupDiv .resizablePopup {
             max-width: 60% !important;
+            max-height: 100% !important;
         }
         .centerPopupDiv .resizablePopup {
             width: 600px;
@@ -795,15 +812,16 @@
 
                                                     </style>
 
-                                                    <div class="row no-gutters">
-                                                        <div class="col">
-                                                            <button class="btn btn-primary btnRefreshTaxRate float-left" type="button" style="margin: 12px 0px; margin-right: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                                                    <div class="row no-gutters mb-3">
+                                                        <div class="col text-right">
+                                                            <button class="btn btn-primary btnRefreshTaxRate" type="button" style="margin: 12px 0px 0; margin-right: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
 
-                                                                <a class="btn btn-primary btnAddTaxRate alerts-border" role="button" data-toggle="modal" href="#addTaxRateModal" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Tax Rate<br></a>
+                                                                <a class="btn btn-primary btnAddTaxRate alerts-border" role="button" data-toggle="modal" href="#addTaxRateModal" style="margin-top: 12px;"><i class="fa fa-plus" style="margin-right: 6px;"></i>Add New Tax Rate<br></a>
 
                                                                 {{> AddTaxRateModal}}
-                                                            <a role="button" data-toggle="modal" href="#activeTaxRatesVideo" class="btn btn-primary helpModal alerts-border visiblePopupDiv" style="margin: 16px 16px 0 16px">View Help Video</a>
-                                                            <a href="javascript:void(0)" data-href="https://vs1forum.com/" class="btn btn-primary alerts-border downloadHelpFile" style="margin-top: 16px;">Download Help File</a>
+                                                            <a role="button" data-toggle="modal" href="#activeTaxRatesVideo" class="btn btn-primary helpModal alerts-border visiblePopupDiv" style="margin: 12px 12px 0 12px">View Help Video</a>
+                                                            <a href="javascript:void(0)" data-href="https://vs1forum.com/" class="btn btn-primary alerts-border downloadHelpFile" style="margin-top: 12px;">Download Help File</a>
+                                                            <button class="btn btn-success float-right confirmBtn" id="saveStep2" type="button" style="margin: 12px 0 0 15px;" data-step-id="2">Confirm</button>
                                                         </div>
                                                     </div>
                                                     <style>
@@ -928,7 +946,7 @@
                                                 <div class="row no-gutters">
                                                     <div class="col">
                                                         <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="2">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                        <button class="btn btn-success float-right confirmBtn" id="saveStep2" type="button" style="margin: 12px;" data-step-id="2">Confirm</button>
+                                                        <!-- <button class="btn btn-success float-right confirmBtn" id="saveStep2" type="button" style="margin: 12px;" data-step-id="2">Confirm</button> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -1075,10 +1093,10 @@
 
                                                         </style>
 
-                                                        <div class="col">
-                                                            <button class="btn btn-primary btnRefreshPaymentMethod float-left" type="button" style="margin: 12px 0px; margin-right: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                                                        <div class="col text-right mb-3">
+                                                            <button class="btn btn-primary btnRefreshPaymentMethod" type="button" style="margin: 12px 0px 0; margin-right: 10px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
 
-                                                            <a class="btn btn-primary btnAddPaymentMethod alerts-border" role="button" data-toggle="modal" href="#btnAddPaymentMethod" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Payment Method<br></a>
+                                                            <a class="btn btn-primary btnAddPaymentMethod alerts-border" role="button" data-toggle="modal" href="#btnAddPaymentMethod" style="margin-top: 12px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Payment Method<br></a>
                                                             <div class="modal fade" role="dialog"
                                                                     tabindex="-1" id="btnAddPaymentMethod">
                                                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -1112,13 +1130,14 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <a role="button" data-toggle="modal" href="#paymentMethodSettingsVideo" style="margin: 16px 16px 0 16px" class="btn btn-primary visiblePopupDiv alerts-border helpModal">View Help Video</a>
-                                                            <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=71" style="margin-top: 16px;" class="btn btn-primary alerts-border downloadHelpFile">Download Help File</a>
+                                                            <a role="button" data-toggle="modal" href="#paymentMethodSettingsVideo" style="margin: 12px 12px 0 12px" class="btn btn-primary visiblePopupDiv alerts-border helpModal">View Help Video</a>
+                                                            <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=71" style="margin-top: 12px;" class="btn btn-primary alerts-border downloadHelpFile">Download Help File</a>
+                                                            <button class="btn btn-success float-right confirmBtn" id="saveStep3" type="button" style="margin: 12px 0 0 15px;" data-step-id="3">Confirm</button>
                                                         </div>
                                                     </div>
                                                     <div class="row no-gutters" style="display: none;">
                                                         <div class="col text-left">
-                                                            <button class="btn btn-primary btnAddNewPaymentMethod alerts-border" type="button" style="margin: 8px 0px;"><i class="fa fa-plus" style="margin-right: 5px;"></i>Add New Payment Method</button>
+                                                            <button class="btn btn-primary btnAddNewPaymentMethod alerts-border" type="button" style="margin: 6px 0px;"><i class="fa fa-plus" style="margin-right: 5px;"></i>Add New Payment Method</button>
                                                         </div>
                                                     </div>
                                                     <style>
@@ -1283,7 +1302,7 @@
                                                 <div class="row no-gutters">
                                                     <div class="col">
                                                         <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="3">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                        <button class="btn btn-success float-right confirmBtn" id="saveStep3" type="button" style="margin: 12px;" data-step-id="3">Confirm</button>
+                                                        <!-- <button class="btn btn-success float-right confirmBtn" id="saveStep3" type="button" style="margin: 12px;" data-step-id="3">Confirm</button> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -1424,13 +1443,14 @@
 
                                     <div class="card-body">
                                         <div class="card-body p-3 rounded">
-                                            <div class="row no-gutters">
-                                                <div class="col">
-                                                    <button class="btn btn-primary btnRefreshTerm float-left" type="button" style="margin: 12px 0px; margin-right: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                                    <a class="btn btn-primary btnAddTerms alerts-border" role="button" data-toggle="modal" href="#addTermModal" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Term<br></a>
+                                            <div class="row no-gutters mb-3">
+                                                <div class="col text-right">
+                                                    <button class="btn btn-primary btnRefreshTerm" type="button" style="margin: 12px 0px 0; margin-right: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                                                    <a class="btn btn-primary btnAddTerms alerts-border" role="button" data-toggle="modal" href="#addTermModal" style="margin-top: 12px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Term<br></a>
                                                     {{> AddTermModal}}
-                                                    <a role="button" data-toggle="modal" href="#termsSettingsVideo" style="margin: 16px 16px 0 16px" class="btn btn-primary visiblePopupDiv alerts-border helpModal">View Help Video</a>
-                                                    <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=23" style="margin-top: 16px;" class="btn btn-primary alerts-border downloadHelpFile">Download Help File</a>
+                                                    <a role="button" data-toggle="modal" href="#termsSettingsVideo" style="margin: 12px 12px 0 12px" class="btn btn-primary visiblePopupDiv alerts-border helpModal">View Help Video</a>
+                                                    <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=23" style="margin-top: 12px;" class="btn btn-primary alerts-border downloadHelpFile">Download Help File</a>
+                                                    <button class="btn btn-success float-right confirmBtn" id="saveStep4" type="button" style="margin: 12px 0 0 15px;" data-step-id="4">Confirm</button>
                                                 </div>
                                             </div>
                                             <div class="row no-gutters" style="display: none;">
@@ -1571,7 +1591,7 @@
                                         <div class="row no-gutters">
                                             <div class="col">
                                                 <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="4">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                <button class="btn btn-success float-right confirmBtn" id="saveStep4" type="button" style="margin: 12px;" data-step-id="4">Confirm</button>
+                                                <!-- <button class="btn btn-success float-right confirmBtn" id="saveStep4" type="button" style="margin: 12px;" data-step-id="4">Confirm</button> -->
                                             </div>
                                         </div>
                                     </div>
@@ -1704,18 +1724,14 @@
                                                     {{> addemployeepop editableEmployee=editableEmployee isSetup="true" }}
                                                 </div>
 
-                                                <div class="col-8 float-left flex-grow-1 pl-0">
-                                                    <button class="btn btn-primary btnRefreshEmployee" type="button" style="margin: 12px 16px 0 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                                    <button id="btnNewEmployee" name="btnNewEmployee" class="btn btn-primary alerts-border" type="button" style="margin:  16px 0 0 0;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Employee</button>
+                                                <div class="col float-left flex-grow-1 pl-0 text-right">
+                                                    <button class="btn btn-primary btnRefreshEmployee" type="button" style="margin: 12px 12px 0 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                                                    <button id="btnNewEmployee" name="btnNewEmployee" class="btn btn-primary alerts-border" type="button" style="margin:  12px 0 0 0;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Employee</button>
                                                     <!-- <button class="btn btn-success btnAddVS1User" type="button" style="margin: 12px;"><i class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button> -->
-                                                    <a role="button" data-toggle="modal" href="#helpModalEmployee" style="margin: 16px 16px 0 16px" class="btn btn-primary alerts-border visiblePopupDiv helpModal">View Help Video</a>
-                                                    <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" style="margin-top: 16px;" class="btn btn-primary downloadHelpFile alerts-border">Download Help File</a>
-                                                </div>
-
-                                                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start pr-0">
-
-                                                    <div>
-                                                        <button style="margin: 16px 0 16px 16px;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                                                    <a role="button" data-toggle="modal" href="#helpModalEmployee" style="margin: 12px 12px 0 12px" class="btn btn-primary alerts-border visiblePopupDiv helpModal">View Help Video</a>
+                                                    <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" style="margin-top: 12px;" class="btn btn-primary downloadHelpFile alerts-border">Download Help File</a>
+                                                    <button style="margin: 12px 0 0px 12px;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                                                    <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="5">Confirm</button>
                                                         <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
@@ -1777,8 +1793,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-
                                                 </div>
                                             <div class="table-responsive">
                                                 <style>
@@ -1858,7 +1872,7 @@
                                         <div class="row no-gutters">
                                             <div class="col">
                                                 <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="5">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="5">Confirm</button>
+                                                <!-- <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="5">Confirm</button> -->
                                             </div>
                                         </div>
                                     </div>
@@ -1992,10 +2006,9 @@
                                         <div class="card-body py-3 px-0 rounded">
                                             <div class="bg-white d-flex flex-row justify-content-xl-center pt-2 pb-2">
 
-                                                    <div class="col-7 d-xl-flex flex-grow-1 align-items-xl-start pl-0">
-                                                        <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 8px; margin-left:0px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                                        <a class="btn btn-primary float-left btnAddNewAccounts alerts-border" role="button" data-toggle="modal" href="#addNewAccount" style="margin: 8px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>New Account</a>
-                                                        <div>
+                                                    <div class="col text-right pl-0">
+                                                        <button class="btn btn-primary btnRefresh" type="button" style="margin: 6px 6px 0; margin-left:0px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                                                        <a class="btn btn-primary btnAddNewAccounts alerts-border" role="button" data-toggle="modal" href="#addNewAccount" style="margin: 6px 6px 0;"><i class="fa fa-plus" style="margin-right: 8px;"></i>New Account</a>
                                                             <div class="modal fade" role="dialog" tabindex="-1" id="addNewAccount">
                                                                 {{> addAccountModal}}
                                                             </div>
@@ -2034,12 +2047,15 @@
                                                                 </div>
                                                             </div>
 
-                                                        </div>
-                                                        <a role="button" data-toggle="modal" href="#helpModalAccount" style="margin: 8px 8px 0 8px" class="btn btn-primary helpModal visiblePopupDiv  alerts-border">View Help Video</a>
-                                                        <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=30" style="margin-top: 8px; margin-left: 8px;" class="downloadHelpFile btn  alerts-border btn-primary">Download Help File</a>
+                                                        <a role="button" data-toggle="modal" href="#helpModalAccount" style="margin: 6px 6px 0 6px" class="btn btn-primary helpModal visiblePopupDiv  alerts-border">View Help Video</a>
+                                                        <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=30" style="margin-top: 6px; margin-right: 6px; margin-left: 6px;" class="downloadHelpFile btn  alerts-border btn-primary">Download Help File</a>
+                                                        
+                                                        <button style="margin: 6px 6px 0;" class="btn align-items-center btn-primary  alerts-border" role="button" data-toggle="modal"
+                                                        href="#importModal_step5"><i class="fas fa-file-import"
+                                                            style="padding-right: 5px;"></i>Import</button>
+                                                        <button class="btn btn-success confirmBtn" type="button" style="margin: 6px 6px 0;" data-step-id="6">Confirm</button>
+                                                        <div>
                                                         <!-- <button class="btn btn-primary btnJournalEntries" id="btnJournalEntries" type="button" style="margin: 8px;"><i class="fa fa-book" style="padding-right: 5px;"></i>Journal Entries</button> -->
-                                                    </div>
-                                                    <div class="col-5 d-xl-flex justify-content-xl-end align-items-end pr-0">
                                                         <style>
                                                             @media screen and (max-width: 420px) {
                                                                 .exportbtngroup {
@@ -2047,107 +2063,99 @@
                                                                 }
                                                             }
                                                         </style>
-
-                                                        <div>
-                                                            <button style="margin: 8px; margin-right: 0px;" class="btn d-flex align-items-center btn-primary  alerts-border float-right" role="button" data-toggle="modal"
-                                                                href="#importModal_step5"><i class="fas fa-file-import"
-                                                                    style="padding-right: 5px;"></i>Import</button>
-                                                           <div>
-                                                                <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step5">
-                                                                    <div class="modal-dialog" role="document">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal"
-                                                                                    aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                        <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step5">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal"
+                                                                            aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div
+                                                                            class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+                                                                            <p style="margin-bottom: 0;font-weight: bold;">1. Download the
+                                                                                &lt;&lt;form&gt;&gt; template</p>
+                                                                            <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Start by
+                                                                                downloading our template file. This file has the correct column headings to
+                                                                                allow VS1 Cloud to import your form's details.</p>
+                                                                            <div class="col flex-grow-1">
+                                                                                <button class="btn btn-primary templateDownload" type="button"
+                                                                                    style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv"
+                                                                                        style="margin-right: 5px;"></i>Download CSV Template</button>
+                                                                                <button class="btn btn-primary templateDownloadXLSX" type="button"
+                                                                                    style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv"
+                                                                                        style="margin-right: 5px;"></i>Download Excel Template</button>
                                                                             </div>
-                                                                            <div class="modal-body">
-                                                                                <div
-                                                                                    class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
-                                                                                    <p style="margin-bottom: 0;font-weight: bold;">1. Download the
-                                                                                        &lt;&lt;form&gt;&gt; template</p>
-                                                                                    <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Start by
-                                                                                        downloading our template file. This file has the correct column headings to
-                                                                                        allow VS1 Cloud to import your form's details.</p>
-                                                                                    <div class="col flex-grow-1">
-                                                                                        <button class="btn btn-primary templateDownload" type="button"
-                                                                                            style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv"
-                                                                                                style="margin-right: 5px;"></i>Download CSV Template</button>
-                                                                                        <button class="btn btn-primary templateDownloadXLSX" type="button"
-                                                                                            style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv"
-                                                                                                style="margin-right: 5px;"></i>Download Excel Template</button>
-                                                                                    </div>
-                                                                                    <div class="col d-xl-flex align-items-xl-center"
-                                                                                        style="width: 50px;max-width: 50px;">
-                                                                                        <a href="downloads/csvHelpFile.pdf" target="_blank" download><i
-                                                                                                class="fa fa-question-circle-o" data-toggle="tooltip"
-                                                                                                data-bs-tooltip=""
-                                                                                                title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'."
-                                                                                                style="margin: 12px;"></i></a>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <hr>
-                                                                                <div
-                                                                                    class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
-                                                                                    <p style="margin-bottom: 0;font-weight: bold;">2. Copy your items into the
-                                                                                        template</p>
-                                                                                    <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Using MS Excel,
-                                                                                        or another spreadsheet editor, you can fill in the VS1 Cloud template file
-                                                                                        with your desired details.</p>
-                                                                                    <p style="margin-left: 16px;margin-bottom: 0;margin-top: 16px;">Important:
-                                                                                        Avoid changing the column headings in the template file.</p>
-                                                                                </div>
-                                                                                <hr>
-                                                                                <div
-                                                                                    class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
-                                                                                    <p style="margin-bottom: 0;font-weight: bold;">3. Import the updated template
-                                                                                        file</p>
-                                                                                    <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Save your
-                                                                                        updated template and you're ready to go.</p>
-
-                                                                                    <div class="divTable" id="file-display">
-                                                                                    </div>
-                                                                                    <input type="file" id="attachment-upload-account" style="display:none"
-                                                                                        accept=".csv,.txt,.xlsx,.xls">
-                                                                                    <style>
-                                                                                        #row1 {
-                                                                                            display: flex;
-                                                                                            flex-direction: row;
-                                                                                            justify-content: space-around;
-                                                                                        }
-
-                                                                                        #column1 {
-                                                                                            display: flex;
-                                                                                        }
-
-
-                                                                                        #column2 {
-                                                                                            display: flex;
-                                                                                            flex-direction: column;
-                                                                                            margin: 16px;
-                                                                                            padding: .375rem .75rem;
-                                                                                        }
-                                                                                    </style>
-                                                                                    <div id="row1">
-                                                                                        <div id="column1"></div><button
-                                                                                            class="btn btn-primary btnUploadFile new_attachment_btn_account" type="button"
-                                                                                            style="margin: 12px;"><i class="fa fa-cloud-upload"
-                                                                                                style="margin-right: 5px;"></i>Browse</button>
-                                                                                        <div class="file-name" id="column2"></div>
-                                                                                    </div>
-                                                                                </div>
+                                                                            <div class="col d-xl-flex align-items-xl-center"
+                                                                                style="width: 50px;max-width: 50px;">
+                                                                                <a href="downloads/csvHelpFile.pdf" target="_blank" download><i
+                                                                                        class="fa fa-question-circle-o" data-toggle="tooltip"
+                                                                                        data-bs-tooltip=""
+                                                                                        title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'."
+                                                                                        style="margin: 12px;"></i></a>
                                                                             </div>
-                                                                            <div class="modal-footer"><button class="btn btn-primary btnAccountImport" type="button"
-                                                                                    disabled><i class="fas fa-file-import"
-                                                                                        style="margin-right: 5px;"></i>Import</button>
-                                                                                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
-                                                                                        class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                        </div>
+                                                                        <hr>
+                                                                        <div
+                                                                            class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                                            <p style="margin-bottom: 0;font-weight: bold;">2. Copy your items into the
+                                                                                template</p>
+                                                                            <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Using MS Excel,
+                                                                                or another spreadsheet editor, you can fill in the VS1 Cloud template file
+                                                                                with your desired details.</p>
+                                                                            <p style="margin-left: 16px;margin-bottom: 0;margin-top: 16px;">Important:
+                                                                                Avoid changing the column headings in the template file.</p>
+                                                                        </div>
+                                                                        <hr>
+                                                                        <div
+                                                                            class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                                            <p style="margin-bottom: 0;font-weight: bold;">3. Import the updated template
+                                                                                file</p>
+                                                                            <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Save your
+                                                                                updated template and you're ready to go.</p>
+
+                                                                            <div class="divTable" id="file-display">
+                                                                            </div>
+                                                                            <input type="file" id="attachment-upload-account" style="display:none"
+                                                                                accept=".csv,.txt,.xlsx,.xls">
+                                                                            <style>
+                                                                                #row1 {
+                                                                                    display: flex;
+                                                                                    flex-direction: row;
+                                                                                    justify-content: space-around;
+                                                                                }
+
+                                                                                #column1 {
+                                                                                    display: flex;
+                                                                                }
+
+
+                                                                                #column2 {
+                                                                                    display: flex;
+                                                                                    flex-direction: column;
+                                                                                    margin: 16px;
+                                                                                    padding: .375rem .75rem;
+                                                                                }
+                                                                            </style>
+                                                                            <div id="row1">
+                                                                                <div id="column1"></div><button
+                                                                                    class="btn btn-primary btnUploadFile new_attachment_btn_account" type="button"
+                                                                                    style="margin: 12px;"><i class="fa fa-cloud-upload"
+                                                                                        style="margin-right: 5px;"></i>Browse</button>
+                                                                                <div class="file-name" id="column2"></div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    <div class="modal-footer"><button class="btn btn-primary btnAccountImport" type="button"
+                                                                            disabled><i class="fas fa-file-import"
+                                                                                style="margin-right: 5px;"></i>Import</button>
+                                                                        <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
+                                                                                class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                    </div>
                                                                 </div>
-                                                           </div>
+                                                            </div>
                                                         </div>
-
+                                                        </div>
                                                     </div>
                                                 </div>
                                             <div class="table-responsive">
@@ -2248,7 +2256,7 @@
                                         <div class="row no-gutters">
                                             <div class="col">
                                                 <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="6">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="6">Confirm</button>
+                                                <!-- <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="6">Confirm</button> -->
                                             </div>
                                         </div>
                                     </div>
@@ -2376,12 +2384,74 @@
                                                                 }
                                                             </style>
 
-                                                            <div class="col-8 float-left flex-grow-1 pl-0">
+                                                            <div class="col float-left text-right flex-grow-1 pl-0">
                                                                 <button class="btn btn-primary btnRefresh refresh-customer-table" type="button" style="margin: 12px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                                 <button id="btnNewCustomer" data-toggle="#addCustomerModal" name="btnNewCustomer" class="btn btn-primary alerts-border" type="button" style="margin: 12px 0; "><i class="icon ion-plus" style="padding-right: 5px;"></i>New Customer</button>
-                                                                <a role="button" data-toggle="modal" href="#helpModalCustomers" class="btn btn-primary helpModal visiblePopupDiv  alerts-border" style="margin: 16px 16px">View Help Video</a>
-                                                                <a href="javascript:void(0);" data-href="https://vs1forum.com/viewforum.php?f=6" class="btn btn-primary downloadHelpFile  alerts-border" style="margin: 16px 0">Download Help File</a>
+                                                                <a role="button" data-toggle="modal" href="#helpModalCustomers" class="btn btn-primary helpModal visiblePopupDiv  alerts-border" style="margin: 12px 12px">View Help Video</a>
+                                                                <a href="javascript:void(0);" data-href="https://vs1forum.com/viewforum.php?f=6" class="btn btn-primary downloadHelpFile  alerts-border" style="margin: 12px 0">Download Help File</a>
+                                                                <button style="margin: 12px; margin-right: 0;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal_step7"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                                                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px; margin-right:0" data-step-id="7">Confirm</button>
+                                                                <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step7">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                                                            <div class="modal-body">
+                                                                                <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+                                                                                    <p style="margin-bottom: 0px;font-weight: bold;">1. Download the &lt;&lt;form&gt;&gt; template</p>
+                                                                                    <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Start by downloading our template file. This file has the correct column headings to allow VS1 Cloud to import your form's details.</p>
+                                                                                    <div class="col flex-grow-1">
+                                                                                        <button class="btn btn-primary templateDownload" type="button" style="margin: 12px;margin-bottom: 0px;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download CSV Template</button>
+                                                                                        <button class="btn btn-primary templateDownloadXLSX" type="button" style="margin: 12px;margin-bottom: 0px;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download Excel Template</button>
+                                                                                    </div>
+                                                                                    <div class="col d-xl-flex align-items-xl-center" style="width: 50px;max-width: 50px;">
+                                                                                        <a href="#" download><i class="fa fa-question-circle-o" data-toggle="tooltip" data-bs-tooltip="" title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'." style="margin: 12px;"></i></a>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <hr>
+                                                                                <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                                                    <p style="margin-bottom: 0px;font-weight: bold;">2. Copy your items into the template</p>
+                                                                                    <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Using MS Excel, or another spreadsheet editor, you can fill in the VS1 Cloud template with your desired details.</p>
+                                                                                    <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 16px;">Important: Avoid changing the column headings in the template file.</p>
+                                                                                </div>
+                                                                                <hr>
+                                                                                <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                                                    <p style="margin-bottom: 0px;font-weight: bold;">3. Import the updated template file</p>
+                                                                                    <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Save your updated template and you're ready to go.</p>
 
+                                                                                    <div class="divTable" id="file-display">
+                                                                                    </div>
+                                                                                    <input type="file" id="attachment-upload-customer" style="display:none" accept=".csv,.txt,.xlsx,.xls">
+                                                                                    <style>
+                                                                                        #row1{
+                                                                                            display:flex;
+                                                                                            flex-direction:row;
+                                                                                            justify-content: space-around;
+                                                                                        }
+
+                                                                                        #column1{
+                                                                                            display:flex;
+                                                                                        }
+
+
+                                                                                        #column2{
+                                                                                            display:flex;
+                                                                                            flex-direction:column;
+                                                                                            margin: 16px;
+                                                                                            padding: .375rem .75rem;
+                                                                                        }
+                                                                                    </style>
+                                                                                    <div id="row1">
+                                                                                        <div id="column1"></div><button class="btn btn-primary btnUploadFile-customer new_customer_attachment_btn" type="button" style="margin: 12px;" ><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
+                                                                                        <div class="file-name" id="column2"></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer"><button class="btn btn-primary btnCustomerImport" type="button" disabled><i class="fas fa-file-import" style="margin-right: 5px;" ></i>Import</button>
+                                                                                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
 
                                                             <div >
@@ -2391,73 +2461,6 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col d-xl-flex justify-content-xl-end align-items-xl-start pr-0">
-                                                                <div>
-                                                                    <button style="margin: 16px; margin-right: 0;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal_step7"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                                                                    <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step7">
-                                                                        <div class="modal-dialog" role="document">
-                                                                            <div class="modal-content">
-                                                                                <div class="modal-header">
-                                                                                    <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                                                <div class="modal-body">
-                                                                                    <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
-                                                                                        <p style="margin-bottom: 0px;font-weight: bold;">1. Download the &lt;&lt;form&gt;&gt; template</p>
-                                                                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Start by downloading our template file. This file has the correct column headings to allow VS1 Cloud to import your form's details.</p>
-                                                                                        <div class="col flex-grow-1">
-                                                                                            <button class="btn btn-primary templateDownload" type="button" style="margin: 12px;margin-bottom: 0px;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download CSV Template</button>
-                                                                                            <button class="btn btn-primary templateDownloadXLSX" type="button" style="margin: 12px;margin-bottom: 0px;"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download Excel Template</button>
-                                                                                        </div>
-                                                                                        <div class="col d-xl-flex align-items-xl-center" style="width: 50px;max-width: 50px;">
-                                                                                            <a href="#" download><i class="fa fa-question-circle-o" data-toggle="tooltip" data-bs-tooltip="" title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'." style="margin: 12px;"></i></a>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <hr>
-                                                                                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
-                                                                                        <p style="margin-bottom: 0px;font-weight: bold;">2. Copy your items into the template</p>
-                                                                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Using MS Excel, or another spreadsheet editor, you can fill in the VS1 Cloud template with your desired details.</p>
-                                                                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 16px;">Important: Avoid changing the column headings in the template file.</p>
-                                                                                    </div>
-                                                                                    <hr>
-                                                                                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
-                                                                                        <p style="margin-bottom: 0px;font-weight: bold;">3. Import the updated template file</p>
-                                                                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Save your updated template and you're ready to go.</p>
-
-                                                                                        <div class="divTable" id="file-display">
-                                                                                        </div>
-                                                                                        <input type="file" id="attachment-upload-customer" style="display:none" accept=".csv,.txt,.xlsx,.xls">
-                                                                                        <style>
-                                                                                            #row1{
-                                                                                                display:flex;
-                                                                                                flex-direction:row;
-                                                                                                justify-content: space-around;
-                                                                                            }
-
-                                                                                            #column1{
-                                                                                                display:flex;
-                                                                                            }
-
-
-                                                                                            #column2{
-                                                                                                display:flex;
-                                                                                                flex-direction:column;
-                                                                                                margin: 16px;
-                                                                                                padding: .375rem .75rem;
-                                                                                            }
-                                                                                        </style>
-                                                                                        <div id="row1">
-                                                                                            <div id="column1"></div><button class="btn btn-primary btnUploadFile-customer new_customer_attachment_btn" type="button" style="margin: 12px;" ><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
-                                                                                            <div class="file-name" id="column2"></div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="modal-footer"><button class="btn btn-primary btnCustomerImport" type="button" disabled><i class="fas fa-file-import" style="margin-right: 5px;" ></i>Import</button>
-                                                                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button></div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
 
 
                                                         </div>
@@ -2543,7 +2546,7 @@
                                         <div class="row no-gutters">
                                             <div class="col">
                                                 <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="7">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="7">Confirm</button>
+                                                <!-- <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="7">Confirm</button> -->
                                             </div>
                                         </div>
                                     </div>
@@ -2678,15 +2681,13 @@
                                         <div class="card-body py-3 px-0 rounded">
                                             <div class="row d-xl-flex flex-row justify-content-xl-center m-0" >
 
-                                                <div class="col-8 float-left flex-grow-1 pl-0">
+                                                <div class="col text-right float-left flex-grow-1 pl-0">
                                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                     <button data-toggle="#addSupplierModal" id="btnNewSupplier" name="btnNewSupplier" class="btn btn-primary alerts-border" type="button" style="margin: 12px; margin-left: 0;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Supplier</button>
-                                                    <a role="button" data-toggle="modal" href="#helpModalSuppliers" class="btn btn-primary helpModal visiblePopupDiv alerts-border" style="margin: 16px 16px 16px 0" >View Help Video</a>
-                                                    <a href="javascript:void(0);" data-href="https://vs1forum.com/" class="btn btn-primary downloadHelpFile alerts-border" style="margin: 16px 0" >Download Help File</a>
-                                                </div>
-                                                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start pr-0">
-                                                    <div>
-                                                        <button style="margin: 16px; margin-right: 0;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal_step8"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                                                    <a role="button" data-toggle="modal" href="#helpModalSuppliers" class="btn btn-primary helpModal visiblePopupDiv alerts-border" style="margin: 12px 12px 12px 0" >View Help Video</a>
+                                                    <a href="javascript:void(0);" data-href="https://vs1forum.com/" class="btn btn-primary downloadHelpFile alerts-border" style="margin: 12px 0" >Download Help File</a>
+                                                    <button style="margin: 12px; margin-right: 3px;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal_step8"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                                                    <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px; margin-right: 0" data-step-id="8">Confirm</button>
                                                         <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step8">
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
@@ -2748,7 +2749,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="table-responsive">
@@ -2829,7 +2829,7 @@
                                         <div class="row no-gutters">
                                             <div class="col">
                                                 <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="8">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="8">Confirm</button>
+                                                <!-- <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="8">Confirm</button> -->
                                             </div>
                                         </div>
                                     </div>
@@ -2967,15 +2967,13 @@
                                         <div class="card-body p-3 rounded">
                                             <div class="row d-xl-flex flex-row justify-content-xl-center m-0" >
 
-                                                <div class="col-8 float-left flex-grow-1 pl-0">
+                                                <div class="col float-left text-right flex-grow-1 pl-0">
                                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                     <button data-toggle="#addProductModal" id="btnNewProduct" name="btnNewProduct" class="btn btn-primary alerts-border" type="button" style="margin: 12px; margin-left: 0;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Product</button>
-                                                    <a role="button" data-toggle="modal" href="#helpModalInventory" class="btn btn-primary helpModal visiblePopupDiv alerts-border" style="margin: 16px 16px 16px 0">View Help Video</a>
-                                                    <a href="javascript:void(0);" data-href="https://vs1forum.com/viewforum.php?f=6" class="btn btn-primary downloadHelpFile alerts-border" style="margin: 16px 0">Download Help File</a>
-                                                </div>
-                                                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start pr-0">
-                                                    <div>
-                                                        <button style="margin: 16px; margin-right: 0;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal_step9"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                                                    <a role="button" data-toggle="modal" href="#helpModalInventory" class="btn btn-primary helpModal visiblePopupDiv alerts-border" style="margin: 12px 12px 12px 0">View Help Video</a>
+                                                    <a href="javascript:void(0);" data-href="https://vs1forum.com/viewforum.php?f=6" class="btn btn-primary downloadHelpFile alerts-border" style="margin: 12px 0">Download Help File</a>
+                                                    <button style="margin: 12px; margin-right: 3px;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal_step9"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                                                    <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px; margin-right: 0;" data-step-id="9">Confirm</button>
                                                         <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step9">
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
@@ -3038,7 +3036,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="table-responsive">
@@ -3226,7 +3223,7 @@
                                         <div class="row no-gutters">
                                             <div class="col">
                                                 <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="9">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="9">Confirm</button>
+                                                <!-- <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="9">Confirm</button> -->
                                             </div>
                                         </div>
                                     </div>
@@ -3444,14 +3441,14 @@
         }
         .setup-stepper li.current {
             color:white;
-            background: #c13050;
+            background: #c13050 !important;
             text-decoration: underline;
         }
         .setup-stepper li.current::before {
-            background: #c13050;
+            background: #c13050 !important;
         }
         .setup-stepper li.current::after {
-            border-left: 30px solid #c13050;
+            border-left: 30px solid #c13050 !important;
         }
         .setup-stepper li.completed {
             color: white;

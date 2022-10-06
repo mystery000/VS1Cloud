@@ -5381,7 +5381,7 @@ Template.new_quote.onRendered(function() {
     };
     tempObj.getSubTaxCodes();
 
-    function initCustomFieldDisplaySettings(data, listType) {
+    tempObj.initCustomFieldDisplaySettings = function(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       showCustomFieldDisplaySettings(reset_data);
@@ -5423,7 +5423,7 @@ Template.new_quote.onRendered(function() {
       }
       tempObj.displayfields.set(custFields);
     }
-    initCustomFieldDisplaySettings("", "tblQuoteLine");
+    tempObj.initCustomFieldDisplaySettings("", "tblQuoteLine");
 
     // tempObj.getAllCustomFieldDisplaySettings = function () {
 
@@ -7530,7 +7530,7 @@ Template.new_quote.events({
                     fields: {
                         ID: currentQuote,
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
@@ -7556,7 +7556,7 @@ Template.new_quote.events({
                     type: "TQuoteEx",
                     fields: {
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
@@ -8470,7 +8470,7 @@ Template.new_quote.events({
         $("th.col" + columHeaderUpdate + "").html(columData);
     },
     // custom field displaysettings
-    'click .btnSaveGridSettings': function(event) {
+    'click .btnSaveGridSettings': async function(event) {
         let lineItems = [];
         $(".fullScreenSpin").css("display", "inline-block");
         $(".displaySettings").each(function (index) {
@@ -8501,7 +8501,7 @@ Template.new_quote.events({
             let erpGet = erpDb();
             let tableName = "tblQuoteLine";
             let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-            let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+            let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
             $(".fullScreenSpin").css("display", "none");
             if(added) {
                 swal({
@@ -8857,7 +8857,7 @@ Template.new_quote.events({
                             fields: {
                                 ID: currentQuote,
                                 CustomerName: customer,
-                                ForeignExchangeCode: currencyCode,
+                              //  ForeignExchangeCode: currencyCode,
                                 ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
@@ -8883,7 +8883,7 @@ Template.new_quote.events({
                             type: "TQuoteEx",
                             fields: {
                                 CustomerName: customer,
-                                ForeignExchangeCode: currencyCode,
+                              //  ForeignExchangeCode: currencyCode,
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
                                 SaleDate: saleDate,
@@ -9449,7 +9449,7 @@ Template.new_quote.events({
                     fields: {
                         ID: currentQuote,
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
@@ -9475,7 +9475,7 @@ Template.new_quote.events({
                     type: "TQuoteEx",
                     fields: {
                         CustomerName: customer,
-                        ForeignExchangeCode: currencyCode,
+                      //  ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
@@ -9705,7 +9705,7 @@ Template.new_quote.events({
                         fields: {
                             ID: currentQuote,
                             CustomerName: customer,
-                            ForeignExchangeCode: currencyCode,
+                          //  ForeignExchangeCode: currencyCode,
                             ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             InvoiceToDesc: billingAddress,
@@ -9732,7 +9732,7 @@ Template.new_quote.events({
                         type: "TQuoteEx",
                         fields: {
                             CustomerName: customer,
-                            ForeignExchangeCode: currencyCode,
+                          //  ForeignExchangeCode: currencyCode,
                             ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             InvoiceToDesc: billingAddress,
@@ -9957,7 +9957,7 @@ Template.new_quote.events({
                         fields: {
                             ID: currentQuote,
                             CustomerName: customer,
-                            ForeignExchangeCode: currencyCode,
+                          //  ForeignExchangeCode: currencyCode,
                             ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             InvoiceToDesc: billingAddress,
@@ -9984,7 +9984,7 @@ Template.new_quote.events({
                         type: "TQuoteEx",
                         fields: {
                             CustomerName: customer,
-                            ForeignExchangeCode: currencyCode,
+                          //  ForeignExchangeCode: currencyCode,
                             ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             InvoiceToDesc: billingAddress,

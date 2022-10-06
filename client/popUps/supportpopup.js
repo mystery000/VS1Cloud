@@ -117,9 +117,9 @@ Template.supportmodalpop.onRendered(function() {
             }).format(currentTime);
 
 
-            document.getElementById("phoneSA").style.display = "block";
-            document.getElementById("phoneUSA").style.display = "block";
-            document.getElementById("phoneAUS").style.display = "block";
+            // document.getElementById("phoneSA").style.display = "block";
+            // document.getElementById("phoneUSA").style.display = "block";
+            // document.getElementById("phoneAUS").style.display = "block";
             // document.getElementById("iconSA").style.display = "block";
             let joburgTimeSplit = joburgTime.split(':')[0];
             joburgTime = parseInt(joburgTimeSplit) +':'+joburgTimeSplit.split(':')[1];

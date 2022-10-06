@@ -116,7 +116,7 @@ Template.inventorylist.onRendered(function() {
     // set initial table rest_data
 
   // custom field displaysettings
-  function initCustomFieldDisplaySettings(data, listType) {
+  templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
@@ -165,7 +165,7 @@ Template.inventorylist.onRendered(function() {
     templateObject.displayfields.set(custFields);
   }
 
-  initCustomFieldDisplaySettings("", "tblInventoryOverview");
+  templateObject.initCustomFieldDisplaySettings("", "tblInventoryOverview");
   // custom field displaysettings
 
 
@@ -1394,6 +1394,10 @@ Template.inventorylist.helpers({
         } else {
             return true;
         }
+    },
+    getSkippedSteps() {
+        let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
+        return setupUrl[1];   
     }
 });
 
@@ -1458,7 +1462,7 @@ Template.inventorylist.events({
         $(".col" + reset_data[index].class).css('width', reset_data[index].width);
       });
     },
-    "click .saveTable": function(event) {
+    "click .saveTable": async function(event) {
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -1496,7 +1500,7 @@ Template.inventorylist.events({
         let erpGet = erpDb();
         let tableName = "tblInventoryOverview";
         let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
             swal({
@@ -1653,84 +1657,84 @@ Template.inventorylist.events({
     },
 
 
-  'click .chkCostPrice': function (event) {
-    if ($(event.target).is(':checked')) {
-        $('.chkCostPriceInc').prop("checked", false);
+//   'click .chkCostPrice': function (event) {
+//     if ($(event.target).is(':checked')) {
+//         $('.chkCostPriceInc').prop("checked", false);
 
-        $('.colCostPriceInc').addClass('hiddenColumn');
-        $('.colCostPriceInc').removeClass('showColumn');
+//         $('.colCostPriceInc').addClass('hiddenColumn');
+//         $('.colCostPriceInc').removeClass('showColumn');
 
-        $('.colCostPrice').addClass('showColumn');
-        $('.colCostPrice').removeClass('hiddenColumn');
-      } else {
-        $('.chkCostPriceInc').prop("checked", true);
+//         $('.colCostPrice').addClass('showColumn');
+//         $('.colCostPrice').removeClass('hiddenColumn');
+//       } else {
+//         $('.chkCostPriceInc').prop("checked", true);
 
-        $('.colCostPrice').addClass('hiddenColumn');
-        $('.colCostPrice').removeClass('showColumn');
+//         $('.colCostPrice').addClass('hiddenColumn');
+//         $('.colCostPrice').removeClass('showColumn');
 
-        $('.colCostPriceInc').addClass('showColumn');
-        $('.colCostPriceInc').removeClass('hiddenColumn');
-    }
-  },
-  'click .chkCostPriceInc': function(event) {
-    if ($(event.target).is(':checked')) {
-        $('.chkCostPrice').prop("checked", false);
+//         $('.colCostPriceInc').addClass('showColumn');
+//         $('.colCostPriceInc').removeClass('hiddenColumn');
+//     }
+//   },
+//   'click .chkCostPriceInc': function(event) {
+//     if ($(event.target).is(':checked')) {
+//         $('.chkCostPrice').prop("checked", false);
 
-        $('.colCostPrice').addClass('hiddenColumn');
-        $('.colCostPrice').removeClass('showColumn');
+//         $('.colCostPrice').addClass('hiddenColumn');
+//         $('.colCostPrice').removeClass('showColumn');
 
-        $('.colCostPriceInc').addClass('showColumn');
-        $('.colCostPriceInc').removeClass('hiddenColumn');
-    } else {
-        $('.chkCostPrice').prop("checked", true);
+//         $('.colCostPriceInc').addClass('showColumn');
+//         $('.colCostPriceInc').removeClass('hiddenColumn');
+//     } else {
+//         $('.chkCostPrice').prop("checked", true);
 
-        $('.colCostPriceInc').addClass('hiddenColumn');
-        $('.colCostPriceInc').removeClass('showColumn');
+//         $('.colCostPriceInc').addClass('hiddenColumn');
+//         $('.colCostPriceInc').removeClass('showColumn');
 
-        $('.colCostPrice').addClass('showColumn');
-        $('.colCostPrice').removeClass('hiddenColumn');
-    }
-  },
+//         $('.colCostPrice').addClass('showColumn');
+//         $('.colCostPrice').removeClass('hiddenColumn');
+//     }
+//   },
 
-  'click .chkSalePrice': function (event) {
-    if ($(event.target).is(':checked')) {
-        $('.chkSalePriceInc').prop("checked", false);
+//   'click .chkSalePrice': function (event) {
+//     if ($(event.target).is(':checked')) {
+//         $('.chkSalePriceInc').prop("checked", false);
 
-        $('.colSalePriceInc').addClass('hiddenColumn');
-        $('.colSalePriceInc').removeClass('showColumn');
+//         $('.colSalePriceInc').addClass('hiddenColumn');
+//         $('.colSalePriceInc').removeClass('showColumn');
 
-        $('.colSalePrice').addClass('showColumn');
-        $('.colSalePrice').removeClass('hiddenColumn');
+//         $('.colSalePrice').addClass('showColumn');
+//         $('.colSalePrice').removeClass('hiddenColumn');
 
-    } else {
-        $('.chkSalePriceInc').prop("checked", true);
+//     } else {
+//         $('.chkSalePriceInc').prop("checked", true);
 
-        $('.colSalePrice').addClass('hiddenColumn');
-        $('.colSalePrice').removeClass('showColumn');
+//         $('.colSalePrice').addClass('hiddenColumn');
+//         $('.colSalePrice').removeClass('showColumn');
 
-        $('.colSalePriceInc').addClass('showColumn');
-        $('.colSalePriceInc').removeClass('hiddenColumn');
-    }
-  },
-  'click .chkSalePriceInc': function(event) {
-      if ($(event.target).is(':checked')) {
-        $('.chkSalePrice').prop("checked", false);
+//         $('.colSalePriceInc').addClass('showColumn');
+//         $('.colSalePriceInc').removeClass('hiddenColumn');
+//     }
+//   },
+//   'click .chkSalePriceInc': function(event) {
+//       if ($(event.target).is(':checked')) {
+//         $('.chkSalePrice').prop("checked", false);
 
-        $('.colSalePrice').addClass('hiddenColumn');
-        $('.colSalePrice').removeClass('showColumn');
+//         $('.colSalePrice').addClass('hiddenColumn');
+//         $('.colSalePrice').removeClass('showColumn');
 
-        $('.colSalePriceInc').addClass('showColumn');
-        $('.colSalePriceInc').removeClass('hiddenColumn');
-      } else {
-        $('.chkSalePrice').prop("checked", true);
+//         $('.colSalePriceInc').addClass('showColumn');
+//         $('.colSalePriceInc').removeClass('hiddenColumn');
+//       } else {
+//         $('.chkSalePrice').prop("checked", true);
 
-        $('.colSalePriceInc').addClass('hiddenColumn');
-        $('.colSalePriceInc').removeClass('showColumn');
+//         $('.colSalePriceInc').addClass('hiddenColumn');
+//         $('.colSalePriceInc').removeClass('showColumn');
 
-        $('.colSalePrice').addClass('showColumn');
-        $('.colSalePrice').removeClass('hiddenColumn');
-      }
-  },
+//         $('.colSalePrice').addClass('showColumn');
+//         $('.colSalePrice').removeClass('hiddenColumn');
+//       }
+//   },
     // display settings
 
 

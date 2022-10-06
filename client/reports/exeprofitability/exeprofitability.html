@@ -187,26 +187,26 @@
                                                 {{#each c in currencyList}}
                                                     {{#if c.active}}
                                                     <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalAgedReceivables1 c}}
+                                                        {{convertAmount totalSales1 c}}
                                                     </td>
                                                     {{/if}}
                                                 {{/each}}
                                             {{else}}
                                                 <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{totalAgedReceivables1}}
+                                                    {{totalSales1}}
                                                 </td>
                                             {{/if}}
                                             {{#if currencyList}}
                                                 {{#each c in currencyList}}
                                                     {{#if c.active}}
                                                     <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalAgedReceivables2 c}}
+                                                        {{convertAmount totalSales2 c}}
                                                     </td>
                                                     {{/if}}
                                                 {{/each}}
                                             {{else}}
                                                 <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{totalAgedReceivables2}}
+                                                    {{totalSales2}}
                                                 </td>
                                             {{/if}}
                                             <td class="text-nowrap text-right spnTotalSalesVariance" style="font-weight: 800;" >
@@ -220,26 +220,26 @@
                                                 {{#each c in currencyList}}
                                                     {{#if c.active}}
                                                     <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalAgedPayables1 c}}
+                                                        {{convertAmount grossProfit1 c}}
                                                     </td>
                                                     {{/if}}
                                                 {{/each}}
                                             {{else}}
                                                 <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{totalAgedPayables1}}
+                                                    {{grossProfit1}}
                                                 </td>
                                             {{/if}}
                                             {{#if currencyList}}
                                                 {{#each c in currencyList}}
                                                     {{#if c.active}}
                                                     <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalAgedPayables2 c}}
+                                                        {{convertAmount grossProfit2 c}}
                                                     </td>
                                                     {{/if}}
                                                 {{/each}}
                                             {{else}}
                                                 <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{totalAgedPayables2}}
+                                                    {{grossProfit2}}
                                                 </td>
                                             {{/if}}
                                             <td class="text-nowrap text-right spnGrossProfitVariance" style="font-weight: 800;" >
@@ -253,26 +253,26 @@
                                                 {{#each c in currencyList}}
                                                     {{#if c.active}}
                                                     <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalNettAssets1 c}}
+                                                        {{convertAmount totalExpense1 c}}
                                                     </td>
                                                     {{/if}}
                                                 {{/each}}
                                             {{else}}
                                                 <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{totalNettAssets1}}
+                                                    {{totalExpense1}}
                                                 </td>
                                             {{/if}}
                                             {{#if currencyList}}
                                                 {{#each c in currencyList}}
                                                     {{#if c.active}}
                                                     <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalNettAssets2 c}}
+                                                        {{convertAmount totalExpense2 c}}
                                                     </td>
                                                     {{/if}}
                                                 {{/each}}
                                             {{else}}
                                                 <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{totalNettAssets2}}
+                                                    {{totalExpense2}}
                                                 </td>
                                             {{/if}}
                                             <td class="text-nowrap text-right spnTotalExpenseVariance" style="font-weight: 800;" >
@@ -286,26 +286,26 @@
                                                 {{#each c in currencyList}}
                                                     {{#if c.active}}
                                                     <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalNettAssets1 c}}
+                                                        {{convertAmount nettProfit1 c}}
                                                     </td>
                                                     {{/if}}
                                                 {{/each}}
                                             {{else}}
                                                 <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{totalNettAssets1}}
+                                                    {{nettProfit1}}
                                                 </td>
                                             {{/if}}
                                             {{#if currencyList}}
                                                 {{#each c in currencyList}}
                                                     {{#if c.active}}
                                                     <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalNettAssets2 c}}
+                                                        {{convertAmount nettProfit2 c}}
                                                     </td>
                                                     {{/if}}
                                                 {{/each}}
                                             {{else}}
                                                 <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                    {{totalNettAssets2}}
+                                                    {{nettProfit2}}
                                                 </td>
                                             {{/if}}
                                             <td class="text-nowrap text-right spnNettProfitVariance" style="font-weight: 800;" >

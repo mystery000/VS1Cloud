@@ -65,7 +65,7 @@ Template.refundlist.onRendered(function () {
     // set initial table rest_data
 
     // custom field displaysettings
-    function initCustomFieldDisplaySettings(data, listType) {
+    templateObject.initCustomFieldDisplaySettings = function(data, listType) {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       showCustomFieldDisplaySettings(reset_data);
@@ -107,7 +107,7 @@ Template.refundlist.onRendered(function () {
       }
       templateObject.displayfields.set(custFields);
     }
-    initCustomFieldDisplaySettings("", "tblRefundlist");
+    templateObject.initCustomFieldDisplaySettings("", "tblRefundlist");
     // custom field displaysettings
 
 
@@ -1489,7 +1489,7 @@ Template.refundlist.events({
     },
 
     // custom field displaysettings
-    'click .saveTable' : function(event){
+    'click .saveTable' : async function(event){
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -1527,7 +1527,7 @@ Template.refundlist.events({
         let erpGet = erpDb();
         let tableName = "tblRefundlist";
         let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
             swal({

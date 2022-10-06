@@ -187,7 +187,7 @@
                                                 {{#each c in currencyList}}
                                                     {{#if c.active}}
                                                     <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalInvoiceCount1 c}}
+                                                        {{totalInvoiceCount1}}
                                                     </td>
                                                     {{/if}}
                                                 {{/each}}
@@ -200,7 +200,7 @@
                                                 {{#each c in currencyList}}
                                                     {{#if c.active}}
                                                     <td class="text-nowrap text-right" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount totalInvoiceCount2 c}}
+                                                        {{totalInvoiceCount2}}
                                                     </td>
                                                     {{/if}}
                                                 {{/each}}

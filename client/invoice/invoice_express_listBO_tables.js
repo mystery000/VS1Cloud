@@ -13,11 +13,92 @@ Template.invoicelistBO.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.custfields = new ReactiveVar([]);
+    templateObject.displayfields = new ReactiveVar([]);
+    templateObject.reset_data = new ReactiveVar([]);
 });
 
 Template.invoicelistBO.onRendered(function() {
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
+    // set initial table rest_data
+    function init_reset_data() {
+        let reset_data = [
+        { index: 0, label: 'Sort Date', class:'SortDate', active: false, display: false, width: "0" },
+        { index: 1, label: "Sale Date", class: "SaleDate", active: true, display: true, width: "" },
+        { index: 2, label: "Sales No.", class: "SalesNo", active: true, display: true, width: "" },
+        { index: 3, label: "Due Date", class: "DueDate", active: true, display: true, width: "" },
+        { index: 4, label: "Customer", class: "Customer", active: true, display: true, width: "" },
+        { index: 5, label: "Product Name", class: "ProductName", active: true, display: true, width: "" },
+        { index: 6, label: "Sale Desc", class: "SaleDesc", active: true, display: true, width: "" },
+        { index: 7, label: "ETA Date", class: "ETADate", active: true, display: true, width: "" },
+        { index: 8, label: "Customer Job", class: "CustomerJob", active: true, display: true, width: "" },
+        { index: 9, label: "Qty", class: "Qty", active: true, display: true, width: "" },
+        { index: 10, label: "Amount (Ex)", class: "AmountEx", active: false, display: false, width: "" },
+        { index: 11, label: "Tax", class: "Tax", active: false, display: false, width: "" },
+        { index: 12, label: "Amount (Inc)", class: "AmountInc", active: false, display: false, width: "" },
+        { index: 13, label: "Outstanding", class: "Outstanding", active: false, display: false, width: "" },
+        { index: 14, label: "Status", class: "Status", active: true, display: true, width: "" },
+        { index: 15, label: "UOM", class: "UOM", active: false, display: false, width: "" },
+        { index: 16, label: "Terms", class: "Terms", active: false, display: false, width: "" },
+        { index: 17, label: "Rep", class: "Rep", active: false, display: false, width: "" },
+        { index: 18, label: "Comments", class: "Comments", active: true, display: true, width: "" },
+        ];
+
+        let templateObject = Template.instance();
+        templateObject.reset_data.set(reset_data);
+    }
+    init_reset_data();
+    // set initial table rest_data
+
+
+  // custom field displaysettings
+  function initCustomFieldDisplaySettings(data, listType) {
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    showCustomFieldDisplaySettings(reset_data);
+
+    try {
+      getVS1Data("VS1_Customize").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+              // reset_data = data.ProcessLog.CustomLayout.Columns;
+              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              showCustomFieldDisplaySettings(reset_data);
+          }).catch(function (err) {
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          // handle process here
+        }
+      });
+    } catch (error) {
+    }
+    return;
+  }
+
+  function showCustomFieldDisplaySettings(reset_data) {
+
+    let custFields = [];
+    let customData = {};
+    let customFieldCount = reset_data.length;
+
+    for (let r = 0; r < customFieldCount; r++) {
+      customData = {
+        active: reset_data[r].active,
+        id: reset_data[r].index,
+        custfieldlabel: reset_data[r].label,
+        class: reset_data[r].class,
+        display: reset_data[r].display,
+        width: reset_data[r].width ? reset_data[r].width : ''
+      };
+      custFields.push(customData);
+    }
+    templateObject.displayfields.set(custFields);
+  }
+  initCustomFieldDisplaySettings("", "tblInvoicelistBO");
+
+
     let accountService = new AccountService();
     let salesService = new SalesBoardService();
     const customerList = [];
@@ -1737,5 +1818,14 @@ Template.invoicelistBO.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblInvoicelistBO'});
-    }
+    },
+    // custom fields displaysettings
+    custfields: () => {
+        return Template.instance().custfields.get();
+    },
+
+    // custom fields displaysettings
+    displayfields: () => {
+        return Template.instance().displayfields.get();
+    },
 });
