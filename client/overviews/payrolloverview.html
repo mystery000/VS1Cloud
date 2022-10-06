@@ -899,70 +899,27 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                {{#if timeSheetList }}
+                                    {{#each item in timeSheetList}}
+                                        <tr>
+                                            <td>{{ getFirstName item.EmployeeName }}</td>
+                                            <td>{{ getLastName item.EmployeeName }}</td>
+                                            <td>Week ending {{ formatDate item.TimeSheetDate }}</td>
+                                            <td>{{ item.Status }}</td>
+                                            <td>{{ lastEdit item.MsTimeStamp }}</td>
+                                            <td>{{ formatHours item.Hours }}</td>
+                                        </tr>
+                                    {{/each}}
+                                {{/if}}
+                              
+                                <!-- <tr>
                                     <td>Odette</td>
                                     <td>Garrison</td>
                                     <td>Week ending 14 Oct 2022</td>
                                     <td>Processed</td>
                                     <td>31 Jan 2023 06:09</td>
                                     <td>48.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Odette</td>
-                                    <td>Garrison</td>
-                                    <td>Week ending 14 Oct 2022</td>
-                                    <td>Processed</td>
-                                    <td>31 Jan 2023 06:09</td>
-                                    <td>48.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Odette</td>
-                                    <td>Garrison</td>
-                                    <td>Week ending 14 Oct 2022</td>
-                                    <td>Processed</td>
-                                    <td>31 Jan 2023 06:09</td>
-                                    <td>48.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Odette</td>
-                                    <td>Garrison</td>
-                                    <td>Week ending 14 Oct 2022</td>
-                                    <td>Processed</td>
-                                    <td>31 Jan 2023 06:09</td>
-                                    <td>48.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Odette</td>
-                                    <td>Garrison</td>
-                                    <td>Week ending 14 Oct 2022</td>
-                                    <td>Processed</td>
-                                    <td>31 Jan 2023 06:09</td>
-                                    <td>48.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Odette</td>
-                                    <td>Garrison</td>
-                                    <td>Week ending 14 Oct 2022</td>
-                                    <td>Processed</td>
-                                    <td>31 Jan 2023 06:09</td>
-                                    <td>48.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Odette</td>
-                                    <td>Garrison</td>
-                                    <td>Week ending 14 Oct 2022</td>
-                                    <td>Processed</td>
-                                    <td>31 Jan 2023 06:09</td>
-                                    <td>48.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Odette</td>
-                                    <td>Garrison</td>
-                                    <td>Week ending 14 Oct 2022</td>
-                                    <td>Processed</td>
-                                    <td>31 Jan 2023 06:09</td>
-                                    <td>48.00</td>
-                                </tr>
+                                </tr> -->
                             </tbody>
                         </table>
                     </div>
