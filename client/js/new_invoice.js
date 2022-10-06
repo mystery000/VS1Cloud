@@ -12764,7 +12764,7 @@ Template.new_invoice.onRendered(function () {
   tempObj.getSubTaxCodes();
 
   // custom field displaysettings
-  function initCustomFieldDisplaySettings(data, listType) {
+   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
@@ -12807,7 +12807,7 @@ Template.new_invoice.onRendered(function () {
     tempObj.displayfields.set(custFields);
   }
 
-  initCustomFieldDisplaySettings("", "tblInvoiceLine");
+  templateObject.initCustomFieldDisplaySettings("", "tblInvoiceLine");
 
   // tempObj.getAllCustomFieldDisplaySettings = function () {
   //   let listType = "ltSaleslines"; // tempcode until InvoiceLines is added on backend
@@ -18369,7 +18369,7 @@ Template.new_invoice.events({
   },
 
   // custom field displaysettings
-  "click .btnSaveGridSettings": function (event) {
+  "click .btnSaveGridSettings": async function (event) {
     let lineItems = [];
     $(".fullScreenSpin").css("display", "inline-block");
 
@@ -18407,7 +18407,7 @@ Template.new_invoice.events({
       let erpGet = erpDb();
       let tableName = "tblInvoiceLine";
       let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-      let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+      let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
       if(added) {
         swal({

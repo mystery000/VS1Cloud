@@ -116,7 +116,7 @@ Template.inventorylist.onRendered(function() {
     // set initial table rest_data
 
   // custom field displaysettings
-  function initCustomFieldDisplaySettings(data, listType) {
+  templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
@@ -165,7 +165,7 @@ Template.inventorylist.onRendered(function() {
     templateObject.displayfields.set(custFields);
   }
 
-  initCustomFieldDisplaySettings("", "tblInventoryOverview");
+  templateObject.initCustomFieldDisplaySettings("", "tblInventoryOverview");
   // custom field displaysettings
 
 
@@ -1462,7 +1462,7 @@ Template.inventorylist.events({
         $(".col" + reset_data[index].class).css('width', reset_data[index].width);
       });
     },
-    "click .saveTable": function(event) {
+    "click .saveTable": async function(event) {
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -1500,7 +1500,7 @@ Template.inventorylist.events({
         let erpGet = erpDb();
         let tableName = "tblInventoryOverview";
         let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
             swal({

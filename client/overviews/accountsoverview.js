@@ -82,7 +82,7 @@ Template.accountsoverview.onRendered(function() {
 
 
   // custom field displaysettings
-  function initCustomFieldDisplaySettings(data, listType) {
+  templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
@@ -126,7 +126,7 @@ Template.accountsoverview.onRendered(function() {
     templateObject.displayfields.set(custFields);
   }
 
-  initCustomFieldDisplaySettings("", "tblAccountOverview");
+  templateObject.initCustomFieldDisplaySettings("", "tblAccountOverview");
   // set initial table rest_data  //
 
     templateObject.getReceiptCategoryList = function() {
@@ -1528,7 +1528,7 @@ Template.accountsoverview.events({
     //         }
     //     }
     // }, 
-    "click .saveTable": function(event) {
+    "click .saveTable": async function(event) {
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -1566,7 +1566,7 @@ Template.accountsoverview.events({
         let erpGet = erpDb();
         let tableName = "tblAccountOverview";
         let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
-        let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
             swal({

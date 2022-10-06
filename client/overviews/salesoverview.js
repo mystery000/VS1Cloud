@@ -56,7 +56,7 @@ Template.salesoverview.onRendered(function () {
 
 
   // custom field displaysettings
-  function initCustomFieldDisplaySettings(data, listType) {
+  templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
@@ -100,7 +100,7 @@ Template.salesoverview.onRendered(function () {
     templateObject.displayfields.set(custFields);
   }
 
-  initCustomFieldDisplaySettings("", "tblSalesOverview");
+  templateObject.initCustomFieldDisplaySettings("", "tblSalesOverview");
 
 
   let accountService = new AccountService();
@@ -196,7 +196,8 @@ Template.salesoverview.onRendered(function () {
               toDate,
               true,
               initialReportLoad,
-              0
+              0,
+              deleteFilter
             )
             .then(function (data) {
               let lineItems = [];
@@ -1440,6 +1441,7 @@ Template.salesoverview.events({
   "click .btnViewDeleted": async function (e) {
     e.stopImmediatePropagation();    
     const templateObject = Template.instance();
+    await clearData('TSalesList');
     $('.btnViewDeleted').css('display','none');
     $('.btnHideDeleted').css('display','inline-block');    
     await templateObject.getAllSalesOrderData(true);
@@ -1447,6 +1449,7 @@ Template.salesoverview.events({
   "click .btnHideDeleted": async function (e) {
     e.stopImmediatePropagation();
     let templateObject = Template.instance();
+    await clearData('TSalesList');
     $('.btnHideDeleted').css('display','none');
     $('.btnViewDeleted').css('display','inline-block');    
     await templateObject.getAllSalesOrderData(false);
@@ -2114,7 +2117,7 @@ Template.salesoverview.events({
       $(".rngRange" + reset_data[index].class).val('');
     });
   },
-  "click .saveTable": function (event) {
+  "click .saveTable": async function (event) {
     let lineItems = [];
     $(".fullScreenSpin").css("display", "inline-block");
 
@@ -2152,7 +2155,7 @@ Template.salesoverview.events({
       let erpGet = erpDb();
       let tableName = "tblSalesOverview";
       let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
-      let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+      let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
       if(added) {
           swal({
