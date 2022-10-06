@@ -6336,7 +6336,17 @@ Template.new_quote.events({
         const offset = $earch.offset();
         let customername = $('#edtCustomerName').val();
         if (customername === '') {
-            swal('Customer has not been selected!', '', 'warning');
+          swal({
+              title: "Customer has not been selected!",
+              text: '',
+              type: 'warning',
+          }).then((result) => {
+              if (result.value) {
+                  $('#edtCustomerName').focus();
+              } else if (result.dismiss == 'cancel') {
+
+              }
+          });
             event.preventDefault();
         } else {
             const productDataName = $(event.target).val() || '';
@@ -7387,7 +7397,17 @@ Template.new_quote.events({
         //     return false;
         // }
         if (customername.val() === '') {
-            swal('Customer has not been selected!', '', 'warning');
+          swal({
+              title: "Customer has not been selected!",
+              text: '',
+              type: 'warning',
+          }).then((result) => {
+              if (result.value) {
+                  $('#edtCustomerName').focus();
+              } else if (result.dismiss == 'cancel') {
+
+              }
+          });
             e.preventDefault();
         } else {
             LoadingOverlay.show();
@@ -7531,7 +7551,7 @@ Template.new_quote.events({
                         ID: currentQuote,
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -7557,7 +7577,7 @@ Template.new_quote.events({
                     fields: {
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -8771,7 +8791,17 @@ Template.new_quote.events({
                 // }
 
                 if (customername.val() === '') {
-                    swal('Customer has not been selected!', '', 'warning');
+                  swal({
+                      title: "Customer has not been selected!",
+                      text: '',
+                      type: 'warning',
+                  }).then((result) => {
+                      if (result.value) {
+                          $('#edtCustomerName').focus();
+                      } else if (result.dismiss == 'cancel') {
+
+                      }
+                  });
                     e.preventDefault();
                 } else {
                     LoadingOverlay.show();
@@ -8858,7 +8888,7 @@ Template.new_quote.events({
                                 ID: currentQuote,
                                 CustomerName: customer,
                               //  ForeignExchangeCode: currencyCode,
-                                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                              //  ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
                                 SaleDate: saleDate,
@@ -9368,7 +9398,17 @@ Template.new_quote.events({
         // }
 
         if (customername.val() === '') {
-            swal('Customer has not been selected!', '', 'warning');
+          swal({
+              title: "Customer has not been selected!",
+              text: '',
+              type: 'warning',
+          }).then((result) => {
+              if (result.value) {
+                  $('#edtCustomerName').focus();
+              } else if (result.dismiss == 'cancel') {
+
+              }
+          });
             e.preventDefault();
         } else {
             LoadingOverlay.show();
@@ -9450,7 +9490,7 @@ Template.new_quote.events({
                         ID: currentQuote,
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                      //  ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -9476,7 +9516,7 @@ Template.new_quote.events({
                     fields: {
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                      //  ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -9625,7 +9665,17 @@ Template.new_quote.events({
             //     return false;
             // }
             if (customername.val() === '') {
-                swal('Customer has not been selected!', '', 'warning');
+              swal({
+                  title: "Customer has not been selected!",
+                  text: '',
+                  type: 'warning',
+              }).then((result) => {
+                  if (result.value) {
+                      $('#edtCustomerName').focus();
+                  } else if (result.dismiss == 'cancel') {
+
+                  }
+              });
                 e.preventDefault();
             } else {
                 LoadingOverlay.show();
@@ -9706,7 +9756,7 @@ Template.new_quote.events({
                             ID: currentQuote,
                             CustomerName: customer,
                           //  ForeignExchangeCode: currencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                            //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             InvoiceToDesc: billingAddress,
                             SaleDate: saleDate,
@@ -9733,7 +9783,7 @@ Template.new_quote.events({
                         fields: {
                             CustomerName: customer,
                           //  ForeignExchangeCode: currencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                            //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             InvoiceToDesc: billingAddress,
                             SaleDate: saleDate,
@@ -9876,7 +9926,17 @@ Template.new_quote.events({
             // }
 
             if (customername.val() === '') {
-                swal('Customer has not been selected!', '', 'warning');
+              swal({
+                  title: "Customer has not been selected!",
+                  text: '',
+                  type: 'warning',
+              }).then((result) => {
+                  if (result.value) {
+                      $('#edtCustomerName').focus();
+                  } else if (result.dismiss == 'cancel') {
+
+                  }
+              });
                 e.preventDefault();
             } else {
                 LoadingOverlay.show();
@@ -9958,7 +10018,7 @@ Template.new_quote.events({
                             ID: currentQuote,
                             CustomerName: customer,
                           //  ForeignExchangeCode: currencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                            //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             InvoiceToDesc: billingAddress,
                             SaleDate: saleDate,
@@ -9985,7 +10045,7 @@ Template.new_quote.events({
                         fields: {
                             CustomerName: customer,
                           //  ForeignExchangeCode: currencyCode,
-                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                          //  ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                             Lines: splashLineArray,
                             InvoiceToDesc: billingAddress,
                             SaleDate: saleDate,

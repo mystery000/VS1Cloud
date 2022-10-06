@@ -1828,13 +1828,13 @@ Template.journalentrycard.helpers({
         return 1;
 
 
-        if(["Amount (Ex)", "Amount (Inc)", "Tax Amt"].includes(displayfield.custfieldlabel)) 
+        if(["Amount (Ex)", "Amount (Inc)", "Tax Amt"].includes(displayfield.custfieldlabel))
         {
             if(Template.instance().isForeignEnabled.get() == true) {
                 return 2
             }
             return 1;
-        } 
+        }
         return 1;
     },
 
@@ -3043,7 +3043,17 @@ Template.journalentrycard.events({
         let headMemo = $('#txaMemo').val();
         let purchaseService = new PurchaseBoardService();
         if (department === '') {
-            swal('Department has not been selected!', '', 'warning');
+          swal({
+              title: "Department has not been selected!",
+              text: '',
+              type: 'warning',
+          }).then((result) => {
+              if (result.value) {
+                  $('#sltDepartment').focus();
+              } else if (result.dismiss == 'cancel') {
+
+              }
+          });
             e.preventDefault();
         } else {
 
@@ -3590,15 +3600,15 @@ Template.journalentrycard.events({
                 const mainClass = element.classList[0];
                 const mainValueElement = document.querySelector(`#tblJournalEntryLine td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
                // const footerValueElement = document.querySelector(`#tblJournalEntryLine tfoot td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
-                
-                let value = mainValueElement.childElementCount > 0 ? 
-                    $(mainValueElement).find('input').val() : 
+
+                let value = mainValueElement.childElementCount > 0 ?
+                    $(mainValueElement).find('input').val() :
                     mainValueElement.innerText;
 
                 $(element).attr("value", convertToForeignAmount(value, rate, false));
                 value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
                 $(element).text(value);
-        
+
             })
         }, 500);
 

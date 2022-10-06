@@ -8483,7 +8483,7 @@ Template.supplierpaymentcard.events({
     }, 300);
   },
   "click .btnSave": (e, ui) => {
-    
+
     LoadingOverlay.show();
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
@@ -8503,6 +8503,25 @@ Template.supplierpaymentcard.events({
     let department = $("#sltDepartment").val();
     let empName = localStorage.getItem("mySession");
     let paymentData = [];
+
+    if (department === "") {
+      $(".fullScreenSpin").css("display", "none");
+      swal({
+          title: "Department has not been selected!",
+          text: '',
+          type: 'warning',
+      }).then((result) => {
+          if (result.value) {
+              $('#sltDepartment').focus();
+          } else if (result.dismiss == 'cancel') {
+
+          }
+      });
+      LoadingOverlay.hide();
+      event.preventDefault();
+      return false;
+    };
+
     Session.setPersistent("paymentmethod", payMethod);
     Session.setPersistent("bankaccount", bankAccount);
     Session.setPersistent("department", department);
@@ -8600,7 +8619,6 @@ Template.supplierpaymentcard.events({
         },
       };
 
-      console.log('objDetails', objDetails)
       return false
       paymentService.saveSuppDepositData(objDetails).then(function (data) {
           var customerID = $("#edtSupplierEmail").attr("customerid");
@@ -13067,4 +13085,3 @@ export function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol 
   return convert;
 
 }
-

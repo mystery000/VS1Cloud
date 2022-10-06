@@ -7624,13 +7624,13 @@ Template.new_salesorder.helpers({
     },
 
     displayFieldColspan: (displayfield) => {
-        if(foreignCols.includes(displayfield.custfieldlabel)) 
+        if(foreignCols.includes(displayfield.custfieldlabel))
         {
             if(Template.instance().isForeignEnabled.get() == true) {
                 return 2
             }
             return 1;
-        } 
+        }
         return 1;
     },
 
@@ -9692,7 +9692,7 @@ Template.new_salesorder.events({
                     fields: {
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -11037,7 +11037,7 @@ Template.new_salesorder.events({
                                 ID: currentSalesOrder,
                                 CustomerName: customer,
                               //  ForeignExchangeCode: currencyCode,
-                                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                                //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
                                 SaleDate: saleDate,
@@ -11062,7 +11062,7 @@ Template.new_salesorder.events({
                             fields: {
                                 CustomerName: customer,
                               //  ForeignExchangeCode: currencyCode,
-                                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                              //  ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
                                 SaleDate: saleDate,
@@ -11728,7 +11728,7 @@ Template.new_salesorder.events({
                         ID: currentSalesOrder,
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -11753,7 +11753,7 @@ Template.new_salesorder.events({
                     fields: {
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -11990,7 +11990,7 @@ Template.new_salesorder.events({
                         ID: currentSalesOrder,
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -12016,7 +12016,7 @@ Template.new_salesorder.events({
                     fields: {
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -12384,13 +12384,13 @@ Template.new_salesorder.events({
           toConvert.forEach((element) => {
               const mainClass = element.classList[0];
               const mainValueElement = document.querySelector(`#tblSalesOrderLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
-              
-              let value = mainValueElement.childElementCount > 0 ? 
-                  $(mainValueElement).find('input').val() : 
+
+              let value = mainValueElement.childElementCount > 0 ?
+                  $(mainValueElement).find('input').val() :
                   mainValueElement.innerText;
               value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
               $(element).text(value);
-      
+
           })
       }, 500);
 

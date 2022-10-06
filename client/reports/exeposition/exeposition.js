@@ -176,7 +176,7 @@ Template.exepositionreport.onRendered(() => {
             templateObject.setFieldVariance(currentAsset[0], currentAsset[1], "spnCurrentAssetVariance");
             templateObject.setFieldVariance(termAsset[0], termAsset[1], "spnTermAssetVariance");
         } catch (err) {
-            console.log(err);
+
         }
         LoadingOverlay.hide();
     };

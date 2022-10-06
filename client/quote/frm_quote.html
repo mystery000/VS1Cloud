@@ -259,11 +259,28 @@
                                                 <input class="form-control form-control" type="hidden"  id="lastname" value="{{quoterecord.lastname}}">
                                             </div>
                                         </div>
-
+                                        {{#if isCurrencyEnable}}
+                                        {{else}}
+                                        <div class="col-6 col-md-12 col-lg-12">
+                                            <div class="form-group">
+                                                <label>Status</label>
+                                                <input type="search" class="form-control" id="sltStatus" name="sltStatus" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="display: none;"><label>Due Date</label>
+                                            <div class="input-group date" style="cursor: pointer;">
+                                                <input type="text" class="form-control" id="dtDueDate" name="dtDueDate" value="{{quoterecord.duedate}}">
+                                                <div class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-th"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{/if}}
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        {{#if isCurrencyEnable}}
                         <div class="col-12 col-md-6 col-lg-4 col-xl-3">
                             <div class="row">
                                 <div class="col-12 col-md-6 col-lg-6 col-xl-6">
@@ -286,18 +303,19 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{#if isCurrencyEnable}}
+                                <!-- {{#if isCurrencyEnable}} -->
                                 <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                                     <div class="row">
                                         <div class="col-6 col-md-12 col-lg-12">
                                              {{> CurrencyWidget rate="sell"}}
                                         </div>
-                                       
+
                                     </div>
                                 </div>
-                                {{/if}}
+                                <!-- {{/if}} -->
                             </div>
                         </div>
+                        {{/if}}
                         <div class="col-12 col-md-6 col-lg-4 col-xl-3">
                           <div class="row">
                             <div class="col-12 col-md-6 col-lg-6 col-xl-6">
@@ -795,7 +813,7 @@
                                     <!-- <td contenteditable="false" class="lineDiscount colDiscount {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
                                   {{item.DiscountPercent}}</td> -->
                                   <td class="colDiscount {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}"><input class="lineDiscount highlightInput" type="number" value="{{item.DiscountPercent}}" max="100"></td>
-                                  
+
                                   <td class="colCostPrice {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><input
                                       class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}"></td>
 

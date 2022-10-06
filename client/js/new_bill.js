@@ -7550,7 +7550,17 @@ Template.billcard.events({
 
             var objDetails = '';
             if ($('#sltDept').val() === '') {
-                swal('Department has not been selected!', '', 'warning');
+              swal({
+                  title: "Department has not been selected!",
+                  text: '',
+                  type: 'warning',
+              }).then((result) => {
+                  if (result.value) {
+                      $('#sltDept').focus();
+                  } else if (result.dismiss == 'cancel') {
+
+                  }
+              });
                 LoadingOverlay.hide();
                 event.preventDefault();
                 return false;

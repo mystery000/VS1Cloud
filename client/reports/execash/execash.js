@@ -172,7 +172,7 @@ Template.execashreport.onRendered(() => {
             templateObject.setFieldVariance(cashSurplus[0], cashSurplus[1], "spnCashSurplusVariance");
             templateObject.setFieldVariance(bankBalance[0], bankBalance[1], "spnBankBalanceVariance");
         } catch (err) {
-            console.log(err);
+
         }
         LoadingOverlay.hide();
     };
