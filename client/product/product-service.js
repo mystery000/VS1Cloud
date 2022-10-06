@@ -377,4 +377,8 @@ export class ProductService extends BaseService {
         }
         return this.getList(this.ERPObjects.TProcTree, options);
     }
+
+    saveBOMProduct(data){
+        return this.POST(this.ERPObjects.TProcTree, data)
+    }
 }

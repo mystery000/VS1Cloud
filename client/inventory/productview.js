@@ -11,6 +11,7 @@ import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let productService = new ProductService();
 let accSelected = "";
 let taxSelected = "";
 var subStructure = {
@@ -75,7 +76,7 @@ Template.productview.onCreated(() => {
 Template.productview.onRendered(function() {
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
-    let productService = new ProductService();
+    
     let purchaseService = new PurchaseBoardService();
     let taxRateService = new TaxRateService();
     const records = [];
@@ -109,6 +110,11 @@ Template.productview.onRendered(function() {
        $('#sltsalesacount').editableSelect();
        $('#sltinventoryacount').editableSelect();
        $('#sltCustomerType').editableSelect();
+       $('#newProcessModal #edtCOGS').editableSelect();
+       $('#newProcessModal #edtExpenseAccount').editableSelect();
+       $('#newProcessModal #edtOverheadCOGS').editableSelect();
+       $('#newProcessModal #edtOverheadExpenseAccount').editableSelect();
+       $('#newProcessModal #edtWastage').editableSelect();
        });
 
        $(document).ready(function() {
@@ -736,7 +742,386 @@ Template.productview.onRendered(function() {
                        }
                    });
 
+                $('#newProcessModal #edtCOGS').editableSelect()
+                    .on('click.editable-select', function(e, li) {
+                        accSelected = "bom-all";
+                        $('#accSelected').val(accSelected);
+                        var $earch = $(this);
+                        var offset = $earch.offset();
+                        let cogsAccountDataName = e.target.value || '';
+                        var accountType = "";
+                        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                            templateObject.getAccountsByCategory(accountType);
 
+                        } else {
+                            if (cogsAccountDataName.replace(/\s/g, '') != '') {
+                                $('#add-account-title').text('Edit Account Details');
+                                getVS1Data('TAccountVS1').then(function(dataObject) {
+                                    if (dataObject.length == 0) {
+                                        productService.getAccountName().then(function(data) {
+                                            let lineItems = [];
+                                            let lineItemObj = {};
+                                            for (let i = 0; i < data.taccountvs1.length; i++) {
+                                                if ((data.taccountvs1[i].AccountName) === cogsAccountDataName) {
+                                                    var acountName = data.taccountvs1[i].AccountName || '';
+                                                    $('#newProcessModal #edtCOGS').val(acountName);
+                                                    setTimeout(function() {
+                                                        $('#addAccountModal').modal('toggle');
+                                                    }, 100);
+                                                }
+                                            }
+
+                                        }).catch(function(err) {
+                                            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                            $('.fullScreenSpin').css('display', 'none');
+                                            // Meteor._reload.reload();
+                                        });
+                                    } else {
+                                        let data = JSON.parse(dataObject[0].data);
+                                        let useData = data.taccountvs1;
+                                        let lineItems = [];
+                                        let lineItemObj = {};
+                                        $('#add-account-title').text('Edit Account Details');
+                                        for (let i = 0; i < useData.length; i++) {
+                                            if ((useData[i].fields.AccountName) === cogsAccountDataName) {
+                                                var acountName = useData[i].fields.AccountName || '';
+                                                $('#newProcessModal #edtCOGS').val(acountName);
+                                                $('#addAccountModal').modal('toggle');
+                                            }
+                                        }
+                                    }
+                                }).catch(function(err) {
+                                    productService.getAccountName().then(function(data) {
+                                        let lineItems = [];
+                                        let lineItemObj = {};
+                                        for (let i = 0; i < data.taccountvs1.length; i++) {
+                                            if ((data.taccountvs1[i].CodeName) === taxRateDataName) {
+                                                var acountName = data.taccountvs1[i].AccountName || '';
+                                                $('#newProcessModal #edtCOGS').val(acountName);
+                                                setTimeout(function() {
+                                                    $('#addAccountModal').modal('toggle');
+                                                }, 100);
+
+                                            }
+                                        }
+
+                                    }).catch(function(err) {
+                                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                        $('.fullScreenSpin').css('display', 'none');
+                                        // Meteor._reload.reload();
+                                    });
+                                });
+                            } else {
+                                templateObject.getAccountsByCategory(accountType);
+                            }
+
+                        }
+                    });
+
+                $('#newProcessModal #edtExpenseAccount').editableSelect()
+                    .on('click.editable-select', function(e, li) {
+                        accSelected = "bom-expense";
+                        $('#accSelected').val(accSelected);
+                        var $earch = $(this);
+                        var offset = $earch.offset();
+                        var expenseAccountDataName = e.target.value || '';
+                        var accountType = "EXP";
+                        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                            templateObject.getAccountsByCategory(accountType);
+
+                        } else {
+                            if (expenseAccountDataName.replace(/\s/g, '') != '') {
+                                $('#add-account-title').text('Edit Account Details');
+                                getVS1Data('TAccountVS1').then(function(dataObject) {
+                                    if (dataObject.length == 0) {
+                                        productService.getAccountName().then(function(data) {
+                                            let lineItems = [];
+                                            let lineItemObj = {};
+                                            for (let i = 0; i < data.taccountvs1.length; i++) {
+                                                if ((data.taccountvs1[i].AccountName) === expenseAccountDataName) {
+                                                    var acountName = data.taccountvs1[i].AccountName || '';
+                                                    $('#newProcessModal #edtExpenseAccount').val(acountName);
+                                                    setTimeout(function() {
+                                                        $('#addAccountModal').modal('toggle');
+                                                    }, 100);
+                                                }
+                                            }
+
+                                        }).catch(function(err) {
+                                            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                            $('.fullScreenSpin').css('display', 'none');
+                                            // Meteor._reload.reload();
+                                        });
+                                    } else {
+                                        let data = JSON.parse(dataObject[0].data);
+                                        let useData = data.taccountvs1;
+                                        let lineItems = [];
+                                        let lineItemObj = {};
+                                        $('#add-account-title').text('Edit Account Details');
+                                        for (let i = 0; i < useData.length; i++) {
+                                            if ((useData[i].fields.AccountName) === expenseAccountDataName) {
+                                                var acountName = useData[i].fields.AccountName || '';
+                                                $('#newProcessModal #edtExpenseAccount').val(acountName);
+                                                $('#addAccountModal').modal('toggle');
+                                            }
+                                        }
+                                    }
+                                }).catch(function(err) {
+                                    productService.getAccountName().then(function(data) {
+                                        let lineItems = [];
+                                        let lineItemObj = {};
+                                        for (let i = 0; i < data.taccountvs1.length; i++) {
+                                            if ((data.taccountvs1[i].CodeName) === taxRateDataName) {
+                                                var acountName = data.taccountvs1[i].AccountName || '';
+                                                $('#newProcessModal #edtExpenseAccount').val(acountName);
+                                                setTimeout(function() {
+                                                    $('#addAccountModal').modal('toggle');
+                                                }, 100);
+
+                                            }
+                                        }
+
+                                    }).catch(function(err) {
+                                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                        $('.fullScreenSpin').css('display', 'none');
+                                        // Meteor._reload.reload();
+                                    });
+                                });
+                            } else {
+                                templateObject.getAccountsByCategory(accountType);
+                            }
+
+                        }
+                    });
+
+                $('#newProcessModal #edtOverheadCOGS').editableSelect()
+                    .on('click.editable-select', function(e, li) {
+                        accSelected = "bom-overhead-all";
+                        $('#accSelected').val(accSelected);
+                        var $earch = $(this);
+                        var offset = $earch.offset();
+                        let cogsAccountDataName = e.target.value || '';
+                        var accountType = "";
+                        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                            templateObject.getAccountsByCategory(accountType);
+
+                        } else {
+                            if (cogsAccountDataName.replace(/\s/g, '') != '') {
+                                $('#add-account-title').text('Edit Account Details');
+                                getVS1Data('TAccountVS1').then(function(dataObject) {
+                                    if (dataObject.length == 0) {
+                                        productService.getAccountName().then(function(data) {
+                                            let lineItems = [];
+                                            let lineItemObj = {};
+                                            for (let i = 0; i < data.taccountvs1.length; i++) {
+                                                if ((data.taccountvs1[i].AccountName) === cogsAccountDataName) {
+                                                    var acountName = data.taccountvs1[i].AccountName || '';
+                                                    $('#newProcessModal #edtOverheadCOGS').val(acountName);
+                                                    setTimeout(function() {
+                                                        $('#addAccountModal').modal('toggle');
+                                                    }, 100);
+                                                }
+                                            }
+
+                                        }).catch(function(err) {
+                                            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                            $('.fullScreenSpin').css('display', 'none');
+                                            // Meteor._reload.reload();
+                                        });
+                                    } else {
+                                        let data = JSON.parse(dataObject[0].data);
+                                        let useData = data.taccountvs1;
+                                        let lineItems = [];
+                                        let lineItemObj = {};
+                                        $('#add-account-title').text('Edit Account Details');
+                                        for (let i = 0; i < useData.length; i++) {
+                                            if ((useData[i].fields.AccountName) === cogsAccountDataName) {
+                                                var acountName = useData[i].fields.AccountName || '';
+                                                $('#newProcessModal #edtOverheadCOGS').val(acountName);
+                                                $('#addAccountModal').modal('toggle');
+                                            }
+                                        }
+                                    }
+                                }).catch(function(err) {
+                                    productService.getAccountName().then(function(data) {
+                                        let lineItems = [];
+                                        let lineItemObj = {};
+                                        for (let i = 0; i < data.taccountvs1.length; i++) {
+                                            if ((data.taccountvs1[i].CodeName) === taxRateDataName) {
+                                                var acountName = data.taccountvs1[i].AccountName || '';
+                                                $('#newProcessModal #edtOverheadCOGS').val(acountName);
+                                                setTimeout(function() {
+                                                    $('#addAccountModal').modal('toggle');
+                                                }, 100);
+
+                                            }
+                                        }
+
+                                    }).catch(function(err) {
+                                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                        $('.fullScreenSpin').css('display', 'none');
+                                        // Meteor._reload.reload();
+                                    });
+                                });
+                            } else {
+                                templateObject.getAccountsByCategory(accountType);
+                            }
+
+                        }
+                    });
+                
+                $('#newProcessModal #edtOverheadExpenseAccount').editableSelect()
+                    .on('click.editable-select', function(e, li) {
+                        accSelected = "bom-overhead-expense";
+                        $('#accSelected').val(accSelected);
+                        var $earch = $(this);
+                        var offset = $earch.offset();
+                        var expenseAccountDataName = e.target.value || '';
+                        var accountType = "EXP";
+                        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                            templateObject.getAccountsByCategory(accountType);
+
+                        } else {
+                            if (expenseAccountDataName.replace(/\s/g, '') != '') {
+                                $('#add-account-title').text('Edit Account Details');
+                                getVS1Data('TAccountVS1').then(function(dataObject) {
+                                    if (dataObject.length == 0) {
+                                        productService.getAccountName().then(function(data) {
+                                            let lineItems = [];
+                                            let lineItemObj = {};
+                                            for (let i = 0; i < data.taccountvs1.length; i++) {
+                                                if ((data.taccountvs1[i].AccountName) === expenseAccountDataName) {
+                                                    var acountName = data.taccountvs1[i].AccountName || '';
+                                                    $('#newProcessModal #edtOverheadExpenseAccount').val(acountName);
+                                                    setTimeout(function() {
+                                                        $('#addAccountModal').modal('toggle');
+                                                    }, 100);
+                                                }
+                                            }
+
+                                        }).catch(function(err) {
+                                            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                            $('.fullScreenSpin').css('display', 'none');
+                                            // Meteor._reload.reload();
+                                        });
+                                    } else {
+                                        let data = JSON.parse(dataObject[0].data);
+                                        let useData = data.taccountvs1;
+                                        let lineItems = [];
+                                        let lineItemObj = {};
+                                        $('#add-account-title').text('Edit Account Details');
+                                        for (let i = 0; i < useData.length; i++) {
+                                            if ((useData[i].fields.AccountName) === expenseAccountDataName) {
+                                                var acountName = useData[i].fields.AccountName || '';
+                                                $('#newProcessModal #edtOverheadExpenseAccount').val(acountName);
+                                                $('#addAccountModal').modal('toggle');
+                                            }
+                                        }
+                                    }
+                                }).catch(function(err) {
+                                    productService.getAccountName().then(function(data) {
+                                        let lineItems = [];
+                                        let lineItemObj = {};
+                                        for (let i = 0; i < data.taccountvs1.length; i++) {
+                                            if ((data.taccountvs1[i].CodeName) === taxRateDataName) {
+                                                var acountName = data.taccountvs1[i].AccountName || '';
+                                                $('#newProcessModal #edtOverheadExpenseAccount').val(acountName);
+                                                setTimeout(function() {
+                                                    $('#addAccountModal').modal('toggle');
+                                                }, 100);
+
+                                            }
+                                        }
+
+                                    }).catch(function(err) {
+                                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                        $('.fullScreenSpin').css('display', 'none');
+                                        // Meteor._reload.reload();
+                                    });
+                                });
+                            } else {
+                                templateObject.getAccountsByCategory(accountType);
+                            }
+
+                        }
+                    });
+
+                $('#newProcessModal #edtWastage').editableSelect()
+                    .on('click.editable-select', function(e, li) {
+                        accSelected = "bom-inventory";
+                        $('#accSelected').val(accSelected);
+                        var $earch = $(this);
+                        var offset = $earch.offset();
+                        var expenseAccountDataName = e.target.value || '';
+                        var accountType = "OCASSET";
+                        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                            templateObject.getAccountsByCategory(accountType);
+
+                        } else {
+                            if (expenseAccountDataName.replace(/\s/g, '') != '') {
+                                $('#add-account-title').text('Edit Account Details');
+                                getVS1Data('TAccountVS1').then(function(dataObject) {
+                                    if (dataObject.length == 0) {
+                                        productService.getAccountName().then(function(data) {
+                                            let lineItems = [];
+                                            let lineItemObj = {};
+                                            for (let i = 0; i < data.taccountvs1.length; i++) {
+                                                if ((data.taccountvs1[i].AccountName) === expenseAccountDataName) {
+                                                    var acountName = data.taccountvs1[i].AccountName || '';
+                                                    $('#newProcessModal #edtWastage').val(acountName);
+                                                    setTimeout(function() {
+                                                        $('#addAccountModal').modal('toggle');
+                                                    }, 100);
+                                                }
+                                            }
+
+                                        }).catch(function(err) {
+                                            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                            $('.fullScreenSpin').css('display', 'none');
+                                            // Meteor._reload.reload();
+                                        });
+                                    } else {
+                                        let data = JSON.parse(dataObject[0].data);
+                                        let useData = data.taccountvs1;
+                                        let lineItems = [];
+                                        let lineItemObj = {};
+                                        $('#add-account-title').text('Edit Account Details');
+                                        for (let i = 0; i < useData.length; i++) {
+                                            if ((useData[i].fields.AccountName) === expenseAccountDataName) {
+                                                var acountName = useData[i].fields.AccountName || '';
+                                                $('#newProcessModal #edtWastage').val(acountName);
+                                                $('#addAccountModal').modal('toggle');
+                                            }
+                                        }
+                                    }
+                                }).catch(function(err) {
+                                    productService.getAccountName().then(function(data) {
+                                        let lineItems = [];
+                                        let lineItemObj = {};
+                                        for (let i = 0; i < data.taccountvs1.length; i++) {
+                                            if ((data.taccountvs1[i].CodeName) === taxRateDataName) {
+                                                var acountName = data.taccountvs1[i].AccountName || '';
+                                                $('#newProcessModal #edtWastage').val(acountName);
+                                                setTimeout(function() {
+                                                    $('#addAccountModal').modal('toggle');
+                                                }, 100);
+
+                                            }
+                                        }
+
+                                    }).catch(function(err) {
+                                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                        $('.fullScreenSpin').css('display', 'none');
+                                        // Meteor._reload.reload();
+                                    });
+                                });
+                            } else {
+                                templateObject.getAccountsByCategory(accountType);
+                            }
+
+                        }
+                    }); 
+       
            //On Click Account List
            $(document).on("click", "#tblTaxRate tbody tr", function(e) {
                var table = $(this);
@@ -828,6 +1213,16 @@ Template.productview.onRendered(function() {
                    $('#sltsalesacount').val(accountsName);
                } else if (accSelected == "inventory") {
                    $('#sltinventoryacount').val(accountsName);
+               } else if(accSelected == "bom-all") {
+                   $("#newProcessModal #edtCOGS").val(accountsName);
+               } else if(accSelected == "bom-expense") {
+                   $("#newProcessModal #edtExpenseAccount").val(accountsName);
+               } else if(accSelected == "bom-overhead-all") {
+                   $("#newProcessModal #edtOverheadCOGS").val(accountsName);
+               } else if(accSelected == "bom-overhead-expense") {
+                    $("#newProcessModal #edtOverheadExpenseAccount").val(accountsName);
+               } else if(accSelected == 'bom-inventory'){
+                    $("#newProcessModal #edtWastage").val(accountsName)
                }
                $('#accountListModal').modal('toggle');
            });
@@ -847,20 +1242,7 @@ Template.productview.onRendered(function() {
 
 
     templateObject.getAllBOMProducts = function() {
-        // getVS1Data('TProcTree').then(dataObject =>{
-        //     if(dataObject.length == 0) {
-        //         productService.getAllBOMProducts().then(data => {
-        //         }).catch(function(err){
-        //         })
-        //     }else {
-
-        //     }
-        // }).catch(function(err){
-
-        //     productService.getAllBOMProducts().then(dataObject => {
-        //     }).catch(function(error){
-        //     })
-        // }) 
+    
         let tempArray = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')): [];
         templateObject.bomProducts.set(tempArray);
     }
@@ -908,9 +1290,12 @@ Template.productview.onRendered(function() {
                             data.taccountvs1[i].fields.TaxCode || '',
                             data.taccountvs1[i].fields.ID || ''
                         ];
-
-                        if (useData[i].fields.AccountTypeName == accountType) {
-                            splashArrayAccountList.push(dataList);
+                        if(accountType == '') {
+                            splashArrayAccountList.push(dataList)
+                        }else {
+                            if (useData[i].fields.AccountTypeName == accountType) {
+                                splashArrayAccountList.push(dataList);
+                            }
                         }
                     }
                     //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
@@ -948,9 +1333,12 @@ Template.productview.onRendered(function() {
                         useData[i].fields.TaxCode || '',
                         useData[i].fields.ID || ''
                     ];
-
-                    if (useData[i].fields.AccountTypeName == accountType) {
+                    if (accountType == '') {
                         splashArrayAccountList.push(dataList);
+                    }else {
+                        if (useData[i].fields.AccountTypeName == accountType) {
+                            splashArrayAccountList.push(dataList);
+                        }
                     }
 
                 }
@@ -983,8 +1371,13 @@ Template.productview.onRendered(function() {
                         data.taccountvs1[i].fields.TaxCode || '',
                         data.taccountvs1[i].fields.ID || ''
                     ];
-                    if (useData[i].fields.AccountTypeName == accountType) {
+
+                    if (accountType == '') {
                         splashArrayAccountList.push(dataList);
+                    } else {
+                        if (useData[i].fields.AccountTypeName == accountType) {
+                            splashArrayAccountList.push(dataList);
+                        }
                     }
                 }
                 //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
@@ -1494,17 +1887,11 @@ Template.productview.onRendered(function() {
                             barcode: data.fields.BARCODE,
                             // data.fields.TotalQtyInStock,
                             totalqtyonorder: data.fields.TotalQtyOnOrder,
-                            //productclass :lineItems
+                            //productclass :lineItems,
+                            isManufactured: data.fields.IsManufactured
                         };
 
-                        let index = templateObject.bomProducts.get().findIndex((product)=>{
-                            return product.fields.productName == data.fields.ProductName
-                        })
-
-                        if(index > -1) {
-                            productrecord.isManufactured = true;
-                            templateObject.isManufactured.set(true);
-                        }
+                            templateObject.isManufactured.set(productrecord.isManufactured);
 
                         setTimeout(async function() {
                           await templateObject.setEditableSelect();
@@ -1672,19 +2059,13 @@ Template.productview.onRendered(function() {
                                 barcode: useData[i].fields.BARCODE,
                                 // useData[i].fields.TotalQtyInStock,
                                 totalqtyonorder: useData[i].fields.TotalQtyOnOrder,
-                                //productclass :lineItems
+                                //productclass :lineItems,
+                                isManufactured: useData[i].fields.IsManufactured
                             };
 
 
-                            let index = templateObject.bomProducts.get().findIndex((product)=>{
-                                return product.fields.productName == useData[i].fields.ProductName
-                            })
-
-    
-                            if(index > -1) {
-                                productrecord.isManufactured = true;
-                                templateObject.isManufactured.set(true)
-                            }
+                          
+                                templateObject.isManufactured.set(productrecord.isManufactured)
 
                             setTimeout(async function() {
                               await templateObject.setEditableSelect();
@@ -1833,18 +2214,15 @@ Template.productview.onRendered(function() {
                                 barcode: data.fields.BARCODE,
                                 // data.fields.TotalQtyInStock,
                                 totalqtyonorder: data.fields.TotalQtyOnOrder,
+                                isManufactured: data.fields.IsManufactured
                                 //productclass :lineItems
                             };
 
 
-                            let index = templateObject.bomProducts.get().findIndex((product)=>{
-                                return product.fields.productName == data.fields.ProductName
-                            })
-    
-                            if(index > -1) {
-                                productrecord.isManufactured = true;
-                                templateObject.isManufactured.set(true)
-                            }
+                            templateObject.isManufactured.set(productrecord.isManufactured)
+
+
+                          
 
                             setTimeout(async function() {
                               await templateObject.setEditableSelect();
@@ -1996,17 +2374,12 @@ Template.productview.onRendered(function() {
                         barcode: data.fields.BARCODE,
                         // data.fields.TotalQtyInStock,
                         totalqtyonorder: data.fields.TotalQtyOnOrder,
-                        //productclass :lineItems
+                        //productclass :lineItems,
+                        isManufactured: data.fields.IsManufactured
                     };
 
-                    let index = templateObject.bomProducts.get().findIndex((product)=>{
-                        return product.fields.productName == data.fields.ProductName
-                    })
-
-                    if(index > -1) {
-                        productrecord.isManufactured = true;
-                        templateObject.isManufactured.set(true);
-                    }
+                   
+                    templateObject.isManufactured.set(productrecord.isManufactured);
 
                     setTimeout(async function() {
                       await templateObject.setEditableSelect();
@@ -2343,7 +2716,6 @@ Template.productview.onRendered(function() {
                         "fnDrawCallback": function(oSettings) {
                             $('.paginate_button.page-item').removeClass('disabled');
                             $('#tblPaymentOverview_ellipsis').addClass('disabled');
-                            console.log('hghj')
 
                             if (oSettings._iDisplayLength == -1) {
                                 if (oSettings.fnRecordsDisplay() > 150) {
@@ -2479,7 +2851,6 @@ Template.productview.onRendered(function() {
                         "fnDrawCallback": function(oSettings) {
                             $('.paginate_button.page-item').removeClass('disabled');
                             $('#tblPaymentOverview_ellipsis').addClass('disabled');
-                            console.log('hghj')
 
                             if (oSettings._iDisplayLength == -1) {
                                 if (oSettings.fnRecordsDisplay() > 150) {
@@ -3460,7 +3831,6 @@ Template.productview.onRendered(function() {
                         "fnDrawCallback": function(oSettings) {
                             $('.paginate_button.page-item').removeClass('disabled');
                             $('#tblPaymentOverview_ellipsis').addClass('disabled');
-                            console.log('hghj')
 
                             if (oSettings._iDisplayLength == -1) {
                                 if (oSettings.fnRecordsDisplay() > 150) {
@@ -4006,7 +4376,6 @@ Template.productview.events({
     },
     'click #btnSave': async function() {
         let templateObject = Template.instance();
-        let productService = new ProductService();
         let productCode = $("#edtproductcode").val();
         let productName = $("#edtproductname").val();
         var objDetails = '';
@@ -4970,7 +5339,6 @@ Template.productview.events({
     },
     'click .btnDeleteInv': function(event) {
         let templateObject = Template.instance();
-        let productService = new ProductService();
         swal({
             title: 'Delete Product',
             text: "Do you want to delete this Product?",
@@ -5136,7 +5504,7 @@ Template.productview.events({
 
     'click #showBOMBtn': function(event) {
         let templateObject = Template.instance()
-        let objectArray = JSON.parse(localStorage.getItem('TProcTree'))
+        let objectArray = JSON.parse(localStorage.getItem('TProcTree')?localStorage.getItem('TProcTree'): [])
         let obj = objectArray.find(object => {
             return object.fields.productName == templateObject.records.get().productname;
         });
@@ -5158,12 +5526,38 @@ Template.productview.events({
                             
                             "<select type='search' class='edtProductName edtRaw form-control es-input' style='width: 30%'></select>" ;
 
-                            let bomIndex = objectArray.findIndex(object => {
-                                return object.fields.productName == subs[i].product
+                            // let bomIndex = objectArray.findIndex(object => {
+                            //     return object.fields.productName == subs[i].product
+                            // })
+
+                            getVS1Data('TProductVS1').then(function(dataObject){
+                                if(dataObject.length == 0) {
+                                    productService.getOneProductdatavs1byname(subs[i].product).then(function(data){
+                                        if(data.tproduct[0].fields.IsManufactured == true) {
+                                            html +="<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>";
+                                        }                                        
+                                    })
+                                } else {
+                                    let data = JSON.parse(dataObject[0].data);
+                                    let useData = data.tproductvs1;
+                                    for(let i = 0; i< useData.length ; i++) {
+                                        if(useData[i].fields.ProductName == subs[i].product) {
+                                            if(useData[i].fields.IsManufactured == true) {
+                                                html +="<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>";
+                                            }
+                                        }
+                                    }
+                                }
+                            }).catch(function(err) {
+                                productService.getOneProductdatavs1byname(subs[i].product).then(function(data){
+                                    if(data.tproduct[0].fields.IsManufactured == true) {
+                                        html +="<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>";
+                                    }                                        
+                                })
                             })
                             // if (bomIndex > -1) {
 
-                                html +="<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>";
+                                
                             // }else {
                             //     html += "<button type='button' class='btnShowSub btn btn-primary'>Create Sub</button>"
                             // }
@@ -5257,7 +5651,7 @@ Template.productview.events({
         $(event.target).remove()
         $(colProduct).find('.edtProductName').editableSelect()
         $(colQty).append("<input type='text' class='form-control edtQuantity w-100'/>");
-        $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
+        // $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
         $(colProcess).append("<select class='edtProcessName form-control w-100' type='search' ></select>")
         $(colProcess).find('.edtProcessName').editableSelect();
         $(colNote).append("<input class='w-100 form-control edtProcessNote' type='text'/>");
@@ -5341,146 +5735,6 @@ Template.productview.events({
                 "</div>"
                     topParent.append(attachModalHtml);
 
-        // if($('#edtRaw').val() != '') {
-        //     if($(colQty).find('.edtQuantity').val() != '') {
-        //         let quantity = $(colQty).find('.edtQuantity').val();
-        //         let edtRaw = colProduct.find('.edtProductName')
-        //         $(event.target).remove();
-        //         $(colDelete).addClass('d-flex align-items-center justify-content-center')
-        //         $(colDelete).append("<button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button>")
-        //         let parent = row.parent();
-        //         let grandParent = parent.parent();
-        //         let modalElement = $(row).closest('.modal#BOMSetupModal');
-        //         let topParent = modalElement.parent();
-        //         let bomProducts = tempObject.bomProducts.get();
-        //         let exist = false;
-        //         bomProducts.map(product=>{
-        //             if(product.fields.productName == $('#edtRaw').val()) {
-        //                 exist = true
-        //             }
-        //         })
-        //         if (exist == false) {
-        //             while ($('#edtRaw').length) {
-        //                 $('#edtRaw').removeAttr('id');
-        //             }
-
-        //             $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
-        //             $(colProcess).append("<select class='edtProcessName form-control w-100' type='search' ></select>")
-        //             $(colProcess).find('.edtProcessName').editableSelect();
-        //             $(colNote).append("<input class='w-100 form-control edtProcessNote' type='text'/>");
-        //             grandParent.append("<div class='product-content'><div class='d-flex productRow'>" +
-        //                 "<div class='colProduct  d-flex form-group'>" +
-        //                 "<button class='btn btn-primary btnAddProduct' style='width: 29%;'>Product+</button>" +
-        //                 "<input class='edtProductName  edtRaw form-control' id='edtRaw' type='search' style='width: 30%'/>" +
-        //                 "</div>" +
-        //                 "<div class='colQty form-group'>" +
-        //                 "<input type='text' class='edtQuantity w-100 form-control' value='1'/>" +
-        //                 "</div>" +
-        //                 "<div class='colProcess form-group'>" +
-        //                 "</div>" +
-        //                 "<div class='colNote form-group'>" +
-        //                 "</div>" +
-        //                 "<div class='colAttachment form-group'></div>" +
-        //                 "<div class='colDelete'>" +
-        //                 "</div>" +
-        //                 "</div></div>")
-        //         } else {
-        //             while($('#edtRaw').length) {
-        //                 $('#edtRaw').removeAttr('id');
-        //             }
-
-        //             $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>" )
-        //             $(colQty).find('.edtQuantity').val('1');
-        //             $(colProcess).append("<select class='edtProcessName form-control w-100' type='search' ></select>")
-        //             $(colProcess).find('.edtProcessName').editableSelect()
-        //             $(colProcess).find('.edtProcessName').val(subStructure.process)
-        //             $(colNote).append("<input class='w-100 form-control edtProcessNote' type='text'/>");
-        //             let pName = $(edtRaw).val()
-        //             $(colAttachment).append("<a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-"+pName.replace(/[|&;$%@"<>()+," "]/g, '')+"' id='btn_Attachment' name='btn_Attachment'>"+
-        //             "<i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div>")
-
-                  
-        //             grandParent.append("<div class='product-content'><div class='d-flex productRow'>" +
-        //                 "<div class='colProduct d-flex form-group'>" +
-        //                 "<button class='btn btn-primary btnAddProduct' style='width: 29%;'>Product+</button>" +
-        //                 "<input class='edtProductName form-control edtRaw' id='edtRaw' type='search'  style='width: 30%'/>" +
-        //                 "</div>" +
-        //                 "<div class='colQty form-group'>" +
-        //                 "<input type='text' class='edtQuantity form-control w-100' value='1'/>" +
-        //                 "</div>" +
-        //                 "<div class='colProcess form-group'>" +
-        //                 "</div>" +
-        //                 "<div class='colNote form-group'>" +
-        //                 "</div>" +
-        //                 "<div class='colAttachment'></div>" +
-        //                 "<div class='colDelete'></div>" +
-        //                 "</div></div>")
-        //             let attachModalHtml = "<div class='modal fade' role='dialog' tabindex='-1' id='myModalAttachment-"+pName.replace(/[|&;$%@"<>()+," "]/g, '')+"'>" +
-        //             "<div class='modal-dialog modal-dialog-centered' role='document'>" +
-        //                 "<div class='modal-content'>" +
-        //                     "<div class='modal-header'>" +
-        //                         "<h4>Upload Attachments</h4><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>" +
-        //                     "</div>" +
-        //                     "<div class='modal-body' style='padding: 0px;'>" +
-        //                         "<div class='divTable file-display'>" +
-        //                             "<div class='col inboxcol1'>" +
-        //                                 "<img src='/icons/nofiles_icon.jpg' class=' style='width:100%;'>" +
-        //                             "</div>" +
-        //                             "<div class='col inboxcol2' style='text-align: center;'>" +
-        //                                 "<div>Upload files or add files from the file library.</div>"
-        //                                 if(tempObject.isMobileDevices.get() == true) {
-        //                                     attachModalHtml = attachModalHtml +"<div>Capture copies of receipt's or take photo's of completed jobs.</div>"
-        //                                 }
-
-
-        //                                 attachModalHtml = attachModalHtml + "<p style='color: #ababab;'>Only users with access to your company can view these files</p>" +
-        //                             "</div>" +
-        //                         "</div>" +
-        //                     "</div>"+
-        //                     "<div class='modal-footer'>";
-        //                     if(tempObject.isMobileDevices.get() == true) {
-        //                         attachModalHtml = attachModalHtml +"<input type='file' class='img-attachment-upload' id='img-attachment-upload' style='display:none' accept='image/*' capture='camera'>" +
-        //                         "<button class='btn btn-primary btnUploadFile img_new_attachment_btn' type='button'><i class='fas fa-camera' style='margin-right: 5px;'></i>Capture</button>" +
-
-        //                         "<input type='file' class='attachment-upload' id='attachment-upload' style='display:none' multiple accept='.jpg,.gif,.png'>"
-        //                     }else {
-        //                         attachModalHtml = attachModalHtml + "<input type='file' class='attachment-upload' id='attachment-upload' style='display:none' multiple accept='.jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt," +
-        //                         ".pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef," +
-        //                         ".pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg," +
-        //                         "image/gif,image/png,image/bmp,image/tiff,application/pdf," +
-        //                         "application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document," +
-        //                         "application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet," +
-        //                         "application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation," +
-        //                         "application/vnd.oasis.opendocument.formula,text/csv,text/plain,text/rtf,message/rfc822," +
-        //                         "application/vnd.ms-outlook,application/vnd.oasis.opendocument.spreadsheet," +
-        //                         "application/vnd.oasis.opendocument.text,application/x-iwork-keynote-sffkey," +
-        //                         "application/vnd.apple.keynote,application/x-iwork-pages-sffpages," +
-        //                         "application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers," +
-        //                         "application/vnd.apple.numbers,application/zip,application/rar," +
-        //                         "application/x-zip-compressed,application/x-zip,application/x-7z-compressed'>"
-        //                     }
-        //                     attachModalHtml = attachModalHtml +
-        //                         "<button class='btn btn-primary btnUploadFile new_attachment_btn' type='button'><i class='fa fa-cloud-upload' style='margin-right: 5px;'></i>Upload</button>" +
-        //                         "<button class='btn btn-success closeModal' data-dismiss='modal' type='button' style='margin-right: 5px;' autocomplete='off'>" +
-        //                             "<i class='fa fa-save' style='padding-right: 8px;'></i>Save" +
-        //                         "</button>" +
-        //                         "<button class='btn btn-secondary' data-dismiss='modal' type='button'><i class='fa fa-remove' style='margin-right: 5px;'></i>Close</button>" +
-        //                     "</div>"+
-        //                 "</div>"+
-        //             "</div>"+
-        //         "</div>"
-        //             topParent.append(attachModalHtml);
-
-        //         }
-        //         $(colProduct).prepend("<div style='width: 29%'></div>")
-        //         $(colProcess).find('.edtProcessName')
-        //     }
-        // }
-
-        // let colProductName = $(colProduct).find('.edtProductName');
-        // $(colProductName).attr('id', 'edtRaw');
-
-
     },
 
     'click #BOMSetupModal .btnShowSub': function(event) {
@@ -5491,18 +5745,15 @@ Template.productview.events({
         let processName = $(event.target).closest('.productRow').find('.edtProcessName').val();
         let quantity = $(event.target).closest('.productRow').find('.edtQuantity').val();
         let bomIndex = bomProducts.findIndex(product=>{
-            return product.fields.productName == templateObject.records.get().productname
+            return product.fields.productName == productName
         })
         if(productName == '' || quantity == '' || processName == '') {
             return
         }
 
         if(bomIndex > -1) {
-            let index = bomProducts[bomIndex].fields.subs.findIndex(product => {
-                return product.product == productName;
-            });
-            let subs = bomProducts[bomIndex].fields.subs[index].raws
-            if(index > -1) {
+         
+            let subs = bomProducts[bomIndex].fields.subs
                 $(event.target).remove()
                 if(subs && subs.length) {
                     for (let i = 0; i < subs.length; i++) {
@@ -5512,7 +5763,7 @@ Template.productview.events({
                             "<select class='edtProductName edtRaw form-control' type='search' style='width: 40%'></select>" +
                             "</div>" +
                             "<div class='colQty form-group'>" +
-                            "<input type='text' class='edtQuantity w-100 form-control' value='" + subs[i].rawQty + "'/>" +
+                            "<input type='text' class='edtQuantity w-100 form-control' value='" + subs[i].quantity + "'/>" +
                             "</div>" +
                             "<div class='colProcess form-group'>"+
                             "<select type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' ></select>"+
@@ -5525,15 +5776,13 @@ Template.productview.events({
                         let elements = $(row).find('.edtProductName')
                         $(elements[elements.length - 1]).editableSelect();
                         let inputElements = $(row).find('input.edtProductName');
-                            $(inputElements[inputElements.length - 1]).val(subs[i].rawName)
+                            $(inputElements[inputElements.length - 1]).val(subs[i].product)
                         let processes = $(row).find('.edtProcessName');
                         $(processes[processes.length - 1]).editableSelect();
                         let processElements = $(row).find('input.edtProcessName');
-                        $(processElements[processElements.length - 1]).val(subs[i].rawProcess)
+                        $(processElements[processElements.length - 1]).val(subs[i].process)
                     }
                 }
-                    
-            }
         }
 
         $(row).append("<div class='d-flex productRow'>"+
@@ -5608,6 +5857,10 @@ Template.productview.events({
     'click .edtProductName': function(event) {
         let templateObject = Template.instance();
         let colProduct = $(event.target).closest('div.colProduct');
+        let buttonSub = $(event.target).closest('div.colProduct').find('.btnShowSub');
+        if(buttonSub){$(buttonSub).remove()}
+        let colRow = $(event.target).closest('div.productRow')
+        
         // $(event.target).editableSelect()
         templateObject.selectedProductField.set($(colProduct).children('.edtProductName'))
         $('#productListModal').modal('toggle');
@@ -5626,6 +5879,37 @@ Template.productview.events({
         let productName = $(event.target).closest('tr').find('.productName').text();
         let selEle = templateObject.selectedProductField.get()
         $(selEle).val(productName);
+
+        getVS1Data('TProductVS1').then(function(dataObject){
+            if(dataObject.length == 0) {
+                productService.getOneProductdatavs1byname(productName).then(function(data){
+                    if(data.tproduct[0].fields.IsManufactured == true) {
+                        let colProduct = $(selEle).closest('.colProduct')
+                        $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
+                    }                                        
+                })
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tproductvs1;
+                for(let i = 0; i< useData.length ; i++) {
+                    if(useData[i].fields.ProductName == productName) {
+                        if(useData[i].fields.IsManufactured == true) {
+                            let colProduct = $(selEle).closest('.colProduct')
+                            $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
+                        }
+                    }
+                }
+            }
+        }).catch(function(err) {
+            productService.getOneProductdatavs1byname(productName).then(function(data){
+                if(data.tproduct[0].fields.IsManufactured == true) {
+                    let colProduct = $(selEle).closest('.colProduct')
+                    $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
+                }                                        
+            })
+        })
+
+      
         $('#productListModal').modal('toggle')
     },
 
@@ -5765,6 +6049,9 @@ Template.productview.events({
         }
         $('#BOMSetupModal').modal('toggle');
         tempObject.getProductData();
+        let tempRecord = tempObject.records.get();
+        tempRecord.isManufactured = true;
+        tempObject.records.set(tempRecord)
     },
 
 
@@ -5785,6 +6072,10 @@ Template.productview.events({
             $(productContents[l]).remove()
         }
         $('#BOMSetupModal').modal('toggle');
+    },
+
+    'click #accountListModal table tr': function(event) {
+
     },
 
 

@@ -138,9 +138,6 @@ Template.processlistpopup.helpers({
 Template.processlistpopup.events({
     'click .btnAddNewProcess':function(event) {
         $('#processListModal').modal('toggle');
-        $('#BOMSetupModal').modal('toggle');
-        setTimeout(()=>{
-            FlowRouter.go('/processcard')
-        }, 1000)
+        $('#newProcessModal').modal('toggle')
     }
 })

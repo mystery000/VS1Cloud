@@ -275,7 +275,8 @@ const erpObject = {
     VS1_Customize: "VS1_Customize",
     TProductList:"TProductList",
     TProductMovementList:"TProductMovementList",
-    TCardDataReport:"TCardDataReport"
+    TCardDataReport:"TCardDataReport",
+    TProcTree:"TProcTree",
 };
 
 export default erpObject;
