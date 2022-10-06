@@ -1,5 +1,5 @@
-import '../../lib/global/indexdbstorage.js';
-import { FixedAssetService } from "../fixedasset-service";
+import '../../../lib/global/indexdbstorage.js';
+import { FixedAssetService } from "../../fixedasset-service";
 let _ = require('lodash');
 
 Template.fixedassetchart.onCreated(() => {
@@ -134,7 +134,7 @@ Template.fixedassetchart.onRendered(() => {
       borderColors.push('#ffffff00');
     }
 
-    var ctx = document.getElementById("chart_leadpiechart").getContext("2d");
+    var ctx = document.getElementById("chart_fixedassertpie").getContext("2d");
     try {
       var pieChart = new Chart(ctx, {
         type: "pie",

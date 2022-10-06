@@ -2166,7 +2166,7 @@ Template.salesoverview.events({
             confirmButtonText: 'OK'
           }).then((result) => {
               if (result.value) {
-                 $('#myModal2').modal('hide');
+                 $('#displaySettingsModal2').modal('hide');
               }
           });
       } else {
