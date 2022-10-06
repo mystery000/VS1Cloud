@@ -141,8 +141,8 @@
                     <button class="btn btn-success btnAddVS1User" type="button" style="margin: 12px;"><i class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button>
                 </div>
                 {{#if showSetupFinishedAlert }}
-                    <div class="col setupIncompleatedMsg text-danger">
-                        <h2>Set Up Incomplete</h2>
+                    <div class="col-2 setupIncompleatedMsg text-danger">
+                        <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
                     </div>
                 {{/if}}
                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">

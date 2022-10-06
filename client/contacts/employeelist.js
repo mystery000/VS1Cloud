@@ -771,5 +771,9 @@ Template.employeelist.helpers({
         } else {
             return true;
         }
+    },
+    getSkippedSteps() {
+        let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
+        return setupUrl[1];   
     }
 });
