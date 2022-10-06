@@ -12,6 +12,8 @@ let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 let reportService = new ReportService();
 let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
+let salesService = new SalesBoardService();
+let initCurrency = Currency;
 
 Template.exeperformancereport.onCreated(function () {
     const templateObject = Template.instance();
@@ -33,11 +35,6 @@ Template.exeperformancereport.onCreated(function () {
 
 Template.exeperformancereport.onRendered(() => {
     const templateObject = Template.instance();
-
-    let taxRateService = new TaxRateService();
-    let salesService = new SalesBoardService();
-
-    let initCurrency = Currency;
 
     templateObject.setMonthsOnHeader = (yy, mm, dd) => {
         var currentDate = new Date(yy, mm, dd);
@@ -88,43 +85,50 @@ Template.exeperformancereport.onRendered(() => {
             $("#uploadedImage").attr("src", imageData);
             $("#uploadedImage").attr("width", "50%");
         }
-
-        var today = moment().format("DD/MM/YYYY");
-        var currentDate = new Date();
-        templateObject.setMonthsOnHeader(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-        templateObject.dateAsAt.set(begunDate);
     });
 
-    let totalAgedReceivables = [0, 0];
-    let totalAgedPayables = [0, 0];
-    let totalNettAssets = [0, 0];
+    let grossProfitMargin = [0, 0];
+    let netProfitMargin = [0, 0];
+    let returnOnInvestment = [0, 0];
 
     let varianceRed = "#ff420e";
     let varianceGreen = "#579D1C;";
 
     templateObject.setFieldVariance = function (fieldVal1, fieldVal2, fieldSelector) {
         var fieldVariance = 0;
-        if (fieldVal1 == 0) {
-            if (fieldVal2 > 0) {
-                fieldVariance = 100;
-                $('.' + fieldSelector).css("color", varianceGreen);
-            } else if (fieldVal2 == 0) {
-                fieldVariance = 0;
-                $('.' + fieldSelector).css("color", varianceGreen);
-            } else {
-                fieldVariance = -100;
-                $('.' + fieldSelector).css("color", varianceRed);
-            }
+        var fieldVariance = 0;
+        if (fieldVal1 == 0 && fieldVal2 == 0) {
+            fieldVariance = 0;
+        } else if (fieldVal1 == 0) {
+            fieldVariance = fieldVal2;
+        } else if (fieldVal2 == 0) {
+            fieldVariance = (-1) * fieldVal1;
         } else {
-            if (fieldVal1 > 0)
-                fieldVariance = (fieldVal2 - fieldVal1) / fieldVal1 * 100;
-            else
-                fieldVariance = (fieldVal2 - fieldVal1) / Math.abs(fieldVal1) * 100;
-            if (fieldVariance >= 0)
-                $('.' + fieldSelector).css("color", varianceGreen);
-            else
-                $('.' + fieldSelector).css("color", varianceRed);
+            if (fieldVal1 > 0 && fieldVal2 > 0) {
+                if (fieldVal2 >= fieldVal1) {
+                    fieldVariance = (fieldVal2 / fieldVal1) * 100;
+                } else {
+                    fieldVariance = (fieldVal1 / fieldVal2) * (-100);
+                }
+            }
+            if (fieldVal1 > 0 && fieldVal2 < 0) {
+                fieldVariance = fieldVal2 - fieldVal1;
+            }
+            if (fieldVal1 < 0 && fieldVal2 > 0) {
+                fieldVariance = fieldVal2 - fieldVal1;
+            }
+            if (fieldVal1 < 0 && fieldVal2 < 0) {
+                if (fieldVal2 >= fieldVal1) {
+                    fieldVariance = (fieldVal1 / fieldVal2) * 100;
+                } else {
+                    fieldVariance = (fieldVal2 / fieldVal1) * (-100);
+                }
+            }
+        }
+        if (fieldVariance >= 0) {
+            $('.' + fieldSelector).css("color", varianceGreen);
+        } else {
+            $('.' + fieldSelector).css("color", varianceRed);
         }
         $('.' + fieldSelector).html(fieldVariance.toFixed(1));
     }
@@ -135,35 +139,45 @@ Template.exeperformancereport.onRendered(() => {
             let data = await reportService.getCardDataReport(dateAsOf);
             if (data.tcarddatareport) {
                 let resData = data.tcarddatareport[0];
-                grossProfitMg[0] = resData.Perf_GrossMargin1;
-                grossProfitMg[1] = resData.Perf_GrossMargin2;
-                netProfitMg[0] = resData.Perf_NetMargin1;
-                netProfitMg[1] = resData.Perf_NetMargin2;
-                investReturns[0] = resData.Perf_ROI1;
-                investReturns[1] = resData.Perf_ROI2;
+                grossProfitMargin[0] = parseFloat(resData.Perf_GrossMargin1);
+                grossProfitMargin[1] = parseFloat(resData.Perf_GrossMargin2);
+                netProfitMargin[0] = parseFloat(resData.Perf_NetMargin1);
+                netProfitMargin[1] = parseFloat(resData.Perf_NetMargin2);
+                returnOnInvestment[0] = parseFloat(resData.Perf_ROI1);
+                returnOnInvestment[1] = parseFloat(resData.Perf_ROI2);
             }
 
-            templateObject.grossProfitMargin1.set(grossProfitMargin[0]);
-            templateObject.netProfitMargin1.set(netProfitMargin[0]);
-            templateObject.returnOnInvestment1.set(returnOnInvestment[0]);
-            templateObject.grossProfitMargin2.set(grossProfitMargin[1]);
-            templateObject.netProfitMargin2.set(netProfitMargin[1]);
-            templateObject.returnOnInvestment2.set(returnOnInvestment[1]);
+            templateObject.grossProfitMargin1.set(utilityService.modifynegativeCurrencyFormat(grossProfitMargin[0].toFixed(2)));
+            templateObject.netProfitMargin1.set(utilityService.modifynegativeCurrencyFormat(netProfitMargin[0].toFixed(2)));
+            templateObject.returnOnInvestment1.set(returnOnInvestment[0].toFixed(2));
+            templateObject.grossProfitMargin2.set(utilityService.modifynegativeCurrencyFormat(grossProfitMargin[1].toFixed(2)));
+            templateObject.netProfitMargin2.set(utilityService.modifynegativeCurrencyFormat(netProfitMargin[1].toFixed(2)));
+            templateObject.returnOnInvestment2.set(returnOnInvestment[1].toFixed(2));
 
-            templateObject.setFieldVariance(grossProfitMg[0], grossProfitMg[1], "spnGrossProfitMarginVariance");
-            templateObject.setFieldVariance(netProfitMg[0], netProfitMg[1], "spnNetProfitMarginVariance");
-            templateObject.setFieldVariance(investReturns[0], investReturns[1], "spnReturnInvestVariance");
+            templateObject.setFieldVariance(grossProfitMargin[0], grossProfitMargin[1], "spnGrossProfitMarginVariance");
+            templateObject.setFieldVariance(netProfitMargin[0], netProfitMargin[1], "spnNetProfitMarginVariance");
+            templateObject.setFieldVariance(returnOnInvestment[0], returnOnInvestment[1], "spnReturnInvestVariance");
         } catch (err) {
-
+            console.log(err);
         }
         LoadingOverlay.hide();
     };
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    templateObject.getPerformanceReports(getLoadDate);
-    $("#balancedate").val(moment(currentDate2).format("DD/MM/YYYY"));
-
-
+    var currentDate = new Date();
+    var getLoadDate = moment(currentDate).format("YYYY-MM-DD");
+    // var getLoadDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+    let pDate = FlowRouter.current().queryParams.viewDate || getLoadDate;
+    templateObject.getPerformanceReports(pDate);
+    let strDate = "";
+    if (pDate.length == 10)
+        strDate = pDate;
+    else
+        strDate = pDate.substring(1, 11);
+    arrDate = strDate.split("-");
+    let newbalanceDate = new Date(arrDate[0], eval(arrDate[1]) - 1, arrDate[2]);
+    templateObject.setMonthsOnHeader(arrDate[0], eval(arrDate[1]) - 1, arrDate[2]);
+    let newbalanceDate2 = moment(newbalanceDate).format("DD/MM/YYYY")
+    $("#balancedate").val(newbalanceDate2);
+    templateObject.dateAsAt.set(newbalanceDate2);
 });
 
 function sortByAlfa(a, b) {
@@ -197,15 +211,15 @@ Template.exeperformancereport.helpers({
     convertAmount: (amount, currencyData) => {
         let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-        // if (!amount || amount.trim() == "") {
-        //     return "";
-        // }
-        // if (currencyData.code == defaultCurrencyCode) {
-        //     // default currency
-        //     return amount;
-        // }
+        if (!amount || amount.trim() == "") {
+            return "";
+        }
+        if (currencyData.code == defaultCurrencyCode) {
+            // default currency
+            return amount;
+        }
 
-        // amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+        amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
 
         // Lets remove the minus character
         const isMinus = amount < 0;
@@ -276,14 +290,14 @@ Template.exeperformancereport.helpers({
 
         // amount = amount.toLocaleString();
 
-        // let convertedAmount =
-        //     isMinus == true ?
-        //         `- ${currencyData.symbol} ${amount}` :
-        //         `${currencyData.symbol} ${amount}`;
         let convertedAmount =
             isMinus == true ?
-                `- ${amount}` :
-                `${amount}`;
+                `- ${currencyData.symbol} ${amount}` :
+                `${currencyData.symbol} ${amount}`;
+        // let convertedAmount =
+        //     isMinus == true ?
+        //         `- ${amount}` :
+        //         `${amount}`;
 
         return convertedAmount;
     },
@@ -426,9 +440,9 @@ Template.exeperformancereport.events({
     },
     "click .btnPrintReport": function (event) {
         $("a").attr("href", "/");
-        document.title = "Balance Sheet (Executive) Report";
+        document.title = "Performance (Executive) Report";
         $(".printReport").print({
-            title: document.title + " | Balance Sheet (Executive) | " + loggedCompany,
+            title: document.title + " | Performance (Executive) | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
             mediaPrint: false,
         });
@@ -450,7 +464,7 @@ Template.exeperformancereport.events({
             "-" +
             balanceDate.getDate();
 
-        const filename = loggedCompany + "-Balance Sheet" + ".csv";
+        const filename = loggedCompany + "-Performance" + ".csv";
         utilityService.exportReportToCsvTable("tableExport", filename, "csv");
         // let rows = [];
         // reportService.getBalanceSheetReport(formatBalDate).then(function (data) {

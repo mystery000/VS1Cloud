@@ -253,7 +253,7 @@
                                                 {{#each c in currencyList}}
                                                     {{#if c.active}}
                                                     <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount returnOnInvestment1 c}}
+                                                        {{returnOnInvestment1}}
                                                     </td>
                                                     {{/if}}
                                                 {{/each}}
@@ -266,7 +266,7 @@
                                                 {{#each c in currencyList}}
                                                     {{#if c.active}}
                                                     <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                        {{convertAmount returnOnInvestment2 c}}
+                                                        {{returnOnInvestment2}}
                                                     </td>
                                                     {{/if}}
                                                 {{/each}}
