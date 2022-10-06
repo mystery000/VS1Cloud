@@ -1653,84 +1653,84 @@ Template.inventorylist.events({
     },
 
 
-  'click .chkCostPrice': function (event) {
-    if ($(event.target).is(':checked')) {
-        $('.chkCostPriceInc').prop("checked", false);
+//   'click .chkCostPrice': function (event) {
+//     if ($(event.target).is(':checked')) {
+//         $('.chkCostPriceInc').prop("checked", false);
 
-        $('.colCostPriceInc').addClass('hiddenColumn');
-        $('.colCostPriceInc').removeClass('showColumn');
+//         $('.colCostPriceInc').addClass('hiddenColumn');
+//         $('.colCostPriceInc').removeClass('showColumn');
 
-        $('.colCostPrice').addClass('showColumn');
-        $('.colCostPrice').removeClass('hiddenColumn');
-      } else {
-        $('.chkCostPriceInc').prop("checked", true);
+//         $('.colCostPrice').addClass('showColumn');
+//         $('.colCostPrice').removeClass('hiddenColumn');
+//       } else {
+//         $('.chkCostPriceInc').prop("checked", true);
 
-        $('.colCostPrice').addClass('hiddenColumn');
-        $('.colCostPrice').removeClass('showColumn');
+//         $('.colCostPrice').addClass('hiddenColumn');
+//         $('.colCostPrice').removeClass('showColumn');
 
-        $('.colCostPriceInc').addClass('showColumn');
-        $('.colCostPriceInc').removeClass('hiddenColumn');
-    }
-  },
-  'click .chkCostPriceInc': function(event) {
-    if ($(event.target).is(':checked')) {
-        $('.chkCostPrice').prop("checked", false);
+//         $('.colCostPriceInc').addClass('showColumn');
+//         $('.colCostPriceInc').removeClass('hiddenColumn');
+//     }
+//   },
+//   'click .chkCostPriceInc': function(event) {
+//     if ($(event.target).is(':checked')) {
+//         $('.chkCostPrice').prop("checked", false);
 
-        $('.colCostPrice').addClass('hiddenColumn');
-        $('.colCostPrice').removeClass('showColumn');
+//         $('.colCostPrice').addClass('hiddenColumn');
+//         $('.colCostPrice').removeClass('showColumn');
 
-        $('.colCostPriceInc').addClass('showColumn');
-        $('.colCostPriceInc').removeClass('hiddenColumn');
-    } else {
-        $('.chkCostPrice').prop("checked", true);
+//         $('.colCostPriceInc').addClass('showColumn');
+//         $('.colCostPriceInc').removeClass('hiddenColumn');
+//     } else {
+//         $('.chkCostPrice').prop("checked", true);
 
-        $('.colCostPriceInc').addClass('hiddenColumn');
-        $('.colCostPriceInc').removeClass('showColumn');
+//         $('.colCostPriceInc').addClass('hiddenColumn');
+//         $('.colCostPriceInc').removeClass('showColumn');
 
-        $('.colCostPrice').addClass('showColumn');
-        $('.colCostPrice').removeClass('hiddenColumn');
-    }
-  },
+//         $('.colCostPrice').addClass('showColumn');
+//         $('.colCostPrice').removeClass('hiddenColumn');
+//     }
+//   },
 
-  'click .chkSalePrice': function (event) {
-    if ($(event.target).is(':checked')) {
-        $('.chkSalePriceInc').prop("checked", false);
+//   'click .chkSalePrice': function (event) {
+//     if ($(event.target).is(':checked')) {
+//         $('.chkSalePriceInc').prop("checked", false);
 
-        $('.colSalePriceInc').addClass('hiddenColumn');
-        $('.colSalePriceInc').removeClass('showColumn');
+//         $('.colSalePriceInc').addClass('hiddenColumn');
+//         $('.colSalePriceInc').removeClass('showColumn');
 
-        $('.colSalePrice').addClass('showColumn');
-        $('.colSalePrice').removeClass('hiddenColumn');
+//         $('.colSalePrice').addClass('showColumn');
+//         $('.colSalePrice').removeClass('hiddenColumn');
 
-    } else {
-        $('.chkSalePriceInc').prop("checked", true);
+//     } else {
+//         $('.chkSalePriceInc').prop("checked", true);
 
-        $('.colSalePrice').addClass('hiddenColumn');
-        $('.colSalePrice').removeClass('showColumn');
+//         $('.colSalePrice').addClass('hiddenColumn');
+//         $('.colSalePrice').removeClass('showColumn');
 
-        $('.colSalePriceInc').addClass('showColumn');
-        $('.colSalePriceInc').removeClass('hiddenColumn');
-    }
-  },
-  'click .chkSalePriceInc': function(event) {
-      if ($(event.target).is(':checked')) {
-        $('.chkSalePrice').prop("checked", false);
+//         $('.colSalePriceInc').addClass('showColumn');
+//         $('.colSalePriceInc').removeClass('hiddenColumn');
+//     }
+//   },
+//   'click .chkSalePriceInc': function(event) {
+//       if ($(event.target).is(':checked')) {
+//         $('.chkSalePrice').prop("checked", false);
 
-        $('.colSalePrice').addClass('hiddenColumn');
-        $('.colSalePrice').removeClass('showColumn');
+//         $('.colSalePrice').addClass('hiddenColumn');
+//         $('.colSalePrice').removeClass('showColumn');
 
-        $('.colSalePriceInc').addClass('showColumn');
-        $('.colSalePriceInc').removeClass('hiddenColumn');
-      } else {
-        $('.chkSalePrice').prop("checked", true);
+//         $('.colSalePriceInc').addClass('showColumn');
+//         $('.colSalePriceInc').removeClass('hiddenColumn');
+//       } else {
+//         $('.chkSalePrice').prop("checked", true);
 
-        $('.colSalePriceInc').addClass('hiddenColumn');
-        $('.colSalePriceInc').removeClass('showColumn');
+//         $('.colSalePriceInc').addClass('hiddenColumn');
+//         $('.colSalePriceInc').removeClass('showColumn');
 
-        $('.colSalePrice').addClass('showColumn');
-        $('.colSalePrice').removeClass('hiddenColumn');
-      }
-  },
+//         $('.colSalePrice').addClass('showColumn');
+//         $('.colSalePrice').removeClass('hiddenColumn');
+//       }
+//   },
     // display settings
 
 
