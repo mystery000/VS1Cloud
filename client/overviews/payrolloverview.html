@@ -1684,23 +1684,40 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label>Employee</label>
-                            <select class="form-control">
-                                <option>Emp 1</option>
-                                <option>Emp 2</option>
+                            <select class="form-control employee-select">
+                                <option value="0">Select an employee</option>
+
+                                {{#if employees}}
+                                    {{#each employee in employees}}
+                                        <option value="{{ employee.ID }}">{{ employee.EmployeeName }}</option>
+                                    {{/each}}
+                                {{/if}}
+
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <style>
+                            .hidden {
+                                display: none;
+                            }
+                        </style>
+                        <div class="col-md-6 payperiod-field hidden">
                             <label>Period</label>
-                            <select class="form-control">
-                                <option>Emp 1</option>
-                                <option>Emp 2</option>
+                            <select class="form-control payperiod-select">
+                                <option value="0">Select a pay period</option>
+
+                                {{#if payPeriods}}
+                                    {{#each pay in payPeriods}}
+                                        <option value="{{ pay.ID }}">{{ pay.PayrollCalendarName }} ({{ pay.PayrollCalendarPayPeriod }})</option>
+                                    {{/each}}
+                                {{/if}}
+                             
                             </select>
                         </div>
                     </div>
                 </form>
               </div>
                 <div class="modal-footer ui-draggable-handle">
-                    <button class="btn btn-primary" type="button"><i class="fas fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-primary add-new-timesheet" disabled type="button"><i class="fas fa-save" style="margin-right: 5px;"></i>Save</button>
                     <button class="btn btn-secondary" data-dismiss="modal" type="button" autocomplete="off"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                 </div>
             </div>

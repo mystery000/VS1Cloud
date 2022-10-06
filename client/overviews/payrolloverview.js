@@ -53,6 +53,8 @@ Template.payrolloverview.onCreated(function () {
   templateObject.draftPayRunRecords = new ReactiveVar([]);
   templateObject.payRunHistoryRecords = new ReactiveVar([]);
   templateObject.timeSheetList = new ReactiveVar([]);
+  templateObject.employees = new ReactiveVar([]);
+  templateObject.payPeriods = new ReactiveVar([]);
 });
 
 Template.payrolloverview.onRendered(function () {
@@ -256,6 +258,42 @@ Template.payrolloverview.onRendered(function () {
     data = data.response;
     let timesheets = data.ttimesheet.map(t => t.fields);
     templateObject.timeSheetList.set(timesheets);
+  }
+
+  templateObject.loadEmployees = async () => {
+    let data = await CachedHttp.get(erpObject.TEmployee, async () => {
+      return await contactService.getAllEmployees();
+    }, {
+      useIndexDb: true,
+      fallBackToLocal: true, 
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        return true;
+      }
+    });
+    data = data.response;
+
+    let employees = data.temployee.map(e => e.fields);
+
+    templateObject.employees.set(employees);
+
+  }
+
+  templateObject.loadPayPeriods = async () => {
+    let data = await CachedHttp.get(erpObject.TPayrollCalendars, async () => {
+      return await sideBarService.getCalender(initialBaseDataLoad, 0);
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: cachedResponse => {
+        return true;
+      }
+    });
+
+    data = data.response;
+    let calendars = data.tpayrollcalendars.map(c => c.fields);
+
+    templateObject.payPeriods.set(calendars);
   }
 
   
@@ -3496,11 +3534,19 @@ Template.payrolloverview.onRendered(function () {
 
 
   templateObject.initPage = async () => {
+    LoadingOverlay.show();
 
+    // Timesheet
     await templateObject.loadTimeSheet();
 
+    // PayRuns
     await templateObject.loadDraftPayrun();
     await templateObject.loadPayRunList();
+
+    // Add timsheet modal
+    await templateObject.loadEmployees();
+    await templateObject.loadPayPeriods();
+    LoadingOverlay.hide();
   }
   templateObject.initPage();
 });
@@ -6094,6 +6140,17 @@ Template.payrolloverview.events({
   "click .redirect-to-payrun-details": (e, ui) => {
     const id = $(e.currentTarget).attr('calendar-id');
     window.location.href = `/payrundetails?cid=${id}`;
+  },
+
+  "change .employee-select": (e, ui) => {
+    const selectedEmployeeId = $(e.currentTarget).val();
+    if(selectedEmployeeId == 0) {
+      $('.payperiod-field').addClass('hidden');
+      $('.add-new-timesheet').attr('disabled', true);
+    } else {
+      $('.payperiod-field').removeClass('hidden');
+      $('.add-new-timesheet').attr('disabled', false);
+    }
   }
 });
 
@@ -6236,7 +6293,12 @@ Template.payrolloverview.helpers({
   },
   lastEdit: (date) => {
     return moment(date).format('D MMM YYYY HH:mm');
+  },
+  employees: () => {
+    return Template.instance().employees.get();
+  },
+  payPeriods: () => {
+    return Template.instance().payPeriods.get();
   }
-
  
 });
