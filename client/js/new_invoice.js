@@ -12060,6 +12060,7 @@ Template.new_invoice.onRendered(function() {
 
 Template.new_invoice.onRendered(function () {
   let tempObj = Template.instance();
+  let templateObject = Template.instance();
   let utilityService = new UtilityService();
   let productService = new ProductService();
   let salesService = new SalesBoardService();
@@ -13535,7 +13536,7 @@ Template.new_invoice.events({
               fields: {
                 ID: currentInvoice,
                 CustomerName: customer,
-                // ForeignExchangeCode: currencyCode,
+                //ForeignExchangeCode: currencyCode
                 // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                 Lines: splashLineArray,
                 InvoiceToDesc: billingAddress,
@@ -13559,7 +13560,7 @@ Template.new_invoice.events({
               type: "TInvoiceEx",
               fields: {
                 CustomerName: customer,
-                // ForeignExchangeCode: currencyCode,
+                //ForeignExchangeCode: currencyCode
                 // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                 Lines: splashLineArray,
                 InvoiceToDesc: billingAddress,
@@ -13579,6 +13580,11 @@ Template.new_invoice.events({
               },
             };
           }
+
+          if(Session.get("CloudUseForeignLicence") == true){
+            objDetails.ForeignExchangeCode = currencyCode||'';
+            objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
+          };
           salesService
             .saveInvoiceEx(objDetails)
             .then(function (objDetails) {
@@ -17226,13 +17232,13 @@ Template.new_invoice.events({
       if (splashLineArray.length > 0) {
         if (getso_id[1]) {
           currentInvoice = parseInt(currentInvoice);
-        
+
           objDetails = {
             type: "TInvoiceEx",
             fields: {
               ID: currentInvoice,
               CustomerName: customer,
-              // ForeignExchangeCode: currencyCode,
+              //ForeignExchangeCode: currencyCode
               // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
               Lines: splashLineArray,
               InvoiceToDesc: billingAddress,
@@ -17251,12 +17257,13 @@ Template.new_invoice.events({
               SalesStatus: $("#sltStatus").val(),
             },
           };
+
         } else {
           objDetails = {
             type: "TInvoiceEx",
             fields: {
               CustomerName: customer,
-              // ForeignExchangeCode: currencyCode,
+              //ForeignExchangeCode: currencyCode
               // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
               Lines: splashLineArray,
               InvoiceToDesc: billingAddress,
@@ -17282,6 +17289,11 @@ Template.new_invoice.events({
         event.preventDefault();
         return false;
       }
+
+      if(Session.get("CloudUseForeignLicence") == true){
+        objDetails.ForeignExchangeCode = currencyCode||'';
+        objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
+      };
       salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
           // add to custom field
           // add to custom field
@@ -18795,7 +18807,7 @@ Template.new_invoice.events({
           fields: {
             ID: currentInvoice,
             CustomerName: customer,
-            // ForeignExchangeCode: currencyCode,
+            //ForeignExchangeCode: currencyCode
             // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
             Lines: splashLineArray,
             InvoiceToDesc: billingAddress,
@@ -18819,7 +18831,7 @@ Template.new_invoice.events({
           type: "TInvoiceEx",
           fields: {
             CustomerName: customer,
-            // ForeignExchangeCode: currencyCode,
+            //ForeignExchangeCode: currencyCode
             // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
             Lines: splashLineArray,
             InvoiceToDesc: billingAddress,
@@ -18839,6 +18851,11 @@ Template.new_invoice.events({
           },
         };
       }
+
+      if(Session.get("CloudUseForeignLicence") == true){
+        objDetails.ForeignExchangeCode = currencyCode||'';
+        objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
+      };
       salesService
         .saveInvoiceEx(objDetails)
         .then(function (objDetails) {
@@ -19576,7 +19593,7 @@ Template.new_invoice.events({
             fields: {
               ID: currentInvoice,
               CustomerName: customer,
-              // ForeignExchangeCode: currencyCode,
+              //ForeignExchangeCode: currencyCode
               // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
               Lines: splashLineArray,
               InvoiceToDesc: billingAddress,
@@ -19601,7 +19618,7 @@ Template.new_invoice.events({
             type: "TInvoiceEx",
             fields: {
               CustomerName: customer,
-              // ForeignExchangeCode: currencyCode,
+              //ForeignExchangeCode: currencyCode
               // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
               Lines: splashLineArray,
               InvoiceToDesc: billingAddress,
@@ -19621,7 +19638,10 @@ Template.new_invoice.events({
             },
           };
         }
-
+        if(Session.get("CloudUseForeignLicence") == true){
+          objDetails.ForeignExchangeCode = currencyCode||'';
+          objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
+        };
         salesService
           .saveInvoiceEx(objDetails)
           .then(function (objDetails) {
