@@ -196,7 +196,8 @@ Template.salesoverview.onRendered(function () {
               toDate,
               true,
               initialReportLoad,
-              0
+              0,
+              deleteFilter
             )
             .then(function (data) {
               let lineItems = [];
@@ -1440,6 +1441,7 @@ Template.salesoverview.events({
   "click .btnViewDeleted": async function (e) {
     e.stopImmediatePropagation();    
     const templateObject = Template.instance();
+    await clearData('TSalesList');
     $('.btnViewDeleted').css('display','none');
     $('.btnHideDeleted').css('display','inline-block');    
     await templateObject.getAllSalesOrderData(true);
@@ -1447,6 +1449,7 @@ Template.salesoverview.events({
   "click .btnHideDeleted": async function (e) {
     e.stopImmediatePropagation();
     let templateObject = Template.instance();
+    await clearData('TSalesList');
     $('.btnHideDeleted').css('display','none');
     $('.btnViewDeleted').css('display','inline-block');    
     await templateObject.getAllSalesOrderData(false);

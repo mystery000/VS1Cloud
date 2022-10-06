@@ -83,4 +83,15 @@ export class StockTransferService extends BaseService {
         return this.getList(this.ERPObjects.TSerialNumberListCurrentReport, options);
     }
 
+    getAllSerialNumber(limitcount, limitfrom) {
+        let options = {
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+        return this.getList(
+            this.ERPObjects.TSerialNumberListCurrentReport,
+            options
+        );
+    }
+
 }

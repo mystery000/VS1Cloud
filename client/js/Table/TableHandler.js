@@ -1,3 +1,4 @@
+import { SideBarService } from "../../js/sidebar-service";
 export default class TableHandler {
   constructor() {
     this.bindEvents();
@@ -39,6 +40,10 @@ export default class TableHandler {
       resizeMode: "overflow",
       onResize: e => {
         var table = $(e.currentTarget); //reference to the resized table
+        let tableName = table.attr('id');
+        if( tableName == 'tblInvoicelist' ||  tableName == 'tblInvoicelistBO'){
+          this.saveTableColumns( tableName );
+        }
         let tableWidth = [];
         $("#tblcontactoverview th").each(function () {
           tableWidth.push($(this).outerWidth());
@@ -55,4 +60,59 @@ export default class TableHandler {
   disableDatatableResizable() {
     $(".dataTable").colResizable({disable: true});
   }
+
+  saveTableColumns( tableName ){
+    let lineItems = [];
+    $(".fullScreenSpin").css("display", "inline-block");
+    $(`#${tableName} thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var fieldID = $tblrow.attr("data-col-index") || 0;
+      var colTitle = $tblrow.text().replace(/^\s+|\s+$/g, "")|| "";
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      var colHidden = false;
+      if ($tblrow.attr('data-col-active') == 'true') {
+        colHidden = true;
+      } else {
+        colHidden = false;
+      }
+      let lineItemObj = {
+        index: parseInt(fieldID),
+        label: colTitle,
+        active: colHidden,
+        width: parseInt(colWidth),
+        class: colthClass,
+        display: true
+      };
+
+      lineItems.push(lineItemObj);
+    });
+    // lineItems.sort((a,b) => a.index - b.index);
+    try {
+      let erpGet = erpDb();
+      let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
+      let sideBarService = new SideBarService();
+      let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+      $(".fullScreenSpin").css("display", "none");
+      if(added) {
+          swal({
+            title: 'SUCCESS',
+            text: "Display settings is updated!",
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonText: 'OK'
+          }).then((result) => {
+              if (result.value) {
+                $(".fullScreenSpin").css("display", "none");
+              }
+          });
+      } else {
+        swal("Something went wrong!", "", "error");
+      }
+    } catch (error) {
+      $(".fullScreenSpin").css("display", "none");
+      swal("Something went wrong!", "", "error");
+    }
+  }
+
 }

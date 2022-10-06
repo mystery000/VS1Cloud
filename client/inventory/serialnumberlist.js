@@ -57,14 +57,15 @@ Template.serialnumberlist.onRendered(function() {
     };
 
     templateObject.resetData = function(dataVal) {
-        window.open('/serialnumberlist?page=last', '_self');
+        Meteor._reload.reload();
+        // window.open('/serialnumberlist?page=last', '_self');
     }
     templateObject.getAllSerialNumberData = function() {
         getVS1Data('TSerialNumberListCurrentReport').then(function(dataObject) {
-            sideBarService.getAllSerialNumber().then(function(data) {
-            })
+            // sideBarService.getAllSerialNumber().then(function(data) {
+            // })
             if (dataObject.length === 0) {
-                sideBarService.getAllSerialNumber().then(function(data) {
+                stockTransferService.getAllSerialNumber( initialReportLoad, 0 ).then(function(data) {
                     addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
 
                     for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
@@ -213,8 +214,7 @@ Template.serialnumberlist.onRendered(function() {
                                     .on('click', function() {
                                         $('.fullScreenSpin').css('display', 'inline-block');
                                         let dataLenght = oSettings._iDisplayLength;
-
-                                        sideBarService.getAllSerialNumber(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                        stockTransferService.getAllSerialNumber(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                             getVS1Data('TSerialNumberListCurrentReport').then(function(dataObjectold) {
                                                 if (dataObjectold.length == 0) {
 
@@ -225,7 +225,6 @@ Template.serialnumberlist.onRendered(function() {
                                                     let objCombineData = {
                                                         tserialnumberlistcurrentreport: thirdaryData
                                                     }
-
 
                                                     addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(objCombineData)).then(function(datareturn) {
                                                         templateObject.resetData(objCombineData);
@@ -271,7 +270,7 @@ Template.serialnumberlist.onRendered(function() {
                                 if (settings.fnRecordsDisplay() > initialDatatableLoad) {
                                     $('.fullScreenSpin').css('display', 'none');
                                 } else {
-                                    sideBarService.getAllSerialNumber().then(function(dataNonBo) {
+                                    stockTransferService.getAllSerialNumber( initialDatatableLoad, settings.fnRecordsDisplay() ).then(function(dataNonBo) {
 
                                         addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(dataNonBo)).then(function(datareturn) {
                                             templateObject.resetData(dataNonBo);
@@ -287,7 +286,7 @@ Template.serialnumberlist.onRendered(function() {
                                 if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                                     $('.fullScreenSpin').css('display', 'none');
                                 } else {
-                                    sideBarService.getAllSerialNumber(dataLenght, 0).then(function(dataNonBo) {
+                                    stockTransferService.getAllSerialNumber(dataLenght, 0).then(function(dataNonBo) {
 
                                         addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(dataNonBo)).then(function(datareturn) {
                                             templateObject.resetData(dataNonBo);
@@ -343,7 +342,7 @@ Template.serialnumberlist.onRendered(function() {
 
                 }).catch(function(err) {
 
-                    sideBarService.getAllSerialNumber().then(function(data) {
+                    stockTransferService.getAllSerialNumber( initialReportLoad, 0 ).then(function(data) {
                         let lineItems = [];
                         let lineItemObj = {};
                         let tclass = '';
@@ -682,7 +681,7 @@ Template.serialnumberlist.onRendered(function() {
                                     $('.fullScreenSpin').css('display', 'inline-block');
                                     let dataLenght = oSettings._iDisplayLength;
 
-                                    sideBarService.getAllSerialNumber(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                    stockTransferService.getAllSerialNumber(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                         getVS1Data('TSerialNumberListCurrentReport').then(function(dataObjectold) {
                                             if (dataObjectold.length == 0) {
 
@@ -739,7 +738,7 @@ Template.serialnumberlist.onRendered(function() {
                             if (settings.fnRecordsDisplay() > initialDatatableLoad) {
                                 $('.fullScreenSpin').css('display', 'none');
                             } else {
-                                sideBarService.getAllSerialNumber().then(function(dataNonBo) {
+                                stockTransferService.getAllSerialNumber(initialDatatableLoad, settings.fnRecordsDisplay()).then(function(dataNonBo) {
 
                                     addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(dataNonBo)).then(function(datareturn) {
                                         templateObject.resetData(dataNonBo);
@@ -755,7 +754,7 @@ Template.serialnumberlist.onRendered(function() {
                             if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                                 $('.fullScreenSpin').css('display', 'none');
                             } else {
-                                sideBarService.getAllSerialNumber(dataLenght, 0).then(function(dataNonBo) {
+                                stockTransferService.getAllSerialNumber(dataLenght, 0).then(function(dataNonBo) {
 
                                     addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(dataNonBo)).then(function(datareturn) {
                                         templateObject.resetData(dataNonBo);
@@ -820,7 +819,7 @@ Template.serialnumberlist.onRendered(function() {
 Template.serialnumberlist.events({
     'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
-        sideBarService.getAllSerialNumber(initialDataLoad, 0).then(function(data) {
+        stockTransferService.getAllSerialNumber(initialDataLoad, 0).then(function(data) {
             addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data)).then(function(datareturn) {
                 window.open('/serialnumberlist', '_self');
             }).catch(function(err) {
