@@ -173,7 +173,19 @@ Template.customerlist.events({
                       splashArrayCustomerList.push(dataListCustomer);
                       //}
                   }
-                  var datatable = $('#tblCustomerlist').DataTable({"order": [1, 'asc' ],});
+                  var datatable = $('#tblCustomerlist').DataTable({
+                    "order": [1, 'asc' ],
+                    columnDefs: [
+                        {
+                          type: "date",
+                          targets: 0,
+                        },
+                        {
+                          orderable: false,
+                          targets: -1,
+                        },
+                      ],
+                    });
                   datatable.clear();
                   datatable.rows.add(splashArrayCustomerList);
                   datatable.draw(false);
