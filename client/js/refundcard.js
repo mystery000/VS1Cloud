@@ -7618,6 +7618,13 @@ Template.refundcard.events({
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
+            let foreignCurrencyFields = {}
+            if( Session.get("CloudUseForeignLicence") ){
+                foreignCurrencyFields = {
+                    ForeignExchangeCode: currencyCode,
+                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                }
+            }
             var objDetails = '';
             if (getso_id[1]) {
                 currentInvoice = parseInt(currentInvoice);
@@ -7628,6 +7635,7 @@ Template.refundcard.events({
                         CustomerName: customer,
                         // ForeignExchangeCode: currencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -7654,6 +7662,7 @@ Template.refundcard.events({
                         CustomerName: customer,
                         // ForeignExchangeCode: currencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -8743,6 +8752,13 @@ Template.refundcard.events({
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
+            let foreignCurrencyFields = {}
+            if( Session.get("CloudUseForeignLicence") ){
+                foreignCurrencyFields = {
+                    ForeignExchangeCode: currencyCode,
+                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                }
+            }
             var objDetails = '';
             if (getso_id[1]) {
                 currentInvoice = parseInt(currentInvoice);
@@ -8753,6 +8769,7 @@ Template.refundcard.events({
                         CustomerName: customer,
                         // ForeignExchangeCode: currencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -8778,6 +8795,7 @@ Template.refundcard.events({
                         CustomerName: customer,
                         // ForeignExchangeCode: currencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,

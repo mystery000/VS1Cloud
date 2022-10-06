@@ -5233,13 +5233,13 @@ Template.purchaseordercard.onRendered(function() {
     };
     tempObj.getAllTaxCodes();
 
-    templateObject.getOrganisationDetails = function () {
+    tempObj.getOrganisationDetails = function () {
         let account_id = Session.get('vs1companyStripeID') || '';
         let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
-        templateObject.accountID.set(account_id);
-        templateObject.stripe_fee_method.set(stripe_fee);
+        tempObj.accountID.set(account_id);
+        tempObj.stripe_fee_method.set(stripe_fee);
     };
-    templateObject.getOrganisationDetails();
+    tempObj.getOrganisationDetails();
 
     tempObj.getSubTaxCodes = function () {
         let subTaxTableList = [];
@@ -7708,6 +7708,14 @@ Template.purchaseordercard.events({
             var currentPurchaseOrder = getso_id[getso_id.length - 1];
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+            let ForeignExchangeRate = $('#exchange_rate').val();
+            let foreignCurrencyFields = {}
+            if( Session.get("CloudUseForeignLicence") ){
+                foreignCurrencyFields = {
+                    ForeignExchangeCode: currencyCode,
+                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                }
+            }
             var objDetails = '';
             if ($('#sltDept').val() === '') {
               swal({
@@ -7734,7 +7742,7 @@ Template.purchaseordercard.events({
                         fields: {
 
                             SupplierName: supplier,
-                            ForeignExchangeCode: currencyCode,
+                            ...foreignCurrencyFields,
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -7758,7 +7766,7 @@ Template.purchaseordercard.events({
                         fields: {
                             ID: currentPurchaseOrder,
                             SupplierName: supplier,
-                            ForeignExchangeCode: currencyCode,
+                            ...foreignCurrencyFields,
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -7782,7 +7790,7 @@ Template.purchaseordercard.events({
                     type: "TPurchaseOrderEx",
                     fields: {
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
+                        ...foreignCurrencyFields,
                         SupplierInvoiceNumber: poNumber || ' ',
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
@@ -8943,7 +8951,7 @@ Template.purchaseordercard.events({
                     fields: {
                         ID: currentPurchaseOrder,
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
+                        ...foreignCurrencyFields,
                         SupplierInvoiceNumber: poNumber || ' ',
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
@@ -8968,7 +8976,7 @@ Template.purchaseordercard.events({
                     type: "TPurchaseOrderEx",
                     fields: {
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
+                        ...foreignCurrencyFields,
                         SupplierInvoiceNumber: poNumber || ' ',
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
@@ -9220,7 +9228,7 @@ Template.purchaseordercard.events({
                         fields: {
                             ID: currentPurchaseOrder,
                             SupplierName: supplier,
-                            ForeignExchangeCode: currencyCode,
+                            ...foreignCurrencyFields,
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -9245,7 +9253,7 @@ Template.purchaseordercard.events({
                         type: "TPurchaseOrderEx",
                         fields: {
                             SupplierName: supplier,
-                            ForeignExchangeCode: currencyCode,
+                            ...foreignCurrencyFields,
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -9510,7 +9518,7 @@ Template.purchaseordercard.events({
                         fields: {
 
                             SupplierName: supplier,
-                            ForeignExchangeCode: currencyCode,
+                            ...foreignCurrencyFields,
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -9534,7 +9542,7 @@ Template.purchaseordercard.events({
                         fields: {
 
                             SupplierName: supplier,
-                            ForeignExchangeCode: currencyCode,
+                            ...foreignCurrencyFields,
                             SupplierInvoiceNumber: poNumber || ' ',
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
@@ -9558,7 +9566,7 @@ Template.purchaseordercard.events({
                     type: "TPurchaseOrderEx",
                     fields: {
                         SupplierName: supplier,
-                        ForeignExchangeCode: currencyCode,
+                        ...foreignCurrencyFields,
                         SupplierInvoiceNumber: poNumber || ' ',
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
@@ -9969,7 +9977,7 @@ Template.purchaseordercard.events({
                                     fields: {
 
                                         SupplierName: supplier,
-                                        ForeignExchangeCode: currencyCode,
+                                        ...foreignCurrencyFields,
                                         SupplierInvoiceNumber: poNumber || ' ',
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
@@ -9993,7 +10001,7 @@ Template.purchaseordercard.events({
                                     fields: {
                                         ID: currentPurchaseOrder,
                                         SupplierName: supplier,
-                                        ForeignExchangeCode: currencyCode,
+                                        ...foreignCurrencyFields,
                                         SupplierInvoiceNumber: poNumber || ' ',
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
@@ -10017,7 +10025,7 @@ Template.purchaseordercard.events({
                                 type: "TPurchaseOrderEx",
                                 fields: {
                                     SupplierName: supplier,
-                                    ForeignExchangeCode: currencyCode,
+                                    ...foreignCurrencyFields,
                                     SupplierInvoiceNumber: poNumber || ' ',
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
@@ -10281,7 +10289,7 @@ Template.purchaseordercard.events({
                                             fields: {
 
                                                 SupplierName: supplier,
-                                                ForeignExchangeCode: currencyCode,
+                                                ...foreignCurrencyFields,
                                                 SupplierInvoiceNumber: poNumber || ' ',
                                                 Lines: splashLineArray,
                                                 OrderTo: billingAddress,
@@ -10305,7 +10313,7 @@ Template.purchaseordercard.events({
                                             fields: {
                                                 ID: currentPurchaseOrder,
                                                 SupplierName: supplier,
-                                                ForeignExchangeCode: currencyCode,
+                                                ...foreignCurrencyFields,
                                                 SupplierInvoiceNumber: poNumber || ' ',
                                                 Lines: splashLineArray,
                                                 OrderTo: billingAddress,
@@ -10329,7 +10337,7 @@ Template.purchaseordercard.events({
                                         type: "TPurchaseOrderEx",
                                         fields: {
                                             SupplierName: supplier,
-                                            ForeignExchangeCode: currencyCode,
+                                            ...foreignCurrencyFields,
                                             SupplierInvoiceNumber: poNumber || ' ',
                                             Lines: splashLineArray,
                                             OrderTo: billingAddress,
@@ -10600,7 +10608,7 @@ Template.purchaseordercard.events({
                                     fields: {
 
                                         SupplierName: supplier,
-                                        ForeignExchangeCode: currencyCode,
+                                        ...foreignCurrencyFields,
                                         SupplierInvoiceNumber: poNumber || ' ',
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
@@ -10624,7 +10632,7 @@ Template.purchaseordercard.events({
                                     fields: {
                                         ID: currentPurchaseOrder,
                                         SupplierName: supplier,
-                                        ForeignExchangeCode: currencyCode,
+                                        ...foreignCurrencyFields,
                                         SupplierInvoiceNumber: poNumber || ' ',
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
@@ -10648,7 +10656,7 @@ Template.purchaseordercard.events({
                                 type: "TPurchaseOrderEx",
                                 fields: {
                                     SupplierName: supplier,
-                                    ForeignExchangeCode: currencyCode,
+                                    ...foreignCurrencyFields,
                                     SupplierInvoiceNumber: poNumber || ' ',
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
@@ -10917,7 +10925,7 @@ Template.purchaseordercard.events({
                                 fields: {
 
                                     SupplierName: supplier,
-                                    ForeignExchangeCode: currencyCode,
+                                    ...foreignCurrencyFields,
                                     SupplierInvoiceNumber: poNumber || ' ',
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
@@ -10941,7 +10949,7 @@ Template.purchaseordercard.events({
                                 fields: {
                                     ID: currentPurchaseOrder,
                                     SupplierName: supplier,
-                                    ForeignExchangeCode: currencyCode,
+                                    ...foreignCurrencyFields,
                                     SupplierInvoiceNumber: poNumber || ' ',
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
@@ -10965,7 +10973,7 @@ Template.purchaseordercard.events({
                             type: "TPurchaseOrderEx",
                             fields: {
                                 SupplierName: supplier,
-                                ForeignExchangeCode: currencyCode,
+                                ...foreignCurrencyFields,
                                 SupplierInvoiceNumber: poNumber || ' ',
                                 Lines: splashLineArray,
                                 OrderTo: billingAddress,

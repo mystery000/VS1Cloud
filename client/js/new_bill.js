@@ -7547,6 +7547,13 @@ Template.billcard.events({
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
+            let foreignCurrencyFields = {}
+            if( Session.get("CloudUseForeignLicence") ){
+                foreignCurrencyFields = {
+                    ForeignExchangeCode: currencyCode,
+                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                }
+            }
 
             var objDetails = '';
             if ($('#sltDept').val() === '') {
@@ -7574,6 +7581,7 @@ Template.billcard.events({
                         SupplierName: supplier,
                         // ForeignExchangeCode: currencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         Deleted: false,
@@ -7602,6 +7610,7 @@ Template.billcard.events({
                         SupplierName: supplier,
                         // ForeignExchangeCode: currencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         OrderDate: saleDate,
@@ -8644,6 +8653,7 @@ Template.billcard.events({
                             SupplierName: supplier,
                             // ForeignExchangeCode: currencyCode,
                             // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                            ...foreignCurrencyFields,
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
                             OrderDate: saleDate,
@@ -8671,6 +8681,7 @@ Template.billcard.events({
                             SupplierName: supplier,
                             // ForeignExchangeCode: currencyCode,
                             // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                            ...foreignCurrencyFields,
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
                             OrderDate: saleDate,

@@ -9658,6 +9658,13 @@ Template.new_salesorder.events({
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
+            let foreignCurrencyFields = {}
+            if( Session.get("CloudUseForeignLicence") ){
+                foreignCurrencyFields = {
+                    ForeignExchangeCode: currencyCode,
+                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                }
+            }
             var objDetails = '';
             if (getso_id[1]) {
                 currentSalesOrder = parseInt(currentSalesOrder);
@@ -9668,6 +9675,7 @@ Template.new_salesorder.events({
                         CustomerName: customer,
                         //  ForeignExchangeCode: currencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -9692,7 +9700,8 @@ Template.new_salesorder.events({
                     fields: {
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -11028,6 +11037,13 @@ Template.new_salesorder.events({
                     let uploadedItems = templateObject.uploadedFiles.get();
                     var currencyCode = $("#sltCurrency").val() || CountryAbbr;
                     let ForeignExchangeRate = $('#exchange_rate').val();
+                    let foreignCurrencyFields = {}
+                    if( Session.get("CloudUseForeignLicence") ){
+                        foreignCurrencyFields = {
+                            ForeignExchangeCode: currencyCode,
+                            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        }
+                    }
                     var objDetails = '';
                     if (getso_id[1]) {
                         currentSalesOrder = parseInt(currentSalesOrder);
@@ -11037,7 +11053,8 @@ Template.new_salesorder.events({
                                 ID: currentSalesOrder,
                                 CustomerName: customer,
                               //  ForeignExchangeCode: currencyCode,
-                                //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                                // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                                ...foreignCurrencyFields,
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
                                 SaleDate: saleDate,
@@ -11062,7 +11079,8 @@ Template.new_salesorder.events({
                             fields: {
                                 CustomerName: customer,
                               //  ForeignExchangeCode: currencyCode,
-                              //  ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                                // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                                ...foreignCurrencyFields,
                                 Lines: splashLineArray,
                                 InvoiceToDesc: billingAddress,
                                 SaleDate: saleDate,
@@ -11719,6 +11737,13 @@ Template.new_salesorder.events({
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
+            let foreignCurrencyFields = {}
+            if( Session.get("CloudUseForeignLicence") ){
+                foreignCurrencyFields = {
+                    ForeignExchangeCode: currencyCode,
+                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                }
+            }
             var objDetails = '';
             if (getso_id[1]) {
                 currentSalesOrder = parseInt(currentSalesOrder);
@@ -11728,7 +11753,8 @@ Template.new_salesorder.events({
                         ID: currentSalesOrder,
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -11753,7 +11779,8 @@ Template.new_salesorder.events({
                     fields: {
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -11981,6 +12008,13 @@ Template.new_salesorder.events({
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
+            let foreignCurrencyFields = {}
+            if( Session.get("CloudUseForeignLicence") ){
+                foreignCurrencyFields = {
+                    ForeignExchangeCode: currencyCode,
+                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                }
+            }
             var objDetails = '';
             if (getso_id[1]) {
                 currentSalesOrder = parseInt(currentSalesOrder);
@@ -11990,7 +12024,8 @@ Template.new_salesorder.events({
                         ID: currentSalesOrder,
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
@@ -12016,7 +12051,8 @@ Template.new_salesorder.events({
                     fields: {
                         CustomerName: customer,
                       //  ForeignExchangeCode: currencyCode,
-                        //ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         InvoiceToDesc: billingAddress,
                         SaleDate: saleDate,
