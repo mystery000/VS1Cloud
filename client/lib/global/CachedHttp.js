@@ -21,7 +21,7 @@ class CachedHttp {
     const prefix = "CachedHttp | ";
 
     if (this.debug) {
-       //console.info(prefix, message, ...optionalParams);
+      // console.info(prefix, message, ...optionalParams);
     }
   }
 
