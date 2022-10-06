@@ -1146,7 +1146,8 @@ Template.balancetransactionlist.onRendered(function() {
         }else if(transactiontype === 'Supplier Payment'){
           window.open('/supplierpaymentcard?id=' + listData,'_self');
         }else if(transactiontype === 'Supplier Prepayment'){
-          swal({title: 'Information', text: "No further information available on this column", type: 'warning',confirmButtonText: 'Ok'});
+          window.open('/supplierpaymentcard?id=' + listData,'_self');
+          // swal({title: 'Information', text: "No further information available on this column", type: 'warning',confirmButtonText: 'Ok'});
         }else if(transactiontype === 'Journal Entry'){
           window.open('/journalentrycard?id=' + listData,'_self');
         }else if(transactiontype === 'Un-Invoiced PO'){
