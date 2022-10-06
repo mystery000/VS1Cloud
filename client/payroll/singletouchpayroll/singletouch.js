@@ -17,6 +17,8 @@ import {
     SideBarService
 } from '../../js/sidebar-service';
 import 'jquery-editable-select';
+import CachedHttp from '../../lib/global/CachedHttp';
+import erpObject from '../../lib/global/erp-objects';
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 Template.singletouch.onCreated(function() {
@@ -248,6 +250,13 @@ Template.singletouch.onRendered(function() {
 
         $('.fullScreenSpin').css('display', 'none');
     }, 0);
+
+
+    templateObject.loadSingleTouch = async () => {
+        let data = await CachedHttp.get();
+
+    }
+    
 });
 
 Template.singletouch.events({

@@ -741,7 +741,7 @@ Template.currenciessettings.onRendered(function () {
 
   //templateObject.loadCurrencies();
 
-  templateObject.getCurrencies(true, true);
+  templateObject.getCurrencies();
 
   templateObject.getCountryData = function () {
     getVS1Data("TCountries").then(function (dataObject) {

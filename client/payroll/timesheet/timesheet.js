@@ -33,6 +33,7 @@ Template.timesheet.onCreated(function() {
     templateObject.selectedConvertTimesheet = new ReactiveVar([]);
     templateObject.isAccessLevels = new ReactiveVar();
 
+    templateObject.timesheets = new ReactiveVar([]);
 });
 
 Template.timesheet.onRendered(function() {
@@ -212,6 +213,40 @@ Template.timesheet.onRendered(function() {
 
         });
     };
+    templateObject.loadTimeSheet = async (fromDate, toDate, ignoreDate) => {
+        if (ignoreDate == true) {
+            $("#dateFrom").attr("readonly", true);
+            $("#dateTo").attr("readonly", true);
+        } else {
+            $("#dateFrom").val(
+            fromDate != ""
+            ? moment(fromDate).format("DD/MM/YYYY")
+            : fromDate);
+            $("#dateTo").val(
+            toDate != ""
+            ? moment(toDate).format("DD/MM/YYYY")
+            : toDate);
+        }
+
+        let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
+            return await sideBarService.getAllTimeSheetList();
+        }, {
+            useIndexDb: true,
+            useLocalStorage: false,
+            fallBackToLocal: true,
+            validate: cachedResponse => {
+                console.log("cached", cachedResponse);
+                return true;
+            }
+        });
+
+        //let data  = await getVS1Data('TTimeSheet');
+
+        //data = data.response;
+
+        console.log("timesheets", data);
+    };
+
 
     templateObject.getAllTimeSheetData = function(fromDate, toDate, ignoreDate) {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -1429,6 +1464,7 @@ Template.timesheet.onRendered(function() {
     let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
     templateObject.getAllTimeSheetData(prevMonth11Date, toDate, false);
+    templateObject.loadTimeSheet(prevMonth11Date, toDate, false);
 
     templateObject.getAllTimeSheetDataClock = function() {
         getVS1Data('TTimeSheet').then(function(dataObject) {
