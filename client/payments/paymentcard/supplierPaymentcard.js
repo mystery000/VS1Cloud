@@ -8594,13 +8594,14 @@ Template.supplierpaymentcard.events({
           PaymentDate: paymentDate,
           Notes: notes,
           ReferenceNo: reference,
-
-          // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-          // ForeignExchangeRate: parseFloat(exchangeRate),
+          // ...( Session.get("CloudUseForeignLicence") == true ? ForeignExchangeCode: foreignCurrency||'' ),
+          // ...( Session.get("CloudUseForeignLicence") == true ? ForeignExchangeRate: parseFloat(exchangeRate)||0 )
           //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
         },
       };
 
+      console.log('objDetails', objDetails)
+      return false
       paymentService.saveSuppDepositData(objDetails).then(function (data) {
           var customerID = $("#edtSupplierEmail").attr("customerid");
           // Start End Send Email
