@@ -5,6 +5,7 @@ import TableHandler from '../../js/Table/TableHandler';
 let sideBarService = new SideBarService();
 modalDraggable = function () {
     $('.modal-dialog').draggable({
+        containment: "body",
         "handle":".modal-header, .modal-footer"
     });
 $(document).ready(function(){

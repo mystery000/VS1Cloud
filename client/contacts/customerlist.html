@@ -38,6 +38,9 @@
                                 margin-right: 0px;
                             }
                         }
+                        .setupIncompleatedMsg.text-danger a {
+                            color: #e74a3b !important;
+                        }
                     </style>
 
                 </h1>
@@ -61,7 +64,7 @@
                 </div>
                 {{#if showSetupFinishedAlert }}
                     <div class="col-2 setupIncompleatedMsg text-danger">
-                        <h2>Set Up Incomplete</h2>
+                        <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Incomplete</a></h2>
                     </div>
                 {{/if}}
 

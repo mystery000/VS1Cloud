@@ -180,7 +180,7 @@ function getSkippedSteps() {
     localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify([])
   );
 }
-
+  
 function addSkippedStep(step) {
   if (isNaN(step)) return false;
   let steps = getSkippedSteps();
@@ -401,6 +401,16 @@ Template.setup.onRendered(function () {
     });
     templateObject.steps.set(_steps);
   };
+
+  setTimeout(function () {
+    var url = FlowRouter.current().path;
+    if (url.indexOf("?step") > 0) {
+      url = new URL(window.location.href);
+      var stepId = url.searchParams.get("step");
+      $('#progress-steps a[' + 'data-step-id="' + stepId + '"]').trigger("click");
+    }
+  }, 200);
+
 
   templateObject.loadSteps();
 
@@ -717,6 +727,7 @@ Template.setup.onRendered(function () {
       setTimeout(() => {
         $("#taxRatesTable")
           .DataTable({
+            
             columnDefs: [
               {
                 type: "date",
@@ -742,7 +753,7 @@ Template.setup.onRendered(function () {
             //                      "scrollCollapse": true,
             info: true,
             responsive: true,
-            order: [[0, "asc"]],
+            "order": [0, 'asc' ],
             action: function () {
               $("#taxRatesTable").DataTable().ajax.reload();
             },
@@ -884,6 +895,7 @@ Template.setup.onRendered(function () {
               setTimeout(function () {
                 $("#paymentmethodList")
                   .DataTable({
+                    
                     // columnDefs: [
                     //   {
                     //     orderable: false,
@@ -942,7 +954,7 @@ Template.setup.onRendered(function () {
                     //                      "scrollCollapse": true,
                     info: true,
                     responsive: true,
-                    order: [[0, "asc"]],
+                    "order": [0, 'asc' ],
                     // "aaSorting": [[1,'desc']],
                     action: function () {
                       $("#paymentmethodList").DataTable().ajax.reload();
@@ -1136,7 +1148,7 @@ Template.setup.onRendered(function () {
                 //            "scrollCollapse": true,
                 info: true,
                 responsive: true,
-                order: [[0, "asc"]],
+                "order": [[ 3, 'asc' ], [ 0, 'asc' ]],
                 // "aaSorting": [[1,'desc']],
                 action: function () {
                   $("#paymentmethodList").DataTable().ajax.reload();
@@ -1320,7 +1332,7 @@ Template.setup.onRendered(function () {
                   //                    "scrollCollapse": true,
                   info: true,
                   responsive: true,
-                  order: [[0, "asc"]],
+                  "order": [[ 3, 'asc' ], [ 0, 'asc' ]],
                   // "aaSorting": [[1,'desc']],
                   action: function () {
                     $("#paymentmethodList").DataTable().ajax.reload();
@@ -1652,6 +1664,7 @@ Template.setup.onRendered(function () {
       setTimeout(function () {
         $("#termsList")
           .DataTable({
+            
             columnDefs: [
               {
                 orderable: false,
@@ -1703,7 +1716,7 @@ Template.setup.onRendered(function () {
 
             info: true,
             responsive: true,
-            order: [[0, "asc"]],
+            "order": [0, 'asc' ],
             // "aaSorting": [[1,'desc']],
             action: function () {
               $("#termsList").DataTable().ajax.reload();
@@ -1906,7 +1919,7 @@ Template.setup.onRendered(function () {
                     //                      "scrollCollapse": true,
                     info: true,
                     responsive: true,
-                    order: [[0, "asc"]],
+                    "order": [[ 3, 'asc' ], [ 0, 'asc' ]],
                     // "aaSorting": [[1,'desc']],
                     action: function () {
                       $("#termsList").DataTable().ajax.reload();
@@ -2099,7 +2112,7 @@ Template.setup.onRendered(function () {
                 //          "scrollCollapse": true,
                 info: true,
                 responsive: true,
-                order: [[0, "asc"]],
+                "order": [[ 3, 'asc' ], [ 0, 'asc' ]],
                 // "aaSorting": [[1,'desc']],
                 action: function () {
                   $("#termsList").DataTable().ajax.reload();
@@ -2292,7 +2305,7 @@ Template.setup.onRendered(function () {
                   //                    "scrollCollapse": true,
                   info: true,
                   responsive: true,
-                  order: [[0, "asc"]],
+                  "order": [[ 3, 'asc' ], [ 0, 'asc' ]],
                   // "aaSorting": [[1,'desc']],
                   action: function () {
                     $("#termsList").DataTable().ajax.reload();
@@ -2426,6 +2439,7 @@ Template.setup.onRendered(function () {
       setTimeout(() => {
         $("#employeeListTable")
           .DataTable({
+            
             columnDefs: [],
             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             select: true,
@@ -2435,7 +2449,7 @@ Template.setup.onRendered(function () {
             paging: true,
             info: true,
             responsive: true,
-            order: [[0, "asc"]],
+            "order": [1, 'asc' ],
             action: function () {
               $("#employeeListTable").DataTable().ajax.reload();
             },
@@ -2607,6 +2621,7 @@ Template.setup.onRendered(function () {
       // //$.fn.dataTable.moment('DD/MM/YY');
       $("#tblAccountOverview")
         .DataTable({
+          
           columnDefs: [
             // { type: 'currency', targets: 4 }
           ],
@@ -2618,7 +2633,7 @@ Template.setup.onRendered(function () {
           paging: true,
           info: true,
           responsive: true,
-          order: [[0, "asc"]],
+          "order": [1, 'asc' ],
           // "aaSorting": [[1,'desc']],
           action: function () {
             $("#tblAccountOverview").DataTable().ajax.reload();
@@ -2924,7 +2939,7 @@ Template.setup.onRendered(function () {
               ],
               colReorder: true,
 
-              order: [[0, "asc"]],
+              "order": [[ 3, 'asc' ], [ 0, 'asc' ]],
 
               // pageLength: initialDatatableLoad,
               // lengthMenu: [
@@ -3074,7 +3089,7 @@ Template.setup.onRendered(function () {
               ],
               colReorder: true,
 
-              order: [[0, "asc"]],
+              "order": [[ 3, 'asc' ], [ 0, 'asc' ]],
 
               // pageLength: initialDatatableLoad,
               // lengthMenu: [
@@ -3458,6 +3473,7 @@ Template.setup.onRendered(function () {
       setTimeout(() => {
         $("#tblCustomerlist")
           .DataTable({
+            
             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             select: true,
             destroy: refresh,
@@ -3466,7 +3482,7 @@ Template.setup.onRendered(function () {
             paging: true,
             info: true,
             responsive: true,
-            order: [[1, "asc"]],
+            order: [1, "asc"],
             action: function () {
               $("#tblCustomerlist").DataTable().ajax.reload();
             },
@@ -3664,6 +3680,7 @@ Template.setup.onRendered(function () {
       setTimeout(function () {
         $("#tblSupplierlist")
           .DataTable({
+            
             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             // buttons: [
             //   {
@@ -3715,7 +3732,7 @@ Template.setup.onRendered(function () {
             paging: true,
             info: true,
             responsive: true,
-            order: [[1, "asc"]],
+            order: [1, "asc"],
             action: function () {
               $("#tblSupplierlist").DataTable().ajax.reload();
             },
@@ -3970,6 +3987,7 @@ Template.setup.onRendered(function () {
       setTimeout(function () {
         $("#InventoryTable")
           .dataTable({
+            
             // data: splashArrayProductList,
             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
 
@@ -4084,7 +4102,7 @@ Template.setup.onRendered(function () {
             // lengthMenu: [],
             info: true,
             responsive: true,
-            order: [[0, "asc"]],
+            "order": [1, 'asc'],
             action: function () {
               $("#InventoryTable").DataTable().ajax.reload();
             },

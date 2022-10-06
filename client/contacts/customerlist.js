@@ -173,7 +173,7 @@ Template.customerlist.events({
                       splashArrayCustomerList.push(dataListCustomer);
                       //}
                   }
-                  var datatable = $('#tblCustomerlist').DataTable();
+                  var datatable = $('#tblCustomerlist').DataTable({"order": [1, 'asc' ],});
                   datatable.clear();
                   datatable.rows.add(splashArrayCustomerList);
                   datatable.draw(false);
@@ -601,5 +601,10 @@ Template.customerlist.helpers({
         } else {
             return true;
         }
+    },
+    
+    getSkippedSteps() {
+        let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
+        return setupUrl[1];   
     }
 });
