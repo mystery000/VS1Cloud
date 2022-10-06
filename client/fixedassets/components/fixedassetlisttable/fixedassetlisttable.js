@@ -1,8 +1,8 @@
 import { ReactiveVar } from "meteor/reactive-var";
-import { FixedAssetService } from "../fixedasset-service";
-import { SideBarService } from "../../js/sidebar-service";
-import { UtilityService } from "../../utility-service";
-import "../../lib/global/indexdbstorage.js";
+import { FixedAssetService } from "../../fixedasset-service";
+import { SideBarService } from "../../../js/sidebar-service";
+import { UtilityService } from "../../../utility-service";
+import "../../../lib/global/indexdbstorage.js";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let fixedAssetService = new FixedAssetService();
