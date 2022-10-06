@@ -21,7 +21,7 @@ class CachedHttp {
     const prefix = "CachedHttp | ";
 
     if (this.debug) {
-      // console.info(prefix, message, ...optionalParams);
+       //console.info(prefix, message, ...optionalParams);
     }
   }
 
@@ -65,6 +65,10 @@ class CachedHttp {
   }) {
     this.logSeparator();
     this.logger('You see this because you are in dev mode');
+
+    // Init empty vars
+    if(options.date == undefined) options.date = new Date();
+
 
     const endPointName = this.endpointPrefix + endpoint;
 
@@ -134,7 +138,8 @@ class CachedHttp {
 
       let cachedResponse = {
         requestDate: new Date(),
-        response: response
+        response: response,
+        fromRemote: true,
       };
 
       if (options.useLocalStorage) {
@@ -173,6 +178,7 @@ class CachedHttp {
 
         // if the data already cached
         const hours = Math.abs(options.date - cachedData.requestDate) / 36e5;
+        this.logger('hours', hours, this.limit, options.date, cachedData.requestDate);
 
         if (hours > this.limit) {
           this.logger("NOTICE: Cached data is expired");

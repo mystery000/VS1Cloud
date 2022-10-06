@@ -19,6 +19,9 @@ import PayRun from "../js/Api/Model/PayRun";
 import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
 import { EmployeeFields } from "../js/Api/Model/Employee";
+import { map } from "jquery";
+import GlobalFunctions from "../GlobalFunctions";
+import moment from "moment";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -49,6 +52,9 @@ Template.payrolloverview.onCreated(function () {
 
   templateObject.draftPayRunRecords = new ReactiveVar([]);
   templateObject.payRunHistoryRecords = new ReactiveVar([]);
+  templateObject.timeSheetList = new ReactiveVar([]);
+  templateObject.employees = new ReactiveVar([]);
+  templateObject.payPeriods = new ReactiveVar([]);
 });
 
 Template.payrolloverview.onRendered(function () {
@@ -235,6 +241,62 @@ Template.payrolloverview.onRendered(function () {
       });
     }, 500);
   };
+
+
+  templateObject.loadTimeSheet = async () => {
+    let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
+        return await sideBarService.getAllTimeSheetList();
+    }, {
+        useIndexDb: true,
+        useLocalStorage: false,
+        fallBackToLocal: true,
+        validate: (cachedResponse) => {
+            return true;
+        }
+    });
+
+    data = data.response;
+    let timesheets = data.ttimesheet.map(t => t.fields);
+    templateObject.timeSheetList.set(timesheets);
+  }
+
+  templateObject.loadEmployees = async () => {
+    let data = await CachedHttp.get(erpObject.TEmployee, async () => {
+      return await contactService.getAllEmployees();
+    }, {
+      useIndexDb: true,
+      fallBackToLocal: true, 
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        return true;
+      }
+    });
+    data = data.response;
+
+    let employees = data.temployee.map(e => e.fields);
+
+    templateObject.employees.set(employees);
+
+  }
+
+  templateObject.loadPayPeriods = async () => {
+    let data = await CachedHttp.get(erpObject.TPayrollCalendars, async () => {
+      return await sideBarService.getCalender(initialBaseDataLoad, 0);
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: cachedResponse => {
+        return true;
+      }
+    });
+
+    data = data.response;
+    let calendars = data.tpayrollcalendars.map(c => c.fields);
+
+    templateObject.payPeriods.set(calendars);
+  }
+
+  
 
   $(".formClassDate").datepicker({
     showOn: "button",
@@ -3471,9 +3533,22 @@ Template.payrolloverview.onRendered(function () {
 
 
 
+  templateObject.initPage = async () => {
+    LoadingOverlay.show();
 
-  templateObject.loadDraftPayrun();
-  templateObject.loadPayRunList();
+    // Timesheet
+    await templateObject.loadTimeSheet();
+
+    // PayRuns
+    await templateObject.loadDraftPayrun();
+    await templateObject.loadPayRunList();
+
+    // Add timsheet modal
+    await templateObject.loadEmployees();
+    await templateObject.loadPayPeriods();
+    LoadingOverlay.hide();
+  }
+  templateObject.initPage();
 });
 
 Template.payrolloverview.events({
@@ -3935,7 +4010,7 @@ Template.payrolloverview.events({
                 contactService
                   .saveClockTimeSheet(updateTimeSheet)
                   .then(function (savedTimesheetData) {
-                    sideBarService.getAllTimeSheetList().then(function (data) {
+                    sideBarService.getAlltimeSheetList().then(function (data) {
                       addVS1Data("TTimeSheet", JSON.stringify(data));
                       setTimeout(function () {
                         templateObject.checkAccessSaveRedirect();
@@ -4576,7 +4651,7 @@ Template.payrolloverview.events({
         .saveTimeSheet(data)
         .then(function (dataReturnRes) {
           $("#updateID").val(dataReturnRes.fields.ID);
-          sideBarService.getAllTimeSheetList().then(function (data) {
+          sideBarService.getAlltimeSheetList().then(function (data) {
             Bert.alert(
               $("#employee_name").val() + " you are now Clocked On",
               "now-success"
@@ -4675,7 +4750,7 @@ Template.payrolloverview.events({
                     .saveTimeSheetLog(updateData)
                     .then(function (data) {
                       sideBarService
-                        .getAllTimeSheetList()
+                        .getAlltimeSheetList()
                         .then(function (data) {
                           addVS1Data("TTimeSheet", JSON.stringify(data));
                           if (showTimesheetStatus == true) {
@@ -4696,7 +4771,7 @@ Template.payrolloverview.events({
               contactService
                 .saveTimeSheetLog(obj)
                 .then(function (data) {
-                  sideBarService.getAllTimeSheetList().then(function (data) {
+                  sideBarService.getAlltimeSheetList().then(function (data) {
                     addVS1Data("TTimeSheet", JSON.stringify(data));
                     setTimeout(function () {
                       if (showTimesheetStatus == true) {
@@ -4714,7 +4789,7 @@ Template.payrolloverview.events({
                 .catch(function (err) {});
             }
           } else {
-            sideBarService.getAllTimeSheetList().then(function (data) {
+            sideBarService.getAlltimeSheetList().then(function (data) {
               addVS1Data("TTimeSheet", JSON.stringify(data));
               if (showTimesheetStatus == true) {
                 setTimeout(function () {
@@ -4983,7 +5058,7 @@ Template.payrolloverview.events({
       contactService
         .saveTimeSheet(data)
         .then(function (data) {
-          sideBarService.getAllTimeSheetList().then(function (data) {
+          sideBarService.getAlltimeSheetList().then(function (data) {
             addVS1Data("TTimeSheet", JSON.stringify(data));
             if (showTimesheetStatus == true) {
               setTimeout(function () {
@@ -5063,7 +5138,7 @@ Template.payrolloverview.events({
                     .saveTimeSheetLog(updateData)
                     .then(function (data) {
                       sideBarService
-                        .getAllTimeSheetList()
+                        .getAlltimeSheetList()
                         .then(function (data) {
                           addVS1Data("TTimeSheet", JSON.stringify(data));
                           if (showTimesheetStatus == true) {
@@ -5084,7 +5159,7 @@ Template.payrolloverview.events({
               contactService
                 .saveTimeSheetLog(obj)
                 .then(function (data) {
-                  sideBarService.getAllTimeSheetList().then(function (data) {
+                  sideBarService.getAlltimeSheetList().then(function (data) {
                     addVS1Data("TTimeSheet", JSON.stringify(data));
                     if (showTimesheetStatus == true) {
                       setTimeout(function () {
@@ -5100,7 +5175,7 @@ Template.payrolloverview.events({
                 .catch(function (err) {});
             }
           } else {
-            sideBarService.getAllTimeSheetList().then(function (data) {
+            sideBarService.getAlltimeSheetList().then(function (data) {
               addVS1Data("TTimeSheet", JSON.stringify(data));
               if (showTimesheetStatus == true) {
                 setTimeout(function () {
@@ -5142,7 +5217,7 @@ Template.payrolloverview.events({
     FlowRouter.go("/singletouch");
   },
 
-  "click .btnTimesheetList": function (event) {
+  "click .btntimeSheetList": function (event) {
     $(".modal-backdrop").css("display", "none");
     let id = $("#updateID").val();
     if (id) {
@@ -5625,7 +5700,7 @@ Template.payrolloverview.events({
             contactService
               .saveTimeSheetLog(toUpdate)
               .then(function (data) {
-                sideBarService.getAllTimeSheetList().then(function (data) {
+                sideBarService.getAlltimeSheetList().then(function (data) {
                   addVS1Data("TTimeSheet", JSON.stringify(data));
                   setTimeout(function () {
                     templateObject.checkAccessSaveRedirect();
@@ -5725,7 +5800,7 @@ Template.payrolloverview.events({
           contactService
             .saveTimeSheetUpdate(data)
             .then(function (data) {
-              sideBarService.getAllTimeSheetList().then(function (data) {
+              sideBarService.getAlltimeSheetList().then(function (data) {
                 addVS1Data("TTimeSheet", JSON.stringify(data));
                 setTimeout(function () {
                   templateObject.checkAccessSaveRedirect();
@@ -5801,7 +5876,7 @@ Template.payrolloverview.events({
       });
 
     sideBarService
-      .getAllTimeSheetList()
+      .getAlltimeSheetList()
       .then(function (data) {
         addVS1Data("TTimeSheet", JSON.stringify(data));
         setTimeout(function () {
@@ -6065,6 +6140,17 @@ Template.payrolloverview.events({
   "click .redirect-to-payrun-details": (e, ui) => {
     const id = $(e.currentTarget).attr('calendar-id');
     window.location.href = `/payrundetails?cid=${id}`;
+  },
+
+  "change .employee-select": (e, ui) => {
+    const selectedEmployeeId = $(e.currentTarget).val();
+    if(selectedEmployeeId == 0) {
+      $('.payperiod-field').addClass('hidden');
+      $('.add-new-timesheet').attr('disabled', true);
+    } else {
+      $('.payperiod-field').removeClass('hidden');
+      $('.add-new-timesheet').attr('disabled', false);
+    }
   }
 });
 
@@ -6189,7 +6275,30 @@ Template.payrolloverview.helpers({
       return moment(data).format("Do MMM YYYY");
     }
 
+  },
+  getFirstName: (employeeName) => {
+    return employeeName.split(' ')[0];
+  },
+  getLastName: (employeeName) => {
+      return employeeName.split(' ')[1];
+  },
+  formatDate: (date) => {
+    return moment(date).format("D MMM YYYY");
+  },
+  timeSheetList: () => {
+      return Template.instance().timeSheetList.get();
+  },
+  formatHours: (hours = 7) => {
+    return parseFloat(hours);
+  },
+  lastEdit: (date) => {
+    return moment(date).format('D MMM YYYY HH:mm');
+  },
+  employees: () => {
+    return Template.instance().employees.get();
+  },
+  payPeriods: () => {
+    return Template.instance().payPeriods.get();
   }
-
  
 });

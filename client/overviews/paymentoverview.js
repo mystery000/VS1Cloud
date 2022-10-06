@@ -22,6 +22,7 @@ import {
 import '../lib/global/indexdbstorage.js';
 import CachedHttp from '../lib/global/CachedHttp';
 import erpObject from '../lib/global/erp-objects';
+import GlobalFunctions from '../GlobalFunctions';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -260,6 +261,10 @@ Template.paymentoverview.onRendered(function() {
         }
         */
     }
+
+
+
+    
 
     // $('#tblPaymentOverview').DataTable();
     templateObject.getAllPaymentsData = async function(viewdeleted) {
@@ -1439,14 +1444,6 @@ Template.paymentoverview.onRendered(function() {
     tableResize();
 
 
-    templateObject.loadTimeSheet = async () => {
-        let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
-            return await sideBarService.getAllTimeSheetList();
-        }, {
-
-        });
-        
-    }
 
 });
 
@@ -2299,5 +2296,7 @@ Template.paymentoverview.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
-    }
+    },
+
+   
 });
