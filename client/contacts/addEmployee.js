@@ -497,7 +497,7 @@ Template.employeescard.onRendered(function () {
             useLocalStorage: false,
             fallBackToLocal: true,
             validate: (cachedResponse) => {
-                return false;
+                return true;
             }
         });
 
@@ -822,6 +822,11 @@ Template.employeescard.onRendered(function () {
         let productIds = $("#tblInventoryService").find("input.chkServiceCard:checked");
         selectedProducts.push(...filterProducts(selectedProducts, productIds.map((index, input) => allProducts.find(p => p.Id == parseInt($(input).attr("product-id")))).toArray()));
 
+        // We do this to avoid undefined valeus
+        selectedProducts = selectedProducts.filter(element => {
+            return element !== undefined;
+        });
+
         await templateObject.selectedproducts.set(selectedProducts);
 
        // templateObject.rebuildProductTable();
@@ -986,6 +991,9 @@ Template.employeescard.onRendered(function () {
         if(result.value) {
             let selectedProducts = await templateObject.selectedproducts.get();
             let deletedProducts = await templateObject.deletedSelectedProducts.get();
+
+          
+            console.log("selected products", selectedProducts);
 
             let removedProduct = selectedProducts.find(p => p.Id == productId);
             deletedProducts.push(removedProduct);

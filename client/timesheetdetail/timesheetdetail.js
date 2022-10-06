@@ -24,11 +24,37 @@ let utilityService = new UtilityService();
 
 
 Template.timesheetdetail.onCreated(function () {
-  
+  this.timesheet = new ReactiveVar();
+  this.timeSheetList = new ReactiveVar([]);
 });
 
 Template.timesheetdetail.onRendered(function () {
-   
+
+
+   this.loadTimeSheet = async () => {
+    let id = FlowRouter.current().queryParams.tid;
+
+    let data = await CachedHttp.get(erpObject.TTimeSheetEntry, async () => {
+      return await (new ContactService()).getAllTimeSheetList();
+    }, {
+      useIndexDb: true, 
+      useLocalStorage:false,
+      fallBackToLocal: true,
+      validate: (cachedResponse) => {
+        return false;
+      }
+    });
+
+    data = data.response;
+
+    let timesheets = data.ttimesheet.map(t => t.fields);
+    let timesheet = data.ttimesheet.find(o => o.ID == id)
+    console.log('timesheets', timesheet);
+ 
+
+   }
+
+   this.loadTimeSheet();
     
 });
 

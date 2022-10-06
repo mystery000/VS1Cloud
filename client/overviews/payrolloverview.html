@@ -901,7 +901,7 @@
                             <tbody>
                                 {{#if timeSheetList }}
                                     {{#each item in timeSheetList}}
-                                        <tr>
+                                        <tr timesheet-id="{{ item.ID }}">
                                             <td>{{ getFirstName item.EmployeeName }}</td>
                                             <td>{{ getLastName item.EmployeeName }}</td>
                                             <td>Week ending {{ formatDate item.TimeSheetDate }}</td>

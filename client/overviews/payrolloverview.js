@@ -307,16 +307,8 @@ Template.payrolloverview.onRendered(function () {
     const payPeriodId = $('.payperiod-select').val();
     const selectedPeriod = payPeriods.find(p => p.ID == payPeriodId);
 
+    console.log('selected epriods', selectedPeriod);
     const timesheets  = await templateObject.timeSheetList.get();
-
-
-    console.log("employees", employees);
-    console.log('employee id: ', employeeId);
-    console.log('selected employee', selectedEmployee);
-
-    console.log('payPeriods', payPeriods);
-    console.log('pay ID', payPeriodId);
-    console.log("selected period", selectedPeriod);
 
 
     let timeSheet = {
@@ -324,7 +316,9 @@ Template.payrolloverview.onRendered(function () {
       fields: {
         EmployeeName: selectedEmployee.EmployeeName,
         Allowedit: true,
-        Hours: 1
+        Hours: 1,
+        EndTime: selectedPeriod.PayrollCalendarFirstPaymentDate,
+        //PayRateTypeName: selectedPeriod.PayrollCalendarName // PayrollCalendarName
       }
     }
 
@@ -337,11 +331,13 @@ Template.payrolloverview.onRendered(function () {
       },
     }
 
-    console.log('object to be saved', timeSheetEntry);
-    
     // Here i need to create a new timesheet
     let response = await contactService.saveTimeSheet(timeSheetEntry);
-    console.log("response", response);
+
+    if(response.fields.ID) {
+      let timeSheetId = response.fields.ID;
+      window.location.href = `/timesheetdetail?tid=${timeSheetId}`;
+    }
 
 
     // once created, please redirect to the right page
@@ -6206,7 +6202,13 @@ Template.payrolloverview.events({
   },
   "click .add-new-timesheet": (e, ui) => {
     ui.newTimeSheet();
-  } 
+  } ,
+
+  "click .tblTimeSheet tbody tr": (e, ui) => {
+    const timesheetId = $(e.currentTarget).attr('timesheet-id');
+
+    window.location.href = `/timesheetdetail?tid=${timesheetId}`;
+  }
 });
 
 Template.payrolloverview.helpers({
