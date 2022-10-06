@@ -37,7 +37,7 @@ export default class FxGlobalFunctions {
     $(".exchange-rate-js").attr("disabled", false);
   }
 
-  static async loadDefaultCurrency(defaultCurrencyCode = "AUD") {
+  static async loadDefaultCurrency(defaultCurrencyCode = "AUD", fromLocal = true) {
     let data = await CachedHttp.get(erpObject.TCurrency, async () => {
       return await new TaxRateService().getCurrencies();
     }, {
@@ -45,7 +45,7 @@ export default class FxGlobalFunctions {
       useLocalStorage: false,
       fallBackToLocal: true,
       validate: cachedResponse => {
-        return false;
+        return fromLocal;
       }
     });
 
