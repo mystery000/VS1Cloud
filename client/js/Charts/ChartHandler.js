@@ -195,10 +195,218 @@ export default class ChartHandler {
     let Tvs1ChartData = [];
     let Tvs1dashboardpreferences = await getVS1Data('Tvs1charts')
     if( Tvs1dashboardpreferences.length ){
-      let allChartsJsonResponse = await JSON.parse(Tvs1dashboardpreferences[0].data)
+      let allChartsJsonResponse = await JSON.parse(Tvs1dashboardpreferences[0].data);
+      // allChartsJsonResponse.tvs1charts.push({
+      //   type: "Tvs1charts",
+      //   fields: {
+      //     Active: true,
+      //     ChartGroup: "DashboardExe",
+      //     ChartName: "Cash",
+      //     GlobalRef: "DEF20",
+      //     ID: 20,
+      //     ISEmpty: false,
+      //     KeyStringFieldName: "Chartname",
+      //     KeyValue: "",
+      //     MsTimeStamp: "2022-10-01 15:19:59",
+      //     MsUpdateSiteCode: "DEF",
+      //     Recno: 20,
+      //     _chartSlug: "dashboardexe___cash"
+      //   }
+      // });
+      // allChartsJsonResponse.tvs1charts.push({
+      //   type: "Tvs1charts",
+      //   fields: {
+      //     Active: true,
+      //     ChartGroup: "DashboardExe",
+      //     ChartName: "Profitability",
+      //     GlobalRef: "DEF21",
+      //     ID: 21,
+      //     ISEmpty: false,
+      //     KeyStringFieldName: "Chartname",
+      //     KeyValue: "",
+      //     MsTimeStamp: "2022-10-01 15:19:59",
+      //     MsUpdateSiteCode: "DEF",
+      //     Recno: 21,
+      //     _chartSlug: "dashboardexe___profitability"
+      //   }
+      // });
+      // allChartsJsonResponse.tvs1charts.push({
+      //   type: "Tvs1charts",
+      //   fields: {
+      //     Active: true,
+      //     ChartGroup: "DashboardExe",
+      //     ChartName: "Performance",
+      //     GlobalRef: "DEF22",
+      //     ID: 22,
+      //     ISEmpty: false,
+      //     KeyStringFieldName: "Chartname",
+      //     KeyValue: "",
+      //     MsTimeStamp: "2022-10-01 15:19:59",
+      //     MsUpdateSiteCode: "DEF",
+      //     Recno: 22,
+      //     _chartSlug: "dashboardexe___performance"
+      //   }
+      // });
+      // allChartsJsonResponse.tvs1charts.push({
+      //   type: "Tvs1charts",
+      //   fields: {
+      //     Active: true,
+      //     ChartGroup: "DashboardExe",
+      //     ChartName: "Balance Sheet",
+      //     GlobalRef: "DEF23",
+      //     ID: 23,
+      //     ISEmpty: false,
+      //     KeyStringFieldName: "Chartname",
+      //     KeyValue: "",
+      //     MsTimeStamp: "2022-10-01 15:19:59",
+      //     MsUpdateSiteCode: "DEF",
+      //     Recno: 23,
+      //     _chartSlug: "dashboardexe___balance_sheet"
+      //   }
+      // });
+      // allChartsJsonResponse.tvs1charts.push({
+      //   type: "Tvs1charts",
+      //   fields: {
+      //     Active: true,
+      //     ChartGroup: "DashboardExe",
+      //     ChartName: "Income",
+      //     GlobalRef: "DEF24",
+      //     ID: 24,
+      //     ISEmpty: false,
+      //     KeyStringFieldName: "Chartname",
+      //     KeyValue: "",
+      //     MsTimeStamp: "2022-10-01 15:19:59",
+      //     MsUpdateSiteCode: "DEF",
+      //     Recno: 24,
+      //     _chartSlug: "dashboardexe___income"
+      //   }
+      // });
+      // allChartsJsonResponse.tvs1charts.push({
+      //   type: "Tvs1charts",
+      //   fields: {
+      //     Active: true,
+      //     ChartGroup: "DashboardExe",
+      //     ChartName: "Position",
+      //     GlobalRef: "DEF25",
+      //     ID: 25,
+      //     ISEmpty: false,
+      //     KeyStringFieldName: "Chartname",
+      //     KeyValue: "",
+      //     MsTimeStamp: "2022-10-01 15:19:59",
+      //     MsUpdateSiteCode: "DEF",
+      //     Recno: 25,
+      //     _chartSlug: "dashboardexe___position"
+      //   }
+      // });
       Tvs1ChartData = Tvs1chart.fromList(allChartsJsonResponse.tvs1charts);
     }
     return Tvs1ChartData;
   }
 
+  static async getTvs1Execharts() {
+    let Tvs1ExeChartData = [];
+    Tvs1ExeChartData.push(new Tvs1chart({
+      type: "Tvs1charts",
+      fields: {
+        Active: true,
+        ChartGroup: "DashboardExe",
+        ChartName: "Cash",
+        GlobalRef: "DEF20",
+        ID: 20,
+        ISEmpty: false,
+        KeyStringFieldName: "Chartname",
+        KeyValue: "",
+        MsTimeStamp: "2022-10-01 15:19:59",
+        MsUpdateSiteCode: "DEF",
+        Recno: 20,
+        _chartSlug: "dashboardexe__cash"
+      }
+    }));
+    Tvs1ExeChartData.push(new Tvs1chart({
+      type: "Tvs1charts",
+      fields: {
+        Active: true,
+        ChartGroup: "DashboardExe",
+        ChartName: "Profitability",
+        GlobalRef: "DEF21",
+        ID: 21,
+        ISEmpty: false,
+        KeyStringFieldName: "Chartname",
+        KeyValue: "",
+        MsTimeStamp: "2022-10-01 15:19:59",
+        MsUpdateSiteCode: "DEF",
+        Recno: 21,
+        _chartSlug: "dashboardexe__profitability"
+      }
+    }));
+    Tvs1ExeChartData.push(new Tvs1chart({
+      type: "Tvs1charts",
+      fields: {
+        Active: true,
+        ChartGroup: "DashboardExe",
+        ChartName: "Performance",
+        GlobalRef: "DEF22",
+        ID: 22,
+        ISEmpty: false,
+        KeyStringFieldName: "Chartname",
+        KeyValue: "",
+        MsTimeStamp: "2022-10-01 15:19:59",
+        MsUpdateSiteCode: "DEF",
+        Recno: 22,
+        _chartSlug: "dashboardexe__performance"
+      }
+    }));
+    Tvs1ExeChartData.push(new Tvs1chart({
+      type: "Tvs1charts",
+      fields: {
+        Active: true,
+        ChartGroup: "DashboardExe",
+        ChartName: "Balance Sheet",
+        GlobalRef: "DEF23",
+        ID: 23,
+        ISEmpty: false,
+        KeyStringFieldName: "Chartname",
+        KeyValue: "",
+        MsTimeStamp: "2022-10-01 15:19:59",
+        MsUpdateSiteCode: "DEF",
+        Recno: 23,
+        _chartSlug: "dashboardexe__balance_sheet"
+      }
+    }));
+    Tvs1ExeChartData.push(new Tvs1chart({
+      type: "Tvs1charts",
+      fields: {
+        Active: true,
+        ChartGroup: "DashboardExe",
+        ChartName: "Income",
+        GlobalRef: "DEF24",
+        ID: 24,
+        ISEmpty: false,
+        KeyStringFieldName: "Chartname",
+        KeyValue: "",
+        MsTimeStamp: "2022-10-01 15:19:59",
+        MsUpdateSiteCode: "DEF",
+        Recno: 24,
+        _chartSlug: "dashboardexe__income"
+      }
+    }));
+    Tvs1ExeChartData.push(new Tvs1chart({
+      type: "Tvs1charts",
+      fields: {
+        Active: true,
+        ChartGroup: "DashboardExe",
+        ChartName: "Position",
+        GlobalRef: "DEF25",
+        ID: 25,
+        ISEmpty: false,
+        KeyStringFieldName: "Chartname",
+        KeyValue: "",
+        MsTimeStamp: "2022-10-01 15:19:59",
+        MsUpdateSiteCode: "DEF",
+        Recno: 25,
+        _chartSlug: "dashboardexe__position"
+      }
+    }));
+    return Tvs1ExeChartData;
+  }
 }

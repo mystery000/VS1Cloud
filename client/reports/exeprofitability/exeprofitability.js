@@ -12,6 +12,8 @@ let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 let reportService = new ReportService();
 let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
+let salesService = new SalesBoardService();
+let initCurrency = Currency;
 
 Template.exeprofitabilityreport.onCreated(function () {
     const templateObject = Template.instance();
@@ -35,11 +37,6 @@ Template.exeprofitabilityreport.onCreated(function () {
 
 Template.exeprofitabilityreport.onRendered(() => {
     const templateObject = Template.instance();
-
-    let taxRateService = new TaxRateService();
-    let salesService = new SalesBoardService();
-
-    let initCurrency = Currency;
 
     templateObject.setMonthsOnHeader = (yy, mm, dd) => {
         var currentDate = new Date(yy, mm, dd);
@@ -90,12 +87,6 @@ Template.exeprofitabilityreport.onRendered(() => {
             $("#uploadedImage").attr("src", imageData);
             $("#uploadedImage").attr("width", "50%");
         }
-
-        var today = moment().format("DD/MM/YYYY");
-        var currentDate = new Date();
-        templateObject.setMonthsOnHeader(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-        templateObject.dateAsAt.set(begunDate);
     });
 
     let totalSales = [0, 0];
@@ -108,23 +99,42 @@ Template.exeprofitabilityreport.onRendered(() => {
 
     templateObject.setFieldVariance = function (fieldVal1, fieldVal2, fieldSelector) {
         var fieldVariance = 0;
-        if (fieldVal1 == 0) {
-            if (fieldVal2 > 0) {
-                fieldVariance = 100;
-                $('.' + fieldSelector).css("color", varianceGreen);
-            } else if (fieldVal2 == 0) {
-                fieldVariance = 0;
-                $('.' + fieldSelector).css("color", varianceGreen);
-            } else {
-                fieldVariance = -100;
-                $('.' + fieldSelector).css("color", varianceRed);
-            }
+        var fieldVariance = 0;
+        if (fieldVal1 == 0 && fieldVal2 == 0) {
+            fieldVariance = 0;
+        } else if (fieldVal1 == 0) {
+            fieldVariance = fieldVal2;
+        } else if (fieldVal2 == 0) {
+            fieldVariance = (-1) * fieldVal1;
         } else {
-            if (fieldVal1 > 0)
-                fieldVariance = (fieldVal2 - fieldVal1) / fieldVal1 * 100;
+            if (fieldVal1 > 0 && fieldVal2 > 0) {
+                if (fieldVal2 >= fieldVal1) {
+                    fieldVariance = (fieldVal2 / fieldVal1) * 100;
+                } else {
+                    fieldVariance = (fieldVal1 / fieldVal2) * (-100);
+                }
+            }
+            if (fieldVal1 > 0 && fieldVal2 < 0) {
+                fieldVariance = fieldVal2 - fieldVal1;
+            }
+            if (fieldVal1 < 0 && fieldVal2 > 0) {
+                fieldVariance = fieldVal2 - fieldVal1;
+            }
+            if (fieldVal1 < 0 && fieldVal2 < 0) {
+                if (fieldVal2 >= fieldVal1) {
+                    fieldVariance = (fieldVal1 / fieldVal2) * 100;
+                } else {
+                    fieldVariance = (fieldVal2 / fieldVal1) * (-100);
+                }
+            }
+        }
+        if (fieldVariance >= 0) {
+            if (fieldSelector == "spnTotalExpenseVariance")
+                $('.' + fieldSelector).css("color", varianceRed);
             else
-                fieldVariance = (fieldVal2 - fieldVal1) / Math.abs(fieldVal1) * 100;
-            if (fieldVariance >= 0)
+                $('.' + fieldSelector).css("color", varianceGreen);
+        } else {
+            if (fieldSelector == "spnTotalExpenseVariance")
                 $('.' + fieldSelector).css("color", varianceGreen);
             else
                 $('.' + fieldSelector).css("color", varianceRed);
@@ -138,40 +148,50 @@ Template.exeprofitabilityreport.onRendered(() => {
             let data = await reportService.getCardDataReport(dateAsOf);
             if (data.tcarddatareport) {
                 let resData = data.tcarddatareport[0];
-                totalSales[0] = resData.Prof_Income1;
-                totalSales[1] = resData.Prof_Income2;
-                grossProfit[0] = resData.Prof_Gross1;
-                grossProfit[1] = resData.Prof_Gross2;
-                totalExpense[0] = resData.Prof_Expenses1;
-                totalExpense[1] = resData.Prof_Expenses2;
-                nettProfit[0] = resData.Prof_Net1;
-                nettProfit[1] = resData.Prof_Net2;
+                totalSales[0] = parseFloat(resData.Prof_Income1);
+                totalSales[1] = parseFloat(resData.Prof_Income2);
+                grossProfit[0] = parseFloat(resData.Prof_Gross1);
+                grossProfit[1] = parseFloat(resData.Prof_Gross2);
+                totalExpense[0] = parseFloat(resData.Prof_Expenses1);
+                totalExpense[1] = parseFloat(resData.Prof_Expenses2);
+                nettProfit[0] = parseFloat(resData.Prof_Net1);
+                nettProfit[1] = parseFloat(resData.Prof_Net2);
             }
 
-            templateObject.totalSales1.set(totalSales[0]);
-            templateObject.grossProfit1.set(grossProfit[0]);
-            templateObject.totalExpense1.set(totalExpense[0]);
-            templateObject.nettProfit1.set(nettProfit[0]);
-            templateObject.totalSales2.set(totalSales[1]);
-            templateObject.grossProfit2.set(grossProfit[1]);
-            templateObject.totalExpense2.set(totalExpense[1]);
-            templateObject.nettProfit2.set(nettProfit[1]);
+            templateObject.totalSales1.set(utilityService.modifynegativeCurrencyFormat(totalSales[0].toFixed(2)));
+            templateObject.grossProfit1.set(utilityService.modifynegativeCurrencyFormat(grossProfit[0].toFixed(2)));
+            templateObject.totalExpense1.set(utilityService.modifynegativeCurrencyFormat(totalExpense[0].toFixed(2)));
+            templateObject.nettProfit1.set(utilityService.modifynegativeCurrencyFormat(nettProfit[0].toFixed(2)));
+            templateObject.totalSales2.set(utilityService.modifynegativeCurrencyFormat(totalSales[1].toFixed(2)));
+            templateObject.grossProfit2.set(utilityService.modifynegativeCurrencyFormat(grossProfit[1].toFixed(2)));
+            templateObject.totalExpense2.set(utilityService.modifynegativeCurrencyFormat(totalExpense[1].toFixed(2)));
+            templateObject.nettProfit2.set(utilityService.modifynegativeCurrencyFormat(nettProfit[1].toFixed(2)));
 
             templateObject.setFieldVariance(totalSales[0], totalSales[1], "spnTotalSalesVariance");
             templateObject.setFieldVariance(grossProfit[0], grossProfit[1], "spnGrossProfitVariance");
             templateObject.setFieldVariance(totalExpense[0], totalExpense[1], "spnTotalExpenseVariance");
             templateObject.setFieldVariance(nettProfit[0], nettProfit[1], "spnNettProfitVariance");
         } catch (err) {
-
+            console.log(err);
         }
         LoadingOverlay.hide();
     };
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    templateObject.getProfitabilityReports(getLoadDate);
-    $("#balancedate").val(moment(currentDate2).format("DD/MM/YYYY"));
-
-
+    var currentDate = new Date();
+    var getLoadDate = moment(currentDate).format("YYYY-MM-DD");
+    // var getLoadDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+    let pDate = FlowRouter.current().queryParams.viewDate || getLoadDate;
+    templateObject.getProfitabilityReports(pDate);
+    let strDate = "";
+    if (pDate.length == 10)
+        strDate = pDate;
+    else
+        strDate = pDate.substring(1, 11);
+    arrDate = strDate.split("-");
+    let newbalanceDate = new Date(arrDate[0], eval(arrDate[1]) - 1, arrDate[2]);
+    templateObject.setMonthsOnHeader(arrDate[0], eval(arrDate[1]) - 1, arrDate[2]);
+    let newbalanceDate2 = moment(newbalanceDate).format("DD/MM/YYYY")
+    $("#balancedate").val(newbalanceDate2);
+    templateObject.dateAsAt.set(newbalanceDate2);
 });
 
 function sortByAlfa(a, b) {
@@ -211,15 +231,15 @@ Template.exeprofitabilityreport.helpers({
     convertAmount: (amount, currencyData) => {
         let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-        // if (!amount || amount.trim() == "") {
-        //     return "";
-        // }
-        // if (currencyData.code == defaultCurrencyCode) {
-        //     // default currency
-        //     return amount;
-        // }
+        if (!amount || amount.trim() == "") {
+            return "";
+        }
+        if (currencyData.code == defaultCurrencyCode) {
+            // default currency
+            return amount;
+        }
 
-        // amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+        amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
 
         // Lets remove the minus character
         const isMinus = amount < 0;
@@ -290,14 +310,14 @@ Template.exeprofitabilityreport.helpers({
 
         // amount = amount.toLocaleString();
 
-        // let convertedAmount =
-        //     isMinus == true ?
-        //         `- ${currencyData.symbol} ${amount}` :
-        //         `${currencyData.symbol} ${amount}`;
         let convertedAmount =
             isMinus == true ?
-                `- ${amount}` :
-                `${amount}`;
+                `- ${currencyData.symbol} ${amount}` :
+                `${currencyData.symbol} ${amount}`;
+        // let convertedAmount =
+        //     isMinus == true ?
+        //         `- ${amount}` :
+        //         `${amount}`;
 
         return convertedAmount;
     },
@@ -440,9 +460,9 @@ Template.exeprofitabilityreport.events({
     },
     "click .btnPrintReport": function (event) {
         $("a").attr("href", "/");
-        document.title = "Balance Sheet (Executive) Report";
+        document.title = "Profitability (Executive) Report";
         $(".printReport").print({
-            title: document.title + " | Balance Sheet (Executive) | " + loggedCompany,
+            title: document.title + " | Profitability (Executive) | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
             mediaPrint: false,
         });
@@ -464,7 +484,7 @@ Template.exeprofitabilityreport.events({
             "-" +
             balanceDate.getDate();
 
-        const filename = loggedCompany + "-Balance Sheet" + ".csv";
+        const filename = loggedCompany + "-Profitability" + ".csv";
         utilityService.exportReportToCsvTable("tableExport", filename, "csv");
         // let rows = [];
         // reportService.getBalanceSheetReport(formatBalDate).then(function (data) {

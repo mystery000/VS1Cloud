@@ -12,6 +12,8 @@ let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 let reportService = new ReportService();
 let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
+let salesService = new SalesBoardService();
+let initCurrency = Currency;
 
 Template.execashreport.onCreated(function () {
     const templateObject = Template.instance();
@@ -35,11 +37,6 @@ Template.execashreport.onCreated(function () {
 
 Template.execashreport.onRendered(() => {
     const templateObject = Template.instance();
-
-    let taxRateService = new TaxRateService();
-    let salesService = new SalesBoardService();
-
-    let initCurrency = Currency;
 
     templateObject.setMonthsOnHeader = (yy, mm, dd) => {
         var currentDate = new Date(yy, mm, dd);
@@ -90,12 +87,6 @@ Template.execashreport.onRendered(() => {
             $("#uploadedImage").attr("src", imageData);
             $("#uploadedImage").attr("width", "50%");
         }
-
-        var today = moment().format("DD/MM/YYYY");
-        var currentDate = new Date();
-        templateObject.setMonthsOnHeader(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-        templateObject.dateAsAt.set(begunDate);
     });
 
     let cashReceived = [0, 0];
@@ -108,23 +99,42 @@ Template.execashreport.onRendered(() => {
 
     templateObject.setFieldVariance = function (fieldVal1, fieldVal2, fieldSelector) {
         var fieldVariance = 0;
-        if (fieldVal1 == 0) {
-            if (fieldVal2 > 0) {
-                fieldVariance = 100;
-                $('.' + fieldSelector).css("color", varianceGreen);
-            } else if (fieldVal2 == 0) {
-                fieldVariance = 0;
-                $('.' + fieldSelector).css("color", varianceGreen);
-            } else {
-                fieldVariance = -100;
-                $('.' + fieldSelector).css("color", varianceRed);
-            }
+        var fieldVariance = 0;
+        if (fieldVal1 == 0 && fieldVal2 == 0) {
+            fieldVariance = 0;
+        } else if (fieldVal1 == 0) {
+            fieldVariance = fieldVal2;
+        } else if (fieldVal2 == 0) {
+            fieldVariance = (-1) * fieldVal1;
         } else {
-            if (fieldVal1 > 0)
-                fieldVariance = (fieldVal2 - fieldVal1) / fieldVal1 * 100;
+            if (fieldVal1 > 0 && fieldVal2 > 0) {
+                if (fieldVal2 >= fieldVal1) {
+                    fieldVariance = (fieldVal2 / fieldVal1) * 100;
+                } else {
+                    fieldVariance = (fieldVal1 / fieldVal2) * (-100);
+                }
+            }
+            if (fieldVal1 > 0 && fieldVal2 < 0) {
+                fieldVariance = fieldVal2 - fieldVal1;
+            }
+            if (fieldVal1 < 0 && fieldVal2 > 0) {
+                fieldVariance = fieldVal2 - fieldVal1;
+            }
+            if (fieldVal1 < 0 && fieldVal2 < 0) {
+                if (fieldVal2 >= fieldVal1) {
+                    fieldVariance = (fieldVal1 / fieldVal2) * 100;
+                } else {
+                    fieldVariance = (fieldVal2 / fieldVal1) * (-100);
+                }
+            }
+        }
+        if (fieldVariance >= 0) {
+            if (fieldSelector == "spnCashSpentVariance")
+                $('.' + fieldSelector).css("color", varianceRed);
             else
-                fieldVariance = (fieldVal2 - fieldVal1) / Math.abs(fieldVal1) * 100;
-            if (fieldVariance >= 0)
+                $('.' + fieldSelector).css("color", varianceGreen);
+        } else {
+            if (fieldSelector == "spnCashSpentVariance")
                 $('.' + fieldSelector).css("color", varianceGreen);
             else
                 $('.' + fieldSelector).css("color", varianceRed);
@@ -138,38 +148,50 @@ Template.execashreport.onRendered(() => {
             let data = await reportService.getCardDataReport(dateAsOf);
             if (data.tcarddatareport) {
                 let resData = data.tcarddatareport[0];
-                cashReceived[0] = resData.Cash_Received1;
-                cashReceived[1] = resData.Cash_Received2;
-                cashSpent[0] = resData.Cash_Spent1;
-                cashSpent[1] = resData.Cash_Spent2;
-                cashSurplus[0] = resData.Cash_Surplus1;
-                cashSurplus[1] = resData.Cash_Surplus2;
-                bankBalance[0] = resData.Cash_Balance1;
-                bankBalance[1] = resData.Cash_Balance2;
+                cashReceived[0] = parseFloat(resData.Cash_Received1);
+                cashReceived[1] = parseFloat(resData.Cash_Received2);
+                cashSpent[0] = parseFloat(resData.Cash_Spent1);
+                cashSpent[1] = parseFloat(resData.Cash_Spent2);
+                cashSurplus[0] = parseFloat(resData.Cash_Surplus1);
+                cashSurplus[1] = parseFloat(resData.Cash_Surplus2);
+                bankBalance[0] = parseFloat(resData.Cash_Balance1);
+                bankBalance[1] = parseFloat(resData.Cash_Balance2);
             }
 
-            templateObject.cashReceived1.set(cashReceived[0]);
-            templateObject.cashSpent1.set(cashSpent[0]);
-            templateObject.cashSurplus1.set(cashSurplus[0]);
-            templateObject.bankBalance1.set(bankBalance[0]);
-            templateObject.cashReceived2.set(cashReceived[1]);
-            templateObject.cashSpent2.set(cashSpent[1]);
-            templateObject.cashSurplus2.set(cashSurplus[1]);
-            templateObject.bankBalance2.set(bankBalance[1]);
+            templateObject.cashReceived1.set(utilityService.modifynegativeCurrencyFormat(cashReceived[0].toFixed(2)));
+            templateObject.cashSpent1.set(utilityService.modifynegativeCurrencyFormat(cashSpent[0].toFixed(2)));
+            templateObject.cashSurplus1.set(utilityService.modifynegativeCurrencyFormat(cashSurplus[0].toFixed(2)));
+            templateObject.bankBalance1.set(utilityService.modifynegativeCurrencyFormat(bankBalance[0].toFixed(2)));
+            templateObject.cashReceived2.set(utilityService.modifynegativeCurrencyFormat(cashReceived[1].toFixed(2)));
+            templateObject.cashSpent2.set(utilityService.modifynegativeCurrencyFormat(cashSpent[1].toFixed(2)));
+            templateObject.cashSurplus2.set(utilityService.modifynegativeCurrencyFormat(cashSurplus[1].toFixed(2)));
+            templateObject.bankBalance2.set(utilityService.modifynegativeCurrencyFormat(bankBalance[1].toFixed(2)));
 
             templateObject.setFieldVariance(cashReceived[0], cashReceived[1], "spnCashReceivedVariance");
             templateObject.setFieldVariance(cashSpent[0], cashSpent[1], "spnCashSpentVariance");
             templateObject.setFieldVariance(cashSurplus[0], cashSurplus[1], "spnCashSurplusVariance");
             templateObject.setFieldVariance(bankBalance[0], bankBalance[1], "spnBankBalanceVariance");
         } catch (err) {
-
+            console.log(err);
         }
         LoadingOverlay.hide();
     };
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    templateObject.getCashReports(getLoadDate);
-    $("#balancedate").val(moment(currentDate2).format("DD/MM/YYYY"));
+    var currentDate = new Date();
+    var getLoadDate = moment(currentDate).format("YYYY-MM-DD");
+    // var getLoadDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+    let pDate = FlowRouter.current().queryParams.viewDate || getLoadDate;
+    templateObject.getCashReports(pDate);
+    let strDate = "";
+    if (pDate.length == 10)
+        strDate = pDate;
+    else
+        strDate = pDate.substring(1, 11);
+    arrDate = strDate.split("-");
+    let newbalanceDate = new Date(arrDate[0], eval(arrDate[1]) - 1, arrDate[2]);
+    templateObject.setMonthsOnHeader(arrDate[0], eval(arrDate[1]) - 1, arrDate[2]);
+    let newbalanceDate2 = moment(newbalanceDate).format("DD/MM/YYYY")
+    $("#balancedate").val(newbalanceDate2);
+    templateObject.dateAsAt.set(newbalanceDate2);
 });
 
 function sortByAlfa(a, b) {
@@ -209,15 +231,15 @@ Template.execashreport.helpers({
     convertAmount: (amount, currencyData) => {
         let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-        // if (!amount || amount.trim() == "") {
-        //     return "";
-        // }
-        // if (currencyData.code == defaultCurrencyCode) {
-        //     // default currency
-        //     return amount;
-        // }
+        if (!amount || amount.trim() == "") {
+            return "";
+        }
+        if (currencyData.code == defaultCurrencyCode) {
+            // default currency
+            return amount;
+        }
 
-        // amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+        amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
 
         // Lets remove the minus character
         const isMinus = amount < 0;
@@ -288,14 +310,14 @@ Template.execashreport.helpers({
 
         // amount = amount.toLocaleString();
 
-        // let convertedAmount =
-        //     isMinus == true ?
-        //         `- ${currencyData.symbol} ${amount}` :
-        //         `${currencyData.symbol} ${amount}`;
         let convertedAmount =
             isMinus == true ?
-                `- ${amount}` :
-                `${amount}`;
+                `- ${currencyData.symbol} ${amount}` :
+                `${currencyData.symbol} ${amount}`;
+        // let convertedAmount =
+        //     isMinus == true ?
+        //         `- ${amount}` :
+        //         `${amount}`;
 
         return convertedAmount;
     },
@@ -438,9 +460,9 @@ Template.execashreport.events({
     },
     "click .btnPrintReport": function (event) {
         $("a").attr("href", "/");
-        document.title = "Balance Sheet (Executive) Report";
+        document.title = "Cash (Executive) Report";
         $(".printReport").print({
-            title: document.title + " | Balance Sheet (Executive) | " + loggedCompany,
+            title: document.title + " | Cash (Executive) | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
             mediaPrint: false,
         });
@@ -462,7 +484,7 @@ Template.execashreport.events({
             "-" +
             balanceDate.getDate();
 
-        const filename = loggedCompany + "-Balance Sheet" + ".csv";
+        const filename = loggedCompany + "-Cash" + ".csv";
         utilityService.exportReportToCsvTable("tableExport", filename, "csv");
         // let rows = [];
         // reportService.getBalanceSheetReport(formatBalDate).then(function (data) {
