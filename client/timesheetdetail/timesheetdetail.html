@@ -188,7 +188,7 @@
                                         <a>
                                             <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Employee</span></div>
                                             <div class="text-dark font-weight-bold h5 mb-0 mr-3">
-                                                <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);"> Odette Garrison </span>
+                                                <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);"> {{ employee.EmployeeName }} </span>
                                             </div>
                                         </a>
                                         <div class="col-auto"><i class="fas fa-user fa-2x text-gray-300"></i></div>
@@ -203,7 +203,7 @@
                                         <a>
                                             <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Status</span></div>
                                             <div class="text-dark font-weight-bold h5 mb-0 mr-3">
-                                                <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);"> Draft </span>
+                                                <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);"> {{ timesheet.Status }} </span>
                                             </div>
                                         </a>
                                         <div class="col-auto"><i class="fas fa-shield-check fa-2x text-gray-300"></i></div>
@@ -218,7 +218,7 @@
                                         <a>
                                             <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Week ending</span></div>
                                             <div class="text-dark font-weight-bold h5 mb-0 mr-3">
-                                                <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);"> 28 Oct 2022 </span>
+                                                <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);"> {{ formatDate timesheet.TimeSheetDate }} </span>
                                             </div>
                                         </a>
                                         <div class="col-auto"><i class="fas fa-calendar-alt fa-2x text-gray-300"></i></div>
