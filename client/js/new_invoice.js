@@ -12765,7 +12765,7 @@ Template.new_invoice.onRendered(function () {
   tempObj.getSubTaxCodes();
 
   // custom field displaysettings
-  tempObj.initCustomFieldDisplaySettings = function(data, listType) {
+   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
@@ -12808,7 +12808,7 @@ Template.new_invoice.onRendered(function () {
     tempObj.displayfields.set(custFields);
   }
 
-  tempObj.initCustomFieldDisplaySettings("", "tblInvoiceLine");
+  templateObject.initCustomFieldDisplaySettings("", "tblInvoiceLine");
 
   // tempObj.getAllCustomFieldDisplaySettings = function () {
   //   let listType = "ltSaleslines"; // tempcode until InvoiceLines is added on backend
@@ -13399,12 +13399,32 @@ Template.new_invoice.events({
         let termname =
           $("#sltTerms").val() || templateObject.defaultsaleterm.get();
         if (termname === "") {
-          swal("Terms has not been selected!", "", "warning");
+          swal({
+              title: "Terms has not been selected!",
+              text: '',
+              type: 'warning',
+          }).then((result) => {
+              if (result.value) {
+                  $('#sltTerms').focus();
+              } else if (result.dismiss == 'cancel') {
+
+              }
+          });
           event.preventDefault();
           return false;
         }
         if (customername.val() === "") {
-          swal("Customer has not been selected!", "", "warning");
+          swal({
+              title: "Customer has not been selected!",
+              text: '',
+              type: 'warning',
+          }).then((result) => {
+              if (result.value) {
+                  $('#edtCustomerName').focus();
+              } else if (result.dismiss == 'cancel') {
+
+              }
+          });
           e.preventDefault();
         } else {
           $(".fullScreenSpin").css("display", "inline-block");
@@ -13581,10 +13601,10 @@ Template.new_invoice.events({
             };
           }
 
-          if(Session.get("CloudUseForeignLicence") == true){
-            objDetails.ForeignExchangeCode = currencyCode||'';
-            objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
-          };
+          // if(Session.get("CloudUseForeignLicence") == true){
+          //   objDetails.ForeignExchangeCode = currencyCode||'';
+          //   objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
+          // };
           salesService
             .saveInvoiceEx(objDetails)
             .then(function (objDetails) {
@@ -15056,7 +15076,17 @@ Template.new_invoice.events({
     const templateObject = Template.instance();
     $("#selectProductID").val("");
     if (customername === "") {
-      swal("Customer has not been selected!", "", "warning");
+      swal({
+          title: "Customer has not been selected!",
+          text: '',
+          type: 'warning',
+      }).then((result) => {
+          if (result.value) {
+              $('#edtCustomerName').focus();
+          } else if (result.dismiss == 'cancel') {
+
+          }
+      });
       event.preventDefault();
     } else {
       var productDataName = $(event.target).val() || "";
@@ -17023,12 +17053,32 @@ Template.new_invoice.events({
     let salesService = new SalesBoardService();
     let termname = $("#sltTerms").val() || "";
     if (termname === "") {
-      swal("Terms has not been selected!", "", "warning");
+      swal({
+          title: "Terms has not been selected!",
+          text: '',
+          type: 'warning',
+      }).then((result) => {
+          if (result.value) {
+              $('#sltTerms').focus();
+          } else if (result.dismiss == 'cancel') {
+
+          }
+      });
       event.preventDefault();
       return false;
     }
     if (customername.val() === "") {
-      swal("Customer has not been selected!", "", "warning");
+      swal({
+          title: "Customer has not been selected!",
+          text: '',
+          type: 'warning',
+      }).then((result) => {
+          if (result.value) {
+              $('#edtCustomerName').focus();
+          } else if (result.dismiss == 'cancel') {
+
+          }
+      });
       event.preventDefault();
     } else {
       $(".fullScreenSpin").css("display", "inline-block");
@@ -17224,7 +17274,17 @@ Template.new_invoice.events({
       let ForeignExchangeRate = $('#exchange_rate').val();
       var objDetails = "";
       if (departement === "") {
-        swal("Department has not been selected!", "", "warning");
+        swal({
+            title: "Department has not been selected!",
+            text: '',
+            type: 'warning',
+        }).then((result) => {
+            if (result.value) {
+                $('#sltDept').focus();
+            } else if (result.dismiss == 'cancel') {
+
+            }
+        });
         $(".fullScreenSpin").css("display", "none");
         event.preventDefault();
         return false;
@@ -17290,10 +17350,10 @@ Template.new_invoice.events({
         return false;
       }
 
-      if(Session.get("CloudUseForeignLicence") == true){
-        objDetails.ForeignExchangeCode = currencyCode||'';
-        objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
-      };
+      // if(Session.get("CloudUseForeignLicence") == true){
+      //   objDetails.ForeignExchangeCode = currencyCode||'';
+      //   objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
+      // };
       salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
           // add to custom field
           // add to custom field
@@ -18671,12 +18731,32 @@ Template.new_invoice.events({
     let salesService = new SalesBoardService();
     let termname = $("#sltTerms").val() || templateObject.defaultsaleterm.get();
     if (termname === "") {
-      swal("Terms has not been selected!", "", "warning");
+      swal({
+          title: "Terms has not been selected!",
+          text: '',
+          type: 'warning',
+      }).then((result) => {
+          if (result.value) {
+              $('#sltTerms').focus();
+          } else if (result.dismiss == 'cancel') {
+
+          }
+      });
       event.preventDefault();
       return false;
     }
     if (customername.val() === "") {
-      swal("Customer has not been selected!", "", "warning");
+      swal({
+          title: "Customer has not been selected!",
+          text: '',
+          type: 'warning',
+      }).then((result) => {
+          if (result.value) {
+              $('#edtCustomerName').focus();
+          } else if (result.dismiss == 'cancel') {
+
+          }
+      });
       e.preventDefault();
     } else {
       $(".fullScreenSpin").css("display", "inline-block");
@@ -18852,10 +18932,10 @@ Template.new_invoice.events({
         };
       }
 
-      if(Session.get("CloudUseForeignLicence") == true){
-        objDetails.ForeignExchangeCode = currencyCode||'';
-        objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
-      };
+      // if(Session.get("CloudUseForeignLicence") == true){
+      //   objDetails.ForeignExchangeCode = currencyCode||'';
+      //   objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
+      // };
       salesService
         .saveInvoiceEx(objDetails)
         .then(function (objDetails) {
@@ -19458,13 +19538,33 @@ Template.new_invoice.events({
       let termname =
         $("#sltTerms").val() || templateObject.defaultsaleterm.get();
       if (termname === "") {
-        swal("Terms has not been selected!", "", "warning");
+        swal({
+            title: "Terms has not been selected!",
+            text: '',
+            type: 'warning',
+        }).then((result) => {
+            if (result.value) {
+                $('#sltTerms').focus();
+            } else if (result.dismiss == 'cancel') {
+
+            }
+        });
         event.preventDefault();
         return false;
       }
 
       if (customername.val() === "") {
-        swal("Customer has not been selected!", "", "warning");
+        swal({
+            title: "Customer has not been selected!",
+            text: '',
+            type: 'warning',
+        }).then((result) => {
+            if (result.value) {
+                $('#edtCustomerName').focus();
+            } else if (result.dismiss == 'cancel') {
+
+            }
+        });
         e.preventDefault();
       } else {
         $(".fullScreenSpin").css("display", "inline-block");
@@ -19638,10 +19738,10 @@ Template.new_invoice.events({
             },
           };
         }
-        if(Session.get("CloudUseForeignLicence") == true){
-          objDetails.ForeignExchangeCode = currencyCode||'';
-          objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
-        };
+        // if(Session.get("CloudUseForeignLicence") == true){
+        //   objDetails.ForeignExchangeCode = currencyCode||'';
+        //   objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
+        // };
         salesService
           .saveInvoiceEx(objDetails)
           .then(function (objDetails) {

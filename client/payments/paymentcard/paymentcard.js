@@ -5023,7 +5023,23 @@ Template.paymentcard.events({
         let department = $("#sltDepartment").val();
         let empName = localStorage.getItem('mySession');
         let paymentData = [];
+        if (department === "") {
+          $(".fullScreenSpin").css("display", "none");
+          swal({
+              title: "Department has not been selected!",
+              text: '',
+              type: 'warning',
+          }).then((result) => {
+              if (result.value) {
+                  $('#sltDepartment').focus();
+              } else if (result.dismiss == 'cancel') {
 
+              }
+          });
+          LoadingOverlay.hide();
+          event.preventDefault();
+          return false;
+        };
 
         /**
          * Currency module data
@@ -5034,21 +5050,21 @@ Template.paymentcard.events({
         let foreignAmount = $("#foreignAmount").val(); // this is the foreign amount by the currency, foreign Amount
         let variation = $("#edtVariation").val(); // this is the variation field
         let appliedAmount = $("#edtApplied").val(); // this is the variation field
-        if (isNaN(appliedAmount) || !appliedAmount) {
-            appliedAmount = Number(appliedAmount.replace(/[^0-9.-]+/g, ""));
-        }
+        // if (isNaN(appliedAmount) || !appliedAmount) {
+        //     appliedAmount = Number(appliedAmount.replace(/[^0-9.-]+/g, ""));
+        // }
         let exchangeRate = $('#exchange_rate').val();
-        if (isNaN(exchangeRate) || !exchangeRate) {
-            exchangeRate = Number(exchangeRate.replace(/[^0-9.-]+/g, ""));
-        }
+        // if (isNaN(exchangeRate) || !exchangeRate) {
+        //     exchangeRate = Number(exchangeRate.replace(/[^0-9.-]+/g, ""));
+        // }
         let foreignAppliedAmount = templateObject.isForeignEnabled.get() == true ? utilityService.removeCurrency(
             $("#finalAppliedAmount").text(), $('#sltCurrency').attr('currency-symbol')
             || getCurrentCurrencySymbol()) : null; // this is the foreign final amount
 
         let ForeignCurrencyAmount = $('#edtForeignAmount').val();
-        if (isNaN(ForeignCurrencyAmount) || !ForeignCurrencyAmount) {
-            ForeignCurrencyAmount = Number(ForeignCurrencyAmount.replace(/[^0-9.-]+/g, ""));
-        }
+        // if (isNaN(ForeignCurrencyAmount) || !ForeignCurrencyAmount) {
+        //     ForeignCurrencyAmount = Number(ForeignCurrencyAmount.replace(/[^0-9.-]+/g, ""));
+        // }
         let ForeignExchangeCode = $('#sltCurrency').val();
         let ForeignExchangeRate = $('#exchange_rate').val();
         let ForeignVariationAmount = $('#edtVariation').val();
@@ -5057,11 +5073,19 @@ Template.paymentcard.events({
             Amount = Number(Amount.replace(/[^0-9.-]+/g, ""));
         }
         if (isNaN(ForeignVariationAmount) || !ForeignVariationAmount) {
-            ForeignVariationAmount = Number(ForeignVariationAmount.replace(/[^0-9.-]+/g, ""));
+            //ForeignVariationAmount = Number(ForeignVariationAmount.replace(/[^0-9.-]+/g, ""));
         }
         let ForeignApplied = $('#edtApplied').val();
         if (isNaN(ForeignApplied) || !ForeignApplied) {
-            ForeignApplied = Number(ForeignApplied.replace(/[^0-9.-]+/g, ""));
+            //ForeignApplied = Number(ForeignApplied.replace(/[^0-9.-]+/g, ""));
+        }
+
+        var foreignCurrencyFields = {};
+        if( Session.get("CloudUseForeignLicence") ){
+            foreignCurrencyFields = {
+                ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
+                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+            }
         }
 
 
@@ -5113,6 +5137,7 @@ Template.paymentcard.events({
                         Notes: notes,
                         exchangeRate: exchangeRate,
                         currency: currency,
+                        ...foreignCurrencyFields
                         // ForeignCurrencyAmount: ForeignCurrencyAmount,
                         // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
@@ -5541,7 +5566,7 @@ Template.paymentcard.events({
                             PayMethodName: payMethod,
 
                             ReferenceNo: reference,
-
+                            ...foreignCurrencyFields
                             // ForeignCurrencyAmount: ForeignCurrencyAmount,
                             // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
                             // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
@@ -5965,7 +5990,7 @@ Template.paymentcard.events({
                             PayMethodName: payMethod,
 
                             ReferenceNo: reference,
-
+                            ...foreignCurrencyFields
                             // ForeignCurrencyAmount: ForeignCurrencyAmount,
                             // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
                             // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
@@ -6420,7 +6445,7 @@ Template.paymentcard.events({
                         Payment: true,
                         ReferenceNo: reference,
                         Notes: notes,
-
+                        ...foreignCurrencyFields
                         // ForeignCurrencyAmount: ForeignCurrencyAmount,
                         // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
@@ -6815,7 +6840,7 @@ Template.paymentcard.events({
                     PayMethodName: payMethod,
 
                     ReferenceNo: reference,
-
+                    ...foreignCurrencyFields
                     // ForeignCurrencyAmount: ForeignCurrencyAmount,
                     // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
                     // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
@@ -7633,13 +7658,13 @@ Template.paymentcard.events({
                     // PayMethodName: payMethod,
                     Amount: Amount,
                     ReferenceNo: reference,
+                    ...foreignCurrencyFields
                     // ForeignCurrencyAmount: ForeignCurrencyAmount,
                     // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
                     // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
                     // ForeignApplied: parseFloat(ForeignApplied)
                 }
             };
-
             paymentService.saveDepositData(objDetails).then(function (data) {
                 var customerID = $('#edtCustomerEmail').attr('customerid');
 
@@ -7732,7 +7757,7 @@ Template.paymentcard.events({
                             PayMethodName: payMethod,
 
                             ReferenceNo: reference,
-
+                            ...foreignCurrencyFields
                             // ForeignCurrencyAmount: ForeignCurrencyAmount,
                             // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
                             // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
@@ -8160,7 +8185,7 @@ Template.paymentcard.events({
                             PayMethodName: payMethod,
 
                             ReferenceNo: reference,
-
+                            ...foreignCurrencyFields
                             // ForeignCurrencyAmount: ForeignCurrencyAmount,
                             // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
                             // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
@@ -8644,7 +8669,7 @@ Template.paymentcard.events({
                     PaymentDate: paymentDate,
                     PayMethodName: payMethod,
                     ReferenceNo: reference,
-
+                    ...foreignCurrencyFields
                     // ForeignCurrencyAmount: ForeignCurrencyAmount,
                     // ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
                     // ForeignExchangeRate: parseFloat(ForeignExchangeRate),

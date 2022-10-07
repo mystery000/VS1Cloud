@@ -128,7 +128,9 @@ Template.execashreport.onRendered(() => {
                 }
             }
         }
-        if (fieldVariance >= 0) {
+        if (fieldVariance == 0) {
+            $('.' + fieldSelector).css("color", varianceGreen);
+        } else if (fieldVariance > 0) {
             if (fieldSelector == "spnCashSpentVariance")
                 $('.' + fieldSelector).css("color", varianceRed);
             else
@@ -138,6 +140,9 @@ Template.execashreport.onRendered(() => {
                 $('.' + fieldSelector).css("color", varianceGreen);
             else
                 $('.' + fieldSelector).css("color", varianceRed);
+        }
+        if (fieldSelector == "spnCashSpentVariance") {
+            fieldVariance = (-1) * fieldVariance;
         }
         $('.' + fieldSelector).html(fieldVariance.toFixed(1));
     }

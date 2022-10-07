@@ -134,12 +134,10 @@ Template.basreturn.onRendered(function() {
     // accountService
     //     .getBASReturnDetail()
     //     .then(function(data) {
-    //         console.log("============", data);
     //     })
     //     .catch(function(err) {
     //         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
     //         $(".fullScreenSpin").css("display", "none");
-    //         console.log("=", err);
     //         // Meteor._reload.reload();
     //     });
 
@@ -156,7 +154,7 @@ Template.basreturn.onRendered(function() {
                 getid = "";
             }
         }
-        
+
         getVS1Data('TBasReturn').then(function(dataObject) {
             if (dataObject.length == 0) {
                 // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
@@ -242,7 +240,7 @@ Template.basreturn.onRendered(function() {
                             fromDate = moment(fromDate).format("YYYY-MM-DD");
                             $("#beginmonthlydate").val(fromDate.split("-")[1]+"-01");
                             $("#currentyear").val(fromDate.split("-")[0]);
-                            if ($("#datemethod1").prop('checked') == true) {                                
+                            if ($("#datemethod1").prop('checked') == true) {
                                 var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
                                 toDate = moment(toDate).format("YYYY-MM-DD");
@@ -262,7 +260,7 @@ Template.basreturn.onRendered(function() {
                             fromDate = moment(fromDate).format("YYYY-MM-DD");
                             $("#beginmonthlydate-t2").val(fromDate.split("-")[1]+"-01");
                             $("#currentyear-t2").val(fromDate.split("-")[0]);
-                            if ($("#datemethod1-t2").prop('checked') == true) {                                
+                            if ($("#datemethod1-t2").prop('checked') == true) {
                                 var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
                                 toDate = moment(toDate).format("YYYY-MM-DD");
@@ -282,7 +280,7 @@ Template.basreturn.onRendered(function() {
                             fromDate = moment(fromDate).format("YYYY-MM-DD");
                             $("#beginmonthlydate-t2-2").val(fromDate.split("-")[1]+"-01");
                             $("#currentyear-t2-2").val(fromDate.split("-")[0]);
-                            if ($("#datemethod1-t2-2").prop('checked') == true) {                                
+                            if ($("#datemethod1-t2-2").prop('checked') == true) {
                                 var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
                                 toDate = moment(toDate).format("YYYY-MM-DD");
@@ -302,7 +300,7 @@ Template.basreturn.onRendered(function() {
                             fromDate = moment(fromDate).format("YYYY-MM-DD");
                             $("#beginmonthlydate-t3").val(fromDate.split("-")[1]+"-01");
                             $("#currentyear-t3").val(fromDate.split("-")[0]);
-                            if ($("#datemethod1-t3").prop('checked') == true) {                                
+                            if ($("#datemethod1-t3").prop('checked') == true) {
                                 var endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
                                 toDate = moment(toDate).format("YYYY-MM-DD");
@@ -338,7 +336,7 @@ Template.basreturn.onRendered(function() {
                 }
                 templateObject.basreturnData.set(dataTableList);
 
-                $('.fullScreenSpin').css('display', 'none');                
+                $('.fullScreenSpin').css('display', 'none');
             }
         }).catch(function(err) {
             // sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
@@ -725,7 +723,7 @@ Template.basreturn.onRendered(function() {
                                     // setTimeout(function() {
                                     //     MakeNegative();
                                     // }, 100);
-                                });;  
+                                });;
                                 $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
                             }
                         }, 10);
@@ -807,7 +805,7 @@ Template.basreturn.onRendered(function() {
                                 // setTimeout(function() {
                                 //     MakeNegative();
                                 // }, 100);
-                            });;  
+                            });;
                             $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
                         }
                     }, 10);
@@ -887,10 +885,10 @@ Template.basreturn.onRendered(function() {
                                 // setTimeout(function() {
                                 //     MakeNegative();
                                 // }, 100);
-                            });;  
+                            });;
                             $("<button class='btn btn-primary btnRefreshTaxcode' type='button' id='btnRefreshTaxcode' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_wrapper .dataTables_filter");
                         }
-                    }, 10);                
+                    }, 10);
                 });
             });
     }
@@ -1064,7 +1062,7 @@ Template.basreturn.onRendered(function() {
                     }
                 });
             }
-            
+
             $(".tblAccountOverview")
                 .DataTable({
                     columnDefs: [
@@ -1931,28 +1929,28 @@ Template.basreturn.events({
     //     }
     // },
     "click #datemethod1": (e) => {
-        
+
     },
     "click #datemethod2": (e) => {
-        
+
     },
     "click #datemethod1-t2": (e) => {
-        
+
     },
     "click #datemethod2-t2": (e) => {
-        
+
     },
     "click #datemethod1-t2-2": (e) => {
-        
+
     },
     "click #datemethod2-t2-2": (e) => {
-        
+
     },
     "click #datemethod1-t3": (e) => {
-        
+
     },
     "click #datemethod2-t3": (e) => {
-        
+
     },
     'click #datemethod1, click #datemethod2, change #beginmonthlydate, change #currentyear': function(event) {
         let toDate = new Date();
@@ -2181,14 +2179,14 @@ Template.basreturn.events({
                         if ($("#datemethod1").prop('checked') == true) {
                             datemethod = "q";
                         } else {
-                            datemethod = "m";                            
+                            datemethod = "m";
                         }
                         if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
                             startDate = new Date($("#currentyear").val() + "-" + $("#beginmonthlydate").val());
                             startDate = moment(startDate).format("YYYY-MM-DD");
                             endDate = $("#endDate").val();
                         }
-                        
+
                         let gst1cost = $('#gst1cost').val();
                         let gst2cost = $('#gst2cost').val();
                         let gst3cost = $('#gst3cost').val();
@@ -2266,26 +2264,26 @@ Template.basreturn.events({
                         if ($("#datemethod1-t2").prop('checked') == true) {
                             datemethodT2 = "q";
                         } else {
-                            datemethodT2 = "m";                            
+                            datemethodT2 = "m";
                         }
                         if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
                             startDateT2 = new Date($("#currentyear-t2").val() + "-" + $("#beginmonthlydate-t2").val());
                             startDateT2 = moment(startDateT2).format("YYYY-MM-DD");
                             endDateT2 = $("#endDate-t2").val();
-                        }                        
+                        }
                         let datemethodT2_2 = "q";
                         let startDateT2_2 = "0000-00-00";
                         var endDateT2_2 = "0000-00-00";
                         if ($("#datemethod1-t2-2").prop('checked') == true) {
                             datemethodT2_2 = "q";
                         } else {
-                            datemethodT2_2 = "m";                            
+                            datemethodT2_2 = "m";
                         }
                         if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
                             startDateT2_2 = new Date($("#currentyear-t2-2").val() + "-" + $("#beginmonthlydate-t2-2").val());
                             startDateT2_2 = moment(startDateT2_2).format("YYYY-MM-DD");
                             endDateT2_2 = $("#endDate-t2-2").val();
-                        }                        
+                        }
                         let accounts1cost = $('#accounts1cost').val();
                         let accounts2cost = $('#accounts2cost').val();
                         let accounts3cost = $('#accounts3cost').val();
@@ -2330,7 +2328,7 @@ Template.basreturn.events({
                         if ($("#datemethod1-t3").prop('checked') == true) {
                             datemethodT3 = "q";
                         } else {
-                            datemethodT3 = "m";                            
+                            datemethodT3 = "m";
                         }
                         if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
                             startDateT3 = new Date($("#currentyear-t3").val() + "-" + $("#beginmonthlydate-t3").val());
@@ -2718,7 +2716,7 @@ Template.basreturn.events({
     },
 
 
-    
+
     'click .btnRefresh': function(event) {
         let templateObject = Template.instance();
         let fromDate = "0000-00-00";
@@ -2735,7 +2733,7 @@ Template.basreturn.events({
         if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
             fromDate = new Date($("#currentyear-t2").val() + "-" + $("#beginmonthlydate-t2").val());
             fromDate = moment(fromDate).format("YYYY-MM-DD");
-            toDate = $("#endDate-t2").val();            
+            toDate = $("#endDate-t2").val();
             templateObject.getAccountsSummaryReports(fromDate, toDate, 't2');
         }
         if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
@@ -2747,7 +2745,7 @@ Template.basreturn.events({
         if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
             fromDate = new Date($("#currentyear-t3").val() + "-" + $("#beginmonthlydate-t3").val());
             fromDate = moment(fromDate).format("YYYY-MM-DD");
-            toDate = $("#endDate-t3").val();            
+            toDate = $("#endDate-t3").val();
             templateObject.getTaxSummaryReports(fromDate, toDate, false, "t3");
             templateObject.getAccountsSummaryReports(fromDate, toDate, 't3');
         }
@@ -2859,7 +2857,7 @@ Template.basreturn.events({
         let departmentId = "all";
         if ($("#allDepart").prop('checked') == false) {
             departmentId = $('#sltDepartment').val();
-        }        
+        }
         let accountingMethod = "Accrual";
         if ($("#accountingmethod1").prop('checked') == true) {
             accountingMethod = "Accrual";
@@ -2872,13 +2870,13 @@ Template.basreturn.events({
         if ($("#datemethod1").prop('checked') == true) {
             datemethod = "q";
         } else {
-            datemethod = "m";            
+            datemethod = "m";
         }
         if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
             startDate = new Date($("#currentyear").val() + "-" + $("#beginmonthlydate").val());
             startDate = moment(startDate).format("YYYY-MM-DD");
             endDate = $("#endDate").val();
-        }        
+        }
         let gst1cost = $('#gst1cost').val();
         let gst2cost = $('#gst2cost').val();
         let gst3cost = $('#gst3cost').val();
@@ -2956,7 +2954,7 @@ Template.basreturn.events({
         if ($("#datemethod1-t2").prop('checked') == true) {
             datemethodT2 = "q";
         } else {
-            datemethodT2 = "m";            
+            datemethodT2 = "m";
         }
         if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
             startDateT2 = new Date($("#currentyear-t2").val() + "-" + $("#beginmonthlydate-t2").val());
@@ -2969,7 +2967,7 @@ Template.basreturn.events({
         if ($("#datemethod1-t2-2").prop('checked') == true) {
             datemethodT2_2 = "q";
         } else {
-            datemethodT2_2 = "m";            
+            datemethodT2_2 = "m";
         }
         if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
             startDateT2_2 = new Date($("#currentyear-t2-2").val() + "-" + $("#beginmonthlydate-t2-2").val());
@@ -3020,7 +3018,7 @@ Template.basreturn.events({
         if ($("#datemethod1-t3").prop('checked') == true) {
             datemethodT3 = "q";
         } else {
-            datemethodT3 = "m";            
+            datemethodT3 = "m";
         }
         if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
             startDateT3 = new Date($("#currentyear-t3").val() + "-" + $("#beginmonthlydate-t3").val());

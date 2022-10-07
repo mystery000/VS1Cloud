@@ -13,7 +13,6 @@ Template.dashboardSalesCards.onRendered(function () {
         getVS1Data('TProspectEx').then(function (dataObject) {
             if(dataObject.length) {
                 let {tprospect = []} = JSON.parse(dataObject[0].data);
-                console.log(tprospect);
                 let myLeadsLast3Months = 0;
                 let teamAvgLast3Months = 0;
                 let myNewOpportunityLast3Months = 0;

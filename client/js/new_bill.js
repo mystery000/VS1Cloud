@@ -7547,10 +7547,27 @@ Template.billcard.events({
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
+            let foreignCurrencyFields = {}
+            if( Session.get("CloudUseForeignLicence") ){
+                foreignCurrencyFields = {
+                    ForeignExchangeCode: currencyCode,
+                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                }
+            }
 
             var objDetails = '';
             if ($('#sltDept').val() === '') {
-                swal('Department has not been selected!', '', 'warning');
+              swal({
+                  title: "Department has not been selected!",
+                  text: '',
+                  type: 'warning',
+              }).then((result) => {
+                  if (result.value) {
+                      $('#sltDept').focus();
+                  } else if (result.dismiss == 'cancel') {
+
+                  }
+              });
                 LoadingOverlay.hide();
                 event.preventDefault();
                 return false;
@@ -7564,6 +7581,7 @@ Template.billcard.events({
                         SupplierName: supplier,
                         // ForeignExchangeCode: currencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         Deleted: false,
@@ -7592,6 +7610,7 @@ Template.billcard.events({
                         SupplierName: supplier,
                         // ForeignExchangeCode: currencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         OrderDate: saleDate,
@@ -8634,6 +8653,7 @@ Template.billcard.events({
                             SupplierName: supplier,
                             // ForeignExchangeCode: currencyCode,
                             // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                            ...foreignCurrencyFields,
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
                             OrderDate: saleDate,
@@ -8661,6 +8681,7 @@ Template.billcard.events({
                             SupplierName: supplier,
                             // ForeignExchangeCode: currencyCode,
                             // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                            ...foreignCurrencyFields,
                             Lines: splashLineArray,
                             OrderTo: billingAddress,
                             OrderDate: saleDate,

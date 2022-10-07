@@ -3257,16 +3257,16 @@ Template.appointments.onRendered(function () {
                   id: data.tappointmentex[i].fields.ID.toString() || "",
                   title:
                     data.tappointmentex[i].fields.TrainerName +
-                    "<br>" +
-                    data.tappointmentex[i].fields.ClientName +
-                    "<br>" +
-                    street +
-                    "<br>" +
-                    surbub +
-                    "<br>" +
-                    state +
-                    " " +
-                    zip,
+                    " - " +
+                    data.tappointmentex[i].fields.ClientName,
+                    // "<br>" +
+                    // street +
+                    // "<br>" +
+                    // surbub +
+                    // "<br>" +
+                    // state +
+                    // " " +
+                    // zip,
                   start: data.tappointmentex[i].fields.StartTime || "",
                   end: data.tappointmentex[i].fields.EndTime || "",
                   description: data.tappointmentex[i].fields.Notes || "",
@@ -4853,16 +4853,16 @@ Template.appointments.onRendered(function () {
               id: useData[i].fields.ID.toString() || "",
               title:
                 useData[i].fields.TrainerName +
-                "<br>" +
-                useData[i].fields.ClientName +
-                "<br>" +
-                street +
-                "<br>" +
-                surbub +
-                "<br>" +
-                state +
-                " " +
-                zip,
+                " - " +
+                useData[i].fields.ClientName,
+                // "<br>" +
+                // street +
+                // "<br>" +
+                // surbub +
+                // "<br>" +
+                // state +
+                // " " +
+                // zip,
               start: useData[i].fields.StartTime || "",
               end: useData[i].fields.EndTime || "",
               description: useData[i].fields.Notes || "",
@@ -5941,16 +5941,16 @@ Template.appointments.onRendered(function () {
                 id: data.tappointmentex[i].fields.ID.toString() || "",
                 title:
                   data.tappointmentex[i].fields.TrainerName +
-                  "<br>" +
-                  data.tappointmentex[i].fields.ClientName +
-                  "<br>" +
-                  street +
-                  "<br>" +
-                  surbub +
-                  "<br>" +
-                  state +
-                  " " +
-                  zip,
+                  " - " +
+                  data.tappointmentex[i].fields.ClientName,
+                  // "<br>" +
+                  // street +
+                  // "<br>" +
+                  // surbub +
+                  // "<br>" +
+                  // state +
+                  // " " +
+                  // zip,
                 start: data.tappointmentex[i].fields.StartTime || "",
                 end: data.tappointmentex[i].fields.EndTime || "",
                 description: data.tappointmentex[i].fields.Notes || "",

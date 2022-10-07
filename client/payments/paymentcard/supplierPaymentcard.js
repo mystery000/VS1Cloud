@@ -8483,7 +8483,7 @@ Template.supplierpaymentcard.events({
     }, 300);
   },
   "click .btnSave": (e, ui) => {
-    
+
     LoadingOverlay.show();
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
@@ -8503,6 +8503,25 @@ Template.supplierpaymentcard.events({
     let department = $("#sltDepartment").val();
     let empName = localStorage.getItem("mySession");
     let paymentData = [];
+
+    if (department === "") {
+      $(".fullScreenSpin").css("display", "none");
+      swal({
+          title: "Department has not been selected!",
+          text: '',
+          type: 'warning',
+      }).then((result) => {
+          if (result.value) {
+              $('#sltDepartment').focus();
+          } else if (result.dismiss == 'cancel') {
+
+          }
+      });
+      LoadingOverlay.hide();
+      event.preventDefault();
+      return false;
+    };
+
     Session.setPersistent("paymentmethod", payMethod);
     Session.setPersistent("bankaccount", bankAccount);
     Session.setPersistent("department", department);
@@ -8586,6 +8605,13 @@ Template.supplierpaymentcard.events({
           paymentData.push(Line);
         }
       });
+      let foreignCurrencyFields = {}
+      if( Session.get("CloudUseForeignLicence") ){
+        foreignCurrencyFields = {
+          ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+          ForeignExchangeRate: parseFloat(exchangeRate),
+        }
+      }
       let objDetails = {
         type: "TSuppPayments",
         fields: {
@@ -8594,14 +8620,11 @@ Template.supplierpaymentcard.events({
           PaymentDate: paymentDate,
           Notes: notes,
           ReferenceNo: reference,
-          // ...( Session.get("CloudUseForeignLicence") == true ? ForeignExchangeCode: foreignCurrency||'' ),
-          // ...( Session.get("CloudUseForeignLicence") == true ? ForeignExchangeRate: parseFloat(exchangeRate)||0 )
+          ...foreignCurrencyFields          
           //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
         },
       };
 
-      console.log('objDetails', objDetails)
-      return false
       paymentService.saveSuppDepositData(objDetails).then(function (data) {
           var customerID = $("#edtSupplierEmail").attr("customerid");
           // Start End Send Email
@@ -8924,6 +8947,15 @@ Template.supplierpaymentcard.events({
       var getsale_id = url.split("?poid=");
       var currentSalesID = getsale_id[getsale_id.length - 1];
       let paymentID = parseInt(currentSalesID);
+      let foreignCurrency = $("#sltCurrency").val();
+      let exchangeRate = $('#exchange_rate').val();
+      let foreignCurrencyFields = {}
+      if( Session.get("CloudUseForeignLicence") ){
+        foreignCurrencyFields = {
+          ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+          ForeignExchangeRate: parseFloat(exchangeRate),
+        }
+      }
 
       $(".tblSupplierPaymentcard > tbody > tr").each(function () {
         var lineID = this.id;
@@ -8994,6 +9026,7 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+            ...foreignCurrencyFields
 
             // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
             // ForeignExchangeRate: parseFloat(exchangeRate),
@@ -9354,7 +9387,15 @@ Template.supplierpaymentcard.events({
       var getsale_id = url.split("?billid=");
       var currentSalesID = getsale_id[getsale_id.length - 1];
       let paymentID = parseInt(currentSalesID);
-
+      let foreignCurrency = $("#sltCurrency").val();
+      let exchangeRate = $('#exchange_rate').val();
+      let foreignCurrencyFields = {}
+      if( Session.get("CloudUseForeignLicence") ){
+          foreignCurrencyFields = { 
+              ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+              ForeignExchangeRate: parseFloat(exchangeRate),
+          }
+      }
       $(".tblSupplierPaymentcard > tbody > tr").each(function () {
         var lineID = this.id;
         let linetype =
@@ -9423,7 +9464,7 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
-
+            ...foreignCurrencyFields
             // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
             // ForeignExchangeRate: parseFloat(exchangeRate),
             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
@@ -9778,7 +9819,15 @@ Template.supplierpaymentcard.events({
       var getsale_id = url.split("?creditid=");
       var currentSalesID = getsale_id[getsale_id.length - 1];
       let paymentID = parseInt(currentSalesID);
-
+      let foreignCurrency = $("#sltCurrency").val();
+      let exchangeRate = $('#exchange_rate').val();
+      let foreignCurrencyFields = {}
+      if( Session.get("CloudUseForeignLicence") ){
+          foreignCurrencyFields = {
+              ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+              ForeignExchangeRate: parseFloat(exchangeRate),
+          }
+      }
       $(".tblSupplierPaymentcard > tbody > tr").each(function () {
         var lineID = this.id;
         let linetype =
@@ -9836,7 +9885,7 @@ Template.supplierpaymentcard.events({
             PayMethodName: payMethod,
             ReferenceNo: reference,
             AccountName: bankAccount,
-
+            ...foreignCurrencyFields
             // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
             // ForeignExchangeRate: parseFloat(exchangeRate),
             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
@@ -10197,6 +10246,15 @@ Template.supplierpaymentcard.events({
         });
     } else if (url.indexOf("?suppname=") > 0 && url.indexOf("from=") > 0) {
       let paymentID = templateObject.supppaymentid.get();
+      let foreignCurrency = $("#sltCurrency").val();
+      let exchangeRate = $('#exchange_rate').val();
+      let foreignCurrencyFields = {}
+      if( Session.get("CloudUseForeignLicence") ){
+          foreignCurrencyFields = {
+              ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+              ForeignExchangeRate: parseFloat(exchangeRate),
+          }
+      }
       $(".tblSupplierPaymentcard > tbody > tr").each(function () {
         var lineID = this.id;
         let linetype =
@@ -10263,7 +10321,7 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
-
+            ...foreignCurrencyFields
             // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
             // ForeignExchangeRate: parseFloat(exchangeRate),
             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
@@ -10630,6 +10688,15 @@ Template.supplierpaymentcard.events({
       url.indexOf("?suppcreditname=") > 0 &&
       url.indexOf("pocreditid=") > 0
     ) {
+      let foreignCurrency = $("#sltCurrency").val();
+      let exchangeRate = $('#exchange_rate').val();
+      let foreignCurrencyFields = {}
+      if( Session.get("CloudUseForeignLicence") ){
+          foreignCurrencyFields = {
+              ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+              ForeignExchangeRate: parseFloat(exchangeRate),
+          }
+      }
       $(".tblSupplierPaymentcard > tbody > tr").each(function () {
         var lineID = this.id;
         let linetype =
@@ -10696,7 +10763,7 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
-
+            ...foreignCurrencyFields
             // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
             // ForeignExchangeRate: parseFloat(exchangeRate),
             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
@@ -11076,6 +11143,15 @@ Template.supplierpaymentcard.events({
       var currentSalesID = getsale_id[getsale_id.length - 1];
       let checkData = [];
       let allData = [];
+      let foreignCurrency = $("#sltCurrency").val();
+      let exchangeRate = $('#exchange_rate').val();
+      let foreignCurrencyFields = {}
+      if( Session.get("CloudUseForeignLicence") ){
+          foreignCurrencyFields = {
+              ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+              ForeignExchangeRate: parseFloat(exchangeRate),
+          }
+      }
 
       checkData = Session.get("supplierpayments") || [];
       if (checkData.length > 0) {
@@ -11149,7 +11225,7 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
-
+            ...foreignCurrencyFields
             // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
             // ForeignExchangeRate: parseFloat(exchangeRate),
             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
@@ -11533,6 +11609,15 @@ Template.supplierpaymentcard.events({
           LoadingOverlay.hide();
         });
     } else {
+      let foreignCurrency = $("#sltCurrency").val();
+      let exchangeRate = $('#exchange_rate').val();
+      let foreignCurrencyFields = {}
+      if( Session.get("CloudUseForeignLicence") ){
+          foreignCurrencyFields = {
+              ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+              ForeignExchangeRate: parseFloat(exchangeRate),
+          }
+      }
       $(".tblSupplierPaymentcard > tbody > tr").each(function () {
         if ($(this).closest("tr").find(".colType").text() != "") {
           var lineID = this.id;
@@ -11600,7 +11685,7 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
-
+            ...foreignCurrencyFields
             // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
             // ForeignExchangeRate: parseFloat(exchangeRate),
             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
@@ -13067,4 +13152,3 @@ export function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol 
   return convert;
 
 }
-

@@ -216,6 +216,9 @@ Template.executivesummaryreport.onRendered(() => {
       else
         $('.' + fieldSelector).css("color", varianceRed);
     }
+    if (fieldSelector == "spnCashSpentVariance" || fieldSelector == "spnTotalExpenseVariance" || fieldSelector == "spnTotalAgedPayablesVariance") {
+      fieldVariance = (-1) * fieldVariance;
+    }
     $('.' + fieldSelector).html(fieldVariance.toFixed(1));
   }
 

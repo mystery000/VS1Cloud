@@ -6857,6 +6857,13 @@ Template.creditcard.events({
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
+            let foreignCurrencyFields = {}
+            if( Session.get("CloudUseForeignLicence") ){
+                foreignCurrencyFields = {
+                    ForeignExchangeCode: currencyCode,
+                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                }
+            }
             var objDetails = '';
             if (getso_id[1]) {
                 currentCredit = parseInt(currentCredit);
@@ -6867,6 +6874,7 @@ Template.creditcard.events({
                         SupplierName: supplier,
                         // ForeignExchangeCode: currencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         Deleted: false,
@@ -6894,6 +6902,7 @@ Template.creditcard.events({
                         SupplierName: supplier,
                         // ForeignExchangeCode: currencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         OrderDate: saleDate,
@@ -7928,6 +7937,13 @@ Template.creditcard.events({
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
+            let foreignCurrencyFields = {}
+            if( Session.get("CloudUseForeignLicence") ){
+                foreignCurrencyFields = {
+                    ForeignExchangeCode: currencyCode,
+                    ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                }
+            }
             var objDetails = '';
             if (getso_id[1]) {
                 currentCredit = parseInt(currentCredit);
@@ -7938,6 +7954,7 @@ Template.creditcard.events({
                         SupplierName: supplier,
                         // ForeignExchangeCode: currencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         OrderDate: saleDate,
@@ -7963,6 +7980,7 @@ Template.creditcard.events({
                         SupplierName: supplier,
                         // ForeignExchangeCode: currencyCode,
                         // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+                        ...foreignCurrencyFields,
                         Lines: splashLineArray,
                         OrderTo: billingAddress,
                         Deleted: false,
