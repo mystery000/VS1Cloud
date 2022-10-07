@@ -115,6 +115,18 @@ Template.allreports.onCreated(function() {
     templateObject.isPrintStatement.set(false);
     templateObject.isExecutiveSummary = new ReactiveVar();
     templateObject.isExecutiveSummary.set(false);
+    templateObject.isCashReport = new ReactiveVar();
+    templateObject.isCashReport.set(false);
+    templateObject.isProfitabilityReport = new ReactiveVar();
+    templateObject.isProfitabilityReport.set(false);
+    templateObject.isPerformanceReport = new ReactiveVar();
+    templateObject.isPerformanceReport.set(false);
+    templateObject.isBalanceSheetReport = new ReactiveVar();
+    templateObject.isBalanceSheetReport.set(false);
+    templateObject.isIncomeReport = new ReactiveVar();
+    templateObject.isIncomeReport.set(false);
+    templateObject.isPositionReport = new ReactiveVar();
+    templateObject.isPositionReport.set(false);
     templateObject.accountantList = new ReactiveVar([]);
 });
 Template.allreports.onRendered(() => {
@@ -175,7 +187,12 @@ Template.allreports.onRendered(() => {
     let isPurchaseSummaryReport = Session.get('cloudPurchaseSummaryReport');
     let isPrintStatement = Session.get('cloudPrintStatement');
     let isExecutiveSummary = Session.get('cloudExecutiveSummary');
-
+    let isCashReport = Session.get('cloudCashReport');
+    let isProfitabilityReport = Session.get('cloudProfitabilityReport');
+    let isPerformanceReport = Session.get('cloudPerformanceReport');
+    let isBalanceSheetReport = Session.get('cloudBalanceSheetReport');
+    let isIncomeReport = Session.get('cloudIncomeReport');
+    let isPositionReport = Session.get('cloudPositionReport');
     const taxRateService = new taxRateService();
 
     const accountantList = [];
@@ -348,7 +365,24 @@ Template.allreports.onRendered(() => {
     if (isExecutiveSummary == true) {
         templateObject.isExecutiveSummary.set(true);
     }
-
+    if (isCashReport == true) {
+        templateObject.isCashReport.set(true);
+    }
+    if (isProfitabilityReport == true) {
+        templateObject.isProfitabilityReport.set(true);
+    }
+    if (isPerformanceReport == true) {
+        templateObject.isPerformanceReport.set(true);
+    }
+    if (isBalanceSheetReport == true) {
+        templateObject.isBalanceSheetReport.set(true);
+    }
+    if (isIncomeReport == true) {
+        templateObject.isIncomeReport.set(true);
+    }
+    if (isPositionReport == true) {
+        templateObject.isPositionReport.set(true);
+    }
     templateObject.getAccountantList = function() {
         getVS1Data('TReportsAccountantsCategory').then(function(dataObject) {
 
@@ -1148,6 +1182,66 @@ Template.allreports.events({
             templateObject.isExecutiveSummary.set(false);
         }
     },
+    'click .chkCashReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudCashReport', true);
+            templateObject.isCashReport.set(true);
+        } else {
+            Session.setPersistent('cloudCashReport', false);
+            templateObject.isCashReport.set(false);
+        }
+    },
+    'click .chkProfitabilityReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudProfitabilityReport', true);
+            templateObject.isProfitabilityReport.set(true);
+        } else {
+            Session.setPersistent('cloudProfitabilityReport', false);
+            templateObject.isProfitabilityReport.set(false);
+        }
+    },
+    'click .chkPerformanceReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudPerformanceReport', true);
+            templateObject.isPerformanceReport.set(true);
+        } else {
+            Session.setPersistent('cloudPerformanceReport', false);
+            templateObject.isPerformanceReport.set(false);
+        }
+    },
+    'click .chkBalanceSheetReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudBalanceSheetReport', true);
+            templateObject.isBalanceSheetReport.set(true);
+        } else {
+            Session.setPersistent('cloudBalanceSheetReport', false);
+            templateObject.isBalanceSheetReport.set(false);
+        }
+    },
+    'click .chkIncomeReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudIncomeReport', true);
+            templateObject.isIncomeReport.set(true);
+        } else {
+            Session.setPersistent('cloudIncomeReport', false);
+            templateObject.isIncomeReport.set(false);
+        }
+    },
+    'click .chkPositionReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudPositionReport', true);
+            templateObject.isPositionReport.set(true);
+        } else {
+            Session.setPersistent('cloudPositionReport', false);
+            templateObject.isPositionReport.set(false);
+        }
+    },
     'click .showhidden_fin': function(event) {
         if (event.target.id === "ellipsis_fin") {
             $('#ellipsis_fin').hide();
@@ -1383,6 +1477,24 @@ Template.allreports.helpers({
     isExecutiveSummary: function() {
         return Template.instance().isExecutiveSummary.get();
     },
+    isCashReport: function() {
+        return Template.instance().isCashReport.get();
+    },
+    isProfitabilityReport: function() {
+        return Template.instance().isProfitabilityReport.get();
+    },
+    isPerformanceReport: function() {
+        return Template.instance().isPerformanceReport.get();
+    },
+    isBalanceSheetReport: function() {
+        return Template.instance().isBalanceSheetReport.get();
+    },
+    isIncomeReport: function() {
+        return Template.instance().isIncomeReport.get();
+    },
+    isPositionReport: function() {
+        return Template.instance().isPositionReport.get();
+    },
     isFavorite: function() {
         let isBalanceSheet = Template.instance().isBalanceSheet.get();
         let isProfitLoss = Template.instance().isProfitLoss.get();
@@ -1440,9 +1552,15 @@ Template.allreports.helpers({
         let isPurchaseSummaryReport = Template.instance().isPurchaseSummaryReport.get();
         let isPrintStatement = Template.instance().isPrintStatement.get();
         let isExecutiveSummary = Template.instance().isExecutiveSummary.get();
+        let isCashReport = Template.instance().isCashReport.get();
+        let isProfitabilityReport = Template.instance().isProfitabilityReport.get();
+        let isPerformanceReport = Template.instance().isPerformanceReport.get();
+        let isBalanceSheetReport = Template.instance().isBalanceSheetReport.get();
+        let isIncomeReport = Template.instance().isIncomeReport.get();
+        let isPositionReport = Template.instance().isPositionReport.get();
         let isShowFavorite = false;
 
-        if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || isExecutiveSummary || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isPayrollLeaveTaken || isForeignExchangeHistoryList || isForeignExchangeList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity || isLotReport || isCustomerDetails || isCustomerSummary || isSupplierDetails || isSupplierProduct || isJobProfitReport || isPLMonthly || isPLQuarterly || isPLYearly || isPLYTD || isJobSalesSummary) {
+        if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || isExecutiveSummary || isCashReport || isProfitabilityReport || isPerformanceReport || isBalanceSheetReport || isIncomeReport || isPositionReport || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isPayrollLeaveTaken || isForeignExchangeHistoryList || isForeignExchangeList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity || isLotReport || isCustomerDetails || isCustomerSummary || isSupplierDetails || isSupplierProduct || isJobProfitReport || isPLMonthly || isPLQuarterly || isPLYearly || isPLYTD || isJobSalesSummary) {
             isShowFavorite = true;
         }
         return isShowFavorite;

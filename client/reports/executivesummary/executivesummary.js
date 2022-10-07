@@ -216,6 +216,9 @@ Template.executivesummaryreport.onRendered(() => {
       else
         $('.' + fieldSelector).css("color", varianceRed);
     }
+    if (fieldSelector == "spnCashSpentVariance" || fieldSelector == "spnTotalExpenseVariance" || fieldSelector == "spnTotalAgedPayablesVariance") {
+      fieldVariance = (-1) * fieldVariance;
+    }
     $('.' + fieldSelector).html(fieldVariance.toFixed(1));
   }
 
@@ -408,7 +411,7 @@ Template.executivesummaryreport.onRendered(() => {
       templateObject.setFieldVariance(currentAsset[0], currentAsset[1], "spnCurrentAssetVariance");
       templateObject.setFieldVariance(termAsset[0], termAsset[1], "spnTermAssetVariance");
     } catch (err) {
-
+      console.log(err);
     }
     LoadingOverlay.hide();
   }

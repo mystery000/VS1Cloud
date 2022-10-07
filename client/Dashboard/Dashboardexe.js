@@ -581,7 +581,7 @@ Template.dashboardexe.onRendered(function () {
         $(`[key='${arrChartKey[i]}']`).hide();
       }
     }
-    // if ($(`[key='dashboardexe_cash'] .on-editor-change-mode`).attr("is-hidden") == "true") {
+    // if ($(`[key='dashboardexe_cash'] .on-editor-change-mode`).attr("is-hidden") == "true") { 
     // }
   };
 
@@ -681,6 +681,9 @@ Template.dashboardexe.onRendered(function () {
         $('.' + parentSelector).css("backgroundColor", varianceGreen);
       else
         $('.' + parentSelector).css("backgroundColor", varianceRed);
+    }
+    if (fieldSelector == "spnCashSpentVariance" || fieldSelector == "spnTotalExpenseVariance" || fieldSelector == "spnTotalAgedPayablesVariance") {
+      fieldVariance = (-1) * fieldVariance;
     }
     $('.' + fieldSelector).html(fieldVariance.toFixed(1));
   }
@@ -1011,7 +1014,7 @@ Template.dashboardexe.onRendered(function () {
       templateObject.setFieldVariance(currentAsset[0], currentAsset[1], "spnCurrentAssetVariance", "divCurrentAssetVariance");
       templateObject.setFieldVariance(termAsset[0], termAsset[1], "spnTermAssetVariance", "divTermAssetVariance");
     } catch (err) {
-
+      console.log(err);
     }
     LoadingOverlay.hide();
   }
