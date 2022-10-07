@@ -20,6 +20,7 @@ import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
 import {EmployeeFields} from "../js/Api/Model/Employee";
 import {ReportService} from "../reports/report-service";
+import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -27,6 +28,7 @@ Template.timesheetdetail.onCreated(function () {
   this.timesheet = new ReactiveVar();
   this.timeSheetList = new ReactiveVar([]);
   this.employee = new ReactiveVar();
+  this.earnings = new ReactiveVar([]);
 });
 
 Template.timesheetdetail.onRendered(function () {
@@ -46,11 +48,11 @@ Template.timesheetdetail.onRendered(function () {
     data = data.response;
 
     let timesheets = data.ttimesheet.map(t => t.fields);
-     timesheets.forEach((t, index) => {
-      if(t.Status == "") {
+    timesheets.forEach((t, index) => {
+      if (t.Status == "") {
         t.Status = "Draft";
       }
-    })
+    });
     let timesheet = timesheets.find(o => o.ID == id);
 
     console.log("timsheet", timesheet);
@@ -81,6 +83,34 @@ Template.timesheetdetail.onRendered(function () {
     console.log("employee", selectedEmployee);
   };
 
+  this.getEarnings = async (employeeID = null) => {
+    let data = await CachedHttp.get(erpObject.TPayTemplateEarningLine, async () => {
+      const employeePayrolApis = new EmployeePayrollApi();
+      const employeePayrolEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TPayTemplateEarningLine);
+      employeePayrolEndpoint.url.searchParams.append("ListType", "'Detail'");
+
+      const response = await employeePayrolEndpoint.fetch();
+      if (response.ok == true) {
+        return await response.json();
+      }
+      return null;
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: cachedResponse => {
+        return false;
+      }
+    });
+
+    data = data.response.tpaytemplateearningline.map(earning => earning.fields);
+    if (employeeID) {
+      data = data.filter(item => parseInt(item.EmployeeID) == parseInt(employeeID));
+    }
+
+    this.earnings.set(data);
+    return data;
+  };
+
   //  this.loadTimeSheetEntry = async () => {
   //   let data = await CachedHttp.get(erpObject.TTimeSheetEntry, async () => {
   //     return await (new ReportService()).getTimeSheetEntry();
@@ -100,9 +130,11 @@ Template.timesheetdetail.onRendered(function () {
   //  }
 
   this.initPage = async () => {
+    const employee = await this.employee.get();
     LoadingOverlay.show();
     await this.loadTimeSheet();
     await this.loadEmployee();
+    await this.getEarnings(employee.ID);
 
     LoadingOverlay.hide();
   };
