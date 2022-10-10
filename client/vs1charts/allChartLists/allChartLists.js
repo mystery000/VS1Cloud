@@ -367,7 +367,7 @@ Template.allChartLists.onRendered(function () {
                         if ( chart.fields._chartSlug == 'accounts__profit_and_loss' ){
                             $(`[key='dashboard__profit_and_loss']`).removeClass("hideelement");
                         }
-                        if ( chart.fields._chartSlug == 'sales__sales_overview'){
+                        if ( chart.fields._chartSlug == 'sales__sales_overview' || chart.fields._chartSlug == 'dsmcharts__sales_quota'){
                             $(`[key='contacts__top_10_customers']`).removeClass("hideelement");
                             $(`[key='dashboard__employee_sales_comparison']`).removeClass("hideelement");
                         }

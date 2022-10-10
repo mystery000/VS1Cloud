@@ -809,6 +809,12 @@ Template.vs1login.onRendered(function () {
                     $('.loginSpinner').css('display', 'none');
                     $('.fullScreenSpin').css('display', 'none');
                 } else{
+                  await delay(500);
+                  pausevideo();
+                  $('.myVS1Video').css('display', 'none');
+                  $('.myVS1VideoLogin').css('display', 'none');
+                  $('.loginSpinner').css('display', 'none');
+                  $('.fullScreenSpin').css('display', 'none');
                 }
             }
           } else {
@@ -949,118 +955,7 @@ Template.vs1login.onRendered(function () {
             }
         }
       });
-      var oReq4 = new XMLHttpRequest();
-      var ERPDetails = erpdbname;
-      var SegsDatabase = ERPDetails.split(',');
-      var currentBeginDate = new Date();
-      var dateAsOf = currentBeginDate.getFullYear() + '-' + ("0" + (currentBeginDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentBeginDate.getDate())).slice(-2);
-      oReq4.open("GET", URLRequest + SegsDatabase[0] + ':' + SegsDatabase[4] + '/' + "erpapi" + '/TCardDataReport?SelDate="' + dateAsOf + '"', true);
-            
-      oReq4.setRequestHeader("database",SegsDatabase[1]);
-      oReq4.setRequestHeader("username",SegsDatabase[2]);
-      oReq4.setRequestHeader("password",SegsDatabase[3]);
-      oReq4.send();
-      oReq4.onreadystatechange = function() {
-        if(oReq4.readyState == 4 && oReq4.status == 200) {
-            var dataReturnRes4 = JSON.parse(oReq4.responseText);
-            if (dataReturnRes4.tcarddatareport.length > 0) {
-                let resData = dataReturnRes4.tcarddatareport[0];
-                localStorage.setItem('TCardDataReport_loaded', 1);
-                localStorage.setItem('TCardDataReport_Cash_Received1', resData.Cash_Received1);
-                localStorage.setItem('TCardDataReport_Cash_Received2', resData.Cash_Received2);
-                localStorage.setItem('TCardDataReport_Cash_Spent1', resData.Cash_Spent1);
-                localStorage.setItem('TCardDataReport_Cash_Spent2', resData.Cash_Spent2);
-                localStorage.setItem('TCardDataReport_Cash_Surplus1', resData.Cash_Surplus1);
-                localStorage.setItem('TCardDataReport_Cash_Surplus2', resData.Cash_Surplus2);
-                localStorage.setItem('TCardDataReport_Cash_Balance1', resData.Cash_Balance1);
-                localStorage.setItem('TCardDataReport_Cash_Balance2', resData.Cash_Balance2);
-                localStorage.setItem('TCardDataReport_Prof_Income1', resData.Prof_Income1);
-                localStorage.setItem('TCardDataReport_Prof_Income2', resData.Prof_Income2);
-                localStorage.setItem('TCardDataReport_Prof_Gross1', resData.Prof_Gross1);
-                localStorage.setItem('TCardDataReport_Prof_Gross2', resData.Prof_Gross2);
-                localStorage.setItem('TCardDataReport_Prof_Expenses1', resData.Prof_Expenses1);
-                localStorage.setItem('TCardDataReport_Prof_Expenses2', resData.Prof_Expenses2);
-                localStorage.setItem('TCardDataReport_Prof_Net1', resData.Prof_Net1);
-                localStorage.setItem('TCardDataReport_Prof_Net2', resData.Prof_Net2);
-                localStorage.setItem('TCardDataReport_Income_Invoices1', resData.Income_Invoices1);
-                localStorage.setItem('TCardDataReport_Income_Invoices2', resData.Income_Invoices2);
-                localStorage.setItem('TCardDataReport_Income_Average1', resData.Income_Average1);
-                localStorage.setItem('TCardDataReport_Income_Average2', resData.Income_Average2);
-                localStorage.setItem('TCardDataReport_Income_Total1', resData.Income_Total1);
-                localStorage.setItem('TCardDataReport_Income_Total2', resData.Income_Total2);
-                localStorage.setItem('TCardDataReport_Perf_GrossMargin1', resData.Perf_GrossMargin1);
-                localStorage.setItem('TCardDataReport_Perf_GrossMargin2', resData.Perf_GrossMargin2);
-                localStorage.setItem('TCardDataReport_Perf_NetMargin1', resData.Perf_NetMargin1);
-                localStorage.setItem('TCardDataReport_Perf_NetMargin2', resData.Perf_NetMargin2);
-                localStorage.setItem('TCardDataReport_Perf_ROI1', resData.Perf_ROI1);
-                localStorage.setItem('TCardDataReport_Perf_ROI2', resData.Perf_ROI2);
-                localStorage.setItem('TCardDataReport_Bal_Debtors1', resData.Bal_Debtors1);
-                localStorage.setItem('TCardDataReport_Bal_Debtors2', resData.Bal_Debtors2);
-                localStorage.setItem('TCardDataReport_Bal_Creditors1', resData.Bal_Creditors1);
-                localStorage.setItem('TCardDataReport_Bal_Creditors2', resData.Bal_Creditors2);
-                localStorage.setItem('TCardDataReport_Bal_NetAsset1', resData.Bal_NetAsset1);
-                localStorage.setItem('TCardDataReport_Bal_NetAsset2', resData.Bal_NetAsset2);
-                localStorage.setItem('TCardDataReport_Pos_AvgDebtDays1', resData.Pos_AvgDebtDays1);
-                localStorage.setItem('TCardDataReport_Pos_AvgDebtDays2', resData.Pos_AvgDebtDays2);
-                localStorage.setItem('TCardDataReport_Pos_AvgCredDays1', resData.Pos_AvgCredDays1);
-                localStorage.setItem('TCardDataReport_Pos_AvgCredDays2', resData.Pos_AvgCredDays2);
-                localStorage.setItem('TCardDataReport_Pos_CashForecast1', resData.Pos_CashForecast1);
-                localStorage.setItem('TCardDataReport_Pos_CashForecast2', resData.Pos_CashForecast2);
-                localStorage.setItem('TCardDataReport_Pos_AssetToLiab1', resData.Pos_AssetToLiab1);
-                localStorage.setItem('TCardDataReport_Pos_AssetToLiab2', resData.Pos_AssetToLiab2);
-                localStorage.setItem('TCardDataReport_Sheet_AssetToLiab1', resData.Sheet_AssetToLiab1);
-                localStorage.setItem('TCardDataReport_Sheet_AssetToLiab2', resData.Sheet_AssetToLiab2);
-            } else {
-                localStorage.setItem('TCardDataReport_loaded', 0);
-                localStorage.setItem('TCardDataReport_Cash_Received1', 0);
-                localStorage.setItem('TCardDataReport_Cash_Received2', 0);
-                localStorage.setItem('TCardDataReport_Cash_Spent1', 0);
-                localStorage.setItem('TCardDataReport_Cash_Spent2', 0);
-                localStorage.setItem('TCardDataReport_Cash_Surplus1', 0);
-                localStorage.setItem('TCardDataReport_Cash_Surplus2', 0);
-                localStorage.setItem('TCardDataReport_Cash_Balance1', 0);
-                localStorage.setItem('TCardDataReport_Cash_Balance2', 0);
-                localStorage.setItem('TCardDataReport_Prof_Income1', 0);
-                localStorage.setItem('TCardDataReport_Prof_Income2', 0);
-                localStorage.setItem('TCardDataReport_Prof_Gross1', 0);
-                localStorage.setItem('TCardDataReport_Prof_Gross2', 0);
-                localStorage.setItem('TCardDataReport_Prof_Expenses1', 0);
-                localStorage.setItem('TCardDataReport_Prof_Expenses2', 0);
-                localStorage.setItem('TCardDataReport_Prof_Net1', 0);
-                localStorage.setItem('TCardDataReport_Prof_Net2', 0);
-                localStorage.setItem('TCardDataReport_Income_Invoices1', 0);
-                localStorage.setItem('TCardDataReport_Income_Invoices2', 0);
-                localStorage.setItem('TCardDataReport_Income_Average1', 0);
-                localStorage.setItem('TCardDataReport_Income_Average2', 0);
-                localStorage.setItem('TCardDataReport_Income_Total1', 0);
-                localStorage.setItem('TCardDataReport_Income_Total2', 0);
-                localStorage.setItem('TCardDataReport_Perf_GrossMargin1', 0);
-                localStorage.setItem('TCardDataReport_Perf_GrossMargin2', 0);
-                localStorage.setItem('TCardDataReport_Perf_NetMargin1', 0);
-                localStorage.setItem('TCardDataReport_Perf_NetMargin2', 0);
-                localStorage.setItem('TCardDataReport_Perf_ROI1', 0);
-                localStorage.setItem('TCardDataReport_Perf_ROI2', 0);
-                localStorage.setItem('TCardDataReport_Bal_Debtors1', 0);
-                localStorage.setItem('TCardDataReport_Bal_Debtors2', 0);
-                localStorage.setItem('TCardDataReport_Bal_Creditors1', 0);
-                localStorage.setItem('TCardDataReport_Bal_Creditors2', 0);
-                localStorage.setItem('TCardDataReport_Bal_NetAsset1', 0);
-                localStorage.setItem('TCardDataReport_Bal_NetAsset2', 0);
-                localStorage.setItem('TCardDataReport_Pos_AvgDebtDays1', 0);
-                localStorage.setItem('TCardDataReport_Pos_AvgDebtDays2', 0);
-                localStorage.setItem('TCardDataReport_Pos_AvgCredDays1', 0);
-                localStorage.setItem('TCardDataReport_Pos_AvgCredDays2', 0);
-                localStorage.setItem('TCardDataReport_Pos_CashForecast1', 0);
-                localStorage.setItem('TCardDataReport_Pos_CashForecast2', 0);
-                localStorage.setItem('TCardDataReport_Pos_AssetToLiab1', 0);
-                localStorage.setItem('TCardDataReport_Pos_AssetToLiab2', 0);
-                localStorage.setItem('TCardDataReport_Sheet_AssetToLiab1', 0);
-                localStorage.setItem('TCardDataReport_Sheet_AssetToLiab2', 0);
-            }
-        }else if (oReq4.status != 200){
-            Meteor._reload.reload();
-        }
-      }
+
     }
 
 
@@ -1519,8 +1414,8 @@ Template.vs1login.onRendered(function () {
                 isAppointmentSMS = false;
             }
 
-            if (!isFxCurrencyLicence) {
-                isFXEnabled = false;
+            if (isFxCurrencyLicence) {
+                isFXEnabled = true;
             }
 
             if (!isInventoryLicence) {
@@ -1664,8 +1559,7 @@ Template.vs1login.onRendered(function () {
              Session.setPersistent('CloudImportProd', isImportProduct);
              Session.setPersistent('CloudStockOnHand', isStockonHandDemandChart);
              Session.setPersistent('CloudApptSMS', isAppointmentSMS);
-
-             Session.setPersistent('CloudUseForeignLicence', isFXEnabled);
+             //Session.setPersistent('CloudUseForeignLicence', isFXEnabled);
 
             let userSerssion = {
                 'loggedEmpID': userAccessOptions.items[0].fields.EmployeeId,
@@ -2455,6 +2349,7 @@ Template.vs1login.onRendered(function () {
                                       Session.setPersistent('CloudMatrixLicence', isMatrixLicence);
                                       Session.setPersistent('CloudPOSLicence', isPOSLicence);
                                       Session.setPersistent('CloudUseForeignLicenceModule', isFxCurrencyLicence);
+                                      Session.setPersistent('CloudUseForeignLicence', isFxCurrencyLicence);
                                       Session.setPersistent('CloudWMSLicence', isWMSLicence);
                                       Session.setPersistent('CloudAppointmentSchedulingLicence', isAppointmentSchedulingLicence);
                                       /* End Remove licence */

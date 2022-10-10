@@ -128,7 +128,9 @@ Template.exeprofitabilityreport.onRendered(() => {
                 }
             }
         }
-        if (fieldVariance >= 0) {
+        if (fieldVariance == 0) {
+            $('.' + fieldSelector).css("color", varianceGreen);
+        } else if (fieldVariance > 0) {
             if (fieldSelector == "spnTotalExpenseVariance")
                 $('.' + fieldSelector).css("color", varianceRed);
             else
@@ -138,6 +140,9 @@ Template.exeprofitabilityreport.onRendered(() => {
                 $('.' + fieldSelector).css("color", varianceGreen);
             else
                 $('.' + fieldSelector).css("color", varianceRed);
+        }
+        if (fieldSelector == "spnTotalExpenseVariance") {
+            fieldVariance = (-1) * fieldVariance;
         }
         $('.' + fieldSelector).html(fieldVariance.toFixed(1));
     }
@@ -172,7 +177,7 @@ Template.exeprofitabilityreport.onRendered(() => {
             templateObject.setFieldVariance(totalExpense[0], totalExpense[1], "spnTotalExpenseVariance");
             templateObject.setFieldVariance(nettProfit[0], nettProfit[1], "spnNettProfitVariance");
         } catch (err) {
-
+            console.log(err);
         }
         LoadingOverlay.hide();
     };
