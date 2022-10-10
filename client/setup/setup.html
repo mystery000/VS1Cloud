@@ -54,6 +54,7 @@
         .addEmployeeModalNew .row.no-gutters .chkaddress {
             width: auto !important;
         }
+        #btnAddPaymentMethod .custom-control.custom-checkbox.chkBox .custom-control-label,
         .addEmployeeModalNew .row.no-gutters .chkaddress .custom-control-label {
             position: relative;
         }
@@ -74,6 +75,7 @@
             top: 50%;
             overflow: visible; */
             pointer-events: none;
+            text-align: center;
         }
         .giveAccess {
             pointer-events: none;
@@ -90,10 +92,13 @@
             -webkit-transition: all 0s ease 0s !important;
             -moz-transition: all 0s ease 0s !important;
         }
+        body {
+            padding: 0px !important;
+        }
         .modal.show {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
+            /* display: flex !important; */
+            /* justify-content: center !important;
+            align-items: center !important; */
             transition: all 0.5s ease 0s !important;
             -webkit-transition: all 0.5s ease 0s !important;
             -moz-transition: all 0.5s ease 0s !important;
@@ -103,10 +108,13 @@
         }
         .centerPopupDiv .resizablePopup {
             max-width: 60% !important;
+            height: 400px;
             max-height: 100% !important;
+            display: inline-block;
         }
         .centerPopupDiv .resizablePopup {
             width: 600px;
+            text-align: left;
         }
         .centerPopupDiv iframe,
         .centerPopupDiv video {
