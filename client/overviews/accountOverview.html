@@ -459,7 +459,7 @@
                             <th class="th colExpenseCategory hiddenColumn">Category</th> -->
                             {{#each displayfield in displayfields}}
                               {{#if displayfield.display}}
-                              <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                              <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
                                   {{displayfield.custfieldlabel}}
                                 </th>
                               {{/if}}
