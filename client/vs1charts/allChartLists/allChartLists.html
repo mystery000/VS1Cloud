@@ -141,6 +141,8 @@
         <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="4" data-default-class="col-md-8" key="inventory__stock_on_hand_and_demand">
             {{> invstockonhandanddemand}}
         </div>
+        <!-- position 17 to 18, 24 -->
+        {{> dashboardManagerCharts}}
         <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="5" data-default-class="col-md-4" key="contacts__top_10_customers">
             {{> top10Customers}}
         </div>
@@ -184,12 +186,8 @@
             {{> accountslistchart}}
         </div>
         {{/if}}
-        <!-- position 17 to 18 -->
-        {{> dashboardManagerCharts}}
-        <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="24" data-default-class="col-md-4" key="dsmcharts__appointment_list">
-            {{> dsmAppointmentsWidget}}
-        </div>
-        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="25" data-default-class="col-md-12" key="dsmcharts__lead_list">
+        
+        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="25" data-default-class="col-md-12" key="dsmcharts__lead_list" style="margin-top:25px !important">
             {{> dsmleadlistchart}}
         </div>
         <!-- position 27, 28 -->

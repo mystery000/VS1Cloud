@@ -14,7 +14,7 @@ Template.dashboardsales.onRendered(function () {
         templateObject.includeDashboard.set(true);
     }
     const currentDate = new Date();
-    let fromDate = moment().subtract(1, 'month').format('DD/MM/YYYY');
+    let fromDate = moment().subtract(2, 'month').format('DD/MM/YYYY');
     let toDate = moment(currentDate).format("DD/MM/YYYY");
     setTimeout(function(){
         $("#date-input,#dateTo,#dateFrom").datepicker({
