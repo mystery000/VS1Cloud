@@ -1335,8 +1335,11 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                         DOB: data.temployee[i].fields.DOB || moment('2018-07-01').format('YYYY-MM-DD')
                     }
                 };
-                contactService.saveEmployeeEx(objDetails).then(function (data) {
-                });
+                // contactService.saveEmployeeEx(objDetails).then(function (data) {
+                //   sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function(dataEmployee) {
+                //       addVS1Data('TEmployee', JSON.stringify(dataEmployee));
+                //   });
+                // });
             }
             if (Session.get('mySessionEmployee') == data.temployee[i].fields.EmployeeName) {
                 if (data.temployee[i].fields.CustFld8 == "false") {
