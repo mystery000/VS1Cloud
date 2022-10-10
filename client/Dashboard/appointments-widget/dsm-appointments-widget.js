@@ -213,16 +213,43 @@ Template.dsmAppointmentsWidget.onRendered(function () {
         templateObject.globalSettings.set(globalSet);
 
         if (globalSet.productID != "") {
-            appointmentService.getGlobalSettingsExtra().then(function (data) {
-                for (let p = 0; p < data.terppreferenceextra.length; p++) {
-                    if (data.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
-                        globalSet.defaultProduct = data.terppreferenceextra[p].fieldValue
+            getVS1Data('TERPPreferenceExtra').then(function (dataObject) {
+                if (dataObject.length == 0) {
+                    sideBarService.getGlobalSettingsExtra().then(function (data) {
+                      addVS1Data('TERPPreferenceExtra', JSON.stringify(data));
+                      for (let p = 0; p < data.terppreferenceextra.length; p++) {
+                          if (data.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
+                              globalSet.defaultProduct = data.terppreferenceextra[p].fieldValue
+                          }
+                          $('#productlist').prepend('<option value=' + globalSet.id + '>' + globalSet.defaultProduct + '</option>');
+                          $("#productlist")[0].options[0].selected = true;
+                      }
+                      templateObject.globalSettings.set(globalSet);
+                    }).catch(function (err) {});
+                } else {
+                    let data = JSON.parse(dataObject[0].data);
+                    for (let p = 0; p < data.terppreferenceextra.length; p++) {
+                        if (data.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
+                            globalSet.defaultProduct = data.terppreferenceextra[p].fieldValue
+                        }
+                        $('#productlist').prepend('<option value=' + globalSet.id + '>' + globalSet.defaultProduct + '</option>');
+                        $("#productlist")[0].options[0].selected = true;
                     }
-                    $('#productlist').prepend('<option value=' + globalSet.id + '>' + globalSet.defaultProduct + '</option>');
-                    $("#productlist")[0].options[0].selected = true;
+                    templateObject.globalSettings.set(globalSet);
                 }
-                templateObject.globalSettings.set(globalSet);
-            })
+            }).catch(function (err) {
+                sideBarService.getGlobalSettingsExtra().then(function (data) {
+                  addVS1Data('TERPPreferenceExtra', JSON.stringify(data));
+                  for (let p = 0; p < data.terppreferenceextra.length; p++) {
+                      if (data.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
+                          globalSet.defaultProduct = data.terppreferenceextra[p].fieldValue
+                      }
+                      $('#productlist').prepend('<option value=' + globalSet.id + '>' + globalSet.defaultProduct + '</option>');
+                      $("#productlist")[0].options[0].selected = true;
+                  }
+                  templateObject.globalSettings.set(globalSet);
+                }).catch(function (err) {});
+            });
         } else {
             globalSet.defaultProduct = "";
             globalSet.id = "";
@@ -3010,7 +3037,7 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                         }
                     }
                     document.getElementById("appID").value = max + 1;
-    
+
                 } else {
                     document.getElementById("appID").value = 1;
                 }
@@ -3039,7 +3066,7 @@ Template.dsmAppointmentsWidget.onRendered(function () {
             //   }
             //
             // }
-    
+
             //templateObject.getAllProductData();
         }
         $('#customerListModal').modal('hide');

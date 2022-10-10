@@ -152,52 +152,55 @@ Template.bankingoverview.onRendered(function() {
 
     getVS1Data('TAccountVS1').then(function(dataObject) {
         if (dataObject.length == 0) {
-            accountService.getAccountListVS1().then(function(data) {
-                let arrayDataUse = [];
-                let totalAmountCalculation = '';
-                for (let i = 0; i < data.taccountvs1.length; i++) {
-                    if ((data.taccountvs1[i].AccountTypeName == 'CCARD') && (data.taccountvs1[i].fields.Balance != 0) || (data.taccountvs1[i].AccountTypeName == 'BANK') && (data.taccountvs1[i].fields.Balance != 0)) {
-                        arrayDataUse.push(data.taccountvs1[i]);
-                        let filterDueDateData = _.filter(arrayDataUse, function(data) {
-                            return data.AccountName
-                        });
+          sideBarService.getAccountListVS1().then(async function(data) {
+            addVS1Data('TAccountVS1',JSON.stringify(data));
+              let arrayDataUse = [];
+              let totalAmountCalculation = '';
+              for (let i = 0; i < data.taccountvs1.length; i++) {
+                if ((data.taccountvs1[i].fields.AccountTypeName == 'CCARD') && (data.taccountvs1[i].fields.Balance != 0) || (data.taccountvs1[i].fields.AccountTypeName == 'BANK') && (data.taccountvs1[i].fields.Balance != 0)) {
+                    arrayDataUse.push(data.taccountvs1[i].fields);
+                      arrayDataUse.push(data.taccountvs1[i]);
+                      let filterDueDateData = _.filter(arrayDataUse, function(data) {
+                          return data.AccountName
+                      });
 
-                        let groupData = _.omit(_.groupBy(filterDueDateData, 'AccountName'), ['']);
-                        totalAmountCalculation = _.map(groupData, function(value, key) {
-                            let totalBalance = 0;
-                            let creditcard = 'fas fa-credit-card';
-                            for (let i = 0; i < value.length; i++) {
-                                totalBalance += value[i].Balance;
-                                let accountName = value[i].AccountName.toLowerCase();
-                                if (accountName.includes("credit")) {
-                                    creditcard = 'fas fa-credit-card';
-                                } else if (accountName.includes("mastercard")) {
-                                    creditcard = 'fab fa-cc-mastercard'
-                                } else if (accountName.includes("bank")) {
-                                    creditcard = 'fab fa-cc-visa'
-                                }
-                            }
-                            let userObject = {};
-                            userObject.name = key;
-                            userObject.totalbalance = utilityService.modifynegativeCurrencyFormat(totalBalance);
-                            userObject.card = creditcard;
-                            userObject.cardAccountID = 'banking-' + key.replaceAll(' ', '').toLowerCase();
-                            return userObject;
+                      let groupData = _.omit(_.groupBy(filterDueDateData, 'AccountName'), ['']);
+                      totalAmountCalculation = _.map(groupData, function(value, key) {
+                          let totalBalance = 0;
+                          let creditcard = 'fas fa-credit-card';
+                          for (let i = 0; i < value.length; i++) {
+                              totalBalance += value[i].Balance;
+                              let accountName = value[i].AccountName.toLowerCase();
+                              if (accountName.includes("credit")) {
+                                  creditcard = 'fas fa-credit-card';
+                              } else if (accountName.includes("mastercard")) {
+                                  creditcard = 'fab fa-cc-mastercard'
+                              } else if (accountName.includes("bank")) {
+                                  creditcard = 'fab fa-cc-visa'
+                              }
+                          }
+                          let userObject = {};
+                          userObject.name = key;
+                          userObject.totalbalance = utilityService.modifynegativeCurrencyFormat(totalBalance);
+                          userObject.card = creditcard;
+                          userObject.cardAccountID = 'banking-' + key.replaceAll(' ', '').toLowerCase();
+                          return userObject;
 
-                        });
+                      });
 
-                    }
-                }
-                let sortedArray = [];
-                sortedArray = totalAmountCalculation.sort(function(a, b) {
-                    return b.totalbalance - a.totalbalance;
-                });
-                let getTop4Data = _.take(sortedArray, 4);
-                let newObjData = '';
-                let newObjDataArr = [];
+                  }
+              }
+              let sortedArray = [];
+              sortedArray = await totalAmountCalculation.sort(function(a, b) {
+                  return b.totalbalance - a.totalbalance;
+              });
+              let getTop4Data = _.take(sortedArray, 4);
+              let newObjData = '';
+              let newObjDataArr = [];
 
-                templateObject.bankaccountdatarecord.set(getTop4Data);
-            });
+              templateObject.bankaccountdatarecord.set(getTop4Data);
+          }).catch(function(err) {
+          });
         } else {
             let data = JSON.parse(dataObject[0].data);
             let useData = data.taccountvs1;
@@ -211,8 +214,8 @@ Template.bankingoverview.onRendered(function() {
             let arrayDataUse = [];
             let totalAmountCalculation = '';
             for (let i = 0; i < useData.length; i++) {
-                if ((useData[i].fields.AccountTypeName == 'CCARD') && (useData[i].fields.Balance != 0) || (useData[i].fields.AccountTypeName == 'BANK') && (useData[i].fields.Balance != 0)) {
-                    arrayDataUse.push(useData[i].fields);
+                if ((data.taccountvs1[i].fields.AccountTypeName == 'CCARD') && (data.taccountvs1[i].fields.Balance != 0) || (data.taccountvs1[i].fields.AccountTypeName == 'BANK') && (data.taccountvs1[i].fields.Balance != 0)) {
+                    arrayDataUse.push(data.taccountvs1[i].fields);
                     let filterDueDateData = _.filter(arrayDataUse, function(data) {
                         return data.AccountName
                     });
@@ -256,52 +259,55 @@ Template.bankingoverview.onRendered(function() {
 
         }
     }).catch(function(err) {
-        accountService.getAccountListVS1().then(function(data) {
-            let arrayDataUse = [];
-            let totalAmountCalculation = '';
-            for (let i = 0; i < data.taccountvs1.length; i++) {
-                if ((data.taccountvs1[i].AccountTypeName == 'CCARD') || (data.taccountvs1[i].AccountTypeName == 'BANK')) {
-                    arrayDataUse.push(data.taccountvs1[i]);
-                    let filterDueDateData = _.filter(arrayDataUse, function(data) {
-                        return data.AccountName
-                    });
+      sideBarService.getAccountListVS1().then(async function(data) {
+        addVS1Data('TAccountVS1',JSON.stringify(data));
+          let arrayDataUse = [];
+          let totalAmountCalculation = '';
+          for (let i = 0; i < data.taccountvs1.length; i++) {
+            if ((data.taccountvs1[i].fields.AccountTypeName == 'CCARD') && (data.taccountvs1[i].fields.Balance != 0) || (data.taccountvs1[i].fields.AccountTypeName == 'BANK') && (data.taccountvs1[i].fields.Balance != 0)) {
+                arrayDataUse.push(data.taccountvs1[i].fields);
+                  arrayDataUse.push(data.taccountvs1[i]);
+                  let filterDueDateData = _.filter(arrayDataUse, function(data) {
+                      return data.AccountName
+                  });
 
-                    let groupData = _.omit(_.groupBy(filterDueDateData, 'AccountName'), ['']);
-                    totalAmountCalculation = _.map(groupData, function(value, key) {
-                        let totalBalance = 0;
-                        let creditcard = 'fas fa-credit-card';
-                        for (let i = 0; i < value.length; i++) {
-                            totalBalance += value[i].Balance;
-                            let accountName = value[i].AccountName.toLowerCase();
-                            if (accountName.includes("credit")) {
-                                creditcard = 'fas fa-credit-card';
-                            } else if (accountName.includes("mastercard")) {
-                                creditcard = 'fab fa-cc-mastercard'
-                            } else if (accountName.includes("bank")) {
-                                creditcard = 'fab fa-cc-visa'
-                            }
-                        }
-                        let userObject = {};
-                        userObject.name = key;
-                        userObject.totalbalance = utilityService.modifynegativeCurrencyFormat(totalBalance);
-                        userObject.card = creditcard;
-                        userObject.cardAccountID = 'banking-' + key.replaceAll(' ', '').toLowerCase();
-                        return userObject;
+                  let groupData = _.omit(_.groupBy(filterDueDateData, 'AccountName'), ['']);
+                  totalAmountCalculation = _.map(groupData, function(value, key) {
+                      let totalBalance = 0;
+                      let creditcard = 'fas fa-credit-card';
+                      for (let i = 0; i < value.length; i++) {
+                          totalBalance += value[i].Balance;
+                          let accountName = value[i].AccountName.toLowerCase();
+                          if (accountName.includes("credit")) {
+                              creditcard = 'fas fa-credit-card';
+                          } else if (accountName.includes("mastercard")) {
+                              creditcard = 'fab fa-cc-mastercard'
+                          } else if (accountName.includes("bank")) {
+                              creditcard = 'fab fa-cc-visa'
+                          }
+                      }
+                      let userObject = {};
+                      userObject.name = key;
+                      userObject.totalbalance = utilityService.modifynegativeCurrencyFormat(totalBalance);
+                      userObject.card = creditcard;
+                      userObject.cardAccountID = 'banking-' + key.replaceAll(' ', '').toLowerCase();
+                      return userObject;
 
-                    });
+                  });
 
-                }
-            }
-            let sortedArray = [];
-            sortedArray = totalAmountCalculation.sort(function(a, b) {
-                return b.totalbalance - a.totalbalance;
-            });
-            let getTop4Data = _.take(sortedArray, 4);
-            let newObjData = '';
-            let newObjDataArr = [];
+              }
+          }
+          let sortedArray = [];
+          sortedArray = await totalAmountCalculation.sort(function(a, b) {
+              return b.totalbalance - a.totalbalance;
+          });
+          let getTop4Data = _.take(sortedArray, 4);
+          let newObjData = '';
+          let newObjDataArr = [];
 
-            templateObject.bankaccountdatarecord.set(getTop4Data);
-        });
+          templateObject.bankaccountdatarecord.set(getTop4Data);
+      }).catch(function(err) {
+      });
     });
 
 /*
@@ -662,7 +668,7 @@ Template.bankingoverview.onRendered(function() {
                               }else{
                                 $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                               }
-                                $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
+                                $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshBankingOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
                                 $('.myvarFilterForm').appendTo(".colDateFilter");
                             },
@@ -997,7 +1003,7 @@ Template.bankingoverview.onRendered(function() {
                           }else{
                             $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                           }
-                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
+                            $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshBankingOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
@@ -1319,7 +1325,7 @@ Template.bankingoverview.onRendered(function() {
                           }else{
                             $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                           }
-                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
+                            $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshBankingOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },

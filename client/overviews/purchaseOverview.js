@@ -507,7 +507,7 @@ Template.purchasesoverview.onRendered(function () {
                       }else{
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPurchaseOverview_filter");
                       }
-                      $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshPurchaseOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPurchaseOverview_filter");
+                      $("<button class='btn btn-primary btnRefreshPurchaseOverview' type='button' id='btnRefreshPurchaseOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPurchaseOverview_filter");
 
                       $(".myvarFilterForm").appendTo(".colDateFilter");
                     },
@@ -869,7 +869,7 @@ Template.purchasesoverview.onRendered(function () {
                   }else{
                     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPurchaseOverview_filter");
                   }
-                  $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshPurchaseOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPurchaseOverview_filter");
+                  $("<button class='btn btn-primary btnRefreshPurchaseOverview' type='button' id='btnRefreshPurchaseOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPurchaseOverview_filter");
 
                   $(".myvarFilterForm").appendTo(".colDateFilter");
                 },
@@ -1224,7 +1224,7 @@ Template.purchasesoverview.onRendered(function () {
                     }else{
                       $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPurchaseOverview_filter");
                     }
-                    $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshPurchaseOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPurchaseOverview_filter");
+                    $("<button class='btn btn-primary btnRefreshPurchaseOverview' type='button' id='btnRefreshPurchaseOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPurchaseOverview_filter");
 
                     $(".myvarFilterForm").appendTo(".colDateFilter");
                   },

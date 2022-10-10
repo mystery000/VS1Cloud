@@ -3208,40 +3208,6 @@ Template.newsidenav.onRendered(function() {
     }
 
     templateObject.getAllTBillExData = function() {
-        sideBarService.getAllBillExList(initialDataLoad, 0).then(function(data) {
-          countObjectTimes++;
-          progressPercentage = (countObjectTimes * 100) / allDataToLoad;
-          $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
-          //$(".progressBarInner").text("Bill "+Math.round(progressPercentage)+"%");
-          $(".progressBarInner").text(Math.round(progressPercentage)+"%");
-          $(".progressName").text("Bill ");
-          if((progressPercentage > 0) && (Math.round(progressPercentage) != 100)){
-            if($('.headerprogressbar').hasClass("headerprogressbarShow")){
-              $('.headerprogressbar').removeClass('headerprogressbarHidden');
-            }else{
-              $('.headerprogressbar').addClass('headerprogressbarShow');
-              $('.headerprogressbar').removeClass('headerprogressbarHidden');
-            }
-
-          }else if(Math.round(progressPercentage) >= 100){
-              $('.checkmarkwrapper').removeClass("hide");
-            setTimeout(function() {
-              if($('.headerprogressbar').hasClass("headerprogressbarShow")){
-                $('.headerprogressbar').removeClass('headerprogressbarShow');
-                $('.headerprogressbar').addClass('headerprogressbarHidden');
-              }else{
-                $('.headerprogressbar').removeClass('headerprogressbarShow');
-                $('.headerprogressbar').addClass('headerprogressbarHidden');
-              }
-
-            }, 1000);
-          }
-            addVS1Data('TBillEx', JSON.stringify(data));
-            $("<span class='process'>Bills Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
-        }).catch(function(err) {
-
-        });
-
         sideBarService.getAllBillListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
@@ -4764,8 +4730,10 @@ Template.newsidenav.onRendered(function() {
                 }).catch(function(err) {
                     templateObject.getAllPurchasesData();
                 });
+
                 getVS1Data('TBillEx').then(function(dataObject) {
                     if (dataObject.length == 0) {
+                      templateObject.getAllTBillExData();
                       sideBarService.getAllBillExList(initialDataLoad, 0).then(function(data) {
                         countObjectTimes++;
                         progressPercentage = (countObjectTimes * 100) / allDataToLoad;
@@ -4892,6 +4860,7 @@ Template.newsidenav.onRendered(function() {
 
                     }
                 }).catch(function(err) {
+                  templateObject.getAllTBillExData();
                   sideBarService.getAllBillExList(initialDataLoad, 0).then(function(data) {
                     countObjectTimes++;
                     progressPercentage = (countObjectTimes * 100) / allDataToLoad;
@@ -4970,6 +4939,7 @@ Template.newsidenav.onRendered(function() {
             if (isPurchases) {
                 getVS1Data('TPurchaseOrderEx').then(function(dataObject) {
                     if (dataObject.length == 0) {
+                        templateObject.getAllTPurchaseOrderData();
                         sideBarService.getAllPurchaseOrderList(initialDataLoad, 0).then(function(data) {
                           countObjectTimes++;
                           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
@@ -5095,6 +5065,7 @@ Template.newsidenav.onRendered(function() {
                         }
                     }
                 }).catch(function(err) {
+                  templateObject.getAllTPurchaseOrderData();
                     sideBarService.getAllPurchaseOrderList(initialDataLoad, 0).then(function(data) {
                       countObjectTimes++;
                       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
