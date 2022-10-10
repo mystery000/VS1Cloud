@@ -1327,12 +1327,12 @@ Template.dsAppointmentsWidget.onRendered(function () {
                 let objDetails = {
                     type: "TEmployeeEx",
                     fields: {
-                        ID: useData[i].fields.ID,
+                        ID: data.temployee[i].fields.ID,
                         CustFld6: selectedColor,
-                        Email: useData[i].fields.Email || useData[i].fields.FirstName.toLowerCase() + "@gmail.com",
-                        Sex: useData[i].fields.Sex || "M",
-                        DateStarted: useData[i].fields.DateStarted || moment().format('YYYY-MM-DD'),
-                        DOB: useData[i].fields.DOB || moment('2018-07-01').format('YYYY-MM-DD')
+                        Email: data.temployee[i].fields.Email || data.temployee[i].fields.FirstName.toLowerCase() + "@gmail.com",
+                        Sex: data.temployee[i].fields.Sex || "M",
+                        DateStarted: data.temployee[i].fields.DateStarted || moment().format('YYYY-MM-DD'),
+                        DOB: data.temployee[i].fields.DOB || moment('2018-07-01').format('YYYY-MM-DD')
                     }
                 };
                 contactService.saveEmployeeEx(objDetails).then(function (data) {
