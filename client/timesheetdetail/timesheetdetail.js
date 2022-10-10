@@ -21,6 +21,7 @@ import erpObject from "../lib/global/erp-objects";
 import {EmployeeFields} from "../js/Api/Model/Employee";
 import {ReportService} from "../reports/report-service";
 import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
+import moment from "moment";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -29,6 +30,10 @@ Template.timesheetdetail.onCreated(function () {
   this.timeSheetList = new ReactiveVar([]);
   this.employee = new ReactiveVar();
   this.earnings = new ReactiveVar([]);
+
+  this.earningLines = new ReactiveVar([]);
+  this.earningDays = new ReactiveVar([]);
+  this.earningOptions = new ReactiveVar([]);
 });
 
 Template.timesheetdetail.onRendered(function () {
@@ -83,6 +88,12 @@ Template.timesheetdetail.onRendered(function () {
     console.log("employee", selectedEmployee);
   };
 
+  /**
+   * Here we load earnings of this employee
+   * 
+   * @param {integer} employeeID 
+   * @returns 
+   */
   this.getEarnings = async (employeeID = null) => {
     let data = await CachedHttp.get(erpObject.TPayTemplateEarningLine, async () => {
       const employeePayrolApis = new EmployeePayrollApi();
@@ -107,9 +118,36 @@ Template.timesheetdetail.onRendered(function () {
       data = data.filter(item => parseInt(item.EmployeeID) == parseInt(employeeID));
     }
 
+    data = _.groupBy(data, 'EarningRate')
+
+    console.log('earnings', data);
+
     this.earnings.set(data);
     return data;
   };
+
+
+  this.calculateThisWeek = async () => {
+    const timesheet = await this.timesheet.get();
+
+    const endDate = moment(timesheet.TimeSheetDate);
+    const aWeekAgo = moment(timesheet.TimeSheetDate).subtract('1', "week");
+    console.log('endfate', endDate, aWeekAgo);
+
+    let date = moment(timesheet.TimeSheetDate).subtract('1', "week");
+    let days = [];
+    while(date.isBefore(endDate) == true) {
+      date = aWeekAgo.add('1', 'day');
+      days.push(date.format('ddd DD MMM'));
+    }
+
+    this.earningDays.set(days);
+
+    console.log(days);
+
+
+
+  }
 
   //  this.loadTimeSheetEntry = async () => {
   //   let data = await CachedHttp.get(erpObject.TTimeSheetEntry, async () => {
@@ -129,37 +167,75 @@ Template.timesheetdetail.onRendered(function () {
 
   //  }
 
+  this.duplicateFirstLine = () => {
+      let template = document.querySelector('#tblTimeSheetInner tbody tr.template');
+      let clonedTr = template.cloneNode(true);
+      clonedTr.removeAttribute('class');
+      $("#tblTimeSheetInner tbody").find("tr:last").prev().after(clonedTr);
+  }
+
+  this.loadEarningSelector = async () => {
+
+    let options =  [
+      {
+        value : "Ordinary Time Earnings",
+        text : "Ordinary Time Earnings",
+      }, {
+        value: "Overtime Earnings",
+        text: "Overtime Earnings"
+      }
+    ];
+
+    await this.earningOptions.set(options);
+  }
+
   this.initPage = async () => {
-    const employee = await this.employee.get();
+    
     LoadingOverlay.show();
     await this.loadTimeSheet();
     await this.loadEmployee();
+
+    const employee = await this.employee.get();
     await this.getEarnings(employee.ID);
 
+    await this.calculateThisWeek();
+
+    await this.loadEarningSelector();
+
+    setTimeout(() => {
+      this.duplicateFirstLine();
+    })
+  
     LoadingOverlay.hide();
   };
   this.initPage();
 });
 
 Template.timesheetdetail.events({
-  "click .btnAddNewLine": function () {
-    $("#tblTimeSheetInner tbody").find("tr:last").prev().after(`<tr>
-        <td>
-         <select class="form-control">
-             <option>Select</option>
-         </select>
-        </td>
-        <td>0.00</td>
-        <td>0.00</td>
-        <td>0.00</td>
-        <td>0.00</td>
-        <td>0.00</td>
-        <td>0.00</td>
-        <td>0.00</td>
-        <td>0.00</td>
-        <td><button type="button" class="btn btn-danger btn-rounded btn-sm btnDeletePayslip" data-id="1" autocomplete="off"><i class="fa fa-remove"></i></button></td>
-     </tr>
-        `);
+  "click .btnAddNewLine": function (e, ui) {
+    // $("#tblTimeSheetInner tbody").find("tr:last").prev().after(`<tr>
+    //     <td>
+    //      <select class="form-control">
+    //          <option>Select</option>
+    //          <option value="Ordinary Time Earnings">Ordinary Time Earnings</option>
+    //          <option value="Overtime Earnings">Overtime Earnings</option>
+    //      </select>
+    //     </td>
+    //     <td>0.00</td>
+    //     <td>0.00</td>
+    //     <td>0.00</td>
+    //     <td>0.00</td>
+    //     <td>0.00</td>
+    //     <td>0.00</td>
+    //     <td>0.00</td>
+    //     <td>0.00</td>
+    //     <td><button type="button" class="btn btn-danger btn-rounded btn-sm btnDeletePayslip" data-id="1" autocomplete="off"><i class="fa fa-remove"></i></button></td>
+    //  </tr>
+    //     `);
+
+
+
+    ui.duplicateFirstLine();
   },
   "click .btnDeleteRow": function (e) {
     $(e.target).parents("tr").remove();
@@ -175,5 +251,11 @@ Template.timesheetdetail.helpers({
   },
   employee: () => {
     return Template.instance().employee.get();
+  },
+  earningDays: () => {
+    return Template.instance().earningDays.get();
+  },
+  earningOptions: () => {
+    return Template.instance().earningOptions.get();
   }
 });

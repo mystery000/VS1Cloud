@@ -256,62 +256,50 @@
                          <thead>
                             <tr>
                                <th>Earnings Rate</th>
-                               <th>Sat 22 Oct</th>
-                               <th>Sat 23 Oct</th>
-                               <th>Sat 24 Oct</th>
-                               <th>Sat 25 Oct</th>
-                               <th>Sat 26 Oct</th>
-                               <th>Sat 27 Oct</th>
-                               <th>Sat 28 Oct</th>
-                               <th>Sat 29 Oct</th>
+                               {{#if earningDays}}
+                                {{#each day in earningDays}}
+                                    <th>{{ day }}</th>
+                                {{/each}}
+                               {{/if}}
                                <th style="width: 20px;"></th>
                             </tr>
                          </thead>
                          <tbody>
-                            <tr>
+                            <style>
+                                tr.template {
+                                    display: none;
+                                }
+                            </style>
+
+                            <tr class="template">
                                <td>
                                 <select class="form-control">
                                     <option>Select</option>
+                                    {{#if earningOptions}}
+                                        {{#each option in earningOptions}}
+                                            <option value="{{option.value}}">{{option.text}}</option>
+                                        {{/each}}
+                                    {{/if}}
                                 </select>
                                </td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
+                                {{#if earningDays}}
+                                    {{#each day in earningDays}}
+                                        <td><input type="text" value="0.00"></td>
+                                    {{/each}}
+                                {{/if}}
+                              
                                <td><button type="button" class="btn btn-danger btn-rounded btn-sm btnDeleteRow" data-id="1" autocomplete="off"><i class="fa fa-remove"></i></button></td>
                             </tr>
-                            <tr>
-                               <td>
-                                <select class="form-control">
-                                    <option>Select</option>
-                                </select>
-                               </td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td><button type="button" class="btn btn-danger btn-rounded btn-sm btnDeleteRow" data-id="1" autocomplete="off"><i class="fa fa-remove"></i></button></td>
-                            </tr>
+                           
                             <tr>
                                <td>
                                 <button type="button" class="btn btn-primary btnAddNewLine"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add another line</button>
                                </td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
-                               <td>0.00</td>
+                                {{#if earningDays}}
+                                    {{#each day in earningDays}}
+                                        <td>0.00</td>
+                                    {{/each}}
+                                {{/if}}
                                <td></td>
                             </tr>
                          </tbody>
