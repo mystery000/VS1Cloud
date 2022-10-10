@@ -10393,7 +10393,16 @@ Template.setup.helpers({
   // Step 7 helpers
 
   customerList: () => {
-    return Template.instance().customerList.get();
+    return Template.instance().customerList.get().sort(function (a, b) {
+      if (a.company === "NA") {
+        return 1;
+      } else if (b.company === "NA") {
+        return -1;
+      }
+      return a.company.toUpperCase() > b.company.toUpperCase()
+        ? 1
+        : -1;
+    });
   },
   // customerListHeaders: () => {
   //   return Template.instance().customerListHeaders.get();
