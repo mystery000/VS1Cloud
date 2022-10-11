@@ -16,7 +16,7 @@ let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 Template.currenciessettings.onCreated(function () {
   const templateObject = Template.instance();
-  templateObject.datatablerecords = new ReactiveVar([]);
+  templateObject.currencies = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.countryData = new ReactiveVar();
 });
@@ -65,6 +65,7 @@ Template.currenciessettings.onRendered(function () {
       useIndexDb: true,
       useLocalStorage: false,
       validate: (cachedResponse) => {
+        console.log("cahced", cachedResponse);
         if(fromRemote == true || refresh == true) {
           return false;
         }
@@ -72,9 +73,11 @@ Template.currenciessettings.onRendered(function () {
       }
     });
 
-    data = data.response;
 
-    let currencies = [];
+    data = data.response;
+    console.log("data", data);
+
+    let currencies = data.tcurrency[0].fields ? data.tcurrency.map(c => c.fields) : data.tcurrency;
 
     // if (fromRemote == true) {
     //   data = await taxRateService.getCurrencies();
@@ -86,9 +89,8 @@ Template.currenciessettings.onRendered(function () {
     //     ? await taxRateService.getCurrencies()
     //     : JSON.parse(dataObject[0].data);
     // }
-
-    data.tcurrency.forEach(_currency => {
-      currencies.push({
+    currencies = currencies.map(_currency => {
+      return {
         id: _currency.Id || "",
         code: _currency.Code || "N/A",
         currency: _currency.Currency || "N/A",
@@ -98,12 +100,13 @@ Template.currenciessettings.onRendered(function () {
         country: _currency.Country || "N/A",
         description: _currency.CurrencyDesc || "N/A",
         ratelastmodified: _currency.RateLastModified || "N/A"
-      });
+      }
     });
+    console.log("currencies", currencies);
 
-    await templateObject.datatablerecords.set(currencies);
+    await templateObject.currencies.set(currencies);
 
-    if (await templateObject.datatablerecords.get()) {
+    if (await templateObject.currencies.get()) {
       Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "currencyLists", function (error, result) {
         if (error) {} else {
           if (result) {
@@ -198,8 +201,8 @@ Template.currenciessettings.onRendered(function () {
           setTimeout(function () {
             MakeNegative();
           }, 100);
-          let draftRecord = templateObject.datatablerecords.get();
-          templateObject.datatablerecords.set(draftRecord);
+          let draftRecord = templateObject.currencies.get();
+          templateObject.currencies.set(draftRecord);
         }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
           setTimeout(function () {
             MakeNegative();
@@ -240,6 +243,9 @@ Template.currenciessettings.onRendered(function () {
     $("div.dataTables_filter input").addClass("form-control form-control-sm");
   };
 
+  /**
+   * @deprecated
+   */
   templateObject.loadCurrencies = function () {
     getVS1Data("TCurrency").then(function (dataObject) {
       if (dataObject.length == 0) {
@@ -264,9 +270,9 @@ Template.currenciessettings.onRendered(function () {
             //}
           }
 
-          templateObject.datatablerecords.set(dataTableList);
+          templateObject.currencies.set(dataTableList);
 
-          if (templateObject.datatablerecords.get()) {
+          if (templateObject.currencies.get()) {
             Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "currencyLists", function (error, result) {
               if (error) {} else {
                 if (result) {
@@ -361,8 +367,8 @@ Template.currenciessettings.onRendered(function () {
               setTimeout(function () {
                 MakeNegative();
               }, 100);
-              let draftRecord = templateObject.datatablerecords.get();
-              templateObject.datatablerecords.set(draftRecord);
+              let draftRecord = templateObject.currencies.get();
+              templateObject.currencies.set(draftRecord);
             }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
               setTimeout(function () {
                 MakeNegative();
@@ -430,9 +436,9 @@ Template.currenciessettings.onRendered(function () {
           //}
         }
 
-        templateObject.datatablerecords.set(dataTableList);
+        templateObject.currencies.set(dataTableList);
 
-        if (templateObject.datatablerecords.get()) {
+        if (templateObject.currencies.get()) {
           Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "currencyLists", function (error, result) {
             if (error) {} else {
               if (result) {
@@ -534,8 +540,8 @@ Template.currenciessettings.onRendered(function () {
             setTimeout(function () {
               MakeNegative();
             }, 100);
-            let draftRecord = templateObject.datatablerecords.get();
-            templateObject.datatablerecords.set(draftRecord);
+            let draftRecord = templateObject.currencies.get();
+            templateObject.currencies.set(draftRecord);
           }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
             setTimeout(function () {
               MakeNegative();
@@ -596,9 +602,9 @@ Template.currenciessettings.onRendered(function () {
           //}
         }
 
-        templateObject.datatablerecords.set(dataTableList);
+        templateObject.currencies.set(dataTableList);
 
-        if (templateObject.datatablerecords.get()) {
+        if (templateObject.currencies.get()) {
           Meteor.call("readPrefMethod", Session.get("mycloudLogonID"), "currencyLists", function (error, result) {
             if (error) {} else {
               if (result) {
@@ -692,8 +698,8 @@ Template.currenciessettings.onRendered(function () {
             setTimeout(function () {
               MakeNegative();
             }, 100);
-            let draftRecord = templateObject.datatablerecords.get();
-            templateObject.datatablerecords.set(draftRecord);
+            let draftRecord = templateObject.currencies.get();
+            templateObject.currencies.set(draftRecord);
           }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
             setTimeout(function () {
               MakeNegative();
@@ -1442,8 +1448,9 @@ Template.currenciessettings.events({
 });
 
 Template.currenciessettings.helpers({
-  datatablerecords: () => {
-    return Template.instance().datatablerecords.get().sort(function (a, b) {
+  currencies: () => {
+   
+    return Template.instance().currencies.get().sort(function (a, b) {
       if (a.code == "NA") {
         return 1;
       } else if (b.code == "NA") {
