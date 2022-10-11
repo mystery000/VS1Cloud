@@ -251,7 +251,14 @@
                         <table id="tblLeadlist" class="dataTable table table-hover table-striped table-bordered tblleadlist">
                             <thead>
                                 <tr class="dnd-moved">
-                                    <th class="th colLeadId hiddenColumn"></th>
+                                    {{#each displayfield in displayfields}}
+                                        {{#if displayfield.display}}
+                                            <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                                {{displayfield.custfieldlabel}}
+                                            </th>
+                                        {{/if}}
+                                    {{/each}}
+                                    <!-- <th class="th colLeadId hiddenColumn"></th>
                                     <th class="th colLeadName" style="min-width: 80px; max-width: 100px">Lead Name</th>
                                     <th class="th colFirstName" style="min-width: 80px; max-width: 100px">First Name</th>
                                     <th class="th colLastName" style="min-width: 80px; max-width: 100px">Last Name</th>
@@ -261,7 +268,7 @@
                                     <th class="th colDepartment" style="min-width: 120px; max-width: 160px;">Department</th>
                                     <th class="th colAddress" style="min-width: 150px; max-width: 200px;">Address</th>
                                     <th class="th colSuburb" style="min-width: 200px;">Suburb</th>
-                                    <th class="th colCity" style="min-width: 200px;">City</th>
+                                    <th class="th colCity" style="min-width: 200px;">City</th> -->
                                     <!-- <th class="th colDeletelead" style="width: 3% !important;"></th> -->
                                 </tr>
                             </thead>
@@ -269,17 +276,17 @@
                                 {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                    <td contenteditable="false" class="colLeadId hiddenColumn" >{{item.id}}</td>
-                                    <td contenteditable="false" class="colLeadName">{{item.employeeName}}</td>
-                                    <td contenteditable="false" class="colFirstName">{{item.firstName}}</td>
-                                    <td contenteditable="false" class="colLastName">{{item.lastName}}</td>
-                                    <td contenteditable="false" class="colPhone">{{item.phone}}</td>
-                                    <td contenteditable="false" class="colMobile">{{item.mobile}}</td>
-                                    <td contenteditable="false" class="colEmail">{{item.email}}</td>
-                                    <td contenteditable="false" class="colDepartment">{{item.department}}</td>
-                                    <td contenteditable="false" class="colAddress">{{item.address}}</td>
-                                    <td contenteditable="false" class="colSuburb">{{item.surburb}}</td>
-                                    <td contenteditable="false" class="colCity">{{item.city}}</td>
+                                    <td contenteditable="false" class="colLeadId {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}" >{{item.id}}</td>
+                                    <td contenteditable="false" class="colLeadName {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">{{item.employeeName}}</td>
+                                    <td contenteditable="false" class="colFirstName {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.firstName}}</td>
+                                    <td contenteditable="false" class="colLastName {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{item.lastName}}</td>
+                                    <td contenteditable="false" class="colPhone {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}">{{item.phone}}</td>
+                                    <td contenteditable="false" class="colMobile {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}">{{item.mobile}}</td>
+                                    <td contenteditable="false" class="colEmail {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">{{item.email}}</td>
+                                    <td contenteditable="false" class="colDepartment {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{item.department}}</td>
+                                    <td contenteditable="false" class="colAddress {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">{{item.address}}</td>
+                                    <td contenteditable="false" class="colSuburb {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.surburb}}</td>
+                                    <td contenteditable="false" class="colCity {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">{{item.city}}</td>
                                     <!-- <td contenteditable="false" style="width: 3% !important;" class="colDeletelead"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td> -->
                                 </tr>
                                 {{/each}}
