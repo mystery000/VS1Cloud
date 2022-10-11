@@ -51,7 +51,7 @@ Template.accountsoverview.onRendered(function() {
     if (Session.get("ERPLoggedCountry") === "Australia") {
         bsbname = "BSB";
     }
-        
+
     let reset_data = [
       { index: 0, label: 'Account ID', class: 'AccountId', active: false, display: false, width: "0" },
       { index: 1, label: 'Account Name', class: 'AccountName', active: true, display: true, width: "120" },
@@ -1062,7 +1062,7 @@ Template.accountsoverview.onRendered(function() {
                     },
                     fnInitComplete: function() {
                         $(
-                            "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                            "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                         ).insertAfter("#tblAccountOverview_filter");
                     },
                 })
@@ -1470,9 +1470,9 @@ Template.accountsoverview.events({
     // custom field displaysettings
     "click .resetTable": async function (event) {
       let templateObject = Template.instance();
-        let reset_data = templateObject.reset_data.get();  
-        reset_data = reset_data.filter(redata => redata.display); 
-    
+        let reset_data = templateObject.reset_data.get();
+        reset_data = reset_data.filter(redata => redata.display);
+
         $(".customDisplaySettings").each(function (index) {
           let $tblrow = $(this);
           $tblrow.find(".divcolumn").text(reset_data[index].label);
@@ -1527,7 +1527,7 @@ Template.accountsoverview.events({
     //             }
     //         }
     //     }
-    // }, 
+    // },
     "click .saveTable": async function(event) {
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
@@ -1553,19 +1553,19 @@ Template.accountsoverview.events({
           display: true
         };
 
-        lineItems.push(lineItemObj); 
+        lineItems.push(lineItemObj);
       });
 
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       reset_data = reset_data.filter(redata => redata.display == false);
       lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index); 
+      lineItems.sort((a,b) => a.index - b.index);
 
       try {
         let erpGet = erpDb();
         let tableName = "tblAccountOverview";
-        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0; 
+        let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
         let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
@@ -1578,7 +1578,7 @@ Template.accountsoverview.events({
             }).then((result) => {
                 if (result.value) {
                   $('#myModal2').modal('hide');
-                }  
+                }
             });
         } else {
           swal("Something went wrong!", "", "error");
@@ -1586,7 +1586,7 @@ Template.accountsoverview.events({
       } catch (error) {
         $(".fullScreenSpin").css("display", "none");
         swal("Something went wrong!", "", "error");
-      } 
+      }
     },
     // "blur .divcolumn": function(event) {
     //     // let columData = $(event.target).text();
@@ -1603,7 +1603,7 @@ Template.accountsoverview.events({
     // },
 
     'change .custom-range': function(event) {
-      let range = $(event.target).val(); 
+      let range = $(event.target).val();
       let colClassName = $(event.target).attr("valueclass");
       $('.col' + colClassName).css('width', range);
     },
@@ -1677,6 +1677,19 @@ Template.accountsoverview.events({
         $(".fullScreenSpin").css("display", "inline-block");
         jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletoexcel").click();
         $(".fullScreenSpin").css("display", "none");
+    },
+    "keyup #tblAccountOverview_filter input": function (event) {
+      if ($(event.target).val() != "") {
+        $(".btnRefreshAccount").addClass("btnSearchAlert");
+      } else {
+        $(".btnRefreshAccount").removeClass("btnSearchAlert");
+      }
+      if (event.keyCode == 13) {
+        $(".btnRefresh").trigger("click");
+      }
+    },
+    "click .btnRefreshAccount": function () {
+        $(".btnRefresh").trigger("click");
     },
     "click .btnRefresh": function() {
         $(".fullScreenSpin").css("display", "inline-block");
@@ -2138,6 +2151,7 @@ Template.accountsoverview.events({
         ];
         utilityService.exportToCsv(rows, filename, "csv");
     },
+
     "click .templateDownloadXLSX": function(e) {
         e.preventDefault(); //stop the browser from following
         window.location.href = "sample_imports/SampleAccounts.xlsx";
@@ -2721,7 +2735,7 @@ Template.accountsoverview.helpers({
     },
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
-        return setupUrl[1];   
+        return setupUrl[1];
     },
 
     // custom fields displaysettings

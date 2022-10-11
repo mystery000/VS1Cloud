@@ -101,7 +101,6 @@ Template.accountslistchart.onRendered(()=>{
           }
       }
       addDefaultCategoryValue();
-      $('.fullScreenSpin').css('display', 'none');
       templateObject.getAccountLists();
   }
   function addDefaultCategoryValue() {
@@ -841,7 +840,6 @@ Template.accountslistchart.onRendered(()=>{
                       MakeNegative();
                   }, 100);
               });
-          // $('.fullScreenSpin').css('display','none');
       }, 10);
 
       const columns = $("#tblDashboardAccountChartList th");
@@ -899,11 +897,10 @@ Template.accountslistchart.onRendered(()=>{
           if (searchDataName.replace(/\s/g, '') != '') {
               getVS1Data('TReceiptCategory').then(function(dataObject) {
                   if (dataObject.length == 0) {
-                      $('.fullScreenSpin').css('display', 'inline-block');
                       sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
                           showEditReceiptCategoryView(data.treceiptcategory[0]);
                       }).catch(function(err) {
-                          $('.fullScreenSpin').css('display', 'none');
+
                       });
                   } else {
                       let data = JSON.parse(dataObject[0].data);
@@ -915,11 +912,11 @@ Template.accountslistchart.onRendered(()=>{
                           }
                       }
                       if (!added) {
-                          $('.fullScreenSpin').css('display', 'inline-block');
+
                           sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
                               showEditReceiptCategoryView(data.treceiptcategory[0]);
                           }).catch(function(err) {
-                              $('.fullScreenSpin').css('display', 'none');
+
                           });
                       }
                   }
@@ -927,7 +924,7 @@ Template.accountslistchart.onRendered(()=>{
                   sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
                       showEditReceiptCategoryView(data.treceiptcategory[0]);
                   }).catch(function(err) {
-                      $('.fullScreenSpin').css('display', 'none');
+
                   });
               });
           } else {
@@ -1855,7 +1852,6 @@ Template.accountslistchart.onRendered(()=>{
                                            .saveAccount(objDetails)
                                            .then(function(data) {})
                                            .catch(function(err) {
-                                               //$('.fullScreenSpin').css('display','none');
                                                swal({
                                                    title: "Oooops...",
                                                    text: err,
@@ -2046,12 +2042,12 @@ Template.accountslistchart.onRendered(()=>{
                            datatable.rows.add(splashArrayAccountList);
                            datatable.draw(false);
                        }
-                       $('.fullScreenSpin').css('display', 'none');
+
                    }).catch(function(err) {
-                       $('.fullScreenSpin').css('display', 'none');
+
                    })
                } else {
-                   $('.fullScreenSpin').css('display', 'none');
+
                    $('#categoryListModal').modal('toggle');
                    swal({
                        title: 'Question',
@@ -2070,7 +2066,7 @@ Template.accountslistchart.onRendered(()=>{
                    });
                }
            }).catch(function(err) {
-               $('.fullScreenSpin').css('display', 'none');
+
            });
        } else {
            sideBarService.getReceiptCategory().then(function(data) {
@@ -2118,15 +2114,15 @@ Template.accountslistchart.onRendered(()=>{
                            datatable.clear();
                            datatable.rows.add(splashArrayAccountList);
                            datatable.draw(false);
-                           $('.fullScreenSpin').css('display', 'none');
+;
                        }
                    }).catch(function(err) {
-                       $('.fullScreenSpin').css('display', 'none');
+
                    })
                }
-               $('.fullScreenSpin').css('display', 'none');
+
            }).catch(function(err) {
-               $('.fullScreenSpin').css('display', 'none');
+
            });
        }
    },

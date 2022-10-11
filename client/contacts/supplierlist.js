@@ -13,6 +13,8 @@ Template.supplierlist.onCreated(function() {
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     templateObject.selectedFile = new ReactiveVar();
+    templateObject.displayfields = new ReactiveVar([]);
+    templateObject.reset_data = new ReactiveVar([]);
 });
 
 Template.supplierlist.onRendered(function() {
@@ -751,6 +753,89 @@ Template.supplierlist.onRendered(function() {
     });
 
     tableResize();
+
+
+
+     // set initial table rest_data
+     function init_reset_data() {
+        let bsbname = "Branch Code";
+        if (Session.get("ERPLoggedCountry") === "Australia") {
+            bsbname = "BSB";
+        }
+        
+        let reset_data = [
+          { index: 0, label: '#ID', class: 'SupplierID', active: false, display: true, width: "" },
+          { index: 1, label: 'Company', class: 'Company', active: true, display: true, width: "200" },
+          { index: 2, label: 'Phone', class: 'Phone', active: true, display: true, width: "95" },
+          { index: 3, label: 'AP Balance', class: 'ARBalance', active: true, display: true, width: "80" },
+          { index: 4, label: 'Credit Balance', class: 'CreditBalance', active: true, display: true, width: "80" },
+          { index: 5, label: 'Balance', class: 'Balance', active: true, display: true, width: "80" },
+          { index: 6, label: 'Credit Limit', class: 'CreditLimit', active: true, display: true, width: "80" },
+          { index: 7, label: 'Order Balance', class: 'SalesOrderBalance', active: true, display: true, width: "80" },
+          { index: 8, label: 'City/Suburb', class: 'Suburb', active: true, display: true, width: "100" },
+          { index: 9, label: 'Country', class: 'Country', active: true, display: true, width: "100" },
+          { index: 10, label: 'Email', class: 'Email', active: false, display: true, width: "" },
+          { index: 11, label: 'Account No', class: 'AccountNo', active: false, display: true, width: "" },
+          { index: 12, label: 'Custom Field 1', class: 'ClientNo', active: false, display: true, width: "" },
+          { index: 13, label: 'Custom Field 2', class: 'JobTitle', active: false, display: true, width: "" },
+          { index: 14, label: 'Comments', class: 'Notes', active: true, display: true, width: "" },
+        ];
+
+        let templateObject = Template.instance();
+        templateObject.reset_data.set(reset_data);
+      }
+      init_reset_data();
+      // set initial table rest_data
+
+
+      // custom field displaysettings
+      templateObject.initCustomFieldDisplaySettings = function(data, listType) {
+        let templateObject = Template.instance();
+        let reset_data = templateObject.reset_data.get();
+        showCustomFieldDisplaySettings(reset_data);
+
+        try {
+          getVS1Data("VS1_Customize").then(function (dataObject) {
+            if (dataObject.length == 0) {
+              sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+                  // reset_data = data.ProcessLog.CustomLayout.Columns;
+                  reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                  showCustomFieldDisplaySettings(reset_data);
+              }).catch(function (err) {
+              });
+            } else {
+              let data = JSON.parse(dataObject[0].data);
+              // handle process here
+            }
+          });
+        } catch (error) {
+        }
+        return;
+      }
+
+      function showCustomFieldDisplaySettings(reset_data) {
+
+        let custFields = [];
+        let customData = {};
+        let customFieldCount = reset_data.length;
+
+        for (let r = 0; r < customFieldCount; r++) {
+          customData = {
+            active: reset_data[r].active,
+            id: reset_data[r].index,
+            custfieldlabel: reset_data[r].label,
+            class: reset_data[r].class,
+            display: reset_data[r].display,
+            width: reset_data[r].width ? reset_data[r].width : ''
+          };
+          custFields.push(customData);
+        }
+        templateObject.displayfields.set(custFields);
+      }
+
+      templateObject.initCustomFieldDisplaySettings("", "tblSupplierlist");
+      // set initial table rest_data  //
+
 });
 
 
@@ -1273,5 +1358,10 @@ Template.supplierlist.helpers({
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
         return setupUrl[1];   
-    }
+    },
+    // custom fields displaysettings
+    displayfields: () => {
+        return Template.instance().displayfields.get();
+    },
+  
 });

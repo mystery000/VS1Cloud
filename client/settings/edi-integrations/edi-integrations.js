@@ -15,7 +15,7 @@ Template.ediintegrations.onRendered(function () {
 });
 
 Template.ediintegrations.helpers({
-  checkModulePurchased: ( moduleName ) => {
-      return isAdditionalModulePurchased( moduleName );
+  checkModulePurchased: async ( moduleName ) => {
+      return await isAdditionalModulePurchased( moduleName );
   }
 });

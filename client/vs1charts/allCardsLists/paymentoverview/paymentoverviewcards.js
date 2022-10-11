@@ -11,7 +11,6 @@ Template.paymentoverviewcards.onCreated(function() {
 });
 
 Template.paymentoverviewcards.onRendered(function() {
-    $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     const customerList = [];

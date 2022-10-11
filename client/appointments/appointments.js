@@ -14499,70 +14499,88 @@ Template.appointments.events({
   },
   "click #btnStartAppointment": function () {
     const templateObject = Template.instance();
-    templateObject.checkSMSSettings();
-    const smsCustomer = $("#chkSMSCustomer").is(":checked");
-    const smsUser = $("#chkSMSUser").is(":checked");
-    const customerPhone = $("#mobile").val();
-    if (customerPhone === "" || customerPhone === "0") {
-      if (smsCustomer || smsUser) {
-        swal({
-          title: "Invalid Phone Number",
-          text: "SMS messages won't be sent.",
-          type: "warning",
-          showCancelButton: true,
-          confirmButtonText: "Continue",
-          cancelButtonText: "Cancel",
-        }).then((result) => {
-          if (result.value) {
-            $("#chkSMSCustomer").prop("checked", false);
-            $("#chkSMSUser").prop("checked", false);
-            $("#btnStartAppointmentConfirm").trigger("click");
-          }
-        });
-      } else {
-        $("#btnStartAppointmentConfirm").trigger("click");
+
+    let empID = templateObject.empID.get();
+    let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+    var startdateGet = new Date($("#dtSODate").datepicker("getDate"));
+    var leaveFlag = false;
+    leaveemployeerecords.forEach((item) => {
+      if(item.EmployeeID == empID && startdateGet >= new Date(item.StartDate) && startdateGet <= new Date(item.EndDate)){
+        swal(
+          "They are not available due to whatever leave they took",
+          "",
+          "warning"
+        );
+        leaveFlag = true;
       }
-    } else {
-      const templateObject = Template.instance();
-      const smsSettings = templateObject.defaultSMSSettings.get();
-      if (smsCustomer || smsUser) {
-        if (!smsSettings || !smsSettings.twilioAccountId) {
+    });
+
+    if(!leaveFlag){
+      templateObject.checkSMSSettings();
+      const smsCustomer = $("#chkSMSCustomer").is(":checked");
+      const smsUser = $("#chkSMSUser").is(":checked");
+      const customerPhone = $("#mobile").val();
+      if (customerPhone === "" || customerPhone === "0") {
+        if (smsCustomer || smsUser) {
           swal({
-            title: "No SMS Settings",
-            text: "Do you wish to setup SMS Confirmation?",
-            type: "question",
+            title: "Invalid Phone Number",
+            text: "SMS messages won't be sent.",
+            type: "warning",
             showCancelButton: true,
             confirmButtonText: "Continue",
-            cancelButtonText: "Go to SMS Settings",
+            cancelButtonText: "Cancel",
           }).then((result) => {
             if (result.value) {
               $("#chkSMSCustomer").prop("checked", false);
               $("#chkSMSUser").prop("checked", false);
               $("#btnStartAppointmentConfirm").trigger("click");
-            } else if (result.dismiss === "cancel") {
-              window.open("/smssettings", "_self");
-            } else {
-              window.open("/smssettings", "_self");
             }
           });
         } else {
-          const templateObject = Template.instance();
-          $("#startAppointmentModal").modal("show");
-          const accountName = $("#customer").val();
-          const employeeName = $("#employee_name").val();
-          const companyName = Session.get("vs1companyName");
-          const productService = $("#product-list").val();
-          const startAppointmentSMS = templateObject.defaultSMSSettings
-            .get()
-            .startAppointmentSMSMessage.replace("[Customer Name]", accountName)
-            .replace("[Employee Name]", employeeName)
-            .replace("[Company Name]", companyName)
-            .replace("[Product/Service]", productService);
-          $("#startAppointmentSMSMessage").val(startAppointmentSMS);
+          $("#btnStartAppointmentConfirm").trigger("click");
         }
       } else {
-        //$("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
-        $("#btnStartAppointmentConfirm").trigger("click");
+        const templateObject = Template.instance();
+        const smsSettings = templateObject.defaultSMSSettings.get();
+        if (smsCustomer || smsUser) {
+          if (!smsSettings || !smsSettings.twilioAccountId) {
+            swal({
+              title: "No SMS Settings",
+              text: "Do you wish to setup SMS Confirmation?",
+              type: "question",
+              showCancelButton: true,
+              confirmButtonText: "Continue",
+              cancelButtonText: "Go to SMS Settings",
+            }).then((result) => {
+              if (result.value) {
+                $("#chkSMSCustomer").prop("checked", false);
+                $("#chkSMSUser").prop("checked", false);
+                $("#btnStartAppointmentConfirm").trigger("click");
+              } else if (result.dismiss === "cancel") {
+                window.open("/smssettings", "_self");
+              } else {
+                window.open("/smssettings", "_self");
+              }
+            });
+          } else {
+            const templateObject = Template.instance();
+            $("#startAppointmentModal").modal("show");
+            const accountName = $("#customer").val();
+            const employeeName = $("#employee_name").val();
+            const companyName = Session.get("vs1companyName");
+            const productService = $("#product-list").val();
+            const startAppointmentSMS = templateObject.defaultSMSSettings
+              .get()
+              .startAppointmentSMSMessage.replace("[Customer Name]", accountName)
+              .replace("[Employee Name]", employeeName)
+              .replace("[Company Name]", companyName)
+              .replace("[Product/Service]", productService);
+            $("#startAppointmentSMSMessage").val(startAppointmentSMS);
+          }
+        } else {
+          //$("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
+          $("#btnStartAppointmentConfirm").trigger("click");
+        }
       }
     }
   },
@@ -14650,82 +14668,46 @@ Template.appointments.events({
       swal("Appointments can't be booked against this Employee", "", "error");
       return;
     }
-    templateObject.checkSMSSettings();
-    const smsCustomer = $("#chkSMSCustomer").is(":checked");
-    const smsUser = $("#chkSMSUser").is(":checked");
-    const emailCustomer = $("#customerEmail").is(":checked");
-    const emailUser = $("#userEmail").is(":checked");
-    const customerPhone = $("#mobile").val();
-    if (customerPhone === "" || customerPhone === "0") {
-      if (smsCustomer || smsUser) {
-        swal({
-          title: "Invalid Phone Number",
-          text: "SMS messages won't be sent.",
-          type: "warning",
-          showCancelButton: true,
-          confirmButtonText: "Continue",
-          cancelButtonText: "Cancel",
-        }).then((result) => {
-          if (result.value) {
-            $("#chkSMSCustomer").prop("checked", false);
-            $("#chkSMSUser").prop("checked", false);
-            $("#btnSaveAppointmentSubmit").trigger("click");
-          }
-        });
-      } else if (emailCustomer || emailUser) {
-        const templateObject = Template.instance();
-        $("#saveAppointmentModal").modal("show");
-        const accountName = $("#customer").val();
-        const employeeName = $("#employee_name").val();
-        const companyName = Session.get("vs1companyName");
-        const fullAddress =
-          $("#address").val() +
-          ", " +
-          $("#suburb").val() +
-          ", " +
-          $("#state").val() +
-          ", " +
-          $("#country").val();
-        const bookedTime = $("#startTime").val() ? $("#startTime").val() : "";
-        const productService = $("#product-list").val();
-        const saveAppointmentSMS = templateObject.defaultSMSSettings
-          .get()
-          .saveAppointmentSMSMessage.replace("[Customer Name]", accountName)
-          .replace("[Employee Name]", employeeName)
-          .replace("[Company Name]", companyName)
-          .replace("[Product/Service]", productService)
-          .replace("[Full Address]", fullAddress)
-          .replace("[Booked Time]", bookedTime);
-        $("#saveAppointmentSMSMessage").val(saveAppointmentSMS);
-      } else {
-        $("#btnSaveAppointmentSubmit").trigger("click");
+
+    let empID = templateObject.empID.get();
+    let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+    var startdateGet = new Date($("#dtSODate").datepicker("getDate"));
+    var leaveFlag = false;
+    leaveemployeerecords.forEach((item) => {
+      if(item.EmployeeID == empID && startdateGet >= new Date(item.StartDate) && startdateGet <= new Date(item.EndDate)){
+        swal(
+          "They are not available due to whatever leave they took",
+          "",
+          "warning"
+        );
+        leaveFlag = true;
       }
-    } else {
-      const templateObject = Template.instance();
-      const smsSettings = templateObject.defaultSMSSettings.get();
-      if (smsCustomer || smsUser) {
-        if (!smsSettings || !smsSettings.twilioAccountId) {
+    });
+
+    if(!leaveFlag){
+      templateObject.checkSMSSettings();
+      const smsCustomer = $("#chkSMSCustomer").is(":checked");
+      const smsUser = $("#chkSMSUser").is(":checked");
+      const emailCustomer = $("#customerEmail").is(":checked");
+      const emailUser = $("#userEmail").is(":checked");
+      const customerPhone = $("#mobile").val();
+      if (customerPhone === "" || customerPhone === "0") {
+        if (smsCustomer || smsUser) {
           swal({
-            title: "No SMS Settings",
-            // text: "SMS messages won't be sent to Customer or User.",
-            text: "Do you wish to setup SMS Confirmation?",
-            type: "question",
-            // type: 'warning',
+            title: "Invalid Phone Number",
+            text: "SMS messages won't be sent.",
+            type: "warning",
             showCancelButton: true,
             confirmButtonText: "Continue",
-            cancelButtonText: "Go to SMS Settings",
+            cancelButtonText: "Cancel",
           }).then((result) => {
             if (result.value) {
               $("#chkSMSCustomer").prop("checked", false);
               $("#chkSMSUser").prop("checked", false);
-              $("#btnStartAppointmentConfirm").trigger("click");
-            } else if (result.dismiss === "cancel") {
-              window.open("/smssettings", "_self");
-            } else {
-              window.open("/smssettings", "_self");
+              $("#btnSaveAppointmentSubmit").trigger("click");
             }
           });
-        } else {
+        } else if (emailCustomer || emailUser) {
           const templateObject = Template.instance();
           $("#saveAppointmentModal").modal("show");
           const accountName = $("#customer").val();
@@ -14750,34 +14732,88 @@ Template.appointments.events({
             .replace("[Full Address]", fullAddress)
             .replace("[Booked Time]", bookedTime);
           $("#saveAppointmentSMSMessage").val(saveAppointmentSMS);
+        } else {
+          $("#btnSaveAppointmentSubmit").trigger("click");
         }
-      } else if (emailCustomer || emailUser) {
-        const templateObject = Template.instance();
-        $("#saveAppointmentModal").modal("show");
-        const accountName = $("#customer").val();
-        const employeeName = $("#employee_name").val();
-        const companyName = Session.get("vs1companyName");
-        const fullAddress =
-          $("#address").val() +
-          ", " +
-          $("#suburb").val() +
-          ", " +
-          $("#state").val() +
-          ", " +
-          $("#country").val();
-        const bookedTime = $("#startTime").val() ? $("#startTime").val() : "";
-        const productService = $("#product-list").val();
-        const saveAppointmentSMS = templateObject.defaultSMSSettings
-          .get()
-          .saveAppointmentSMSMessage.replace("[Customer Name]", accountName)
-          .replace("[Employee Name]", employeeName)
-          .replace("[Company Name]", companyName)
-          .replace("[Product/Service]", productService)
-          .replace("[Full Address]", fullAddress)
-          .replace("[Booked Time]", bookedTime);
-        $("#saveAppointmentSMSMessage").val(saveAppointmentSMS);
       } else {
-        $("#btnSaveAppointmentSubmit").trigger("click");
+        const templateObject = Template.instance();
+        const smsSettings = templateObject.defaultSMSSettings.get();
+        if (smsCustomer || smsUser) {
+          if (!smsSettings || !smsSettings.twilioAccountId) {
+            swal({
+              title: "No SMS Settings",
+              // text: "SMS messages won't be sent to Customer or User.",
+              text: "Do you wish to setup SMS Confirmation?",
+              type: "question",
+              // type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: "Continue",
+              cancelButtonText: "Go to SMS Settings",
+            }).then((result) => {
+              if (result.value) {
+                $("#chkSMSCustomer").prop("checked", false);
+                $("#chkSMSUser").prop("checked", false);
+                $("#btnStartAppointmentConfirm").trigger("click");
+              } else if (result.dismiss === "cancel") {
+                window.open("/smssettings", "_self");
+              } else {
+                window.open("/smssettings", "_self");
+              }
+            });
+          } else {
+            const templateObject = Template.instance();
+            $("#saveAppointmentModal").modal("show");
+            const accountName = $("#customer").val();
+            const employeeName = $("#employee_name").val();
+            const companyName = Session.get("vs1companyName");
+            const fullAddress =
+              $("#address").val() +
+              ", " +
+              $("#suburb").val() +
+              ", " +
+              $("#state").val() +
+              ", " +
+              $("#country").val();
+            const bookedTime = $("#startTime").val() ? $("#startTime").val() : "";
+            const productService = $("#product-list").val();
+            const saveAppointmentSMS = templateObject.defaultSMSSettings
+              .get()
+              .saveAppointmentSMSMessage.replace("[Customer Name]", accountName)
+              .replace("[Employee Name]", employeeName)
+              .replace("[Company Name]", companyName)
+              .replace("[Product/Service]", productService)
+              .replace("[Full Address]", fullAddress)
+              .replace("[Booked Time]", bookedTime);
+            $("#saveAppointmentSMSMessage").val(saveAppointmentSMS);
+          }
+        } else if (emailCustomer || emailUser) {
+          const templateObject = Template.instance();
+          $("#saveAppointmentModal").modal("show");
+          const accountName = $("#customer").val();
+          const employeeName = $("#employee_name").val();
+          const companyName = Session.get("vs1companyName");
+          const fullAddress =
+            $("#address").val() +
+            ", " +
+            $("#suburb").val() +
+            ", " +
+            $("#state").val() +
+            ", " +
+            $("#country").val();
+          const bookedTime = $("#startTime").val() ? $("#startTime").val() : "";
+          const productService = $("#product-list").val();
+          const saveAppointmentSMS = templateObject.defaultSMSSettings
+            .get()
+            .saveAppointmentSMSMessage.replace("[Customer Name]", accountName)
+            .replace("[Employee Name]", employeeName)
+            .replace("[Company Name]", companyName)
+            .replace("[Product/Service]", productService)
+            .replace("[Full Address]", fullAddress)
+            .replace("[Booked Time]", bookedTime);
+          $("#saveAppointmentSMSMessage").val(saveAppointmentSMS);
+        } else {
+          $("#btnSaveAppointmentSubmit").trigger("click");
+        }
       }
     }
   },
@@ -16808,24 +16844,25 @@ Template.appointments.events({
    'click .addAppointmentEmp': function(event) {
      templateObject = Template.instance();
       let empID = $(event.currentTarget).attr('id').split("_")[1];
-      let leaveemployeerecords = templateObject.leaveemployeerecords.get();
-      var startdateGet = new Date($("#dtSODate").datepicker("getDate"));
-      var leaveFlag = false;
-      leaveemployeerecords.forEach((item) => {
-      if(item.EmployeeID == empID && startdateGet >= new Date(item.StartDate) && startdateGet <= new Date(item.EndDate)){
-        swal(
-          "They are not available due to whatever leave they took",
-          "",
-          "warning"
-        );
-        leaveFlag = true;
-      }
-      });
+      templateObject.empID.set(empID);
+      // let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+      // var startdateGet = new Date($("#dtSODate").datepicker("getDate"));
+      // var leaveFlag = false;
+      // leaveemployeerecords.forEach((item) => {
+      //   if(item.EmployeeID == empID && startdateGet >= new Date(item.StartDate) && startdateGet <= new Date(item.EndDate)){
+      //     swal(
+      //       "They are not available due to whatever leave they took",
+      //       "",
+      //       "warning"
+      //     );
+      //     leaveFlag = true;
+      //   }
+      // });
 
-      if(!leaveFlag){
-      $('#employee_name').val($("#employeeName_" + empID).text());
-      $('#customerListModal').modal("show");
-      }
+      // if(!leaveFlag){
+        $('#employee_name').val($("#employeeName_" + empID).text());
+        $('#customerListModal').modal("show");
+      // }
    },
    'click .chkServiceCard': function(event) {
        templateObject = Template.instance();

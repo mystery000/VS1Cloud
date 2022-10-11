@@ -219,18 +219,25 @@
                         <table id="tblDepositList" name="tblDepositList" class="dataTable table table-hover table-striped table-bordered tblDepositList">
                             <thead>
                                 <tr class="dnd-moved">
-                                    <th class="th colSortDate hiddenColumn">id</th>
+                                    <!-- <th class="th colSortDate hiddenColumn">id</th>
                                     <th class="th colDepositDate" style="width:105px;">Deposit Date</th>
                                     <th class="th colAccountName" style="width:200px;">Account Name</th>
                                     <th class="th colDepartment" style="width:130px;">Department</th>
                                     <th class="th colEntryNo" style="width:80px;">Entry No</th>
-                                    <th class="th colAmount" style="width:80px;">Amount</th>
+                                    <th class="th colAmount" style="width:80px;">Amount</th> -->
                                     <!-- <th class="th colCreditAmount" style="width:80px;">Credit Amount</th>
 <th class="th colTaxAmount" style="width:80px;">Tax Amount</th>
 <th class="th colAccountNo hiddenColumn">Account No</th> -->
-                                    <th class="th colEmployee" style="width:200px;">Employee</th>
+                                    <!-- <th class="th colEmployee" style="width:200px;">Employee</th> -->
                                     <!-- <th class="th colApproved hiddenColumn">Approved?</th> -->
-                                    <th class="th colMemo">Reference No</th>
+                                    <!-- <th class="th colMemo">Reference No</th> -->
+                                    {{#each displayfield in displayfields}}
+                                        {{#if displayfield.display}}
+                                            <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                                {{displayfield.custfieldlabel}}
+                                            </th>
+                                        {{/if}}
+                                    {{/each}}
                                 </tr>
                             </thead>
                             <tbody>

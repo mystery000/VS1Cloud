@@ -262,7 +262,15 @@
                         <table id="tblSupplierlist" name="tblSupplierlist"  class="dataTable table table-hover table-striped table-bordered tblSupplierlist">
                             <thead>
                                 <tr class="dnd-moved">
-                                    <th class="th colSupplierID hiddenColumn" style="width:3%">#ID</th>
+                                    
+                                    {{#each displayfield in displayfields}}
+                                        {{#if displayfield.display}}
+                                            <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                                {{displayfield.custfieldlabel}}
+                                            </th>
+                                        {{/if}}
+                                    {{/each}}
+                                    <!-- <th class="th colSupplierID hiddenColumn" style="width:3%">#ID</th>
                                     <th class="th colCompany" style="width:200px;">Company</th>
                                     <th class="th colPhone" style="width:95px;">Phone</th>
                                     <th class="th colARBalance" style="width:80px;">AP Balance</th>
@@ -276,28 +284,28 @@
                                     <th class="th colAccountNo hiddenColumn">Account No</th>
                                     <th class="th colClientNo hiddenColumn">Custom Field 1</th>
                                     <th class="th colJobTitle hiddenColumn">Custom Field 2</th>
-                                    <th class="th colNotes">Comments</th>
+                                    <th class="th colNotes">Comments</th> -->
                                 </tr>
                             </thead>
                             <tbody>
                                 {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                    <td contenteditable="false" class="colSupplierID hiddenColumn" >{{item.id}}</td>
-                                    <td contenteditable="false" class="colCompany" >{{item.company}}</td>
-                                    <td contenteditable="false" class="colPhone">{{item.phone}}</td>
-                                    <td contenteditable="false" class="colARBalance" style="text-align: right!important;">{{item.arbalance}}</td>
-                                    <td contenteditable="false" class="colCreditBalance" style="text-align: right!important;">{{item.creditbalance}}</td>
-                                    <td contenteditable="false" class="colBalance" style="text-align: right!important;">{{item.balance}}</td>
-                                    <td contenteditable="false" class="colCreditLimit" style="text-align: right!important;">{{item.creditlimit}}</td>
-                                    <td contenteditable="false" class="colSalesOrderBalance" style="text-align: right!important;">{{item.salesorderbalance}}</td>
-                                    <td contenteditable="false" class="colSuburb">{{item.suburb}}</td>
-                                    <td contenteditable="false" class="colCountry">{{item.country}}</td>
-                                    <td contenteditable="false" class="colEmail hiddenColumn">{{item.email}}</td>
-                                    <td contenteditable="false" class="colAccountNo hiddenColumn">{{item.accountno}}</td>
-                                    <td contenteditable="false" class="colClientNo hiddenColumn">{{item.clientno}}</td>
-                                    <td contenteditable="false" class="colJobTitle hiddenColumn">{{item.jobtitle}}</td>
-                                    <td contenteditable="false" class="colNotes" >{{item.notes}}</td>
+                                    <td contenteditable="false" class="colSupplierID {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}" >{{item.id}}</td>
+                                    <td contenteditable="false" class="colCompany {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" >{{item.company}}</td>
+                                    <td contenteditable="false" class="colPhone {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.phone}}</td>
+                                    <td contenteditable="false" class="colARBalance {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.arbalance}}</td>
+                                    <td contenteditable="false" class="colCreditBalance {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.creditbalance}}</td>
+                                    <td contenteditable="false" class="colBalance {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.balance}}</td>
+                                    <td contenteditable="false" class="colCreditLimit {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.creditlimit}}</td>
+                                    <td contenteditable="false" class="colSalesOrderBalance {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.salesorderbalance}}</td>
+                                    <td contenteditable="false" class="colSuburb {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">{{item.suburb}}</td>
+                                    <td contenteditable="false" class="colCountry {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.country}}</td>
+                                    <td contenteditable="false" class="colEmail {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">{{item.email}}</td>
+                                    <td contenteditable="false" class="colAccountNo {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">{{item.accountno}}</td>
+                                    <td contenteditable="false" class="colClientNo {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">{{item.clientno}}</td>
+                                    <td contenteditable="false" class="colJobTitle {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}">{{item.jobtitle}}</td>
+                                    <td contenteditable="false" class="colNotes {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}" >{{item.notes}}</td>
                                 </tr>
                                 {{/each}}
                                 {{/if}}

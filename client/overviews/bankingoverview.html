@@ -409,7 +409,7 @@
                                 
                                 {{#each displayfield in displayfields}}
                                   {{#if displayfield.display}}
-                                  <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                  <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
                                     {{displayfield.custfieldlabel}}
                                     {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>
                                       {{else}}
