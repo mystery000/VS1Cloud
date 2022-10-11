@@ -45,6 +45,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="sup-tab" data-toggle="tab" href="#superannuation" role="tab" aria-controls="contact" aria-selected="false">Superannuation</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="ove-tab" data-toggle="tab" href="#OvertimeCalculations" role="tab" aria-controls="contact" aria-selected="false">Overtime</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="card-body">
@@ -1869,7 +1872,7 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                
                                 <div class="tab-pane fade" id="superannuation" role="tabpanel" aria-labelledby="superannuation-tab">
                                     <div class="row">
                                         <div class="col-12 col-md-6">
@@ -2035,6 +2038,128 @@
                                                             <td contenteditable="false" class="colaccountname"></td>
                                                             <td class="th colSuperannuationTypeid hiddenColumn" >fundid</td>
                                                             <td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="OvertimeCalculations" role="tabpanel" aria-labelledby="OvertimeCalculations-tab">
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <h4>Overtime</h4>
+                                        </div>
+                                        <div class="col-12 col-md-6 mb-3">
+                                            <style>
+                                                .addNewRulediv {
+                                                    display: inline-block;
+                                                    width: 100%;
+                                                    position: relative;
+                                                }
+                                                .addNewRulediv span {
+                                                    display: inline-block;
+                                                    position: absolute;
+                                                    top: 7px;
+                                                    left: 15px;
+                                                }
+                                                .addNewRulediv input + span {
+                                                    left: auto;
+                                                    right:15px;
+                                                }
+                                                .addNewRulediv input {
+                                                    padding: 5px 65px 5px 120px;
+                                                }
+                                            </style>
+                                            <button type="button" class="btn btn-primary btnAddNewOvertime float-right" data-toggle="modal" data-target="#btnAddNewOvertime"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add New Overtime</button>
+
+                                            <div class="modal fade" id="btnAddNewOvertime" tabindex="-1" role="dialog" aria-labelledby="btnAddNewOvertimeLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="newOvertimeAdd">Add New</h5>
+
+                                                            <button type="button" class="close" id="closeuperannution" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <label for="edtFundType">Rate Type</label>
+                                                                        <select class="form-control editRateType" style="cursor: pointer;" id="editRateType" >
+                                                                            <option value="">Time & Half</option>
+                                                                            <option value="">Double Time</option>
+                                                                            <option value="">Weekend</option>
+                                                                        </select>
+
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <label for="editRule">Rule</label>
+                                                                        <div class="addNewRulediv">
+                                                                            <span>Greater than </span><input class="form-control" id="editRule" type="text" value=""><span>hours</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-12" id="acountabmandelectronic">
+                                                                    <div class="form-group">
+                                                                        <label for="hourlyMultiplier">Hourly Multiplier</label>
+                                                                        <input type="text" class="form-control" id="hourlyMultiplier">
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-success saveAddNewOvertime"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="table-responsive">
+                                                <style>
+                                                    .btn-success.btn-sm,
+                                                    .btn-sm.btn-danger {
+                                                        padding: 0.5px 5px !important;
+                                                        margin-top: 0px !important;
+                                                    }
+                                                </style>
+
+                                                <table id="" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblSuperannuation">
+                                                    <thead>
+                                                        <tr class="dnd-moved">
+                                                            <th class="th">Rate Type</th>
+                                                            <th class="th">Rule</th>
+                                                            <th class="th">hourly Multiplier</th>        
+                                                            <th style="width: 54px;" class="th">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="td">XXXXXXXXXXXXXX</td>
+                                                            <td class="td">XXXXXXXXXX</td>
+                                                            <td class="td">XXXXXXXXXXXX</td>        
+                                                            <td contenteditable="false" class="colDelete">
+                                                                <span class="table-remove">
+                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0" autocomplete="off">
+                                                                    <i class="fa fa-remove"></i>
+                                                                    </button>
+                                                                </span>
+        
+                                                                <span class="table-edit">
+                                                                    <button type="button" class="btn btn-rounded btn-success btn-sm my-0">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </button>
+                                                                </span>
                                                             </td>
                                                         </tr>
                                                     </tbody>
