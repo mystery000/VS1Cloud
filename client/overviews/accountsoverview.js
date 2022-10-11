@@ -1678,6 +1678,19 @@ Template.accountsoverview.events({
         jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletoexcel").click();
         $(".fullScreenSpin").css("display", "none");
     },
+    "keyup #tblAccountOverview_filter input": function (event) {
+      if ($(event.target).val() != "") {
+        $(".btnRefreshAccount").addClass("btnSearchAlert");
+      } else {
+        $(".btnRefreshAccount").removeClass("btnSearchAlert");
+      }
+      if (event.keyCode == 13) {
+        $(".btnRefresh").trigger("click");
+      }
+    },
+    "click .btnRefreshAccount": function () {
+        $(".btnRefresh").trigger("click");
+    },
     "click .btnRefresh": function() {
         $(".fullScreenSpin").css("display", "inline-block");
         let templateObject = Template.instance();
@@ -2138,7 +2151,7 @@ Template.accountsoverview.events({
         ];
         utilityService.exportToCsv(rows, filename, "csv");
     },
-    
+
     "click .templateDownloadXLSX": function(e) {
         e.preventDefault(); //stop the browser from following
         window.location.href = "sample_imports/SampleAccounts.xlsx";

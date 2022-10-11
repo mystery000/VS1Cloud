@@ -821,7 +821,7 @@
                                                     </style>
 
                                                     <div class="row no-gutters mb-3">
-                                                        <div class="col text-right">
+                                                        <div class="col-sm-8 text-left">
                                                             <button class="btn btn-primary btnRefreshTaxRate" type="button" style="margin: 12px 0px 0; margin-right: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
 
                                                                 <a class="btn btn-primary btnAddTaxRate alerts-border" role="button" data-toggle="modal" href="#addTaxRateModal" style="margin-top: 12px;"><i class="fa fa-plus" style="margin-right: 6px;"></i>Add New Tax Rate<br></a>
@@ -829,6 +829,8 @@
                                                                 {{> AddTaxRateModal}}
                                                             <a role="button" data-toggle="modal" href="#activeTaxRatesVideo" class="btn btn-primary helpModal alerts-border visiblePopupDiv" style="margin: 12px 12px 0 12px">View Help Video</a>
                                                             <a href="javascript:void(0)" data-href="https://vs1forum.com/" class="btn btn-primary alerts-border downloadHelpFile" style="margin-top: 12px;">Download Help File</a>
+                                                        </div>
+                                                        <div class="col-sm-4 text-right">
                                                             <button class="btn btn-success float-right confirmBtn" id="saveStep2" type="button" style="margin: 12px 0 0 15px;" data-step-id="2">Confirm</button>
                                                         </div>
                                                     </div>
@@ -954,7 +956,7 @@
                                                 <div class="row no-gutters">
                                                     <div class="col">
                                                         <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="2">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                        <!-- <button class="btn btn-success float-right confirmBtn" id="saveStep2" type="button" style="margin: 12px;" data-step-id="2">Confirm</button> -->
+                                                        <button class="btn btn-success float-right confirmBtn" id="saveStep2" type="button" style="margin: 12px;" data-step-id="2">Confirm</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1101,12 +1103,11 @@
 
                                                         </style>
 
-                                                        <div class="col text-right mb-3">
+                                                        <div class="col-sm-8 text-right mb-3">
                                                             <button class="btn btn-primary btnRefreshPaymentMethod" type="button" style="margin: 12px 0px 0; margin-right: 10px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
 
                                                             <a class="btn btn-primary btnAddPaymentMethod alerts-border" role="button" data-toggle="modal" href="#btnAddPaymentMethod" style="margin-top: 12px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Payment Method<br></a>
-                                                            <div class="modal fade" role="dialog"
-                                                                    tabindex="-1" id="btnAddPaymentMethod">
+                                                            <div class="modal fade" role="dialog" tabindex="-1" id="btnAddPaymentMethod">
                                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                                     <div class="modal-content">
                                                                         <div class="modal-header">
@@ -1140,6 +1141,8 @@
                                                             </div>
                                                             <a role="button" data-toggle="modal" href="#paymentMethodSettingsVideo" style="margin: 12px 12px 0 12px" class="btn btn-primary visiblePopupDiv alerts-border helpModal">View Help Video</a>
                                                             <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=71" style="margin-top: 12px;" class="btn btn-primary alerts-border downloadHelpFile">Download Help File</a>
+                                                        </div>
+                                                        <div class="col-sm-4 text-right mb-3">
                                                             <button class="btn btn-success float-right confirmBtn" id="saveStep3" type="button" style="margin: 12px 0 0 15px;" data-step-id="3">Confirm</button>
                                                         </div>
                                                     </div>
@@ -1310,7 +1313,7 @@
                                                 <div class="row no-gutters">
                                                     <div class="col">
                                                         <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="3">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                        <!-- <button class="btn btn-success float-right confirmBtn" id="saveStep3" type="button" style="margin: 12px;" data-step-id="3">Confirm</button> -->
+                                                        <button class="btn btn-success float-right confirmBtn" id="saveStep3" type="button" style="margin: 12px;" data-step-id="3">Confirm</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1452,12 +1455,14 @@
                                     <div class="card-body">
                                         <div class="card-body p-3 rounded">
                                             <div class="row no-gutters mb-3">
-                                                <div class="col text-right">
+                                                <div class="col-sm-8 text-left">
                                                     <button class="btn btn-primary btnRefreshTerm" type="button" style="margin: 12px 0px 0; margin-right: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                     <a class="btn btn-primary btnAddTerms alerts-border" role="button" data-toggle="modal" href="#addTermModal" style="margin-top: 12px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Term<br></a>
                                                     {{> AddTermModal}}
                                                     <a role="button" data-toggle="modal" href="#termsSettingsVideo" style="margin: 12px 12px 0 12px" class="btn btn-primary visiblePopupDiv alerts-border helpModal">View Help Video</a>
                                                     <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=23" style="margin-top: 12px;" class="btn btn-primary alerts-border downloadHelpFile">Download Help File</a>
+                                                </div>
+                                                <div class="col-sm-4 text-right">
                                                     <button class="btn btn-success float-right confirmBtn" id="saveStep4" type="button" style="margin: 12px 0 0 15px;" data-step-id="4">Confirm</button>
                                                 </div>
                                             </div>
@@ -1599,7 +1604,7 @@
                                         <div class="row no-gutters">
                                             <div class="col">
                                                 <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="4">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                <!-- <button class="btn btn-success float-right confirmBtn" id="saveStep4" type="button" style="margin: 12px;" data-step-id="4">Confirm</button> -->
+                                                <button class="btn btn-success float-right confirmBtn" id="saveStep4" type="button" style="margin: 12px;" data-step-id="4">Confirm</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1732,14 +1737,13 @@
                                                     {{> addemployeepop editableEmployee=editableEmployee isSetup="true" }}
                                                 </div>
 
-                                                <div class="col float-left flex-grow-1 pl-0 text-right">
+                                                <div class="col-sm-8 float-left flex-grow-1 pl-0 text-left">
                                                     <button class="btn btn-primary btnRefreshEmployee" type="button" style="margin: 12px 12px 0 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                     <button id="btnNewEmployee" name="btnNewEmployee" class="btn btn-primary alerts-border" type="button" style="margin:  12px 0 0 0;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Employee</button>
                                                     <!-- <button class="btn btn-success btnAddVS1User" type="button" style="margin: 12px;"><i class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button> -->
                                                     <a role="button" data-toggle="modal" href="#helpModalEmployee" style="margin: 12px 12px 0 12px" class="btn btn-primary alerts-border visiblePopupDiv helpModal">View Help Video</a>
                                                     <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" style="margin-top: 12px;" class="btn btn-primary downloadHelpFile alerts-border">Download Help File</a>
                                                     <button style="margin: 12px 0 0px 12px;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                                                    <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="5">Confirm</button>
                                                         <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
@@ -1801,6 +1805,9 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                </div>
+                                                <div class="col-sm-4 float-left flex-grow-1 pl-0 text-right">
+                                                    <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="5">Confirm</button>
                                                 </div>
                                             <div class="table-responsive">
                                                 <style>
@@ -1880,7 +1887,7 @@
                                         <div class="row no-gutters">
                                             <div class="col">
                                                 <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="5">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                <!-- <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="5">Confirm</button> -->
+                                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="5">Confirm</button>
                                             </div>
                                         </div>
                                     </div>
@@ -2014,7 +2021,7 @@
                                         <div class="card-body py-3 px-0 rounded">
                                             <div class="bg-white d-flex flex-row justify-content-xl-center pt-2 pb-2">
 
-                                                    <div class="col text-right pl-0">
+                                                    <div class="col-sm-9 text-left pl-0">
                                                         <button class="btn btn-primary btnRefresh" type="button" style="margin: 6px 6px 0; margin-left:0px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                         <a class="btn btn-primary btnAddNewAccounts alerts-border" role="button" data-toggle="modal" href="#addNewAccount" style="margin: 6px 6px 0;"><i class="fa fa-plus" style="margin-right: 8px;"></i>New Account</a>
                                                             <div class="modal fade" role="dialog" tabindex="-1" id="addNewAccount">
@@ -2061,8 +2068,8 @@
                                                         <button style="margin: 6px 6px 0;" class="btn align-items-center btn-primary  alerts-border" role="button" data-toggle="modal"
                                                         href="#importModal_step5"><i class="fas fa-file-import"
                                                             style="padding-right: 5px;"></i>Import</button>
-                                                        <button class="btn btn-success confirmBtn" type="button" style="margin: 6px 6px 0;" data-step-id="6">Confirm</button>
-                                                        <div>
+                                                            <div>
+                                                        
                                                         <!-- <button class="btn btn-primary btnJournalEntries" id="btnJournalEntries" type="button" style="margin: 8px;"><i class="fa fa-book" style="padding-right: 5px;"></i>Journal Entries</button> -->
                                                         <style>
                                                             @media screen and (max-width: 420px) {
@@ -2165,6 +2172,9 @@
                                                         </div>
                                                         </div>
                                                     </div>
+                                                    <div class="col-sm-3 text-right pl-0">
+                                                        <button class="btn btn-success confirmBtn" type="button" style="margin: 6px 6px 0;" data-step-id="6">Confirm</button>
+                                                    </div>
                                                 </div>
                                             <div class="table-responsive">
                                                 <style>
@@ -2264,7 +2274,7 @@
                                         <div class="row no-gutters">
                                             <div class="col">
                                                 <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="6">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                <!-- <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="6">Confirm</button> -->
+                                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="6">Confirm</button>
                                             </div>
                                         </div>
                                     </div>
@@ -2392,13 +2402,12 @@
                                                                 }
                                                             </style>
 
-                                                            <div class="col float-left text-right flex-grow-1 pl-0">
+                                                            <div class="col-sm-8 float-left text-left flex-grow-1 pl-0">
                                                                 <button class="btn btn-primary btnRefresh refresh-customer-table" type="button" style="margin: 12px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                                 <button id="btnNewCustomer" data-toggle="#addCustomerModal" name="btnNewCustomer" class="btn btn-primary alerts-border" type="button" style="margin: 12px 0; "><i class="icon ion-plus" style="padding-right: 5px;"></i>New Customer</button>
                                                                 <a role="button" data-toggle="modal" href="#helpModalCustomers" class="btn btn-primary helpModal visiblePopupDiv  alerts-border" style="margin: 12px 12px">View Help Video</a>
                                                                 <a href="javascript:void(0);" data-href="https://vs1forum.com/viewforum.php?f=6" class="btn btn-primary downloadHelpFile  alerts-border" style="margin: 12px 0">Download Help File</a>
                                                                 <button style="margin: 12px; margin-right: 0;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal_step7"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                                                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px; margin-right:0" data-step-id="7">Confirm</button>
                                                                 <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step7">
                                                                     <div class="modal-dialog" role="document">
                                                                         <div class="modal-content">
@@ -2461,7 +2470,9 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-
+                                                            <div class="col-sm4 float-left text-right flex-grow-1 pl-0">
+                                                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px; margin-right:0" data-step-id="7">Confirm</button>
+                                                            </div>
                                                             <div >
 
                                                                 <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
@@ -2554,7 +2565,7 @@
                                         <div class="row no-gutters">
                                             <div class="col">
                                                 <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="7">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                <!-- <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="7">Confirm</button> -->
+                                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="7">Confirm</button>
                                             </div>
                                         </div>
                                     </div>
@@ -2689,13 +2700,12 @@
                                         <div class="card-body py-3 px-0 rounded">
                                             <div class="row d-xl-flex flex-row justify-content-xl-center m-0" >
 
-                                                <div class="col text-right float-left flex-grow-1 pl-0">
+                                                <div class="col-sm-9 text-left float-left flex-grow-1 pl-0">
                                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                     <button data-toggle="#addSupplierModal" id="btnNewSupplier" name="btnNewSupplier" class="btn btn-primary alerts-border" type="button" style="margin: 12px; margin-left: 0;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Supplier</button>
                                                     <a role="button" data-toggle="modal" href="#helpModalSuppliers" class="btn btn-primary helpModal visiblePopupDiv alerts-border" style="margin: 12px 12px 12px 0" >View Help Video</a>
                                                     <a href="javascript:void(0);" data-href="https://vs1forum.com/" class="btn btn-primary downloadHelpFile alerts-border" style="margin: 12px 0" >Download Help File</a>
                                                     <button style="margin: 12px; margin-right: 3px;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal_step8"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                                                    <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px; margin-right: 0" data-step-id="8">Confirm</button>
                                                         <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step8">
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
@@ -2757,6 +2767,9 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                </div>
+                                                <div class="col-sm-3 text-right float-left flex-grow-1 pl-0">
+                                                    <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px; margin-right: 0" data-step-id="8">Confirm</button>
                                                 </div>
                                             </div>
                                             <div class="table-responsive">
@@ -2837,7 +2850,7 @@
                                         <div class="row no-gutters">
                                             <div class="col">
                                                 <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="8">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                <!-- <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="8">Confirm</button> -->
+                                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="8">Confirm</button>
                                             </div>
                                         </div>
                                     </div>
@@ -2975,13 +2988,12 @@
                                         <div class="card-body p-3 rounded">
                                             <div class="row d-xl-flex flex-row justify-content-xl-center m-0" >
 
-                                                <div class="col float-left text-right flex-grow-1 pl-0">
+                                                <div class="col-sm-8 float-left text-left flex-grow-1 pl-0">
                                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                     <button data-toggle="#addProductModal" id="btnNewProduct" name="btnNewProduct" class="btn btn-primary alerts-border" type="button" style="margin: 12px; margin-left: 0;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Product</button>
                                                     <a role="button" data-toggle="modal" href="#helpModalInventory" class="btn btn-primary helpModal visiblePopupDiv alerts-border" style="margin: 12px 12px 12px 0">View Help Video</a>
                                                     <a href="javascript:void(0);" data-href="https://vs1forum.com/viewforum.php?f=6" class="btn btn-primary downloadHelpFile alerts-border" style="margin: 12px 0">Download Help File</a>
                                                     <button style="margin: 12px; margin-right: 3px;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal_step9"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                                                    <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px; margin-right: 0;" data-step-id="9">Confirm</button>
                                                         <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step9">
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
@@ -3044,6 +3056,9 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                </div>
+                                                <div class="col-sm-4 float-left text-right flex-grow-1 pl-0">
+                                                    <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px; margin-right: 0;" data-step-id="9">Confirm</button>
                                                 </div>
                                             </div>
                                             <div class="table-responsive">
@@ -3231,7 +3246,7 @@
                                         <div class="row no-gutters">
                                             <div class="col">
                                                 <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;" data-step-id="9">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                <!-- <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="9">Confirm</button> -->
+                                                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;" data-step-id="9">Confirm</button>
                                             </div>
                                         </div>
                                     </div>

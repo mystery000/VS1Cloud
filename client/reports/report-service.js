@@ -3,13 +3,12 @@ import { BaseService } from "../js/base-service.js";
 
 export class ReportService extends BaseService {
   getCardDataReport(dateAsOf) {
-    let options = {
-      SelDate: '"' + dateAsOf + '"',
-    };
-    return this.getList(
-      this.ERPObjects.TCardDataReport,
-      options
-    );
+    let options = '';
+      options = {
+        SelDate: '"' + dateAsOf + '"',
+      };
+
+    return this.getList(this.ERPObjects.TCardDataReport,options);
   }
 
   getCashReceivedData(dateFrom, dateTo) {
