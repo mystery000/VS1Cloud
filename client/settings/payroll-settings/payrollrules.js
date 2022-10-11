@@ -1477,6 +1477,11 @@ Template.payrollrules.onRendered(function() {
           setTimeout(function () {
               MakeNegative();
           }, 100);
+
+
+
+          
+
           setTimeout(function () {
               $('#tblDeductions').DataTable({
 
@@ -5372,7 +5377,27 @@ Template.payrollrules.onRendered(function() {
         $('#selectDeleteLineID').val(targetID);
         $('#deleteAllowanceLineModal').modal('toggle');
     });
-
+    $(document).on('change', '#editRateType', function(e) {
+        let evalue = $('#editRateType').val();
+        console.log(evalue);
+        switch(evalue) {
+            case 'Time & Half':
+                $('.graterThenDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+            break;
+            case 'Double Time':
+                $('.graterThenDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+            break;
+            case 'Weekend':
+                $('.weekendDiv').css('display', 'block');
+                $('.graterThenDiv').css('display', 'none');
+            break;
+            default:
+                $('.graterThenDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+        }
+    });
 
 
     $(document).on('click', '.colDeleteCalenders', function(event) {
@@ -21664,7 +21689,7 @@ Template.payrollrules.events({
         $('#fileInput').trigger('click');
 
      },
-
+     
 
 });
 
@@ -21680,4 +21705,6 @@ Template.payrollrules.helpers({
             // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
         });
     }
+
+    
 });

@@ -2063,14 +2063,10 @@
                                                     display: inline-block;
                                                     position: absolute;
                                                     top: 7px;
-                                                    left: 15px;
-                                                }
-                                                .addNewRulediv input + span {
-                                                    left: auto;
                                                     right:15px;
                                                 }
                                                 .addNewRulediv input {
-                                                    padding: 5px 65px 5px 120px;
+                                                    padding: 5px 65px 5px 15px;
                                                 }
                                             </style>
                                             <button type="button" class="btn btn-primary btnAddNewOvertime float-right" data-toggle="modal" data-target="#btnAddNewOvertime"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add New Overtime</button>
@@ -2091,19 +2087,26 @@
                                                                     <div class="form-group">
                                                                         <label for="edtFundType">Rate Type</label>
                                                                         <select class="form-control editRateType" style="cursor: pointer;" id="editRateType" >
-                                                                            <option value="">Time & Half</option>
-                                                                            <option value="">Double Time</option>
-                                                                            <option value="">Weekend</option>
+                                                                            <option value="">Default</option>
+                                                                            <option value="Time & Half">Time & Half</option>
+                                                                            <option value="Double Time">Double Time</option>
+                                                                            <option value="Weekend">Weekend</option>
                                                                         </select>
-
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-12">
-                                                                    <div class="form-group">
-                                                                        <label for="editRule">Rule</label>
+                                                                    <div class="form-group graterThenDiv">
+                                                                        <label for="editRule">Greater than</label>
                                                                         <div class="addNewRulediv">
-                                                                            <span>Greater than </span><input class="form-control" id="editRule" type="text" value=""><span>hours</span>
+                                                                            <input class="form-control" id="editRule" type="number" value=""><span>hours</span>
                                                                         </div>
+                                                                    </div>
+                                                                    <div style="display: none;" class="form-group weekendDiv">
+                                                                        <label for="edtFundType">Weekend</label>
+                                                                        <select class="form-control editRateType" style="cursor: pointer;" id="editRateType" >
+                                                                            <option value="">Sunday</option>
+                                                                            <option value="">Saturday</option>
+                                                                        </select>
                                                                     </div>
                                                                 </div>
 
@@ -2131,6 +2134,10 @@
                                                     .btn-sm.btn-danger {
                                                         padding: 0.5px 5px !important;
                                                         margin-top: 0px !important;
+                                                    }
+                                                    .table-bordered, .table-bordered td, .table-bordered th {
+                                                        border: 1px solid #e3e6f0 !important;
+                                                        border-collapse: collapse;
                                                     }
                                                 </style>
 
