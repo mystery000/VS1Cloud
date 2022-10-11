@@ -1684,7 +1684,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label>Employee</label>
-                            <select class="form-control employee-select">
+                            <input class="form-control es-input select-employee-js employee-select" type="search" autocomplete="off" value="Select an employee">
+
+                            <!-- <select class="form-control employee-select">
                                 <option value="0">Select an employee</option>
 
                                 {{#if employees}}
@@ -1693,7 +1695,7 @@
                                     {{/each}}
                                 {{/if}}
 
-                            </select>
+                            </select> -->
                         </div>
                         <style>
                             .hidden {
@@ -1702,7 +1704,9 @@
                         </style>
                         <div class="col-md-6 payperiod-field hidden">
                             <label>Period</label>
-                            <select class="form-control payperiod-select">
+                            <input class="form-control es-input select-period-js payperiod-select" type="search" autocomplete="off" value="Select a pay period">
+
+                            <!-- <select class="form-control payperiod-select">
                                 <option value="0">Select a pay period</option>
 
                                 {{#if payPeriods}}
@@ -1711,7 +1715,7 @@
                                     {{/each}}
                                 {{/if}}
                              
-                            </select>
+                            </select> -->
                         </div>
                     </div>
                 </form>
@@ -1861,6 +1865,162 @@
         </div>
     
       </div>
+
+
+      <div class="modal fade" role="dialog" tabindex="-1" id="select-employee-modal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Select an employee</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+        <!--
+                    <div style="margin: 4px; margin-bottom: 8px;">
+                        <button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='icon ion-android-bulb' style='margin-right: 5px;'></i>Refresh</button>
+                    </div>
+        -->
+                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded">
+                        <div class="table-responsive">
+                            <style>
+                                .th.chkBox {
+                                    width: 2% !important;
+                                }
+                                .thQty {
+                                    width: 8% !important;
+                                }
+                                .thSalesPrice {
+                                    width: 8% !important;
+                                }
+                                .thSalesPrice {
+                                    width: 8% !important;
+                                }
+                                .thTax {
+                                    width: 8% !important;
+                                }
+                                .thCostPrice {
+                                    width: 8% !important;
+                                }
+                                .thProductName {
+                                    width: 20% !important;
+                                }
+      
+                                .thColBarcode {
+                                    width: 15% !important;
+                                }
+                            </style>
+                            <table id="tblEmployeesList" class="table table-striped table-bordered tblInventoryService">
+                                <thead>
+                                    <tr  class="dnd-moved">
+                                       
+                                        <th>Employee Name</th>
+                                    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#if employees}}
+                                        {{#each employee in employees}}
+                                            <tr employee-id="{{ employee.ID }}">
+                                                <td>{{ employee.EmployeeName }}</td>
+                                            </tr>
+                                        {{/each}}
+                                    {{/if}}
+                                  
+      
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+             
+                  <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="select-payperiod-modal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Select a Pay Period</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+        <!--
+                    <div style="margin: 4px; margin-bottom: 8px;">
+                        <button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='icon ion-android-bulb' style='margin-right: 5px;'></i>Refresh</button>
+                    </div>
+        -->
+                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded">
+                        <div class="table-responsive">
+                            <style>
+                                .th.chkBox {
+                                    width: 2% !important;
+                                }
+                                .thQty {
+                                    width: 8% !important;
+                                }
+                                .thSalesPrice {
+                                    width: 8% !important;
+                                }
+                                .thSalesPrice {
+                                    width: 8% !important;
+                                }
+                                .thTax {
+                                    width: 8% !important;
+                                }
+                                .thCostPrice {
+                                    width: 8% !important;
+                                }
+                                .thProductName {
+                                    width: 20% !important;
+                                }
+      
+                                .thColBarcode {
+                                    width: 15% !important;
+                                }
+                            </style>
+                            <table id="tblPayPeriodsList" class="table table-striped table-bordered tblInventoryService">
+                                <thead>
+                                    <tr  class="dnd-moved">
+                                       
+                                        <th>Calendar Name</th>
+                                        <th>Calendar Period</th>
+                                    
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    {{#if payPeriods}}
+                                        {{#each pay in payPeriods}}
+                                            <tr calendar-id="{{pay.ID }}">
+                                                <td>{{ pay.PayrollCalendarName }}</td>
+                                                <td>{{ pay.PayrollCalendarPayPeriod }}</td>
+                                            </tr>
+                                        
+                                        {{/each}}
+                                    {{/if}}
+                                    {{#if employees}}
+                                        {{#each employee in employees}}
+                                           
+                                        {{/each}}
+                                    {{/if}}
+                                  
+      
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+             
+                  <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- End Modal Product -->
     <script>

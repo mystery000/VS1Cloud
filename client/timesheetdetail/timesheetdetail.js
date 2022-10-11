@@ -34,6 +34,7 @@ Template.timesheetdetail.onCreated(function () {
   this.earningLines = new ReactiveVar([]);
   this.earningDays = new ReactiveVar([]);
   this.earningOptions = new ReactiveVar([]);
+
 });
 
 Template.timesheetdetail.onRendered(function () {
@@ -136,9 +137,15 @@ Template.timesheetdetail.onRendered(function () {
 
     let date = moment(timesheet.TimeSheetDate).subtract('1', "week");
     let days = [];
+    let i = 0;
     while(date.isBefore(endDate) == true) {
       date = aWeekAgo.add('1', 'day');
-      days.push(date.format('ddd DD MMM'));
+      days.push({
+        index: i,
+        dateObject: date,
+        date: date.format('ddd DD MMM'),
+      });
+      i++;
     }
 
     this.earningDays.set(days);
@@ -187,7 +194,51 @@ Template.timesheetdetail.onRendered(function () {
     ];
 
     await this.earningOptions.set(options);
+
+    $('#tblEarnigRatesList').DataTable();
   }
+
+  this.buildNewObject = () => {
+    // Here we will build the object to save
+
+    const trs = $('#tblTimeSheetInner').find('tr');
+
+    trs.each((index, tr) => {
+      let totalHours = 0;
+
+     const inputs = tr.find('.hours');
+
+     inputs.each((_index, input) => {
+        totalHours += parseFloat(input.val() || 0);
+     });
+
+
+
+    })
+  }
+
+  this.approveTimeSheet = async () => {
+    console.log('Aprove timsheet');
+  }
+
+
+  this.cancelTimeSheet = async () => {
+    console.log('Cancel timsheet');
+  }
+
+
+  this.darftTimeSheet = async () => {
+    console.log('Draft timsheet');
+  }
+
+
+  this.deleteTimeSheet = async () => {
+    console.log('Delete timsheet');
+  }
+
+
+
+
 
   this.initPage = async () => {
     
@@ -239,6 +290,31 @@ Template.timesheetdetail.events({
   },
   "click .btnDeleteRow": function (e) {
     $(e.target).parents("tr").remove();
+  },
+
+  "click #tblTimeSheetInner tbody .select-rate-js": (e, ui) => {
+    $(e.currentTarget).addClass('selector-target'); // This is used to know where to paste data later
+    $("#select-rate-modal").modal("toggle");
+  },
+
+  "click #tblEarnigRatesList tbody tr": (e, ui) => {
+    const selectedEarning = $(e.currentTarget).find('td:first').text();
+    $("#select-rate-modal").modal("toggle");
+    $('.selector-target').val(selectedEarning);
+    $('.selector-target').removeClass('selector-target');
+  },
+
+  "click .approve-timesheet": (e, ui) => {
+    ui.approveTimeSheet();
+  },
+  'click .delete-timesheet': (e, ui) => {
+    ui.deleteTimeSheet();
+  },
+  "click .save-draft": (e, ui) => {
+    ui.darftTimeSheet();
+  },
+  "click .cancel-timesheet": (e, ui) => {
+    ui.cancelTimeSheet();
   }
 });
 

@@ -342,6 +342,7 @@ Template.payrolloverview.onRendered(function () {
     let employees = data.temployee.map(e => e.fields);
 
     templateObject.employees.set(employees);
+    $('#tblEmployeesList').DataTable();
 
   }
 
@@ -360,17 +361,19 @@ Template.payrolloverview.onRendered(function () {
     let calendars = data.tpayrollcalendars.map(c => c.fields);
 
     templateObject.payPeriods.set(calendars);
+
+    $('#tblPayPeriodsList').DataTable();
   }
 
 
   templateObject.newTimeSheet = async () => {
     LoadingOverlay.show();
     const employees = await templateObject.employees.get();
-    const employeeId =  $('.employee-select').val();
+    const employeeId =  $('.employee-select').attr('employee-id');
     const selectedEmployee = employees.find(e => e.ID == employeeId);
 
     const payPeriods = await templateObject.payPeriods.get();
-    const payPeriodId = $('.payperiod-select').val();
+    const payPeriodId = $('.payperiod-select').attr('calendar-id');
     const selectedPeriod = payPeriods.find(p => p.ID == payPeriodId);
 
     console.log('selected epriods', selectedPeriod);
@@ -401,6 +404,7 @@ Template.payrolloverview.onRendered(function () {
     let response = await contactService.saveTimeSheet(timeSheetEntry);
     LoadingOverlay.hide(0);
 
+    $('.add-new-timesheet').attr('disabled', true);
     if(response.fields.ID) {
       let timeSheetId = response.fields.ID;
       window.location.href = `/timesheetdetail?tid=${timeSheetId}`;
@@ -6258,7 +6262,7 @@ Template.payrolloverview.events({
   },
 
   "change .employee-select": (e, ui) => {
-    const selectedEmployeeId = $(e.currentTarget).val();
+    const selectedEmployeeId = $(e.currentTarget).attr('employee-id');
     if(selectedEmployeeId == 0) {
       $('.payperiod-field').addClass('hidden');
       $('.add-new-timesheet').attr('disabled', true);
@@ -6275,7 +6279,45 @@ Template.payrolloverview.events({
     const timesheetId = $(e.currentTarget).attr('timesheet-id');
 
     window.location.href = `/timesheetdetail?tid=${timesheetId}`;
-  }
+  },
+
+
+  "click .select-employee-js": (e, ui) => {
+    $(e.currentTarget).addClass('selector-target'); // This is used to know where to paste data later
+    $("#select-employee-modal").modal("toggle");
+  },
+
+  "click #tblEmployeesList tbody tr": (e, ui) => {
+    const selectedEmployee = $(e.currentTarget).find('td:first').text();
+    const employeId = $(e.currentTarget).attr('employee-id');
+    $("#select-employee-modal").modal("toggle");
+    $('.selector-target').val(selectedEmployee);
+    if(employeId) {
+      $('.selector-target').attr('employee-id', employeId);
+      $('.selector-target').trigger('change');
+    }
+    $('.selector-target').removeClass('selector-target');
+  },
+
+
+  "click .select-period-js": (e, ui) => {
+    $(e.currentTarget).addClass('selector-target'); // This is used to know where to paste data later
+    $("#select-payperiod-modal").modal("toggle");
+  },
+
+  "click #tblPayPeriodsList tbody tr": (e, ui) => {
+    const selectedEmployee = $(e.currentTarget).find('td:first').text();
+    const employeId = $(e.currentTarget).attr('calendar-id');
+    $("#select-payperiod-modal").modal("toggle");
+    $('.selector-target').val(selectedEmployee);
+    if(employeId) {
+      $('.selector-target').attr('calendar-id', employeId);
+      $('.selector-target').trigger('change');
+    }
+    $('.selector-target').removeClass('selector-target');
+  },
+
+  
 });
 
 Template.payrolloverview.helpers({
