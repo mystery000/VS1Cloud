@@ -102,7 +102,7 @@ async function saveCharts() {
   // for (const _chart of chartList) {
   let chartJSON = {
     type: "Tvs1dashboardpreferences",
-    objects:chartList
+    objects: chartList
   };
   const ApiResponse = await apiEndpoint.fetch(null, {
     method: "POST",
@@ -581,7 +581,7 @@ Template.dashboardexe.onRendered(function () {
         $(`[key='${arrChartKey[i]}']`).hide();
       }
     }
-    // if ($(`[key='dashboardexe_cash'] .on-editor-change-mode`).attr("is-hidden") == "true") {
+    // if ($(`[key='dashboardexe_cash'] .on-editor-change-mode`).attr("is-hidden") == "true") { 
     // }
   };
 
@@ -691,112 +691,59 @@ Template.dashboardexe.onRendered(function () {
   templateObject.getDashboardExecutiveData = async (dateAsOf, dateChanged) => {
     LoadingOverlay.show();
     try {
-      var cardDataLoaded = localStorage.getItem('TCardDataReport_loaded');
-      if (dateChanged == true || cardDataLoaded == null || cardDataLoaded == '0') {
-        let data = await reportService.getCardDataReport(dateAsOf);
-        if (data.tcarddatareport) {
-          let resData = data.tcarddatareport[0];
+      let data = await reportService.getCardDataReport(dateAsOf);
+      if (data.tcarddatareport) {
+        let resData = data.tcarddatareport[0];
 
-          cashReceived[0] = parseFloat(resData.Cash_Received1);
-          cashReceived[1] = parseFloat(resData.Cash_Received2);
-          cashSpent[0] = parseFloat(resData.Cash_Spent1);
-          cashSpent[1] = parseFloat(resData.Cash_Spent2);
-          cashSurplus[0] = parseFloat(resData.Cash_Surplus1);
-          cashSurplus[1] = parseFloat(resData.Cash_Surplus2);
-          bankBalance[0] = parseFloat(resData.Cash_Balance1);
-          bankBalance[1] = parseFloat(resData.Cash_Balance2);
+        cashReceived[0] = parseFloat(resData.Cash_Received1);
+        cashReceived[1] = parseFloat(resData.Cash_Received2);
+        cashSpent[0] = parseFloat(resData.Cash_Spent1);
+        cashSpent[1] = parseFloat(resData.Cash_Spent2);
+        cashSurplus[0] = parseFloat(resData.Cash_Surplus1);
+        cashSurplus[1] = parseFloat(resData.Cash_Surplus2);
+        bankBalance[0] = parseFloat(resData.Cash_Balance1);
+        bankBalance[1] = parseFloat(resData.Cash_Balance2);
 
-          totalSales[0] = parseFloat(resData.Prof_Income1);
-          totalSales[1] = parseFloat(resData.Prof_Income2);
-          grossProfit[0] = parseFloat(resData.Prof_Gross1);
-          grossProfit[1] = parseFloat(resData.Prof_Gross2);
-          totalExpense[0] = parseFloat(resData.Prof_Expenses1);
-          totalExpense[1] = parseFloat(resData.Prof_Expenses2);
-          nettProfit[0] = parseFloat(resData.Prof_Net1);
-          nettProfit[1] = parseFloat(resData.Prof_Net2);
+        totalSales[0] = parseFloat(resData.Prof_Income1);
+        totalSales[1] = parseFloat(resData.Prof_Income2);
+        grossProfit[0] = parseFloat(resData.Prof_Gross1);
+        grossProfit[1] = parseFloat(resData.Prof_Gross2);
+        totalExpense[0] = parseFloat(resData.Prof_Expenses1);
+        totalExpense[1] = parseFloat(resData.Prof_Expenses2);
+        nettProfit[0] = parseFloat(resData.Prof_Net1);
+        nettProfit[1] = parseFloat(resData.Prof_Net2);
 
-          grossProfitMargin[0] = parseFloat(resData.Perf_GrossMargin1);
-          grossProfitMargin[1] = parseFloat(resData.Perf_GrossMargin2);
-          netProfitMargin[0] = parseFloat(resData.Perf_NetMargin1);
-          netProfitMargin[1] = parseFloat(resData.Perf_NetMargin2);
-          returnOnInvestment[0] = parseFloat(resData.Perf_ROI1);
-          returnOnInvestment[1] = parseFloat(resData.Perf_ROI2);
+        grossProfitMargin[0] = parseFloat(resData.Perf_GrossMargin1);
+        grossProfitMargin[1] = parseFloat(resData.Perf_GrossMargin2);
+        netProfitMargin[0] = parseFloat(resData.Perf_NetMargin1);
+        netProfitMargin[1] = parseFloat(resData.Perf_NetMargin2);
+        returnOnInvestment[0] = parseFloat(resData.Perf_ROI1);
+        returnOnInvestment[1] = parseFloat(resData.Perf_ROI2);
 
-          totalAgedReceivables[0] = parseFloat(resData.Bal_Debtors1);
-          totalAgedReceivables[1] = parseFloat(resData.Bal_Debtors2);
-          totalAgedPayables[0] = parseFloat(resData.Bal_Creditors1);
-          totalAgedPayables[1] = parseFloat(resData.Bal_Creditors2);
-          totalNettAssets[0] = parseFloat(resData.Bal_NetAsset1);
-          totalNettAssets[1] = parseFloat(resData.Bal_NetAsset2);
+        totalAgedReceivables[0] = parseFloat(resData.Bal_Debtors1);
+        totalAgedReceivables[1] = parseFloat(resData.Bal_Debtors2);
+        totalAgedPayables[0] = parseFloat(resData.Bal_Creditors1);
+        totalAgedPayables[1] = parseFloat(resData.Bal_Creditors2);
+        totalNettAssets[0] = parseFloat(resData.Bal_NetAsset1);
+        totalNettAssets[1] = parseFloat(resData.Bal_NetAsset2);
 
-          totalInvoiceCount[0] = parseInt(resData.Income_Invoices1);
-          totalInvoiceCount[1] = parseInt(resData.Income_Invoices2);
-          totalInvoiceValue[0] = parseFloat(resData.Income_Total1);
-          totalInvoiceValue[1] = parseFloat(resData.Income_Total2);
-          averageInvoiceValue[0] = parseFloat(resData.Income_Average1);
-          averageInvoiceValue[1] = parseFloat(resData.Income_Average2);
+        totalInvoiceCount[0] = parseInt(resData.Income_Invoices1);
+        totalInvoiceCount[1] = parseInt(resData.Income_Invoices2);
+        totalInvoiceValue[0] = parseFloat(resData.Income_Total1);
+        totalInvoiceValue[1] = parseFloat(resData.Income_Total2);
+        averageInvoiceValue[0] = parseFloat(resData.Income_Average1);
+        averageInvoiceValue[1] = parseFloat(resData.Income_Average2);
 
-          avgDebtors[0] = parseInt(resData.Pos_AvgDebtDays1);
-          avgDebtors[1] = parseInt(resData.Pos_AvgDebtDays2);
-          avgCreditors[0] = parseInt(resData.Pos_AvgCredDays1);
-          avgCreditors[1] = parseInt(resData.Pos_AvgCredDays2);
-          shortTermCash[0] = parseFloat(resData.Pos_CashForecast1);
-          shortTermCash[1] = parseFloat(resData.Pos_CashForecast2);
-          currentAsset[0] = parseFloat(resData.Pos_AssetToLiab1);
-          currentAsset[1] = parseFloat(resData.Pos_AssetToLiab2);
-          termAsset[0] = parseFloat(resData.Sheet_AssetToLiab1);
-          termAsset[1] = parseFloat(resData.Sheet_AssetToLiab2);
-        }
-      } else {
-        cashReceived[0] = parseFloat(localStorage.getItem('TCardDataReport_Cash_Received1'));
-        cashReceived[1] = parseFloat(localStorage.getItem('TCardDataReport_Cash_Received2'));
-        cashSpent[0] = parseFloat(localStorage.getItem('TCardDataReport_Cash_Spent1'));
-        cashSpent[1] = parseFloat(localStorage.getItem('TCardDataReport_Cash_Spent2'));
-        cashSurplus[0] = parseFloat(localStorage.getItem('TCardDataReport_Cash_Surplus1'));
-        cashSurplus[1] = parseFloat(localStorage.getItem('TCardDataReport_Cash_Surplus2'));
-        bankBalance[0] = parseFloat(localStorage.getItem('TCardDataReport_Cash_Balance1'));
-        bankBalance[1] = parseFloat(localStorage.getItem('TCardDataReport_Cash_Balance2'));
-
-        totalSales[0] = parseFloat(localStorage.getItem('TCardDataReport_Prof_Income1'));
-        totalSales[1] = parseFloat(localStorage.getItem('TCardDataReport_Prof_Income2'));
-        grossProfit[0] = parseFloat(localStorage.getItem('TCardDataReport_Prof_Gross1'));
-        grossProfit[1] = parseFloat(localStorage.getItem('TCardDataReport_Prof_Gross2'));
-        totalExpense[0] = parseFloat(localStorage.getItem('TCardDataReport_Prof_Expenses1'));
-        totalExpense[1] = parseFloat(localStorage.getItem('TCardDataReport_Prof_Expenses2'));
-        nettProfit[0] = parseFloat(localStorage.getItem('TCardDataReport_Prof_Net1'));
-        nettProfit[1] = parseFloat(localStorage.getItem('TCardDataReport_Prof_Net2'));
-
-        grossProfitMargin[0] = parseFloat(localStorage.getItem('TCardDataReport_Perf_GrossMargin1'));
-        grossProfitMargin[1] = parseFloat(localStorage.getItem('TCardDataReport_Perf_GrossMargin2'));
-        netProfitMargin[0] = parseFloat(localStorage.getItem('TCardDataReport_Perf_NetMargin1'));
-        netProfitMargin[1] = parseFloat(localStorage.getItem('TCardDataReport_Perf_NetMargin2'));
-        returnOnInvestment[0] = parseFloat(localStorage.getItem('TCardDataReport_Perf_ROI1'));
-        returnOnInvestment[1] = parseFloat(localStorage.getItem('TCardDataReport_Perf_ROI2'));
-
-        totalAgedReceivables[0] = parseFloat(localStorage.getItem('TCardDataReport_Bal_Debtors1'));
-        totalAgedReceivables[1] = parseFloat(localStorage.getItem('TCardDataReport_Bal_Debtors2'));
-        totalAgedPayables[0] = parseFloat(localStorage.getItem('TCardDataReport_Bal_Creditors1'));
-        totalAgedPayables[1] = parseFloat(localStorage.getItem('TCardDataReport_Bal_Creditors2'));
-        totalNettAssets[0] = parseFloat(localStorage.getItem('TCardDataReport_Bal_NetAsset1'));
-        totalNettAssets[1] = parseFloat(localStorage.getItem('TCardDataReport_Bal_NetAsset2'));
-
-        totalInvoiceCount[0] = parseInt(localStorage.getItem('TCardDataReport_Income_Invoices1'));
-        totalInvoiceCount[1] = parseInt(localStorage.getItem('TCardDataReport_Income_Invoices2'));
-        totalInvoiceValue[0] = parseFloat(localStorage.getItem('TCardDataReport_Income_Total1'));
-        totalInvoiceValue[1] = parseFloat(localStorage.getItem('TCardDataReport_Income_Total2'));
-        averageInvoiceValue[0] = parseFloat(localStorage.getItem('TCardDataReport_Income_Average1'));
-        averageInvoiceValue[1] = parseFloat(localStorage.getItem('TCardDataReport_Income_Average2'));
-
-        avgDebtors[0] = parseInt(localStorage.getItem('TCardDataReport_Pos_AvgDebtDays1'));
-        avgDebtors[1] = parseInt(localStorage.getItem('TCardDataReport_Pos_AvgDebtDays2'));
-        avgCreditors[0] = parseInt(localStorage.getItem('TCardDataReport_Pos_AvgCredDays1'));
-        avgCreditors[1] = parseInt(localStorage.getItem('TCardDataReport_Pos_AvgCredDays2'));
-        shortTermCash[0] = parseFloat(localStorage.getItem('TCardDataReport_Pos_CashForecast1'));
-        shortTermCash[1] = parseFloat(localStorage.getItem('TCardDataReport_Pos_CashForecast2'));
-        currentAsset[0] = parseFloat(localStorage.getItem('TCardDataReport_Pos_AssetToLiab1'));
-        currentAsset[1] = parseFloat(localStorage.getItem('TCardDataReport_Pos_AssetToLiab2'));
-        termAsset[0] = parseFloat(localStorage.getItem('TCardDataReport_Sheet_AssetToLiab1'));
-        termAsset[1] = parseFloat(localStorage.getItem('TCardDataReport_Sheet_AssetToLiab2'));
+        avgDebtors[0] = parseInt(resData.Pos_AvgDebtDays1);
+        avgDebtors[1] = parseInt(resData.Pos_AvgDebtDays2);
+        avgCreditors[0] = parseInt(resData.Pos_AvgCredDays1);
+        avgCreditors[1] = parseInt(resData.Pos_AvgCredDays2);
+        shortTermCash[0] = parseFloat(resData.Pos_CashForecast1);
+        shortTermCash[1] = parseFloat(resData.Pos_CashForecast2);
+        currentAsset[0] = parseFloat(resData.Pos_AssetToLiab1);
+        currentAsset[1] = parseFloat(resData.Pos_AssetToLiab2);
+        termAsset[0] = parseFloat(resData.Sheet_AssetToLiab1);
+        termAsset[1] = parseFloat(resData.Sheet_AssetToLiab2);
       }
 
       let pArr = [];
@@ -867,36 +814,46 @@ Template.dashboardexe.onRendered(function () {
       pArr = [];
       for (i = 0; i < 2; i++) {
         pArr.push(totalInvoiceCount[i]);
+      }
+      rArr = templateObject.calculatePercent(pArr);
+      totalInvoiceCountPerc1 = rArr[0];
+      totalInvoiceCountPerc2 = rArr[1];
+
+      pArr = [];
+      for (i = 0; i < 2; i++) {
         pArr.push(totalInvoiceValue[i]);
         pArr.push(averageInvoiceValue[i]);
       }
       rArr = templateObject.calculatePercent(pArr);
-      totalInvoiceCountPerc1 = rArr[0];
-      totalInvoiceValuePerc1 = rArr[1];
-      averageInvoiceValuePerc1 = rArr[2];
-      totalInvoiceCountPerc2 = rArr[3];
-      totalInvoiceValuePerc2 = rArr[4];
-      averageInvoiceValuePerc2 = rArr[5];
+      totalInvoiceValuePerc1 = rArr[0];
+      averageInvoiceValuePerc1 = rArr[1];
+      totalInvoiceValuePerc2 = rArr[2];
+      averageInvoiceValuePerc2 = rArr[3];
 
       pArr = [];
       for (i = 0; i < 2; i++) {
         pArr.push(avgDebtors[i]);
         pArr.push(avgCreditors[i]);
+      }
+      rArr = templateObject.calculatePercent(pArr);
+      avgDebtorsPerc1 = rArr[0];
+      avgCreditorsPerc1 = rArr[1];
+      avgDebtorsPerc2 = rArr[2];
+      avgCreditorsPerc2 = rArr[3];
+
+      pArr = [];
+      for (i = 0; i < 2; i++) {
         pArr.push(shortTermCash[i]);
         pArr.push(currentAsset[i]);
         pArr.push(termAsset[i]);
       }
       rArr = templateObject.calculatePercent(pArr);
-      avgDebtorsPerc1 = rArr[0];
-      avgCreditorsPerc1 = rArr[1];
-      shortTermCashPerc1 = rArr[2];
-      currentAssetPerc1 = rArr[3];
-      termAssetPerc1 = rArr[4];
-      avgDebtorsPerc2 = rArr[5];
-      avgCreditorsPerc2 = rArr[6];
-      shortTermCashPerc2 = rArr[7];
-      currentAssetPerc2 = rArr[8];
-      termAssetPerc2 = rArr[9];
+      shortTermCashPerc1 = rArr[0];
+      currentAssetPerc1 = rArr[1];
+      termAssetPerc1 = rArr[2];
+      shortTermCashPerc2 = rArr[3];
+      currentAssetPerc2 = rArr[4];
+      termAssetPerc2 = rArr[5];
 
       templateObject.cashReceivedPerc1.set(cashReceivedPerc1);
       templateObject.cashSpentPerc1.set(cashSpentPerc1);
@@ -1014,7 +971,7 @@ Template.dashboardexe.onRendered(function () {
       templateObject.setFieldVariance(currentAsset[0], currentAsset[1], "spnCurrentAssetVariance", "divCurrentAssetVariance");
       templateObject.setFieldVariance(termAsset[0], termAsset[1], "spnTermAssetVariance", "divTermAssetVariance");
     } catch (err) {
-
+      console.log(err);
     }
     LoadingOverlay.hide();
   }
