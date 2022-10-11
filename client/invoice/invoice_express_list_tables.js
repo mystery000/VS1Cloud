@@ -1673,6 +1673,7 @@ Template.invoicelist.onRendered(function () {
   });
 
   templateObject.getCustomFieldData = function () {
+    return;
     // let listType = "ltInvoiceList";
     // getVS1Data("TCustomFieldList")
     //   .then(function (dataObject) {
@@ -1694,101 +1695,7 @@ Template.invoicelist.onRendered(function () {
     //         templateObject.setCustomFieldDataCheckIndexDB(data);
     //       });
     //   });
-  };
-  // custom field displaysettings
-  templateObject.setCustomFieldDataCheckIndexDB = function (data) {
-    let custFields = [];
-    let dispFields = [];
-    let customData = {};
-    let customFieldCount = 12;
-    let listType = "ltInvoiceList";
-
-    let reset_data = [
-      { label: "Sale Date", class: "colSaleDate", active: true },
-      { label: "Sales No.", class: "colSalesNo", active: true },
-      { label: "Due Date", class: "colDueDate", active: true },
-      { label: "Customer", class: "colCustomer", active: true },
-      { label: "Amount (Ex)", class: "colAmountEx", active: true },
-      { label: "Tax", class: "colTax", active: true },
-      { label: "Amount (Inc)", class: "colAmount", active: true },
-      { label: "Paid", class: "colPaid", active: true },
-      { label: "Outstanding", class: "colBalanceOutstanding", active: false },
-      { label: "Status", class: "colStatus", active: true },
-      { label: "P.O. Number", class: "colPONumber", active: false },
-      { label: "Reference", class: "colReference", active: false },
-      { label: "Employee", class: "colEmployee", active: true },
-      { label: "Comments", class: "colComments", active: false },
-    ];
-    for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-      if (data.tcustomfieldlist[x].fields.ListType == "ltSales") {
-        customData = {
-          active: data.tcustomfieldlist[x].fields.Active || false,
-          id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-          custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-          datatype: data.tcustomfieldlist[x].fields.DataType || "",
-          isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-          iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-          dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-        };
-        custFields.push(customData);
-      } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
-        customData = {
-          active: data.tcustomfieldlist[x].fields.Active || false,
-          id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-          custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-          datatype: data.tcustomfieldlist[x].fields.DataType || "",
-          isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-          iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-          dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-        };
-        dispFields.push(customData);
-      }
-    }
-
-    if (custFields.length < 3) {
-      let remainder = 3 - custFields.length;
-      let getRemCustomFields = parseInt(custFields.length);
-      for (let r = 0; r < remainder; r++) {
-        getRemCustomFields++;
-        customData = {
-          active: false,
-          id: "",
-          custfieldlabel: "Custom Field " + getRemCustomFields,
-          datatype: "",
-          isempty: true,
-          iscombo: false,
-        };
-        // count++;
-        custFields.push(customData);
-      }
-    }
-
-    if (dispFields.length < customFieldCount) {
-      let remainder = customFieldCount - dispFields.length;
-      let getRemCustomFields = parseInt(dispFields.length);
-      for (let r = 0; r < remainder; r++) {
-        customData = {
-          active: reset_data[getRemCustomFields].active,
-          id: "",
-          custfieldlabel: reset_data[getRemCustomFields].label,
-          datatype: "",
-          isempty: true,
-          iscombo: false,
-        };
-        getRemCustomFields++;
-        // count++;
-        dispFields.push(customData);
-      }
-    }
-
-    for (let index = 0; index < custFields.length; index++) {
-      const element = custFields[index];
-      dispFields.push(element);
-    }
-
-    templateObject.custfields.set(custFields);
-    templateObject.displayfields.set(dispFields);
-  };
+  }; 
 
   templateObject.getAllInvoiceData();
   templateObject.getAllFilterInvoiceData = function (
@@ -2091,15 +1998,18 @@ Template.invoicelist.events({
   "click .resetTable": function (event) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
-    reset_data = reset_data.filter(redata => redata.display);
+    templateObject.showCustomFieldDisplaySettings(reset_data); 
 
-    $(".displaySettings").each(function (index) {
+    reset_data = reset_data.filter(redata => redata.display);
+    $(".customDisplaySettings").each(function (index) {
       let $tblrow = $(this);
       $tblrow.find(".divcolumn").text(reset_data[index].label);
-      $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
+      $tblrow
+        .find(".custom-control-input")
+        .prop("checked", reset_data[index].active);
 
-      let title = $("#tblInvoicelist").find("th").eq(index+1);
-      $(title).html(reset_data[index].label);
+        let title = $("#tblInvoicelist").find("th").eq(index+1);
+        $(title).html(reset_data[index].label);
 
       if (reset_data[index].active) {
         $('.col' + reset_data[index].class).addClass('showColumn');
@@ -2108,7 +2018,7 @@ Template.invoicelist.events({
         $('.col' + reset_data[index].class).addClass('hiddenColumn');
         $('.col' + reset_data[index].class).removeClass('showColumn');
       }
-      $(".rngRange" + reset_data[index].class).val('');
+      $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
     });
   },
 
@@ -2117,7 +2027,7 @@ Template.invoicelist.events({
     let lineItems = [];
     $(".fullScreenSpin").css("display", "inline-block");
 
-    $(".displaySettings").each(function (index) {
+    $(".customDisplaySettings").each(function (index) {
       var $tblrow = $(this);
       var fieldID = $tblrow.attr("custid") || 0;
       var colTitle = $tblrow.find(".divcolumn").text() || "";
@@ -2174,229 +2084,235 @@ Template.invoicelist.events({
     }
   },
 
-  // "blur .divcolumn": function (event) {
-  //   let columData = $(event.target).text();
+  
+  'change .custom-range': function(event) {
+    let range = $(event.target).val();
+    let colClassName = $(event.target).attr("valueclass");
+    $('.col' + colClassName).css('width', range);
+  },
+  'click .custom-control-input': function(event) {
+    let colClassName = $(event.target).attr("id");
+    if ($(event.target).is(':checked')) {
+      $('.col' + colClassName).addClass('showColumn');
+      $('.col' + colClassName).removeClass('hiddenColumn');
+    } else {
+      $('.col' + colClassName).addClass('hiddenColumn');
+      $('.col' + colClassName).removeClass('showColumn');
+    }
+  },
 
-  //   let columnDatanIndex = $(event.target)
-  //     .closest("div.columnSettings")
-  //     .attr("id");
-  //   var datable = $("#tblInvoicelist").DataTable();
-  //   var title = datable.column(columnDatanIndex).header();
-  //   $(title).html(columData);
+  // 'click .chkSaleDate': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colSaleDate').addClass('showColumn');
+  //     $('.colSaleDate').removeClass('hiddenColumn');
+  //   } else {
+  //     $('.colSaleDate').addClass('hiddenColumn');
+  //     $('.colSaleDate').removeClass('showColumn');
+  //   }
+  // },
+  // 'click .chkSalesNo': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colSalesNo').addClass('showColumn');
+  //     $('.colSalesNo').removeClass('hiddenColumn');
+  //   } else {
+  //     $('.colSalesNo').addClass('hiddenColumn');
+  //     $('.colSalesNo').removeClass('showColumn');
+  //   }
+  // },
+  // 'click .chkDueDate': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colDueDate').addClass('showColumn');
+  //     $('.colDueDate').removeClass('hiddenColumn');
+  //   } else {
+  //     $('.colDueDate').addClass('hiddenColumn');
+  //     $('.colDueDate').removeClass('showColumn');
+  //   }
+  // },
+  // 'click .chkCustomer': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colCustomer').addClass('showColumn');
+  //     $('.colCustomer').removeClass('hiddenColumn');
+  //   } else {
+  //     $('.colCustomer').addClass('hiddenColumn');
+  //     $('.colCustomer').removeClass('showColumn');
+  //   }
+  // },
+  // 'click .chkAmountEx': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colAmountEx').addClass('showColumn');
+  //     $('.colAmountEx').removeClass('hiddenColumn');
+  //   } else {
+  //     $('.colAmountEx').addClass('hiddenColumn');
+  //     $('.colAmountEx').removeClass('showColumn');
+  //   }
+  // },
+  // 'click .chkTax': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colTax').addClass('showColumn');
+  //     $('.colTax').removeClass('hiddenColumn');
+  //   } else {
+  //     $('.colTax').addClass('hiddenColumn');
+  //     $('.colTax').removeClass('showColumn');
+  //   }
+  // },
+  // // displaysettings
+  // 'click .chkAmount': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colAmount').addClass('showColumn');
+  //     $('.colAmount').removeClass('hiddenColumn');
+  //   } else {
+  //     $('.colAmount').addClass('hiddenColumn');
+  //     $('.colAmount').removeClass('showColumn');
+  //   }
+  // },
+  // 'click .chkPaid': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colPaid').addClass('showColumn');
+  //     $('.colPaid').removeClass('hiddenColumn');
+  //   } else {
+  //     $('.colPaid').addClass('hiddenColumn');
+  //     $('.colPaid').removeClass('showColumn');
+  //   }
   // },
 
-  'click .chkSaleDate': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colSaleDate').addClass('showColumn');
-      $('.colSaleDate').removeClass('hiddenColumn');
-    } else {
-      $('.colSaleDate').addClass('hiddenColumn');
-      $('.colSaleDate').removeClass('showColumn');
-    }
-  },
-  'click .chkSalesNo': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colSalesNo').addClass('showColumn');
-      $('.colSalesNo').removeClass('hiddenColumn');
-    } else {
-      $('.colSalesNo').addClass('hiddenColumn');
-      $('.colSalesNo').removeClass('showColumn');
-    }
-  },
-  'click .chkDueDate': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colDueDate').addClass('showColumn');
-      $('.colDueDate').removeClass('hiddenColumn');
-    } else {
-      $('.colDueDate').addClass('hiddenColumn');
-      $('.colDueDate').removeClass('showColumn');
-    }
-  },
-  'click .chkCustomer': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colCustomer').addClass('showColumn');
-      $('.colCustomer').removeClass('hiddenColumn');
-    } else {
-      $('.colCustomer').addClass('hiddenColumn');
-      $('.colCustomer').removeClass('showColumn');
-    }
-  },
-  'click .chkAmountEx': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colAmountEx').addClass('showColumn');
-      $('.colAmountEx').removeClass('hiddenColumn');
-    } else {
-      $('.colAmountEx').addClass('hiddenColumn');
-      $('.colAmountEx').removeClass('showColumn');
-    }
-  },
-  'click .chkTax': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colTax').addClass('showColumn');
-      $('.colTax').removeClass('hiddenColumn');
-    } else {
-      $('.colTax').addClass('hiddenColumn');
-      $('.colTax').removeClass('showColumn');
-    }
-  },
-  // displaysettings
-  'click .chkAmount': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colAmount').addClass('showColumn');
-      $('.colAmount').removeClass('hiddenColumn');
-    } else {
-      $('.colAmount').addClass('hiddenColumn');
-      $('.colAmount').removeClass('showColumn');
-    }
-  },
-  'click .chkPaid': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colPaid').addClass('showColumn');
-      $('.colPaid').removeClass('hiddenColumn');
-    } else {
-      $('.colPaid').addClass('hiddenColumn');
-      $('.colPaid').removeClass('showColumn');
-    }
-  },
-
-  'click .chkBalanceOutstanding': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colBalanceOutstanding').addClass('showColumn');
-      $('.colBalanceOutstanding').removeClass('hiddenColumn');
-    } else {
-        $('.colBalanceOutstanding').addClass('hiddenColumn');
-        $('.colBalanceOutstanding').removeClass('showColumn');
-    }
-  },
-  'click .chkStatus': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colStatus').addClass('showColumn');
-      $('.colStatus').removeClass('hiddenColumn');
-    } else {
-      $('.colStatus').addClass('hiddenColumn');
-      $('.colStatus').removeClass('showColumn');
-    }
-  },
-  'click .chkEmployee': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colEmployee').addClass('showColumn');
-      $('.colEmployee').removeClass('hiddenColumn');
-    } else {
-      $('.colEmployee').addClass('hiddenColumn');
-      $('.colEmployee').removeClass('showColumn');
-    }
-  },
-  'click .chkComments': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colComments').addClass('showColumn');
-      $('.colComments').removeClass('hiddenColumn');
-    } else {
-      $('.colComments').addClass('hiddenColumn');
-      $('.colComments').removeClass('showColumn');
-    }
-  },
-  'click .chkPONumber': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colPONumber').addClass('showColumn');
-      $('.colPONumber').removeClass('hiddenColumn');
-    } else {
-      $('.colPONumber').addClass('hiddenColumn');
-      $('.colPONumber').removeClass('showColumn');
-    }
-  },
-  'click .chkReference': function(event) {
-    if ($(event.target).is(':checked')) {
-      $('.colReference').addClass('showColumn');
-      $('.colReference').removeClass('hiddenColumn');
-    } else {
-      $('.colReference').addClass('hiddenColumn');
-      $('.colReference').removeClass('showColumn');
-    }
-  },
-  // display settings
+  // 'click .chkBalanceOutstanding': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colBalanceOutstanding').addClass('showColumn');
+  //     $('.colBalanceOutstanding').removeClass('hiddenColumn');
+  //   } else {
+  //       $('.colBalanceOutstanding').addClass('hiddenColumn');
+  //       $('.colBalanceOutstanding').removeClass('showColumn');
+  //   }
+  // },
+  // 'click .chkStatus': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colStatus').addClass('showColumn');
+  //     $('.colStatus').removeClass('hiddenColumn');
+  //   } else {
+  //     $('.colStatus').addClass('hiddenColumn');
+  //     $('.colStatus').removeClass('showColumn');
+  //   }
+  // },
+  // 'click .chkEmployee': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colEmployee').addClass('showColumn');
+  //     $('.colEmployee').removeClass('hiddenColumn');
+  //   } else {
+  //     $('.colEmployee').addClass('hiddenColumn');
+  //     $('.colEmployee').removeClass('showColumn');
+  //   }
+  // },
+  // 'click .chkComments': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colComments').addClass('showColumn');
+  //     $('.colComments').removeClass('hiddenColumn');
+  //   } else {
+  //     $('.colComments').addClass('hiddenColumn');
+  //     $('.colComments').removeClass('showColumn');
+  //   }
+  // },
+  // 'click .chkPONumber': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colPONumber').addClass('showColumn');
+  //     $('.colPONumber').removeClass('hiddenColumn');
+  //   } else {
+  //     $('.colPONumber').addClass('hiddenColumn');
+  //     $('.colPONumber').removeClass('showColumn');
+  //   }
+  // },
+  // 'click .chkReference': function(event) {
+  //   if ($(event.target).is(':checked')) {
+  //     $('.colReference').addClass('showColumn');
+  //     $('.colReference').removeClass('hiddenColumn');
+  //   } else {
+  //     $('.colReference').addClass('hiddenColumn');
+  //     $('.colReference').removeClass('showColumn');
+  //   }
+  // },
+  // // display settings
 
 
-  'change .rngRangeSaleDate': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthSaleDate").html(range);
-      $('.colSaleDate').css('width', range);
-  },
-  'change .rngRangeSalesNo': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthSalesNo").html(range);
-      $('.colSalesNo').css('width', range);
-  },
-  'change .rngRangeDueDate': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthDueDate").html(range);
-      $('.colDueDate').css('width', range);
-  },
-  'change .rngRangeUnitPriceInc': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthUnitPrice").html(range);
-      $('.colUnitPriceInc').css('width', range);
-  },
-  'change .rngRangeUnitPriceEx': function(event) {
-      let range = $(event.target).val();
-      $('.colUnitPriceEx').css('width', range);
-  },
-  'change .rngRangeTax': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthTax").html(range);
-      $('.colTax').css('width', range);
-  },
-  'change .rngRangeAmountInc': function (event) {
-      let range = $(event.target).val();
-      //$(".spWidthAmount").html(range);
-      $('.colAmountInc').css('width', range);
-  },
-  'change .rngRangeAmountEx': function (event) {
-      let range = $(event.target).val();
-      //$(".spWidthAmount").html(range);
-      $('.colAmountEx').css('width', range);
-  },
-  'change .rngRangePaid': function (event) {
-      let range = $(event.target).val();
-      //$(".spWidthAmount").html(range);
-      $('.colPaid').css('width', range);
-  },
-  'change .rngRangeBalanceOutstanding': function (event) {
-      let range = $(event.target).val();
-      $('.colBalanceOutstanding').css('width', range);
-  },
-  'change .rngRangeStatus': function (event) {
-      let range = $(event.target).val();
-      $('.colStatus').css('width', range);
-  },
-  'change .rngRangeAmount': function (event) {
-      let range = $(event.target).val();
-      $('.colAmount').css('width', range);
-  },
-  'change .rngRangeCustomer': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthCustomer").html(range);
-      $('.colCustomer').css('width', range);
-  },
-  'change .rngRangeEmployee': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthEmployee").html(range);
-      $('.colEmployee').css('width', range);
-  },
-  'change .rngRangeComments': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthComments").html(range);
-      $('.colComments').css('width', range);
-  },
-  'change .rngRangePONumber': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthPONumber").html(range);
-      $('.colPONumber').css('width', range);
-  },
-  'change .rngRangeReference': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthReference").html(range);
-      $('.colReference').css('width', range);
-  },
+  // 'change .rngRangeSaleDate': function(event) {
+  //     let range = $(event.target).val();
+  //     $(".spWidthSaleDate").html(range);
+  //     $('.colSaleDate').css('width', range);
+  // },
+  // 'change .rngRangeSalesNo': function(event) {
+  //     let range = $(event.target).val();
+  //     $(".spWidthSalesNo").html(range);
+  //     $('.colSalesNo').css('width', range);
+  // },
+  // 'change .rngRangeDueDate': function(event) {
+  //     let range = $(event.target).val();
+  //     $(".spWidthDueDate").html(range);
+  //     $('.colDueDate').css('width', range);
+  // },
+  // 'change .rngRangeUnitPriceInc': function(event) {
+  //     let range = $(event.target).val();
+  //     $(".spWidthUnitPrice").html(range);
+  //     $('.colUnitPriceInc').css('width', range);
+  // },
+  // 'change .rngRangeUnitPriceEx': function(event) {
+  //     let range = $(event.target).val();
+  //     $('.colUnitPriceEx').css('width', range);
+  // },
+  // 'change .rngRangeTax': function(event) {
+  //     let range = $(event.target).val();
+  //     $(".spWidthTax").html(range);
+  //     $('.colTax').css('width', range);
+  // },
+  // 'change .rngRangeAmountInc': function (event) {
+  //     let range = $(event.target).val();
+  //     //$(".spWidthAmount").html(range);
+  //     $('.colAmountInc').css('width', range);
+  // },
+  // 'change .rngRangeAmountEx': function (event) {
+  //     let range = $(event.target).val();
+  //     //$(".spWidthAmount").html(range);
+  //     $('.colAmountEx').css('width', range);
+  // },
+  // 'change .rngRangePaid': function (event) {
+  //     let range = $(event.target).val();
+  //     //$(".spWidthAmount").html(range);
+  //     $('.colPaid').css('width', range);
+  // },
+  // 'change .rngRangeBalanceOutstanding': function (event) {
+  //     let range = $(event.target).val();
+  //     $('.colBalanceOutstanding').css('width', range);
+  // },
+  // 'change .rngRangeStatus': function (event) {
+  //     let range = $(event.target).val();
+  //     $('.colStatus').css('width', range);
+  // },
+  // 'change .rngRangeAmount': function (event) {
+  //     let range = $(event.target).val();
+  //     $('.colAmount').css('width', range);
+  // },
+  // 'change .rngRangeCustomer': function(event) {
+  //     let range = $(event.target).val();
+  //     $(".spWidthCustomer").html(range);
+  //     $('.colCustomer').css('width', range);
+  // },
+  // 'change .rngRangeEmployee': function(event) {
+  //     let range = $(event.target).val();
+  //     $(".spWidthEmployee").html(range);
+  //     $('.colEmployee').css('width', range);
+  // },
+  // 'change .rngRangeComments': function(event) {
+  //     let range = $(event.target).val();
+  //     $(".spWidthComments").html(range);
+  //     $('.colComments').css('width', range);
+  // },
+  // 'change .rngRangePONumber': function(event) {
+  //     let range = $(event.target).val();
+  //     $(".spWidthPONumber").html(range);
+  //     $('.colPONumber').css('width', range);
+  // },
+  // 'change .rngRangeReference': function(event) {
+  //     let range = $(event.target).val();
+  //     $(".spWidthReference").html(range);
+  //     $('.colReference').css('width', range);
+  // },
   "blur .divcolumn": function (event) {
     let columData = $(event.target).html();
     let columHeaderUpdate = $(event.target).attr("valueupdate");
