@@ -117,20 +117,23 @@ Template.inventorylist.onRendered(function() {
 
   // custom field displaysettings
   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
+    $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
 
     try {
-      getVS1Data("VS1_Customize").then(function (dataObject) {
+      getVS1Data("VS1_Customize").then( function (dataObject) {
         if (dataObject.length == 0) {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
             reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
             showCustomFieldDisplaySettings(reset_data);
+            $(".fullScreenSpin").css("display", "none");
           }).catch(function (err) {
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
+          $(".fullScreenSpin").css("display", "none");
           // handle process here
         }
       });
@@ -154,18 +157,16 @@ Template.inventorylist.onRendered(function() {
         display: reset_data[r].display,
         width: reset_data[r].width ? reset_data[r].width : ''
       };
-
       if(reset_data[r].active == true){
-        $('#tblInventoryOverview_wrapper .'+reset_data[r].class).removeClass('hiddenColumn');
+        $('#tblInventoryOverview_wrapper .col'+reset_data[r].class).removeClass('hiddenColumn');
       }else if(reset_data[r].active == false){
-        $('#tblInventoryOverview_wrapper .'+reset_data[r].class).addClass('hiddenColumn');
+        $('#tblInventoryOverview_wrapper .col'+reset_data[r].class).addClass('hiddenColumn');
       };
       custFields.push(customData);
     }
     templateObject.displayfields.set(custFields);
   }
 
-  templateObject.initCustomFieldDisplaySettings("", "tblInventoryOverview");
   // custom field displaysettings
 
 
@@ -273,7 +274,8 @@ Template.inventorylist.onRendered(function() {
       window.open("/inventorylist?page=last", "_self");
     };
 
-    templateObject.getAllProductData = function(deptname) {
+    templateObject.getAllProductData = async function(deptname) {
+        await templateObject.initCustomFieldDisplaySettings("", "tblInventoryOverview");
         getVS1Data("TProductList").then(function(dataObject) {
                 if (dataObject.length == 0) {
                     sideBarService.getProductListVS1(initialBaseDataLoad, 0).then(function(data) {
@@ -616,6 +618,7 @@ Template.inventorylist.onRendered(function() {
 
                     $(".fullScreenSpin").css("display", "none");
                     setTimeout(function() {
+                        let displayfields = templateObject.displayfields.get();
                         $("#tblInventoryOverview").dataTable({
                                 data: splashArrayProductList,
                                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1512,6 +1515,7 @@ Template.inventorylist.events({
             }).then((result) => {
                 if (result.value) {
                    $('#myInventoryModal').modal('hide');
+                   Meteor._reload.reload();
                 }
             });
         } else {
