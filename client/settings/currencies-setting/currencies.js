@@ -65,7 +65,6 @@ Template.currenciessettings.onRendered(function () {
       useIndexDb: true,
       useLocalStorage: false,
       validate: (cachedResponse) => {
-        console.log("cahced", cachedResponse);
         if(fromRemote == true || refresh == true) {
           return false;
         }
@@ -75,7 +74,6 @@ Template.currenciessettings.onRendered(function () {
 
 
     data = data.response;
-    console.log("data", data);
 
     let currencies = data.tcurrency[0].fields ? data.tcurrency.map(c => c.fields) : data.tcurrency;
 
@@ -102,7 +100,6 @@ Template.currenciessettings.onRendered(function () {
         ratelastmodified: _currency.RateLastModified || "N/A"
       }
     });
-    console.log("currencies", currencies);
 
     await templateObject.currencies.set(currencies);
 
