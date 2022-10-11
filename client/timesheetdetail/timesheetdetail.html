@@ -269,6 +269,10 @@
                                 tr.template {
                                     display: none;
                                 }
+                                #tblTimeSheetInner.table-bordered, #tblTimeSheetInner.table-bordered td, #tblTimeSheetInner.table-bordered th {
+                                    border: 1px solid #e3e6f0 !important;
+                                    border-collapse: collapse !important;
+                                }
                             </style>
 
                             <tr class="template">
@@ -281,11 +285,11 @@
                                         {{/each}}
                                     {{/if}}
                                 </select> -->
-                                <input class="es-input highlightSelect select-rate-js" type="search" autocomplete="off">
+                                <input class="es-input --highlightSelect-- select-rate-js form-control" type="search" autocomplete="off">
                                </td>
                                 {{#if earningDays}}
                                     {{#each day in earningDays}}
-                                        <td><input class="hours" date="{{day.index}}" type="text" value="0.00"></td>
+                                        <td><input class="hours form-control" date="{{day.index}}" type="text" value="0.00"></td>
                                     {{/each}}
                                 {{/if}}
                               
