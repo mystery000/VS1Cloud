@@ -516,7 +516,7 @@ Template.inventorylist.onRendered(function() {
                                         if (urlParametersPage) {
                                           this.fnPageChange("last");
                                         };
-                                          $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                                          $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                                           ).insertAfter("#tblInventoryOverview_filter");
                                       },
                                       "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -789,7 +789,7 @@ Template.inventorylist.onRendered(function() {
                                   if (urlParametersPage) {
                                     this.fnPageChange("last");
                                   };
-                                    $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                                    $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                                     ).insertAfter("#tblInventoryOverview_filter");
                                 },
                                 "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -1058,7 +1058,7 @@ Template.inventorylist.onRendered(function() {
                                     if (urlParametersPage) {
                                       this.fnPageChange("last");
                                     };
-                                      $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventoryOverview_filter");
+                                      $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventoryOverview_filter");
                                   },
                                   "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                                     let countTableData = data.Params.Count || 0; //get count from API data
@@ -1397,7 +1397,7 @@ Template.inventorylist.helpers({
     },
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
-        return setupUrl[1];   
+        return setupUrl[1];
     }
 });
 
@@ -2672,6 +2672,8 @@ Template.inventorylist.events({
             //$('.lblPriceEx').css('width','10%');
         }
     },
+
+
 });
 
 Template.registerHelper("equals", function(a, b) {
