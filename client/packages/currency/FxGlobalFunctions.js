@@ -18,23 +18,26 @@ export default class FxGlobalFunctions {
 
   static async loadDefaultCurrencyForReport(defaultCurrencyCode = "AUD") {
     $("#sltCurrency").attr("disabled", true);
-    $(".exchange-rate-js").attr("disabled", true);
-    $("#exchange_rate").attr("disabled", true);
+    // $(".exchange-rate-js").attr("disabled", false);
+    // $("#exchange_rate").attr("disabled", false);
     const currency = await FxGlobalFunctions.loadDefaultCurrency(defaultCurrencyCode);
-    const currencyCode = currency.Code;
-    const currencySymbol = currency.CurrencySymbol || "$";
-    const currencyRate = (
-      $(".currency-js").attr("type") == "buy"
-      ? currency.BuyRate
-      : currency.SellRate) || 1; // We can make this dynamic
-    if( $("#sltCurrency").val() == "" ){
-      $("#sltCurrency").val(currencyCode);
-      $("#sltCurrency").attr("currency-symbol", currencySymbol);
-      $("#exchange_rate").val(currencyRate);      
-      $(".exchange-rate-js").val(currencyRate);
+    if( currency ){
+      const currencyCode = currency.Code;
+      const currencySymbol = currency.CurrencySymbol || "$";
+      const currencyRate = (
+        $(".currency-js").attr("type") == "buy"
+        ? currency.BuyRate
+        : currency.SellRate) || 1; // We can make this dynamic
+      if( $("#sltCurrency").val() == "" ){
+        $("#sltCurrency").val(currencyCode);
+        $("#sltCurrency").attr("currency-symbol", currencySymbol);
+        $("#exchange_rate").val(currencyRate);      
+        $(".exchange-rate-js").val(currencyRate);
+      }
     }
     $("#sltCurrency").attr("disabled", false);
-    $(".exchange-rate-js").attr("disabled", false);
+    // $(".exchange-rate-js").attr("disabled", false);
+    // $("#exchange_rate").attr("disabled", false);
   }
 
   static async loadDefaultCurrency(defaultCurrencyCode = "AUD", fromLocal = true) {

@@ -11,11 +11,82 @@ Template.depositlist.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.custfields = new ReactiveVar([]);
+    templateObject.displayfields = new ReactiveVar([]);
+    templateObject.reset_data = new ReactiveVar([]);
 });
 
 Template.depositlist.onRendered(function() {
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
+
+    // set initial table rest_data
+    function init_reset_data() {
+        let reset_data = [
+            { index: 0, label: 'ID', class:'ID', active: false, display: true, width: "0" },
+            { index: 1, label: "Deposit Date", class: "DepositDate", active: true, display: true, width: "" },
+            { index: 2, label: "Account Name", class: "AccountName", active: true, display: true, width: "" },
+            { index: 3, label: "Department", class: "Department", active: true, display: true, width: "" },
+            { index: 4, label: "Entry No", class: "EntryNo", active: true, display: true, width: "" },
+            { index: 5, label: "Amount", class: "Amount", active: true, display: true, width: "" },
+            { index: 6, label: "Employee", class: "Employee", active: true, display: true, width: "" },
+            { index: 7, label: "Reference No", class: "ReferenceNo", active: true, display: true, width: "" }
+        ];
+
+        let templateObject = Template.instance();
+        templateObject.reset_data.set(reset_data);
+    }
+    init_reset_data();
+    // set initial table rest_data
+
+
+    // custom field displaysettings
+    templateObject.initCustomFieldDisplaySettings = function(data, listType) {
+        let templateObject = Template.instance();
+        let reset_data = templateObject.reset_data.get();
+        templateObject.showCustomFieldDisplaySettings(reset_data);
+
+        try {
+        getVS1Data("VS1_Customize").then(function (dataObject) {
+            if (dataObject.length == 0) {
+            sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+                // reset_data = data.ProcessLog.CustomLayout.Columns;
+                reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                templateObject.showCustomFieldDisplaySettings(reset_data);
+            }).catch(function (err) {
+            });
+            } else {
+            let data = JSON.parse(dataObject[0].data);
+            // handle process here
+            }
+        });
+        } catch (error) {
+        }
+        return;
+    }
+
+    templateObject.showCustomFieldDisplaySettings = function(reset_data){
+    //function showCustomFieldDisplaySettings(reset_data) {
+
+        let custFields = [];
+        let customData = {};
+        let customFieldCount = reset_data.length;
+
+        for (let r = 0; r < customFieldCount; r++) {
+        customData = {
+            active: reset_data[r].active,
+            id: reset_data[r].index,
+            custfieldlabel: reset_data[r].label,
+            class: reset_data[r].class,
+            display: reset_data[r].display,
+            width: reset_data[r].width ? reset_data[r].width : ''
+        };
+        custFields.push(customData);
+        }
+        templateObject.displayfields.set(custFields);
+    }
+    templateObject.initCustomFieldDisplaySettings("", "tblDepositList");
+
     let accountService = new AccountService();
     const customerList = [];
     let salesOrderTable;
@@ -1517,5 +1588,9 @@ Template.depositlist.helpers({
         var currentDate = new Date();
         var begunDate = moment(currentDate).format("DD/MM/YYYY");
         return begunDate;
-    }
+    },
+    // custom fields displaysettings
+    displayfields: () => {
+        return Template.instance().displayfields.get();
+    },
 });

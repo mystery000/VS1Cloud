@@ -12,6 +12,8 @@ Template.reconciliationlist.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.displayfields = new ReactiveVar([]);
+    templateObject.reset_data = new ReactiveVar([]);
 });
 
 Template.reconciliationlist.onRendered(function() {
@@ -28,6 +30,77 @@ Template.reconciliationlist.onRendered(function() {
     if(FlowRouter.current().queryParams.success){
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
+
+        // set initial table rest_data
+        function init_reset_data() {
+            let reset_data = [
+                { index: 0, label: 'ID', class:'ID', active: false, display: true, width: "0" },
+                { index: 1, label: "Date", class: "Date", active: true, display: true, width: "" },
+                { index: 2, label: "Account Name", class: "AccountName", active: true, display: true, width: "" },
+                { index: 3, label: "Statment No.", class: "StatmentNo", active: true, display: true, width: "" },
+                { index: 4, label: "Recon #", class: "Recon", active: false, display: true, width: "" },
+                { index: 5, label: "Department", class: "Department", active: true, display: true, width: "" },
+                { index: 6, label: "Opening", class: "Opening", active: true, display: true, width: "" },
+                { index: 7, label: "Closing", class: "Closing", active: true, display: true, width: "" },
+                { index: 8, label: "Employee", class: "Employee", active: true, display: true, width: "" },
+                { index: 9, label: "Notes", class: "Notes", active: true, display: true, width: "" },
+                { index: 10, label: "Status", class: "Status", active: true, display: true, width: "" }
+            ];
+    
+            let templateObject = Template.instance();
+            templateObject.reset_data.set(reset_data);
+        }
+        init_reset_data();
+        // set initial table rest_data
+    
+    
+        // custom field displaysettings
+        templateObject.initCustomFieldDisplaySettings = function(data, listType) {
+            let templateObject = Template.instance();
+            let reset_data = templateObject.reset_data.get();
+            templateObject.showCustomFieldDisplaySettings(reset_data);
+    
+            try {
+            getVS1Data("VS1_Customize").then(function (dataObject) {
+                if (dataObject.length == 0) {
+                sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+                    // reset_data = data.ProcessLog.CustomLayout.Columns;
+                    reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                    templateObject.showCustomFieldDisplaySettings(reset_data);
+                }).catch(function (err) {
+                });
+                } else {
+                let data = JSON.parse(dataObject[0].data);
+                // handle process here
+                }
+            });
+            } catch (error) {
+            }
+            return;
+        }
+    
+        templateObject.showCustomFieldDisplaySettings = function(reset_data){
+        //function showCustomFieldDisplaySettings(reset_data) {
+    
+            let custFields = [];
+            let customData = {};
+            let customFieldCount = reset_data.length;
+    
+            for (let r = 0; r < customFieldCount; r++) {
+            customData = {
+                active: reset_data[r].active,
+                id: reset_data[r].index,
+                custfieldlabel: reset_data[r].label,
+                class: reset_data[r].class,
+                display: reset_data[r].display,
+                width: reset_data[r].width ? reset_data[r].width : ''
+            };
+            custFields.push(customData);
+            }
+            templateObject.displayfields.set(custFields);
+        }
+        templateObject.initCustomFieldDisplaySettings("", "tblreconciliationlist");
+
     Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblreconciliationlist', function(error, result){
         if(error){
 
@@ -1043,6 +1116,8 @@ Template.reconciliationlist.onRendered(function() {
       }
     }
 
+    tableResize();
+
 });
 
 Template.reconciliationlist.events({
@@ -1505,6 +1580,12 @@ Template.reconciliationlist.helpers({
     },
     purchasesCloudPreferenceRec: () => {
         return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblreconciliationlist'});
+    },
+    displayfields: () => {
+        return Template.instance().displayfields.get();
     }
 
+});
+Template.registerHelper('equals', function(a, b) {
+    return a === b;
 });
