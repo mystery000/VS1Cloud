@@ -9,7 +9,7 @@ Template.leadlist.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
-    templateObject.selectedFile = new ReactiveVar();    
+    templateObject.selectedFile = new ReactiveVar();
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
 });
@@ -149,7 +149,7 @@ Template.leadlist.onRendered(function() {
                 },
                 language: { search: "",searchPlaceholder: "Search List..." },
                 "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnRefreshLeads' type='button' id='btnRefreshLeads' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeadlist_filter");
+                    $("<button class='btn btn-primary btnRefreshLeads' type='button' id='btnRefreshLeads' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeadlist_filter");
                 }
 
             }).on('page', function () {
@@ -203,14 +203,14 @@ Template.leadlist.onRendered(function() {
     });
     tableResize();
 
-    
+
      // set initial table rest_data
      function init_reset_data() {
         let bsbname = "Branch Code";
         if (Session.get("ERPLoggedCountry") === "Australia") {
             bsbname = "BSB";
         }
-        
+
         let reset_data = [
           { index: 0, label: '', class: 'LeadId', active: false, display: true, width: "" },
           { index: 1, label: 'Lead Name', class: 'LeadName', active: true, display: true, width: "80" },
@@ -686,7 +686,7 @@ Template.leadlist.helpers({
     displayfields: () => {
         return Template.instance().displayfields.get();
     },
-  
+
 });
 
 function getCheckPrefDetails() {
