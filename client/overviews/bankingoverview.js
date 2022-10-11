@@ -1458,6 +1458,19 @@ Template.bankingoverview.events({
     'click .btnEft': function() {
       FlowRouter.go('/eft');
     },
+    "keyup #tblBankingOverview_filter input": function (event) {
+      if ($(event.target).val() != "") {
+        $(".btnRefreshBankingOverview").addClass("btnSearchAlert");
+      } else {
+        $(".btnRefreshBankingOverview").removeClass("btnSearchAlert");
+      }
+      if (event.keyCode == 13) {
+        $(".btnRefresh").trigger("click");
+      }
+    },
+    "click .btnRefreshBankingOverview": function () {
+        $(".btnRefresh").trigger("click");
+    },
     'click .btnRefresh': function() {
       var currentBeginDate = new Date();
       var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
