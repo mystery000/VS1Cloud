@@ -14,6 +14,8 @@ Template.employeelist.onCreated(function(){
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.selectedFile = new ReactiveVar();
+    templateObject.displayfields = new ReactiveVar([]);
+    templateObject.reset_data = new ReactiveVar([]);
 });
 
 Template.employeelist.onRendered(function() {
@@ -229,6 +231,84 @@ Template.employeelist.onRendered(function() {
         });
     }
     templateObject.getEmployees();
+
+    // set initial table rest_data
+    function init_reset_data() {
+        let bsbname = "Branch Code";
+        if (Session.get("ERPLoggedCountry") === "Australia") {
+            bsbname = "BSB";
+        }
+        
+        let reset_data = [
+          { index: 0, label: 'Emp #', class: 'EmployeeNo', active: false, display: true, width: "" },
+          { index: 1, label: 'Employee Name', class: 'EmployeeName', active: true, display: true, width: "150" },
+          { index: 2, label: 'First Name', class: 'FirstName', active: true, display: true, width: "85" },
+          { index: 3, label: 'Last Name', class: 'LastName', active: false, display: true, width: "95" },
+          { index: 4, label: 'Phone', class: 'Phone', active: true, display: true, width: "95" },
+          { index: 5, label: 'Mobile', class: 'Mobile', active: true, display: true, width: "95" },
+          { index: 6, label: 'Email', class: 'Email', active: true, display: true, width: "100" },
+          { index: 7, label: 'Department', class: 'Department', active: false, display: true, width: "100" },
+          { index: 8, label: 'Country', class: 'Country', active: false, display: true, width: "120" },
+          { index: 9, label: 'Custom Field 1', class: 'CustFld1', active: false, display: true, width: "" },
+          { index: 10, label: 'Custom Field 2', class: 'CustFld2', active: false, display: true, width: "" },
+          { index: 11, label: 'Address', class: 'Address', active: true, display: true, width: "" },
+        ];
+
+        let templateObject = Template.instance();
+        templateObject.reset_data.set(reset_data);
+      }
+      init_reset_data();
+      // set initial table rest_data
+
+
+      // custom field displaysettings
+      templateObject.initCustomFieldDisplaySettings = function(data, listType) {
+        let templateObject = Template.instance();
+        let reset_data = templateObject.reset_data.get();
+        showCustomFieldDisplaySettings(reset_data);
+
+        try {
+          getVS1Data("VS1_Customize").then(function (dataObject) {
+            if (dataObject.length == 0) {
+              sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+                  // reset_data = data.ProcessLog.CustomLayout.Columns;
+                  reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                  showCustomFieldDisplaySettings(reset_data);
+              }).catch(function (err) {
+              });
+            } else {
+              let data = JSON.parse(dataObject[0].data);
+              // handle process here
+            }
+          });
+        } catch (error) {
+        }
+        return;
+      }
+
+      function showCustomFieldDisplaySettings(reset_data) {
+
+        let custFields = [];
+        let customData = {};
+        let customFieldCount = reset_data.length;
+
+        for (let r = 0; r < customFieldCount; r++) {
+          customData = {
+            active: reset_data[r].active,
+            id: reset_data[r].index,
+            custfieldlabel: reset_data[r].label,
+            class: reset_data[r].class,
+            display: reset_data[r].display,
+            width: reset_data[r].width ? reset_data[r].width : ''
+          };
+          custFields.push(customData);
+        }
+        templateObject.displayfields.set(custFields);
+      }
+
+      templateObject.initCustomFieldDisplaySettings("", "tblEmployeelist");
+      // set initial table rest_data  //
+
 
     $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
         const listData = $(this).closest('tr').attr('id');
@@ -775,5 +855,9 @@ Template.employeelist.helpers({
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
         return setupUrl[1];   
-    }
+    },
+    // custom fields displaysettings
+    displayfields: () => {
+    return Template.instance().displayfields.get();
+    },
 });

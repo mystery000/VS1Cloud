@@ -16,6 +16,8 @@ Template.contactoverview.onCreated(function () {
   templateObject.tableheaderrecords = new ReactiveVar([]);
   //templateObject.topTenData = new ReactiveVar([]);
   //templateObject.loggeduserdata = new ReactiveVar([]);
+  templateObject.displayfields = new ReactiveVar([]);
+    templateObject.reset_data = new ReactiveVar([]);
 });
 
 Template.contactoverview.onRendered(function () {
@@ -23,6 +25,9 @@ Template.contactoverview.onRendered(function () {
   let templateObject = Template.instance();
   let accountService = new AccountService();
   let contactService = new ContactService();
+
+
+
   const customerList = [];
   let salesOrderTable;
   const dataTableList = [];
@@ -100,6 +105,82 @@ Template.contactoverview.onRendered(function () {
         $(this).addClass("text-danger");
     });
   }
+
+  // set initial table rest_data
+  function init_reset_data() {
+    let bsbname = "Branch Code";
+    if (Session.get("ERPLoggedCountry") === "Australia") {
+        bsbname = "BSB";
+    }
+    
+    let reset_data = [
+      { index: 0, label: 'Contact Name', class: 'colClientName', active: true, display: true, width: "200" },
+      { index: 1, label: 'Type', class: 'colType', active: true, display: true, width: "130" },
+      { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
+      { index: 3, label: 'Mobile', class: 'colMobile', active: false, display: true, width: "0" },
+      { index: 4, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "80" },
+      { index: 5, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "80" },
+      { index: 6, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
+      { index: 7, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "80" },
+      { index: 8, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
+      { index: 9, label: 'Email', class: 'colEmail', active: false, display: true, width: "0" },
+      { index: 10, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "0" },
+      { index: 11, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "0" },
+      { index: 12, label: 'Address', class: 'colAddress', active: true, display: true, width: "80" },
+    ];
+    let templateObject = Template.instance();
+    templateObject.reset_data.set(reset_data);
+  }
+  init_reset_data();
+  // set initial table rest_data
+
+
+  // custom field displaysettings
+  templateObject.initCustomFieldDisplaySettings = function(data, listType) {
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    showCustomFieldDisplaySettings(reset_data);
+
+    // try {
+      getVS1Data("VS1_Customize").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+              // reset_data = data.ProcessLog.CustomLayout.Columns;
+              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              showCustomFieldDisplaySettings(reset_data);
+          }).catch(function (err) {
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          // handle process here
+        }
+      });
+    // } catch (error) {
+    // }
+    return;
+  }
+
+  function showCustomFieldDisplaySettings(reset_data) {
+    let custFields = [];
+    let customData = {};
+    let customFieldCount = reset_data.length;
+
+    for (let r = 0; r < customFieldCount; r++) {
+      customData = {
+        active: reset_data[r].active,
+        id: reset_data[r].index,
+        custfieldlabel: reset_data[r].label,
+        class: reset_data[r].class,
+        display: reset_data[r].display,
+        width: reset_data[r].width ? reset_data[r].width : ''
+      };
+      custFields.push(customData);
+    }
+    templateObject.displayfields.set(custFields);
+  }
+
+  templateObject.initCustomFieldDisplaySettings("", "tblcontactoverview");
+  // set initial table rest_data  //
 
   templateObject.resetData = function (dataVal) {
     window.open("/contactoverview?page=last", "_self");
@@ -2161,5 +2242,10 @@ Template.contactoverview.helpers({
 
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
+  },
+  
+  // custom fields displaysettings
+  displayfields: () => {
+    return Template.instance().displayfields.get();
   },
 });

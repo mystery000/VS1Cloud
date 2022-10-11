@@ -269,8 +269,15 @@
                             <thead>
                                 <tr class="dnd-moved">
 
+                                    {{#each displayfield in displayfields}}
+                                        {{#if displayfield.display}}
+                                            <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                                {{displayfield.custfieldlabel}}
+                                            </th>
+                                        {{/if}}
+                                    {{/each}}
                                     <!-- <th class="th colEmployeeNo" style="width:80px;">Emp #</th> -->
-                                    <th class="th colEmployeeNo hiddenColumn" style="width:3%;">Emp #</th>
+                                    <!-- <th class="th colEmployeeNo hiddenColumn" style="width:3%;">Emp #</th>
                                     <th class="th colEmployeeName" style="width:150px;">Employee Name</th>
                                     <th class="th colFirstName" style="width:85px;">First Name</th>
                                     <th class="th colLastName" style="width:85px;">Last Name</th>
@@ -281,9 +288,9 @@
                                     <th class="th colCountry hiddenColumn">Country</th>
                                     <th class="th colCustFld1 hiddenColumn">Custom Field 1</th>
                                     <th class="th colCustFld2 hiddenColumn">Custom Field 2</th>
-                                    <th class="th colAddress">Address</th>
+                                    <th class="th colAddress">Address</th> -->
                                     <!-- <th class="th colCustFld3 hiddenColumn">CustFld3</th>
-<th class="th colCustFld4 hiddenColumn">CustFld4</th> -->
+                                    <th class="th colCustFld4 hiddenColumn">CustFld4</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -291,18 +298,18 @@
                                 {{#each item in datatablerecords}}
                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                                     <!-- <td contenteditable="false" class="colEmployeeNo" >{{item.id}}</td> -->
-                                    <td contenteditable="false" class="colEmployeeNo hiddenColumn" >{{item.id}}</td>
-                                    <td contenteditable="false" class="colEmployeeName" >{{item.employeename}}</td>
-                                    <td contenteditable="false" class="colFirstName">{{item.firstname}}</td>
-                                    <td contenteditable="false" class="colLastName">{{item.lastname}}</td>
-                                    <td contenteditable="false" class="colPhone">{{item.phone}}</td>
-                                    <td contenteditable="false" class="colMobile">{{item.mobile}}</td>
-                                    <td contenteditable="false" class="colEmail">{{item.email}}</td>
-                                    <td contenteditable="false" class="colDepartment">{{item.department}}</td>
-                                    <td contenteditable="false" class="colCountry hiddenColumn">{{item.country}}</td>
-                                    <td contenteditable="false" class="colCustFld1 hiddenColumn">{{item.custFld1}}</td>
-                                    <td contenteditable="false" class="colCustFld2 hiddenColumn">{{item.custFld2}}</td>
-                                    <td contenteditable="false" class="colAddress">{{item.address}}</td>
+                                    <td contenteditable="false" class="colEmployeeNo {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}" >{{item.id}}</td>
+                                    <td contenteditable="false" class="colEmployeeName {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" >{{item.employeename}}</td>
+                                    <td contenteditable="false" class="colFirstName {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.firstname}}</td>
+                                    <td contenteditable="false" class="colLastName {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{item.lastname}}</td>
+                                    <td contenteditable="false" class="colPhone {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}">{{item.phone}}</td>
+                                    <td contenteditable="false" class="colMobile {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}">{{item.mobile}}</td>
+                                    <td contenteditable="false" class="colEmail {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">{{item.email}}</td>
+                                    <td contenteditable="false" class="colDepartment {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{item.department}}</td>
+                                    <td contenteditable="false" class="colCountry {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">{{item.country}}</td>
+                                    <td contenteditable="false" class="colCustFld1 {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.custFld1}}</td>
+                                    <td contenteditable="false" class="colCustFld2 {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">{{item.custFld2}}</td>
+                                    <td contenteditable="false" class="colAddress {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">{{item.address}}</td>
                                     <!-- <td contenteditable="false" class="colCustFld3 hiddenColumn">{{item.custFld3}}</td>
 <td contenteditable="false" class="colCustFld4 hiddenColumn" >{{item.custFld4}}</td> -->
                                 </tr>
