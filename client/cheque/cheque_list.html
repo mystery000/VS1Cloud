@@ -223,7 +223,7 @@
                             <thead>
                                 <tr class="dnd-moved">
                                     <!-- <th class="th colAccountName" style="width:90px;">Account Name</th> -->
-                                    <th class="th colSortDate hiddenColumn">id</th>
+                                    <!-- <th class="th colSortDate hiddenColumn">id</th>
                                     <th class="th colOrderDate" style="width:84px;">Order Date</th>
                                     <th class="th colChequeID " style="width:50px; !important">#ID</th>
                                     <th class="th colBankAccount" style="width:84px;">Bank Account</th>
@@ -241,7 +241,20 @@
                                     <th class="th colPurchaseCustField1 hiddenColumn">Custom Field 1</th>
                                     <th class="th colPurchaseCustField2 hiddenColumn">Custom Field 2</th>
                                     <th class="th colEmployee hiddenColumn">Employee</th>
-                                    <th class="th colComments">Comments</th>
+                                    <th class="th colComments">Comments</th> -->
+                                    {{#each displayfield in displayfields}}
+                                        {{#if displayfield.display}}
+                                            {{#if equals displayfield.class 'PurchaseNo'}}
+                                                <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                                    {{formname}} Number
+                                                </th>
+                                            {{else}}
+                                                <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                                    {{displayfield.custfieldlabel}}
+                                                </th>
+                                            {{/if}}
+                                        {{/if}}
+                                    {{/each}}
 
                                 </tr>
                             </thead>
@@ -250,25 +263,25 @@
                                 {{#each item in datatablerecords}}
                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                                     <!-- <td contendeditable="false" class="colAccountName">{{item.accountname}}</td> -->
-                                    <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
-                                    <td contenteditable="false" class="colOrderDate" ><span style="display:none;">{{item.sortdate}}</span>{{item.orderdate}}</td>
-                                    <td contenteditable="false" class="colChequeID">{{item.id}}</td>
-                                    <td contenteditable="false" class="colBankAccount">{{item.accountname}}</td>
-                                    <td contenteditable="false" class="colPurchaseNo">{{item.chequeNumber}}</td>
-                                    <td contenteditable="false" class="colSupplier">{{item.suppliername}}</td>
-                                    <td contenteditable="false" class="colReference">{{item.reference}}</td>
-                                    <td contenteditable="false" class="colVia">{{item.via}}</td>
-                                    <td contenteditable="false" class="colCurrency">{{item.currency}}</td>
-                                    <td contenteditable="false" class="colAmountEx" style="text-align: right!important;">{{item.totalamountex}}</td>
-                                    <td contenteditable="false" class="colTax" style="text-align: right!important;">{{item.totaltax}}</td>
-                                    <td contenteditable="false" class="colAmount" style="text-align: right!important;">{{item.totalamount}}</td>
-                                    <td contenteditable="false" class="colPaid" style="text-align: right!important;">{{item.totalpaid}}</td>
-                                    <td contenteditable="false" class="colBalanceOutstanding" style="text-align: right!important;">{{item.totaloustanding}}</td>
-                                    <td contenteditable="false" class="colStatus">{{item.orderstatus}}</td>
-                                    <td contenteditable="false" class="colPurchaseCustField1 hiddenColumn">{{item.custfield1}}</td>
-                                    <td contenteditable="false" class="colPurchaseCustField2 hiddenColumn">{{item.custfield2}}</td>
-                                    <td contenteditable="false" class="colEmployee hiddenColumn">{{item.employee}}</td>
-                                    <td contenteditable="false" class="colComments" >{{item.comments}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}} colSortDate">{{item.sortdate}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}} colOrderDate" ><span style="display:none;">{{item.sortdate}}</span>{{item.orderdate}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}} colChequeID">{{item.id}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}} colBankAccount">{{item.accountname}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}} colPurchaseNo">{{item.chequeNumber}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}} colSupplier">{{item.suppliername}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}} colReference">{{item.reference}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}} colVia">{{item.via}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}} colCurrency">{{item.currency}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}} colAmountEx" style="text-align: right!important;">{{item.totalamountex}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}} colTax" style="text-align: right!important;">{{item.totaltax}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}} colAmount" style="text-align: right!important;">{{item.totalamount}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}} colPaid" style="text-align: right!important;">{{item.totalpaid}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}} colBalanceOutstanding" style="text-align: right!important;">{{item.totaloustanding}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}} colStatus">{{item.orderstatus}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}} colPurchaseCustField1">{{item.custfield1}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}} colPurchaseCustField2">{{item.custfield2}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[17].active}}{{else}}hiddenColumn{{/if}} colEmployee">{{item.employee}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[18].active}}{{else}}hiddenColumn{{/if}} colComments" >{{item.comments}}</td>
                                 </tr>
                                 {{/each}}
                                 {{/if}}

@@ -2011,10 +2011,10 @@ templateObject.getLastPOData = async function() {
                             };
 
                             let getDepartmentVal = data.fields.Lines[0].fields.LineClassName || defaultDept;
-
                             $('#edtSupplierName').val(data.fields.SupplierName);
                             templateObject.CleintName.set(data.fields.SupplierName);
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(getDepartmentVal);
                             $('#sltStatus').val(data.fields.OrderStatus);
@@ -2254,6 +2254,7 @@ templateObject.getLastPOData = async function() {
                                 $('#edtSupplierName').val(useData[d].fields.SupplierName);
                                 templateObject.CleintName.set(useData[d].fields.SupplierName);
                                 $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
+                                $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(useData[d].fields.OrderStatus);
@@ -2473,6 +2474,7 @@ templateObject.getLastPOData = async function() {
                                 $('#edtSupplierName').val(data.fields.SupplierName);
                                 templateObject.CleintName.set(data.fields.SupplierName);
                                 $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                                 $('#sltTerms').val(data.fields.TermsName);
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(data.fields.OrderStatus);
@@ -2688,6 +2690,7 @@ templateObject.getLastPOData = async function() {
                         $('#edtSupplierName').val(data.fields.SupplierName);
                         templateObject.CleintName.set(data.fields.SupplierName);
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                        $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(getDepartmentVal);
                         $('#sltStatus').val(data.fields.OrderStatus);
@@ -2893,6 +2896,7 @@ templateObject.getLastPOData = async function() {
                 $('#edtSupplierName').val(data.fields.SupplierName);
                 templateObject.CleintName.set(data.fields.SupplierName);
                 $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                 $('#sltTerms').val(data.fields.TermsName);
                 $('#sltDept').val(getDepartmentVal);
                 $('#sltStatus').val(data.fields.OrderStatus);
@@ -5465,7 +5469,7 @@ Template.purchaseordercard.helpers({
         return defaultCurrencyCode;
     },
     convertToForeignAmount: (amount) => {
-        return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+        // return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
     },
 
     displayFieldColspan: (displayfield) => {

@@ -22,6 +22,9 @@ Template.journalentrylist.onCreated(function(){
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
+  templateObject.custfields = new ReactiveVar([]);
+  templateObject.displayfields = new ReactiveVar([]);
+  templateObject.reset_data = new ReactiveVar([]);
 
   // Currency related vars //
   FxGlobalFunctions.initVars(templateObject);
@@ -91,6 +94,80 @@ Template.journalentrylist.onRendered(function() {
              if ($(this).text() == "Rec") $(this).addClass('text-reconciled');
          });
   };
+
+
+  
+  // set initial table rest_data
+  function init_reset_data() {
+    let reset_data = [
+      { index: 0, label: 'ID', class:'ID', active: false, display: false, width: "0" },
+      { index: 1, label: "Transaction Date", class: "TransactionDate", active: true, display: true, width: "" },
+      { index: 2, label: "Entry No", class: "EntryNo", active: true, display: true, width: "" },
+      { index: 3, label: "Account Name", class: "AccountName", active: true, display: true, width: "" },
+      { index: 4, label: "Department", class: "Department", active: true, display: true, width: "" },
+      { index: 5, label: "Debit Amount", class: "DebitAmount", active: true, display: true, width: "" },
+      { index: 6, label: "Credit Amount", class: "CreditAmount", active: true, display: true, width: "" },
+      { index: 7, label: "Tax Amount", class: "TaxAmount", active: true, display: true, width: "" },
+      { index: 8, label: "Status", class: "Status", active: true, display: true, width: "" },
+      { index: 9, label: "Account No", class: "AccountNo", active: false, display: true, width: "" },
+      { index: 10, label: "Employee", class: "Employee", active: false, display: true, width: "" },
+      { index: 11, label: "Memo", class: "Memo", active: true, display: true, width: "" },
+    ];
+
+    let templateObject = Template.instance();
+    templateObject.reset_data.set(reset_data);
+  }
+  init_reset_data();
+  // set initial table rest_data
+
+
+  // custom field displaysettings
+  templateObject.initCustomFieldDisplaySettings = function(data, listType) {
+    let templateObject = Template.instance();
+    let reset_data = templateObject.reset_data.get();
+    templateObject.showCustomFieldDisplaySettings(reset_data);
+
+    try {
+      getVS1Data("VS1_Customize").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+              // reset_data = data.ProcessLog.CustomLayout.Columns;
+              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              templateObject.showCustomFieldDisplaySettings(reset_data);
+          }).catch(function (err) {
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          // handle process here
+        }
+      });
+    } catch (error) {
+    }
+    return;
+  }
+
+  templateObject.showCustomFieldDisplaySettings = function(reset_data){
+  //function showCustomFieldDisplaySettings(reset_data) {
+
+    let custFields = [];
+    let customData = {};
+    let customFieldCount = reset_data.length;
+
+    for (let r = 0; r < customFieldCount; r++) {
+      customData = {
+        active: reset_data[r].active,
+        id: reset_data[r].index,
+        custfieldlabel: reset_data[r].label,
+        class: reset_data[r].class,
+        display: reset_data[r].display,
+        width: reset_data[r].width ? reset_data[r].width : ''
+      };
+      custFields.push(customData);
+    }
+    templateObject.displayfields.set(custFields);
+  }
+  templateObject.initCustomFieldDisplaySettings("", "tblJournalList");
+
 
   templateObject.resetData = function (dataVal) {
       window.open('/journalentrylist?page=last', '_self');
@@ -1646,5 +1723,9 @@ Template.journalentrylist.helpers({
   },
   currency: () => {
     return Currency;
-  }
+  },
+  // custom fields displaysettings
+  displayfields: () => {
+    return Template.instance().displayfields.get();
+  },
 });
