@@ -306,39 +306,39 @@
                                 {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                    <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
-                                    <td contenteditable="false" class="colTransactionDate" ><span style="display:none;">{{item.sortdate}}</span>{{item.transactiondate}}</td>
-                                    <td contenteditable="false" class="colEntryNo" style="text-align: right!important;">{{item.entryno}}</td>
-                                    <td contenteditable="false" class="colAccountName">{{item.accountname}}</td>
-                                    <td contenteditable="false" class="colDepartment">{{item.department}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}} colSortDate hiddenColumn">{{item.sortdate}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}} colTransactionDate" ><span style="display:none;">{{item.sortdate}}</span>{{item.transactiondate}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}} colEntryNo" style="text-align: right!important;">{{item.entryno}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}} colAccountName">{{item.accountname}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}} colDepartment">{{item.department}}</td>
 
                                     {{#if isOnlyDefaultActive }}
                                         {{#if currencyList}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
-                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="colDebitAmount text-right {{#if isNegativeAmount item.debitamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.debitamount c}}</td>
+                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="{{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}} colDebitAmount text-right {{#if isNegativeAmount item.debitamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.debitamount c}}</td>
 
 
                                                 {{/if}}
                                             {{/each}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
-                                                     <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="colCreditAmount text-right {{#if isNegativeAmount item.creditamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.creditamount c}}</td>
+                                                     <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="{{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}} colCreditAmount text-right {{#if isNegativeAmount item.creditamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.creditamount c}}</td>
 
                                                 {{/if}}
                                             {{/each}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
-                                                     <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="colTaxAmount text-right {{#if isNegativeAmount item.taxamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.taxamount c}}</td>
+                                                     <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="{{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}} colTaxAmount text-right {{#if isNegativeAmount item.taxamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.taxamount c}}</td>
                                                 {{/if}}
                                             {{/each}}
 
 
                                         {{/if}}
                                     {{else}}
-                                        <td contenteditable="false" class="colDebitAmount" style="text-align: right!important;">{{item.debitamount}}</td>
-                                        <td contenteditable="false" class="colCreditAmount" style="text-align: right!important;">{{item.creditamount}}</td>
-                                        <td contenteditable="false" class="colTaxAmount" style="text-align: right!important;">{{item.taxamount}}</td>
+                                        <td contenteditable="false" class="{{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}} colDebitAmount" style="text-align: right!important;">{{item.debitamount}}</td>
+                                        <td contenteditable="false" class="{{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}} colCreditAmount" style="text-align: right!important;">{{item.creditamount}}</td>
+                                        <td contenteditable="false" class="{{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}} colTaxAmount" style="text-align: right!important;">{{item.taxamount}}</td>
 
 
                                     {{/if}}
@@ -347,11 +347,11 @@
 
 
 
-                                    <td contenteditable="false" class="colStatus">{{item.orderstatus}}</td>
-                                    <td contenteditable="false" class="colAccountNo hiddenColumn">{{item.accountno}}</td>
-                                    <td contenteditable="false" class="colEmployee hiddenColumn">{{item.employeename}}</td>
+                                    <td contenteditable="false" class="{{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}} colStatus">{{item.orderstatus}}</td>
+                                    <td contenteditable="false" class="{{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}} colAccountNo hiddenColumn">{{item.accountno}}</td>
+                                    <td contenteditable="false" class="{{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}} colEmployee hiddenColumn">{{item.employeename}}</td>
 
-                                    <td contenteditable="false" class="colMemo" >{{item.memo}}</td>
+                                    <td contenteditable="false" class="{{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}} colMemo" >{{item.memo}}</td>
                                 </tr>
                                 {{/each}}
                                 {{/if}}
