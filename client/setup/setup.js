@@ -65,15 +65,20 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
         if (error) {
           // handle error here
         } else {
-          if( result.data.tcompanyinfo.length > 0 ){
-            let data = result.data.tcompanyinfo[0];
-            localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
-            if(data.IsSetUpWizard == true) {
-              window.open(onSetupFinished, '_self');
-            } else {
-              window.open(onSetupUnFinished, '_self');
+          if(result.data != undefined) {
+            if( result.data.tcompanyinfo.length > 0 ){
+              let data = result.data.tcompanyinfo[0];
+              localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+              if(data.IsSetUpWizard == true) {
+                window.open(onSetupFinished, '_self');
+              } else {
+                window.open(onSetupUnFinished, '_self');
+              }
             }
+          } else {
+            window.open(onSetupUnFinished, '_self');
           }
+          
         }
     });
      // isSetupFinished().then(boolean => {

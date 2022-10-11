@@ -257,6 +257,11 @@ Template.payrolloverview.onRendered(function () {
 
     data = data.response;
     let timesheets = data.ttimesheet.map(t => t.fields);
+    timesheets.forEach((t, index) => {
+      if (t.Status == "") {
+        t.Status = "Draft";
+      }
+    });
     console.log('timesheets', timesheets);
     templateObject.timeSheetList.set(timesheets);
 
@@ -278,7 +283,7 @@ Template.payrolloverview.onRendered(function () {
             text: "",
             download: "open",
             className: "btntabletocsv hiddenColumn",
-            filename: "taxratelist_" + moment().format(),
+            filename: "timesheets_" + moment().format(),
             orientation: "portrait",
             exportOptions: {
               columns: ":visible"
@@ -288,8 +293,8 @@ Template.payrolloverview.onRendered(function () {
             download: "open",
             className: "btntabletopdf hiddenColumn",
             text: "",
-            title: "Tax Rate List",
-            filename: "taxratelist_" + moment().format(),
+            title: "Timesheets",
+            filename: "timesheets_" + moment().format(),
             exportOptions: {
               columns: ":visible"
             }
@@ -298,9 +303,6 @@ Template.payrolloverview.onRendered(function () {
         select: true,
         destroy: true,
         colReorder: true,
-        colReorder: {
-          fixedColumnsRight: 1
-        },
         lengthMenu: [
           [
             25, -1
@@ -320,11 +322,6 @@ Template.payrolloverview.onRendered(function () {
         action: function () {
           $("#tblTimeSheet").DataTable().ajax.reload();
         },
-        fnDrawCallback: function (oSettings) {
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-        }
       })
     }, 500);
   }
@@ -367,6 +364,7 @@ Template.payrolloverview.onRendered(function () {
 
 
   templateObject.newTimeSheet = async () => {
+    LoadingOverlay.show();
     const employees = await templateObject.employees.get();
     const employeeId =  $('.employee-select').val();
     const selectedEmployee = employees.find(e => e.ID == employeeId);
@@ -401,6 +399,7 @@ Template.payrolloverview.onRendered(function () {
 
     // Here i need to create a new timesheet
     let response = await contactService.saveTimeSheet(timeSheetEntry);
+    LoadingOverlay.hide(0);
 
     if(response.fields.ID) {
       let timeSheetId = response.fields.ID;
