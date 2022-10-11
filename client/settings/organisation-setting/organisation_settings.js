@@ -1255,9 +1255,9 @@ Template.organisationsettings.events({
                 };
             }
 
-            organisationService
-                .saveCompanyLogo(companyLogoObj)
-                .then(function(companyLogoObj) {});
+            organisationService.saveCompanyLogo(companyLogoObj).then(function(companyLogoObj) {
+
+            });
         }
     },
 

@@ -1720,7 +1720,7 @@ Template.vs1login.onRendered(function () {
                                     localStorage.setItem('mainEIPAddress', licenceIPAddress);
                                     localStorage.setItem('mainEPort', checkSSLPorts);
 
-                                    var ERPCheackUserObject = "TUser?PropertyList==ID,EmployeeId,LogonName,EmployeeName,PasswordHash,Active&Select=[LogonName]='" + ERPLoggeduserName + "'";
+                                    var ERPCheackUserObject = "TUser?PropertyList=ID,EmployeeId,LogonName,EmployeeName,PasswordHash,Active&Select=[LogonName]='" + ERPLoggeduserName + "'";
                                     var oReqCheackUserObject = new XMLHttpRequest();
                                     oReqCheackUserObject.open("GET", URLRequest + ERPIPAdderess + ':' + ERPport + '/' + "erpapi" + '/' + ERPCheackUserObject, true);
                                     oReqCheackUserObject.setRequestHeader("database", ERPdbName);
@@ -1747,7 +1747,7 @@ Template.vs1login.onRendered(function () {
                                                         var sessionDataToLog = localStorage.getItem('mySession');
                                                         Session.setPersistent('mySessionEmployee', employeename);
 
-                                                        var ERPCheackAppUserObject = "TAppUser?PropertyList==ID,DatabaseName,UserName,MultiLogon&Select=[DatabaseName]='" + ERPdbName + "' and [UserName]='" + ERPLoggeduserName + "'";
+                                                        var ERPCheackAppUserObject = "TAppUser?PropertyList=ID,DatabaseName,UserName,MultiLogon&Select=[DatabaseName]='" + ERPdbName + "' and [UserName]='" + ERPLoggeduserName + "'";
                                                         var oReqCheackAppUserObject = new XMLHttpRequest();
                                                         oReqCheackAppUserObject.open("GET", URLRequest + ERPIPAdderess + ':' + ERPport + '/' + "erpapi" + '/' + ERPCheackAppUserObject, true);
                                                         oReqCheackAppUserObject.setRequestHeader("database", ERPdbName);
