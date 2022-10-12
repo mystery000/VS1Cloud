@@ -3777,6 +3777,10 @@ function openEditTaskModal(id, type) {
       $(".editTaskDetailName").val(selected_record.TaskName);
       $(".editTaskDetailDescription").val(selected_record.TaskDescription);
 
+      // tempcode check if AssignedName is set in selected_record
+      let employeeName = Session.get("mySessionEmployee");
+      $('#crmSelectEmployeeList').val(employeeName);
+
       let projectName = selected_record.ProjectName == "Default" ? "All Tasks" : selected_record.ProjectName;
 
       if (selected_record.Completed) {
@@ -3861,7 +3865,8 @@ function openEditTaskModal(id, type) {
 
       $("#taskmodalNameLabel").html(selected_record.TaskName);
       $(".activityAdded").html("Added on " + moment(selected_record.MsTimeStamp).format("MMM D h:mm A"));
-      let due_date = selected_record.due_date ? moment(selected_record.due_date).format("D MMM") : "No Date";
+      // let due_date = selected_record.due_date ? moment(selected_record.due_date).format("D MMM") : "No Date";
+      let due_date = selected_record.due_date ? moment(selected_record.due_date).format("dddd, Do MMMM") : "No Date";
 
 
       let todayDate = moment().format("ddd");
