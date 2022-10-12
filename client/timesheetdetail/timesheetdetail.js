@@ -65,6 +65,7 @@ Template.timesheetdetail.onRendered(function () {
     let timesheet = timesheets.find(o => o.ID == id);
 
     this.timesheet.set(timesheet);
+    this.weeklyTotal.set(timesheet.Hours);
   };
 
   this.loadEmployee = async () => {
@@ -256,8 +257,6 @@ Template.timesheetdetail.onRendered(function () {
   };
 
   this.darftTimeSheet = async () => {
-    this.buildNewObject();
-
     const timesheet = await this.timesheet.get();
     const hours = await this.calculateWeeklyHours();
     const earningLines = this.buildNewObject();
