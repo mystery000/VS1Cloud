@@ -78,9 +78,11 @@ Template.dashboardSalesCards.onRendered(function () {
                 if(totalInvoiceValueLast3Months > totalQuoteValueLast3Months) {
                     $('#gap-to-quota').removeClass('text-danger');
                     $('#gap-to-quota').addClass('text-success');
+                    $('#gap-to-quota-label').html('In Front');
                 } else {
                     $('#gap-to-quota').removeClass('text-success');
                     $('#gap-to-quota').addClass('text-danger');
+                    $('#gap-to-quota-label').html('Behind');
                 }
             }).catch(function (err) {
             });
@@ -136,7 +138,7 @@ Template.dashboardSalesCards.onRendered(function () {
         const dateTo = new Date($("#dateTo").datepicker("getDate"));
         formatDateFrom = dateFrom.getFullYear() +"-" +(dateFrom.getMonth() + 1) +"-" +dateFrom.getDate();
         formatDateTo =dateTo.getFullYear() +"-" +(dateTo.getMonth() + 1) +  "-" +dateTo.getDate();
-        if ( $("#dateFrom").val() == "" && $("#dateFrom").val() == "") {
+        if ( $("#dateFrom").val() == "" && $("#dateTo").val() == "") {
             templateObject.getDashboardData(formatDateFrom, formatDateTo, true);
         } else {
             templateObject.getDashboardData(formatDateFrom, formatDateTo, false);
