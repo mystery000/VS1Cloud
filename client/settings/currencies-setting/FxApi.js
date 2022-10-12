@@ -1,12 +1,7 @@
+import Base64 from "../../js/Base64";
 import {TaxRateService} from "../settings-service";
 
 class FxApi {
-  static ApiID = "zuusoft547505136";
-  static ApiKey = "jkupm6cmhafko2jm7hbodgonur";
-  static encodedApiKey =  "eXl5dXV1dXV1eXV5dXl1eTU0ODg0MDU4NzozMXNldXFrMTRkdGZyczZjc2FzbWIzanIyMQ==";
-
-  constructor() {}
-
   /**
      *
      * @param {String} to
@@ -20,7 +15,7 @@ class FxApi {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Basic " + FxApi.encodedApiKey
+          Authorization: "Basic " + await this.getEmployeeFxCurrencyCredentials()
         }
       });
 
@@ -45,7 +40,7 @@ class FxApi {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Basic " + FxApi.encodedApiKey
+        Authorization: "Basic " + await this.getEmployeeFxCurrencyCredentials()
       }
     });
 
@@ -62,7 +57,7 @@ class FxApi {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Basic " + FxApi.encodedApiKey
+        Authorization: "Basic " + await this.getEmployeeFxCurrencyCredentials()
       }
     });
 
@@ -84,7 +79,7 @@ class FxApi {
     const response = await fetch(`https://xecdapi.xe.com/v1/convert_from.json/?to=${to}&from=${from}&amount=${amount}&inverse=true`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Basic " + FxApi.encodedApiKey
+        Authorization: "Basic " + await this.getEmployeeFxCurrencyCredentials()
       }
     });
 
@@ -116,15 +111,24 @@ class FxApi {
     let taxRateService = new TaxRateService();
 
     try {
-      const response = await taxRateService.saveCurrencies({
-        type: "TCurrency",
-        objects: currencies
-      });
+      const response = await taxRateService.saveCurrencies({type: "TCurrency", objects: currencies});
 
       callback(response);
     } catch (error) {
       callback(null, error);
     }
+  }
+
+  /**
+     * This function will return employeeCredentials;
+     */
+  async getEmployeeFxCurrencyCredentials(ApiID = "zuusoft547505136", ApiKey = "jkupm6cmhafko2jm7hbodgonur") {
+   
+    // here we need to load from db the user credentials 
+
+    const encoded = Base64.encode(`${ApiID}:${ApiKey}`);
+
+    return encoded;
   }
 }
 
