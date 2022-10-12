@@ -5081,7 +5081,7 @@ Template.paymentcard.events({
         }
 
         var foreignCurrencyFields = {};
-        if( Session.get("CloudUseForeignLicence") ){
+        if( FxGlobalFunctions.isCurrencyEnabled() ){
             foreignCurrencyFields = {
                 ForeignExchangeCode: ForeignExchangeCode || defaultCurrencyCode,
                 ForeignExchangeRate: parseFloat(ForeignExchangeRate),

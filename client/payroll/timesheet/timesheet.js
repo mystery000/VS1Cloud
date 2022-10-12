@@ -7,6 +7,7 @@ import { SideBarService } from '../../js/sidebar-service';
 import 'jquery-editable-select';
 import CachedHttp from '../../lib/global/CachedHttp';
 import erpObject from '../../lib/global/erp-objects';
+import LoadingOverlay from '../../LoadingOverlay';
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 Template.timesheet.onCreated(function() {
@@ -34,6 +35,8 @@ Template.timesheet.onCreated(function() {
     templateObject.isAccessLevels = new ReactiveVar();
 
     templateObject.timesheets = new ReactiveVar([]);
+    templateObject.employees  = new ReactiveVar([]);
+    templateObject.payPeriods = new ReactiveVar([]);
 });
 
 Template.timesheet.onRendered(function() {
@@ -243,6 +246,49 @@ Template.timesheet.onRendered(function() {
 
         //data = data.response;
     };
+
+
+        
+    templateObject.loadEmployees = async () => {
+        let data = await CachedHttp.get(erpObject.TEmployee, async () => {
+        return await contactService.getAllEmployees();
+        }, {
+        useIndexDb: true,
+        fallBackToLocal: true, 
+        useLocalStorage: false,
+        validate: (cachedResponse) => {
+            return true;
+        }
+        });
+        data = data.response;
+
+        let employees = data.temployee.map(e => e.fields);
+
+        templateObject.employees.set(employees);
+
+    }
+
+
+  templateObject.loadPayPeriods = async () => {
+    let data = await CachedHttp.get(erpObject.TPayrollCalendars, async () => {
+      return await sideBarService.getCalender(initialBaseDataLoad, 0);
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: cachedResponse => {
+        return true;
+      }
+    });
+
+    data = data.response;
+    let calendars = data.tpayrollcalendars.map(c => c.fields);
+
+    templateObject.payPeriods.set(calendars);
+  }
+
+
+
+
 
 
     templateObject.getAllTimeSheetData = function(fromDate, toDate, ignoreDate) {
@@ -4219,6 +4265,17 @@ Template.timesheet.onRendered(function() {
         });
     }
 
+
+    templateObject.initPage = async () => {
+        LoadingOverlay.show();
+        await templateObject.loadEmployees();
+        await templateObject.loadPayPeriods();
+        await templateObject.loadTimeSheet();
+
+        LoadingOverlay.hide();
+    }
+
+    templateObject.initPage();
 });
 
 Template.timesheet.events({
@@ -7173,7 +7230,8 @@ Template.timesheet.events({
     },
     'click .btnRefreshTimeSheet': function(event) {
         $(".btnRefreshOne").trigger("click");
-    }
+    },
+    
 });
 
 Template.timesheet.helpers({

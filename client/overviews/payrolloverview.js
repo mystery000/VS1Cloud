@@ -257,7 +257,73 @@ Template.payrolloverview.onRendered(function () {
 
     data = data.response;
     let timesheets = data.ttimesheet.map(t => t.fields);
+    timesheets.forEach((t, index) => {
+      if (t.Status == "") {
+        t.Status = "Draft";
+      }
+    });
+    console.log('timesheets', timesheets);
     templateObject.timeSheetList.set(timesheets);
+
+    // TODO: Datable jquery to be added
+
+    setTimeout(() => {
+
+      $("#tblTimeSheet").DataTable({
+        columnDefs: [
+          {
+            orderable: false,
+            targets: -1
+          }
+        ],
+        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        buttons: [
+          {
+            extend: "excelHtml5",
+            text: "",
+            download: "open",
+            className: "btntabletocsv hiddenColumn",
+            filename: "timesheets_" + moment().format(),
+            orientation: "portrait",
+            exportOptions: {
+              columns: ":visible"
+            }
+          }, {
+            extend: "print",
+            download: "open",
+            className: "btntabletopdf hiddenColumn",
+            text: "",
+            title: "Timesheets",
+            filename: "timesheets_" + moment().format(),
+            exportOptions: {
+              columns: ":visible"
+            }
+          }
+        ],
+        select: true,
+        destroy: true,
+        colReorder: true,
+        lengthMenu: [
+          [
+            25, -1
+          ],
+          [
+            25, "All"
+          ]
+        ],
+        // bStateSave: true,
+        // rowId: 0,
+        paging: true,
+        info: true,
+        responsive: true,
+        order: [
+          [0, "asc"]
+        ],
+        action: function () {
+          $("#tblTimeSheet").DataTable().ajax.reload();
+        },
+      })
+    }, 500);
   }
 
   templateObject.loadEmployees = async () => {
@@ -276,6 +342,7 @@ Template.payrolloverview.onRendered(function () {
     let employees = data.temployee.map(e => e.fields);
 
     templateObject.employees.set(employees);
+    $('#tblEmployeesList').DataTable();
 
   }
 
@@ -294,7 +361,59 @@ Template.payrolloverview.onRendered(function () {
     let calendars = data.tpayrollcalendars.map(c => c.fields);
 
     templateObject.payPeriods.set(calendars);
+
+    $('#tblPayPeriodsList').DataTable();
   }
+
+
+  templateObject.newTimeSheet = async () => {
+    LoadingOverlay.show();
+    const employees = await templateObject.employees.get();
+    const employeeId =  $('.employee-select').attr('employee-id');
+    const selectedEmployee = employees.find(e => e.ID == employeeId);
+
+    const payPeriods = await templateObject.payPeriods.get();
+    const payPeriodId = $('.payperiod-select').attr('calendar-id');
+    const selectedPeriod = payPeriods.find(p => p.ID == payPeriodId);
+
+    console.log('selected epriods', selectedPeriod);
+    const timesheets  = await templateObject.timeSheetList.get();
+
+
+    let timeSheet = {
+      type: erpObject.TTimeSheet,
+      fields: {
+        EmployeeName: selectedEmployee.EmployeeName,
+        Allowedit: true,
+        Hours: 1,
+        EndTime: selectedPeriod.PayrollCalendarFirstPaymentDate,
+        //PayRateTypeName: selectedPeriod.PayrollCalendarName // PayrollCalendarName
+      }
+    }
+
+    let timeSheetEntry = {
+      type: erpObject.TTimeSheetEntry,
+      fields: {
+        TimeSheet: [
+          timeSheet
+        ]
+      },
+    }
+
+    // Here i need to create a new timesheet
+    let response = await contactService.saveTimeSheet(timeSheetEntry);
+    LoadingOverlay.hide(0);
+
+    $('.add-new-timesheet').attr('disabled', true);
+    if(response.fields.ID) {
+      let timeSheetId = response.fields.ID;
+      window.location.href = `/timesheetdetail?tid=${timeSheetId}`;
+    }
+
+
+    // once created, please redirect to the right page
+
+}
 
   
 
@@ -6143,7 +6262,7 @@ Template.payrolloverview.events({
   },
 
   "change .employee-select": (e, ui) => {
-    const selectedEmployeeId = $(e.currentTarget).val();
+    const selectedEmployeeId = $(e.currentTarget).attr('employee-id');
     if(selectedEmployeeId == 0) {
       $('.payperiod-field').addClass('hidden');
       $('.add-new-timesheet').attr('disabled', true);
@@ -6151,7 +6270,54 @@ Template.payrolloverview.events({
       $('.payperiod-field').removeClass('hidden');
       $('.add-new-timesheet').attr('disabled', false);
     }
-  }
+  },
+  "click .add-new-timesheet": (e, ui) => {
+    ui.newTimeSheet();
+  } ,
+
+  "click .tblTimeSheet tbody tr": (e, ui) => {
+    const timesheetId = $(e.currentTarget).attr('timesheet-id');
+
+    window.location.href = `/timesheetdetail?tid=${timesheetId}`;
+  },
+
+
+  "click .select-employee-js": (e, ui) => {
+    $(e.currentTarget).addClass('selector-target'); // This is used to know where to paste data later
+    $("#select-employee-modal").modal("toggle");
+  },
+
+  "click #tblEmployeesList tbody tr": (e, ui) => {
+    const selectedEmployee = $(e.currentTarget).find('td:first').text();
+    const employeId = $(e.currentTarget).attr('employee-id');
+    $("#select-employee-modal").modal("toggle");
+    $('.selector-target').val(selectedEmployee);
+    if(employeId) {
+      $('.selector-target').attr('employee-id', employeId);
+      $('.selector-target').trigger('change');
+    }
+    $('.selector-target').removeClass('selector-target');
+  },
+
+
+  "click .select-period-js": (e, ui) => {
+    $(e.currentTarget).addClass('selector-target'); // This is used to know where to paste data later
+    $("#select-payperiod-modal").modal("toggle");
+  },
+
+  "click #tblPayPeriodsList tbody tr": (e, ui) => {
+    const selectedEmployee = $(e.currentTarget).find('td:first').text();
+    const employeId = $(e.currentTarget).attr('calendar-id');
+    $("#select-payperiod-modal").modal("toggle");
+    $('.selector-target').val(selectedEmployee);
+    if(employeId) {
+      $('.selector-target').attr('calendar-id', employeId);
+      $('.selector-target').trigger('change');
+    }
+    $('.selector-target').removeClass('selector-target');
+  },
+
+  
 });
 
 Template.payrolloverview.helpers({

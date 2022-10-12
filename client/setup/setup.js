@@ -15,6 +15,7 @@ import { ContactService } from "../contacts/contact-service";
 import { BaseService } from "../js/base-service";
 import ApiService from "../js/Api/Module/ApiService";
 import XLSX from 'xlsx';
+import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 
 const employeeId = User.getCurrentLoggedUserId();
 let organisationService = new OrganisationService();
@@ -65,15 +66,20 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
         if (error) {
           // handle error here
         } else {
-          if( result.data.tcompanyinfo.length > 0 ){
-            let data = result.data.tcompanyinfo[0];
-            localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
-            if(data.IsSetUpWizard == true) {
-              window.open(onSetupFinished, '_self');
-            } else {
-              window.open(onSetupUnFinished, '_self');
+          if(result.data != undefined) {
+            if( result.data.tcompanyinfo.length > 0 ){
+              let data = result.data.tcompanyinfo[0];
+              localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+              if(data.IsSetUpWizard == true) {
+                window.open(onSetupFinished, '_self');
+              } else {
+                window.open(onSetupUnFinished, '_self');
+              }
             }
+          } else {
+            window.open(onSetupUnFinished, '_self');
           }
+          
         }
     });
      // isSetupFinished().then(boolean => {
@@ -10386,9 +10392,7 @@ Template.setup.helpers({
 
     return isMobile;
   },
-  isCurrencyEnable: () => {
-    return Session.get("CloudUseForeignLicence");
-  },
+  isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
 
   // Step 7 helpers
 

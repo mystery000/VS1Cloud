@@ -8606,7 +8606,7 @@ Template.supplierpaymentcard.events({
         }
       });
       let foreignCurrencyFields = {}
-      if( Session.get("CloudUseForeignLicence") ){
+      if( FxGlobalFunctions.isCurrencyEnabled() ){
         foreignCurrencyFields = {
           ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
           ForeignExchangeRate: parseFloat(exchangeRate),
@@ -8950,7 +8950,7 @@ Template.supplierpaymentcard.events({
       let foreignCurrency = $("#sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
-      if( Session.get("CloudUseForeignLicence") ){
+      if( FxGlobalFunctions.isCurrencyEnabled() ){
         foreignCurrencyFields = {
           ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
           ForeignExchangeRate: parseFloat(exchangeRate),
@@ -9390,7 +9390,7 @@ Template.supplierpaymentcard.events({
       let foreignCurrency = $("#sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
-      if( Session.get("CloudUseForeignLicence") ){
+      if( FxGlobalFunctions.isCurrencyEnabled() ){
           foreignCurrencyFields = { 
               ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
               ForeignExchangeRate: parseFloat(exchangeRate),
@@ -9822,7 +9822,7 @@ Template.supplierpaymentcard.events({
       let foreignCurrency = $("#sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
-      if( Session.get("CloudUseForeignLicence") ){
+      if( FxGlobalFunctions.isCurrencyEnabled() ){
           foreignCurrencyFields = {
               ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
               ForeignExchangeRate: parseFloat(exchangeRate),
@@ -10249,7 +10249,7 @@ Template.supplierpaymentcard.events({
       let foreignCurrency = $("#sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
-      if( Session.get("CloudUseForeignLicence") ){
+      if( FxGlobalFunctions.isCurrencyEnabled() ){
           foreignCurrencyFields = {
               ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
               ForeignExchangeRate: parseFloat(exchangeRate),
@@ -10691,7 +10691,7 @@ Template.supplierpaymentcard.events({
       let foreignCurrency = $("#sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
-      if( Session.get("CloudUseForeignLicence") ){
+      if( FxGlobalFunctions.isCurrencyEnabled() ){
           foreignCurrencyFields = {
               ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
               ForeignExchangeRate: parseFloat(exchangeRate),
@@ -11146,7 +11146,7 @@ Template.supplierpaymentcard.events({
       let foreignCurrency = $("#sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
-      if( Session.get("CloudUseForeignLicence") ){
+      if( FxGlobalFunctions.isCurrencyEnabled() ){
           foreignCurrencyFields = {
               ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
               ForeignExchangeRate: parseFloat(exchangeRate),
@@ -11612,7 +11612,7 @@ Template.supplierpaymentcard.events({
       let foreignCurrency = $("#sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
-      if( Session.get("CloudUseForeignLicence") ){
+      if( FxGlobalFunctions.isCurrencyEnabled() ){
           foreignCurrencyFields = {
               ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
               ForeignExchangeRate: parseFloat(exchangeRate),

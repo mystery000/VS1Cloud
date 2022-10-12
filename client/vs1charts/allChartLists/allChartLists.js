@@ -324,6 +324,17 @@ Template.allChartLists.onRendered(function () {
                 }
             };
             chartList.push(accountListChart);
+
+            let myTasksChart= {
+                fields: {
+                    Active: true,
+                    ChartGroup: "Dashboard",
+                    ChartName: "My Tasks",
+                    ID: 1005,
+                    _chartSlug: "dashboard__mytaskschart"
+                }
+            };
+            chartList.push(myTasksChart);
             // Hide all charts
             $('.sortable-chart-widget-js').addClass("hideelement");
             // the goal here is to get the right names so it can be used for preferences
