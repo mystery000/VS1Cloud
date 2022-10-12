@@ -606,7 +606,7 @@ div.dataTables_wrapper .row button{
 }
 
 .align-items-xl-start .btnRefresh{
-  margin-left: 0px!important;
+  /* margin-left: 0px!important; */
 }
 
 .custom-range {
@@ -647,5 +647,5 @@ div.dataTables_wrapper .row button{
 .vs1MarginButton {
     margin : 14px;
     margin-right :0px !important;
-    
+
 }
