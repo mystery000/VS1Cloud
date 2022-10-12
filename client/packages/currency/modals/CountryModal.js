@@ -3,6 +3,7 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from "../../../js/sidebar-service";
 import "../../../lib/global/indexdbstorage.js";
 import { CountryService } from "../../../js/country-service";
+import FxGlobalFunctions from "../FxGlobalFunctions";
 let sideBarService = new SideBarService();
 
 Template.CountryModal.onCreated(function () {
@@ -85,9 +86,7 @@ Template.CountryModal.events({
 });
 
 Template.CountryModal.helpers({
-  isCurrencyEnable: () => {
-    return Session.get("CloudUseForeignLicence");
-  },
+  isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
   countryList: () => {
     return Template.instance().countryData.get();
   },

@@ -13601,7 +13601,7 @@ Template.new_invoice.events({
             };
           }
 
-          // if(Session.get("CloudUseForeignLicence") == true){
+          // if(FxGlobalFunctions.isCurrencyEnabled() == true){
           //   objDetails.ForeignExchangeCode = currencyCode||'';
           //   objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
           // };
@@ -17350,7 +17350,7 @@ Template.new_invoice.events({
         return false;
       }
 
-      // if(Session.get("CloudUseForeignLicence") == true){
+      // if(FxGlobalFunctions.isCurrencyEnabled() == true){
       //   objDetails.ForeignExchangeCode = currencyCode||'';
       //   objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
       // };
@@ -18932,7 +18932,7 @@ Template.new_invoice.events({
         };
       }
 
-      // if(Session.get("CloudUseForeignLicence") == true){
+      // if(FxGlobalFunctions.isCurrencyEnabled() == true){
       //   objDetails.ForeignExchangeCode = currencyCode||'';
       //   objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
       // };
@@ -19738,7 +19738,7 @@ Template.new_invoice.events({
             },
           };
         }
-        // if(Session.get("CloudUseForeignLicence") == true){
+        // if(FxGlobalFunctions.isCurrencyEnabled() == true){
         //   objDetails.ForeignExchangeCode = currencyCode||'';
         //   objDetails.ForeignExchangeRate = parseFloat(ForeignExchangeRate)||0;
         // };

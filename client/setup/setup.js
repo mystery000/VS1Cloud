@@ -15,6 +15,7 @@ import { ContactService } from "../contacts/contact-service";
 import { BaseService } from "../js/base-service";
 import ApiService from "../js/Api/Module/ApiService";
 import XLSX from 'xlsx';
+import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 
 const employeeId = User.getCurrentLoggedUserId();
 let organisationService = new OrganisationService();
@@ -10391,9 +10392,7 @@ Template.setup.helpers({
 
     return isMobile;
   },
-  isCurrencyEnable: () => {
-    return Session.get("CloudUseForeignLicence");
-  },
+  isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
 
   // Step 7 helpers
 

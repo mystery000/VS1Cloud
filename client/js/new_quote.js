@@ -7543,7 +7543,7 @@ Template.new_quote.events({
             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
             let foreignCurrencyFields = {}
-            if( Session.get("CloudUseForeignLicence") ){
+            if( FxGlobalFunctions.isCurrencyEnabled() ){
                 foreignCurrencyFields = {
                     ForeignExchangeCode: currencyCode,
                     ForeignExchangeRate: parseFloat(ForeignExchangeRate),
@@ -8889,7 +8889,7 @@ Template.new_quote.events({
                     const currencyCode = $("#sltCurrency").val() || CountryAbbr;
                     let ForeignExchangeRate = $('#exchange_rate').val();
                     let foreignCurrencyFields = {}
-                    if( Session.get("CloudUseForeignLicence") ){
+                    if( FxGlobalFunctions.isCurrencyEnabled() ){
                         foreignCurrencyFields = {
                             ForeignExchangeCode: currencyCode,
                             ForeignExchangeRate: parseFloat(ForeignExchangeRate),
@@ -9500,7 +9500,7 @@ Template.new_quote.events({
             const currencyCode = $("#sltCurrency").val() || CountryAbbr;
             let ForeignExchangeRate = $('#exchange_rate').val();
             let foreignCurrencyFields = {}
-            if( Session.get("CloudUseForeignLicence") ){
+            if( FxGlobalFunctions.isCurrencyEnabled() ){
                 foreignCurrencyFields = {
                     ForeignExchangeCode: currencyCode,
                     ForeignExchangeRate: parseFloat(ForeignExchangeRate),
@@ -9775,7 +9775,7 @@ Template.new_quote.events({
                 const currencyCode = $("#sltCurrency").val() || CountryAbbr;
                 let ForeignExchangeRate = $('#exchange_rate').val();
                 let foreignCurrencyFields = {}
-                if( Session.get("CloudUseForeignLicence") ){
+                if( FxGlobalFunctions.isCurrencyEnabled() ){
                     foreignCurrencyFields = {
                         ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
@@ -10046,7 +10046,7 @@ Template.new_quote.events({
                 const currencyCode = $("#sltCurrency").val() || CountryAbbr;
                 let ForeignExchangeRate = $('#exchange_rate').val();
                 let foreignCurrencyFields = {}
-                if( Session.get("CloudUseForeignLicence") ){
+                if( FxGlobalFunctions.isCurrencyEnabled() ){
                     foreignCurrencyFields = {
                         ForeignExchangeCode: currencyCode,
                         ForeignExchangeRate: parseFloat(ForeignExchangeRate),
