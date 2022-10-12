@@ -640,3 +640,12 @@ div.dataTables_wrapper .row button{
   margin: 14px;
   margin-right: 0px;
 }
+.vs1MarginButton-imp {
+    margin : 14px;
+    margin-left :0px !important;
+}
+.vs1MarginButton {
+    margin : 14px;
+    margin-right :0px !important;
+    
+}
