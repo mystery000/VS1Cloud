@@ -236,7 +236,7 @@ a.btnOpenSettingsJob:focus,.btn-link:hover, .btn-link:focus,
 }
 .dataTables_length {
     float: right !important;
-    margin-right: 12px;
+    margin-right: 14px;
 }
 
 a.btnOpenSettings, .btn-link.dropdown-toggle, .btnoptionsmodal {
@@ -598,11 +598,11 @@ td.td-input {
 
 div.dataTables_wrapper div.dataTables_filter input{
   margin-left: 0px!important;
-  margin-right: 12px;
+  margin-right: 14px;
 }
 
 div.dataTables_wrapper .row button{
-  margin-right: 12px;
+  margin-right: 14px;
 }
 
 .align-items-xl-start .btnRefresh{
