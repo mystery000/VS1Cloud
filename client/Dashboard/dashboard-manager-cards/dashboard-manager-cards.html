@@ -1,9 +1,6 @@
 <template name="dashboardManagerCards">
     <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSalesManager" data-default-position="0" position="0" card-active="true" card-key="dashboard-sales-manager-new-leads-month">
-        <div class="card shadow custom-sales-card border-left-primary py-2"
-            data-toggle="tooltip" 
-            data-bs-tooltip=""
-            title="is new Lead/Customer source count for last 30 days.">
+        <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip="" title="This new Lead/Customer source count.">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
@@ -11,8 +8,8 @@
             <div class="card-body text-center new-leads-month" style="cursor: pointer;">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
-                        <div class="text-uppercase text-info h5 small-heading font-weight-bold mb-1"><span>New Leads this month</span></div>
-                        <div class="h5 font-weight-bold mb-1 currency-value"><span id="new-leads-month"></span></div>
+                        <div class="text-uppercase text-info h5 small-heading font-weight-bold mb-1"><span>New Leads</span></div>
+                        <div class="h5 font-weight-bold mb-1 currency-value"><span id="new-leads-month">0</span></div>
                     </div>
                 </div>
             </div>
@@ -22,7 +19,7 @@
         <div class="card shadow custom-sales-card border-left-primary py-2"
             data-toggle="tooltip"
             data-bs-tooltip=""
-            title="is new Quotes count for this month.">
+            title="This new Quotes count.">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
@@ -30,7 +27,7 @@
             <div class="card-body text-center new-deals-month" style="cursor: pointer;">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
-                        <div class="text-uppercase text-info h5 small-heading font-weight-bold mb-1"><span>New Deals this month</span></div>
+                        <div class="text-uppercase text-info h5 small-heading font-weight-bold mb-1"><span>New Deals</span></div>
                         <div class="font-weight-bold h5 mb-1 currency-value"><span id="new-deals-month"></span></div>
                     </div>
                 </div>
@@ -41,7 +38,7 @@
         <div class="card shadow custom-sales-card border-left-primary py-2"
             data-toggle="tooltip" 
             data-bs-tooltip=""
-            title="is new Invoice Value for last 30 days.">
+            title="This new Invoice Value.">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
@@ -49,7 +46,7 @@
             <div class="card-body text-center closed-deals-month" style="cursor: pointer;">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
-                        <div class="text-uppercase text-info h5 small-heading font-weight-bold mb-1"><span>Closed Deals this month</span></div>
+                        <div class="text-uppercase text-info h5 small-heading font-weight-bold mb-1"><span>Closed Deals</span></div>
                         <div class="h5 font-weight-bold mb-1 currency-value"><span id="closed-deals-month"></span></div>
                     </div>
                 </div>
@@ -60,7 +57,7 @@
         <div class="card shadow custom-sales-card border-left-primary py-2"
             data-toggle="tooltip" 
             data-bs-tooltip=""
-            title="is new Invoices value for last 12 months.">
+            title="This new Invoices value for last 12 months.">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
@@ -79,7 +76,7 @@
         <div class="card shadow custom-sales-card border-left-primary py-2"
             data-toggle="tooltip" 
             data-bs-tooltip=""
-            title="is last 30 days converted quotes to invoice count to non-Converted quotes.">
+            title="This converted quotes to invoice count to non-Converted quotes.">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
@@ -98,7 +95,7 @@
         <div class="card shadow custom-sales-card border-left-primary py-2"
             data-toggle="tooltip" 
             data-bs-tooltip=""
-            title="Is last 30 days average between quote date and converted to invoice date.">
+            title="This average between quote date and converted to invoice date.">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
