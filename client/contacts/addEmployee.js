@@ -395,7 +395,12 @@ Template.employeescard.onRendered(function () {
                 }
             }
         });
+
     }, 500);
+
+    setTimeout(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    }, 1000);
 
     setTimeout(function () {
         MakeNegative();

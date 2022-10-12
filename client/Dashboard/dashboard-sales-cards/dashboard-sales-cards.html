@@ -36,7 +36,7 @@
     <div class="col-md-3 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
          data-default-position="0" position="0" card-active="true" card-key="dashboard-sales-performance-new-leads">
         <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
-             title="is Lead count for last 3 months where status is ”Unqualified”">
+             title="This Lead count for last 3 months where status is ”Unqualified”">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
@@ -61,7 +61,7 @@
     <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
          data-default-position="1" position="1" card-active="true" card-key="dashboard-sales-performance-new-oppertunities">
         <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
-             title="is Lead count for last 3 months where status is ”Opportunity”">
+             title="This is the Lead count for last 3 months where status is “Opportunity”">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
@@ -86,7 +86,7 @@
     <div class="col-md-3 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
         data-default-position="2" position="2" card-active="true" card-key="dashboard-sales-performance-won-oppertunities">
         <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
-            title="is Lead/Customer count for last 3 months where an Invoice has been made">
+            title="This is the Lead/Customer count for last 3 months where an Invoice has been made">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
@@ -111,7 +111,7 @@
     <div class="col-md-2 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
         data-default-position="3" position="3" card-active="true" card-key="dashboard-sales-performance-gap-to-quota">
         <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
-            title="is value of Invoices for last 3 months">
+            title="This is the value of Invoices for last 3 months">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
@@ -119,8 +119,13 @@
             <div class="card-body" style="cursor: pointer;">
                 <div class="row align-items-center no-gutters">
                     <div class="col-md-12 card-inner-heading mb-3" data-toggle="tooltip" title="If more than “Quota” on employee card show “In Front” and colour Numbers green. If less than “Quota” on employee card show “Behind” and colour Numbers Red.">
-                        Gap to Quota
-                        <h6 class="text-danger mt-3" id="gap-to-quota"></h6>
+                        <div class="col-md-12 card-inner-heading mb-3">
+                            Gap to Quota
+                        </div>
+                        <div class="col-md-12 card-inner-matrics">
+                            <h6 class="text-danger mt-3" id="gap-to-quota"></h6>
+                            <h5 id="gap-to-quota-label" style="margin-bottom:0px"></h5>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -129,7 +134,7 @@
     <div class="col-md-3 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
         data-default-position="4" position="4" card-active="true" card-key="dashboard-sales-performance-win-rate">
         <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
-            title="is Quote count for last 3 months where it is converted to an invoice">
+            title="This is the Quote count for last 3 months where it is converted to an invoice">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
@@ -153,8 +158,7 @@
     </div>
     <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
         data-default-position="5" position="5" card-active="true" card-key="dashboard-sales-performance-avg-sale">
-        <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
-            title="is average time taken where Lead/Customer status is converted from “Unqualified” to “Invoiced”">
+        <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip="" title="This is the average time taken where Lead/Customer status is converted from “Unqualified” to “Invoiced”">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
@@ -179,7 +183,7 @@
     <div class="col-md-5 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
         data-default-position="6" position="6" card-active="true" card-key="dashboard-sales-performance-pipeline">
         <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
-            title="is quotes from Lead/Customer for last 3 months where the quote has not been converted to an invoice">
+            title="This is the quotes from Lead/Customer for last 3 months where the quote has not been converted to an invoice.">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>

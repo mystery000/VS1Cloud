@@ -203,7 +203,7 @@ Template.supplierlist.onRendered(function() {
                             },
                             language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function() {
-                                $("<button class='btn btn-primary btnRefreshSuppliers' type='button' id='btnRefreshSuppliers' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierlist_filter");
+                                $("<button class='btn btn-primary btnRefreshSuppliers' type='button' id='btnRefreshSuppliers' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierlist_filter");
                             }
 
                         }).on('page', function() {
@@ -452,7 +452,7 @@ Template.supplierlist.onRendered(function() {
                             if (urlParametersPage) {
                                 this.fnPageChange('last');
                             }
-                            $("<button class='btn btn-primary btnRefreshSuppliers' type='button' id='btnRefreshSuppliers' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierlist_filter");
+                            $("<button class='btn btn-primary btnRefreshSuppliers' type='button' id='btnRefreshSuppliers' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierlist_filter");
 
 
                         },
@@ -682,7 +682,7 @@ Template.supplierlist.onRendered(function() {
                         },
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function() {
-                            $("<button class='btn btn-primary btnRefreshSuppliers' type='button' id='btnRefreshSuppliers' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierlist_filter");
+                            $("<button class='btn btn-primary btnRefreshSuppliers' type='button' id='btnRefreshSuppliers' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierlist_filter");
                         }
                     }).on('page', function() {
 
@@ -762,7 +762,7 @@ Template.supplierlist.onRendered(function() {
         if (Session.get("ERPLoggedCountry") === "Australia") {
             bsbname = "BSB";
         }
-        
+
         let reset_data = [
           { index: 0, label: '#ID', class: 'SupplierID', active: false, display: true, width: "" },
           { index: 1, label: 'Company', class: 'Company', active: true, display: true, width: "200" },
@@ -1357,11 +1357,11 @@ Template.supplierlist.helpers({
     },
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
-        return setupUrl[1];   
+        return setupUrl[1];
     },
     // custom fields displaysettings
     displayfields: () => {
         return Template.instance().displayfields.get();
     },
-  
+
 });

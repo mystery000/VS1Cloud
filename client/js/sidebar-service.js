@@ -3542,14 +3542,14 @@ export class SideBarService extends BaseService {
           if (oPost.readyState !== 4) {
             return false;
           }
-    
+
           if (oPost.status === 200) {
             resolve(JSON.parse(oPost.responseText));
-          } else { 
+          } else {
             return false;
           }
         };
-    
+
         oPost.open("POST",URLRequest +erpGet.ERPIPAddress +":" +erpGet.ERPPort +"/" +'erpapi/VS1_Cloud_Task/Method',true);
         oPost.setRequestHeader("database", erpGet.ERPDatabase);
         oPost.setRequestHeader("username", erpGet.ERPUsername);
@@ -3558,7 +3558,7 @@ export class SideBarService extends BaseService {
         oPost.setRequestHeader("Accept", "application/html");
         oPost.setRequestHeader("Content-type", "application/json");
         oPost.send(myCustomizeString);
-      }); 
+      });
     } catch (error) {
       return false
     }

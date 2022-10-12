@@ -626,3 +626,17 @@ div.dataTables_wrapper .row button{
   color: rgb(128, 128, 128);
   height: inherit !important;
 }
+
+.vs1FirstButtonMargin{
+  margin: 14px;
+  margin-left: 0px;
+}
+
+.vs1ButtonMargin{
+  margin: 14px;
+}
+
+.vs1LastButtonMargin{
+  margin: 14px;
+  margin-right: 0px;
+}

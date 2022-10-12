@@ -6,279 +6,181 @@
         .spd-gauge-charts {
             margin: auto;
             display: none;
-            width: 350px;
-            height: 370px;
         }
         .rev-counter {
-            margin-top: 127px !important;
+            margin-top: -20px;
         }
         .rev-counter span{
             font-size: 14px !important;
-        }
-        @media screen and (max-width: 1680px) {
-            .spd-gauge-charts {
-                margin: auto;
-                display: none;
-                width: 325px;
-                height: 345px;
-            }
-            .rev-counter {
-                margin-top: 118px !important;
-            }
-            .rev-counter span{
-                font-size: 12px !important;
-            }
-            .highcharts-title {
-                font-size: 13px !important;
-            }
-        }
-        @media screen and (max-width: 1560px) {
-            .spd-gauge-charts {
-                margin: auto;
-                display: none;
-                width: 305px;
-                height: 325px;
-            }
-            .rev-counter {
-                margin-top: 110px !important;
-            }
-            .rev-counter span{
-                font-size: 12px !important;
-            }
-            .highcharts-title {
-                font-size: 12px !important;
-            }
-        }
-        @media screen and (max-width: 1480px) {
-            .spd-gauge-charts {
-                margin: auto;
-                display: none;
-                width: 290px;
-                height: 310px;
-            }
-            .rev-counter {
-                margin-top: 105px !important;
-            }
-            .rev-counter span{
-                font-size: 12px !important;
-            }
-            .highcharts-title {
-                font-size: 12px !important;
-            }
-        }
-        @media screen and (max-width: 1350px) {
-            .spd-gauge-charts {
-                margin: auto;
-                display: none;
-                width: 225px;
-                height: 245px;
-            }
-            .rev-counter {
-                margin-top: 80px !important;
-            }
-            .rev-counter span{
-                font-size: 11px !important;
-            }
-            .highcharts-title {
-                font-size: 11px !important;
-            }
-        }
-        @media screen and (max-width: 1024px) {
-            .spd-gauge-charts {
-                margin: auto;
-                display: none;
-                width: 130px;
-                height: 150px;
-            }
-            .rev-counter {
-                margin-top: 44px !important;
-            }
-            .rev-counter span{
-                font-size: 10px !important;
-            }
-            .highcharts-title {
-                font-size: 10px !important;
-            }
         }
         .Gauge .portlet .card-body {
             padding: 0;
         }
     </style>
 
-    <div class="sortable-chart-widget-js hideelement Gauge col-md-7" data-default-position="18" data-default-class="col-md-7" key="dsmcharts__sales_quota">
-        <div class="row">
-            <div class="col-md-6" style="display: none;" id="gauge-card-1">
-                <div class="card shadow mb-4 portlet">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="text-info font-weight-bold m-0"></h6>
-                        <div class="dropdown no-arrow">
-                            <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
-                            <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown"
-                                    aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                            <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
-                                <a class="dropdown-item" role="presentation" href="/invoicelist">&nbsp;More Details</a>
-                                <div class="dropdown-divider"></div>
-                                <a id="" class="dropdown-item pointer editchartsbtn " role="presentation"
-                                    data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
-                                <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body" style="padding-bottom:15px;">
-                        <div class="" key="spd-gauge-area1">
-                            <div id="spd-gauge-area1" class="ds-highcharts spd-gauge-charts"></div>
-                            <div id="spd-gauge-area1-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
-                            <div id="spd-gauge-area1-amount" class="text-center currency-value fs-24" style="display: none;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6" style="display: none;" id="gauge-card-2">
-                <div class="card shadow mb-4 portlet">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="text-info font-weight-bold m-0"></h6>
-                        <div class="dropdown no-arrow">
-                            <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
-                            <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown"
-                                    aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                            <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
-                                <a class="dropdown-item" role="presentation" href="/invoicelist">&nbsp;More Details</a>
-                                <div class="dropdown-divider"></div>
-                                <a id="" class="dropdown-item pointer editchartsbtn " role="presentation"
-                                    data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
-                                <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body" style="padding-bottom:15px;">
-                        <div class="" key="spd-gauge-area2">
-                            <div id="spd-gauge-area2" class="ds-highcharts spd-gauge-charts"></div>
-                            <div id="spd-gauge-area2-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
-                            <div id="spd-gauge-area2-amount" class="text-center currency-value fs-24" style="display: none;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6" style="display: none;" id="gauge-card-3">
-                <div class="card shadow mb-4 portlet">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="text-info font-weight-bold m-0"></h6>
-                        <div class="dropdown no-arrow">
-                            <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
-                            <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown"
-                                    aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                            <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
-                                <a class="dropdown-item" role="presentation" href="/invoicelist">&nbsp;More Details</a>
-                                <div class="dropdown-divider"></div>
-                                <a id="" class="dropdown-item pointer editchartsbtn " role="presentation"
-                                    data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
-                                <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body" style="padding-bottom:15px;">
-                        <div class="" key="spd-gauge-area3">
-                            <div id="spd-gauge-area3" class="ds-highcharts spd-gauge-charts"></div>
-                            <div id="spd-gauge-area3-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
-                            <div id="spd-gauge-area3-amount" class="text-center currency-value fs-24" style="display: none;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6" style="display: none;" id="gauge-card-4">
-                <div class="card shadow mb-4 portlet">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="text-info font-weight-bold m-0"></h6>
-                        <div class="dropdown no-arrow">
-                            <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
-                            <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown"
-                                    aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                            <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
-                                <a class="dropdown-item" role="presentation" href="/invoicelist">&nbsp;More Details</a>
-                                <div class="dropdown-divider"></div>
-                                <a id="" class="dropdown-item pointer editchartsbtn " role="presentation"
-                                    data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
-                                <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body" style="padding-bottom:15px;">
-                        <div class="" key="spd-gauge-area4">
-                            <div id="spd-gauge-area4" class="ds-highcharts spd-gauge-charts"></div>
-                            <div id="spd-gauge-area4-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
-                            <div id="spd-gauge-area4-amount" class="text-center currency-value fs-24" style="display: none;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">            
-            <div class="col-md-6" style="display: none;" id="gauge-card-5">
-                <div class="card shadow mb-4 portlet">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="text-info font-weight-bold m-0"></h6>
-                        <div class="dropdown no-arrow">
-                            <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
-                            <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown"
-                                    aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                            <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
-                                <a class="dropdown-item" role="presentation" href="/invoicelist">&nbsp;More Details</a>
-                                <div class="dropdown-divider"></div>
-                                <a id="" class="dropdown-item pointer editchartsbtn " role="presentation"
-                                    data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
-                                <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body" style="padding-bottom:15px;">
-                        <div class="" key="spd-gauge-area5">
-                            <div id="spd-gauge-area5" class="ds-highcharts spd-gauge-charts"></div>
-                            <div id="spd-gauge-area5-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
-                            <div id="spd-gauge-area5-amount" class="text-center currency-value fs-24" style="display: none;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6" style="display: none;" id="gauge-card-6">
-                <div class="card shadow mb-4 portlet">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="text-info font-weight-bold m-0"></h6>
-                        <div class="dropdown no-arrow">
-                            <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
-                            <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown"
-                                    aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                            <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
-                                <a class="dropdown-item" role="presentation" href="/invoicelist">&nbsp;More Details</a>
-                                <div class="dropdown-divider"></div>
-                                <a id="" class="dropdown-item pointer editchartsbtn " role="presentation"
-                                    data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
-                                <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body" style="padding-bottom:15px;">
-                        <div class="" key="spd-gauge-area6">
-                            <div id="spd-gauge-area6" class="ds-highcharts spd-gauge-charts"></div>
-                            <div id="spd-gauge-area6-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
-                            <div id="spd-gauge-area6-amount" class="text-center currency-value fs-24" style="display: none;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-auto col-md-5 sortable-chart-widget-js hideelement" data-default-position="24" data-default-class="col-md-4" key="dsmcharts__appointment_list">
-        {{> dsmAppointmentsWidget}}
-    </div>
-    <div class="sortable-chart-widget-js hideelement col-md-3" data-default-position="17" data-default-class="col-md-4"
-         key="dsmcharts__discount_employee" chart-active="true" chart-group="DSMCharts">
-        <div class="card shadow mb-4 portlet" style="min-height: 456px; margin-bottom:0px !important">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h6 class="text-info font-weight-bold m-0">Discount Given By Employee</h6>
+    <div class="col-auto sortable-chart-widget-js" data-default-position="5" id="gauge-card-1" key="dsmcharts__sales_quota_1" style="width:25%; display:none">
+        <div class="card shadow mb-4 portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable">
+            <div class="card-header d-flex justify-content-between align-items-center" data-toggle="tooltip" data-bs-tooltip="" title="Controlled by the “Sales Quota” field on an Employee card">
+                <h6 class="text-info font-weight-bold m-0"></h6>
                 <div class="dropdown no-arrow">
                     <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
+                    <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown"
+                            aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                    <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                        <a class="dropdown-item" role="presentation" href="/invoicelist">&nbsp;More Details</a>
+                        <div class="dropdown-divider"></div>
+                        <a id="" class="dropdown-item pointer editchartsbtn " role="presentation"
+                            data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
+                        <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="padding-bottom:15px;">
+                <div class="" key="spd-gauge-area1">
+                    <div id="spd-gauge-area1" class="ds-highcharts spd-gauge-charts"></div>
+                    <div id="spd-gauge-area1-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
+                    <div id="spd-gauge-area1-amount" class="text-center currency-value fs-24" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-auto sortable-chart-widget-js" id="gauge-card-2" data-default-position="6" key="dsmcharts__sales_quota_2" style="width:25%; display:none">
+        <div class="card shadow mb-4 portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable">
+            <div class="card-header d-flex justify-content-between align-items-center" data-toggle="tooltip" data-bs-tooltip="" title="Controlled by the “Sales Quota” field on an Employee card">
+                <h6 class="text-info font-weight-bold m-0"></h6>
+                <div class="dropdown no-arrow">
+                    <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
+                    <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown"
+                            aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                    <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                        <a class="dropdown-item" role="presentation" href="/invoicelist">&nbsp;More Details</a>
+                        <div class="dropdown-divider"></div>
+                        <a id="" class="dropdown-item pointer editchartsbtn " role="presentation"
+                            data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
+                        <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="padding-bottom:15px;">
+                <div class="" key="spd-gauge-area2">
+                    <div id="spd-gauge-area2" class="ds-highcharts spd-gauge-charts"></div>
+                    <div id="spd-gauge-area2-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
+                    <div id="spd-gauge-area2-amount" class="text-center currency-value fs-24" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-auto sortable-chart-widget-js" id="gauge-card-3" data-default-position="7" key="dsmcharts__sales_quota_3" style="width:25%; display:none">
+        <div class="card shadow mb-4 portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable">
+            <div class="card-header d-flex justify-content-between align-items-center" data-toggle="tooltip" data-bs-tooltip="" title="Controlled by the “Sales Quota” field on an Employee card">
+                <h6 class="text-info font-weight-bold m-0"></h6>
+                <div class="dropdown no-arrow">
+                    <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
+                    <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown"
+                            aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                    <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                        <a class="dropdown-item" role="presentation" href="/invoicelist">&nbsp;More Details</a>
+                        <div class="dropdown-divider"></div>
+                        <a id="" class="dropdown-item pointer editchartsbtn " role="presentation"
+                            data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
+                        <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="padding-bottom:15px;">
+                <div class="" key="spd-gauge-area3">
+                    <div id="spd-gauge-area3" class="ds-highcharts spd-gauge-charts"></div>
+                    <div id="spd-gauge-area3-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
+                    <div id="spd-gauge-area3-amount" class="text-center currency-value fs-24" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-auto sortable-chart-widget-js" id="gauge-card-4" data-default-position="8" key="dsmcharts__sales_quota_4" style="width:25%; display:none">
+        <div class="card shadow mb-4 portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable">
+            <div class="card-header d-flex justify-content-between align-items-center" data-toggle="tooltip" data-bs-tooltip="" title="Controlled by the “Sales Quota” field on an Employee card">
+                <h6 class="text-info font-weight-bold m-0"></h6>
+                <div class="dropdown no-arrow">
+                    <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
+                    <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown"
+                            aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                    <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                        <a class="dropdown-item" role="presentation" href="/invoicelist">&nbsp;More Details</a>
+                        <div class="dropdown-divider"></div>
+                        <a id="" class="dropdown-item pointer editchartsbtn " role="presentation"
+                            data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
+                        <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="padding-bottom:15px;">
+                <div class="" key="spd-gauge-area4">
+                    <div id="spd-gauge-area4" class="ds-highcharts spd-gauge-charts"></div>
+                    <div id="spd-gauge-area4-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
+                    <div id="spd-gauge-area4-amount" class="text-center currency-value fs-24" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-auto sortable-chart-widget-js" id="gauge-card-5" data-default-position="9" key="dsmcharts__sales_quota_5" style="width:25%; display:none">
+        <div class="card shadow mb-4 portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable">
+            <div class="card-header d-flex justify-content-between align-items-center" data-toggle="tooltip" data-bs-tooltip="" title="Controlled by the “Sales Quota” field on an Employee card">
+                <h6 class="text-info font-weight-bold m-0"></h6>
+                <div class="dropdown no-arrow">
+                    <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
+                    <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown"
+                            aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                    <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                        <a class="dropdown-item" role="presentation" href="/invoicelist">&nbsp;More Details</a>
+                        <div class="dropdown-divider"></div>
+                        <a id="" class="dropdown-item pointer editchartsbtn " role="presentation"
+                            data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
+                        <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="padding-bottom:15px;">
+                <div class="" key="spd-gauge-area5">
+                    <div id="spd-gauge-area5" class="ds-highcharts spd-gauge-charts"></div>
+                    <div id="spd-gauge-area5-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
+                    <div id="spd-gauge-area5-amount" class="text-center currency-value fs-24" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-auto sortable-chart-widget-js" id="gauge-card-6" data-default-position="10" key="dsmcharts__sales_quota_6" style="width:25%; display:none">
+        <div class="card shadow mb-4 portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable">
+            <div class="card-header d-flex justify-content-between align-items-center" data-toggle="tooltip" data-bs-tooltip="" title="Controlled by the “Sales Quota” field on an Employee card">
+                <h6 class="text-info font-weight-bold m-0"></h6>
+                <div class="dropdown no-arrow">
+                    <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
+                    <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown"
+                            aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                    <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                        <a class="dropdown-item" role="presentation" href="/invoicelist">&nbsp;More Details</a>
+                        <div class="dropdown-divider"></div>
+                        <a id="" class="dropdown-item pointer editchartsbtn " role="presentation"
+                            data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
+                        <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="padding-bottom:15px;">
+                <div class="" key="spd-gauge-area6">
+                    <div id="spd-gauge-area6" class="ds-highcharts spd-gauge-charts"></div>
+                    <div id="spd-gauge-area6-emp" class="text-center h5 font-weight-bold mb-0 fs-18" style="display: none;"></div>
+                    <div id="spd-gauge-area6-amount" class="text-center currency-value fs-24" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="sortable-chart-widget-js hideelement col-md-3" data-default-position="25" data-default-class="col-md-4" key="dsmcharts__discount_employee">
+        <div class="card shadow mb-4 portlet" style="min-height: 456px; margin-bottom:0px !important">
+            <div class="card-header d-flex justify-content-between align-items-center" data-toggle="tooltip" data-bs-tooltip="" title="Controlled by the “Sales Quota” field on an Employee card">
+                <h6 class="text-info font-weight-bold m-0">Discount Given By Employee</h6>
+                <div class="dropdown no-arrow">
+                    <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href=""><i class='far fa-eye-slash'></i></a>
                     <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown" aria-expanded="false" type="button">
                         <i class="fas fa-ellipsis-v text-gray-400"></i>
                     </button>

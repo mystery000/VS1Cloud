@@ -32,9 +32,9 @@ const refreshTableTimout = 300;
 export const getCompanyInfo = async () => {
 
   const headers = ApiService.getHeaders();
-  //const url = ApiService.getBaseUrl({ endpoint: "TCompanyInfo?PropertyList==ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax,IsSetUpWizard", isUrl: false});
+  //const url = ApiService.getBaseUrl({ endpoint: "TCompanyInfo?PropertyList=ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax,IsSetUpWizard", isUrl: false});
 
-  const url = "https://sandboxdb.vs1cloud.com:4443/erpapi/TCompanyInfo?PropertyList==ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax,IsSetUpWizard";
+  const url = "https://sandboxdb.vs1cloud.com:4443/erpapi/TCompanyInfo?PropertyList=ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax,IsSetUpWizard";
   const response = await fetch(url, {
     headers: headers,
     method: "GET"
@@ -185,7 +185,7 @@ function getSkippedSteps() {
     localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify([])
   );
 }
-  
+
 function addSkippedStep(step) {
   if (isNaN(step)) return false;
   let steps = getSkippedSteps();
@@ -732,7 +732,7 @@ Template.setup.onRendered(function () {
       setTimeout(() => {
         $("#taxRatesTable")
           .DataTable({
-            
+
             columnDefs: [
               {
                 type: "date",
@@ -900,7 +900,7 @@ Template.setup.onRendered(function () {
               setTimeout(function () {
                 $("#paymentmethodList")
                   .DataTable({
-                    
+
                     // columnDefs: [
                     //   {
                     //     orderable: false,
@@ -1669,7 +1669,7 @@ Template.setup.onRendered(function () {
       setTimeout(function () {
         $("#termsList")
           .DataTable({
-            
+
             columnDefs: [
               {
                 orderable: false,
@@ -2444,7 +2444,7 @@ Template.setup.onRendered(function () {
       setTimeout(() => {
         $("#employeeListTable")
           .DataTable({
-            
+
             columnDefs: [],
             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             select: true,
@@ -2626,7 +2626,7 @@ Template.setup.onRendered(function () {
       // //$.fn.dataTable.moment('DD/MM/YY');
       $("#tblAccountOverview")
         .DataTable({
-          
+
           columnDefs: [
             // { type: 'currency', targets: 4 }
           ],
@@ -3478,7 +3478,7 @@ Template.setup.onRendered(function () {
       setTimeout(() => {
         $("#tblCustomerlist")
           .DataTable({
-            
+
             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             select: true,
             destroy: refresh,
@@ -3685,7 +3685,7 @@ Template.setup.onRendered(function () {
       setTimeout(function () {
         $("#tblSupplierlist")
           .DataTable({
-            
+
             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             // buttons: [
             //   {
@@ -3992,7 +3992,7 @@ Template.setup.onRendered(function () {
       setTimeout(function () {
         $("#InventoryTable")
           .dataTable({
-            
+
             // data: splashArrayProductList,
             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
 
@@ -8604,7 +8604,7 @@ Template.setup.events({
         $(".btnInventoryImport").Attr("disabled");
       }
     }
-  },  
+  },
   "click .btnInventoryImport": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
@@ -9025,7 +9025,7 @@ Template.setup.events({
                     });
                 }
               }
-            }            
+            }
             LoadingOverlay.hide();
           } else {
             LoadingOverlay.hide();
@@ -9125,7 +9125,7 @@ Template.setup.events({
     let lastName = '';
     let taxCode = '';
     Papa.parse(templateObject.selectedFile.get(), {
-        complete: function(results) {      
+        complete: function(results) {
             if (results.data.length > 0) {
                 if ((results.data[0][0] == "Company") && (results.data[0][1] == "Phone") &&
                     (results.data[0][2] == "AR Balance") && (results.data[0][3] == "Credit balance") &&

@@ -172,94 +172,94 @@ Template.allChartLists.onRendered(function () {
             // chartList.forEach((chart) => {
             //
             // });
-            let discountEmployeeChart = {
-                fields: {
-                    Active: true,
-                    ChartGroup: "DSMCharts",
-                    ChartName: "Discount Employee",
-                    ID: 902,
-                    _chartSlug: "dsmcharts__discount_employee"
-                }
-            };
-            chartList.push(discountEmployeeChart);
+            // let discountEmployeeChart = {
+            //     fields: {
+            //         Active: true,
+            //         ChartGroup: "DSMCharts",
+            //         ChartName: "Discount Employee",
+            //         ID: 902,
+            //         _chartSlug: "dsmcharts__discount_employee"
+            //     }
+            // };
+            // chartList.push(discountEmployeeChart);
 
-            let salesQuotaChart = {
+            // let salesQuotaChart = {
+            //     fields: {
+            //         Active: true,
+            //         ChartGroup: "DSMCharts",
+            //         ChartName: "Sales Quota",
+            //         ID: 903,
+            //         _chartSlug: "dsmcharts__sales_quota"
+            //     }
+            // };
+            // chartList.push(salesQuotaChart);
+            let salesQuotaChart1 = {
                 fields: {
                     Active: true,
                     ChartGroup: "DSMCharts",
-                    ChartName: "Sales Quota",
+                    ChartName: "Sales Quota 1",
                     ID: 903,
-                    _chartSlug: "dsmcharts__sales_quota"
+                    _chartSlug: "dsmcharts__sales_quota_1"
                 }
             };
-            chartList.push(salesQuotaChart);
-            // let salesQuotaChart1 = {
-            //     fields: {
-            //         Active: true,
-            //         ChartGroup: "DSMCharts",
-            //         ChartName: "Sales Quota 1",
-            //         ID: 903,
-            //         _chartSlug: "dsmcharts__sales_quota_1"
-            //     }
-            // };
-            // chartList.push(salesQuotaChart1);
-            // let salesQuotaChart2 = {
-            //     fields: {
-            //         Active: true,
-            //         ChartGroup: "DSMCharts",
-            //         ChartName: "Sales Quota 2",
-            //         ID: 903,
-            //         _chartSlug: "dsmcharts__sales_quota_2"
-            //     }
-            // };
-            // chartList.push(salesQuotaChart2);
-            // let salesQuotaChart3 = {
-            //     fields: {
-            //         Active: true,
-            //         ChartGroup: "DSMCharts",
-            //         ChartName: "Sales Quota 3",
-            //         ID: 903,
-            //         _chartSlug: "dsmcharts__sales_quota_3"
-            //     }
-            // };
-            // chartList.push(salesQuotaChart3);
-            // let salesQuotaChart4 = {
-            //     fields: {
-            //         Active: true,
-            //         ChartGroup: "DSMCharts",
-            //         ChartName: "Sales Quota 4",
-            //         ID: 903,
-            //         _chartSlug: "dsmcharts__sales_quota_4"
-            //     }
-            // };
-            // chartList.push(salesQuotaChart4);
-            // let salesQuotaChart5 = {
-            //     fields: {
-            //         Active: true,
-            //         ChartGroup: "DSMCharts",
-            //         ChartName: "Sales Quota 5",
-            //         ID: 903,
-            //         _chartSlug: "dsmcharts__sales_quota_5"
-            //     }
-            // };
-            // chartList.push(salesQuotaChart5);
-            // let salesQuotaChart6 = {
-            //     fields: {
-            //         Active: true,
-            //         ChartGroup: "DSMCharts",
-            //         ChartName: "Sales Quota 6",
-            //         ID: 903,
-            //         _chartSlug: "dsmcharts__sales_quota_6"
-            //     }
-            // };
-            // chartList.push(salesQuotaChart6);
+            chartList.push(salesQuotaChart1);
+            let salesQuotaChart2 = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSMCharts",
+                    ChartName: "Sales Quota 2",
+                    ID: 904,
+                    _chartSlug: "dsmcharts__sales_quota_2"
+                }
+            };
+            chartList.push(salesQuotaChart2);
+            let salesQuotaChart3 = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSMCharts",
+                    ChartName: "Sales Quota 3",
+                    ID: 905,
+                    _chartSlug: "dsmcharts__sales_quota_3"
+                }
+            };
+            chartList.push(salesQuotaChart3);
+            let salesQuotaChart4 = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSMCharts",
+                    ChartName: "Sales Quota 4",
+                    ID: 906,
+                    _chartSlug: "dsmcharts__sales_quota_4"
+                }
+            };
+            chartList.push(salesQuotaChart4);
+            let salesQuotaChart5 = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSMCharts",
+                    ChartName: "Sales Quota 5",
+                    ID: 907,
+                    _chartSlug: "dsmcharts__sales_quota_5"
+                }
+            };
+            chartList.push(salesQuotaChart5);
+            let salesQuotaChart6 = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSMCharts",
+                    ChartName: "Sales Quota 6",
+                    ID: 908,
+                    _chartSlug: "dsmcharts__sales_quota_6"
+                }
+            };
+            chartList.push(salesQuotaChart6);
 
             let dsmAppointmentListChart = {
                 fields: {
                     Active: true,
                     ChartGroup: "DSMCharts",
                     ChartName: "Appointment List",
-                    ID: 904,
+                    ID: 909,
                     _chartSlug: "dsmcharts__appointment_list"
                 }
             };
@@ -269,7 +269,7 @@ Template.allChartLists.onRendered(function () {
                     Active: true,
                     ChartGroup: "DSMCharts",
                     ChartName: "Lead List",
-                    ID: 905,
+                    ID: 910,
                     _chartSlug: "dsmcharts__lead_list"
                 }
             };
@@ -279,7 +279,7 @@ Template.allChartLists.onRendered(function () {
                     Active: true,
                     ChartGroup: "DSCharts",
                     ChartName: "Performance Quota",
-                    ID: 906,
+                    ID: 911,
                     _chartSlug: "dscharts__performance_quota"
                 }
             };
@@ -289,7 +289,7 @@ Template.allChartLists.onRendered(function () {
                     Active: true,
                     ChartGroup: "DSCharts",
                     ChartName: "Opportunities Source",
-                    ID: 907,
+                    ID: 912,
                     _chartSlug: "dscharts__opportunities_source"
                 }
             };
@@ -299,7 +299,7 @@ Template.allChartLists.onRendered(function () {
                     Active: true,
                     ChartGroup: "DSCharts",
                     ChartName: "Appointment List",
-                    ID: 908,
+                    ID: 913,
                     _chartSlug: "dscharts__appointment_list"
                 }
             };
@@ -309,7 +309,7 @@ Template.allChartLists.onRendered(function () {
                     Active: true,
                     ChartGroup: "DSCharts",
                     ChartName: "Lead List",
-                    ID: 909,
+                    ID: 914,
                     _chartSlug: "dscharts__lead_list"
                 }
             };
@@ -367,7 +367,7 @@ Template.allChartLists.onRendered(function () {
                         if ( chart.fields._chartSlug == 'accounts__profit_and_loss' ){
                             $(`[key='dashboard__profit_and_loss']`).removeClass("hideelement");
                         }
-                        if ( chart.fields._chartSlug == 'sales__sales_overview' || chart.fields._chartSlug == 'dsmcharts__sales_quota'){
+                        if ( chart.fields._chartSlug == 'sales__sales_overview' || chart.fields._chartSlug == 'dsmcharts__sales_quota_1'){
                             $(`[key='contacts__top_10_customers']`).removeClass("hideelement");
                             $(`[key='dashboard__employee_sales_comparison']`).removeClass("hideelement");
                         }
