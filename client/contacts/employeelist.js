@@ -185,7 +185,7 @@ Template.employeelist.onRendered(function() {
                 },
                 language: { search: "",searchPlaceholder: "Search List..." },
                 "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
+                    $("<button class='btn btn-primary btnRefreshEmployees ' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
                 }
             }).on('page', function () {
                 let draftRecord = templateObject.datatablerecords.get();
@@ -238,7 +238,7 @@ Template.employeelist.onRendered(function() {
         if (Session.get("ERPLoggedCountry") === "Australia") {
             bsbname = "BSB";
         }
-        
+
         let reset_data = [
           { index: 0, label: 'Emp #', class: 'EmployeeNo', active: false, display: true, width: "" },
           { index: 1, label: 'Employee Name', class: 'EmployeeName', active: true, display: true, width: "150" },
@@ -854,7 +854,7 @@ Template.employeelist.helpers({
     },
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
-        return setupUrl[1];   
+        return setupUrl[1];
     },
     // custom fields displaysettings
     displayfields: () => {

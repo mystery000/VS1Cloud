@@ -1527,6 +1527,19 @@ Template.purchasesoverview.events({
   "mouseleave .card-header": (e) => {
     $(e.currentTarget).parent(".card").removeClass("hovered");
   },
+  "keyup #tblPurchaseOverview_filter input": function (event) {
+    if ($(event.target).val() != "") {
+      $(".btnRefreshPurchaseOverview").addClass("btnSearchAlert");
+    } else {
+      $(".btnRefreshPurchaseOverview").removeClass("btnSearchAlert");
+    }
+    if (event.keyCode == 13) {
+      $(".btnRefresh").trigger("click");
+    }
+  },
+  "click .btnRefreshPurchaseOverview": function () {
+      $(".btnRefresh").trigger("click");
+  },
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();

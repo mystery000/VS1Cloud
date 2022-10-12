@@ -242,7 +242,7 @@ Template.salesoverview.onRendered(function () {
                   }else if(data.tsaleslist[i].CustomerName == ''){
                     salestatus = "Deleted";
                   };
-                  if( ( deleteFilter == true &&  salestatus == "Deleted" ) || salestatus !=  'Deleted' ){  
+                  if( ( deleteFilter == true &&  salestatus == "Deleted" ) || salestatus !=  'Deleted' ){
                   var dataList = {
                     id: data.tsaleslist[i].SaleId || "",
                     employee: data.tsaleslist[i].employeename || "",
@@ -606,7 +606,7 @@ Template.salesoverview.onRendered(function () {
             $("#dateFrom").val(data.Params.DateFrom != ""? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
             $("#dateTo").val(data.Params.DateTo != ""? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
           }
-          
+
           let useData = data.tsaleslist;
           let lineItems = [];
           let lineItemObj = {};
@@ -638,7 +638,7 @@ Template.salesoverview.onRendered(function () {
               }else if(useData[i].CustomerName == ''){
                 salestatus = "Deleted";
               };
-            if( ( deleteFilter == true &&  salestatus == "Deleted" ) || salestatus !=  'Deleted' ){  
+            if( ( deleteFilter == true &&  salestatus == "Deleted" ) || salestatus !=  'Deleted' ){
               var dataList = {
                 id: useData[i].SaleId || "",
                 employee: useData[i].employeename || "",
@@ -1439,11 +1439,11 @@ Template.salesoverview.onRendered(function () {
 
 Template.salesoverview.events({
   "click .btnViewDeleted": async function (e) {
-    e.stopImmediatePropagation();    
+    e.stopImmediatePropagation();
     const templateObject = Template.instance();
     await clearData('TSalesList');
     $('.btnViewDeleted').css('display','none');
-    $('.btnHideDeleted').css('display','inline-block');    
+    $('.btnHideDeleted').css('display','inline-block');
     await templateObject.getAllSalesOrderData(true);
   },
   "click .btnHideDeleted": async function (e) {
@@ -1451,8 +1451,18 @@ Template.salesoverview.events({
     let templateObject = Template.instance();
     await clearData('TSalesList');
     $('.btnHideDeleted').css('display','none');
-    $('.btnViewDeleted').css('display','inline-block');    
+    $('.btnViewDeleted').css('display','inline-block');
     await templateObject.getAllSalesOrderData(false);
+  },
+  "keyup #tblSalesOverview_filter input": function (event) {
+    if ($(event.target).val() != "") {
+      $(".btnRefreshSalesOverview").addClass("btnSearchAlert");
+    } else {
+      $(".btnRefreshSalesOverview").removeClass("btnSearchAlert");
+    }
+    if (event.keyCode == 13) {
+      $(".btnRefresh").trigger("click");
+    }
   },
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");

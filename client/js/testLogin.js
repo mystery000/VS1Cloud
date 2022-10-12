@@ -903,7 +903,7 @@ $("#login-button").click(function(e){
         localStorage.setItem('mainEIPAddress', licenceIPAddress);
         localStorage.setItem('mainEPort', checkSSLPorts);
 
-        var ERPCheackUserObject = "TUser?PropertyList==ID,EmployeeId,LogonName,EmployeeName,PasswordHash,Active&Select=[LogonName]='"+ERPLoggeduserName+"'";
+        var ERPCheackUserObject = "TUser?PropertyList=ID,EmployeeId,LogonName,EmployeeName,PasswordHash,Active&Select=[LogonName]='"+ERPLoggeduserName+"'";
         var oReqCheackUserObject = new XMLHttpRequest();
         oReqCheackUserObject.open("GET",URLRequest + ERPIPAdderess + ':' + ERPport + '/' + "erpapi" + '/' + ERPCheackUserObject, true);
         oReqCheackUserObject.setRequestHeader("database",ERPdbName);
@@ -930,7 +930,7 @@ $("#login-button").click(function(e){
               var sessionDataToLog = localStorage.getItem('mySession');
               Session.setPersistent('mySessionEmployee', employeename);
 
-              var ERPCheackAppUserObject = "TAppUser?PropertyList==ID,DatabaseName,UserName,MultiLogon&Select=[DatabaseName]='"+ERPdbName+"' and [UserName]='"+ERPLoggeduserName+"'";
+              var ERPCheackAppUserObject = "TAppUser?PropertyList=ID,DatabaseName,UserName,MultiLogon&Select=[DatabaseName]='"+ERPdbName+"' and [UserName]='"+ERPLoggeduserName+"'";
               var oReqCheackAppUserObject = new XMLHttpRequest();
               oReqCheackAppUserObject.open("GET",URLRequest + ERPIPAdderess + ':' + ERPport + '/' + "erpapi" + '/' + ERPCheackAppUserObject, true);
               oReqCheackAppUserObject.setRequestHeader("database",ERPdbName);
@@ -1912,7 +1912,7 @@ loggedUserEventFired = true;
 localStorage.setItem('mainEIPAddress', licenceIPAddress);
 localStorage.setItem('mainEPort', checkSSLPorts);
 
-var ERPCheackUserObject = "TUser?PropertyList==ID,EmployeeId,LogonName,EmployeeName,PasswordHash,Active&Select=[LogonName]='"+ERPuserName+"'";
+var ERPCheackUserObject = "TUser?PropertyList=ID,EmployeeId,LogonName,EmployeeName,PasswordHash,Active&Select=[LogonName]='"+ERPuserName+"'";
 var oReqCheackUserObject = new XMLHttpRequest();
 oReqCheackUserObject.open("GET",URLRequest + ERPIPAdderess + ':' + ERPport + '/' + "erpapi" + '/' + ERPCheackUserObject, true);
 oReqCheackUserObject.setRequestHeader("database",ERPdbName);
@@ -1939,7 +1939,7 @@ if (oReqCheackUserObject.readyState == 4 && oReqCheackUserObject.status == 200) 
       var sessionDataToLog = localStorage.getItem('mySession');
       Session.setPersistent('mySessionEmployee', employeename);
 
-      var ERPCheackAppUserObject = "TAppUser?PropertyList==ID,DatabaseName,UserName,MultiLogon&Select=[DatabaseName]='"+ERPdbName+"' and [UserName]='"+ERPLoggeduserName+"'";
+      var ERPCheackAppUserObject = "TAppUser?PropertyList=ID,DatabaseName,UserName,MultiLogon&Select=[DatabaseName]='"+ERPdbName+"' and [UserName]='"+ERPLoggeduserName+"'";
       var oReqCheackAppUserObject = new XMLHttpRequest();
       oReqCheackAppUserObject.open("GET",URLRequest + ERPIPAdderess + ':' + ERPport + '/' + "erpapi" + '/' + ERPCheackAppUserObject, true);
       oReqCheackAppUserObject.setRequestHeader("database",ERPdbName);

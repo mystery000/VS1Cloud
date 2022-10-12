@@ -993,6 +993,15 @@ Template.leadscard.onRendered(function () {
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
     });
+    $(document).on("click", "#tblSourcePopList tbody tr", function(e) {
+        $('#leadSource').val($(this).find(".colSourceName").text());
+        $('#sourcePopModal').modal('toggle');
+        $('#tblSourcePopList_filter .form-control-sm').val('');
+        setTimeout(function () {
+            $('.btnRefreshStatus').trigger('click');
+            $('.fullScreenSpin').css('display', 'none');
+        }, 1000);
+    });
     $(document).on('click', '#tblEmployeelist tbody tr', function (event) {
         let value = $(this).find('.colEmployeeName').text();
         $('#leadRep').val(value);
@@ -1071,12 +1080,29 @@ Template.leadscard.onRendered(function () {
             }
         }
     });
+    $(document).on('click', '#leadSource', function(e, li) {
+        const $earch = $(this);
+        const offset = $earch.offset();
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                $('#sourcePopModal').modal('toggle');
+        } else {
+            $('#sourcePopModal').modal();
+            setTimeout(function() {
+                $('#tblSourcePopList_filter .form-control-sm').focus();
+                $('#tblSourcePopList_filter .form-control-sm').val('');
+                $('#tblSourcePopList_filter .form-control-sm').trigger("input");
+                const datatable = $('#tblSourcePopList').DataTable();
+                datatable.draw();
+                $('#tblSourcePopList_filter .form-control-sm').trigger("input");
+            }, 500);
+        }
+    });
     $(document).on('click', '#leadRep', function(e, li){
         $('#employeeListPOPModal').modal('show');
     })
 
     setTimeout(() => $('#leadStatus').editableSelect(), 500);
-    // setTimeout(() => $('#leadStatus').editableSelect(), 3500);
+    setTimeout(() => $('#leadSource').editableSelect(), 500);
 });
 
 Template.leadscard.events({
@@ -1094,6 +1120,10 @@ Template.leadscard.events({
     'click #leadStatus': function(event) {
         $('#leadStatus').select();
         $('#leadStatus').editableSelect();
+    },
+    'click #leadSource': function(event) {
+        $('#leadSource').select();
+        $('#leadSource').editableSelect();
     },
     'click #leadRep': function(event) {
         $('#leadRep').select();
@@ -1926,7 +1956,8 @@ Template.leadscard.helpers({
 
         return isMobile;
     },
-    setLeadStatus: (status) => status || 'Unqualified'
+    setLeadStatus: (status) => status || 'Unqualified',
+    setLeadSource: (source) => source || 'Unknown'
 });
 
 function getPreviewFile(uploadedFiles, attachmentID) {
@@ -2018,7 +2049,7 @@ function convertToCustomer(nav) {
             $('.fullScreenSpin').css('display', 'none');
         });
     } else {
-
+        $('.fullScreenSpin').css('display', 'none');
     }
 }
 function removeAttachment(suffix, event) {

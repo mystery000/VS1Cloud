@@ -50,10 +50,14 @@ Template.dsmleadlistchart.onRendered(function() {
     function setAllLeads(data) {
         let lineItems = [];
         let lineItemObj = {};
+        const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+        const dateTo = new Date($("#dateTo").datepicker("getDate"));
+
         for (let i = 0; i < data.tprospect.length; i++) {
             // const contactContacts = data.tprospect[i].fields.Contacts?data.tprospect[i].fields.Contacts[0]:null;
             // const city = contactContacts?contactContacts.fields.ContactCity:'';
             let mobile = contactService.changeMobileFormat(data.tprospect[i].fields.Mobile);
+            let creationDate = new Date(data.tprospect[i].fields.CreationDate);
             const dataList = {
                 id: data.tprospect[i].fields.ID || '',
                 employeeName: data.tprospect[i].fields.ClientName || '',
@@ -68,7 +72,7 @@ Template.dsmleadlistchart.onRendered(function() {
                 // country: data.tprospect[i].fields.MarketingContacts.fields.Country || '',
                 city: data.tprospect[i].fields.Street2 || '',
             };
-            if(data.tprospect[i].fields.ClientName.replace(/\s/g, '') !== ''){
+            if(data.tprospect[i].fields.ClientName.replace(/\s/g, '') !== '' && dateFrom <= creationDate && dateTo >= creationDate){
                 splashArrayLeadList.push(dataList);
             }
         }

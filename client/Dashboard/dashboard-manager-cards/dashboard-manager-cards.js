@@ -2,14 +2,24 @@ import _ from "lodash";
 
 Template.dashboardManagerCards.onRendered(()=>{
     let templateObject = Template.instance();
+    
+    const days = (date_1, date_2) =>{
+        let difference = date_1.getTime() - date_2.getTime();
+        let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
+        return TotalDays;
+    }
+
     templateObject.getDashboardData = async function () {
         getVS1Data('TProspectEx').then(function (dataObject) {
             if(dataObject.length) {
                 let {tprospect = []} = JSON.parse(dataObject[0].data);
                 let leadsThisMonthCount = 0;
-                const currentMonth = new Date().getMonth();
+                const fromDate = new Date($("#dateFrom").datepicker("getDate"));
+                const toDate = new Date($("#dateTo").datepicker("getDate"));
+                
                 tprospect.forEach(prospect  =>  {
-                    if(currentMonth === new Date(prospect.fields.CreationDate).getMonth() && prospect.fields.SourceName) {
+                    const creationDate = new Date(prospect.fields.CreationDate);
+                    if(fromDate <= creationDate && toDate >= creationDate) {
                         leadsThisMonthCount += 1;
                     }
                 });
@@ -25,9 +35,11 @@ Template.dashboardManagerCards.onRendered(()=>{
                 let convertedQuotesCount = 0;
                 let nonConvertedQuotesCount = 0;
                 let convertedQuotesAmount = 0;
-                const currentMonth = new Date().getMonth();
+                const fromDate = new Date($("#dateFrom").datepicker("getDate"));
+                const toDate = new Date($("#dateTo").datepicker("getDate"));
                 tquotelist.forEach(tquote  =>  {
-                    if(currentMonth === new Date(tquote.SaleDate).getMonth()) {
+                    const saleDate = new Date(tquote.SaleDate);
+                    if(fromDate <= saleDate && toDate >= saleDate) {
                         dealsThisMonthCount += 1;
                         if(tquote.Converted) {
                             convertedQuotesCount +=1;
@@ -38,7 +50,7 @@ Template.dashboardManagerCards.onRendered(()=>{
                     }
                 });
                 const winRate = convertedQuotesCount ? parseInt((convertedQuotesCount/(convertedQuotesCount+nonConvertedQuotesCount)) * 100) : 0;
-                const avgSalesCycle = convertedQuotesAmount ? convertedQuotesAmount/30 : convertedQuotesAmount;
+                const avgSalesCycle = convertedQuotesAmount ? convertedQuotesAmount/days(toDate,fromDate) : convertedQuotesAmount;
                 $('#sales-winrate').text(winRate.toFixed(2));
                 $('#new-deals-month').text(dealsThisMonthCount);
                 $('#avg-sales-cycle').text(avgSalesCycle.toFixed(2));
@@ -53,6 +65,7 @@ Template.dashboardManagerCards.onRendered(()=>{
                 let closedDealsThisYear = 0;
                 const lastMonthUnix =  moment().subtract(1, 'months').unix();
                 const lastYearUnix =  moment().subtract(12, 'months').unix();
+
                 tinvoicelist.forEach(tinvoice  =>  {
                     if(moment(tinvoice.SaleDate).unix() > lastMonthUnix) {
                         closedDealsThisMonth += tinvoice.Balance;

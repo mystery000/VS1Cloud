@@ -13,7 +13,7 @@ Template.crmoverview.onCreated(function () {
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.tprojectlist = new ReactiveVar([]);
   templateObject.all_projects = new ReactiveVar([]);
-  templateObject.subTasks = new ReactiveVar([]);
+  templateObject.subTasks = new ReactiveVar([]); 
 });
 
 Template.crmoverview.onRendered(function () {
@@ -514,8 +514,9 @@ Template.crmoverview.onRendered(function () {
     let colID = table.find(".colID").text();
     let colType = table.find(".colType").text();
 
-    if (colType == 'Lead' || colType == 'Customer' || colType == 'Supplier' || colType == 'Employee' || colType == 'Customer / Supplier') {
-      colType = colType == 'Customer / Supplier' ? 'Customer' : colType;
+    if (colType != 'Prospect' && colType != 'Customer') {
+      colType = colType == 'Customer / Supplier' ? 'Supplier' : colType;
+      colType = colType == 'Customer / Prospect / Supplier' ? 'Supplier' : colType;
       $('#customerListModal').modal('toggle');
 
       // for add modal
@@ -534,8 +535,8 @@ Template.crmoverview.onRendered(function () {
   $(document).on("click", "#tblEmployeelist tbody tr", function (e) {
     var table = $(this);
     let colEmployeeName = table.find(".colEmployeeName").text();
-    let colID = table.find(".colID").text(); 
- 
+    let colID = table.find(".colID").text();
+
     $('#employeeListModal').modal('toggle');
 
     // for add modal
@@ -543,7 +544,7 @@ Template.crmoverview.onRendered(function () {
     // for edit modal
     $('#crmSelectEmployeeList').val(colEmployeeName);
 
-    $('#assignedID').val(colID) 
+    $('#assignedID').val(colID)
   });
   ///////////////////////////////////////////////////
 
@@ -731,274 +732,7 @@ Template.crmoverview.events({
       window.history.pushState('name', '', 'crmoverview');
       Meteor._reload.reload();
     });
-  },
-
-  // "click .btnSearchCrm": function () {
-  //   Meteor._reload.reload();
-  // },
-
-  "click .btnOpenSettings": function (event) {
-    let currentTabID = Template.instance().currentTabID.get();
-    let tableName = "";
-
-    switch (currentTabID) {
-      case "todayTab-tab":
-        tableName = "tblTodayTaskDatatable";
-        break;
-      case "upcomingTab-tab":
-        tableName = "tblUpcomingTaskDatatable";
-        break;
-      case "projectsTab-tab":
-        tableName = "tblNewProjectsDatatable";
-        break;
-      case "filterLabelsTab-tab":
-        tableName = "tblLabels";
-        break;
-      default:
-        tableName = "tblAllTaskDatatable";
-        break;
-    }
-
-    let templateObject = Template.instance();
-    // var columns = $("#" + tableName + " th");
-    var columns = $("#" + tableName).find("th");
-    const tableHeaderList = [];
-    let sTible = "";
-    let sWidth = "";
-    let sIndex = "";
-    let sVisible = "";
-    let columVisible = false;
-    let sClass = "";
-    $.each(columns, function (i, v) {
-      if (v.hidden == false) {
-        columVisible = true;
-      }
-      if (v.className.includes("hiddenColumn")) {
-        columVisible = false;
-      }
-      sWidth = v.style.width.replace("px", ""); 
-
-      let datatablerecordObj = {
-        sTitle: v.innerText || "",
-        sWidth: sWidth || "",
-        sIndex: v.cellIndex || "0",
-        sVisible: columVisible || false,
-        sClass: v.className || "",
-      };
-      tableHeaderList.push(datatablerecordObj);
-    });
-
-    templateObject.tableheaderrecords.set(tableHeaderList);
-
-    setTimeout(() => {
-      tableHeaderList.forEach((element) => {
-        $("#chkSalesNo-" + element.sIndex).prop("checked", element.sVisible);
-      });
-    }, 500);
-  },
-
-  "click .chkDatatable": function (event) {
-    let currentTabID = Template.instance().currentTabID.get();
-    let tableName = "";
-
-    switch (currentTabID) {
-      case "todayTab-tab":
-        tableName = "tblTodayTaskDatatable";
-        break;
-      case "upcomingTab-tab":
-        tableName = "tblUpcomingTaskDatatable";
-        break;
-      case "projectsTab-tab":
-        tableName = "tblNewProjectsDatatable";
-        break;
-      case "filterLabelsTab-tab":
-        tableName = "tblLabels";
-        break;
-      default:
-        tableName = "tblAllTaskDatatable";
-        break;
-    }
-
-    var columns = $("#" + tableName).find("th");
-    // var columns = $("#" + tableName + " th");
-    let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-    $.each(columns, function (i, v) {
-      let className = v.classList;
-      let replaceClass = className[1];
-
-      if (v.innerText == columnDataValue) {
-        if ($(event.target).is(":checked")) {
-          $("#" + tableName).find("." + replaceClass + "").css("display", "table-cell");
-          $("#" + tableName).find("." + replaceClass + "").removeClass("hiddenColumn");
-          $("#" + tableName).find("." + replaceClass + "").css("padding", ".75rem");
-          $("#" + tableName).find("." + replaceClass + "").css("vertical-align", "top");
-        } else {
-          // $("#" + tableName)
-          //   .find("." + replaceClass + "")
-          //   .css("display", "none");
-          $("#" + tableName).find("." + replaceClass + "").addClass("hiddenColumn");
-        }
-      }
-    });
-  },
-
-  "click .saveTable": function (event) {
-    let currentTabID = Template.instance().currentTabID.get();
-    let tableName = "";
-
-    switch (currentTabID) {
-      case "todayTab-tab":
-        tableName = "tblTodayTaskDatatable";
-        break;
-      case "upcomingTab-tab":
-        tableName = "tblUpcomingTaskDatatable";
-        break;
-      case "projectsTab-tab":
-        tableName = "tblNewProjectsDatatable";
-        break;
-      case "filterLabelsTab-tab":
-        tableName = "tblLabels";
-        break;
-      default:
-        tableName = "tblAllTaskDatatable";
-        break;
-    }
-
-    let lineItems = [];
-    $(".columnSettings").each(function (index) {
-      var $tblrow = $(this);
-      var colTitle = $tblrow.find(".divcolumn").text() || "";
-      var colWidth = $tblrow.find(".custom-range").val() || 0;
-      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-      var colHidden = false;
-      if ($tblrow.find(".custom-control-input").is(":checked")) {
-        colHidden = false;
-      } else {
-        colHidden = true;
-      }
-      let lineItemObj = {
-        index: index,
-        label: colTitle,
-        hidden: colHidden,
-        width: colWidth,
-        thclass: colthClass,
-      };
-
-      lineItems.push(lineItemObj);
-    });
-
-    var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
-    });
-    if (getcurrentCloudDetails) {
-      if (getcurrentCloudDetails._id.length > 0) {
-        var clientID = getcurrentCloudDetails._id;
-        var clientUsername = getcurrentCloudDetails.cloudUsername;
-        var clientEmail = getcurrentCloudDetails.cloudEmail;
-        var checkPrefDetails = CloudPreference.findOne({
-          userid: clientID,
-          PrefName: tableName,
-        });
-        if (checkPrefDetails) {
-          CloudPreference.update(
-            { _id: checkPrefDetails._id },
-            {
-              $set: {
-                userid: clientID,
-                username: clientUsername,
-                useremail: clientEmail,
-                PrefGroup: "salesform",
-                PrefName: tableName,
-                published: true,
-                customFields: lineItems,
-                updatedAt: new Date(),
-              },
-            },
-            function (err, idTag) {
-              if (err) {
-                $("#myModal2").modal("toggle");
-              } else {
-                $("#myModal2").modal("toggle");
-              }
-            }
-          );
-        } else {
-          CloudPreference.insert(
-            {
-              userid: clientID,
-              username: clientUsername,
-              useremail: clientEmail,
-              PrefGroup: "salesform",
-              PrefName: tableName,
-              published: true,
-              customFields: lineItems,
-              createdAt: new Date(),
-            },
-            function (err, idTag) {
-              if (err) {
-                $("#myModal2").modal("toggle");
-              } else {
-                $("#myModal2").modal("toggle");
-              }
-            }
-          );
-        }
-      }
-    }
-    $("#myModal2").modal("toggle");
-  },
-
-  "click .resetTable": function (event) {
-    let currentTabID = Template.instance().currentTabID.get();
-    let tableName = "";
-
-    switch (currentTabID) {
-      case "todayTab-tab":
-        tableName = "tblTodayTaskDatatable";
-        break;
-      case "upcomingTab-tab":
-        tableName = "tblUpcomingTaskDatatable";
-        break;
-      case "projectsTab-tab":
-        tableName = "tblNewProjectsDatatable";
-        break;
-      case "filterLabelsTab-tab":
-        tableName = "tblLabels";
-        break;
-      default:
-        tableName = "tblAllTaskDatatable";
-        break;
-    }
-
-    var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
-    });
-    if (getcurrentCloudDetails) {
-      if (getcurrentCloudDetails._id.length > 0) {
-        var clientID = getcurrentCloudDetails._id;
-        var clientUsername = getcurrentCloudDetails.cloudUsername;
-        var clientEmail = getcurrentCloudDetails.cloudEmail;
-        var checkPrefDetails = CloudPreference.findOne({
-          userid: clientID,
-          PrefName: tableName,
-        });
-        if (checkPrefDetails) {
-          CloudPreference.remove(
-            { _id: checkPrefDetails._id },
-            function (err, idTag) {
-              if (err) {
-              } else {
-                Meteor._reload.reload();
-              }
-            }
-          );
-        }
-      }
-    }
-  },
+  }, 
 
   "click #exportbtn": function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -1134,7 +868,7 @@ Template.crmoverview.events({
   "click #sidenavcrm": function (e) {
     FlowRouter.go("/crmoverview");
     Meteor._reload.reload();
-  }
+  }, 
 
 });
 
@@ -1156,7 +890,7 @@ Template.crmoverview.helpers({
   },
   currentTabID: () => {
     return Template.instance().currentTabID.get();
-  },
+  }, 
 });
 
 function openEditTaskModal(id, type) {
@@ -1170,7 +904,7 @@ function openEditTaskModal(id, type) {
   // get selected task detail via api
   crmService.getTaskDetail(id).then(function (data) {
     if (data.fields.ID == id) {
-      let selected_record = data.fields; 
+      let selected_record = data.fields;
 
       $("#txtCrmTaskID").val(selected_record.ID);
       $("#txtCrmProjectID").val(selected_record.ProjectID);
@@ -1209,17 +943,17 @@ function openEditTaskModal(id, type) {
       if (selected_record.due_date) {
         if (selected_record.due_date.substring(0, 10) == today) {
           catg =
-              `<i class="fas fa-calendar-day text-primary" style="margin-right: 5px; ${projectColorStyle}"></i>` +
-              "<span class='text-primary' style='" + projectColorStyle + "'>" +
-              projectName +
-              "</span>";
+            `<i class="fas fa-calendar-day text-primary" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+            "<span class='text-primary' style='" + projectColorStyle + "'>" +
+            projectName +
+            "</span>";
           $(".taskDueDate").css("color", "#00a3d3");
         } else if (selected_record.due_date.substring(0, 10) > today) {
           catg =
-              `<i class="fas fa-calendar-alt text-danger" style="margin-right: 5px; ${projectColorStyle}"></i>` +
-              "<span class='text-danger' style='" + projectColorStyle + "'>" +
-              projectName +
-              "</span>";
+            `<i class="fas fa-calendar-alt text-danger" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+            "<span class='text-danger' style='" + projectColorStyle + "'>" +
+            projectName +
+            "</span>";
           $(".taskDueDate").css("color", "#1cc88a");
         } else if (selected_record.due_date.substring(0, 10) < today) {
           // catg =
@@ -1227,35 +961,35 @@ function openEditTaskModal(id, type) {
           //   "<span class='text-warning'>Overdue</span>";
           // $(".taskDueDate").css("color", "#e74a3b");
           catg =
-              `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
-              "<span class='text-success' style='" + projectColorStyle + "'>" +
-              projectName +
-              "</span>";
-          $(".taskDueDate").css("color", "#1cc88a");
-        } else {
-          catg =
-              `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
-              "<span class='text-success' style='" + projectColorStyle + "'>" +
-              projectName +
-              "</span>";
-          $(".taskDueDate").css("color", "#1cc88a");
-        }
-      } else {
-        catg =
             `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
             "<span class='text-success' style='" + projectColorStyle + "'>" +
             projectName +
             "</span>";
+          $(".taskDueDate").css("color", "#1cc88a");
+        } else {
+          catg =
+            `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+            "<span class='text-success' style='" + projectColorStyle + "'>" +
+            projectName +
+            "</span>";
+          $(".taskDueDate").css("color", "#1cc88a");
+        }
+      } else {
+        catg =
+          `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
+          "<span class='text-success' style='" + projectColorStyle + "'>" +
+          projectName +
+          "</span>";
         $(".taskDueDate").css("color", "#1cc88a");
       }
 
       $(".taskLocation").html(
-          `<a class="taganchor">
+        `<a class="taganchor">
                 ${catg}
               </a>`
       );
 
-      if(projectName) {
+      if (projectName) {
         $('.taskDetailProjectName').show();
       } else {
         $('.taskDetailProjectName').hide();
@@ -1333,19 +1067,19 @@ function openEditTaskModal(id, type) {
       if (selected_record.TaskLabel) {
         if (selected_record.TaskLabel.fields != undefined) {
           taskmodalLabels =
-              `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
-              selected_record.TaskLabel.fields.TaskLabelName +
-              "</a></span>";
+            `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
+            selected_record.TaskLabel.fields.TaskLabelName +
+            "</a></span>";
           $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
-              "checked",
-              true
+            "checked",
+            true
           );
         } else {
           selected_record.TaskLabel.forEach((lbl) => {
             taskmodalLabels +=
-                `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
-                lbl.fields.TaskLabelName +
-                "</a></span> ";
+              `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
+              lbl.fields.TaskLabelName +
+              "</a></span> ";
             $("#detail_label_" + lbl.fields.ID).prop("checked", true);
           });
           taskmodalLabels = taskmodalLabels.slice(0, -2);
@@ -1461,17 +1195,17 @@ function openEditTaskModal(id, type) {
                   <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
                     <div class="row">
                       <span class="activityName">${activity.EnteredBy
-          } </span> <span class="activityAction">${activity.ActivityName
-          } </span>
+            } </span> <span class="activityAction">${activity.ActivityName
+            } </span>
                     </div>
                     <div class="row">
                       <span class="activityComment">${activity.ActivityDescription
-          }</span>
+            }</span>
                     </div>
                     <div class="row">
                       <span class="activityTime">${moment(
               activity.ActivityDateStartd
-          ).format("h:mm A")}</span>
+            ).format("h:mm A")}</span>
                     </div>
                   </div>
                   <hr style="width: 100%; margin: 16px;" />
@@ -1503,17 +1237,17 @@ function openEditTaskModal(id, type) {
                     <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
                       <div class="row">
                         <span class="activityName">${activity.EnteredBy
-            } </span> <span class="activityAction">${activity.ActivityName
-            } </span>
+              } </span> <span class="activityAction">${activity.ActivityName
+              } </span>
                       </div>
                       <div class="row">
                         <span class="activityComment">${activity.ActivityDescription
-            }</span>
+              }</span>
                       </div>
                       <div class="row">
                         <span class="activityTime">${moment(
                 activity.ActivityDateStartd
-            ).format("h:mm A")}</span>
+              ).format("h:mm A")}</span>
                       </div>
                     </div>
                     <hr style="width: 100%; margin: 16px;" />
@@ -1537,19 +1271,19 @@ function openEditTaskModal(id, type) {
       $("#chkPriority" + selected_record.priority).prop("checked", true);
 
       $(".taskModalActionFlagDropdown").removeClass(
-          "task_modal_priority_3"
+        "task_modal_priority_3"
       );
       $(".taskModalActionFlagDropdown").removeClass(
-          "task_modal_priority_2"
+        "task_modal_priority_2"
       );
       $(".taskModalActionFlagDropdown").removeClass(
-          "task_modal_priority_1"
+        "task_modal_priority_1"
       );
       $(".taskModalActionFlagDropdown").removeClass(
-          "task_modal_priority_0"
+        "task_modal_priority_0"
       );
       $(".taskModalActionFlagDropdown").addClass(
-          "task_modal_priority_" + selected_record.priority
+        "task_modal_priority_" + selected_record.priority
       );
 
       $("#taskDetailModal").modal("toggle");
@@ -1578,6 +1312,7 @@ function openEditTaskModal(id, type) {
 
       let contactID = 0;
       let contactType = '';
+      // tempcode need all contact type in api
       if (selected_record.CustomerID) {
         contactID = selected_record.CustomerID;
         contactType = 'Customer';
@@ -1602,6 +1337,7 @@ function openEditTaskModal(id, type) {
     return;
   });
 }
+// tempcode need all contact type in api
 function getContactData(contactID, contactType) {
   if (contactType == 'Customer') {
     getVS1Data("TCustomerVS1").then(function (dataObject) {
@@ -1665,14 +1401,36 @@ function getContactData(contactID, contactType) {
       });
     });
   } else {
-    $('#crmSelectLeadList').val('');
-    $('#contactID').val('')
-    $('#contactType').val('')
+    getVS1Data("TCustomerVS1").then(function (dataObject) {
+      if (dataObject.length === 0) {
+        contactService.getOneCustomerDataEx(contactID).then(function (data) {
+          setContactDataToDetail(data, contactType);
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.tcustomervs1;
+        for (let i = 0; i < useData.length; i++) {
+          if (parseInt(useData[i].fields.ID) === parseInt(contactID)) {
+            setContactDataToDetail(useData[i], contactType);
+          }
+        }
+      }
+    }).catch(function (err) {
+      contactService.getOneCustomerDataEx(contactID).then(function (data) {
+        setContactDataToDetail(data, contactType);
+      });
+    });
   }
   return;
 }
 function setContactDataToDetail(data, contactType) {
-  $('#crmSelectLeadList').val(data.fields.ClientName);
-  $('#contactID').val(data.fields.ID)
-  $('#contactType').val(contactType)
+  if (data.fields == undefined) {
+    $('#crmSelectLeadList').val('');
+    $('#contactID').val('')
+    $('#contactType').val('')
+  } else {
+    $('#crmSelectLeadList').val(data.fields.ClientName);
+    $('#contactID').val(data.fields.ID)
+    $('#contactType').val(contactType)
+  }
 }

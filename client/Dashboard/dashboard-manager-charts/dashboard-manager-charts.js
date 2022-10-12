@@ -324,6 +324,11 @@ Template.dashboardManagerCharts.onRendered(function () {
                 $('#gauge-card-'+(index + 1)).show();
                 setGaugeChart({ divId: `spd-gauge-area${index + 1}`, empData, index });
             }
+            else{
+                setTimeout(function(){
+                    $('#gauge-card-'+(index + 1)).hide();
+                },500);
+            }
         });
     };
 
@@ -345,7 +350,7 @@ Template.dashboardManagerCharts.onRendered(function () {
             templateObject.employees.set(employees);
         }
 
-        let startUnix = moment().subtract(1, 'months').unix();
+        let startUnix = moment().subtract(2, 'months').unix();
         let endUnix = moment().unix();
         if (fromDate != "") {
             let startDate = new Date(fromDate);
