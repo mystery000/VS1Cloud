@@ -492,6 +492,9 @@ Template.journalentrylist.onRendered(function() {
     // }, 500)
   };
 
+  /**
+   * @deprecated
+   */
   templateObject.getAllJournalEntryData = function () {
 
     var currentBeginDate = new Date();
