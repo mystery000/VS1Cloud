@@ -1,19 +1,21 @@
 <template name="taskDetailModal">
-<style scoped>
-  .flex {
-    display: flex;
-  }
-  .detail-label {
-    margin-bottom: 0; 
-    display: block;
-    margin-top: 4px;
-    margin-right: 10px;
-  } 
-  #nav-subtasks .dataTables_wrapper {
-    min-height: 32vh !important;
-    padding: 0 10px;
-  } 
-</style>
+  <style scoped>
+    .flex {
+      display: flex;
+    }
+
+    .detail-label {
+      margin-bottom: 0;
+      display: block;
+      margin-top: 4px;
+      margin-right: 10px;
+    }
+
+    #nav-subtasks .dataTables_wrapper {
+      min-height: 32vh !important;
+      padding: 0 10px;
+    }
+  </style>
   <div class="modal fade" id="taskDetailModal" tabindex="-1" role="dialog" aria-labelledby="taskNameLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -21,37 +23,62 @@
         <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
           <div style="display: grid; width: 100%;">
 
-            <div class="form-group flex">
-              <label class="detail-label">Task:</label>
-              <h5 class="modal-title displayTaskNameDescription" style="padding-top: 5px;" id="taskmodalNameLabel"></h5>
-              <input type="text" class="editTaskNameDescription editTaskDetailName" />
+            <div style="display: inline-flex; justify-content: space-between;">
+              <div class="form-group flex" style="width: calc(100% - 150px);">
+                <label class="detail-label" style="width: 120px;">Task to do is:</label>
+                <h5 class="modal-title displayTaskNameDescription" style="padding-top: 5px;" id="taskmodalNameLabel">
+                </h5>
+                <input type="text" class="editTaskNameDescription editTaskDetailName" />
+              </div>
+              <div style="display: inline-flex; width: 120px;">
+                <div class="custom-control custom-checkbox chkBox pointer"
+                  style="width: 15px; margin: 4px; background: transparent;" id="chkComplete_taskEditLabel">
+                  <label id="lblComplete_taskEditLabel" class="custom-control-label chkBox pointer chk_complete"
+                    for="chkComplete_taskEdit" data-dismiss="modal" data-id="edit">Completed</label>
+                  <input class="custom-control-input chkBox chkComplete pointer chk_complete" type="checkbox"
+                    id="chkComplete_taskEdit" value="" style="background: transparent !important;" data-dismiss="modal">
+                </div>
+              </div>
             </div>
-            <div class="form-group flex"> 
-              <label class="detail-label" style="width: 130px;">Assigned Task:</label>
-              <select id="crmSelectEmployeeList" class="form-control crmSelectEmployeeList"> 
-              </select>
+
+            <div class="form-group">
+              <div id="taskmodalDescription" class="displayTaskNameDescription"></div>
+              <textarea class="editTaskNameDescription editTaskDetailDescription"></textarea>
             </div>
-            <div class="form-group flex"> 
-              <label class="detail-label">Contact:</label>
-              <select id="crmSelectLeadList" class="form-control crmSelectLeadList"> 
-              </select>
-            </div>
-            <div class="form-group flex taskDetailProjectName"> 
-              <label class="detail-label">For Project:</label>
-              <span class="taskLocation"><a class="taganchor" href="" id="taskDetailModalCategoryLabel"><i
-                class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>All Tasks</a></span>
-            </div>             
 
             <div style="display: inline-flex;">
-              <div class="custom-control custom-checkbox chkBox pointer"
-                style="width: 15px; margin: 4px; background: transparent;" id="chkComplete_taskEditLabel">
-                <input class="custom-control-input chkBox chkComplete pointer chk_complete" type="checkbox"
-                  id="chkComplete_taskEdit" value="" style="background: transparent !important;" data-dismiss="modal">
-                <label id="lblComplete_taskEditLabel" class="custom-control-label chkBox pointer chk_complete" for="chkComplete_taskEdit"
-                  data-dismiss="modal" data-id="edit">Complete</label>
+              <div class="form-group flex" style="margin-right: 16px;">
+                <label class="detail-label" style="width: 290px;">Who is the Task is for:</label>
+                <select id="crmSelectLeadList" class="form-control crmSelectLeadList">
+                </select>
               </div>
-              
+              <div class="form-group flex">
+                <label class="detail-label" style="width: 145px;">Assigned to:</label>
+                <select id="crmSelectEmployeeList" class="form-control crmSelectEmployeeList">
+                </select>
+              </div>
             </div>
+
+            <div style="display: inline-flex; justify-content: space-between;">
+              <div class=" flex">
+                <label class="detail-label" style="width: 147px;">To be completed by:</label>
+                <div style="display: flex;">
+                  <span class="taskDueDate">
+                    <span id="taskmodalDuedate"></span>
+                  </span>
+                  <div id="taskmodalLabels" style="margin-top:4px;">
+                    <span class="taskTag"><i class="fas fa-tag"></i></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class=" flex taskDetailProjectName">
+                <label class="detail-label">For Project:</label>
+                <span class="taskLocation" style="margin-right: 0;"><a class="taganchor" href="" id="taskDetailModalCategoryLabel"><i
+                      class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>All Tasks</a></span>
+              </div>
+            </div>
+
           </div>
 
           <button type="button" class="close" style="position: absolute; right: 14px; top: 14px" data-dismiss="modal"
@@ -61,20 +88,7 @@
         </div>
 
         <div class="modal-body">
-          <div class="row">
-
-            <div class="col-12">
-              <div id="taskmodalDescription" class="displayTaskNameDescription"></div>
-              <textarea class="editTaskNameDescription editTaskDetailDescription"></textarea>
-            </div>
-            <div class="col-12" style="display: flex;">
-              <span class="taskDueDate">
-                <span id="taskmodalDuedate"></span>
-              </span>
-              <div id="taskmodalLabels" style="margin-top:4px;">
-                <span class="taskTag"><i class="fas fa-tag"></i></span>
-              </div>
-            </div>
+          <div class="row"> 
 
             <div class="col-12" style="display: inline-flex; justify-content: end;">
               <div class="dropdown">
@@ -366,7 +380,8 @@
                           <input type="hidden" id="txtCrmProjectID" value="" />
                           <input type="hidden" id="txtCrmSubTaskID" value="" />
                         </div>
-                        <button type="button" class="btn btn-primary btnCrmAddComment" style="margin-left: 16px;">Comment</button>
+                        <button type="button" class="btn btn-primary btnCrmAddComment"
+                          style="margin-left: 16px;">Comment</button>
                       </div>
                     </div>
                   </div>
