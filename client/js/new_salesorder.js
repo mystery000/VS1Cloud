@@ -81,6 +81,7 @@ Template.new_salesorder.onCreated(() => {
     templateObject.productextrasellrecords = new ReactiveVar([]);
     templateObject.defaultsaleterm = new ReactiveVar();
     templateObject.subtaxcodes = new ReactiveVar([]);
+    templateObject.abletomakeworkorder = new ReactiveVar(false);
 });
 
 Template.new_salesorder.onRendered(() => {
@@ -4841,6 +4842,10 @@ Template.new_salesorder.onRendered(() => {
         }
     }
 
+    setTimeout(()=>{
+        templateObject.checkAbleToMakeWorkOrder();
+    }, 500)
+
     templateObject.getDepartments = function() {
         getVS1Data('TDeptClass').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -5158,6 +5163,9 @@ Template.new_salesorder.onRendered(() => {
             $('#' + selectLineID + " .lineOrdered").val(1);
             $('#' + selectLineID + " .lineQty").val(1);
             $('#' + selectLineID + " .lineUnitPrice").val(lineUnitPrice);
+
+            
+            templateObject.checkAbleToMakeWorkOrder();
 
             if ($('.printID').attr('id') == undefined || $('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
                 $('#' + selectLineID + " #lineProductName").text(lineProductName);
@@ -7403,6 +7411,44 @@ Template.new_salesorder.onRendered(function() {
 
     tempObj.initCustomFieldDisplaySettings("", "tblSalesOrderLine");
 
+    tempObj.checkAbleToMakeWorkOrder = function() {
+        let bomProducts = localStorage.getItem('TProcTree')? JSON.parse(localStorage.getItem('TProcTree')): [];
+        let workorderList = [];
+        //await function to get all work order list data
+        let temp = localStorage.getItem('TWorkorders');
+        workorderList = temp?JSON.parse(temp): [];
+
+        let returnvalue = false;
+        let lineTable  = $('#tblSalesOrderLine');
+        let orderlines = $(lineTable).find('tbody tr')
+        for(let i = 0 ; i < orderlines.length; i++) {
+            let line =  orderlines[i];
+            let productName = $(line).find('.lineProductName').val();
+            let existBOM = false;
+            
+            let index = bomProducts.findIndex(product => {
+                return product.fields.productName == productName
+            })
+            if(index > -1) {
+                existBOM = true;
+            }
+
+            if(existBOM == true) {
+                //check if the workorder is already exists
+                let workOrderIndex = workorderList.findIndex(order=>{
+                    return order.SalesOrderID == tempObj.salesOrderId.get() && order.line.fields.ProductName == productName;
+                })
+                if(workOrderIndex == -1) {
+                    returnvalue = true
+                }
+            }
+        }
+        setTimeout(()=>{
+            tempObj.abletomakeworkorder.set(returnvalue);
+        },500)
+    }
+
+
     // tempObj.getAllCustomFieldDisplaySettings = function () {
 
     //     let listType = 'ltSaleslines';
@@ -7641,6 +7687,9 @@ Template.new_salesorder.helpers({
         }
         return false;
     },
+    abletomakeworkorder: ()=>{
+        return Template.instance().abletomakeworkorder.get()
+    }
 });
 
 Template.new_salesorder.events({
@@ -9722,7 +9771,8 @@ Template.new_salesorder.events({
                 };
             }
 
-            salesService.saveSalesOrderEx(objDetails).then(function(objDetails) {
+
+            function saveFunc() {
                 let company = Session.get('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 var customerID = $('#edtCustomerEmail').attr('customerid');
@@ -10006,11 +10056,11 @@ Template.new_salesorder.events({
                             attachments: attachment
                         }, function(error, result) {
                             if (error && error.error === "error") {
-                              if(FlowRouter.current().queryParams.trans){
+                                if(FlowRouter.current().queryParams.trans){
                                 FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                              }else{
+                                }else{
                                 FlowRouter.go('/salesorderslist?success=true');
-                              };
+                                };
 
                             } else {
 
@@ -10026,11 +10076,11 @@ Template.new_salesorder.events({
                             attachments: attachment
                         }, function(error, result) {
                             if (error && error.error === "error") {
-                              if(FlowRouter.current().queryParams.trans){
+                                if(FlowRouter.current().queryParams.trans){
                                 FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                              }else{
+                                }else{
                                 FlowRouter.go('/salesorderslist?success=true');
-                              };
+                                };
                             } else {
                                 $('#html-2-pdfwrapper').css('display', 'none');
                                 swal({
@@ -10041,11 +10091,11 @@ Template.new_salesorder.events({
                                     confirmButtonText: 'OK'
                                 }).then((result) => {
                                     if (result.value) {
-                                      if(FlowRouter.current().queryParams.trans){
+                                        if(FlowRouter.current().queryParams.trans){
                                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                                      }else{
+                                        }else{
                                         FlowRouter.go('/salesorderslist?success=true');
-                                      };
+                                        };
                                     } else if (result.dismiss === 'cancel') {
 
                                     }
@@ -10170,11 +10220,11 @@ Template.new_salesorder.events({
                                     confirmButtonText: 'OK'
                                 }).then((result) => {
                                     if (result.value) {
-                                      if(FlowRouter.current().queryParams.trans){
+                                        if(FlowRouter.current().queryParams.trans){
                                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                                      }else{
+                                        }else{
                                         FlowRouter.go('/salesorderslist?success=true');
-                                      };
+                                        };
                                     } else if (result.dismiss === 'cancel') {
 
                                     }
@@ -10247,11 +10297,11 @@ Template.new_salesorder.events({
                                 }
                             }
                         });
-                      if(FlowRouter.current().queryParams.trans){
+                        if(FlowRouter.current().queryParams.trans){
                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                      }else{
+                        }else{
                         FlowRouter.go('/salesorderslist?success=true');
-                      };
+                        };
                     };
 
 
@@ -10293,9 +10343,10 @@ Template.new_salesorder.events({
                         // });
                     });
                 }
-                // End Send Email
 
-                if (customerID !== " ") {
+                 // End Send Email
+        
+                 if (customerID !== " ") {
                     let customerEmailData = {
                         type: "TCustomer",
                         fields: {
@@ -10378,6 +10429,19 @@ Template.new_salesorder.events({
                         }
                     }
                 }
+            }
+            salesService.saveSalesOrderEx(objDetails).then(function(data) {
+                
+                sideBarService.getAllSalesOrderList(initialDataLoad, 0).then(function (dataUpdated) {
+                    addVS1Data('TSalesOrderEx', JSON.stringify(dataUpdated)).then(function(dataReturn) {
+                        saveFunc()
+                    }).catch((error) => {
+                        saveFunc()
+                    })
+                }).catch(errroorrrr => {
+                    saveFunc()
+                })
+                // salesService.saveSalesOrderEx(objDetails).then(function(objDetails) {
 
             }).catch(function(err) {
 

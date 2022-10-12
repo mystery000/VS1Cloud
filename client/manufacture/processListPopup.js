@@ -84,7 +84,7 @@ Template.processlistpopup.onRendered(function(e){
                         $('.paginate_button.page-item.next').addClass('disabled');
                     }
                     setTimeout(function () {
-                        MakeNegative();
+                        // MakeNegative();
                     }, 100);
                 },
                 "fnInitComplete": function (oSettings) {
@@ -100,7 +100,7 @@ Template.processlistpopup.onRendered(function(e){
     
             }).on('page', function () {
                 setTimeout(function () {
-                    MakeNegative();
+                    // MakeNegative();
                 }, 100);
                 let draftRecord = templateObject.custdatatablerecords.get();
                 templateObject.custdatatablerecords.set(draftRecord);

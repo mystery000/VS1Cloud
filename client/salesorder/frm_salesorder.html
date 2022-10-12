@@ -412,9 +412,11 @@
                             <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
                                 <button class="btn btn-primary float-right" type="button" style="margin: 12px 24px; width: 140px;" id="btnCopyToInvoice" name="btnCopyToInvoice">Copy To Invoice</button>
                             </div>
-                            <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
-                              <button class="btn btn-primary float-right" type="button" style="margin: 12px 24px; width: 140px;" id="btnMakeWorkOrder" name="btnMakeWorkOrder">Make Work Order</button>
-                            </div>
+                            {{#if abletomakeworkorder}}
+                                <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
+                                <button class="btn btn-primary float-right" type="button" style="margin: 12px 24px; width: 140px;" id="btnMakeWorkOrder" name="btnMakeWorkOrder">Make Work Order</button>
+                                </div>
+                            {{/if}}
                         </div>
                     </div>
                 </div>
