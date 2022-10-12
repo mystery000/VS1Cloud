@@ -242,7 +242,7 @@ Template.fixedassetlisttable.onRendered(function () {
         });
     }, 10);
   }
-
+  tableResize();
 });
 
 Template.fixedassetlisttable.events({

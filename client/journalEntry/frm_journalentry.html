@@ -607,15 +607,15 @@
                                                 <tr>
                                                     <th></th>
                                                     <th></th>
-                                                    <th></th>                            
+                                                    <th></th>
                                                     <th>{{ getDefaultCurrency }}</th>
                                                     <th>Foreign</th>
-                                                    
+
                                                     <th>{{ getDefaultCurrency }}</th>
                                                     <th>Foreign</th>
-                                                    <th></th>  
-                                  
-        
+                                                    <th></th>
+
+
                                                 </tr>
                                             {{/if}}
                                         </thead>
@@ -628,7 +628,7 @@
                                                     <td contenteditable="true" class="lineMemo colMemo">{{item.memo}}</td>
                                                     <!-- <td contenteditable="false" class="lineTaxCode colTaxCode" style="text-align: right!important;cursor: pointer;">{{item.taxCode}}</td> -->
                                                     <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
-                                                    
+
 
                                                     <td class="BcolCreditExCheck-{{item.lineID}}" style="text-align: right!important;">
                                                         <input class="lineCreditEx colCreditEx lineCreditExChange highlightInput" type="text" value="{{item.creditex}}"></td>
@@ -662,7 +662,7 @@
                                             <tr>
                                                 <td colspan="2" style="font-size: 20px; color: #696969; font-weight: 800;">Total</td>
                                                 <td class="colTaxCode"></td>
-                                                
+
                                                 <td class="colCreditExCheck" style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="creditTotal" name="creditTotal">{{totalCredit}}</td>
                                                 {{#if isForeignEnabled}}
                                                     <td class="colCreditExCheck  convert-to-foreign " style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="creditTotal" name="creditTotal">{{convertToForeignAmount totalCredit}}</td>
@@ -672,13 +672,13 @@
                                                 {{#if isForeignEnabled}}
                                                 <td class="colCreditIncCheck hiddenColumn  convert-to-foreign " style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="creditTotal" name="creditTotal">{{convertToForeignAmount totalCreditInc}}</td>
                                                 {{/if}}
-                                                
+
                                                 <td class="colDebitExCheck" style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="debitTotal" name="debitTotal">{{totalDebit}}</td>
-                                                
+
                                                 {{#if isForeignEnabled}}
                                                     <td class="colDebitExCheck  convert-to-foreign " style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="debitTotal" name="debitTotal">{{ convertToForeignAmount totalDebit}}</td>
                                                 {{/if}}
-                                                
+
                                                 <td class="colDebitIncCheck hiddenColumn" style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="debitTotal" name="debitTotal">{{totalDebitInc}}</td>
                                                 {{#if isForeignEnabled}}
                                                     <td class="colDebitIncCheck hiddenColumn  convert-to-foreign " style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="debitTotal" name="debitTotal">{{convertToForeignAmount totalDebitInc}}</td>
@@ -711,10 +711,10 @@
 
             <div class="row no-gutters">
                 <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;padding-top: 0px!important;">
-                    <button class="btn btn-success btnSave" type="button" style="margin: 12px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button class="btn btn-danger btnDelete" type="button" style="margin: 12px;" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
-                    <button class="btn btn-primary printConfirm" type="button" style="margin: 12px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-                    <button class="btn btn-secondary btnBack" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                    <button class="btn btn-success btnSave vs1ButtonMargin" type="button" ><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-danger btnDelete vs1ButtonMargin" type="button" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
+                    <button class="btn btn-primary printConfirm vs1ButtonMargin" type="button" ><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                    <button class="btn btn-secondary btnBack vs1ButtonMargin" type="button" ><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                 </div>
 
             </div>

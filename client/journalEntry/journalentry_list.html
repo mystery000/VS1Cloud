@@ -153,16 +153,16 @@
                     */
                 </style>
                 <div class="col float-left flex-grow-1 mb-4">
-                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 14px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                    <button id="btnNewJournalEntry" name="btnNewJournalEntry" class="btn btn-primary" type="button" style="margin: 14px;"><i class="fa fa-book" style="padding-right: 5px;"></i>New Journal Entry</button>
+                    <button class="btn btn-primary btnRefresh vs1FirstButtonMargin" type="button" ><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                    <button id="btnNewJournalEntry" name="btnNewJournalEntry" class="btn btn-primary vs1ButtonMargin" type="button" ><i class="fa fa-book" style="padding-right: 5px;"></i>New Journal Entry</button>
                     <!-- {{>FxRatesButton}} -->
                 </div>
 
                 <div class="col">
-                    <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 14px;"><i class="icon ion-android-more-horizontal"></i></a>
-                    <button class="btn btn-primary printConfirm float-right" type="button" style="margin: 14px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                        <button style="margin: 14px;" class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#importAccountModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button> 
-                    <button class="btn btn-primary export float-right" type="button" style="margin: 14px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
+                    <a class="btn btnOpenSettings float-right vs1LastButtonMargin" role="button" data-toggle="modal" href="#myModal2" ><i class="icon ion-android-more-horizontal"></i></a>
+                    <button class="btn btn-primary printConfirm float-right vs1ButtonMargin" type="button" ><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+                        <button  class="btn btnNav btn-primary float-right vs1ButtonMargin" role="button" data-toggle="modal" href="#importAccountModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                    <button class="btn btn-primary export float-right vs1ButtonMargin" type="button"  id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
                 </div>
 
             </div>
@@ -258,7 +258,7 @@
                                     <th class="th colMemo">Memo</th> -->
                                     {{#each displayfield in displayfields}}
                                         {{#if displayfield.display}}
-                                        <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                        <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}">
                                             {{displayfield.custfieldlabel}}
                                             </th>
                                         {{/if}}
@@ -309,7 +309,7 @@
                                 {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                    <td contenteditable="false" class=" {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}} colSortDate hiddenColumn">{{item.sortdate}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}} colSortDate">{{item.sortdate}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}} colTransactionDate" ><span style="display:none;">{{item.sortdate}}</span>{{item.transactiondate}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}} colEntryNo" style="text-align: right!important;">{{item.entryno}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}} colAccountName">{{item.accountname}}</td>
@@ -351,8 +351,8 @@
 
 
                                     <td contenteditable="false" class="{{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}} colStatus">{{item.orderstatus}}</td>
-                                    <td contenteditable="false" class="{{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}} colAccountNo hiddenColumn">{{item.accountno}}</td>
-                                    <td contenteditable="false" class="{{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}} colEmployee hiddenColumn">{{item.employeename}}</td>
+                                    <td contenteditable="false" class="{{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}} colAccountNo">{{item.accountno}}</td>
+                                    <td contenteditable="false" class="{{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}} colEmployee">{{item.employeename}}</td>
 
                                     <td contenteditable="false" class="{{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}} colMemo" >{{item.memo}}</td>
                                 </tr>

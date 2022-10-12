@@ -955,6 +955,188 @@ Template.stocktransferlist.events({
         jQuery('#tblStockTransferList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
 
+    },
+
+    'click .printConfirm' : function(event){
+
+    $('.fullScreenSpin').css('display','inline-block');
+    jQuery('#tblInventory_wrapper .dt-buttons .btntabletopdf').click();
+    $('.fullScreenSpin').css('display','none');
+    },
+    'click .btnStockAdjustment' : function(event){
+      FlowRouter.go('/stockadjustmentoverview');
+    },
+    'click .templateDownload': function () {
+    let utilityService = new UtilityService();
+    let rows =[];
+    const filename = 'SampleProduct'+'.csv';
+    rows[0]= ['Product Name','Sales Description','Sale Price', 'Sales Account', 'Tax Code','Barcode', 'Purchase Description', 'COGGS Account', 'Purchase Tax Code', 'Cost'];
+    rows[1]= ['TSL - Black','T-Shirt Large Black', '600', 'Sales','NT', '','T-Shirt Large Black', 'Cost of Goods Sold', 'NT', '700'];
+    utilityService.exportToCsv(rows, filename, 'csv');
+    },
+    'click .btnUploadFile':function(event){
+    $('#attachment-upload').val('');
+    $('.file-name').text('');
+    //$(".btnImport").removeAttr("disabled");
+    $('#attachment-upload').trigger('click');
+
+    },
+    'click .templateDownloadXLSX': function (e) {
+
+      e.preventDefault();  //stop the browser from following
+      window.location.href = 'sample_imports/SampleProduct.xlsx';
+    },
+    'change #attachment-upload': function (e) {
+        let templateObj = Template.instance();
+        var filename = $('#attachment-upload')[0].files[0]['name'];
+        var fileExtension = filename.split('.').pop().toLowerCase();
+        var validExtensions = ["csv","txt","xlsx"];
+        var validCSVExtensions = ["csv","txt"];
+        var validExcelExtensions = ["xlsx","xls"];
+
+        if (validExtensions.indexOf(fileExtension) == -1) {
+            // Bert.alert('<strong>formats allowed are : '+ validExtensions.join(', ')+'</strong>!', 'danger');
+            swal('Invalid Format', 'formats allowed are :' + validExtensions.join(', '), 'error');
+            $('.file-name').text('');
+            $(".btnImport").Attr("disabled");
+        }else if(validCSVExtensions.indexOf(fileExtension) != -1){
+
+          $('.file-name').text(filename);
+          let selectedFile = event.target.files[0];
+          templateObj.selectedFile.set(selectedFile);
+          if($('.file-name').text() != ""){
+            $(".btnImport").removeAttr("disabled");
+          }else{
+            $(".btnImport").Attr("disabled");
+          }
+        }else if(fileExtension == 'xlsx'){
+          $('.file-name').text(filename);
+          let selectedFile = event.target.files[0];
+          var oFileIn;
+        var oFile = selectedFile;
+        var sFilename = oFile.name;
+        // Create A File Reader HTML5
+        var reader = new FileReader();
+
+        // Ready The Event For When A File Gets Selected
+        reader.onload = function (e) {
+                    var data = e.target.result;
+                    data = new Uint8Array(data);
+                    var workbook = XLSX.read(data, {type: 'array'});
+
+                    var result = {};
+                    workbook.SheetNames.forEach(function (sheetName) {
+                        var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 1});
+                        var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                        templateObj.selectedFile.set(sCSV);
+
+                        if (roa.length) result[sheetName] = roa;
+                    });
+                    // see the result, caution: it works after reader event is done.
+
+                };
+                reader.readAsArrayBuffer(oFile);
+
+                if($('.file-name').text() != ""){
+                  $(".btnImport").removeAttr("disabled");
+                }else{
+                  $(".btnImport").Attr("disabled");
+                }
+
+        }
+
+
+
+    },
+    'click .btnImport' : function () {
+    $('.fullScreenSpin').css('display','inline-block');
+    let templateObject = Template.instance();
+    let productService = new ProductService();
+    let objDetails;
+
+    Papa.parse(templateObject.selectedFile.get(), {
+
+    complete: function(results) {
+
+      if(results.data.length > 0){
+    if((results.data[0][0] == "Product Name") && (results.data[0][1] == "Sales Description")
+    && (results.data[0][2] == "Sale Price") && (results.data[0][3] == "Sales Account")
+    && (results.data[0][4] == "Tax Code") && (results.data[0][5] == "Barcode")
+    && (results.data[0][6] == "Purchase Description") && (results.data[0][7] == "COGGS Account")
+    && (results.data[0][8] == "Purchase Tax Code") && (results.data[0][9] == "Cost")) {
+
+    let dataLength = results.data.length * 3000;
+    setTimeout(function(){
+    // $('#importModal').modal('toggle');
+    Meteor._reload.reload();
+    },parseInt(dataLength));
+
+    for (let i = 0; i < results.data.length -1; i++) {
+    objDetails = {
+     type: "TProduct",
+     fields:
+         {
+           Active:true,
+           ProductType:"INV",
+
+           ProductPrintName:results.data[i+1][0],
+           ProductName:results.data[i+1][0],
+           SalesDescription:results.data[i+1][1],
+           SellQty1Price:parseFloat(results.data[i+1][2].replace(/[^0-9.-]+/g,"")) || 0,
+           IncomeAccount:results.data[i+1][3],
+           TaxCodeSales:results.data[i+1][4],
+           Barcode:results.data[i+1][5],
+           PurchaseDescription:results.data[i+1][6],
+
+           // AssetAccount:results.data[i+1][0],
+           CogsAccount:results.data[i+1][7],
+
+
+           TaxCodePurchase:results.data[i+1][8],
+
+           BuyQty1Cost:parseFloat(results.data[i+1][9].replace(/[^0-9.-]+/g,"")) || 0,
+
+           PublishOnVS1: true
+         }
+    };
+    if(results.data[i+1][1]){
+    if(results.data[i+1][1] !== "") {
+    productService.saveProduct(objDetails).then(function (data) {
+    //$('.fullScreenSpin').css('display','none');
+    //Meteor._reload.reload();
+    }).catch(function (err) {
+    //$('.fullScreenSpin').css('display','none');
+    swal({
+    title: 'Oooops...',
+    text: err,
+    type: 'error',
+    showCancelButton: false,
+    confirmButtonText: 'Try Again'
+    }).then((result) => {
+    if (result.value) {
+      Meteor._reload.reload();
+    } else if (result.dismiss === 'cancel') {
+
+    }
+    });
+    });
+    }
+    }
+    }
+
+    }else{
+      $('.fullScreenSpin').css('display','none');
+      // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
+      swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+    }
+    }else{
+    $('.fullScreenSpin').css('display','none');
+    // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
+    swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+    }
+
+    }
+    });
     }
 
 

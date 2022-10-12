@@ -113,7 +113,7 @@
                                 <tr class="dnd-moved">
                                   {{#each displayfield in custdisplayfields}}
                                     {{#if displayfield.display}}
-                                    <th class="th {{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px;">{{displayfield.custfieldlabel}}</th>
+                                        <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th {{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px;">{{displayfield.custfieldlabel}}</th>
                                     {{/if}}
                                   {{/each}}
                                     <!-- <th class="th colCompany {{#if custdisplayfields.[1].active}}{{else}}hiddenColumn{{/if}}" style="width:{{#if custdisplayfields.[1].width}}px{{/if}};">Company</th>

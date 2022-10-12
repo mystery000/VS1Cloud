@@ -199,7 +199,7 @@
                   <th class="th colFixedID hiddenColumn">ID</th>
                   {{#each displayfield in displayfields}}
                   {{#if displayfield.display}}
-                  <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"
+                  <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"
                     style="width:{{displayfield.width}}px">
                     {{displayfield.custfieldlabel}}
                   </th>
