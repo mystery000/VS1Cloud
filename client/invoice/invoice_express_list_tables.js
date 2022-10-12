@@ -700,7 +700,7 @@ Template.invoicelist.onRendered(function () {
               // $("div.dataTables_filter input").addClass(
               //   "form-control form-control-sm"
               // );
-              /*
+              
               $("#tblInvoicelist tbody").on("click", "tr", function () {
                 var listData = $(this).closest("tr").attr("id");
                 var checkDeleted =
@@ -725,7 +725,6 @@ Template.invoicelist.onRendered(function () {
                   }
                 }
               });
-              */
             })
             .catch(function (err) {
               // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -1165,7 +1164,6 @@ Template.invoicelist.onRendered(function () {
           // $("div.dataTables_filter input").addClass(
           //   "form-control form-control-sm"
           // );
-          /*
           $("#tblInvoicelist tbody").on("click", "tr", function () {
             var listData = $(this).closest("tr").attr("id");
             var checkDeleted =
@@ -1192,7 +1190,6 @@ Template.invoicelist.onRendered(function () {
               }
             }
           });
-          */
           templateObject.getCustomFieldData();
         }
       })
@@ -1622,7 +1619,6 @@ Template.invoicelist.onRendered(function () {
             // $("div.dataTables_filter input").addClass(
             //   "form-control form-control-sm"
             // );
-            /*
             $("#tblInvoicelist tbody").on("click", "tr", function () {
               var listData = $(this).closest("tr").attr("id");
               var checkDeleted =
@@ -1648,7 +1644,6 @@ Template.invoicelist.onRendered(function () {
                 }
               }
             });
-            */
 
             templateObject.getCustomFieldData();
           })
@@ -1660,17 +1655,17 @@ Template.invoicelist.onRendered(function () {
       });
   };
 
-  $("#tblInvoicelist tbody").on("click", "tr", function () {
-    var listData = $(this).closest("tr").attr("id");
-    var checkDeleted = $(this).closest("tr").find(".colStatus").text() || "";
-    if (listData) {
-      if (checkDeleted == "Deleted") {
-        swal("You Cannot View This Transaction", "Because It Has Been Deleted","info");
-      } else {
-        FlowRouter.go("/invoicecard?id=" + listData);
-      }
-    }
-  });
+  // $("#tblInvoicelist tbody").on("click", "tr", function () {
+  //   var listData = $(this).closest("tr").attr("id");
+  //   var checkDeleted = $(this).closest("tr").find(".colStatus").text() || "";
+  //   if (listData) {
+  //     if (checkDeleted == "Deleted") {
+  //       swal("You Cannot View This Transaction", "Because It Has Been Deleted","info");
+  //     } else {
+  //       FlowRouter.go("/invoicecard?id=" + listData);
+  //     }
+  //   }
+  // });
 
   templateObject.getCustomFieldData = function () {
     return;

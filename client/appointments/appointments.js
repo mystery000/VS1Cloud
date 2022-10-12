@@ -1395,6 +1395,16 @@ Template.appointments.onRendered(function () {
     calendar.render();
     $('.fc-today-button').prop('disabled', false);
 
+    setTimeout(() => {
+      const child1 = document.querySelector(".fc-appointments-button");
+      const parent1 = child1.parentNode;
+      const child2 = document.querySelector("h2.fc-toolbar-title");
+      const parent2 = child2.parentNode;
+      $(parent1).css("min-width", 568).css("text-align", "center");
+      $("#calendar .fc-toolbar-title").css("min-width", 270).css("text-align", "center");
+      // $(parent2).css("min-width", 260)
+    }, 500);
+
   };
 
   templateObject.renderNormalCalendar = function () {
@@ -2094,14 +2104,14 @@ Template.appointments.onRendered(function () {
     });
 
     setTimeout(() => {
-        const child1 = document.querySelector(".fc-appointments-button");
-        const parent1 = child1.parentNode;
-        const child2 = document.querySelector("h2.fc-toolbar-title");
-        const parent2 = child2.parentNode;
-        $(parent1).css("min-width", 568).css("text-align", "center");
-        $("#calendar .fc-toolbar-title").css("min-width", 238);
-        // $(parent2).css("min-width", 260)
-      }, 100);
+      const child1 = document.querySelector(".fc-appointments-button");
+      const parent1 = child1.parentNode;
+      const child2 = document.querySelector("h2.fc-toolbar-title");
+      const parent2 = child2.parentNode;
+      $(parent1).css("min-width", 568).css("text-align", "center");
+      $("#calendar .fc-toolbar-title").css("min-width", 270).css("text-align", "center");
+      // $(parent2).css("min-width", 260)
+    }, 500);
   };
 
   const getWeeksInMonth = function (year, month) {

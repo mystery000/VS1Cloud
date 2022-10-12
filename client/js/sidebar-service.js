@@ -2641,7 +2641,7 @@ export class SideBarService extends BaseService {
 
   getAllLeadStatus() {
     let options = {
-      PropertyList: "ID,TypeName,Description,TypeCode",
+      PropertyList: "ID,TypeName,Description,TypeCode, EQPM",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TLeadStatusType, options);

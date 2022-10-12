@@ -1741,6 +1741,92 @@ Template.basreturn.onRendered(function() {
             } else {
                 templateObject.pageTitle.set("New BAS Return");
             }
+
+            $(document).on("click", "#basreturnCategory1", function(e) {
+                if ($("#basreturnCategory1").prop('checked') == true) {
+                    document.getElementById("gst1").setAttribute("href", "#gst1option");
+                    document.getElementById("gst2").setAttribute("href", "#gst2option");
+                    document.getElementById("gst3").setAttribute("href", "#gst3option");
+                    document.getElementById("gst4").setAttribute("href", "#gst4option");
+                    document.getElementById("gst7").setAttribute("href", "#gst7option");
+                    document.getElementById("gst10").setAttribute("href", "#gst10option");
+                    document.getElementById("gst11").setAttribute("href", "#gst11option");
+                    document.getElementById("gst13").setAttribute("href", "#gst13option");
+                    document.getElementById("gst14").setAttribute("href", "#gst14option");
+                    document.getElementById("gst15").setAttribute("href", "#gst15option");
+                    document.getElementById("gst18").setAttribute("href", "#gst18option");
+                }
+                else{
+                    document.getElementById("gst1").setAttribute("href", "#");
+                    document.getElementById("gst2").setAttribute("href", "#");
+                    document.getElementById("gst3").setAttribute("href", "#");
+                    document.getElementById("gst4").setAttribute("href", "#");
+                    document.getElementById("gst7").setAttribute("href", "#");
+                    document.getElementById("gst10").setAttribute("href", "#");
+                    document.getElementById("gst11").setAttribute("href", "#");
+                    document.getElementById("gst13").setAttribute("href", "#");
+                    document.getElementById("gst14").setAttribute("href", "#");
+                    document.getElementById("gst15").setAttribute("href", "#");
+                    document.getElementById("gst18").setAttribute("href", "#");
+                }
+            });
+            
+            $(document).on("click", "#basreturnCategory2", function(e) {
+                if ($("#basreturnCategory2").prop('checked') == true) {
+                    document.getElementById("accounts1").setAttribute("href", "#accounts1option");
+                    document.getElementById("accounts2").setAttribute("href", "#accounts2option");
+                    document.getElementById("accounts3").setAttribute("href", "#accounts3option");
+                    document.getElementById("accounts4").setAttribute("href", "#accounts4option");
+                }
+                else{
+                    document.getElementById("accounts1").setAttribute("href", "#");
+                    document.getElementById("accounts2").setAttribute("href", "#");
+                    document.getElementById("accounts3").setAttribute("href", "#");
+                    document.getElementById("accounts4").setAttribute("href", "#");
+                }
+            });
+
+            $(document).on("click", "#basreturnCategory3", function(e) {
+                if ($("#basreturnCategory3").prop('checked') == true) {
+                    document.getElementById("accounts5").setAttribute("href", "#accounts5option");
+                    $("#accounts6cost").removeAttr("disabled");
+                    $("#accounts7cost").removeAttr("disabled");
+                    $("#reasonT4").removeAttr("disabled");
+                    $("#accounts9cost").removeAttr("disabled");
+                    $("#accounts10cost").removeAttr("disabled");
+                    $("#accounts11cost").removeAttr("disabled");
+                    $("#reasonF4").removeAttr("disabled");
+                }
+                else{
+                    document.getElementById("accounts5").setAttribute("href", "#");
+                    $("#accounts6cost").attr("disabled", "disabled");
+                    $("#accounts7cost").attr("disabled", "disabled");
+                    $("#reasonT4").attr("disabled", "disabled");
+                    $("#accounts9cost").attr("disabled", "disabled");
+                    $("#accounts10cost").attr("disabled", "disabled");
+                    $("#accounts11cost").attr("disabled", "disabled");
+                    $("#reasonF4").attr("disabled", "disabled");
+                }
+            });
+
+            $(document).on("click", "#basreturnCategory4", function(e) {
+                if ($("#basreturnCategory4").prop('checked') == true) {
+                    document.getElementById("t3taxcodes1").setAttribute("href", "#t3taxcodes1option");
+                    document.getElementById("t3taxcodes2").setAttribute("href", "#t3taxcodes2option");
+                    document.getElementById("t3taxcodes3").setAttribute("href", "#t3taxcodes3option");
+                    document.getElementById("t3taxcodes4").setAttribute("href", "#t3taxcodes4option");
+                    document.getElementById("t3taxcodes5").setAttribute("href", "#t3taxcodes5option");
+                    document.getElementById("t3accounts1").setAttribute("href", "#t3accounts1option");
+                }
+                else{
+                    document.getElementById("t3taxcodes1").setAttribute("href", "#");
+                    document.getElementById("t3taxcodes2").setAttribute("href", "#");
+                    document.getElementById("t3taxcodes3").setAttribute("href", "#");
+                    document.getElementById("t3taxcodes4").setAttribute("href", "#");
+                    document.getElementById("t3taxcodes5").setAttribute("href", "#");
+                    document.getElementById("t3accounts1").setAttribute("href", "#");
+                }
+            });
         });
     }, 500);
 

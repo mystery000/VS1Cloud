@@ -36,96 +36,75 @@
             </div>
 
             <div class="row" style="padding: 32px; padding-bottom: 0px; background-color: #ededed;">
-                <div class="col-12 col-md-8">
-                    <div class="row">
-                        <div class="col-12 col-md-8">
-                            <div class="row">
-                                <!-- <div class="col-12 col-md-4">
-                                    <div class="form-group">
-                                        <label>Date</label>
-                                        <div class="input-group date" style="cursor: pointer;">
-                                            <input type="text" class="form-control" id="dtTransDate" name="dtTransDate" value="{{record.transdate}}" style="background-color: #ffffff;height: 38px;">
-                                            <div class="input-group-addon" style="">
-                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-4">
-                                    <div class="form-group">
-                                        <label>Department</label>
-                                        <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-4">
-                                    <div class="form-group">
-                                        <label>Entry No.</label>
-                                        <input type="text" class="form-control" id="edtEnrtyNo" name="edtEnrtyNo" value="{{record.entryno}}">
-                                    </div>
-                                </div> -->
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label>Description</label>
-                                        <input type="text" class="form-control" id="description" name="description" value="">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <div class="col-12 col-md-3">
-                            {{> CurrencyWidget rate="buy"}}
-                        </div> -->
+                <div class="col-12 col-md-4">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" class="form-control" id="description" name="description" value="">
                     </div>
                 </div>
-                <div class="col-12 col-md-4">
-                    <div class="row">
-                        <div class="col-12">                            
-                            <div class="form-group">
-                                <a role="button" data-toggle="modal" href="#basoptionmodal" class="btn btn-primary" id="selBasOption" style="margin-top: 32px; float:right" autocomplete="off">BAS Option</a>
-                            </div>
-                        </div>
-                        <div class="modal fade" role="dialog" tabindex="-1" id="basoptionmodal">
-                            <div class="modal-dialog modal-center" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header" style="padding-bottom: 8px;">
-                                        <h4>BAS Options</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label>Department</label>
-                                            <div>
-                                                <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="float:left; width:80%; background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                </select>
-                                                <div class="custom-control custom-switch" style="width:65px; float:right; margin-top:14px;">
-                                                    <input class="custom-control-input" type="checkbox" name="allDepart" id="allDepart" checked="checked" style="cursor: pointer;">
-                                                    <label class="custom-control-label" for="allDepart" style="cursor: pointer;">All</label>
-                                                </div>
+                <div class="col-12 col-md-6" style="padding-top: 40px;">
+                    <div class="custom-control" style="float:left">
+                        <label>Enable: </label>
+                    </div>
+                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px;">
+                        <input class="custom-control-input" type="checkbox" name="basreturnCategory1" id="basreturnCategory1" checked style="cursor: pointer;">
+                        <label class="custom-control-label" for="basreturnCategory1" style="cursor: pointer;">GST</label>
+                    </div>
+                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px;">
+                        <input class="custom-control-input" type="checkbox" name="basreturnCategory2" id="basreturnCategory2" checked style="cursor: pointer;">
+                        <label class="custom-control-label" for="basreturnCategory2" style="cursor: pointer;">PAYG Withheld</label>
+                    </div>
+                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px;">
+                        <input class="custom-control-input" type="checkbox" name="basreturnCategory3" id="basreturnCategory3" style="cursor: pointer;">
+                        <label class="custom-control-label" for="basreturnCategory3" style="cursor: pointer;">PAYG Instalment</label>
+                    </div>
+                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px;">
+                        <input class="custom-control-input" type="checkbox" name="basreturnCategory4" id="basreturnCategory4" style="cursor: pointer;" value="2">
+                        <label class="custom-control-label" for="basreturnCategory4" style="cursor: pointer;">Wine And Luxury</label>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2">
+                    <div class="form-group">
+                        <a role="button" data-toggle="modal" href="#basoptionmodal" class="btn btn-primary" id="selBasOption" style="margin-top: 32px; float:right" autocomplete="off">BAS Option</a>
+                    </div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="basoptionmodal">
+                        <div class="modal-dialog modal-center" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="padding-bottom: 8px;">
+                                    <h4>BAS Options</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>Department</label>
+                                        <div>
+                                            <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="float:left; width:80%; background-color:rgb(255, 255, 255); cursor: pointer;">
+                                            </select>
+                                            <div class="custom-control custom-switch" style="width:65px; float:right; margin-top:14px;">
+                                                <input class="custom-control-input" type="checkbox" name="allDepart" id="allDepart" checked="checked" style="cursor: pointer;">
+                                                <label class="custom-control-label" for="allDepart" style="cursor: pointer;">All</label>
                                             </div>
                                         </div>
-                                        <div class="form-group" style="margin-top:60px">
-                                            <label>Accounting Method</label>
-                                            <div style="padding-left:25px;">
-                                                <div class="custom-control custom-switch">
-                                                    <input class="custom-control-input" type="radio" name="accountingmethod" id="accountingmethod1" checked style="cursor: pointer;">
-                                                    <label class="custom-control-label" for="accountingmethod1" style="cursor: pointer;">Accrual</label>
-                                                </div>
-                                                <div class="custom-control custom-switch">
-                                                    <input class="custom-control-input" type="radio" name="accountingmethod" id="accountingmethod2" style="cursor: pointer;">
-                                                    <label class="custom-control-label" for="accountingmethod2" style="cursor: pointer;">Cash</label>
-                                                </div>
+                                    </div>
+                                    <div class="form-group" style="margin-top:60px">
+                                        <label>Accounting Method</label>
+                                        <div style="padding-left:25px;">
+                                            <div class="custom-control custom-switch">
+                                                <input class="custom-control-input" type="radio" name="accountingmethod" id="accountingmethod1" checked style="cursor: pointer;">
+                                                <label class="custom-control-label" for="accountingmethod1" style="cursor: pointer;">Accrual</label>
+                                            </div>
+                                            <div class="custom-control custom-switch">
+                                                <input class="custom-control-input" type="radio" name="accountingmethod" id="accountingmethod2" style="cursor: pointer;">
+                                                <label class="custom-control-label" for="accountingmethod2" style="cursor: pointer;">Cash</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="modal-footer" style="padding: 6px;">
-                                        <button type="button" class="btn btn-primary" id="loadBasOption">OK</button>
-                                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                                    </div>
+                                </div>
+                                <div class="modal-footer" style="padding: 6px;">
+                                    <button type="button" class="btn btn-primary" id="loadBasOption">OK</button>
+                                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-12 col-md-3">
-                            {{> CurrencyWidget rate="buy"}}
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -679,7 +658,7 @@
                                                     <div class="row" style="margin-bottom:10px">
                                                         <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Instalment income</div>
                                                         <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            <a role="button" data-toggle="modal" href="#accounts5option" class="btn btn-primary" id="accounts5" autocomplete="off">T1</a>
+                                                            <a role="button" data-toggle="modal" href="#" class="btn btn-primary" id="accounts5" autocomplete="off" disabled="disabled">T1</a>
                                                         </div>
                                                         <div class="col-12 col-md-4" style="align-items: center; display: flex;">
                                                             <span style="float:left;">$&nbsp;</span>
@@ -693,7 +672,7 @@
                                                         </div>
                                                         <div class="col-12 col-md-4" style="align-items: center; display: flex;">
                                                             <span style="float:left;">%&nbsp;</span>
-                                                            <input type="text" class="form-control" id="accounts6cost" name="accounts6cost" value="0" style="float:left; width:90%;">
+                                                            <input type="text" class="form-control" id="accounts6cost" name="accounts6cost" value="0" style="float:left; width:90%;" disabled="disabled">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -705,7 +684,7 @@
                                                         </div>
                                                         <div class="col-12 col-md-4" style="align-items: center; display: flex;">
                                                             <span style="float:left;">%&nbsp;</span>
-                                                            <input type="text" class="form-control" id="accounts7cost" name="accounts7cost" value="0" style="float:left; width:90%;">
+                                                            <input type="text" class="form-control" id="accounts7cost" name="accounts7cost" value="0" style="float:left; width:90%;" disabled="disabled">
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-bottom:10px">
@@ -714,7 +693,7 @@
                                                             T4
                                                         </div>
                                                         <div class="col-12 col-md-4" style="align-items: center; display: flex;">
-                                                            <select class="form-control" id="reasonT4">
+                                                            <select class="form-control" id="reasonT4" disabled="disabled">
                                                                 <option value="" selected="selected"></option>
                                                                 {{#each item in reasonT4}}                                                                
                                                                 <option value="{{item.val}}">{{item.title}}</option>
@@ -734,7 +713,7 @@
                                                         </div>
                                                         <div class="col-12 col-md-4" style="align-items: center; display: flex;">
                                                             <span style="float:left;">$&nbsp;</span>
-                                                            <input type="text" class="form-control" id="accounts9cost" name="accounts9cost" value="0" style="float:left; width:90%;">
+                                                            <input type="text" class="form-control" id="accounts9cost" name="accounts9cost" value="0" style="float:left; width:90%;" disabled="disabled">
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-bottom:10px">
@@ -744,7 +723,7 @@
                                                         </div>
                                                         <div class="col-12 col-md-4" style="align-items: center; display: flex;">
                                                             <span style="float:left;">$&nbsp;</span>
-                                                            <input type="text" class="form-control" id="accounts10cost" name="accounts10cost" value="0" style="float:left; width:90%;">
+                                                            <input type="text" class="form-control" id="accounts10cost" name="accounts10cost" value="0" style="float:left; width:90%;" disabled="disabled">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -756,7 +735,7 @@
                                                         </div>
                                                         <div class="col-12 col-md-4" style="align-items: center; display: flex;">
                                                             <span style="float:left;">$&nbsp;</span>
-                                                            <input type="text" class="form-control" id="accounts11cost" name="accounts11cost" value="0" style="float:left; width:90%;">
+                                                            <input type="text" class="form-control" id="accounts11cost" name="accounts11cost" value="0" style="float:left; width:90%;" disabled="disabled">
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-bottom:10px">
@@ -765,7 +744,7 @@
                                                             F4
                                                         </div>
                                                         <div class="col-12 col-md-4" style="align-items: center; display: flex;">
-                                                            <select class="form-control dropup" id="reasonF4">
+                                                            <select class="form-control dropup" id="reasonF4" disabled="disabled">
                                                                 <option value="" selected="selected"></option>
                                                                 {{#each item in reasonF4}}                                                                
                                                                 <option value="{{item.val}}">{{item.title}}</option>
@@ -897,7 +876,7 @@
                                                     <div class="row" style="margin-bottom:10px">
                                                         <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Special credit for wholesale sales tax</div>
                                                         <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            <a role="button" data-toggle="modal" href="#t3taxcodes5option" class="btn btn-primary" id="t3accounts5" autocomplete="off">1G</a>
+                                                            <a role="button" data-toggle="modal" href="#t3taxcodes5option" class="btn btn-primary" id="t3taxcodes5" autocomplete="off">1G</a>
                                                         </div>
                                                         <div class="col-12 col-md-4" style="align-items: center; display: flex;">
                                                             <span style="float:left;">$&nbsp;</span>

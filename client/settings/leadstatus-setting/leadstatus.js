@@ -67,8 +67,9 @@ Template.leadstatussettings.onRendered(function () {
         });
     }
     function setLeadStatusList(data) {
+        console.log("===", data.tleadstatustype);
         for (let i = 0; i < data.tleadstatustype.length; i++) {
-            let eqpm = Number(data.tleadstatustype[i].KeyValue.replace(/[^0-9.-]+/g, "")) || 10;
+            let eqpm = Number(data.tleadstatustype[i].EQPM);
             const dataList = {
                 id: data.tleadstatustype[i].Id || '',
                 typeName: data.tleadstatustype[i].TypeName || '',
@@ -229,7 +230,7 @@ Template.leadstatussettings.onRendered(function () {
                             fields: {
                                 TypeName: "Unqualified",
                                 Description: "Default Value",
-                                KeyValue: 10,
+                                EQPM: 10,
                                 Active: true
                             }
                         }
@@ -258,7 +259,7 @@ Template.leadstatussettings.onRendered(function () {
                             fields: {
                                 TypeName: "Opportunity",
                                 Description: "Default Value",
-                                KeyValue: 10,
+                                EQPM: 10,
                                 Active: true
                             }
                         }
@@ -287,7 +288,7 @@ Template.leadstatussettings.onRendered(function () {
                             fields: {
                                 TypeName: "Quoted",
                                 Description: "Default Value",
-                                KeyValue: 10,
+                                EQPM: 10,
                                 Active: true
                             }
                         }
@@ -316,7 +317,7 @@ Template.leadstatussettings.onRendered(function () {
                             fields: {
                                 TypeName: "Invoiced",
                                 Description: "Default Value",
-                                KeyValue: 10,
+                                EQPM: 10,
                                 Active: true
                             }
                         }
@@ -617,7 +618,7 @@ Template.leadstatussettings.events({
                     fields: {
                         TypeName: statusName,
                         Description: statusDesc,
-                        KeyValue: statusEQPM,
+                        EQPM: statusEQPM,
                         Active: true
                     }
                 }
@@ -628,11 +629,12 @@ Template.leadstatussettings.events({
                         Id: id,
                         TypeName: statusName,
                         Description: statusDesc,
-                        KeyValue: statusEQPM,
+                        EQPM: statusEQPM,
                         Active: true
                     }
                 }
             }
+
             contactService.saveLeadStatusData(objDetails).then(function (result) {
                 sideBarService.getAllLeadStatus().then(function (dataReload) {
                     addVS1Data('TLeadStatusType', JSON.stringify(dataReload)).then(function (datareturn) {

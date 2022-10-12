@@ -827,64 +827,6 @@
                             </div>
                         </div>
 
-                        <!-- Start Attachemt -->
-                        <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4>Upload Attachments</h4><button type="button" class="close closeModal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                    </div>
-                                    <div class="modal-body" style="padding: 0px;">
-                                        <div class="divTable" id="file-display">
-                                            <!-- <div class="uploaded-element-header">
-<span class="uploaded-on uploaded-header">Upload a file</span>
-</div> -->
-                                            <div class="col inboxcol1">
-                                                <img src="/icons/nofiles_icon.jpg" class="" style="width:100%;">
-                                            </div>
-                                            <div class="col inboxcol2" style="text-align: center;">
-                                                <div>Upload files or add files from the file library.</div>
-
-                                                <div>Capture copies of receipt's or take photo's of completed jobs.</div>
-
-                                                <p style="color: #ababab;">Only users with access to your company can view these files</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-
-
-                                        <input type="file" id="img-attachment-upload" style="display:none" accept="image/*" capture="camera">
-                                        <button class="btn btn-primary btnUploadFile img_new_attachment_btn" type="button"><i class="fas fa-camera" style="margin-right: 5px;"></i>Capture</button>
-
-                                        <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png">
-
-                                        <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt,
-                                           .pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef,
-                                           .pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg,
-                                           image/gif,image/png,image/bmp,image/tiff,application/pdf,
-                                           application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
-                                           application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
-                                           application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,
-                                           application/vnd.oasis.opendocument.formula,text/csv,text/plain,text/rtf,message/rfc822,
-                                           application/vnd.ms-outlook,application/vnd.oasis.opendocument.spreadsheet,
-                                           application/vnd.oasis.opendocument.text,application/x-iwork-keynote-sffkey,
-                                           application/vnd.apple.keynote,application/x-iwork-pages-sffpages,
-                                           application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers,
-                                           application/vnd.apple.numbers,application/zip,application/rar,
-                                           application/x-zip-compressed,application/x-zip,application/x-7z-compressed">
-
-                                        <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload</button>
-                                        <button class="btn btn-success btnAddAttachmentSave" type="button" style="margin-right: 5px;" autocomplete="off">
-                                            <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-                                        </button>
-                                        <!-- <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button> -->
-                                        <button class="btn btn-secondary closeModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END Attachments -->
                         <!-- View File Attachemt -->
                         <div id="files_view" class="modal fade" role="dialog">
                             <div class="modal-dialog">
@@ -1345,6 +1287,65 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
         </div>
     </div>
 
+    <!-- Start Attachemt -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Upload Attachments</h4><button type="button" class="close closeModal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="padding: 0px;">
+                    <div class="divTable" id="file-display">
+                        <!-- <div class="uploaded-element-header">
+<span class="uploaded-on uploaded-header">Upload a file</span>
+</div> -->
+                        <div class="col inboxcol1">
+                            <img src="/icons/nofiles_icon.jpg" class="" style="width:100%;">
+                        </div>
+                        <div class="col inboxcol2" style="text-align: center;">
+                            <div>Upload files or add files from the file library.</div>
+
+                            <div>Capture copies of receipt's or take photo's of completed jobs.</div>
+
+                            <p style="color: #ababab;">Only users with access to your company can view these files</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+
+                    <input type="file" id="img-attachment-upload" style="display:none" accept="image/*" capture="camera">
+                    <button class="btn btn-primary btnUploadFile img_new_attachment_btn" type="button"><i class="fas fa-camera" style="margin-right: 5px;"></i>Capture</button>
+
+                    <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png">
+
+                    <input type="file" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt,
+                       .pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef,
+                       .pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg,
+                       image/gif,image/png,image/bmp,image/tiff,application/pdf,
+                       application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                       application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                       application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,
+                       application/vnd.oasis.opendocument.formula,text/csv,text/plain,text/rtf,message/rfc822,
+                       application/vnd.ms-outlook,application/vnd.oasis.opendocument.spreadsheet,
+                       application/vnd.oasis.opendocument.text,application/x-iwork-keynote-sffkey,
+                       application/vnd.apple.keynote,application/x-iwork-pages-sffpages,
+                       application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers,
+                       application/vnd.apple.numbers,application/zip,application/rar,
+                       application/x-zip-compressed,application/x-zip,application/x-7z-compressed">
+
+                    <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload</button>
+                    <button class="btn btn-success btnAddAttachmentSave" type="button" style="margin-right: 5px;" autocomplete="off">
+                        <i class="fa fa-save" style="padding-right: 8px;"></i>Save
+                    </button>
+                    <!-- <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button> -->
+                    <button class="btn btn-secondary closeModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END Attachments -->
+
     <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
         {{> payrollproductlistpop}}
     </div>
@@ -1383,45 +1384,45 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
         }
 
         .fc-today-button {
-            margin: 0 12px 0 12px !important;
+            margin: 0 5px 0 5px !important;
 
         }
 
         .fc-appointments-button {
-            margin: 0 12px 0 12px !important;
+            margin: 0 5px 0 5px !important;
         }
 
         .fc-allocation-button {
-            margin: 0 12px 0 12px !important;
+            margin: 0 5px 0 5px !important;
         }
 
         .fc-refresh-button {
-            margin-left: 12px !important;
+            margin-left: 5px !important;
         }
 
         .fc-next-button {
-            margin-right: 12px !important;
+            margin-right: 5px !important;
         }
 
         .fc-dayGridMonth-button {
-            margin-right: 12px !important;
+            margin-right: 5px !important;
             border-radius: 0.35rem !important;
         }
 
 
         .fc-timeGridWeek-button {
-            margin: 0 12px 0 12px !important;
+            margin: 0 5px 0 5px !important;
             border-radius: 0.35rem !important;
         }
 
         .fc-timeGridDay-button {
-            margin: 0 12px 0 12px !important;
+            margin: 0 5px 0 5px !important;
             border-radius: 0.35rem !important;
         }
 
 
         .fc-settingsmodalbutton-button {
-            margin-left: 12px !important;
+            margin-left: 5px !important;
             border-radius: 0.35rem !important;
         }
 
@@ -2541,6 +2542,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
 
                 .fc .fc-toolbar.fc-header-toolbar {
                     margin-bottom: 1.5em;
+                    overflow: auto;
                 }
 
                 .fc .fc-toolbar.fc-footer-toolbar {
