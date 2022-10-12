@@ -4061,7 +4061,7 @@ Template.new_invoice.onRendered(function() {
                       cust_data.customername == useData[d].fields.ClientName
                     );
                   });
-                  /*
+                  
                   getVS1Data("TAppointment").then(function (dataObject) {
                     let appointments = JSON.parse(dataObject[0].data);
                     let allAppointments = appointments.tappointmentex;
@@ -4075,7 +4075,6 @@ Template.new_invoice.onRendered(function() {
                       templateObject.uploadedFiles.set(appointmentAttachments);
                     }
                   });
-                  */
                   templateObject.singleInvoiceData.set(useData[d]);
                   let lineItems = [];
                   let lineItemObj = {};
