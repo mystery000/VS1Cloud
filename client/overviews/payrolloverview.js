@@ -3648,7 +3648,9 @@ Template.payrolloverview.onRendered(function () {
     }
   );
   html5QrcodeScannerClockOff.render(onScanSuccessClockOff);
-  tableResize();
+  setTimeout(function() {
+    tableResize();
+  }, 2500);
 
 
 
