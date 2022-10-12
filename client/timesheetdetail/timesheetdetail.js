@@ -22,8 +22,10 @@ import {EmployeeFields} from "../js/Api/Model/Employee";
 import {ReportService} from "../reports/report-service";
 import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import moment from "moment";
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let contactService = new ContactService();
 
 Template.timesheetdetail.onCreated(function () {
   this.timesheet = new ReactiveVar();
@@ -62,7 +64,6 @@ Template.timesheetdetail.onRendered(function () {
     });
     let timesheet = timesheets.find(o => o.ID == id);
 
-    console.log("timsheet", timesheet);
     this.timesheet.set(timesheet);
   };
 
@@ -85,17 +86,14 @@ Template.timesheetdetail.onRendered(function () {
 
     const selectedEmployee = employees.find(e => e.EmployeeName == timesheet.EmployeeName);
     this.employee.set(selectedEmployee);
-
-    console.log("employees", employees);
-    console.log("employee", selectedEmployee);
   };
 
   /**
-   * Here we load earnings of this employee
-   * 
-   * @param {integer} employeeID 
-   * @returns 
-   */
+     * Here we load earnings of this employee
+     *
+     * @param {integer} employeeID
+     * @returns
+     */
   this.getEarnings = async (employeeID = null) => {
     let data = await CachedHttp.get(erpObject.TPayTemplateEarningLine, async () => {
       const employeePayrolApis = new EmployeePayrollApi();
@@ -120,42 +118,30 @@ Template.timesheetdetail.onRendered(function () {
       data = data.filter(item => parseInt(item.EmployeeID) == parseInt(employeeID));
     }
 
-    data = _.groupBy(data, 'EarningRate')
-
-    console.log('earnings', data);
+    data = _.groupBy(data, "EarningRate");
 
     this.earnings.set(data);
     return data;
   };
 
-
   this.calculateThisWeek = async () => {
     const timesheet = await this.timesheet.get();
 
     const endDate = moment(timesheet.TimeSheetDate);
-    const aWeekAgo = moment(timesheet.TimeSheetDate).subtract('1', "week");
-    console.log('endfate', endDate, aWeekAgo);
+    const aWeekAgo = moment(timesheet.TimeSheetDate).subtract("1", "week");
 
-    let date = moment(timesheet.TimeSheetDate).subtract('1', "week");
+    let date = moment(timesheet.TimeSheetDate).subtract("1", "week");
     let days = [];
     let i = 0;
-    while(date.isBefore(endDate) == true) {
-      date = aWeekAgo.add('1', 'day');
-      days.push({
-        index: i,
-        dateObject: date,
-        date: date.format('ddd DD MMM'),
-      });
+    while (date.isBefore(endDate) == true) {
+      date = aWeekAgo.add("1", "day");
+      days.push({index: i, dateObject: date, date: date.format("ddd DD MMM")});
       i++;
     }
 
     this.earningDays.set(days);
 
-    console.log(days);
-
-
-
-  }
+  };
 
   //  this.loadTimeSheetEntry = async () => {
   //   let data = await CachedHttp.get(erpObject.TTimeSheetEntry, async () => {
@@ -171,23 +157,20 @@ Template.timesheetdetail.onRendered(function () {
 
   //   data = data.response;
 
-  //   console.log("data", data);
-
   //  }
 
   this.duplicateFirstLine = () => {
-      let template = document.querySelector('#tblTimeSheetInner tbody tr.template');
-      let clonedTr = template.cloneNode(true);
-      clonedTr.removeAttribute('class');
-      $("#tblTimeSheetInner tbody").find("tr:last").prev().after(clonedTr);
-  }
+    let template = document.querySelector("#tblTimeSheetInner tbody tr.template");
+    let clonedTr = template.cloneNode(true);
+    clonedTr.removeAttribute("class");
+    $("#tblTimeSheetInner tbody").find("tr:last").prev().after(clonedTr);
+  };
 
   this.loadEarningSelector = async () => {
-
-    let options =  [
+    let options = [
       {
-        value : "Ordinary Time Earnings",
-        text : "Ordinary Time Earnings",
+        value: "Ordinary Time Earnings",
+        text: "Ordinary Time Earnings"
       }, {
         value: "Overtime Earnings",
         text: "Overtime Earnings"
@@ -196,83 +179,116 @@ Template.timesheetdetail.onRendered(function () {
 
     await this.earningOptions.set(options);
 
-    $('#tblEarnigRatesList').DataTable();
-  }
+    $("#tblEarnigRatesList").DataTable();
+  };
 
   this.calculateWeeklyHours = async () => {
-    const inputs = $('input.hours');
+    const inputs = $("input.hours");
     let total = 0;
 
     $(inputs).each((index, input) => {
       total += parseFloat($(input).val());
     });
     return await this.weeklyTotal.set(total);
-  }
+  };
 
   this.buildNewObject = () => {
     // Here we will build the object to save
-    const trs = $('#tblTimeSheetInner').find('tr');
+    const trs = $("#tblTimeSheetInner").find("tr");
 
-    const matchDateIndex = (index) => {
-      return (this.earningDays.get()).find(earningDay => earningDay.index == index);
-    }
+    const matchDateIndex = index => {
+      return this.earningDays.get().find(earningDay => earningDay.index == index);
+    };
 
-    const buildHourObject  = (input) => {
+    const buildHourObject = input => {
       return {
-        date: matchDateIndex($(input).attr('date')),
-        hours: parseFloat($(input).val()),
-      }
-    }
+        date: matchDateIndex($(input).attr("date")),
+        hours: parseFloat($(input).val())
+      };
+    };
 
-    const buildEarningLineObject = (tr) => {
-      const inputs = $(tr).find('input.hours');
+    const buildEarningLineObject = tr => {
+      const inputs = $(tr).find("input.hours");
       let lines = [];
 
       $(inputs).each((index, input) => {
-        lines.push(buildHourObject(input))
+        lines.push(buildHourObject(input));
       });
 
-      console.log("lines", lines);
       return lines;
-    }
-
+    };
 
     return buildEarningLineObject(trs);
-  }
-
+  };
 
   this.approveTimeSheet = async () => {
+    const timesheet = await this.timesheet.get();
+    const hours = await this.calculateWeeklyHours();
     const earningLines = this.buildNewObject();
 
-    // (new ContactService()).saveTimeSheetLog()
-
-
-    console.log('Aprove timsheet');
-  }
-
+    let objectDataConverted = {
+      type: erpObject.TTimeSheet,
+      fields: {
+        Id: timesheet.ID,
+        Status: "Approved",
+        Approved: true,
+        Hours: hours
+      }
+    };
+    await contactService.saveTimeSheetUpdate(objectDataConverted);
+  };
 
   this.cancelTimeSheet = async () => {
-    console.log('Cancel timsheet');
-  }
+    const timesheet = await this.timesheet.get();
+    const hours = await this.calculateWeeklyHours();
+    const earningLines = this.buildNewObject();
 
+    let objectDataConverted = {
+      type: erpObject.TTimeSheet,
+      fields: {
+        Id: timesheet.ID,
+        Status: "Canceled",
+        Approved: false,
+        Hours: hours
+      }
+    };
+    await contactService.saveTimeSheetUpdate(objectDataConverted);
+  };
 
   this.darftTimeSheet = async () => {
     this.buildNewObject();
 
-    console.log('Draft timsheet');
-  }
+    const timesheet = await this.timesheet.get();
+    const hours = await this.calculateWeeklyHours();
+    const earningLines = this.buildNewObject();
 
+    let objectDataConverted = {
+      type: erpObject.TTimeSheet,
+      fields: {
+        Id: timesheet.ID,
+        Status: "Draft",
+        Approved: false,
+        Hours: hours
+      }
+    };
+    await contactService.saveTimeSheetUpdate(objectDataConverted);
+  };
 
   this.deleteTimeSheet = async () => {
-    console.log('Delete timsheet');
-  }
-
-
-
-
+    const timesheet = await this.timesheet.get();
+    let objectDataConverted = {
+      type: erpObject.TTimeSheet,
+      fields: {
+        Id: timesheet.ID,
+        Status: "Deleted",
+        Approved: false,
+        Active: false
+      }
+    };
+    await contactService.saveTimeSheetUpdate(objectDataConverted);
+  };
 
   this.initPage = async () => {
-    
     LoadingOverlay.show();
     await this.loadTimeSheet();
     await this.loadEmployee();
@@ -288,9 +304,8 @@ Template.timesheetdetail.onRendered(function () {
       this.duplicateFirstLine();
     });
 
-
     await this.calculateWeeklyHours();
-  
+
     LoadingOverlay.hide();
   };
   this.initPage();
@@ -318,8 +333,6 @@ Template.timesheetdetail.events({
     //  </tr>
     //     `);
 
-
-
     ui.duplicateFirstLine();
   },
   "click .btnDeleteRow": function (e) {
@@ -327,21 +340,21 @@ Template.timesheetdetail.events({
   },
 
   "click #tblTimeSheetInner tbody .select-rate-js": (e, ui) => {
-    $(e.currentTarget).addClass('selector-target'); // This is used to know where to paste data later
+    $(e.currentTarget).addClass("selector-target"); // This is used to know where to paste data later
     $("#select-rate-modal").modal("toggle");
   },
 
   "click #tblEarnigRatesList tbody tr": (e, ui) => {
-    const selectedEarning = $(e.currentTarget).find('td:first').text();
+    const selectedEarning = $(e.currentTarget).find("td:first").text();
     $("#select-rate-modal").modal("toggle");
-    $('.selector-target').val(selectedEarning);
-    $('.selector-target').removeClass('selector-target');
+    $(".selector-target").val(selectedEarning);
+    $(".selector-target").removeClass("selector-target");
   },
 
   "click .approve-timesheet": (e, ui) => {
     ui.approveTimeSheet();
   },
-  'click .delete-timesheet': (e, ui) => {
+  "click .delete-timesheet": (e, ui) => {
     ui.deleteTimeSheet();
   },
   "click .save-draft": (e, ui) => {
