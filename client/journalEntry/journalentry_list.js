@@ -1031,6 +1031,8 @@ Template.journalentrylist.onRendered(function() {
 
 
 
+  $('#tblJournalList').DataTable();
+
 });
 
 Template.journalentrylist.events({

@@ -35,6 +35,7 @@ Template.timesheetdetail.onCreated(function () {
   this.earningDays = new ReactiveVar([]);
   this.earningOptions = new ReactiveVar([]);
 
+  this.weeklyTotal = new ReactiveVar(0.0);
 });
 
 Template.timesheetdetail.onRendered(function () {
@@ -198,26 +199,54 @@ Template.timesheetdetail.onRendered(function () {
     $('#tblEarnigRatesList').DataTable();
   }
 
-  this.buildNewObject = () => {
-    // Here we will build the object to save
+  this.calculateWeeklyHours = async () => {
+    const inputs = $('input.hours');
+    let total = 0;
 
-    const trs = $('#tblTimeSheetInner').find('tr');
-
-    trs.each((index, tr) => {
-      let totalHours = 0;
-
-     const inputs = tr.find('.hours');
-
-     inputs.each((_index, input) => {
-        totalHours += parseFloat(input.val() || 0);
-     });
-
-
-
-    })
+    $(inputs).each((index, input) => {
+      total += parseFloat($(input).val());
+    });
+    return await this.weeklyTotal.set(total);
   }
 
+  this.buildNewObject = () => {
+    // Here we will build the object to save
+    const trs = $('#tblTimeSheetInner').find('tr');
+
+    const matchDateIndex = (index) => {
+      return (this.earningDays.get()).find(earningDay => earningDay.index == index);
+    }
+
+    const buildHourObject  = (input) => {
+      return {
+        date: matchDateIndex($(input).attr('date')),
+        hours: parseFloat($(input).val()),
+      }
+    }
+
+    const buildEarningLineObject = (tr) => {
+      const inputs = $(tr).find('input.hours');
+      let lines = [];
+
+      $(inputs).each((index, input) => {
+        lines.push(buildHourObject(input))
+      });
+
+      console.log("lines", lines);
+      return lines;
+    }
+
+
+    return buildEarningLineObject(trs);
+  }
+
+
   this.approveTimeSheet = async () => {
+    const earningLines = this.buildNewObject();
+
+    // (new ContactService()).saveTimeSheetLog()
+
+
     console.log('Aprove timsheet');
   }
 
@@ -228,6 +257,8 @@ Template.timesheetdetail.onRendered(function () {
 
 
   this.darftTimeSheet = async () => {
+    this.buildNewObject();
+
     console.log('Draft timsheet');
   }
 
@@ -255,7 +286,10 @@ Template.timesheetdetail.onRendered(function () {
 
     setTimeout(() => {
       this.duplicateFirstLine();
-    })
+    });
+
+
+    await this.calculateWeeklyHours();
   
     LoadingOverlay.hide();
   };
@@ -315,6 +349,10 @@ Template.timesheetdetail.events({
   },
   "click .cancel-timesheet": (e, ui) => {
     ui.cancelTimeSheet();
+  },
+
+  "change input.hours": (e, ui) => {
+    ui.calculateWeeklyHours();
   }
 });
 
@@ -333,5 +371,8 @@ Template.timesheetdetail.helpers({
   },
   earningOptions: () => {
     return Template.instance().earningOptions.get();
+  },
+  weeklyTotal: () => {
+    return Template.instance().weeklyTotal.get();
   }
 });

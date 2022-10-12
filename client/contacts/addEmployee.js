@@ -520,7 +520,10 @@ Template.employeescard.onRendered(function () {
         //     objects[index] = products.find(p => p.ProductName == obj.ServiceDesc)
         // });
 
-       
+        // We do this to avoid undefined valeus
+        selectedProducts = selectedProducts.filter(element => {
+            return element !== undefined;
+        });
 
         templateObject.selectedproducts.set(selectedProducts);
         templateObject.rebuildProductTable();
@@ -997,8 +1000,13 @@ Template.employeescard.onRendered(function () {
             let selectedProducts = await templateObject.selectedproducts.get();
             let deletedProducts = await templateObject.deletedSelectedProducts.get();
 
-          
+            // We do this to avoid undefined valeus
+            selectedProducts = selectedProducts.filter(element => {
+                return element !== undefined;
+            });
             console.log("selected products", selectedProducts);
+
+           
 
             let removedProduct = selectedProducts.find(p => p.Id == productId);
             deletedProducts.push(removedProduct);
