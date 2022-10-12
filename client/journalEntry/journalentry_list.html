@@ -256,7 +256,7 @@
                                     <th class="th colMemo">Memo</th> -->
                                     {{#each displayfield in displayfields}}
                                         {{#if displayfield.display}}
-                                        <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                        <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}">
                                             {{displayfield.custfieldlabel}}
                                             </th>
                                         {{/if}}
@@ -307,7 +307,7 @@
                                 {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                    <td contenteditable="false" class=" {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}} colSortDate hiddenColumn">{{item.sortdate}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}} colSortDate">{{item.sortdate}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}} colTransactionDate" ><span style="display:none;">{{item.sortdate}}</span>{{item.transactiondate}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}} colEntryNo" style="text-align: right!important;">{{item.entryno}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}} colAccountName">{{item.accountname}}</td>
@@ -349,8 +349,8 @@
 
 
                                     <td contenteditable="false" class="{{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}} colStatus">{{item.orderstatus}}</td>
-                                    <td contenteditable="false" class="{{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}} colAccountNo hiddenColumn">{{item.accountno}}</td>
-                                    <td contenteditable="false" class="{{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}} colEmployee hiddenColumn">{{item.employeename}}</td>
+                                    <td contenteditable="false" class="{{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}} colAccountNo">{{item.accountno}}</td>
+                                    <td contenteditable="false" class="{{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}} colEmployee">{{item.employeename}}</td>
 
                                     <td contenteditable="false" class="{{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}} colMemo" >{{item.memo}}</td>
                                 </tr>
