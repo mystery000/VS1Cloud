@@ -1,6 +1,7 @@
 import {ReactiveVar} from "meteor/reactive-var";
 import moment from "moment";
 import {AccountService} from "../../accounts/account-service";
+import Datehandler from "../../DateHandler";
 import {OrganisationService} from "../../js/organisation-service";
 import {SideBarService} from "../../js/sidebar-service";
 import CachedHttp from "../../lib/global/CachedHttp";
@@ -232,6 +233,8 @@ Template.AddPayRunModal.onRendered(() => {
   $("#payperiod").editableSelect("add", "Quarterly");
 
   //templateObject.loadPayRuns();
+
+  Datehandler.defaultDatePicker();
 });
 
 Template.AddPayRunModal.events({
@@ -432,7 +435,7 @@ Template.AddPayRunModal.events({
   },
 
   // "click .colDeleteCalenders": (e, ui) => {
-  //   
+  //
   //   e.stopPropagation();
   //   let targetID = $(e.target).closest("tr").find(".colCalenderID").text() || 0;  table row ID
 

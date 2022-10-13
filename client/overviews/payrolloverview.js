@@ -593,27 +593,6 @@ Template.payrolloverview.onRendered(function () {
 
   
 
-  $(".formClassDate").datepicker({
-    showOn: "button",
-    buttonText: "Show Date",
-    buttonImageOnly: true,
-    buttonImage: "/img/imgCal2.png",
-    dateFormat: "dd/mm/yy",
-    showOtherMonths: true,
-    selectOtherMonths: true,
-    changeMonth: true,
-    changeYear: true,
-    yearRange: "-90:+10",
-    onChangeMonthYear: function(year, month, inst){
-    // Set date to picker
-    $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
-    // Hide (close) the picker
-    // $(this).datepicker('hide');
-    // // Change ttrigger the on change function
-    // $(this).trigger('change');
-   }
-  });
-
   var currentDate = new Date();
   var begunDate = moment(currentDate).format("DD/MM/YYYY");
   $(".formClassDate").val(begunDate);
@@ -3843,6 +3822,8 @@ Template.payrolloverview.onRendered(function () {
     // Add timsheet modal
     await templateObject.loadEmployees(refresh);
     await templateObject.loadPayPeriods(refresh);
+
+    Datehandler.defaultDatePicker();
     LoadingOverlay.hide();
   }
   templateObject.initPage(refresh);

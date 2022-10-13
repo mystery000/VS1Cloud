@@ -1,6 +1,7 @@
 import {ReactiveVar} from "meteor/reactive-var";
 import moment from "moment";
 import {AccountService} from "../../accounts/account-service";
+import Datehandler from "../../DateHandler";
 import GlobalFunctions from "../../GlobalFunctions";
 import {OrganisationService} from "../../js/organisation-service";
 import {SideBarService} from "../../js/sidebar-service";
@@ -44,6 +45,8 @@ Template.SelectPayCalendar.onRendered(() => {
   };
 
   // templateObject.loadCalendars();
+
+  Datehandler.defaultDatePicker();
 });
 
 Template.SelectPayCalendar.events({
@@ -316,11 +319,11 @@ Template.SelectPayCalendar.events({
     const tr = $(e.currentTarget);
     const periods = ui.calendarPeriods.get();
     const selectPeriod = periods.find(p => p.ID);
-    
-    $('.paste-selected-pay-period-js').attr('calendar-id', selectPeriod.ID);
-    $('.paste-selected-pay-period-js').val(`${selectPeriod.PayrollCalendarName} (${selectPeriod.PayrollCalendarPayPeriod})`);
 
-    $('#SelectPayRunModal').modal('hide');
+    $(".paste-selected-pay-period-js").attr("calendar-id", selectPeriod.ID);
+    $(".paste-selected-pay-period-js").val(`${selectPeriod.PayrollCalendarName} (${selectPeriod.PayrollCalendarPayPeriod})`);
+
+    $("#SelectPayRunModal").modal("hide");
   }
 });
 

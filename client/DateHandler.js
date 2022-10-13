@@ -84,7 +84,7 @@ export default class Datehandler {
 
   static last12Months(format = "DD/MM/YYYY", templateObject = null) {
     const dateTo = moment(new Date()).format("YYYY-MM-DD");
-    const dateFrom = moment(dateTo).subtract(1, "year"); 
+    const dateFrom = moment(dateTo).subtract(1, "year");
 
     this.domDateFromUpdate(dateFrom, format, templateObject);
     this.domDateToUpdate(dateTo, format);
@@ -197,5 +197,28 @@ export default class Datehandler {
         Datehandler.finYearToDate(Datehandler.defaultFormat, templateObject);
       }
     };
+  }
+
+  static defaultDatePicker(selector = ".formClassDate") {
+    $(selector).datepicker({
+      showOn: "button",
+      buttonText: "Show Date",
+      buttonImageOnly: true,
+      buttonImage: "/img/imgCal2.png",
+      dateFormat: "dd/mm/yy",
+      showOtherMonths: true,
+      selectOtherMonths: true,
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "-90:+10",
+      onChangeMonthYear: function (year, month, inst) {
+        // Set date to picker
+        $(this).datepicker("setDate", new Date(year, inst.selectedMonth, inst.selectedDay));
+        // Hide (close) the picker
+        // $(this).datepicker('hide');
+        //  Change ttrigger the on change function
+        // $(this).trigger('change');
+      }
+    });
   }
 }

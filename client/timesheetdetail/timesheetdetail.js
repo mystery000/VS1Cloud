@@ -22,6 +22,7 @@ import {EmployeeFields} from "../js/Api/Model/Employee";
 import {ReportService} from "../reports/report-service";
 import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import moment from "moment";
+import Datehandler from "../DateHandler";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -399,6 +400,7 @@ Template.timesheetdetail.onRendered(function () {
 
     await this.calculateWeeklyHours();
 
+    Datehandler.defaultDatePicker();
     LoadingOverlay.hide();
   };
   this.initPage();
