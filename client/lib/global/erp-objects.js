@@ -277,7 +277,9 @@ const erpObject = {
     TProductMovementList:"TProductMovementList",
     TCardDataReport:"TCardDataReport",
     TProcTree:"TProcTree",
-    TPayrollSettingOvertimes: "TPayrollSettingOvertimes"
+    TPayrollSettingOvertimes: "TPayrollSettingOvertimes",
+    TRateTypes: "TRateTypes",
+    TEarningData: "TEarningData",
 };
 
 export default erpObject;

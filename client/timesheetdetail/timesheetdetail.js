@@ -23,6 +23,7 @@ import {ReportService} from "../reports/report-service";
 import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import moment from "moment";
 import Datehandler from "../DateHandler";
+import { getEarnings } from "../settings/payroll-settings/payrollrules";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -205,19 +206,15 @@ Template.timesheetdetail.onRendered(function () {
   };
 
   this.loadEarningSelector = async () => {
-    let options = [
-      {
-        value: "Ordinary Time Earnings",
-        text: "Ordinary Time Earnings"
-      }, {
-        value: "Overtime Earnings",
-        text: "Overtime Earnings"
-      }
-    ];
+    let earnings = await getEarnings();
+    earnings  = earnings.map(earning => earning.fields);
+    console.log('earnings', earnings);
+    
+    await this.earningOptions.set(earnings);
 
-    await this.earningOptions.set(options);
-
-    $("#tblEarnigRatesList").DataTable();
+    setTimeout(() => {
+      $("#tblEarnigRatesList").DataTable();
+    }, 300)
   };
 
   this.calculateWeeklyHours = async () => {

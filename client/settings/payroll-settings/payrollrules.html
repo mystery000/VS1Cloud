@@ -2086,12 +2086,15 @@
                                                                 <div class="col-12">
                                                                     <div class="form-group">
                                                                         <label for="overtimeRateType">Rate Type</label>
-                                                                        <select class="form-control overtimeRateType" style="cursor: pointer;" id="overtimeRateType" >
-                                                                            <option value="">Default</option>
-                                                                            <option value="Time & Half">Time & Half</option>
-                                                                            <option value="Double Time">Double Time</option>
-                                                                            <option value="Weekend">Weekend</option>
-                                                                        </select>
+                                                                        <input class="es-input form-control overtimeRateType" id="overtimeRateType" >
+                                                                        <!-- <select class="form-control overtimeRateType" style="cursor: pointer;" id="overtimeRateType" >
+                                                                            {{#if rateTypes}}
+                                                                                {{#each rateType in rateTypes}}
+                                                                                <option value="{{rateType.ID}}">{{rateType.Description}}</option>
+
+                                                                                {{/each}}
+                                                                            {{/if}}
+                                                                        </select> -->
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-12">
@@ -2141,7 +2144,7 @@
                                                     }
                                                 </style>
 
-                                                <table id="" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblSuperannuation">
+                                                <table id="OvertimeTable" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblSuperannuation">
                                                     <thead>
                                                         <tr class="dnd-moved">
                                                             <th class="th">Rate Type</th>
@@ -2154,7 +2157,7 @@
                                                         {{#if overtimes}}
                                                             {{#each overtime in overtimes}}
                                                                 <tr overtime-id="{{overtime.id}}">
-                                                                    <td class="td">{{ overtime.rateType }}</td>
+                                                                    <td class="td">{{ overtime.rateType.Description }}</td>
                                                                     <td class="td">{{ overtime.rule }}</td>
                                                                     <td class="td">{{ overtime.hourlyMultiplier }}</td>        
                                                                     <td contenteditable="false" class="colDelete">
@@ -2665,6 +2668,52 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="select-ratetype-modal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4>Rate Type List</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span></button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" style="width: 100%; display:none;" id="selectRateLineID" name="selectRateLineID" readonly="readonly">
+                <div class="card-body p-1 rounded">
+                  <div class="table-responsive">
+                    <style>
+                      .thDescription {
+                        width: 40% !important;
+                      }
+                    </style>
+        
+                    <table id="tblratetypes" style="width:100%" class="table table-striped table-bordered tblratetypes">
+                      <thead>
+                        <tr class="dnd-moved">
+                          <th class="thDescription">Description</th>
+                          <th class="thRateID hiddenColumn">Rate Type ID</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {{#if rateTypes}}
+                            {{#each rateType in rateTypes}}
+                              <tr>
+                                <td>{{ rateType.Description }}</td>
+                                <td class="hiddenColumn">{{ rateType.ID }}</td>
+                              </tr>
+                            {{/each}}
+                        {{/if}}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+              </div>
+            </div>
+          </div>
     </div>
 
     <!-- End Help Video Modal -->

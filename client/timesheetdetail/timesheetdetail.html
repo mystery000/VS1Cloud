@@ -396,14 +396,14 @@
                                 <tbody>
                                     {{#if earningOptions}}
                                         {{#each rate in earningOptions}}
-                                            <tr>
-                                                <td>{{ rate.value }}</td>
+                                            <tr ratetype-id="{{rate.ID}}">
+                                                <td>{{ rate.EarningName }}</td>
                                             
-                                                <td>{{ rate.type }}</td>
-                                                <td>{{ rate.DisplayName }}</td>
-                                                <td>{{ rate.RateType }}</td>
+                                                <td>{{ rate.EarningType }}</td>
+                                                <td>{{ rate.EarningDisplayName }}</td>
+                                                <td>{{ rate.EarningRateType }}</td>
                                                 <td>{{ rate.Amount }}</td>
-                                                <td>{{ rate.Account }}</td>
+                                                <td>{{ rate.EarningExpanceAccount }}</td>
         
                                             </tr>
                                         {{/each}}

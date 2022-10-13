@@ -263,7 +263,7 @@ openDb = function(dbName) {
             db.createObjectStore('TXeCurrencySettings', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TTripGroup', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TLeaveData', { keyPath: "EmployeeEmail" });
-            db.createObjectStore('TEarningData', { keyPath: "EmployeeEmail" });
+            // db.createObjectStore('TEarningData', { keyPath: "EmployeeEmail" });
             db.createObjectStore('TReportsAccountantsCategory', { keyPath: "EmployeeEmail" });
 
             db.createObjectStore('TltSalesOverview', { keyPath: "EmployeeEmail" });
@@ -305,6 +305,8 @@ openDb = function(dbName) {
             db.createObjectStore('VS1_Customize', { keyPath: "EmployeeEmail" });
             db.createObjectStore('VS1_Dashboard', { keyPath: "EmployeeEmail" });
             db.createObjectStore(erpObject.TPayrollSettingOvertimes, { keyPath: "EmployeeEmail" });
+            db.createObjectStore(erpObject.TRateTypes, { keyPath: "EmployeeEmail" });
+            db.createObjectStore(erpObject.TEarningData, { keyPath: "EmployeeEmail" });
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });

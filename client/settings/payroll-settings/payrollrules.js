@@ -33,6 +33,7 @@ Template.payrollrules.onCreated(function() {
 
 
     templateObject.overtimes = new ReactiveVar([]);
+    templateObject.rateTypes = new ReactiveVar([]);
 });
 
 Template.payrollrules.onRendered(function() {
@@ -2910,7 +2911,7 @@ Template.payrollrules.onRendered(function() {
     templateObject.getHolidayData();
 
     templateObject.getEarningData = function(){
-        getVS1Data('TEarningData').then(function(dataObject) {
+        getVS1Data(erpObject.TEarningData).then(function(dataObject) {
 
             if(dataObject.length == 0)
             {
@@ -5261,10 +5262,21 @@ Template.payrollrules.onRendered(function() {
 
 
     templateObject.getOvertimes = async () => {
+        let rateTypes = await templateObject.rateTypes.get();
         let overtimes =  await getOvertimes();
         // let data = await getVS1Data("TTOvertime");
 
+        overtimes.forEach((overtime) => {
+            overtime.rateType = rateTypes.find(rate => rate.ID == overtime.rateTypeId);
+        });
+
         await templateObject.overtimes.set(overtimes);
+
+        setTimeout(() => {
+            $('#OvertimeTable').DataTable({
+                destroy: true
+            });
+        }, 300);
     }
 
     templateObject.getOvertimes();
@@ -5317,20 +5329,26 @@ Template.payrollrules.onRendered(function() {
         $('#btnAddNewOvertime .modal-title').text('Add new Overtime');
 
         LoadingOverlay.show();
+
+        const rateTypes = await templateObject.rateTypes.get();
+
         const hours = $('#overtimeHours').val();
-        const rateType = $('#overtimeRateType').val();
+        const rateType = rateTypes.find(rate => rate.ID == $('#overtimeRateType').val());
         const hourlyMultiplier = $('#overtimeHourlyMultiplier').val();
         const weekEndDay = $('#OvertimeWeekEndDay').val();
 
+
         const object = {
-            hours: hours, 
+            hours: hours,
+            rateTypeId: rateType.ID,
             rateType: rateType,
+            //rateType: rateType.Description,
             hourlyMultiplier: hourlyMultiplier,
-            rule: rateType == "Weekend" ? `${rateType} : (${weekEndDay})` : `${rateType}`,
+            rule: rateType == "Weekend" ? `${rateType.Description} : (${weekEndDay})` : `${rateType.Description}`,
             ...(rateType == "Weekend" ? {day: weekEndDay} : {day: null}),
             
         }
-
+   
         // Add to the list of overtimes
         let overtimes = await templateObject.overtimes.get();
         overtimes.push(object);
@@ -5420,6 +5438,26 @@ Template.payrollrules.onRendered(function() {
         $('#overtimeHourlyMultiplier').val(0);
         $('#OvertimeWeekEndDay').val('');
     }
+
+
+    templateObject.loadRateTypes = async () => {
+        let rates  = await getRateTypes();
+        rates = rates.tpayratetype.map(rate => rate.fields);
+        await templateObject.rateTypes.set(rates);
+
+       setTimeout(() => {
+        $("#tblratetypes").DataTable({
+            destroy: true
+        });
+       }, 300);
+    }
+
+    templateObject.initData  = async () => {
+        await templateObject.loadRateTypes();
+        await templateObject.getOvertimes();
+    }
+
+    templateObject.initData();
 
 
     $('#tblAlowances tbody').on( 'click', 'td:not(.colDeleteAllowances)', function () {
@@ -17471,7 +17509,7 @@ Template.payrollrules.events({
      else {
         LoadingOverlay.show();
 
-        getVS1Data('TEarningData').then(function(dataObject) {
+        getVS1Data(erpObject.TEarningData).then(function(dataObject) {
 
             if(dataObject.length == 0)
             {
@@ -21866,6 +21904,22 @@ Template.payrollrules.events({
      "click .edit-overtime": (e, ui) => {
         const id = $(e.currentTarget).attr('overtime-id');
         ui.editOverTime(id);
+     },
+
+     "click #overtimeRateType": (e, ui) => {
+        $(e.currentTarget).addClass('paste-rate');
+        $('#select-ratetype-modal').modal('show');
+
+     },
+
+     "click #tblratetypes tbody > tr": (e, ui) => {
+        const tr = $(e.currentTarget);
+        const rateName = $(tr).find('td:first').text();
+
+        $('.paste-rate').val(rateName);
+        $('#select-ratetype-modal').modal('hide');
+        $(".paste-rate").removeClass('paste-rate');
+
      }
 
 });
@@ -21884,6 +21938,9 @@ Template.payrollrules.helpers({
     },
     overtimes: () => {
         return Template.instance().overtimes.get();
+    },
+    rateTypes: () => {
+        return Template.instance().rateTypes.get();
     }
 
     
@@ -21896,7 +21953,7 @@ Template.payrollrules.helpers({
  */
 export const getOvertimes = async () => {
     let overtimesData = await getVS1Data(erpObject.TPayrollSettingOvertimes);
-    let overtimes = JSON.parse(overtimesData[0].data);
+    let overtimes = overtimesData.length > 0 ? JSON.parse(overtimesData[0].data) : [];
 
     return overtimes;
 
@@ -21907,6 +21964,19 @@ export const getOvertimes = async () => {
 }
 
 export const saveOvertimes = async (overtimes = []) => {
-    return await addVS1Data(erpObject.TPayrollSettingOvertimes,JSON.stringify(overtimes));
+    return await addVS1Data(erpObject.TPayrollSettingOvertimes, JSON.stringify(overtimes));
     // return localStorage.setItem(erpObject.TPayrollSettingOvertimes, JSON.stringify(overtimes));
+}
+
+export const getRateTypes = async () => {
+    // sideBarService.getRateTypes(initialBaseDataLoad, 0)
+    let data = await getVS1Data(erpObject.TRateTypes); 
+    let rateTypes = data.length > 0 ? JSON.parse(data[0].data) : [];
+    return rateTypes;
+}
+
+export const getEarnings = async () => {
+    let data = await getVS1Data(erpObject.TEarningData);
+    let earnings =  data.length > 0 ? JSON.parse(data[0].data) : [];
+    return earnings;
 }
