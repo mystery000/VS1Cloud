@@ -26,7 +26,7 @@ Template.leadstatussettings.onRendered(function () {
 
     Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'leadStatusList', function (error, result) {
         if (error) {
-            
+
         } else {
             if (result) {
                 for (let i = 0; i < result.customFields.length; i++) {
@@ -174,6 +174,13 @@ Template.leadstatussettings.onRendered(function () {
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
+                },
+                language: { search: "",searchPlaceholder: "Search List..." },
+                "fnInitComplete": function() {
+                	this.fnPageChange('last');
+                	  $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#leadStatusList_filter");
+
+                	$("<button class='btn btn-primary btnRefreshleadStatusList' type='button' id='btnRefreshleadStatusList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#leadStatusList_filter");
                 },
             }).on('page', function () {
                 setTimeout(function () {

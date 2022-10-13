@@ -200,6 +200,15 @@ Template.paymentmethodSettings.onRendered(function() {
                       action: function () {
                           $('#paymentmethodList').DataTable().ajax.reload();
                       },
+                      language: { search: "",searchPlaceholder: "Search List..." },
+                      "fnInitComplete": function() {
+                      	this.fnPageChange('last');
+                      	  $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#paymentmethodList_filter");
+
+                      	$("<button class='btn btn-primary btnRefreshpaymentmethodList' type='button' id='btnRefreshpaymentmethodList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#paymentmethodList_filter");
+                      },
+
+
                       "fnDrawCallback": function (oSettings) {
                         setTimeout(function () {
                           MakeNegative();
@@ -373,6 +382,14 @@ Template.paymentmethodSettings.onRendered(function() {
             action: function () {
                 $('#paymentmethodList').DataTable().ajax.reload();
             },
+
+            language: { search: "",searchPlaceholder: "Search List..." },
+            "fnInitComplete": function() {
+                this.fnPageChange('last');
+                  $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#paymentmethodList_filter");
+
+                $("<button class='btn btn-primary btnRefreshpaymentmethodList' type='button' id='btnRefreshpaymentmethodList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#paymentmethodList_filter");
+            },
             "fnDrawCallback": function (oSettings) {
               setTimeout(function () {
                 MakeNegative();
@@ -540,6 +557,15 @@ Template.paymentmethodSettings.onRendered(function() {
                     action: function () {
                         $('#paymentmethodList').DataTable().ajax.reload();
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
+                    "fnInitComplete": function() {
+                    	this.fnPageChange('last');
+                    	  $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#paymentmethodList_filter");
+
+                    	$("<button class='btn btn-primary btnRefreshpaymentmethodList' type='button' id='btnRefreshpaymentmethodList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#paymentmethodList_filter");
+                    },
+
+
                     "fnDrawCallback": function (oSettings) {
                       setTimeout(function () {
                         MakeNegative();

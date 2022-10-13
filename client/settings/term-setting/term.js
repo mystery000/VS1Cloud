@@ -193,6 +193,12 @@ Template.termsettings.onRendered(function() {
                       "order": [[ 0, "asc" ]],
                       // "aaSorting": [[1,'desc']],
                       language: { search: "",searchPlaceholder: "Search List..." },
+                      "fnInitComplete": function() {
+                      	this.fnPageChange('last');
+                      	  $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#termsList_filter");
+
+                      	$("<button class='btn btn-primary btnRefreshtermsList' type='button' id='btnRefreshtermsList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#termsList_filter");
+                      },
                       action: function () {
                           $('#termsList').DataTable().ajax.reload();
                       },
@@ -380,6 +386,12 @@ setTimeout(function () {
           "order": [[ 0, "asc" ]],
           // "aaSorting": [[1,'desc']],
           language: { search: "",searchPlaceholder: "Search List..." },
+          "fnInitComplete": function() {
+              this.fnPageChange('last');
+                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#termsList_filter");
+
+              $("<button class='btn btn-primary btnRefreshtermsList' type='button' id='btnRefreshtermsList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#termsList_filter");
+          },
           action: function () {
               $('#termsList').DataTable().ajax.reload();
           },
@@ -562,6 +574,12 @@ templateObject.tableheaderrecords.set(tableHeaderList);
                     "order": [[ 0, "asc" ]],
                     // "aaSorting": [[1,'desc']],
                     language: { search: "",searchPlaceholder: "Search List..." },
+                    "fnInitComplete": function() {
+                    	this.fnPageChange('last');
+                    	  $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#termsList_filter");
+
+                    	$("<button class='btn btn-primary btnRefreshtermsList' type='button' id='btnRefreshtermsList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#termsList_filter");
+                    },
                     action: function () {
                         $('#termsList').DataTable().ajax.reload();
                     },
