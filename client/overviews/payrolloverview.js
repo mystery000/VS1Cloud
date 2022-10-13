@@ -442,7 +442,44 @@ Template.payrolloverview.onRendered(function () {
     let employees = data.temployee.map(e => e.fields);
 
     templateObject.employees.set(employees);
-    $('#tblEmployeesList').DataTable();
+   
+
+    setTimeout(() => {
+      $('#tblEmployeesList').DataTable({
+        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        select: true,
+        destroy: true,
+        colReorder: true,
+        lengthMenu: [
+          [
+            25, -1
+          ],
+          [
+            25, "All"
+          ]
+        ],
+        // bStateSave: true,
+        // rowId: 0,
+        paging: true,
+        info: true,
+        responsive: true,
+        order: [
+          [0, "asc"]
+        ],
+        action: function () {
+          $("#tblEmployeesList").DataTable().ajax.reload();
+        },
+        language: {
+          search: "",
+          searchPlaceholder: "Search List..."
+        },
+        fnInfoCallback: function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+          let countTableData = data.Params.Count || 0; //get count from API data
+
+          return "Showing " + iStart + " to " + iEnd + " of " + countTableData;
+        }
+      });
+    }, 300);
 
   }
 
@@ -460,9 +497,48 @@ Template.payrolloverview.onRendered(function () {
     data = data.response;
     let calendars = data.tpayrollcalendars.map(c => c.fields);
 
-    templateObject.payPeriods.set(calendars);
+    await templateObject.payPeriods.set(calendars);
 
-    $('#tblPayPeriodsList').DataTable();
+    if(await templateObject.payPeriods.get()) {
+    
+      setTimeout(() => {
+        $('#tblPayPeriodsList').DataTable({
+          sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+          select: true,
+          destroy: true,
+          colReorder: true,
+          lengthMenu: [
+            [
+              25, -1
+            ],
+            [
+              25, "All"
+            ]
+          ],
+          // bStateSave: true,
+          // rowId: 0,
+          paging: true,
+          info: true,
+          responsive: true,
+          order: [
+            [0, "asc"]
+          ],
+          action: function () {
+            $("#tblPayPeriodsList").DataTable().ajax.reload();
+          },
+          language: {
+            search: "",
+            searchPlaceholder: "Search List..."
+          },
+          fnInfoCallback: function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+            let countTableData = data.Params.Count || 0; //get count from API data
+  
+            return "Showing " + iStart + " to " + iEnd + " of " + countTableData;
+          }
+        });
+      }, 300);
+    }
+
   }
 
 
