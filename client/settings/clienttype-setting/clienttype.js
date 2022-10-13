@@ -27,26 +27,6 @@ Template.clienttypesettings.onRendered(function () {
     const deptrecords = [];
     let deptprodlineItems = [];
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'clienttypeList', function (error, result) {
-        if (error) {}
-        else {
-            if (result) {
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
 
     function MakeNegative() {
         $('td').each(function () {
@@ -174,6 +154,17 @@ Template.clienttypesettings.onRendered(function () {
                             colReorder: {
                                 fixedColumnsRight: 1
                             },
+                            language: { search: "",searchPlaceholder: "Search List..." },
+                            "fnInitComplete": function() {
+                                this.fnPageChange('last');
+                                // if(data.Params.Search.replace(/\s/g, "") == ""){
+                                //   $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#clienttypeList_filter");
+                                // }else{
+                                  $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#clienttypeList_filter");
+                                //}
+
+                                $("<button class='btn btn-primary btnRefreshClientType' type='button' id='btnRefreshClientType' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#clienttypeList_filter");
+                            },
                             // bStateSave: true,
                             // rowId: 0,
                             pageLength: initialDatatableLoad,
@@ -255,35 +246,6 @@ Template.clienttypesettings.onRendered(function () {
                 templateObject.datatablerecords.set(dataTableList);
 
                 if (templateObject.datatablerecords.get()) {
-
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'clienttypeList', function (error, result) {
-                        if (error) {}
-                        else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
@@ -328,6 +290,13 @@ Template.clienttypesettings.onRendered(function () {
                         colReorder: true,
                         colReorder: {
                             fixedColumnsRight: 1
+                        },
+                        language: { search: "",searchPlaceholder: "Search List..." },
+                        "fnInitComplete": function() {
+                            this.fnPageChange('last');
+                              $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#clienttypeList_filter");
+
+                            $("<button class='btn btn-primary btnRefreshClientType' type='button' id='btnRefreshClientType' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#clienttypeList_filter");
                         },
                         // bStateSave: true,
                         // rowId: 0,
@@ -483,6 +452,13 @@ Template.clienttypesettings.onRendered(function () {
                         colReorder: true,
                         colReorder: {
                             fixedColumnsRight: 1
+                        },
+                        language: { search: "",searchPlaceholder: "Search List..." },
+                        "fnInitComplete": function() {
+                            this.fnPageChange('last');
+                              $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#clienttypeList_filter");
+
+                            $("<button class='btn btn-primary btnRefreshClientType' type='button' id='btnRefreshClientType' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#clienttypeList_filter");
                         },
                         // bStateSave: true,
                         // rowId: 0,
