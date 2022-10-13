@@ -549,30 +549,30 @@ Template.crmoverview.onRendered(function () {
   });
   ///////////////////////////////////////////////////
 
-  templateObject.getSettingsList = async function () { 
-    let data = [];
-    let details = [];
-    let dataObject = await getVS1Data('TERPPreference')
-    if (dataObject.length > 0) {
-      data = JSON.parse(dataObject[0].data);
-      details = data.terppreference.filter(function (item) {
-        if (settingFields.includes(item.PrefName)) {
-          return item;
-        }
-      });
-    }
-    if (details.length == 0) {
-      prefSettings = await settingService.getPreferenceSettings(settingFields);
-      details = prefSettings.terppreference;
-      data.terppreference.push(...details);
-      await addVS1Data('TERPPreference', JSON.stringify(data))
-    }
+  // templateObject.getSettingsList = async function () { 
+  //   let data = [];
+  //   let details = [];
+  //   let dataObject = await getVS1Data('TERPPreference')
+  //   if (dataObject.length > 0) {
+  //     data = JSON.parse(dataObject[0].data);
+  //     details = data.terppreference.filter(function (item) {
+  //       if (settingFields.includes(item.PrefName)) {
+  //         return item;
+  //       }
+  //     });
+  //   }
+  //   if (details.length == 0) {
+  //     prefSettings = await settingService.getPreferenceSettings(settingFields);
+  //     details = prefSettings.terppreference;
+  //     data.terppreference.push(...details);
+  //     await addVS1Data('TERPPreference', JSON.stringify(data))
+  //   }
 
-    if (details.length > 0) {
-      templateObject.settingDetails.set(details); 
-    }  
-  };
-  templateObject.getSettingsList();
+  //   if (details.length > 0) {
+  //     templateObject.settingDetails.set(details); 
+  //   }  
+  // };
+  // templateObject.getSettingsList();
   
 });
 
