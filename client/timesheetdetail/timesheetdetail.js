@@ -27,6 +27,11 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
 
+const redirectToPayRollOverview = () => {
+  const id = FlowRouter.current().queryParams.tid;
+  window.location.href = `/payrolloverview?tid=${id}`;
+};
+
 Template.timesheetdetail.onCreated(function () {
   this.timesheet = new ReactiveVar();
   this.timeSheetList = new ReactiveVar([]);
@@ -41,21 +46,21 @@ Template.timesheetdetail.onCreated(function () {
 });
 
 Template.timesheetdetail.onRendered(function () {
-  this.loadTimeSheet = async () => {
-    let id = FlowRouter.current().queryParams.tid;
+  const id = FlowRouter.current().queryParams.tid;
 
+  this.loadTimeSheet = async (refresh = false) => {
     let data = await CachedHttp.get(erpObject.TTimeSheetEntry, async () => {
       return await new ContactService().getAllTimeSheetList();
     }, {
       useIndexDb: true,
       useLocalStorage: false,
       fallBackToLocal: true,
+      forceOverride: refresh,
       validate: cachedResponse => {
-        return false;
+        return true;
       }
     });
     data = data.response;
-
     let timesheets = data.ttimesheet.map(t => t.fields);
     timesheets.forEach((t, index) => {
       if (t.Status == "") {
@@ -64,11 +69,26 @@ Template.timesheetdetail.onRendered(function () {
     });
     let timesheet = timesheets.find(o => o.ID == id);
 
-    this.timesheet.set(timesheet);
-    this.weeklyTotal.set(timesheet.Hours);
+    if (timesheet) {
+      this.timesheet.set(timesheet);
+      this.weeklyTotal.set(timesheet.Hours);
+    } else {
+      LoadingOverlay.hide(0);
+      const result = await swal({
+        title: `Timesheet ${id} is not found`,
+        //text: "Please log out to activate your changes.",
+        type: "error",
+        showCancelButton: false,
+        confirmButtonText: "OK"
+      });
+
+      if (result.value) {
+        redirectToPayRollOverview();
+      } else if (result.dismiss === "cancel") {}
+    }
   };
 
-  this.loadEmployee = async () => {
+  this.loadEmployee = async (refresh = false) => {
     let timesheet = await this.timesheet.get();
 
     let data = await CachedHttp.get(erpObject.TEmployee, async () => {
@@ -77,6 +97,7 @@ Template.timesheetdetail.onRendered(function () {
       useIndexDb: true,
       useLocalStorage: false,
       fallBackToLocal: true,
+      forceOverride: refresh,
       validate: cachedResponse => {
         return true;
       }
@@ -85,8 +106,23 @@ Template.timesheetdetail.onRendered(function () {
     data = data.response;
     let employees = data.temployee.map(e => e.fields);
 
-    const selectedEmployee = employees.find(e => e.EmployeeName == timesheet.EmployeeName);
-    this.employee.set(selectedEmployee);
+    try {
+      const selectedEmployee = employees.find(e => e.EmployeeName == timesheet.EmployeeName);
+      this.employee.set(selectedEmployee);
+    } catch (e) {
+      LoadingOverlay.hide(0);
+      const result = await swal({
+        title: `Couldn't load the employee's details`,
+        //text: "Please log out to activate your changes.",
+        type: "error",
+        showCancelButton: false,
+        confirmButtonText: "Retry"
+      });
+
+      if (result.value) {
+        this.loadEmployee(true);
+      } else if (result.dismiss === "cancel") {}
+    }
   };
 
   /**
@@ -141,7 +177,6 @@ Template.timesheetdetail.onRendered(function () {
     }
 
     this.earningDays.set(days);
-
   };
 
   //  this.loadTimeSheetEntry = async () => {
@@ -223,6 +258,7 @@ Template.timesheetdetail.onRendered(function () {
   };
 
   this.approveTimeSheet = async () => {
+    LoadingOverlay.show();
     const timesheet = await this.timesheet.get();
     const hours = await this.calculateWeeklyHours();
     const earningLines = this.buildNewObject();
@@ -237,9 +273,24 @@ Template.timesheetdetail.onRendered(function () {
       }
     };
     await contactService.saveTimeSheetUpdate(objectDataConverted);
+
+    LoadingOverlay.hide(0);
+    const result = await swal({
+      title: `Timesheet ${id} has been approved`,
+      //text: "Please log out to activate your changes.",
+      type: "success",
+      showCancelButton: false,
+      confirmButtonText: "OK"
+    });
+
+    if (result.value) {
+      //window.location.reload();
+      redirectToPayRollOverview();
+    } else if (result.dismiss === "cancel") {}
   };
 
   this.cancelTimeSheet = async () => {
+    LoadingOverlay.show();
     const timesheet = await this.timesheet.get();
     const hours = await this.calculateWeeklyHours();
     const earningLines = this.buildNewObject();
@@ -254,9 +305,24 @@ Template.timesheetdetail.onRendered(function () {
       }
     };
     await contactService.saveTimeSheetUpdate(objectDataConverted);
+
+    LoadingOverlay.hide(0);
+    const result = await swal({
+      title: `Timesheet ${id} has been canceled`,
+      //text: "Please log out to activate your changes.",
+      type: "success",
+      showCancelButton: false,
+      confirmButtonText: "OK"
+    });
+
+    if (result.value) {
+      // window.location.reload();
+      redirectToPayRollOverview();
+    } else if (result.dismiss === "cancel") {}
   };
 
   this.darftTimeSheet = async () => {
+    LoadingOverlay.show();
     const timesheet = await this.timesheet.get();
     const hours = await this.calculateWeeklyHours();
     const earningLines = this.buildNewObject();
@@ -271,9 +337,23 @@ Template.timesheetdetail.onRendered(function () {
       }
     };
     await contactService.saveTimeSheetUpdate(objectDataConverted);
+
+    LoadingOverlay.hide(0);
+    const result = await swal({
+      title: `Timesheet ${id} has been drafted`,
+      //text: "Please log out to activate your changes.",
+      type: "success",
+      showCancelButton: false,
+      confirmButtonText: "OK"
+    });
+
+    if (result.value) {
+      redirectToPayRollOverview();
+    } else if (result.dismiss === "cancel") {}
   };
 
   this.deleteTimeSheet = async () => {
+    LoadingOverlay.show();
     const timesheet = await this.timesheet.get();
     let objectDataConverted = {
       type: erpObject.TTimeSheet,
@@ -285,6 +365,19 @@ Template.timesheetdetail.onRendered(function () {
       }
     };
     await contactService.saveTimeSheetUpdate(objectDataConverted);
+
+    LoadingOverlay.hide(0);
+    const result = await swal({
+      title: `Timesheet ${id} has been deleted`,
+      //text: "Please log out to activate your changes.",
+      type: "success",
+      showCancelButton: false,
+      confirmButtonText: "OK"
+    });
+
+    if (result.value) {
+      redirectToPayRollOverview();
+    } else if (result.dismiss === "cancel") {}
   };
 
   this.initPage = async () => {

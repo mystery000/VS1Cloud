@@ -243,13 +243,14 @@ Template.payrolloverview.onRendered(function () {
   };
 
 
-  templateObject.loadTimeSheet = async () => {
+  templateObject.loadTimeSheet = async (refresh = false) => {
     let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
         return await sideBarService.getAllTimeSheetList();
     }, {
         useIndexDb: true,
         useLocalStorage: false,
         fallBackToLocal: true,
+        forceOverride: refresh,
         validate: (cachedResponse) => {
             return true;
         }
@@ -422,13 +423,14 @@ Template.payrolloverview.onRendered(function () {
     
   },
   
-  templateObject.loadEmployees = async () => {
+  templateObject.loadEmployees = async (refresh = false) => {
     let data = await CachedHttp.get(erpObject.TEmployee, async () => {
       return await contactService.getAllEmployees();
     }, {
       useIndexDb: true,
       fallBackToLocal: true, 
       useLocalStorage: false,
+      forceOverride: refresh,
       validate: (cachedResponse) => {
         return true;
       }
@@ -3750,19 +3752,19 @@ Template.payrolloverview.onRendered(function () {
 
 
 
-  templateObject.initPage = async () => {
+  templateObject.initPage = async (refresh = false) => {
     LoadingOverlay.show();
 
     // Timesheet
-    await templateObject.loadTimeSheet();
+    await templateObject.loadTimeSheet(refresh);
 
     // PayRuns
-    await templateObject.loadDraftPayrun();
-    await templateObject.loadPayRunList();
+    await templateObject.loadDraftPayrun(refresh);
+    await templateObject.loadPayRunList(refresh);
 
     // Add timsheet modal
-    await templateObject.loadEmployees();
-    await templateObject.loadPayPeriods();
+    await templateObject.loadEmployees(refresh);
+    await templateObject.loadPayPeriods(refresh);
     LoadingOverlay.hide();
   }
   templateObject.initPage();
@@ -6055,66 +6057,67 @@ Template.payrolloverview.events({
     jQuery("#tblPayHistorylist_wrapper .dt-buttons .btntabletoexcel").click();
     $(".fullScreenSpin").css("display", "none");
   },
-  "click .btnRefresh": function () {
-    LoadingOverlay.show();
-    let templateObject = Template.instance();
-    sideBarService
-      .getAllAppointmentPredList()
-      .then(function (data) {
-        addVS1Data("TAppointmentPreferences", JSON.stringify(data))
-          .then(function (datareturn) {})
-          .catch(function (err) {});
-      })
-      .catch(function (err) {});
-    sideBarService
-      .getAllPayHistoryDataVS1(initialBaseDataLoad, 0)
-      .then(function (data) {
-        addVS1Data("TPayHistory", JSON.stringify(data))
-          .then(function (datareturn) {
-            window.open('/payrolloverview', '_self');
-          })
-          .catch(function (err) {
-            window.open('/payrolloverview', '_self');
-          });
-      })
-      .catch(function (err) {
-        window.open('/payrolloverview', '_self');
-      });
+  "click .btnRefresh":  (e, ui) => {
+    ui.initPage(true);
+    // LoadingOverlay.show();
+    // let templateObject = Template.instance();
+    // sideBarService
+    //   .getAllAppointmentPredList()
+    //   .then(function (data) {
+    //     addVS1Data("TAppointmentPreferences", JSON.stringify(data))
+    //       .then(function (datareturn) {})
+    //       .catch(function (err) {});
+    //   })
+    //   .catch(function (err) {});
+    // sideBarService
+    //   .getAllPayHistoryDataVS1(initialBaseDataLoad, 0)
+    //   .then(function (data) {
+    //     addVS1Data("TPayHistory", JSON.stringify(data))
+    //       .then(function (datareturn) {
+    //         window.open('/payrolloverview', '_self');
+    //       })
+    //       .catch(function (err) {
+    //         window.open('/payrolloverview', '_self');
+    //       });
+    //   })
+    //   .catch(function (err) {
+    //     window.open('/payrolloverview', '_self');
+    //   });
 
-    sideBarService
-      .getAllEmployees(initialBaseDataLoad, 0)
-      .then(function (data) {
-        addVS1Data("TEmployee", JSON.stringify(data))
-          .then(function (datareturn) {})
-          .catch(function (err) {});
-      })
-      .catch(function (err) {
-        window.open('/payrolloverview', '_self');
-      });
+    // sideBarService
+    //   .getAllEmployees(initialBaseDataLoad, 0)
+    //   .then(function (data) {
+    //     addVS1Data("TEmployee", JSON.stringify(data))
+    //       .then(function (datareturn) {})
+    //       .catch(function (err) {});
+    //   })
+    //   .catch(function (err) {
+    //     window.open('/payrolloverview', '_self');
+    //   });
 
-    sideBarService
-      .getAlltimeSheetList()
-      .then(function (data) {
-        addVS1Data("TTimeSheet", JSON.stringify(data));
-        setTimeout(function () {
-          window.open("/payrolloverview", "_self");
-        }, 500);
-      })
-      .catch(function (err) {
-        $(".fullScreenSpin").css("display", "none");
-        swal({
-          title: "Oooops...",
-          text: err,
-          type: "error",
-          showCancelButton: false,
-          confirmButtonText: "Try Again",
-        }).then((result) => {
-          if (result.value) {
-            // Meteor._reload.reload();
-          } else if (result.dismiss == "cancel") {
-          }
-        });
-      });
+    // sideBarService
+    //   .getAlltimeSheetList()
+    //   .then(function (data) {
+    //     addVS1Data("TTimeSheet", JSON.stringify(data));
+    //     setTimeout(function () {
+    //       window.open("/payrolloverview", "_self");
+    //     }, 500);
+    //   })
+    //   .catch(function (err) {
+    //     $(".fullScreenSpin").css("display", "none");
+    //     swal({
+    //       title: "Oooops...",
+    //       text: err,
+    //       type: "error",
+    //       showCancelButton: false,
+    //       confirmButtonText: "Try Again",
+    //     }).then((result) => {
+    //       if (result.value) {
+    //         // Meteor._reload.reload();
+    //       } else if (result.dismiss == "cancel") {
+    //       }
+    //     });
+    //   });
   },
   "click .printConfirm": function (event) {
     LoadingOverlay.show();
