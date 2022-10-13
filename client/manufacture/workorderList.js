@@ -278,23 +278,34 @@ Template.workorderlist.onRendered (function() {
         // templateObject.tableheaderrecords.set(tableHeaderList);
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
         $('#tblWorkorderList tbody').on('click', 'tr', function () {
-            var listData = $(this).closest('tr').find('.colOrderNumber').text();
-          
-            getVS1Data('TSalesOrderEx').then(function(dataObject){
-                if(dataObject.length == 0) {
-                    accountService.getOneSalesOrderdataEx(templateObject.salesOrderId.get()).then(function(data){
-                      FlowRouter.go('/workorderrecord?id=' + listData + "&lineId="+ data.fields.ID)
-                    })
-                }else{
-                    let data = JSON.parse(dataObject[0].data);
-                    let useData = data.tsalesorderex;
-                    FlowRouter.go('/workorderrecord?id=' + listData + "&lineId="+ data.fields.ID)
-                }}).catch(function(err) {
-                    accountService.getOneSalesOrderdataEx(templateObject.salesOrderId.get()).then(function(data){
-                        FlowRouter.go('/workorderrecord?id=' + listData + "&lineId="+ data.fields.ID)
-                    })
-                })
+            // console.log('clicked')
+            // var listData = $(this).closest('tr').find('.colOrderNumber').text();
+            // var id = $(this).closest('tr').find('.colOrderNumber').text()
+            // console.log('list data', listData)
+            // // getVS1Data('TSalesOrderEx').then(function(dataObject){
+            // //     if(dataObject.length == 0) {
+            // //         console.log('dasdas 0000')
+            // //         accountService.getOneSalesOrderdataEx(listData).then(function(data){
+            // //           FlowRouter.go('/workordercard?id=' + listData + "&lineId="+ data.fields.ID)
+            // //         })
+            // //     }else{
+            // //         console.log('sadasdasda not 0000')
+            // //         let data = JSON.parse(dataObject[0].data);
+            // //         let useData = data.tsalesorderex;
+            // //         FlowRouter.go('/workordercard?id=' + listData + "&lineId="+ useData.fields.ID)
+            // //     }}).catch(function(err) {
+            // //         console.log("ereere", err)
+            // //         accountService.getOneSalesOrderdataEx(listData).then(function(data){
+            // //             console.log('data', data.fields.ID)
+            // //             FlowRouter.go('/workordercard?id=' + listData + "&lineId="+ data.fields.ID)
+            // //         }).catch((error)=>console.log(error))
+            // //     })
             
+            // let workorderlists = templateObject.datatablerecords.get();
+            // let index = workorderlists.findIndex(workorder => {
+            //     return workorder.ID == listData;
+            // })
+            // FlowRouter.go('/workordercard?id=' + index)
         });
 
         // templateObject.getCustomFieldData();

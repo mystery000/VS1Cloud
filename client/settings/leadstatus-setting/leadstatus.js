@@ -67,7 +67,6 @@ Template.leadstatussettings.onRendered(function () {
         });
     }
     function setLeadStatusList(data) {
-        console.log("===", data.tleadstatustype);
         for (let i = 0; i < data.tleadstatustype.length; i++) {
             let eqpm = Number(data.tleadstatustype[i].EQPM);
             const dataList = {

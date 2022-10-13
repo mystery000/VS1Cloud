@@ -120,8 +120,8 @@ async function saveCharts() {
 
 Template.allChartLists.onRendered(function () {
     const templateObject = Template.instance();
-    let _tabGroup = $("#connectedSortable").data("tabgroup");
-    let _chartGroup = $("#connectedSortable").data("chartgroup");
+    _tabGroup = $("#connectedSortable").data("tabgroup");
+    _chartGroup = $("#connectedSortable").data("chartgroup");
 
     templateObject.hideChartElements = () => {
         // on edit mode false
@@ -253,23 +253,52 @@ Template.allChartLists.onRendered(function () {
                 }
             };
             chartList.push(salesQuotaChart6);
-
+            let dsmTop_10_customers = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSMCharts",
+                    ChartName: "Top 10 Customers",
+                    ID: 909,
+                    _chartSlug: "dsmcharts__top_10_customers"
+                }
+            };
+            chartList.push(dsmTop_10_customers);
+            let dsmEmployee_sales_comparison = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSMCharts",
+                    ChartName: "Employee Sales Comparison",
+                    ID: 910,
+                    _chartSlug: "dsmcharts__employee_sales_comparison"
+                }
+            };
+            chartList.push(dsmEmployee_sales_comparison);
             let dsmAppointmentListChart = {
                 fields: {
                     Active: true,
                     ChartGroup: "DSMCharts",
                     ChartName: "Appointment List",
-                    ID: 909,
+                    ID: 911,
                     _chartSlug: "dsmcharts__appointment_list"
                 }
             };
             chartList.push(dsmAppointmentListChart);
+            let dsmOpportunitiesStatusChart = {
+                fields: {
+                    Active: true,
+                    ChartGroup: "DSMCharts",
+                    ChartName: "Opportunities Status",
+                    ID: 912,
+                    _chartSlug: "dsmcharts__opportunities_status"
+                }
+            };
+            chartList.push(dsmOpportunitiesStatusChart);
             let dsmLeadListChart = {
                 fields: {
                     Active: true,
                     ChartGroup: "DSMCharts",
                     ChartName: "Lead List",
-                    ID: 910,
+                    ID: 913,
                     _chartSlug: "dsmcharts__lead_list"
                 }
             };
@@ -279,7 +308,7 @@ Template.allChartLists.onRendered(function () {
                     Active: true,
                     ChartGroup: "DSCharts",
                     ChartName: "Performance Quota",
-                    ID: 911,
+                    ID: 914,
                     _chartSlug: "dscharts__performance_quota"
                 }
             };
@@ -289,7 +318,7 @@ Template.allChartLists.onRendered(function () {
                     Active: true,
                     ChartGroup: "DSCharts",
                     ChartName: "Opportunities Source",
-                    ID: 912,
+                    ID: 915,
                     _chartSlug: "dscharts__opportunities_source"
                 }
             };
@@ -299,7 +328,7 @@ Template.allChartLists.onRendered(function () {
                     Active: true,
                     ChartGroup: "DSCharts",
                     ChartName: "Appointment List",
-                    ID: 913,
+                    ID: 916,
                     _chartSlug: "dscharts__appointment_list"
                 }
             };
@@ -309,7 +338,7 @@ Template.allChartLists.onRendered(function () {
                     Active: true,
                     ChartGroup: "DSCharts",
                     ChartName: "Lead List",
-                    ID: 914,
+                    ID: 917,
                     _chartSlug: "dscharts__lead_list"
                 }
             };
@@ -378,7 +407,7 @@ Template.allChartLists.onRendered(function () {
                         if ( chart.fields._chartSlug == 'accounts__profit_and_loss' ){
                             $(`[key='dashboard__profit_and_loss']`).removeClass("hideelement");
                         }
-                        if ( chart.fields._chartSlug == 'sales__sales_overview' || chart.fields._chartSlug == 'dsmcharts__sales_quota_1'){
+                        if ( chart.fields._chartSlug == 'sales__sales_overview'){
                             $(`[key='contacts__top_10_customers']`).removeClass("hideelement");
                             $(`[key='dashboard__employee_sales_comparison']`).removeClass("hideelement");
                         }
@@ -427,85 +456,85 @@ Template.allChartLists.onRendered(function () {
 
         // Now get user preferences
         let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( _tabGroup );
-        // if (tvs1ChartDashboardPreference.length > 0) {
-        //     // if charts to be displayed are specified
-        //     tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
-        //         setTimeout(() => {
-        //             if (!tvs1chart.fields.Chartname || tvs1chart.fields.Chartname == "") {
-        //                 return;
-        //             }
-        //             // Now all of chart name is undefined. Why those are all undefined? so below code part is not useful.
-        //             const itemName =
-        //                 tvs1chart.fields.ChartGroup.toLowerCase() +
-        //                 "__" +
-        //                 tvs1chart.fields.Chartname.toLowerCase().split(" ").join("_"); // this is the new item name
-        //             $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").removeClass("col-md-8 col-md-6 col-md-4");
-        //             $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass("resizeAfterChart");
-        //             $(`[key='${itemName}']`).attr("pref-id", tvs1chart.fields.ID);
-        //             $(`[key='${itemName}']`).attr("position", tvs1chart.fields.Position);
-        //             $(`[key='${itemName}']`).attr("chart-id", tvs1chart.fields.ChartID);
-        //             $(`[key='${itemName}']`).attr(
-        //                 "chart-group",
-        //                 tvs1chart.fields.chartGroup
-        //             );
-        //             $(`[key='${itemName}']`).addClass("chart-visibility");
-        //             //$(`[key='${itemName}']`).attr('chart-id', tvs1chart.fields.Id);
-        //             $(`[key='${itemName}'] .on-editor-change-mode`).attr(
-        //                 "chart-slug",
-        //                 itemName
-        //             );
-        //             if (tvs1chart.fields.Active == true) {
-        //                 $(`[key='${itemName}'] .on-editor-change-mode`).html("<i class='far fa-eye'></i>");
-        //                 $(`[key='${itemName}'] .on-editor-change-mode`).attr(
-        //                     "is-hidden",
-        //                     "false"
-        //                 );
-        //                 // If the item name exist
-        //                 if( tvs1chart.fields.ChartWidth ){
-        //                     $(`[key='${itemName}'] .ui-resizable`).parents('.sortable-chart-widget-js').css(
-        //                         "width",
-        //                         tvs1chart.fields.ChartWidth + '%'
-        //                     );
-        //                     $(`[key='${itemName}'] .ui-resizable`).css(
-        //                         "width", "100%"
-        //                     );
-        //                 }
-        //                 // This is the ChartHeight saved in the preferences
-        //                 if( tvs1chart.fields.ChartHeight ){
-        //                     $(`[key='${itemName}'] .ui-resizable`).css(
-        //                         "height",
-        //                         tvs1chart.fields.ChartHeight + 'vh'
-        //                     );
-        //                 }
-        //                 $(`[key='${itemName}']`).removeClass("hideelement");
-        //             } else {
-        //                 let defaultClassName = $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").data('default-class');
-        //                 $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass(defaultClassName);
-        //                 $(`[key='${itemName}']`).addClass("hideelement");
-        //                 $(`[key='${itemName}'] .on-editor-change-mode`).html("<i class='far fa-eye-slash'></i>");
-        //                 // $(`[key='${itemName}']`).attr("is-hidden", true);
-        //                 $(`[key='${itemName}'] .on-editor-change-mode`).attr(
-        //                     "is-hidden",
-        //                     "true"
-        //                 );
-        //             }
-        //         }, 500);
-        //     });
-        //     displayedCharts = document.querySelectorAll(
-        //       ".sortable-chart-widget-js:not(.hideelement)"
-        //     );
-        //     if (displayedCharts.length == 0) {
-        //         // show only the first one
-        //         let item = defaultChartList.length ? defaultChartList[0] : "";
-        //         if (item) {
-        //             $(`[key='${item}'] .on-editor-change-mode`).html("<i class='far fa-eye'></i>");
-        //             $(`[key='${item}'] .on-editor-change-mode`).attr("is-hidden", false);
-        //             $(`[key='${item}'] .on-editor-change-mode`).attr("chart-slug", item);
-        //             $(`[key='${item}']`).removeClass("hideelement");
-        //             $(`[key='${item}']`).addClass("chart-visibility");
-        //         }
-        //     }
-        // } else {
+        if (tvs1ChartDashboardPreference.length > 0) {
+            // if charts to be displayed are specified
+            tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
+                setTimeout(() => {
+                    if (!tvs1chart.fields.Chartname || tvs1chart.fields.Chartname == "") {
+                        return;
+                    }
+                    // Now all of chart name is undefined. Why those are all undefined? so below code part is not useful.
+                    const itemName =
+                        tvs1chart.fields.ChartGroup.toLowerCase() +
+                        "__" +
+                        tvs1chart.fields.Chartname.toLowerCase().split(" ").join("_"); // this is the new item name
+                    $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").removeClass("col-md-8 col-md-6 col-md-4");
+                    $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass("resizeAfterChart");
+                    $(`[key='${itemName}']`).attr("pref-id", tvs1chart.fields.ID);
+                    $(`[key='${itemName}']`).attr("position", tvs1chart.fields.Position);
+                    $(`[key='${itemName}']`).attr("chart-id", tvs1chart.fields.ChartID);
+                    $(`[key='${itemName}']`).attr(
+                        "chart-group",
+                        tvs1chart.fields.chartGroup
+                    );
+                    $(`[key='${itemName}']`).addClass("chart-visibility");
+                    //$(`[key='${itemName}']`).attr('chart-id', tvs1chart.fields.Id);
+                    $(`[key='${itemName}'] .on-editor-change-mode`).attr(
+                        "chart-slug",
+                        itemName
+                    );
+                    if (tvs1chart.fields.Active == true) {
+                        $(`[key='${itemName}'] .on-editor-change-mode`).html("<i class='far fa-eye'></i>");
+                        $(`[key='${itemName}'] .on-editor-change-mode`).attr(
+                            "is-hidden",
+                            "false"
+                        );
+                        // If the item name exist
+                        if( tvs1chart.fields.ChartWidth ){
+                            $(`[key='${itemName}'] .ui-resizable`).parents('.sortable-chart-widget-js').css(
+                                "width",
+                                tvs1chart.fields.ChartWidth + '%'
+                            );
+                            $(`[key='${itemName}'] .ui-resizable`).css(
+                                "width", "100%"
+                            );
+                        }
+                        // This is the ChartHeight saved in the preferences
+                        if( tvs1chart.fields.ChartHeight ){
+                            $(`[key='${itemName}'] .ui-resizable`).css(
+                                "height",
+                                tvs1chart.fields.ChartHeight + 'vh'
+                            );
+                        }
+                        $(`[key='${itemName}']`).removeClass("hideelement");
+                    } else {
+                        let defaultClassName = $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").data('default-class');
+                        $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass(defaultClassName);
+                        $(`[key='${itemName}']`).addClass("hideelement");
+                        $(`[key='${itemName}'] .on-editor-change-mode`).html("<i class='far fa-eye-slash'></i>");
+                        // $(`[key='${itemName}']`).attr("is-hidden", true);
+                        $(`[key='${itemName}'] .on-editor-change-mode`).attr(
+                            "is-hidden",
+                            "true"
+                        );
+                    }
+                }, 500);
+            });
+            displayedCharts = document.querySelectorAll(
+              ".sortable-chart-widget-js:not(.hideelement)"
+            );
+            if (displayedCharts.length == 0) {
+                // show only the first one
+                let item = defaultChartList.length ? defaultChartList[0] : "";
+                if (item) {
+                    $(`[key='${item}'] .on-editor-change-mode`).html("<i class='far fa-eye'></i>");
+                    $(`[key='${item}'] .on-editor-change-mode`).attr("is-hidden", false);
+                    $(`[key='${item}'] .on-editor-change-mode`).attr("chart-slug", item);
+                    $(`[key='${item}']`).removeClass("hideelement");
+                    $(`[key='${item}']`).addClass("chart-visibility");
+                }
+            }
+        } else {
             // Set default chart list
             $('.card-visibility').each(function () {
                 $(this).find('.cardShowBtn .far').removeClass('fa-eye');
@@ -521,7 +550,7 @@ Template.allChartLists.onRendered(function () {
             $(`[chart-group='${_chartGroup}']`).find('.minHeight100').removeClass('minHeight100');
             //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget');
             //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget-content');
-        // }
+        }
         await ChartHandler.buildPositions();
         // Handle sorting
         setTimeout(() => {
