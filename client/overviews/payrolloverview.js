@@ -22,6 +22,7 @@ import { EmployeeFields } from "../js/Api/Model/Employee";
 import { map } from "jquery";
 import GlobalFunctions from "../GlobalFunctions";
 import moment from "moment";
+import Datehandler from "../DateHandler";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -6419,7 +6420,7 @@ Template.payrolloverview.events({
     $('.selector-target').removeClass('selector-target');
   },
 
-  
+  ...Datehandler.getDateRangeEvents(),
 });
 
 Template.payrolloverview.helpers({
