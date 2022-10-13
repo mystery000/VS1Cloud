@@ -122,7 +122,7 @@ class FxApi {
   /**
      * This function will return employeeCredentials;
      */
-  async getEmployeeFxCurrencyCredentials(ApiID = "zuusoft547505136", ApiKey = "jkupm6cmhafko2jm7hbodgonur") {
+  async getEmployeeFxCurrencyCredentials(ApiID = "userheight41774646", ApiKey = "lgfqm73fb3id5vmqhnnfkgkk0v") {
    
     // here we need to load from db the user credentials 
 
