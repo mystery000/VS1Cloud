@@ -1809,7 +1809,7 @@ Template.alltaskdatatable.onRendered(function () {
         {
           orderable: false,
           targets: 8,
-          className: "colTaskActions",
+          className: "colTaskActions hiddenColumn",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
           },
@@ -3119,8 +3119,50 @@ Template.alltaskdatatable.events({
     });
   },
 
+  "dblclick #tblNewProjectsDatatable tbody tr": function (e) {
+    let id = e.target.dataset.id;
+    $("#editProjectID").val(id);
+
+    let templateObject = Template.instance();
+
+    if (id) {
+      $(".fullScreenSpin").css("display", "inline-block"); 
+      templateObject.view_projecttasks_completed.set("NO");
+
+      crmService.getTProjectDetail(id).then(function (data) {
+        $(".fullScreenSpin").css("display", "none");
+        if (data.fields.ID == id) { 
+
+          let projectName = data.fields.ProjectName;
+          let ProjectColour = data.fields.ProjectColour;
+          let ProjectDescription = data.fields.Description;
+
+          $("#editProjectID").val(id);
+          $("#editCrmProjectName").val(projectName);
+          $(".editCrmProjectName").html(projectName);
+          $("#editCrmProjectColor").val(ProjectColour);
+          $("#editCrmProjectDescription").val(ProjectDescription);
+
+          $("#editCrmProject").modal();
+        } else {
+          swal("Cannot edit this project", "", "warning");
+          return;
+        }
+      }).catch(function (err) {
+        $(".fullScreenSpin").css("display", "none");
+        swal("Cannot edit this project", "", "error");
+        return;
+      });
+    }
+  },
+
   // open task-project modal in projects table
   "click #tblNewProjectsDatatable tbody tr": function (e) {
+    if (e.target.classList.contains("no-modal")) { 
+      e.preventDefault();
+      return
+    }
+
     $("#newProjectTasksModal").modal("toggle");
     let id = e.target.dataset.id;
     $("#editProjectID").val(id);
