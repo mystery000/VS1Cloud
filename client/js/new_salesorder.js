@@ -4844,7 +4844,7 @@ Template.new_salesorder.onRendered(() => {
 
     setTimeout(()=>{
         templateObject.checkAbleToMakeWorkOrder();
-    }, 500)
+    }, 1000)
 
     templateObject.getDepartments = function() {
         getVS1Data('TDeptClass').then(function(dataObject) {
@@ -9356,6 +9356,7 @@ Template.new_salesorder.events({
             } else {
                 $('#deleteLineModal').modal('toggle');
             }
+            templateObject.checkAbleToMakeWorkOrder()
         }
     },
     'click .btnDeleteSO': function(event) {
@@ -9549,6 +9550,7 @@ Template.new_salesorder.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+        templateObject.checkAbleToMakeWorkOrder();
     },
     'click .btnSaveSettings': function(event) {
 
@@ -12353,94 +12355,103 @@ Template.new_salesorder.events({
                 text: "This sales order has not been saved yet, will save it first and then try again",
                 type: 'error',
                 showCancelButton: false,
-                confirmButtonText: 'Try Again'
+                confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {$('.btnSave').trigger('click')}
                 else if (result.dismiss === 'cancel') {
-
+                    return;
                 }
             });
         }else {
             let salesOrderRecord = templateObject.salesorderrecord.get();
             let lines = templateObject.salesorderrecord.get().LineItems;
-            let isAvailable = true;
-            if(lines.length == 0) {
-                isAvailable = false
+            let lineTable  = $('#tblSalesOrderLine');
+            let orderlines = $(lineTable).find('tbody tr')
+            let changeAble = true
+            if(lines.length != orderlines.length) {
+                changeAble = false
+                swal({
+                    title: 'Oooops...',
+                    text: "Changes for lines has not been saved yet, will save it first and then try again",
+                    type: 'error',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if (result.value) {$('.btnSave').trigger('click'); return}
+                    else if (result.dismiss === 'cancel') {
+                        return
+                    }
+                });
             }else {
-                for(let i = 0; i< lines.length; i++) {
-                    let isBOMProduct = false;
-                    let isExisting = false;
-                    getVS1Data('TProductVS1').then(function(dataObject){
-                        if(dataObject.length == 0) {
-                            productService.getOneProductdatavs1byname(lines[i].item).then(function(data){
-                                isBOMProduct = data.tproduct[0].fields.IsManufactured;
-                                if(isBOMProduct == true) {
-                                    workorderList.map(order => {
-                                        if(order.SalesOrderID == salesOrderRecord.id && order.Line.fields.productName == lines[i].item) {
-                                            isExisting = true
-                                            isAvailable = false;
-                                        }
-                                    })
-                                    if(isExisting == false) {
-                                        FlowRouter.go('/workordercard?salesorderid='+FlowRouter.current().queryParams.id + '&lineId='+ i);
-                                        return;
-                                    }
+                let lineProducts = [];
+                for(let k = 0; k< lines.length; k++) {
+                    lineProducts.push(lines[k].item)
+                }
+                // let retValue = true;
+                for(let j = 0; j< orderlines.length; j ++) {
+                    if(lineProducts.indexOf($(orderlines[j]).find('.lineProductName').val()) == -1) {
+                        changeAble = false
+                        swal({
+                            title: 'Oooops...',
+                            text: "Changes for lines has not been saved yet, will save it first and then try again",
+                            type: 'error',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.value) {$('.btnSave').trigger('click')}
+                            else if (result.dismiss === 'cancel') {
+                                return
+                            }
+                        });
+                    }
+                }
+
+                // if(retValue == false) {
+                   
+                // }
+            }
+            if(changeAble == true) {
+                let bomProducts = localStorage.getItem('TProcTree')? JSON.parse(localStorage.getItem('TProcTree')): [];
+                let workorderList = [];
+                let temp = localStorage.getItem('TWorkorders');
+                workorderList = temp?JSON.parse(temp): [];
+                let isAvailable = true;
+                if(lines.length == 0) {
+                    isAvailable = false
+                }else {
+                    for(let i = 0; i< lines.length; i++) {
+                        let isBOMProduct = false;
+                        let isExisting = false;
+                        
+    
+                        let index = bomProducts.findIndex(product => {
+                            return product.fields.productName == lines[i].item
+                        })
+                        if(index > -1) {
+                            isBOMProduct = true;
+                        }
+    
+                        if(isBOMProduct == true) {
+                            //check if the workorder is already exists
+                            workorderList.map(order => {
+                                if(order.SalesOrderID == salesOrderRecord.id && order.Line.fields.productName == lines[i].item) {
+                                    isExisting = true
+                                    isAvailable = false;
                                 }
                             })
-                        }else {
-                            let data = JSON.parse(dataObject[0].data);
-                            let useData = data.tproductvs1;
-                            for(let j=0; j<useData.length; j++ ) {
-                                if(useData[j].fields.ProductName == lines[i].item) {
-                                    isBOMProduct = useData[j].fields.IsManufactured;
-                                }
-                            }
-                            if(isBOMProduct == true) {
-                                workorderList.map(order => {
-                                    if(order.SalesOrderID == salesOrderRecord.id && order.Line.fields.productName == lines[i].item) {
-                                        isExisting = true
-                                        isAvailable = false;
-                                    }
-                                })
-                                if(isExisting == false) {
-                                    FlowRouter.go('/workordercard?salesorderid='+FlowRouter.current().queryParams.id + '&lineId='+ i);
-                                    return;
-                                }
+    
+                            if(isExisting == false) {
+                                FlowRouter.go('/workordercard?salesorderid='+FlowRouter.current().queryParams.id + '&lineId='+ i);
+                                return;
                             }
                         }
-                    }).catch(function(error){
-                        productService.getOneProductdatavs1byname(lines[i].item).then(function(data){
-                            isBOMProduct = data.tproduct[0].fields.IsManufactured;
-                            if(isBOMProduct == true) {
-                                workorderList.map(order => {
-                                    if(order.SalesOrderID == salesOrderRecord.id && order.Line.fields.productName == lines[i].item) {
-                                        isExisting = true
-                                        isAvailable = false;
-                                    }
-                                })
-                                if(isExisting == false) {
-                                    FlowRouter.go('/workordercard?salesorderid='+FlowRouter.current().queryParams.id + '&lineId='+ i);
-                                    return;
-                                }
-                            }
-                        })
-                    })
-                    //  workorderList.map(order => {
-                    //     if(order.SalesOrderID == salesOrderRecord.id && order.Line.fields.productName == lines[i].item) {
-                    //         isExisting = true
-                    //         isAvailable = false;
-                    //     }
-                    // })
-
-                    // if(isExisting == false) {
-                    //     FlowRouter.go('/workordercard?salesorderid='+FlowRouter.current().queryParams.id + '&lineId='+ i);
-                    //     return;
-                    // }
+    
+                    }
                 }
-            }
-
-            if(isAvailable == false) {
-                swal('No available data to make work order!', '', 'warning');
+    
+                if(isAvailable == false) {
+                    swal('No available data to make work order!', '', 'warning');
+                }
             }
 
         }
