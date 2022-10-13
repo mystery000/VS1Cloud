@@ -29,7 +29,7 @@ let contactService = new ContactService();
 
 const redirectToPayRollOverview = () => {
   const id = FlowRouter.current().queryParams.tid;
-  window.location.href = `/payrolloverview?tid=${id}`;
+  window.location.href = `/payrolloverview?tid=${id}&refresh=true`;
 };
 
 Template.timesheetdetail.onCreated(function () {
@@ -104,11 +104,12 @@ Template.timesheetdetail.onRendered(function () {
     });
 
     data = data.response;
-    let employees = data.temployee.map(e => e.fields);
+   
+    let employees = data.temployee.map(e => e.fields != undefined ? e.fields : e);
 
     try {
       const selectedEmployee = employees.find(e => e.EmployeeName == timesheet.EmployeeName);
-      this.employee.set(selectedEmployee);
+      await this.employee.set(selectedEmployee);
     } catch (e) {
       LoadingOverlay.hide(0);
       const result = await swal({

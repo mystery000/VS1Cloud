@@ -58,6 +58,7 @@ Template.payrolloverview.onCreated(function () {
 });
 
 Template.payrolloverview.onRendered(function () {
+  const refresh = FlowRouter.current().queryParams.refresh ? true : false;
   LoadingOverlay.show();
   let templateObject = Template.instance();
   let contactService = new ContactService();
@@ -3767,7 +3768,7 @@ Template.payrolloverview.onRendered(function () {
     await templateObject.loadPayPeriods(refresh);
     LoadingOverlay.hide();
   }
-  templateObject.initPage();
+  templateObject.initPage(refresh);
 });
 
 Template.payrolloverview.events({
