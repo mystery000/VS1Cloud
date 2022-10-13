@@ -15299,7 +15299,7 @@ Template.payrollrules.events({
             taxRateService.checkRateTypeByName(ratetypedescription).then(function (data) {
              rateTypeId = data.tpayratetype[0].Id;
               objDetails = {
-                 type: "TPayRateType",
+                 type: erpObject.TPayRateType,
                  fields: {
                      ID: parseInt(rateTypeId),
                      Description: ratetypedescription,
@@ -15319,7 +15319,7 @@ Template.payrollrules.events({
                 }).then((result) => {
                     if (result.value) {
                         sideBarService.getRateTypes(initialBaseDataLoad, 0).then(function (dataReload) {
-                            addVS1Data("TPayRateType", JSON.stringify(dataReload)).then(function (datareturn) {
+                            addVS1Data(erpObject.TPayRateType, JSON.stringify(dataReload)).then(function (datareturn) {
                                 window.open('/payrollrules?active_key=payitem','_self');
                             }).catch(function (err) {
                                 window.open('/payrollrules?active_key=payitem','_self');
@@ -15349,7 +15349,7 @@ Template.payrollrules.events({
               });
             }).catch(function (err) {
                 objDetails = {
-                    type: "TPayRateType",
+                    type: erpObject.TPayRateType,
                     fields: {
                         ID: parseInt(rateTypeId),
                         Description: ratetypedescription,
@@ -15370,7 +15370,7 @@ Template.payrollrules.events({
                 }).then((result) => {
                     if (result.value) {
                         sideBarService.getRateTypes(initialBaseDataLoad, 0).then(function (dataReload) {
-                            addVS1Data("TPayRateType", JSON.stringify(dataReload)).then(function (datareturn) {
+                            addVS1Data(erpObject.TPayRateType, JSON.stringify(dataReload)).then(function (datareturn) {
                                 window.open('/payrollrules?active_key=payitem','_self');
                             }).catch(function (err) {
                                 window.open('/payrollrules?active_key=payitem','_self');
@@ -15403,7 +15403,7 @@ Template.payrollrules.events({
 
           }else{
             objDetails = {
-                type: "TPayRateType",
+                type: erpObject.TPayRateType,
                 fields: {
                     ID: parseInt(rateTypeId),
                     Description: ratetypedescription,
@@ -15424,7 +15424,7 @@ Template.payrollrules.events({
                 }).then((result) => {
                     if (result.value) {
                         sideBarService.getRateTypes(initialBaseDataLoad, 0).then(function (dataReload) {
-                            addVS1Data("TPayRateType", JSON.stringify(dataReload)).then(function (datareturn) {
+                            addVS1Data(erpObject.TPayRateType, JSON.stringify(dataReload)).then(function (datareturn) {
                                 window.open('/payrollrules?active_key=payitem','_self');
                             }).catch(function (err) {
                                 window.open('/payrollrules?active_key=payitem','_self');
