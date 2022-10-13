@@ -4844,7 +4844,7 @@ Template.new_salesorder.onRendered(() => {
 
     setTimeout(()=>{
         templateObject.checkAbleToMakeWorkOrder();
-    }, 1000)
+    }, 1500)
 
     templateObject.getDepartments = function() {
         getVS1Data('TDeptClass').then(function(dataObject) {
