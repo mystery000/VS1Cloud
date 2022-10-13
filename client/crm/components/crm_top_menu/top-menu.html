@@ -39,9 +39,9 @@
       </button>
 
       <div class="btn-group">
-        <button class="btn  btn-primary btnNewTask" style="margin: 0 0 24px 12px" id="btnNewTask" type="button"
+        <button class="btn  btn-primary menu_all_task" style="margin: 0 0 24px 12px" type="button"
           data-toggle="modal">
-          <i class="fas fa-plus" style="margin-right: 5px;"></i>New Task
+          Task List
         </button>
         <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
           style="margin-bottom: 24px; margin-right: 12px;" data-toggle="dropdown" aria-haspopup="true"
@@ -49,29 +49,60 @@
           <span class="sr-only">Toggle Dropdown</span>
         </button>
         <div class="dropdown-menu">
-          <a class="dropdown-item menu_all_task">All Tasks</a>
           <a class="dropdown-item menu_today">Today</a>
           <a class="dropdown-item menu_upcoming">Upcoming</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item menu_project">Projects</a>
-          <a class="dropdown-item menu_label">Label</a>
+          <a class="dropdown-item btnNewTask">+ New Task</a> 
+        </div>
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn  btn-primary menu_label" style="margin: 0 0 24px 12px" type="button"
+          data-toggle="modal">
+          Label List
+        </button>
+        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+          style="margin-bottom: 24px; margin-right: 12px;" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu"> 
+          <a class="dropdown-item btnNewLabel" data-toggle="modal"
+          data-target="#newLabelModal">+ New Label</a> 
+        </div>
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn  btn-primary menu_project" style="margin: 0 0 24px 12px" type="button"
+          data-toggle="modal">
+          Project List
+        </button>
+        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+          style="margin-bottom: 24px; margin-right: 12px;" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu"> 
+          <a class="dropdown-item btnNewProject" data-toggle="modal"
+          data-target="#newCrmProject">+ New Project</a> 
+        </div>
+      </div>
+      
+      <div class="btn-group">
+        <a class="btn  btn-primary" style="margin: 0 0 24px 12px" role="button" href="/leadlist">
+          Lead List
+        </a>
+        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+          style="margin-bottom: 24px; margin-right: 12px;" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu"> 
+          <a class="dropdown-item" role="button" href="/leadlist">+ New Lead</a> 
         </div>
       </div>
 
-      <button class="btn btnNav btn-primary btnNewProject btn-mg" id="btnNewProject" type="button" data-toggle="modal"
-        data-target="#newCrmProject">
-        <i class="fas fa-plus" style="margin-right: 5px;"></i>New Project
-      </button>
-      <button class="btn btnNav btn-primary btnNewLabel btn-mg" type="button" data-toggle="modal"
-        data-target="#newLabelModal">
-        <i class="fas fa-plus" style="margin-right: 5px;"></i>New Label
-      </button>
-      <!-- <button class="btn btnNav btn-primary btnMailchimp btn-mg" id="btnMailchimp" type="button">
-        <i class="fas fa-plus" style="margin-right: 5px;"></i>Mail Chimp
-      </button> -->
-
       <div class="btn-group">
-        <button class="btn  btn-primary btnMailchimp" style="margin: 0 0 24px 12px" id="btnMailchimp" type="button"
+        <button class="btn  btn-primary btnCampaign" id="btnCampaign" style="margin: 0 0 24px 12px" type="button"
           data-toggle="modal">
           <i class="fas fa-plus" style="margin-right: 5px;"></i>Mail Chimp
         </button>
@@ -81,18 +112,10 @@
           <span class="sr-only">Toggle Dropdown</span>
         </button>
         <div class="dropdown-menu">
-          <a class="dropdown-item" id="btnAddCampaign" type="button" data-toggle="modal">Add Campaign</a>
-          <a class="dropdown-item" id="btnCampaign">Campaigns</a>
-          <a class="dropdown-item" id="btnCorrespondence">Correspondence</a>
+          <a class="dropdown-item" id="btnCorrespondence">Correspondence List</a>
+          <a class="dropdown-item" id="btnAddCampaign" type="button" data-toggle="modal">New Campaign</a>
         </div>
       </div>
-
-      <a class="btn btnNav btn-primary btn-mg" role="button" href="/leadlist">
-        <i class="fas fa-users" style="margin-right: 5px;"></i>Lead List
-      </a>
-      <a class="btn btnNav btn-primary btn-mg" role="button" href="/leadstatussettings">
-        <i class="fas fa-cog" style="margin-right: 5px;"></i>Lead Status List
-      </a>
     </div>
 
     <div class="col-6 col-md-4">

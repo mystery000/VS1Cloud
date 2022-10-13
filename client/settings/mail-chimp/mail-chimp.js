@@ -9,7 +9,7 @@ const specialSearchKey = "vs1mailchimpsettings"
 
 Template.mailchimp.onCreated(() => {
   const templateObject = Template.instance();
-  templateObject.settingDetails = new ReactiveVar([]);
+  templateObject.settingDetails = new ReactiveVar([]); 
   
 });
 
@@ -41,6 +41,9 @@ Template.mailchimp.onRendered(function () {
             for (const item of details) {
                 $('#' + item.PrefName).val( item.Fieldvalue );
             }
+          $('#openMailchimpLink').html(`<i class="fa fa-phone" style="margin-right: 8px;"></i>Log into Mail Chimp`)
+        } else {
+          $('#openMailchimpLink').html(`<i class="fa fa-phone" style="margin-right: 8px;"></i>Mail Chimp Sign Up`)
         }
         $('.fullScreenSpin').css('display', 'none');
         
@@ -51,8 +54,13 @@ Template.mailchimp.onRendered(function () {
 });
 
 Template.mailchimp.events({
-    'click #openLink': function() {
+    'click #openMailchimpLink': function() {
+      let settingDetails = templateObject.settingDetails.get();
+      if( settingDetails.length > 0 ){
+        window.open("https://login.mailchimp.com/");
+      } else {
         window.open("https://login.mailchimp.com/signup/");
+      }
     },
     'click #saveMailChimpSetting': async function(){
         $('.fullScreenSpin').css('display','block');

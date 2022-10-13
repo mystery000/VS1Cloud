@@ -8142,6 +8142,26 @@ Template.newsidenav.events({
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
+    'click #sidenavprojects': function(event) {
+        event.preventDefault(); 
+        if (FlowRouter.current().path == "/crmoverview") {
+          $(".menu_project").trigger("click");
+        } else {
+            window.open('/crmoverview#projectsTab-tab', '_self');
+        }
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
+    'click #sidenavmailchimp': function(event) {
+        event.preventDefault(); 
+        if (FlowRouter.current().path == "/crmoverview") {
+          $('#crmMailchimpModal').modal();
+        } else {
+            window.open('/crmoverview#btnMailchimp', '_self');
+        }
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
     'click .inventoryLiHeader': function(event) {
         event.preventDefault();
         FlowRouter.go('/inventorylist');

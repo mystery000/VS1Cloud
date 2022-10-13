@@ -13,7 +13,8 @@ Template.crmoverview.onCreated(function () {
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.tprojectlist = new ReactiveVar([]);
   templateObject.all_projects = new ReactiveVar([]);
-  templateObject.subTasks = new ReactiveVar([]); 
+  templateObject.subTasks = new ReactiveVar([]);
+  templateObject.settingDetails = new ReactiveVar([]);
 });
 
 Template.crmoverview.onRendered(function () {
@@ -548,6 +549,31 @@ Template.crmoverview.onRendered(function () {
   });
   ///////////////////////////////////////////////////
 
+  templateObject.getSettingsList = async function () { 
+    let data = [];
+    let details = [];
+    let dataObject = await getVS1Data('TERPPreference')
+    if (dataObject.length > 0) {
+      data = JSON.parse(dataObject[0].data);
+      details = data.terppreference.filter(function (item) {
+        if (settingFields.includes(item.PrefName)) {
+          return item;
+        }
+      });
+    }
+    if (details.length == 0) {
+      prefSettings = await settingService.getPreferenceSettings(settingFields);
+      details = prefSettings.terppreference;
+      data.terppreference.push(...details);
+      await addVS1Data('TERPPreference', JSON.stringify(data))
+    }
+
+    if (details.length > 0) {
+      templateObject.settingDetails.set(details); 
+    }  
+  };
+  templateObject.getSettingsList();
+  
 });
 
 Template.crmoverview.events({
@@ -738,7 +764,7 @@ Template.crmoverview.events({
       window.history.pushState('name', '', 'crmoverview');
       Meteor._reload.reload();
     });
-  }, 
+  },
 
   "click #exportbtn": function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -874,7 +900,7 @@ Template.crmoverview.events({
   "click #sidenavcrm": function (e) {
     FlowRouter.go("/crmoverview");
     Meteor._reload.reload();
-  }, 
+  },
 
 });
 
@@ -896,7 +922,7 @@ Template.crmoverview.helpers({
   },
   currentTabID: () => {
     return Template.instance().currentTabID.get();
-  }, 
+  },
 });
 
 function openEditTaskModal(id, type) {
@@ -1005,7 +1031,7 @@ function openEditTaskModal(id, type) {
       $(".activityAdded").html("Added on " + moment(selected_record.MsTimeStamp).format("MMM D h:mm A"));
       // let due_date = selected_record.due_date ? moment(selected_record.due_date).format("D MMM") : "No Date";
       let due_date = selected_record.due_date ? moment(selected_record.due_date).format("dddd, Do MMMM") : "No Date";
-      
+
 
       let todayDate = moment().format("ddd");
       let tomorrowDay = moment().add(1, "day").format("ddd");
