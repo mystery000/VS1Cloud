@@ -279,8 +279,9 @@ Template.workorderlist.onRendered (function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
         $('#tblWorkorderList tbody').on('click', 'tr', function () {
             // console.log('clicked')
-            // var listData = $(this).closest('tr').find('.colOrderNumber').text();
-            // var id = $(this).closest('tr').find('.colOrderNumber').text()
+            var listData = $(this).closest('tr').find('.colOrderNumber').text();
+            var id = $(this).closest('tr').find('.colId').text();
+            FlowRouter.go('/workordercard?id='+id)
             // console.log('list data', listData)
             // // getVS1Data('TSalesOrderEx').then(function(dataObject){
             // //     if(dataObject.length == 0) {

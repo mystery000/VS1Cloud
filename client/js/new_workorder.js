@@ -67,13 +67,14 @@ Template.new_workorder.onRendered(function(){
 
         if(FlowRouter.current().queryParams.id) {
             let orderid = FlowRouter.current().queryParams.id
-            let workorder = templateObject.workOrderRecords.get().find(order => {
+            let workorderIndex = templateObject.workOrderRecords.get().findIndex(order => {
                 return order.ID == orderid
             })
+            let workorder = templateObject.workOrderRecords.get()[workorderIndex]
             let record = {
                 id: orderid,
                 salesorderid: workorder.SalesOrderID,
-                lid: 'Edit Work Order' + ' ' + id,
+                lid: 'Edit Work Order ' + orderid,
                 customer: workorder.Customer || '',
                 orderTo: workorder.OrderTo || '',
                 ponumber: workorder.PONumber  || '',
