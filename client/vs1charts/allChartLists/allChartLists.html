@@ -148,8 +148,6 @@
         <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="4" data-default-class="col-md-8" key="inventory__stock_on_hand_and_demand">
             {{> invstockonhandanddemand}}
         </div>
-        <!-- position 17 to 18, 24 -->
-        {{> dashboardManagerCharts}}
         <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="11" data-default-class="col-md-4" key="contacts__top_10_customers">
             {{> top10Customers}}
         </div>
@@ -186,26 +184,37 @@
         <div class="sortable-chart-widget-js hideelement col-auto col-md-8" data-default-position="23" data-default-class="col-md-8" key="employees__absentee_rate_over_last_12_months">
             {{> absenteeRate }}
         </div>
-        <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="24" data-default-class="col-md-4" key="dsmcharts__appointment_list">
+        <!-- position 17 to 18, 24 -->
+        {{> dashboardManagerCharts}}
+        <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="24" data-default-class="col-md-4" key="dsmcharts__top_10_customers">
+            {{> dsmTop10Customers}}
+        </div>
+        <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="25" data-default-class="col-md-4" id="resalecomparisioncol" key="dsmcharts__employee_sales_comparison">
+            {{> dsmResalescomparision}}
+        </div>
+        <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="26" data-default-class="col-md-4" key="dsmcharts__appointment_list">
             {{> dsmAppointmentsWidget}}
         </div>
         {{#if equals isaccountoverview true}}
 
         {{else}}
-        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="26" data-default-class="col-md-12" key="dashboard__account_list">
+        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="29" data-default-class="col-md-12" key="dashboard__account_list">
             {{> accountslistchart}}
         </div>
         {{/if}}
 
-        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="25" data-default-class="col-md-12" key="dsmcharts__lead_list" style="margin-top:25px !important">
+        <div class="sortable-chart-widget-js hideelement col-auto col-md-8" data-default-position="27" data-default-class="col-md-8" key="dsmcharts__opportunities_status">
+            {{> opportunitiesStatus}}
+        </div>
+        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="28" data-default-class="col-md-12" key="dsmcharts__lead_list" style="margin-top:25px !important">
             {{> dsmleadlistchart}}
         </div>
-        <!-- position 27, 28 -->
+        <!-- position 30, 31 -->
         {{> dashboardSalesCharts}}
-        <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="29" data-default-class="col-md-4" key="dscharts__appointment_list">
+        <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" data-default-position="32" data-default-class="col-md-4" key="dscharts__appointment_list">
             {{> dsAppointmentsWidget}}
         </div>
-        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="30" data-default-class="col-md-12" key="dscharts__lead_list">
+        <div class="col-auto col-md-12 sortable-chart-widget-js hideelement" data-default-position="33" data-default-class="col-md-12" key="dscharts__lead_list">
             {{> dsleadlistchart}}
         </div>
 

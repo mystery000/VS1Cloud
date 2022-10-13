@@ -219,7 +219,7 @@ Template.dashboardSalesCharts.onRendered(function () {
             dateTo.getDate();
         if (
             $("#dateFrom").val().replace(/\s/g, "") == "" &&
-            $("#dateFrom").val().replace(/\s/g, "") == ""
+            $("#dateTo").val().replace(/\s/g, "") == ""
         ) {
             renderCharts(formatDateFrom, formatDateTo, true);
         } else {
