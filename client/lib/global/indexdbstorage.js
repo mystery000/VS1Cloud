@@ -1,4 +1,5 @@
 const { get } = require("jquery");
+const { default: erpObject } = require("./erp-objects");
 
 openDb1 = function(dbName) {
     return new Promise((resolve, reject) => {
@@ -303,6 +304,7 @@ openDb = function(dbName) {
             db.createObjectStore('TBasReturn', { keyPath: "EmployeeEmail" });
             db.createObjectStore('VS1_Customize', { keyPath: "EmployeeEmail" });
             db.createObjectStore('VS1_Dashboard', { keyPath: "EmployeeEmail" });
+            db.createObjectStore(erpObject.TPayrollSettingOvertimes, { keyPath: "EmployeeEmail" });
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });

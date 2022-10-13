@@ -2085,8 +2085,8 @@
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="form-group">
-                                                                        <label for="edtFundType">Rate Type</label>
-                                                                        <select class="form-control editRateType" style="cursor: pointer;" id="editRateType" >
+                                                                        <label for="overtimeRateType">Rate Type</label>
+                                                                        <select class="form-control overtimeRateType" style="cursor: pointer;" id="overtimeRateType" >
                                                                             <option value="">Default</option>
                                                                             <option value="Time & Half">Time & Half</option>
                                                                             <option value="Double Time">Double Time</option>
@@ -2096,24 +2096,24 @@
                                                                 </div>
                                                                 <div class="col-12">
                                                                     <div class="form-group graterThenDiv">
-                                                                        <label for="editRule">Greater than</label>
+                                                                        <label for="overtimeHours">Greater than</label>
                                                                         <div class="addNewRulediv">
-                                                                            <input class="form-control" id="editRule" type="number" value=""><span>hours</span>
+                                                                            <input class="form-control" id="overtimeHours" type="number" value=""><span>hours</span>
                                                                         </div>
                                                                     </div>
                                                                     <div style="display: none;" class="form-group weekendDiv">
-                                                                        <label for="edtFundType">Weekend</label>
-                                                                        <select class="form-control editRateType" style="cursor: pointer;" id="editRateType" >
-                                                                            <option value="">Sunday</option>
-                                                                            <option value="">Saturday</option>
+                                                                        <label for="OvertimeWeekEndDay">Weekend</label>
+                                                                        <select class="form-control OvertimeWeekEndDay" style="cursor: pointer;" id="OvertimeWeekEndDay" >
+                                                                            <option value="sunday">Sunday</option>
+                                                                            <option value="saturday">Saturday</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-12" id="acountabmandelectronic">
                                                                     <div class="form-group">
-                                                                        <label for="hourlyMultiplier">Hourly Multiplier</label>
-                                                                        <input type="text" class="form-control" id="hourlyMultiplier">
+                                                                        <label for="overtimeHourlyMultiplier">Hourly Multiplier</label>
+                                                                        <input type="text" class="form-control" id="overtimeHourlyMultiplier" val="0">
                                                                     </div>
                                                                 </div>
 
@@ -2151,24 +2151,30 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
-                                                            <td class="td">XXXXXXXXXXXXXX</td>
-                                                            <td class="td">XXXXXXXXXX</td>
-                                                            <td class="td">XXXXXXXXXXXX</td>        
-                                                            <td contenteditable="false" class="colDelete">
-                                                                <span class="table-remove">
-                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0" autocomplete="off">
-                                                                    <i class="fa fa-remove"></i>
-                                                                    </button>
-                                                                </span>
-        
-                                                                <span class="table-edit">
-                                                                    <button type="button" class="btn btn-rounded btn-success btn-sm my-0">
-                                                                        <i class="fa fa-edit"></i>
-                                                                    </button>
-                                                                </span>
-                                                            </td>
-                                                        </tr>
+                                                        {{#if overtimes}}
+                                                            {{#each overtime in overtimes}}
+                                                                <tr overtime-id="{{overtime.id}}">
+                                                                    <td class="td">{{ overtime.rateType }}</td>
+                                                                    <td class="td">{{ overtime.rule }}</td>
+                                                                    <td class="td">{{ overtime.hourlyMultiplier }}</td>        
+                                                                    <td contenteditable="false" class="colDelete">
+                                                                        <span class="table-remove">
+                                                                            <button overtime-id="{{overtime.id}}" type="button" class="btn btn-danger btn-rounded btn-sm my-0 delete-overtime" autocomplete="off">
+                                                                            <i class="fa fa-remove"></i>
+                                                                            </button>
+                                                                        </span>
+                
+                                                                        <span class="table-edit">
+                                                                            <button overtime-id="{{overtime.id}}" type="button" class="btn btn-rounded btn-success btn-sm my-0 edit-overtime">
+                                                                                <i class="fa fa-edit"></i>
+                                                                            </button>
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            {{/each}}
+
+                                                        {{/if}}
+                                                      
                                                     </tbody>
 
                                                 </table>

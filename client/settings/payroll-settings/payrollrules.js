@@ -11,13 +11,14 @@ import 'jquery-editable-select';
 import { Random } from 'meteor/random';
 import { Session } from 'meteor/session';
 import f from "jspdf";
-import { template } from "lodash";
+import { over, template } from "lodash";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import LoadingOverlay from "../../LoadingOverlay";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let taxRateService = new TaxRateService();
 
 Template.payrollrules.onCreated(function() {
 
@@ -29,6 +30,9 @@ Template.payrollrules.onCreated(function() {
     templateObject.Ratetypes = new ReactiveVar([]);
     templateObject.imageFileData=new ReactiveVar();
     templateObject.Accounts = new ReactiveVar([]);
+
+
+    templateObject.overtimes = new ReactiveVar([]);
 });
 
 Template.payrollrules.onRendered(function() {
@@ -5256,6 +5260,168 @@ Template.payrollrules.onRendered(function() {
     templateObject.getSuperannuationData();
 
 
+    templateObject.getOvertimes = async () => {
+        let overtimes =  await getOvertimes();
+        // let data = await getVS1Data("TTOvertime");
+
+        await templateObject.overtimes.set(overtimes);
+    }
+
+    templateObject.getOvertimes();
+
+    /**
+     * This will save on the remote server and also on local indexb the object
+     */
+    templateObject.saveOvertimes = async () => {
+        LoadingOverlay.show();
+        let overtimes = await templateObject.overtimes.get();
+
+        try {
+            //await addVS1Data("TTOvertime", JSON.stringify(overtimes));
+            await saveOvertimes(overtimes);
+            LoadingOverlay.hide(0);
+
+            // const result = await swal({
+            //     title: `Overtimes saved succesffully`,
+            //     //text: "Please log out to activate your changes.",
+            //     type: "success",
+            //     showCancelButton: false,
+            //     confirmButtonText: "OK"
+            // });
+
+            // if (result.value) {} else if (result.dismiss === "cancel") {}
+        } catch (e) {
+            LoadingOverlay.hide(0);
+
+            const result = await swal({
+                title: `Overtimes couldn't be saved`,
+                //text: "Please log out to activate your changes.",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonText: "Retry"
+            });
+
+            if (result.value) {
+                // window.location.reload();
+                templateObject.saveOvertimes();
+            } else if (result.dismiss === "cancel") {}
+        }
+    }
+
+    templateObject.addOverTime= async () => {
+        if($('#btnAddNewOvertime').attr('overtime-id')) {
+            const overtimeIdToupdate = $('#btnAddNewOvertime').attr('overtime-id');
+            return templateObject.updateOvertime(overtimeIdToupdate);
+        }
+
+        $('#btnAddNewOvertime .modal-title').text('Add new Overtime');
+
+        LoadingOverlay.show();
+        const hours = $('#overtimeHours').val();
+        const rateType = $('#overtimeRateType').val();
+        const hourlyMultiplier = $('#overtimeHourlyMultiplier').val();
+        const weekEndDay = $('#OvertimeWeekEndDay').val();
+
+        const object = {
+            hours: hours, 
+            rateType: rateType,
+            hourlyMultiplier: hourlyMultiplier,
+            rule: rateType == "Weekend" ? `${rateType} : (${weekEndDay})` : `${rateType}`,
+            ...(rateType == "Weekend" ? {day: weekEndDay} : {day: null}),
+            
+        }
+
+        // Add to the list of overtimes
+        let overtimes = await templateObject.overtimes.get();
+        overtimes.push(object);
+
+        // This code has to be removed once we save on remote database
+        overtimes = overtimes.map((overtime, index) => {
+            return {
+                id: index,
+                ...overtime
+            }
+        });
+
+        await templateObject.overtimes.set(overtimes);
+
+        $('#btnAddNewOvertime').modal('hide');
+        LoadingOverlay.hide();
+
+    }
+
+    templateObject.deleteOvertime = async (overtimeId = null) =>{
+        LoadingOverlay.show();
+        if(overtimeId == null) {
+            return;
+        }
+
+        let overtimes  = await templateObject.overtimes.get();
+        overtimes =  overtimes.filter(overtime => overtime.id != overtimeId);
+        await templateObject.overtimes.set(overtimes);
+
+        LoadingOverlay.hide();
+    }
+
+    templateObject.updateOvertime = async (overtimeId = null) => {
+        if(overtimeId != null) {
+            // update the overtime
+            let overtimes = await templateObject.overtimes.get();
+
+            overtimes = overtimes.map(overtime => {
+                if(overtime.id == overtimeId) {
+                    const hours = $('#overtimeHours').val();
+                    const rateType = $('#overtimeRateType').val();
+                    const hourlyMultiplier = $('#overtimeHourlyMultiplier').val();
+                    const weekEndDay = $('#OvertimeWeekEndDay').val();
+                    return  {
+                        ...overtime,
+                        hours: hours, 
+                        rateType: rateType,
+                        hourlyMultiplier: hourlyMultiplier,
+                        rule: rateType == "Weekend" ? `${rateType} : (${weekEndDay})` : `${rateType}`,
+                        ...(rateType == "Weekend" ? {day: weekEndDay} : {day: null}),
+                        
+                    };
+                }
+                return overtime;
+            });
+
+            await templateObject.overtimes.set(overtimes);
+            $('#btnAddNewOvertime').removeAttr('overtime-id');
+            $('#btnAddNewOvertime').modal('hide');
+            $('#btnAddNewOvertime .modal-title').text('Add new Overtime');
+            return false;
+        }
+        
+    }
+
+    templateObject.editOverTime = async (overtimeId = null) => {
+        $('#btnAddNewOvertime').modal('show');
+        $('#btnAddNewOvertime .modal-title').text('Edit Overtime');
+
+        $('#btnAddNewOvertime').attr('overtime-id', overtimeId);
+
+        let overtimes = await templateObject.overtimes.get();
+        let overtime = overtimes.find(overtime => overtime.id == overtimeId);
+   
+        $('#overtimeHours').val(overtime.hours);
+        $('#overtimeRateType').val(overtime.rateType);
+        $('#overtimeHourlyMultiplier').val(overtime.hourlyMultiplier);
+        $('#OvertimeWeekEndDay').val(overtime.day);
+
+        templateObject.addOverTime(overtime.id);
+     
+    }
+
+    templateObject.resetOvertimeModal = async () => {
+        $('#overtimeHours').val('');
+        $('#overtimeRateType').val('');
+        $('#overtimeHourlyMultiplier').val(0);
+        $('#OvertimeWeekEndDay').val('');
+    }
+
+
     $('#tblAlowances tbody').on( 'click', 'td:not(.colDeleteAllowances)', function () {
 
       var listData = $(this).closest('tr').find('.colAlowancesID').text();
@@ -5377,9 +5543,9 @@ Template.payrollrules.onRendered(function() {
         $('#selectDeleteLineID').val(targetID);
         $('#deleteAllowanceLineModal').modal('toggle');
     });
-    $(document).on('change', '#editRateType', function(e) {
-        let evalue = $('#editRateType').val();
-        console.log(evalue);
+    $(document).on('change', '#overtimeRateType', function(e) {
+        let evalue = $('#overtimeRateType').val();
+
         switch(evalue) {
             case 'Time & Half':
                 $('.graterThenDiv').css('display', 'block');
@@ -5719,7 +5885,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -5892,7 +6058,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -5978,7 +6144,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -6102,7 +6268,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -6275,7 +6441,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -6361,7 +6527,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -6485,7 +6651,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -6658,7 +6824,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -6744,7 +6910,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -6869,7 +7035,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -7042,7 +7208,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -7128,7 +7294,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -7252,7 +7418,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -7425,7 +7591,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -7511,7 +7677,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -7635,7 +7801,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -7808,7 +7974,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -7894,7 +8060,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -8018,7 +8184,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -8191,7 +8357,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -8277,7 +8443,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -8401,7 +8567,7 @@ Template.payrollrules.onRendered(function() {
                     }, 500);
 
                  }).catch(function (err) {
-                     $('.fullScreenSpin').css('display','none');
+                     LoadingOverlay.hide();
                  });
                } else {
                    let data = JSON.parse(dataObject[0].data);
@@ -8574,7 +8740,7 @@ Template.payrollrules.onRendered(function() {
                         }, 500);
 
                      }).catch(function (err) {
-                         $('.fullScreenSpin').css('display','none');
+                         LoadingOverlay.hide();
                      });
                    }
 
@@ -8660,7 +8826,7 @@ Template.payrollrules.onRendered(function() {
                 }, 500);
 
              }).catch(function (err) {
-                 $('.fullScreenSpin').css('display','none');
+                 LoadingOverlay.hide();
              });
 
            });
@@ -8784,7 +8950,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -8957,7 +9123,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -9043,7 +9209,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -9167,7 +9333,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -9340,7 +9506,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -9426,7 +9592,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -9550,7 +9716,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -9723,7 +9889,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -9809,7 +9975,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -9933,7 +10099,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -10109,7 +10275,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -10195,7 +10361,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -10319,7 +10485,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -10492,7 +10658,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -10578,7 +10744,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -10702,7 +10868,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -10875,7 +11041,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -10961,7 +11127,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -11085,7 +11251,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -11258,7 +11424,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -11344,7 +11510,7 @@ Template.payrollrules.onRendered(function() {
                   }, 500);
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
              });
@@ -11469,7 +11635,7 @@ Template.payrollrules.onRendered(function() {
                     }, 500);
 
                  }).catch(function (err) {
-                     $('.fullScreenSpin').css('display','none');
+                     LoadingOverlay.hide();
                  });
                } else {
                    let data = JSON.parse(dataObject[0].data);
@@ -11642,7 +11808,7 @@ Template.payrollrules.onRendered(function() {
                         }, 500);
 
                      }).catch(function (err) {
-                         $('.fullScreenSpin').css('display','none');
+                         LoadingOverlay.hide();
                      });
                    }
 
@@ -11728,7 +11894,7 @@ Template.payrollrules.onRendered(function() {
                 }, 500);
 
              }).catch(function (err) {
-                 $('.fullScreenSpin').css('display','none');
+                 LoadingOverlay.hide();
              });
 
            });
@@ -11817,7 +11983,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -11891,7 +12057,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -11928,7 +12094,7 @@ Template.payrollrules.onRendered(function() {
 
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
                });
@@ -12000,7 +12166,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -12074,7 +12240,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -12111,7 +12277,7 @@ Template.payrollrules.onRendered(function() {
 
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
                });
@@ -12184,7 +12350,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -12258,7 +12424,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -12298,7 +12464,7 @@ Template.payrollrules.onRendered(function() {
 
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
                });
@@ -12370,7 +12536,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -12444,7 +12610,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -12484,7 +12650,7 @@ Template.payrollrules.onRendered(function() {
 
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
                });
@@ -12556,7 +12722,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -12630,7 +12796,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -12670,7 +12836,7 @@ Template.payrollrules.onRendered(function() {
 
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
                });
@@ -12744,7 +12910,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -12820,7 +12986,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -12858,7 +13024,7 @@ Template.payrollrules.onRendered(function() {
 
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
                });
@@ -12930,7 +13096,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -13004,7 +13170,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -13041,7 +13207,7 @@ Template.payrollrules.onRendered(function() {
 
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
                });
@@ -13113,7 +13279,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -13188,7 +13354,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -13225,7 +13391,7 @@ Template.payrollrules.onRendered(function() {
 
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
                });
@@ -13297,7 +13463,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -13372,7 +13538,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -13409,7 +13575,7 @@ Template.payrollrules.onRendered(function() {
 
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
                });
@@ -13481,7 +13647,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -13556,7 +13722,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -13593,7 +13759,7 @@ Template.payrollrules.onRendered(function() {
 
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
                });
@@ -13665,7 +13831,7 @@ Template.payrollrules.onRendered(function() {
                       }, 500);
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
@@ -13740,7 +13906,7 @@ Template.payrollrules.onRendered(function() {
                           }, 500);
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                        });
                      }
 
@@ -13777,7 +13943,7 @@ Template.payrollrules.onRendered(function() {
 
 
                }).catch(function (err) {
-                   $('.fullScreenSpin').css('display','none');
+                   LoadingOverlay.hide();
                });
 
                });
@@ -14591,7 +14757,7 @@ Template.payrollrules.events({
     'click .addholiday':function(){
 
             let templateObject = Template.instance();
-            $('.fullScreenSpin').css('display','inline-block');
+            LoadingOverlay.show();
             let taxRateService = new TaxRateService();
             let holidayname = $('#holidayname').val() || '';
             let edtHolidayDate = $('#edtHolidayDate').val() || '';
@@ -14601,13 +14767,13 @@ Template.payrollrules.events({
 
 
             if (holidayname === '') {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal('Holiday name has not been selected!', '', 'warning');
                 e.preventDefault();
             }
             else if(edtHolidayDate === '')
             {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal('Holiday Date has not been selected!', '', 'warning');
                 e.preventDefault();
 
@@ -14616,7 +14782,7 @@ Template.payrollrules.events({
 
                 if(oldholiday != 0)
                 {
-                    $('.fullScreenSpin').css('display','inline-block');
+                    LoadingOverlay.show();
                     objDetails = {
                         type: "Tpayrollholidays",
                         fields: {
@@ -14629,7 +14795,7 @@ Template.payrollrules.events({
                     };
                     taxRateService.saveHoliday(objDetails).then(function (objDetails) {
 
-                            $('.fullScreenSpin').css('display','none');
+                            LoadingOverlay.hide();
                             swal({
                             title: 'Success',
                             text: 'Holiday saved successfully.',
@@ -14642,16 +14808,16 @@ Template.payrollrules.events({
                                 sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (dataReload) {
                                     addVS1Data("TPayrollHolidays", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#addholdayhide').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=holiday','_self');
                                     }).catch(function (err) {
                                         $('#addholdayhide').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=holiday','_self');
                                     });
                                 }).catch(function (err) {
                                     $('#addholdayhide').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=holiday','_self');
                                 });
                             }else if (result.dismiss === 'cancel') {
@@ -14661,7 +14827,7 @@ Template.payrollrules.events({
 
                     }).catch(function (err) {
 
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal({
                         title: 'Oooops...',
                         text: err,
@@ -14681,7 +14847,7 @@ Template.payrollrules.events({
                 }
                 else
                     {
-                        $('.fullScreenSpin').css('display','inline-block');
+                        LoadingOverlay.show();
                         taxRateService.checkHolidaybyName(holidayname).then(function (data) {
                             holidayid = data.tpayrollholidays;
                             var tpayholidadata = holidayid[0].fields.ID;
@@ -14699,7 +14865,7 @@ Template.payrollrules.events({
 
                         taxRateService.saveHoliday(objDetails).then(function (objDetails) {
 
-                            $('.fullScreenSpin').css('display','none');
+                            LoadingOverlay.hide();
                             swal({
                                 title: 'Success',
                                 text: 'Holiday saved successfully.',
@@ -14712,16 +14878,16 @@ Template.payrollrules.events({
                                     sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (dataReload) {
                                         addVS1Data("TPayrollHolidays", JSON.stringify(dataReload)).then(function (datareturn) {
                                             $('#addholdayhide').trigger('click');
-                                            $('.fullScreenSpin').css('display','inline-block');
+                                            LoadingOverlay.show();
                                             window.open('/payrollrules?active_key=holiday','_self');
                                         }).catch(function (err) {
                                             $('#addholdayhide').trigger('click');
-                                            $('.fullScreenSpin').css('display','inline-block');
+                                            LoadingOverlay.show();
                                             window.open('/payrollrules?active_key=holiday','_self');
                                         });
                                     }).catch(function (err) {
                                         $('#addholdayhide').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=holiday','_self');
                                     });
                                 }else if (result.dismiss === 'cancel') {
@@ -14731,7 +14897,7 @@ Template.payrollrules.events({
 
                         }).catch(function (err) {
 
-                                $('.fullScreenSpin').css('display','none');
+                                LoadingOverlay.hide();
                                 swal({
                                 title: 'Oooops...',
                                 text: err,
@@ -14757,7 +14923,7 @@ Template.payrollrules.events({
                                 };
 
                                 taxRateService.saveHoliday(objDetails).then(function (objDetails) {
-                                    $('.fullScreenSpin').css('display','none');
+                                    LoadingOverlay.hide();
                                     swal({
                                         title: 'Success',
                                         text: 'Holiday saved successfully.',
@@ -14770,19 +14936,19 @@ Template.payrollrules.events({
                                             sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (dataReload) {
                                                 addVS1Data("TPayrollHolidays", JSON.stringify(dataReload)).then(function (datareturn) {
                                                     $('#addholdayhide').trigger('click');
-                                                    $('.fullScreenSpin').css('display','inline-block');
+                                                    LoadingOverlay.show();
 
                                                     window.open('/payrollrules?active_key=holiday','_self');
                                                 }).catch(function (err) {
 
                                                     $('#addholdayhide').trigger('click');
-                                                    $('.fullScreenSpin').css('display','inline-block');
+                                                    LoadingOverlay.show();
                                                     window.open('/payrollrules?active_key=holiday','_self');
                                                 });
                                             }).catch(function (err) {
 
                                                 $('#addholdayhide').trigger('click');
-                                                $('.fullScreenSpin').css('display','inline-block');
+                                                LoadingOverlay.show();
                                                     window.open('/payrollrules?active_key=holiday','_self');
                                             });
                                         }else if (result.dismiss === 'cancel') {
@@ -14792,7 +14958,7 @@ Template.payrollrules.events({
 
                                 }).catch(function (err) {
 
-                                        $('.fullScreenSpin').css('display','none');
+                                        LoadingOverlay.hide();
                                         swal({
                                         title: 'Oooops...',
                                         text: err,
@@ -14820,7 +14986,7 @@ Template.payrollrules.events({
    'click .btnSaveAllowance':function(){
 
      let templateObject = Template.instance();
-     $('.fullScreenSpin').css('display','inline-block');
+     LoadingOverlay.show();
      let taxRateService = new TaxRateService();
      let allowanceID = $('#edtAllowanceID').val()|| 0;
      let allowanceType = $('#edtAllowanceType').val()||'';
@@ -14856,25 +15022,25 @@ Template.payrollrules.events({
 
 
      if (edtEarningsNameAllowance === '') {
-        $('.fullScreenSpin').css('display','none');
+        LoadingOverlay.hide();
         swal('Allowance Name has not been selected!', '', 'warning');
         e.preventDefault();
      }
      else if(allowanceType === '')
      {
-        $('.fullScreenSpin').css('display','none');
+        LoadingOverlay.hide();
         swal('Allowance Type has not been selected!', '', 'warning');
         e.preventDefault();
      }
      else if(expensesAccount === '')
      {
-        $('.fullScreenSpin').css('display','none');
+        LoadingOverlay.hide();
         swal('Expenses Account has not been selected!', '', 'warning');
         e.preventDefault();
      }
      else if(amount === '')
      {
-        $('.fullScreenSpin').css('display','none');
+        LoadingOverlay.hide();
         swal('Please fill Amount !', '', 'warning');
         e.preventDefault();
      }
@@ -14903,7 +15069,7 @@ Template.payrollrules.events({
             };
 
             taxRateService.saveAllowance(objDetails).then(function (objDetails) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'Allowance saved Successfully',
@@ -14916,16 +15082,16 @@ Template.payrollrules.events({
                         sideBarService.getAllowance(initialBaseDataLoad, 0).then(function (dataReload) {
                             addVS1Data("TAllowance", JSON.stringify(dataReload)).then(function (datareturn) {
                                 $('#addallowhide').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem','_self');
                             }).catch(function (err) {
                                 $('#addallowhide').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem','_self');
                             });
                           }).catch(function (err) {
                             $('#addallowhide').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules?active_key=payitem','_self');
                           });
                     }else if (result.dismiss === 'cancel') {
@@ -14938,7 +15104,7 @@ Template.payrollrules.events({
 
              }).catch(function (err) {
 
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Oooops...',
                     text: err,
@@ -14985,7 +15151,7 @@ Template.payrollrules.events({
 
 
                 taxRateService.saveAllowance(objDetails).then(function (objDetails) {
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                         title: 'Success',
                         text: 'Allowance saved Successfully',
@@ -14998,16 +15164,16 @@ Template.payrollrules.events({
                             sideBarService.getAllowance(initialBaseDataLoad, 0).then(function (dataReload) {
                                 addVS1Data("TAllowance", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#addallowhide').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=payitem','_self');
                                 }).catch(function (err) {
                                     $('#addallowhide').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=payitem','_self');
                                 });
                             }).catch(function (err) {
                                 $('#addallowhide').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem','_self');
                             });
                         }else if (result.dismiss === 'cancel') {
@@ -15017,7 +15183,7 @@ Template.payrollrules.events({
 
 
                 }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                        swal({
                         title: 'Oooops...',
                         text: err,
@@ -15052,7 +15218,7 @@ Template.payrollrules.events({
 
                   taxRateService.saveAllowance(objDetails).then(function (objDetails) {
 
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                         title: 'Success',
                         text: 'Allowance saved Successfully',
@@ -15065,16 +15231,16 @@ Template.payrollrules.events({
                             sideBarService.getAllowance(initialBaseDataLoad, 0).then(function (dataReload) {
                                 addVS1Data("TAllowance", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#addallowhide').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=payitem','_self');
                                 }).catch(function (err) {
                                     $('#addallowhide').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=payitem','_self');
                                 });
                             }).catch(function (err) {
                                 $('#addallowhide').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem','_self');
                             });
                         }else if (result.dismiss === 'cancel') {
@@ -15085,7 +15251,7 @@ Template.payrollrules.events({
 
 
                   }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                        swal({
                         title: 'Oooops...',
                         text: err,
@@ -15110,7 +15276,7 @@ Template.payrollrules.events({
 
     'click .btnSaveRatePOP': function(){
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
 
         let taxRateService = new TaxRateService();
 
@@ -15118,14 +15284,14 @@ Template.payrollrules.events({
         let ratetypedescription = $('#edtRateDescription').val()||'';
 
         if (ratetypedescription === '') {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Rate type description can not be blank !', '', 'warning');
             e.preventDefault();
         }
         else {
 
 
-            $('.fullScreenSpin').css('display','inline-block');
+            LoadingOverlay.show();
 
 
           if(rateTypeId == ""){
@@ -15142,7 +15308,7 @@ Template.payrollrules.events({
              };
 
               taxRateService.saveRateType(objDetails).then(function (objDetails) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'New Rate Type saved Successfully',
@@ -15166,7 +15332,7 @@ Template.payrollrules.events({
                     }
                 });
               }).catch(function (err) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                 title: 'Oooops...',
                 text: err,
@@ -15193,7 +15359,7 @@ Template.payrollrules.events({
 
              taxRateService.saveRateType(objDetails).then(function (objDetails) {
 
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'New Rate Type saved Successfully',
@@ -15218,7 +15384,7 @@ Template.payrollrules.events({
                 });
 
              }).catch(function (err) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                 title: 'Oooops...',
                 text: err,
@@ -15247,7 +15413,7 @@ Template.payrollrules.events({
 
           taxRateService.saveRateType(objDetails).then(function (objDetails) {
 
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'New Rate Type saved Successfully',
@@ -15272,7 +15438,7 @@ Template.payrollrules.events({
                 });
 
           }).catch(function (err) {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal({
             title: 'Oooops...',
             text: err,
@@ -15296,20 +15462,20 @@ Template.payrollrules.events({
     'click .btnSaveGroup':function(){
 
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
         let taxRateService = new TaxRateService();
 
         let rateTypeId = $('#edtgroupID').val()|| 0;
         let ratetypedescription = $('#edtGroupDescription').val()||'';
 
         if (ratetypedescription === '') {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Group description can not be blank !', '', 'warning');
             e.preventDefault();
         }
         else {
 
-            $('.fullScreenSpin').css('display','inline-block');
+            LoadingOverlay.show();
             if(rateTypeId == ""){
 
             taxRateService.checkGroupByName(ratetypedescription).then(function (data) {
@@ -15325,7 +15491,7 @@ Template.payrollrules.events({
              };
 
               taxRateService.saveGroupType(objDetails).then(function (objDetails) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'New Group saved Successfully',
@@ -15349,7 +15515,7 @@ Template.payrollrules.events({
                     }
                 });
               }).catch(function (err) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                 title: 'Oooops...',
                 text: err,
@@ -15377,7 +15543,7 @@ Template.payrollrules.events({
 
              taxRateService.saveGroupType(objDetails).then(function (objDetails) {
 
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'New Group saved Successfully',
@@ -15402,7 +15568,7 @@ Template.payrollrules.events({
                 });
 
              }).catch(function (err) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                 title: 'Oooops...',
                 text: err,
@@ -15432,7 +15598,7 @@ Template.payrollrules.events({
 
           taxRateService.saveGroupType(objDetails).then(function (objDetails) {
 
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'New Group saved Successfully',
@@ -15457,7 +15623,7 @@ Template.payrollrules.events({
                 });
 
           }).catch(function (err) {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal({
             title: 'Oooops...',
             text: err,
@@ -15482,7 +15648,7 @@ Template.payrollrules.events({
     'click .btnSavefund':function(){
 
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
 
         let taxRateService = new TaxRateService();
 
@@ -15490,11 +15656,11 @@ Template.payrollrules.events({
         let fundtypedescription = $('#edtFundDescription').val()||'';
 
         if (fundtypedescription === '') {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Fund type description can not be blank !', '', 'warning');
             e.preventDefault();
         } else {
-          $('.fullScreenSpin').css('display','inline-block');
+          LoadingOverlay.show();
           if(fundTypeId == ""){
 
             taxRateService.checkfundTypeByName(fundtypedescription).then(function (data) {
@@ -15510,7 +15676,7 @@ Template.payrollrules.events({
 
              taxRateService.saveSuperType(objDetails).then(function (objDetails) {
 
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'New Super Fund Type saved Successfully',
@@ -15535,7 +15701,7 @@ Template.payrollrules.events({
                 });
 
              }).catch(function (err) {
-               $('.fullScreenSpin').css('display','none');
+               LoadingOverlay.hide();
                swal({
                title: 'Oooops...',
                text: err,
@@ -15562,7 +15728,7 @@ Template.payrollrules.events({
 
              taxRateService.saveSuperType(objDetails).then(function (objDetails) {
 
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'New Super Fund Type saved Successfully',
@@ -15587,7 +15753,7 @@ Template.payrollrules.events({
                 });
 
              }).catch(function (err) {
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                     title: 'Oooops...',
                     text: err,
@@ -15617,7 +15783,7 @@ Template.payrollrules.events({
 
           taxRateService.saveSuperType(objDetails).then(function (objDetails) {
 
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal({
                 title: 'Success',
                 text: 'New Super Fund Type saved Successfully',
@@ -15642,7 +15808,7 @@ Template.payrollrules.events({
             });
 
           }).catch(function (err) {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal({
             title: 'Oooops...',
             text: err,
@@ -15668,7 +15834,7 @@ Template.payrollrules.events({
 
     'click .btnSaveDeduction': function(){
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
         let deductionName = $('#edtDeductionName').val()||'';
         let taxRateService = new TaxRateService();
 
@@ -15715,29 +15881,29 @@ Template.payrollrules.events({
 
 
         if (deductionName === '') {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Deduction Name can not blank!', '', 'warning');
             e.preventDefault();
         }
         else if (deductionType === '') {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Deduction Type has not been selected!', '', 'warning');
             e.preventDefault();
         }
         else if (deductionAmount === '') {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Deduction Amount can not blank !', '', 'warning');
             e.preventDefault();
         }
         else if (deductionAccount === '') {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Deduction Account has not been selected!', '', 'warning');
             e.preventDefault();
         }
 
 
         else {
-          $('.fullScreenSpin').css('display','inline-block');
+          LoadingOverlay.show();
 
            if(deductionID == ""){
             taxRateService.checkDeductionByName(deductionName).then(function (data) {
@@ -15765,7 +15931,7 @@ Template.payrollrules.events({
 
             taxRateService.saveDeduction(objDetails).then(function (objDetails) {
 
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'New Deduction saved Successfully',
@@ -15778,16 +15944,16 @@ Template.payrollrules.events({
                         sideBarService.getDeduction(initialBaseDataLoad, 0).then(function (dataReload) {
                             addVS1Data("TDeduction", JSON.stringify(dataReload)).then(function (datareturn) {
                                 $('#addductionmodelhide').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                             }).catch(function (err) {
                                 $('#addductionmodelhide').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                             });
                           }).catch(function (err) {
                             $('#addductionmodelhide').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                           });
                     }else if (result.dismiss === 'cancel') {
@@ -15796,7 +15962,7 @@ Template.payrollrules.events({
                 });
 
              }).catch(function (err) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                 title: 'Oooops...',
                 text: err,
@@ -15834,7 +16000,7 @@ Template.payrollrules.events({
              };
 
              taxRateService.saveDeduction(objDetails).then(function (objDetails) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'New Dedution saved Successfully',
@@ -15847,16 +16013,16 @@ Template.payrollrules.events({
                         sideBarService.getDeduction(initialBaseDataLoad, 0).then(function (dataReload) {
                             addVS1Data("TDeduction", JSON.stringify(dataReload)).then(function (datareturn) {
                                 $('#addductionmodelhide').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                             }).catch(function (err) {
                                 $('#addductionmodelhide').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                             });
                           }).catch(function (err) {
                             $('#addductionmodelhide').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                           });
                     }else if (result.dismiss === 'cancel') {
@@ -15865,7 +16031,7 @@ Template.payrollrules.events({
                 });
 
              }).catch(function (err) {
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                     title: 'Oooops...',
                     text: err,
@@ -15907,7 +16073,7 @@ Template.payrollrules.events({
 
           taxRateService.saveDeduction(objDetails).then(function (objDetails) {
 
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal({
                 title: 'Success',
                 text: 'New Dedution saved Successfully',
@@ -15920,16 +16086,16 @@ Template.payrollrules.events({
                     sideBarService.getDeduction(initialBaseDataLoad, 0).then(function (dataReload) {
                         addVS1Data("TDeduction", JSON.stringify(dataReload)).then(function (datareturn) {
                             $('#addductionmodelhide').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                         }).catch(function (err) {
                             $('#addductionmodelhide').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                         });
                       }).catch(function (err) {
                         $('#addductionmodelhide').trigger('click');
-                        $('.fullScreenSpin').css('display','inline-block');
+                        LoadingOverlay.show();
                         window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                       });
                 }else if (result.dismiss === 'cancel') {
@@ -15938,7 +16104,7 @@ Template.payrollrules.events({
             });
 
           }).catch(function (err) {
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                     title: 'Oooops...',
                     text: err,
@@ -15964,7 +16130,7 @@ Template.payrollrules.events({
    'click .savenewcalender': function(){
 
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
         let taxRateService = new TaxRateService();
         let oldpaycalenderid  = $('#paycalendarId').val() || 0;
         let payperiod = $('#payperiod').val() || '';
@@ -15973,27 +16139,27 @@ Template.payrollrules.events({
         let FirstPaymentDate = $('#edtFirstPaymentDate').val() || '';
 
          if (payperiod === '') {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Pay period has not been selected!', '', 'warning');
             e.preventDefault();
          }
          else if(calender_name === '')
          {
-             $('.fullScreenSpin').css('display','none');
+             LoadingOverlay.hide();
              swal('Calender Name Can not blank!', '', 'warning');
              e.preventDefault();
 
          }
          else if(startdate === '')
          {
-             $('.fullScreenSpin').css('display','none');
+             LoadingOverlay.hide();
              swal('Start Date Has not been selected!', '', 'warning');
              e.preventDefault();
 
          }
          else if(FirstPaymentDate === '')
          {
-             $('.fullScreenSpin').css('display','none');
+             LoadingOverlay.hide();
              swal('First Payment Date Has not been selected!', '', 'warning');
              e.preventDefault();
 
@@ -16002,7 +16168,7 @@ Template.payrollrules.events({
          {
             if(oldpaycalenderid != 0 )
             {
-                $('.fullScreenSpin').css('display','inline-block');
+                LoadingOverlay.show();
                 objDetails = {
                     type: "TPayrollCalendars",
                     fields: {
@@ -16016,7 +16182,7 @@ Template.payrollrules.events({
                 };
 
                 taxRateService.saveCalender(objDetails).then(function (objDetails) {
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                         title: 'Success',
                         text: 'Pay Calendar saved successfully.',
@@ -16029,17 +16195,17 @@ Template.payrollrules.events({
                             sideBarService.getCalender(initialBaseDataLoad, 0).then(function (dataReload) {
                                 addVS1Data("TPayrollCalendars", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#closemodel').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                      window.open('/payrollrules?active_key=calender','_self');
                                 }).catch(function (err) {
                                     $('#closemodel').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
 
                                     window.open('/payrollrules?active_key=calender','_self');
                                 });
                               }).catch(function (err) {
                                   $('#closemodel').trigger('click');
-                                  $('.fullScreenSpin').css('display','inline-block');
+                                  LoadingOverlay.show();
 
                                   window.open('/payrollrules?active_key=calender','_self');
                               });
@@ -16053,7 +16219,7 @@ Template.payrollrules.events({
 
                  }).catch(function (err) {
 
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                         title: 'Oooops...',
                         text: err,
@@ -16073,7 +16239,7 @@ Template.payrollrules.events({
             }
             else
             {
-                $('.fullScreenSpin').css('display','inline-block');
+                LoadingOverlay.show();
 
                  taxRateService.checkCalenderName(calender_name).then(function (data) {
 
@@ -16097,7 +16263,7 @@ Template.payrollrules.events({
 
 
                     taxRateService.saveCalender(objDetails).then(function (objDetails) {
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal({
                             title: 'Success',
                             text: 'Pay Calendar saved successfully.',
@@ -16110,16 +16276,16 @@ Template.payrollrules.events({
                                 sideBarService.getCalender(initialBaseDataLoad, 0).then(function (dataReload) {
                                     addVS1Data("TPayrollCalendars", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#closemodel').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=calender','_self');
                                     }).catch(function (err) {
                                         $('#closemodel').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=calender','_self');
                                     });
                                   }).catch(function (err) {
                                         $('#closemodel').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=calender','_self');
                                   });
                             }else if (result.dismiss === 'cancel') {
@@ -16129,7 +16295,7 @@ Template.payrollrules.events({
 
 
                     }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                            swal({
                             title: 'Oooops...',
                             text: err,
@@ -16157,7 +16323,7 @@ Template.payrollrules.events({
 
                       taxRateService.saveCalender(objDetails).then(function (objDetails) {
 
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal({
                             title: 'Success',
                             text: 'Pay Calendar saved successfully.',
@@ -16170,16 +16336,16 @@ Template.payrollrules.events({
                             sideBarService.getCalender(initialBaseDataLoad, 0).then(function (dataReload) {
                                 addVS1Data("TPayrollCalendars", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#closemodel').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=calender','_self');
                                 }).catch(function (err) {
                                     $('#closemodel').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=calender','_self');
                                 });
                               }).catch(function (err) {
                                     $('#closemodel').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                    window.open('/payrollrules?active_key=calender','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
@@ -16190,7 +16356,7 @@ Template.payrollrules.events({
 
 
                       }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                            swal({
                             title: 'Oooops...',
                             text: err,
@@ -16216,11 +16382,11 @@ Template.payrollrules.events({
 
     },
 
-   'click .btnSaveDefaultTax':function(){
+   'click .btnSaveDefaultTax': (e, templateObject) => {
+        templateObject.saveOvertimes();
 
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
+        LoadingOverlay.show();
+       
         let editbankaccount = $('#editbankaccount').val() || '';
         let editpaygbankaccount = $('#editpaygbankaccount').val() || '';
         let editwagesexpbankaccount = $('#editwagesexpbankaccount').val() || '';
@@ -16257,48 +16423,48 @@ Template.payrollrules.events({
 
 
          if (editbankaccount === '') {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Bank account has not been selected!', '', 'warning');
             e.preventDefault();
          }
          else if(editpaygbankaccount === '')
          {
-             $('.fullScreenSpin').css('display','none');
+             LoadingOverlay.hide();
              swal('PAYG Liability Account has not been selected!', '', 'warning');
              e.preventDefault();
 
          }
          else if(editwagesexpbankaccount === '')
          {
-             $('.fullScreenSpin').css('display','none');
+             LoadingOverlay.hide();
              swal('Wages Expense Account has not been selected!', '', 'warning');
              e.preventDefault();
 
          }
          else if(editwagespaybankaccount === '')
          {
-             $('.fullScreenSpin').css('display','none');
+             LoadingOverlay.hide();
              swal('Wages Payable Account has not been selected!', '', 'warning');
              e.preventDefault();
 
          }
          else if(editsuperliabbankaccount === '')
          {
-             $('.fullScreenSpin').css('display','none');
+             LoadingOverlay.hide();
              swal('Superannuation Liability Account has not been selected!', '', 'warning');
              e.preventDefault();
 
          }
          else if(editsuperexpbankaccount === '')
          {
-             $('.fullScreenSpin').css('display','none');
+             LoadingOverlay.hide();
              swal('Superannuation Expense Account has not been selected!', '', 'warning');
              e.preventDefault();
 
          }
          else
          {
-            $('.fullScreenSpin').css('display','inline-block');
+            LoadingOverlay.show();
 
             objDetails = {
                 type: "Tpayrollorganization",
@@ -16336,16 +16502,16 @@ Template.payrollrules.events({
                     sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (dataReload) {
                         addVS1Data("TPayrollOrganization", JSON.stringify(dataReload)).then(function (datareturn) {
                             $('#closemodel').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules','_self');
                         }).catch(function (err) {
                             $('#closemodel').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules','_self');
                         });
                       }).catch(function (err) {
                             $('#closemodel').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                            window.open('/payrollrules','_self');
                       });
 
@@ -16370,7 +16536,7 @@ Template.payrollrules.events({
     'click .saveSuperannuation': function(e){
         let taxRateService = new TaxRateService();
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
         let id  = $('#newSuperannuationFundId').val() || 0;
         let fundType = $('#edtFundType').val() || '';
         let fundName = $('#edtFundName').val() || '';
@@ -16388,20 +16554,20 @@ Template.payrollrules.events({
         let edtaccountname = $('#edtaccountname').val() || '';
         let fundtypeid = $('#fundtypeid').val();
         if (fundName === '') {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Fund Name has not been Filled!', '', 'warning');
             e.preventDefault();
          }
          else if(fundType === '')
          {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Fund Type has not been Selected !', '', 'warning');
             e.preventDefault();
          }
          else {
             if(id != 0)
             {
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             objDetails = {
                                 type: "Tsuperannuation",
                                 fields: {
@@ -16426,7 +16592,7 @@ Template.payrollrules.events({
 
 
                             taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
-                                $('.fullScreenSpin').css('display','none');
+                                LoadingOverlay.hide();
                                 swal({
                                     title: 'Success',
                                     text: 'New Superannuation saved Successfully',
@@ -16439,16 +16605,16 @@ Template.payrollrules.events({
                                         sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
                                             addVS1Data("Tsuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
                                                 $('#closeuperannution').trigger('click');
-                                                $('.fullScreenSpin').css('display','inline-block');
+                                                LoadingOverlay.show();
                                                 window.open('/payrollrules?active_key=super','_self');
                                             }).catch(function (err) {
                                                 $('#closeuperannution').trigger('click');
-                                                $('.fullScreenSpin').css('display','inline-block');
+                                                LoadingOverlay.show();
                                                 window.open('/payrollrules?active_key=super','_self');
                                             });
                                           }).catch(function (err) {
                                             $('#closeuperannution').trigger('click');
-                                            $('.fullScreenSpin').css('display','inline-block');
+                                            LoadingOverlay.show();
                                               window.open('/payrollrules?active_key=super','_self');
                                           });
                                     }else if (result.dismiss === 'cancel') {
@@ -16457,7 +16623,7 @@ Template.payrollrules.events({
                                 });
 
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display','none');
+                                LoadingOverlay.hide();
                                 swal({
                                 title: 'Oooops...',
                                 text: err,
@@ -16483,14 +16649,14 @@ Template.payrollrules.events({
 
                     if(abn === '')
                     {
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal('ABN can not be blank !', '', 'warning');
                         e.preventDefault();
 
                     }
                     else if(edtbsb == '')
                     {
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal('BSB can not be blank !', '', 'warning');
                         e.preventDefault();
 
@@ -16498,7 +16664,7 @@ Template.payrollrules.events({
                     }
                     else if(edtelectronicsalias == '')
                     {
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal('Electronicsalias can not be blank !', '', 'warning');
                         e.preventDefault();
 
@@ -16506,21 +16672,21 @@ Template.payrollrules.events({
                     }
                     else if(edtaccountnumber == '')
                     {
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal('Account Number can not be blank !', '', 'warning');
                         e.preventDefault();
 
                     }
                     else if(edtaccountname == '')
                     {
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal('Account Name can not be blank !', '', 'warning');
                         e.preventDefault();
 
                     }
                     else
                     {
-                        $('.fullScreenSpin').css('display','inline-block');
+                        LoadingOverlay.show();
                         taxRateService.checkSuperannuationName(fundName).then(function (data) {
                         supperannuationId = data.tsuperannuation[0].ID;
                         objDetails = {
@@ -16545,7 +16711,7 @@ Template.payrollrules.events({
 
 
                      taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                            swal({
                                title: 'Success',
                                text: 'New Superannuation saved Successfully',
@@ -16558,16 +16724,16 @@ Template.payrollrules.events({
                                    sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
                                        addVS1Data("Tsuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
                                            $('#closeuperannution').trigger('click');
-                                           $('.fullScreenSpin').css('display','inline-block');
+                                           LoadingOverlay.show();
                                            window.open('/payrollrules?active_key=super','_self');
                                        }).catch(function (err) {
                                            $('#closeuperannution').trigger('click');
-                                           $('.fullScreenSpin').css('display','inline-block');
+                                           LoadingOverlay.show();
                                            window.open('/payrollrules?active_key=super','_self');
                                        });
                                      }).catch(function (err) {
                                        $('#closeuperannution').trigger('click');
-                                       $('.fullScreenSpin').css('display','inline-block');
+                                       LoadingOverlay.show();
                                          window.open('/payrollrules?active_key=super','_self');
                                      });
                                }else if (result.dismiss === 'cancel') {
@@ -16576,7 +16742,7 @@ Template.payrollrules.events({
                            });
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                            swal({
                            title: 'Oooops...',
                            text: err,
@@ -16616,7 +16782,7 @@ Template.payrollrules.events({
 
 
                        taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                            swal({
                                title: 'Success',
                                text: 'New Superannuation saved Successfully',
@@ -16629,16 +16795,16 @@ Template.payrollrules.events({
                                    sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
                                        addVS1Data("Tsuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
                                            $('#closeuperannution').trigger('click');
-                                           $('.fullScreenSpin').css('display','inline-block');
+                                           LoadingOverlay.show();
                                            window.open('/payrollrules?active_key=super','_self');
                                        }).catch(function (err) {
                                            $('#closeuperannution').trigger('click');
-                                           $('.fullScreenSpin').css('display','inline-block');
+                                           LoadingOverlay.show();
                                            window.open('/payrollrules?active_key=super','_self');
                                        });
                                      }).catch(function (err) {
                                        $('#closeuperannution').trigger('click');
-                                       $('.fullScreenSpin').css('display','inline-block');
+                                       LoadingOverlay.show();
                                        window.open('/payrollrules?active_key=super','_self');
                                      });
                                }else if (result.dismiss === 'cancel') {
@@ -16648,7 +16814,7 @@ Template.payrollrules.events({
 
 
                        }).catch(function (err) {
-                           $('.fullScreenSpin').css('display','none');
+                           LoadingOverlay.hide();
                            swal({
                            title: 'Oooops...',
                            text: err,
@@ -16672,7 +16838,7 @@ Template.payrollrules.events({
                 else
                 {
 
-                    $('.fullScreenSpin').css('display','inline-block');
+                    LoadingOverlay.show();
                     taxRateService.checkSuperannuationName(fundName).then(function (data) {
                     supperannuationId = data.tsuperannuation[0].Id;
                     objDetails = {
@@ -16698,7 +16864,7 @@ Template.payrollrules.events({
 
 
                  taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                        swal({
                            title: 'Success',
                            text: 'New Superannuation saved Successfully',
@@ -16711,16 +16877,16 @@ Template.payrollrules.events({
                                sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
                                    addVS1Data("Tsuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
                                        $('#closeuperannution').trigger('click');
-                                       $('.fullScreenSpin').css('display','inline-block');
+                                       LoadingOverlay.show();
                                        window.open('/payrollrules?active_key=super','_self');
                                    }).catch(function (err) {
                                        $('#closeuperannution').trigger('click');
-                                       $('.fullScreenSpin').css('display','inline-block');
+                                       LoadingOverlay.show();
                                        window.open('/payrollrules?active_key=super','_self');
                                    });
                                  }).catch(function (err) {
                                    $('#closeuperannution').trigger('click');
-                                   $('.fullScreenSpin').css('display','inline-block');
+                                   LoadingOverlay.show();
                                      window.open('/payrollrules?active_key=super','_self');
                                  });
                            }else if (result.dismiss === 'cancel') {
@@ -16729,7 +16895,7 @@ Template.payrollrules.events({
                        });
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                        swal({
                        title: 'Oooops...',
                        text: err,
@@ -16769,7 +16935,7 @@ Template.payrollrules.events({
 
 
                    taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                        swal({
                            title: 'Success',
                            text: 'New Superannuation saved Successfully',
@@ -16782,16 +16948,16 @@ Template.payrollrules.events({
                                sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
                                    addVS1Data("Tsuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
                                        $('#closeuperannution').trigger('click');
-                                       $('.fullScreenSpin').css('display','inline-block');
+                                       LoadingOverlay.show();
                                        window.open('/payrollrules?active_key=super','_self');
                                    }).catch(function (err) {
                                        $('#closeuperannution').trigger('click');
-                                       $('.fullScreenSpin').css('display','inline-block');
+                                       LoadingOverlay.show();
                                        window.open('/payrollrules?active_key=super','_self');
                                    });
                                  }).catch(function (err) {
                                    $('#closeuperannution').trigger('click');
-                                   $('.fullScreenSpin').css('display','inline-block');
+                                   LoadingOverlay.show();
                                    window.open('/payrollrules?active_key=super','_self');
                                  });
                            }else if (result.dismiss === 'cancel') {
@@ -16801,7 +16967,7 @@ Template.payrollrules.events({
 
 
                    }).catch(function (err) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                        swal({
                        title: 'Oooops...',
                        text: err,
@@ -16837,7 +17003,7 @@ Template.payrollrules.events({
     },
 
    'click .newreiumbursement': function(){
-       $('.fullScreenSpin').css('display','inline-block');
+       LoadingOverlay.show();
         let templateObject = Template.instance();
 
         let taxRateService = new TaxRateService();
@@ -16847,19 +17013,19 @@ Template.payrollrules.events({
         let oldres_id = $('#res_id').val() || 0 ;
 
         if (reimbursementname === '') {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Reimbursement Name has not been Filled!', '', 'warning');
             e.preventDefault();
          }
          else if(account === '')
          {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Account has not been Selected!', '', 'warning');
             e.preventDefault();
 
          }
          else {
-            $('.fullScreenSpin').css('display','inline-block');
+            LoadingOverlay.show();
             if(oldres_id != 0)
             {
 
@@ -16887,16 +17053,16 @@ Template.payrollrules.events({
                             sideBarService.getReimbursement(initialBaseDataLoad, 0).then(function (dataReload) {
                                 addVS1Data("TReimbursement", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#closeresim').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                 }).catch(function (err) {
                                     $('#closeresim').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                 });
                               }).catch(function (err) {
                                 $('#closeresim').trigger('click');
-                                 $('.fullScreenSpin').css('display','inline-block');
+                                 LoadingOverlay.show();
                                  window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
@@ -16904,7 +17070,7 @@ Template.payrollrules.events({
                         }
                     });
 
-                  $('.fullScreenSpin').css('display','none');
+                  LoadingOverlay.hide();
 
 
                 });
@@ -16913,7 +17079,7 @@ Template.payrollrules.events({
             }
             else
             {
-                $('.fullScreenSpin').css('display','inline-block');
+                LoadingOverlay.show();
                 taxRateService.checkReimbursementByName(reimbursementname).then(function (data) {
                     TReimbursementid = data.treimbursement[0].Id;
                     objDetails = {
@@ -16928,7 +17094,7 @@ Template.payrollrules.events({
 
                   taxRateService.saveReimbursement(objDetails).then(function (objDetails) {
 
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal({
                             title: 'Success',
                             text: 'New Reimbursement saved Successfully',
@@ -16941,17 +17107,17 @@ Template.payrollrules.events({
                                 sideBarService.getReimbursement(initialBaseDataLoad, 0).then(function (dataReload) {
                                     addVS1Data("TReimbursement", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#closeresim').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
 
                                         window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                     }).catch(function (err) {
                                         $('#closeresim').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                     });
                                   }).catch(function (err) {
                                     $('#closeresim').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                   });
                             }else if (result.dismiss === 'cancel') {
@@ -16961,7 +17127,7 @@ Template.payrollrules.events({
 
 
                     }).catch(function (err) {
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal({
                         title: 'Oooops...',
                         text: err,
@@ -16990,7 +17156,7 @@ Template.payrollrules.events({
 
                     taxRateService.saveReimbursement(objDetails).then(function (objDetails) {
 
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal({
                             title: 'Success',
                             text: 'New Reimbursement saved Successfully',
@@ -17003,16 +17169,16 @@ Template.payrollrules.events({
                                 sideBarService.getReimbursement(initialBaseDataLoad, 0).then(function (dataReload) {
                                     addVS1Data("TReimbursement", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#closeresim').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                     }).catch(function (err) {
                                         $('#closeresim').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                     });
                                   }).catch(function (err) {
                                     $('#closeresim').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                   });
                             }else if (result.dismiss === 'cancel') {
@@ -17021,7 +17187,7 @@ Template.payrollrules.events({
                         });
 
                     }).catch(function (err) {
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal({
                         title: 'Oooops...',
                         text: err,
@@ -17056,7 +17222,7 @@ Template.payrollrules.events({
 
 
    'click .savePaidLeave':function(){
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
         let templateObject = Template.instance();
         let taxRateService = new TaxRateService();
         let Leavename = $('#edtLeaveName').val() || '';
@@ -17073,19 +17239,19 @@ Template.payrollrules.events({
         }
 
          if (Leavename === '') {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Leave  Name has not been Filled!', '', 'warning');
             e.preventDefault();
          }
          else if(Typeofunit === '')
          {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Type of unit has not been selected!', '', 'warning');
             e.preventDefault();
          }
          else {
 
-            $('.fullScreenSpin').css('display','inline-block');
+            LoadingOverlay.show();
 
             getVS1Data('TLeaveData').then(function(dataObject) {
 
@@ -17110,7 +17276,7 @@ Template.payrollrules.events({
                     golarray.push(objDetails)
 
                     addVS1Data("TLeaveData", JSON.stringify(golarray)).then(function (datareturn) {
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal({
                         title: 'Success',
                         text: 'Leave saved successfully.',
@@ -17132,7 +17298,7 @@ Template.payrollrules.events({
                     }).catch(function (err) {
 
 
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal({
                           title: 'Error',
                           text: 'Leave not saved .',
@@ -17187,7 +17353,7 @@ Template.payrollrules.events({
 
 
                     addVS1Data("TLeaveData", JSON.stringify(golarray)).then(function (datareturn) {
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal({
                         title: 'Success',
                         text: 'Leave saved successfully.',
@@ -17209,7 +17375,7 @@ Template.payrollrules.events({
                     }).catch(function (err) {
 
 
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal({
                           title: 'Error',
                           text: 'Leave not saved .',
@@ -17254,7 +17420,7 @@ Template.payrollrules.events({
 
 
    'click .saveExemptReportable':function(){
-    $('.fullScreenSpin').css('display','inline-block');
+    LoadingOverlay.show();
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     let edtEarningsName = $('#edtEarningsName').val() || '';
@@ -17286,24 +17452,24 @@ Template.payrollrules.events({
     }
 
     if (edtEarningsName === '') {
-        $('.fullScreenSpin').css('display','none');
+        LoadingOverlay.hide();
         swal('Earnings Name has not been Filled!', '', 'warning');
         e.preventDefault();
      }
      else if(edtRateType === '')
      {
-        $('.fullScreenSpin').css('display','none');
+        LoadingOverlay.hide();
         swal('Earnings Rate type has not been Selected!', '', 'warning');
         e.preventDefault();
      }
      else if(edtExpenseAccount === '')
      {
-        $('.fullScreenSpin').css('display','none');
+        LoadingOverlay.hide();
         swal('Expense Account has not been Selected!', '', 'warning');
         e.preventDefault();
      }
      else {
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
 
         getVS1Data('TEarningData').then(function(dataObject) {
 
@@ -17329,7 +17495,7 @@ Template.payrollrules.events({
 
 
                 addVS1Data("TEarningData", JSON.stringify(golarray)).then(function (datareturn) {
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                     title: 'Success',
                     text: 'Earning saved successfully.',
@@ -17351,7 +17517,7 @@ Template.payrollrules.events({
                 }).catch(function (err) {
 
 
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                       title: 'Error',
                       text: 'Leave not saved .',
@@ -17400,7 +17566,7 @@ Template.payrollrules.events({
 
                 golarray.push(objDetails)
                 addVS1Data("TEarningData", JSON.stringify(golarray)).then(function (datareturn) {
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                     title: 'Success',
                     text: 'Earning saved successfully.',
@@ -17422,7 +17588,7 @@ Template.payrollrules.events({
                 }).catch(function (err) {
 
 
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                       title: 'Error',
                       text: 'Leave not saved .',
@@ -17457,7 +17623,7 @@ Template.payrollrules.events({
     },
 
 //    'click .saveExemptReportableOvertime':function(){
-//     $('.fullScreenSpin').css('display','inline-block');
+//     LoadingOverlay.show();
 //     let templateObject = Template.instance();
 
 //     let taxRateService = new TaxRateService();
@@ -17490,24 +17656,24 @@ Template.payrollrules.events({
 //     }
 
 //     if (edtEarningsName === '') {
-//         $('.fullScreenSpin').css('display','none');
+//         LoadingOverlay.hide();
 //         swal('Earnings Name has not been Filled!', '', 'warning');
 //         e.preventDefault();
 //      }
 //      else if(edtRateType === '')
 //      {
-//         $('.fullScreenSpin').css('display','none');
+//         LoadingOverlay.hide();
 //         swal('Earnings Rate type has not been Selected!', '', 'warning');
 //         e.preventDefault();
 //      }
 //      else if(edtExpenseAccount === '')
 //      {
-//         $('.fullScreenSpin').css('display','none');
+//         LoadingOverlay.hide();
 //         swal('Expense Account has not been Selected!', '', 'warning');
 //         e.preventDefault();
 //      }
 //      else {
-//         $('.fullScreenSpin').css('display','inline-block');
+//         LoadingOverlay.show();
 //           if(oldid != 0)
 //           {
 
@@ -17527,7 +17693,7 @@ Template.payrollrules.events({
 //             };
 
 //             taxRateService.saveExemptReportableOvertime(objDetails).then(function (objDetails) {
-//                 $('.fullScreenSpin').css('display','none');
+//                 LoadingOverlay.hide();
 //                 swal({
 //                     title: 'Success',
 //                     text: 'Over time Earnings saved Successfully',
@@ -17540,16 +17706,16 @@ Template.payrollrules.events({
 //                         sideBarService.getExemptReportableOvertime(initialBaseDataLoad, 0).then(function (dataReload) {
 //                             addVS1Data("Tovertimeearnings", JSON.stringify(dataReload)).then(function (datareturn) {
 //                                 $('#addovertimeeringmodel').trigger('click');
-//                                 $('.fullScreenSpin').css('display','inline-block');
+//                                 LoadingOverlay.show();
 //                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                             }).catch(function (err) {
 //                                 $('#addovertimeeringmodel').trigger('click');
-//                                 $('.fullScreenSpin').css('display','inline-block');
+//                                 LoadingOverlay.show();
 //                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                             });
 //                           }).catch(function (err) {
 //                             $('#addovertimeeringmodel').trigger('click');
-//                             $('.fullScreenSpin').css('display','inline-block');
+//                             LoadingOverlay.show();
 //                             window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                           });
 //                     }else if (result.dismiss === 'cancel') {
@@ -17561,7 +17727,7 @@ Template.payrollrules.events({
 
 
 //             }).catch(function (err) {
-//                 $('.fullScreenSpin').css('display','none');
+//                 LoadingOverlay.hide();
 //                 swal({
 //                 title: 'Oooops...',
 //                 text: err,
@@ -17582,7 +17748,7 @@ Template.payrollrules.events({
 //           }
 //           else
 //           {
-//             $('.fullScreenSpin').css('display','inline-block');
+//             LoadingOverlay.show();
 //             taxRateService.checkExemptReportableOvertime(edtEarningsName).then(function (data) {
 //                 earningid = data.tovertimeEarnigns[0].Id;
 //                 objDetails = {
@@ -17601,7 +17767,7 @@ Template.payrollrules.events({
 //                };
 
 //                  taxRateService.saveExemptReportableOvertime(objDetails).then(function (objDetails) {
-//                         $('.fullScreenSpin').css('display','none');
+//                         LoadingOverlay.hide();
 //                         swal({
 //                             title: 'Success',
 //                             text: 'Over time Earnings saved Successfully',
@@ -17612,7 +17778,7 @@ Template.payrollrules.events({
 //                         }).then((result) => {
 //                             if (result.value) {
 //                                 $('#addovertimeeringmodel').trigger('click');
-//                                 $('.fullScreenSpin').css('display','inline-block');
+//                                 LoadingOverlay.show();
 //                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                             }else if (result.dismiss === 'cancel') {
 
@@ -17620,7 +17786,7 @@ Template.payrollrules.events({
 //                         });
 
 //                   }).catch(function (err) {
-//                         $('.fullScreenSpin').css('display','none');
+//                         LoadingOverlay.hide();
 //                         swal({
 //                         title: 'Oooops...',
 //                         text: err,
@@ -17652,7 +17818,7 @@ Template.payrollrules.events({
 //                 };
 
 //                 taxRateService.saveExemptReportableOvertime(objDetails).then(function (objDetails) {
-//                     $('.fullScreenSpin').css('display','none');
+//                     LoadingOverlay.hide();
 //                     swal({
 //                         title: 'Success',
 //                         text: 'Over time Earnings saved Successfully',
@@ -17665,16 +17831,16 @@ Template.payrollrules.events({
 //                             sideBarService.getExemptReportableOvertime(initialBaseDataLoad, 0).then(function (dataReload) {
 //                                 addVS1Data("Tovertimeearnings", JSON.stringify(dataReload)).then(function (datareturn) {
 //                                     $('#addovertimeeringmodel').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 }).catch(function (err) {
 //                                     $('#addovertimeeringmodel').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 });
 //                               }).catch(function (err) {
 //                                 $('#addovertimeeringmodel').trigger('click');
-//                                 $('.fullScreenSpin').css('display','inline-block');
+//                                 LoadingOverlay.show();
 //                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                               });
 //                         }else if (result.dismiss === 'cancel') {
@@ -17682,7 +17848,7 @@ Template.payrollrules.events({
 //                         }
 //                     });
 //                 }).catch(function (err) {
-//                        $('.fullScreenSpin').css('display','none');
+//                        LoadingOverlay.hide();
 //                         swal({
 //                         title: 'Oooops...',
 //                         text: err,
@@ -17709,7 +17875,7 @@ Template.payrollrules.events({
 
 //    'click .saveSuperannuationBonusesCommissions':function(){
 
-//     $('.fullScreenSpin').css('display','inline-block');
+//     LoadingOverlay.show();
 //     let templateObject = Template.instance();
 
 //     let taxRateService = new TaxRateService();
@@ -17740,24 +17906,24 @@ Template.payrollrules.events({
 //     }
 
 //     if (edtEarningsName === '') {
-//         $('.fullScreenSpin').css('display','none');
+//         LoadingOverlay.hide();
 //         swal('Earnings Name has not been Filled!', '', 'warning');
 //         e.preventDefault();
 //     }
 //      else if(edtRateType === '')
 //      {
-//         $('.fullScreenSpin').css('display','none');
+//         LoadingOverlay.hide();
 //         swal('Earnings Rate type has not been Selected!', '', 'warning');
 //         e.preventDefault();
 //      }
 //      else if(edtExpenseAccount === '')
 //      {
-//         $('.fullScreenSpin').css('display','none');
+//         LoadingOverlay.hide();
 //         swal('Expense Account has not been Selected!', '', 'warning');
 //         e.preventDefault();
 //      }
 //      else {
-//         $('.fullScreenSpin').css('display','inline-block');
+//         LoadingOverlay.show();
 //         if(oldid != 0)
 //         {
 
@@ -17777,7 +17943,7 @@ Template.payrollrules.events({
 //                 };
 
 //                 taxRateService.saveSuperannuationBonusesCommissions(objDetails).then(function (objDetails) {
-//                     $('.fullScreenSpin').css('display','none');
+//                     LoadingOverlay.hide();
 //                     swal({
 //                         title: 'Success',
 //                         text: 'Bonuses Commission Saved Successfully',
@@ -17790,16 +17956,16 @@ Template.payrollrules.events({
 //                             sideBarService.getvs1superannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (dataReload) {
 //                                 addVS1Data("Tearningsbonusescommissions", JSON.stringify(dataReload)).then(function (datareturn) {
 //                                     $('#bonusescloseid').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 }).catch(function (err) {
 //                                     $('#bonusescloseid').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 });
 //                               }).catch(function (err) {
 //                                 $('#bonusescloseid').trigger('click');
-//                                 $('.fullScreenSpin').css('display','inline-block');
+//                                 LoadingOverlay.show();
 //                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                               });
 //                         }else if (result.dismiss === 'cancel') {
@@ -17808,7 +17974,7 @@ Template.payrollrules.events({
 //                     });
 
 //                 }).catch(function (err) {
-//                 $('.fullScreenSpin').css('display','none');
+//                 LoadingOverlay.hide();
 //                 swal({
 //                 title: 'Oooops...',
 //                 text: err,
@@ -17828,7 +17994,7 @@ Template.payrollrules.events({
 //         else
 //         {
 
-//             $('.fullScreenSpin').css('display','inline-block');
+//             LoadingOverlay.show();
 //             taxRateService.checkSuperannuationBonusesCommissions(edtEarningsName).then(function (data) {
 //             earningid = data.tearningsbonusescommissions[0].Id;
 //             objDetails = {
@@ -17847,7 +18013,7 @@ Template.payrollrules.events({
 //            };
 
 //           taxRateService.saveSuperannuationBonusesCommissions(objDetails).then(function (objDetails) {
-//                     $('.fullScreenSpin').css('display','none');
+//                     LoadingOverlay.hide();
 //                     swal({
 //                         title: 'Success',
 //                         text: ' Bonuses Commission saved Successfully',
@@ -17860,17 +18026,17 @@ Template.payrollrules.events({
 //                             sideBarService.getvs1superannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (dataReload) {
 //                                 addVS1Data("Tearningsbonusescommissions", JSON.stringify(dataReload)).then(function (datareturn) {
 //                                     $('#bonusescloseid').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 }).catch(function (err) {
 //                                     $('#bonusescloseid').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 });
 //                               }).catch(function (err) {
 //                                 $('#bonusescloseid').trigger('click');
-//                                  $('.fullScreenSpin').css('display','inline-block');
+//                                  LoadingOverlay.show();
 //                                  window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                               });
 //                         }else if (result.dismiss === 'cancel') {
@@ -17878,7 +18044,7 @@ Template.payrollrules.events({
 //                         }
 //                     });
 //               }).catch(function (err) {
-//                        $('.fullScreenSpin').css('display','none');
+//                        LoadingOverlay.hide();
 //                         swal({
 //                         title: 'Oooops...',
 //                         text: err,
@@ -17910,7 +18076,7 @@ Template.payrollrules.events({
 //             };
 
 //             taxRateService.saveSuperannuationBonusesCommissions(objDetails).then(function (objDetails) {
-//                     $('.fullScreenSpin').css('display','none');
+//                     LoadingOverlay.hide();
 //                     swal({
 //                         title: 'Success',
 //                         text: 'Bonuses Commission saved Successfully',
@@ -17923,18 +18089,18 @@ Template.payrollrules.events({
 //                             sideBarService.getvs1superannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (dataReload) {
 //                                 addVS1Data("Tearningsbonusescommissions", JSON.stringify(dataReload)).then(function (datareturn) {
 //                                     $('#bonusescloseid').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 }).catch(function (err) {
 //                                     $('#bonusescloseid').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 });
 //                               }).catch(function (err) {
 //                                 $('#bonusescloseid').trigger('click');
-//                                 $('.fullScreenSpin').css('display','inline-block');
+//                                 LoadingOverlay.show();
 
 //                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                               });
@@ -17943,7 +18109,7 @@ Template.payrollrules.events({
 //                         }
 //                     });
 //             }).catch(function (err) {
-//                 $('.fullScreenSpin').css('display','none');
+//                 LoadingOverlay.hide();
 //                     swal({
 //                     title: 'Oooops...',
 //                     text: err,
@@ -17967,7 +18133,7 @@ Template.payrollrules.events({
 //     },
 
 //    'click .saveExemptReportableLumpSumE':function(){
-//     $('.fullScreenSpin').css('display','inline-block');
+//     LoadingOverlay.show();
 //         let templateObject = Template.instance();
 
 //         let taxRateService = new TaxRateService();
@@ -17998,24 +18164,24 @@ Template.payrollrules.events({
 //         }
 
 //         if (edtEarningsName === '') {
-//             $('.fullScreenSpin').css('display','none');
+//             LoadingOverlay.hide();
 //             swal('Earnings Name has not been Filled!', '', 'warning');
 //             e.preventDefault();
 //          }
 //          else if(edtRateType === '')
 //          {
-//             $('.fullScreenSpin').css('display','none');
+//             LoadingOverlay.hide();
 //             swal('Earnings Rate type has not been Selected!', '', 'warning');
 //             e.preventDefault();
 //          }
 //          else if(edtExpenseAccount === '')
 //          {
-//             $('.fullScreenSpin').css('display','none');
+//             LoadingOverlay.hide();
 //             swal('Expense Account has not been Selected!', '', 'warning');
 //             e.preventDefault();
 //          }
 //          else {
-//             $('.fullScreenSpin').css('display','inline-block');
+//             LoadingOverlay.show();
 //             if(oldid != 0)
 //             {
 
@@ -18035,7 +18201,7 @@ Template.payrollrules.events({
 //                 };
 
 //                 taxRateService.saveExemptReportableLumpSumE(objDetails).then(function (objDetails) {
-//                     $('.fullScreenSpin').css('display','none');
+//                     LoadingOverlay.hide();
 //                     swal({
 //                         title: 'Success',
 //                         text: 'Lump Sum E Earnings Saved Successfully',
@@ -18049,19 +18215,19 @@ Template.payrollrules.events({
 //                                 addVS1Data("Tlumpsume", JSON.stringify(dataReload)).then(function (datareturn) {
 
 //                                     $('#addlumpsumlabelid').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 }).catch(function (err) {
 
 //                                     $('#addlumpsumlabelid').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 });
 //                               }).catch(function (err) {
 
 //                                     $('#addlumpsumlabelid').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                               });
 //                         }else if (result.dismiss === 'cancel') {
@@ -18069,7 +18235,7 @@ Template.payrollrules.events({
 //                         }
 //                     });
 //                 }).catch(function(err){
-//                         $('.fullScreenSpin').css('display','none');
+//                         LoadingOverlay.hide();
 //                         swal({
 //                         title: 'Oooops...',
 //                         text: err,
@@ -18089,7 +18255,7 @@ Template.payrollrules.events({
 //             }
 //             else
 //             {
-//                 $('.fullScreenSpin').css('display','inline-block');
+//                 LoadingOverlay.show();
 //                 taxRateService.checkExemptReportableLumpSumE(edtEarningsName).then(function (data) {
 //                     earningid = data.tlumpsume[0].Id;
 //                     objDetails = {
@@ -18108,7 +18274,7 @@ Template.payrollrules.events({
 //                    };
 
 //                   taxRateService.saveExemptReportableLumpSumE(objDetails).then(function (objDetails) {
-//                             $('.fullScreenSpin').css('display','none');
+//                             LoadingOverlay.hide();
 //                             swal({
 //                                 title: 'Success',
 //                                 text: 'Lump Sum E Earnings Saved Successfully',
@@ -18122,20 +18288,20 @@ Template.payrollrules.events({
 //                                         addVS1Data("Tlumpsume", JSON.stringify(dataReload)).then(function (datareturn) {
 
 //                                             $('#addlumpsumlabelid').trigger('click');
-//                                             $('.fullScreenSpin').css('display','inline-block');
+//                                             LoadingOverlay.show();
 
 //                                             window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                         }).catch(function (err) {
 
 
 //                                                 $('#addlumpsumlabelid').trigger('click');
-//                                                 $('.fullScreenSpin').css('display','inline-block');
+//                                                 LoadingOverlay.show();
 //                                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                         });
 //                                       }).catch(function (err) {
 
 //                                         $('#addlumpsumlabelid').trigger('click');
-//                                         $('.fullScreenSpin').css('display','inline-block');
+//                                         LoadingOverlay.show();
 //                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                       });
 //                                 }else if (result.dismiss === 'cancel') {
@@ -18145,7 +18311,7 @@ Template.payrollrules.events({
 
 
 //                     }).catch(function (err) {
-//                             $('.fullScreenSpin').css('display','none');
+//                             LoadingOverlay.hide();
 //                             swal({
 //                             title: 'Oooops...',
 //                             text: err,
@@ -18175,7 +18341,7 @@ Template.payrollrules.events({
 //                                };
 
 //                     taxRateService.saveExemptReportableLumpSumE(objDetails).then(function (objDetails) {
-//                         $('.fullScreenSpin').css('display','none');
+//                         LoadingOverlay.hide();
 //                         swal({
 //                             title: 'Success',
 //                             text: 'Lump Sum E Earnings Saved Successfully',
@@ -18189,19 +18355,19 @@ Template.payrollrules.events({
 //                                     addVS1Data("Tlumpsume", JSON.stringify(dataReload)).then(function (datareturn) {
 
 //                                         $('#addlumpsumlabelid').trigger('click');
-//                                         $('.fullScreenSpin').css('display','inline-block');
+//                                         LoadingOverlay.show();
 
 //                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                     }).catch(function (err) {
 
 //                                         $('#addlumpsumlabelid').trigger('click');
-//                                         $('.fullScreenSpin').css('display','inline-block');
+//                                         LoadingOverlay.show();
 //                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                     });
 //                                   }).catch(function (err) {
 
 //                                         $('#addlumpsumlabelid').trigger('click');
-//                                         $('.fullScreenSpin').css('display','inline-block');
+//                                         LoadingOverlay.show();
 //                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                   });
 //                             }else if (result.dismiss === 'cancel') {
@@ -18210,7 +18376,7 @@ Template.payrollrules.events({
 //                         });
 
 //                     }).catch(function (err) {
-//                             $('.fullScreenSpin').css('display','none');
+//                             LoadingOverlay.hide();
 //                             swal({
 //                             title: 'Oooops...',
 //                             text: err,
@@ -18235,7 +18401,7 @@ Template.payrollrules.events({
 //     },
 
 //    'click .saveExemptReportableTermnination':function(){
-//        $('.fullScreenSpin').css('display','inline-block');
+//        LoadingOverlay.show();
 //         let templateObject = Template.instance();
 
 //         let taxRateService = new TaxRateService();
@@ -18267,24 +18433,24 @@ Template.payrollrules.events({
 //         }
 
 //         if (edtEarningsName === '') {
-//             $('.fullScreenSpin').css('display','none');
+//             LoadingOverlay.hide();
 //             swal('Earnings Name has not been Filled!', '', 'warning');
 //             e.preventDefault();
 //          }
 //          else if(edtRateType === '')
 //          {
-//             $('.fullScreenSpin').css('display','none');
+//             LoadingOverlay.hide();
 //             swal('Earnings Rate type has not been Selected!', '', 'warning');
 //             e.preventDefault();
 //          }
 //          else if(edtExpenseAccount === '')
 //          {
-//             $('.fullScreenSpin').css('display','none');
+//             LoadingOverlay.hide();
 //             swal('Expense Account has not been Selected!', '', 'warning');
 //             e.preventDefault();
 //          }
 //          else {
-//             $('.fullScreenSpin').css('display','inline-block');
+//             LoadingOverlay.show();
 //             if(oldid != 0)
 //             {
 
@@ -18306,7 +18472,7 @@ Template.payrollrules.events({
 //                 };
 
 //                 taxRateService.saveExemptReportableTermnination(objDetails).then(function (objDetails) {
-//                     $('.fullScreenSpin').css('display','none');
+//                     LoadingOverlay.hide();
 //                     swal({
 //                         title: 'Success',
 //                         text: 'Employee Termination Earning Saved Successfully',
@@ -18319,17 +18485,17 @@ Template.payrollrules.events({
 //                             sideBarService.getExemptReportableTermnination(initialBaseDataLoad, 0).then(function (dataReload) {
 //                                 addVS1Data("TTerminationSimple", JSON.stringify(dataReload)).then(function (datareturn) {
 //                                     $('#addemployeterm').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 }).catch(function (err) {
 //                                     $('#addemployeterm').trigger('click');
-//                                         $('.fullScreenSpin').css('display','inline-block');
+//                                         LoadingOverlay.show();
 //                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 });
 //                               }).catch(function (err) {
 //                                 $('#addemployeterm').trigger('click');
-//                                 $('.fullScreenSpin').css('display','inline-block');
+//                                 LoadingOverlay.show();
 //                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                               });
 //                         }else if (result.dismiss === 'cancel') {
@@ -18342,7 +18508,7 @@ Template.payrollrules.events({
 
 //                 }).catch(function (err) {
 
-//                     $('.fullScreenSpin').css('display','none');
+//                     LoadingOverlay.hide();
 //                     swal({
 //                     title: 'Oooops...',
 //                     text: err,
@@ -18363,7 +18529,7 @@ Template.payrollrules.events({
 //             }
 //             else
 //             {
-//                 $('.fullScreenSpin').css('display','inline-block');
+//                 LoadingOverlay.show();
 //                 taxRateService.checkExemptReportableTermnination(edtEarningsName).then(function (data) {
 //                     earningid = data.tterminationimple[0].Id;
 //                     objDetails = {
@@ -18384,7 +18550,7 @@ Template.payrollrules.events({
 //                    };
 
 //                    taxRateService.saveExemptReportableTermnination(objDetails).then(function (objDetails) {
-//                         $('.fullScreenSpin').css('display','none');
+//                         LoadingOverlay.hide();
 //                         swal({
 //                             title: 'Success',
 //                             text: 'Employee Termination Earning Saved Successfully',
@@ -18397,17 +18563,17 @@ Template.payrollrules.events({
 //                                 sideBarService.getExemptReportableTermnination(initialBaseDataLoad, 0).then(function (dataReload) {
 //                                     addVS1Data("TTerminationSimple", JSON.stringify(dataReload)).then(function (datareturn) {
 //                                         $('#addemployeterm').trigger('click');
-//                                         $('.fullScreenSpin').css('display','inline-block');
+//                                         LoadingOverlay.show();
 
 //                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                     }).catch(function (err) {
 //                                         $('#addemployeterm').trigger('click');
-//                                         $('.fullScreenSpin').css('display','inline-block');
+//                                         LoadingOverlay.show();
 //                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                     });
 //                                   }).catch(function (err) {
 //                                     $('#addemployeterm').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                   });
 //                             }else if (result.dismiss === 'cancel') {
@@ -18418,7 +18584,7 @@ Template.payrollrules.events({
 
 
 //                    }).catch(function (err) {
-//                             $('.fullScreenSpin').css('display','none');
+//                             LoadingOverlay.hide();
 //                             swal({
 //                             title: 'Oooops...',
 //                             text: err,
@@ -18453,7 +18619,7 @@ Template.payrollrules.events({
 //                     };
 
 //                     taxRateService.saveExemptReportableTermnination(objDetails).then(function (objDetails) {
-//                                 $('.fullScreenSpin').css('display','none');
+//                                 LoadingOverlay.hide();
 //                                 swal({
 //                                     title: 'Success',
 //                                     text: 'Employee Termination Earning Saved Successfully',
@@ -18466,16 +18632,16 @@ Template.payrollrules.events({
 //                                         sideBarService.getExemptReportableTermnination(initialBaseDataLoad, 0).then(function (dataReload) {
 //                                             addVS1Data("TTerminationSimple", JSON.stringify(dataReload)).then(function (datareturn) {
 //                                                 $('#addemployeterm').trigger('click');
-//                                                 $('.fullScreenSpin').css('display','inline-block');
+//                                                 LoadingOverlay.show();
 //                                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                             }).catch(function (err) {
 //                                                 $('#addemployeterm').trigger('click');
-//                                                $('.fullScreenSpin').css('display','inline-block');
+//                                                LoadingOverlay.show();
 //                                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                             });
 //                                           }).catch(function (err) {
 //                                             $('#addemployeterm').trigger('click');
-//                                             $('.fullScreenSpin').css('display','inline-block');
+//                                             LoadingOverlay.show();
 //                                             window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                           });
 //                                     }else if (result.dismiss === 'cancel') {
@@ -18484,7 +18650,7 @@ Template.payrollrules.events({
 //                                 });
 
 //                     }).catch(function (err) {
-//                         $('.fullScreenSpin').css('display','none');
+//                         LoadingOverlay.hide();
 //                             swal({
 //                             title: 'Oooops...',
 //                             text: err,
@@ -18509,7 +18675,7 @@ Template.payrollrules.events({
 //     },
 
 //     'click .saveDirectorFee':function(){
-//         $('.fullScreenSpin').css('display','inline-block');
+//         LoadingOverlay.show();
 //         let templateObject = Template.instance();
 
 //         let taxRateService = new TaxRateService();
@@ -18540,24 +18706,24 @@ Template.payrollrules.events({
 //         }
 
 //         if (edtEarningsName === '') {
-//             $('.fullScreenSpin').css('display','none');
+//             LoadingOverlay.hide();
 //             swal('Earnings Name has not been Filled!', '', 'warning');
 //             e.preventDefault();
 //          }
 //          else if(edtRateType === '')
 //          {
-//             $('.fullScreenSpin').css('display','none');
+//             LoadingOverlay.hide();
 //             swal('Earnings Rate type has not been Selected!', '', 'warning');
 //             e.preventDefault();
 //          }
 //          else if(edtExpenseAccount === '')
 //          {
-//             $('.fullScreenSpin').css('display','none');
+//             LoadingOverlay.hide();
 //             swal('Expense Account has not been Selected!', '', 'warning');
 //             e.preventDefault();
 //          }
 //          else {
-//             $('.fullScreenSpin').css('display','inline-block');
+//             LoadingOverlay.show();
 //             if(oldid != 0)
 //             {
 
@@ -18577,7 +18743,7 @@ Template.payrollrules.events({
 //                 };
 
 //                 taxRateService.saveDirectorFee(objDetails).then(function (objDetails) {
-//                     $('.fullScreenSpin').css('display','none');
+//                     LoadingOverlay.hide();
 //                     swal({
 //                         title: 'Success',
 //                         text: 'Director fee earning saved Successfully',
@@ -18590,16 +18756,16 @@ Template.payrollrules.events({
 //                             sideBarService.getDirectorFee(initialBaseDataLoad, 0).then(function (dataReload) {
 //                                 addVS1Data("Tdirectorsfees", JSON.stringify(dataReload)).then(function (datareturn) {
 //                                     $('#closedirect').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 }).catch(function (err) {
 //                                     $('#closedirect').trigger('click');
-//                                      $('.fullScreenSpin').css('display','inline-block');
+//                                      LoadingOverlay.show();
 //                                      window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 });
 //                               }).catch(function (err) {
 //                                 $('#closedirect').trigger('click');
-//                                 $('.fullScreenSpin').css('display','inline-block');
+//                                 LoadingOverlay.show();
 //                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                               });
 //                         }else if (result.dismiss === 'cancel') {
@@ -18608,7 +18774,7 @@ Template.payrollrules.events({
 //                     });
 
 //                 }).catch(function (err) {
-//                     $('.fullScreenSpin').css('display','none');
+//                     LoadingOverlay.hide();
 //                     swal({
 //                     title: 'Oooops...',
 //                     text: err,
@@ -18624,7 +18790,7 @@ Template.payrollrules.events({
 //             }
 //             else
 //             {
-//                 $('.fullScreenSpin').css('display','inline-block');
+//                 LoadingOverlay.show();
 //                 taxRateService.checkDirectorFee(edtEarningsName).then(function (data) {
 //                     earningid = data.tdirectorsfees[0].Id;
 //                     objDetails = {
@@ -18643,7 +18809,7 @@ Template.payrollrules.events({
 //                    };
 
 //                   taxRateService.saveDirectorFee(objDetails).then(function (objDetails) {
-//                             $('.fullScreenSpin').css('display','none');
+//                             LoadingOverlay.hide();
 //                             swal({
 //                                 title: 'Success',
 //                                 text: 'Director fee earning saved Successfully',
@@ -18656,17 +18822,17 @@ Template.payrollrules.events({
 //                                     sideBarService.getDirectorFee(initialBaseDataLoad, 0).then(function (dataReload) {
 //                                         addVS1Data("Tdirectorsfees", JSON.stringify(dataReload)).then(function (datareturn) {
 //                                             $('#closedirect').trigger('click');
-//                                             $('.fullScreenSpin').css('display','inline-block');
+//                                             LoadingOverlay.show();
 //                                             window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                         }).catch(function (err) {
 //                                             $('#closedirect').trigger('click');
-//                                             $('.fullScreenSpin').css('display','inline-block');
+//                                             LoadingOverlay.show();
 
 //                                             window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                         });
 //                                       }).catch(function (err) {
 //                                         $('#closedirect').trigger('click');
-//                                         $('.fullScreenSpin').css('display','inline-block');
+//                                         LoadingOverlay.show();
 
 //                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                       });
@@ -18676,7 +18842,7 @@ Template.payrollrules.events({
 //                             });
 
 //                     }).catch(function (err) {
-//                         $('.fullScreenSpin').css('display','none');
+//                         LoadingOverlay.hide();
 //                         swal({
 //                         title: 'Oooops...',
 //                         text: err,
@@ -18707,7 +18873,7 @@ Template.payrollrules.events({
 //                        };
 
 //                     taxRateService.saveDirectorFee(objDetails).then(function (objDetails) {
-//                             $('.fullScreenSpin').css('display','none');
+//                             LoadingOverlay.hide();
 //                             swal({
 //                                 title: 'Success',
 //                                 text: 'Director fee earning saved Successfully',
@@ -18720,18 +18886,18 @@ Template.payrollrules.events({
 //                                     sideBarService.getDirectorFee(initialBaseDataLoad, 0).then(function (dataReload) {
 //                                         addVS1Data("Tdirectorsfees", JSON.stringify(dataReload)).then(function (datareturn) {
 //                                             $('#closedirect').trigger('click');
-//                                             $('.fullScreenSpin').css('display','inline-block');
+//                                             LoadingOverlay.show();
 
 //                                             window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                         }).catch(function (err) {
 //                                             $('#closedirect').trigger('click');
-//                                             $('.fullScreenSpin').css('display','inline-block');
+//                                             LoadingOverlay.show();
 
 //                                             window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                         });
 //                                       }).catch(function (err) {
 //                                         $('#closedirect').trigger('click');
-//                                                 $('.fullScreenSpin').css('display','inline-block');
+//                                                 LoadingOverlay.show();
 
 //                                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                       });
@@ -18740,7 +18906,7 @@ Template.payrollrules.events({
 //                                 }
 //                             });
 //                     }).catch(function (err) {
-//                             $('.fullScreenSpin').css('display','none');
+//                             LoadingOverlay.hide();
 //                             swal({
 //                             title: 'Oooops...',
 //                             text: err,
@@ -18772,7 +18938,7 @@ Template.payrollrules.events({
 //     },
 
 //     'click .saveLumpSumW':function(){
-//         $('.fullScreenSpin').css('display','inline-block');
+//         LoadingOverlay.show();
 //         let templateObject = Template.instance();
 
 //         let taxRateService = new TaxRateService();
@@ -18803,24 +18969,24 @@ Template.payrollrules.events({
 //         }
 
 //         if (edtEarningsName === '') {
-//             $('.fullScreenSpin').css('display','none');
+//             LoadingOverlay.hide();
 //             swal('Earnings Name has not been Filled!', '', 'warning');
 //             e.preventDefault();
 //          }
 //          else if(edtRateType === '')
 //          {
-//             $('.fullScreenSpin').css('display','none');
+//             LoadingOverlay.hide();
 //             swal('Earnings Rate type has not been Selected!', '', 'warning');
 //             e.preventDefault();
 //          }
 //          else if(edtExpenseAccount === '')
 //          {
-//             $('.fullScreenSpin').css('display','none');
+//             LoadingOverlay.hide();
 //             swal('Expense Account has not been Selected!', '', 'warning');
 //             e.preventDefault();
 //          }
 //          else {
-//             $('.fullScreenSpin').css('display','inline-block');
+//             LoadingOverlay.show();
 //             if(oldid != 0)
 //             {
 
@@ -18840,7 +19006,7 @@ Template.payrollrules.events({
 //                 };
 
 //                 taxRateService.saveLumpSumW(objDetails).then(function (objDetails) {
-//                     $('.fullScreenSpin').css('display','none');
+//                     LoadingOverlay.hide();
 //                     swal({
 //                         title: 'Success',
 //                         text: 'Lump Sum W Saved Successfully',
@@ -18854,16 +19020,16 @@ Template.payrollrules.events({
 //                                 addVS1Data("TLumpSumW", JSON.stringify(dataReload)).then(function (datareturn) {
 
 //                                     $('#lumpSumWLabelclose').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 }).catch(function (err) {
 //                                     $('#lumpSumWLabelclose').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                 });
 //                               }).catch(function (err) {
 //                                 $('#lumpSumWLabelclose').trigger('click');
-//                                 $('.fullScreenSpin').css('display','inline-block');
+//                                 LoadingOverlay.show();
 //                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                               });
 //                         }else if (result.dismiss === 'cancel') {
@@ -18875,7 +19041,7 @@ Template.payrollrules.events({
 //             }
 //             else
 //             {
-//                 $('.fullScreenSpin').css('display','inline-block');
+//                 LoadingOverlay.show();
 //                 taxRateService.checkLumpSumW(edtEarningsName).then(function (data) {
 //                     earningid = data.tlumpsumw[0].Id;
 //                     objDetails = {
@@ -18895,7 +19061,7 @@ Template.payrollrules.events({
 
 //                   taxRateService.saveLumpSumW(objDetails).then(function (objDetails) {
 
-//                         $('.fullScreenSpin').css('display','none');
+//                         LoadingOverlay.hide();
 //                         swal({
 //                             title: 'Success',
 //                             text: 'Lump Sum W Saved Successfully',
@@ -18908,16 +19074,16 @@ Template.payrollrules.events({
 //                                 sideBarService.getLumpSumW(initialBaseDataLoad, 0).then(function (dataReload) {
 //                                     addVS1Data("TLumpSumW", JSON.stringify(dataReload)).then(function (datareturn) {
 //                                         $('#lumpSumWLabelclose').trigger('click');
-//                                         $('.fullScreenSpin').css('display','inline-block');
+//                                         LoadingOverlay.show();
 //                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                     }).catch(function (err) {
 //                                         $('#lumpSumWLabelclose').trigger('click');
-//                                         $('.fullScreenSpin').css('display','inline-block');
+//                                         LoadingOverlay.show();
 //                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                     });
 //                                   }).catch(function (err) {
 //                                     $('#lumpSumWLabelclose').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                   });
 //                             }else if (result.dismiss === 'cancel') {
@@ -18926,7 +19092,7 @@ Template.payrollrules.events({
 //                         });
 
 //                     }).catch(function (err) {
-//                         $('.fullScreenSpin').css('display','none');
+//                         LoadingOverlay.hide();
 //                             swal({
 //                             title: 'Oooops...',
 //                             text: err,
@@ -18958,7 +19124,7 @@ Template.payrollrules.events({
 //                     };
 
 //                       taxRateService.saveLumpSumW(objDetails).then(function (objDetails) {
-//                         $('.fullScreenSpin').css('display','none');
+//                         LoadingOverlay.hide();
 //                         swal({
 //                             title: 'Success',
 //                             text: 'Lump Sum W Saved Successfully',
@@ -18971,16 +19137,16 @@ Template.payrollrules.events({
 //                                 sideBarService.getLumpSumW(initialBaseDataLoad, 0).then(function (dataReload) {
 //                                     addVS1Data("TLumpSumW", JSON.stringify(dataReload)).then(function (datareturn) {
 //                                         $('#lumpSumWLabelclose').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                     }).catch(function (err) {
 //                                         $('#lumpSumWLabelclose').trigger('click');
-//                                         $('.fullScreenSpin').css('display','inline-block');
+//                                         LoadingOverlay.show();
 //                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                     });
 //                                   }).catch(function (err) {
 //                                     $('#lumpSumWLabelclose').trigger('click');
-//                                     $('.fullScreenSpin').css('display','inline-block');
+//                                     LoadingOverlay.show();
 //                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
 //                                   });
 //                             }else if (result.dismiss === 'cancel') {
@@ -18989,7 +19155,7 @@ Template.payrollrules.events({
 //                         });
 
 //                        }).catch(function (err) {
-//                             $('.fullScreenSpin').css('display','none');
+//                             LoadingOverlay.hide();
 //                             swal({
 //                             title: 'Oooops...',
 //                             text: err,
@@ -19022,7 +19188,7 @@ Template.payrollrules.events({
     {
 
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
         let taxRateService = new TaxRateService();
         let accountService = new AccountService();
         let organisationService = new OrganisationService();
@@ -19056,7 +19222,7 @@ Template.payrollrules.events({
         let companyID = 1;
 
         if (edtAccountName === '') {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal('Account Name has not been Filled!', '', 'warning');
             e.preventDefault();
          }
@@ -19064,7 +19230,7 @@ Template.payrollrules.events({
 
             if(edtAccountId != 0)
             {
-                $('.fullScreenSpin').css('display','inline-block');
+                LoadingOverlay.show();
                 data = {
                     type: "TAccount",
                     fields: {
@@ -19257,7 +19423,7 @@ Template.payrollrules.events({
     'click .btnDeleteAllowance': function () {
       let taxRateService = new TaxRateService();
       let allowanceId = $('#selectDeleteLineID').val()||0;
-      $('.fullScreenSpin').css('display','inline-block');
+      LoadingOverlay.show();
 
       let objDetails = {
           type: "TAllowance",
@@ -19274,7 +19440,7 @@ Template.payrollrules.events({
       taxRateService.saveAllowance(objDetails).then(function (objDetails) {
 
 
-         $('.fullScreenSpin').css('display','none');
+         LoadingOverlay.hide();
          swal({
             title: 'Success',
             text: 'Allowance Removed Successfully',
@@ -19288,16 +19454,16 @@ Template.payrollrules.events({
               sideBarService.getAllowance(initialBaseDataLoad, 0).then(function (dataReload) {
                addVS1Data("TAllowance", JSON.stringify(dataReload)).then(function (datareturn) {
                 $('#delallow').trigger('click');
-                $('.fullScreenSpin').css('display','inline-block');
+                LoadingOverlay.show();
                   window.open('/payrollrules?active_key=payitem','_self');
               }).catch(function (err) {
                 $('#delallow').trigger('click');
-                $('.fullScreenSpin').css('display','inline-block');
+                LoadingOverlay.show();
                   window.open('/payrollrules?active_key=payitem','_self');
                 });
                 }).catch(function (err) {
                     $('#delallow').trigger('click');
-                    $('.fullScreenSpin').css('display','inline-block');
+                    LoadingOverlay.show();
                   window.open('/payrollrules?active_key=payitem','_self');
                 });
 
@@ -19307,7 +19473,7 @@ Template.payrollrules.events({
          });
 
       }).catch(function (err) {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal({
             title: 'Oooops...',
             text: err,
@@ -19330,7 +19496,7 @@ Template.payrollrules.events({
         let taxRateService = new TaxRateService();
         let calenderid = $('#selectColDeleteLineID').val()||0;
         let calendername = $('#selectCalenderName').val()||0;
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
 
         let objDetails = {
             type: "TPayrollCalendars",
@@ -19343,8 +19509,8 @@ Template.payrollrules.events({
         if(calendername != 0)
         {
               taxRateService.saveCalender(objDetails).then(function (objDetails) {
-                $('.fullScreenSpin').css('display','none');
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'Calender Removed Successfully',
@@ -19357,16 +19523,16 @@ Template.payrollrules.events({
                         sideBarService.getCalender(initialBaseDataLoad, 0).then(function (dataReload) {
                             addVS1Data("TPayrollCalendars", JSON.stringify(dataReload)).then(function (datareturn) {
                                 $('#hidedeleteca').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=calender','_self');
                            }).catch(function (err) {
                                 $('#hidedeleteca').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=calender','_self');
                              });
                              }).catch(function (err) {
                                 $('#hidedeleteca').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=calender','_self');
                              });
                     }else if (result.dismiss === 'cancel') {
@@ -19388,12 +19554,12 @@ Template.payrollrules.events({
 
                 }
                 });
-                  $('.fullScreenSpin').css('display','none');
+                  LoadingOverlay.hide();
               });
 
         }
         else{
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                 title: 'Oooops...',
                 text: 'Calender ID missing',
@@ -19422,7 +19588,7 @@ Template.payrollrules.events({
         let Type = $('#leave_type').val()|| '';
         if(Type == 'paid'){
 
-            $('.fullScreenSpin').css('display','inline-block');
+            LoadingOverlay.show();
             let objDetails = {
                 type: "TPaidLeave",
                 fields: {
@@ -19433,7 +19599,7 @@ Template.payrollrules.events({
             if(LeaveName != 0)
              {
                        taxRateService.savePaidLeave(objDetails).then(function (objDetails) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                        swal({
                         title: 'Success',
                         text: 'Paid Leave removed Successfully',
@@ -19446,16 +19612,16 @@ Template.payrollrules.events({
                                 sideBarService.getPaidLeave(initialBaseDataLoad, 0).then(function (dataReload) {
                                     addVS1Data("TPaidLeave", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#delleave').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                     }).catch(function (err) {
                                         $('#delleave').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                     });
                                   }).catch(function (err) {
                                     $('#delleave').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                   });
 
@@ -19485,7 +19651,7 @@ Template.payrollrules.events({
             }
             else{
 
-                $('.fullScreenSpin').css('display','inline-block');
+                LoadingOverlay.show();
                 swal({
                     title: 'Oooops...',
                     text: 'Please Select Leave to remove',
@@ -19503,7 +19669,7 @@ Template.payrollrules.events({
         }
         else{
 
-            $('.fullScreenSpin').css('display','inline-block');
+            LoadingOverlay.show();
             let objDetails = {
                 type: "TUnPaidLeave",
                 fields: {
@@ -19514,7 +19680,7 @@ Template.payrollrules.events({
             if(LeaveName != 0)
              {
                       taxRateService.saveUnPaidLeave(objDetails).then(function (objDetails) {
-                       $('.fullScreenSpin').css('display','none');
+                       LoadingOverlay.hide();
                        swal({
                         title: 'Success',
                         text: 'Unpaid removed Successfully',
@@ -19527,16 +19693,16 @@ Template.payrollrules.events({
                                 sideBarService.getUnPaidLeave(initialBaseDataLoad, 0).then(function (dataReload) {
                                     addVS1Data("TUnpaidLeave", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#delleave').trigger('click');
-                                         $('.fullScreenSpin').css('display','inline-block');
+                                         LoadingOverlay.show();
                                          window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                     }).catch(function (err) {
                                         $('#delleave').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                     });
                                   }).catch(function (err) {
                                     $('#delleave').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                   });
                             }else if (result.dismiss === 'cancel') {
@@ -19547,7 +19713,7 @@ Template.payrollrules.events({
 
 
                        }).catch(function (err) {
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal({
                         title: 'Oooops...',
                         text: err,
@@ -19561,7 +19727,7 @@ Template.payrollrules.events({
 
                         }
                         });
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                        });
 
             }
@@ -19590,7 +19756,7 @@ Template.payrollrules.events({
         let taxRateService = new TaxRateService();
         let holidayid = $('#selectholidayDeleteLineID').val()||0;
         let holidayname = $('#selectholidayName').val()||0;
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
 
         let objDetails = {
             type: "TPayrollHolidays",
@@ -19603,7 +19769,7 @@ Template.payrollrules.events({
         if(holidayname != 0)
         {
             taxRateService.saveHoliday(objDetails).then(function (objDetails) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'Holiday Removed Successfully',
@@ -19616,16 +19782,16 @@ Template.payrollrules.events({
                          sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (dataReload) {
                             addVS1Data("TPayrollHolidays", JSON.stringify(dataReload)).then(function (datareturn) {
                                 $('#delholidy').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=holiday','_self');
                             }).catch(function (err) {
                                 $('#delholidy').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=holiday','_self');
                             });
                           }).catch(function (err) {
                                 $('#delholidy').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=holiday','_self');
                           });
                     }else if (result.dismiss === 'cancel') {
@@ -19636,7 +19802,7 @@ Template.payrollrules.events({
 
               }).catch(function (err) {
 
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                 title: 'Oooops...',
                 text: err,
@@ -19655,7 +19821,7 @@ Template.payrollrules.events({
 
         }
         else{
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal({
             title: 'Oooops...',
             text: 'Please Select Holiday to remove',
@@ -19679,7 +19845,7 @@ Template.payrollrules.events({
         let earningid = $('#earningdeletename').val()||0;
         let type = $('#earningdeletetype').val()||0;
 
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
 
         if(type === 'Ordinary Time Earning')
         {
@@ -19694,7 +19860,7 @@ Template.payrollrules.events({
                   if(earningid != 0)
                   {
                          taxRateService.saveordinaryEarningByName(objDetails).then(function (objDetails) {
-                          $('.fullScreenSpin').css('display','none');
+                          LoadingOverlay.hide();
 
                           swal({
                             title: 'Success',
@@ -19708,16 +19874,16 @@ Template.payrollrules.events({
                                  sideBarService.getOrdinarytimeEarning(initialBaseDataLoad, 0).then(function (dataReload) {
                                     addVS1Data("TOrdinaryTimeEarnings", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#closeaddordintimemodel').trigger('click');
-                                       $('.fullScreenSpin').css('display','inline-block');
+                                       LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                     }).catch(function (err) {
                                         $('#closeaddordintimemodel').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                     });
                                   }).catch(function (err) {
                                        $('#closeaddordintimemodel').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                   });
 
@@ -19730,7 +19896,7 @@ Template.payrollrules.events({
 
 
                             }).catch(function (err) {
-                                $('.fullScreenSpin').css('display','none');
+                                LoadingOverlay.hide();
                                 swal({
                                 title: 'Oooops...',
                                 text: err,
@@ -19749,7 +19915,7 @@ Template.payrollrules.events({
 
                   }
                   else{
-                        $('.fullScreenSpin').css('display','none');
+                        LoadingOverlay.hide();
                         swal({
                         title: 'Oooops...',
                         text: 'Please Select Ordinary earning to delete',
@@ -19778,7 +19944,7 @@ Template.payrollrules.events({
             if(earningid != 0)
             {
                     taxRateService.saveExemptReportableOvertime(objDetails).then(function (objDetails) {
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
 
                     swal({
                         title: 'Success',
@@ -19792,16 +19958,16 @@ Template.payrollrules.events({
                             sideBarService.getExemptReportableOvertime(initialBaseDataLoad, 0).then(function (dataReload) {
                                 addVS1Data("Tovertimeearnings", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#addovertimeeringmodel').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 }).catch(function (err) {
                                     $('#addovertimeeringmodel').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 });
                               }).catch(function (err) {
                                 $('#addovertimeeringmodel').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                               });
 
@@ -19813,7 +19979,7 @@ Template.payrollrules.events({
 
 
                         }).catch(function (err) {
-                            $('.fullScreenSpin').css('display','none');
+                            LoadingOverlay.hide();
                             swal({
                             title: 'Oooops...',
                             text: err,
@@ -19832,7 +19998,7 @@ Template.payrollrules.events({
 
             }
             else{
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                     title: 'Oooops...',
                     text: 'Please Select Overtime earning to delete',
@@ -19862,7 +20028,7 @@ Template.payrollrules.events({
             if(earningid != 0)
             {
                     taxRateService.saveExemptReportableTermnination(objDetails).then(function (objDetails) {
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
 
                     swal({
                         title: 'Success',
@@ -19876,17 +20042,17 @@ Template.payrollrules.events({
                             sideBarService.getExemptReportableTermnination(initialBaseDataLoad, 0).then(function (dataReload) {
                                 addVS1Data("TTerminationSimple", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#addemployeterm').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
 
                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 }).catch(function (err) {
                                     $('#addemployeterm').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 });
                               }).catch(function (err) {
                                 $('#addemployeterm').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                               });
 
@@ -19898,7 +20064,7 @@ Template.payrollrules.events({
 
 
                         }).catch(function (err) {
-                            $('.fullScreenSpin').css('display','none');
+                            LoadingOverlay.hide();
                             swal({
                             title: 'Oooops...',
                             text: err,
@@ -19917,7 +20083,7 @@ Template.payrollrules.events({
 
             }
             else{
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                     title: 'Oooops...',
                     text: 'Please Select Termination earning to delete',
@@ -19943,7 +20109,7 @@ Template.payrollrules.events({
             };
 
             taxRateService.saveSuperannuationBonusesCommissions(objDetails).then(function (objDetails) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'Bonuses Commission Removed Successfully',
@@ -19956,16 +20122,16 @@ Template.payrollrules.events({
                         sideBarService.getvs1superannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (dataReload) {
                             addVS1Data("Tearningsbonusescommissions", JSON.stringify(dataReload)).then(function (datareturn) {
                                 $('#bonusescloseid').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                             }).catch(function (err) {
                                 $('#bonusescloseid').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                             });
                           }).catch(function (err) {
                             $('#bonusescloseid').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                           });
                     }else if (result.dismiss === 'cancel') {
@@ -19974,7 +20140,7 @@ Template.payrollrules.events({
                 });
 
             }).catch(function (err) {
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal({
             title: 'Oooops...',
             text: err,
@@ -20003,7 +20169,7 @@ Template.payrollrules.events({
             };
 
             taxRateService.saveExemptReportableLumpSumE(objDetails).then(function (objDetails) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'Lump Sum E Earnings Removed Successfully',
@@ -20017,19 +20183,19 @@ Template.payrollrules.events({
                             addVS1Data("Tlumpsume", JSON.stringify(dataReload)).then(function (datareturn) {
 
                                 $('#addlumpsumlabelid').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
 
                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                             }).catch(function (err) {
 
                                 $('#addlumpsumlabelid').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                             });
                           }).catch(function (err) {
 
                                 $('#addlumpsumlabelid').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                           });
                     }else if (result.dismiss === 'cancel') {
@@ -20037,7 +20203,7 @@ Template.payrollrules.events({
                     }
                 });
                }).catch(function(err){
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                     title: 'Oooops...',
                     text: err,
@@ -20067,7 +20233,7 @@ Template.payrollrules.events({
             };
 
             taxRateService.saveLumpSumW(objDetails).then(function (objDetails) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'Lump Sum W Removed Successfully',
@@ -20081,16 +20247,16 @@ Template.payrollrules.events({
                             addVS1Data("TLumpSumW", JSON.stringify(dataReload)).then(function (datareturn) {
 
                                 $('#lumpSumWLabelclose').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                             }).catch(function (err) {
                                 $('#lumpSumWLabelclose').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                             });
                           }).catch(function (err) {
                             $('#lumpSumWLabelclose').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                           });
                     }else if (result.dismiss === 'cancel') {
@@ -20112,7 +20278,7 @@ Template.payrollrules.events({
             };
 
             taxRateService.saveDirectorFee(objDetails).then(function (objDetails) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'Director fee earning removed Successfully',
@@ -20125,16 +20291,16 @@ Template.payrollrules.events({
                         sideBarService.getDirectorFee(initialBaseDataLoad, 0).then(function (dataReload) {
                             addVS1Data("Tdirectorsfees", JSON.stringify(dataReload)).then(function (datareturn) {
                                 $('#closedirect').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                             }).catch(function (err) {
                                 $('#closedirect').trigger('click');
-                                 $('.fullScreenSpin').css('display','inline-block');
+                                 LoadingOverlay.show();
                                  window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                             });
                           }).catch(function (err) {
                             $('#closedirect').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                           });
                     }else if (result.dismiss === 'cancel') {
@@ -20143,7 +20309,7 @@ Template.payrollrules.events({
                 });
 
             }).catch(function (err) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                 title: 'Oooops...',
                 text: err,
@@ -20169,7 +20335,7 @@ Template.payrollrules.events({
         let superannutionid = $('#selectSuperannuationDeleteLineID').val()||0;
         let superannutionname = $('#selectSuperannuationName').val()||0;
 
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
         let objDetails = {
             type: "Tsuperannuation",
             fields: {
@@ -20182,7 +20348,7 @@ Template.payrollrules.events({
 
 
                          taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
-                          $('.fullScreenSpin').css('display','none');
+                          LoadingOverlay.hide();
 
                           swal({
                             title: 'Success',
@@ -20196,17 +20362,17 @@ Template.payrollrules.events({
                                 sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
                                     addVS1Data("Tsuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#delsup').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
 
                                         window.open('/payrollrules?active_key=super','_self');
                                     }).catch(function (err) {
                                         $('#delsup').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                        LoadingOverlay.show();
                                         window.open('/payrollrules?active_key=super','_self');
                                     });
                                   }).catch(function (err) {
                                     $('#delsup').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
+                                    LoadingOverlay.show();
                                     window.open('/payrollrules?active_key=super','_self');
                                   });
 
@@ -20219,7 +20385,7 @@ Template.payrollrules.events({
 
 
                    }).catch(function (err) {
-                    $('.fullScreenSpin').css('display','none');
+                    LoadingOverlay.hide();
                     swal({
                     title: 'Oooops...',
                     text: err,
@@ -20238,7 +20404,7 @@ Template.payrollrules.events({
 
         }
         else{
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                 title: 'Oooops...',
                 text: 'Please Select Superannuation to delete',
@@ -20258,7 +20424,7 @@ Template.payrollrules.events({
         let taxRateService = new TaxRateService();
         let reid = $('#selectColReiDeleteLineID').val()||0;
         let ReiName = $('#seleclReiName').val()||0;
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
 
         let objDetails = {
             type: "TReimbursement",
@@ -20271,7 +20437,7 @@ Template.payrollrules.events({
         if(ReiName != 0)
         {
                taxRateService.saveReimbursement(objDetails).then(function (objDetails) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Success',
                     text: 'Reimbursement Removed Successfully',
@@ -20284,16 +20450,16 @@ Template.payrollrules.events({
                     sideBarService.getReimbursement(initialBaseDataLoad, 0).then(function (dataReload) {
                         addVS1Data("TReimbursement", JSON.stringify(dataReload)).then(function (datareturn) {
                             $('#delres').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                         }).catch(function (err) {
                             $('#delres').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                         });
                       }).catch(function (err) {
                         $('#delres').trigger('click');
-                        $('.fullScreenSpin').css('display','inline-block');
+                        LoadingOverlay.show();
                           window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                       });
                 }else if (result.dismiss === 'cancel') {
@@ -20302,7 +20468,7 @@ Template.payrollrules.events({
                 });
 
               }).catch(function (err) {
-                $('.fullScreenSpin').css('display','none');
+                LoadingOverlay.hide();
                 swal({
                 title: 'Oooops...',
                 text: err,
@@ -20354,7 +20520,7 @@ Template.payrollrules.events({
 
 
 
-        $('.fullScreenSpin').css('display','inline-block');
+        LoadingOverlay.show();
 
         let objDetails = {
             type: "TDeduction",
@@ -20371,7 +20537,7 @@ Template.payrollrules.events({
 
 
         taxRateService.saveDeduction(objDetails).then(function (objDetails) {
-          $('.fullScreenSpin').css('display','none');
+          LoadingOverlay.hide();
             swal({
             title: 'Success',
             text: 'Deduction removed Successfully',
@@ -20384,16 +20550,16 @@ Template.payrollrules.events({
                     sideBarService.getDeduction(initialBaseDataLoad, 0).then(function (dataReload) {
                         addVS1Data("TDeduction", JSON.stringify(dataReload)).then(function (datareturn) {
                             $('#deldeu').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                         }).catch(function (err) {
                             $('#deldeu').trigger('click');
-                            $('.fullScreenSpin').css('display','inline-block');
+                            LoadingOverlay.show();
                             window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                         });
                       }).catch(function (err) {
                         $('#deldeu').trigger('click');
-                        $('.fullScreenSpin').css('display','inline-block');
+                        LoadingOverlay.show();
                         window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                       });
                 }else if (result.dismiss === 'cancel') {
@@ -20403,7 +20569,7 @@ Template.payrollrules.events({
 
          }).catch(function (err) {
 
-            $('.fullScreenSpin').css('display','none');
+            LoadingOverlay.hide();
             swal({
             title: 'Oooops...',
             text: err,
@@ -21690,6 +21856,17 @@ Template.payrollrules.events({
 
      },
      
+     "click .saveAddNewOvertime": (e, ui) => {
+        ui.addOverTime();
+     },
+     "click .delete-overtime": (e, ui) => {
+        const id = $(e.currentTarget).attr('overtime-id');
+        ui.deleteOvertime(id);
+     },
+     "click .edit-overtime": (e, ui) => {
+        const id = $(e.currentTarget).attr('overtime-id');
+        ui.editOverTime(id);
+     }
 
 });
 
@@ -21704,7 +21881,32 @@ Template.payrollrules.helpers({
             return (a.code.toUpperCase() > b.code.toUpperCase()) ? 1 : -1;
             // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
         });
+    },
+    overtimes: () => {
+        return Template.instance().overtimes.get();
     }
 
     
 });
+
+
+/**
+ * This will get the overtimes 
+ * @returns 
+ */
+export const getOvertimes = async () => {
+    let overtimesData = await getVS1Data(erpObject.TPayrollSettingOvertimes);
+    let overtimes = JSON.parse(overtimesData[0].data);
+
+    return overtimes;
+
+    // if(localStorage.getItem(erpObject.TPayrollSettingOvertimes)) {
+    //     return JSON.parse(localStorage.getItem(erpObject.TPayrollSettingOvertimes));
+    // }
+    // return null;
+}
+
+export const saveOvertimes = async (overtimes = []) => {
+    return await addVS1Data(erpObject.TPayrollSettingOvertimes,JSON.stringify(overtimes));
+    // return localStorage.setItem(erpObject.TPayrollSettingOvertimes, JSON.stringify(overtimes));
+}
