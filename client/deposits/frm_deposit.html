@@ -109,13 +109,13 @@
         </style>
 
         <div class="row" style="padding: 0px 32px; padding-bottom: 0; background-color: #ededed;">
-            <div class="col-6 col-lg-2 col-md-4">
+            <div class="col-6 col-lg-2 col-md-3">
                 <div class="form-group">
                     <label>Account</label>
                     <select type="search" class="form-control" id="sltAccountName" name="sltAccountName" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
                 </div>
             </div>
-            <div class="col-6 col-lg-2 col-md-3">
+            <div class="col-6 col-lg-2 col-md-2">
                 <div class="form-group">
                     <label>Deposit No.</label>
                     <input type="text" class="form-control" id="edtEnrtyNo" name="edtEnrtyNo" value="{{record.id}}">
@@ -136,6 +136,12 @@
                             <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-4 col-md-4">
+                <div class="form-group d-flex" style="justify-content: right;">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-primary form-control" type="button" id="copyDeposit" style="width: 160px; margin-top: 32px; margin-right: 2px;">Copy Deposit</button>
                 </div>
             </div>
         </div>

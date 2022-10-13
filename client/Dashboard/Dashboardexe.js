@@ -648,44 +648,47 @@ Template.dashboardexe.onRendered(function () {
     } else if (fieldVal2 == 0) {
       fieldVariance = (-1) * fieldVal1;
     } else {
-      if (fieldVal1 > 0 && fieldVal2 > 0) {
-        if (fieldVal2 >= fieldVal1) {
-          fieldVariance = (fieldVal2 / fieldVal1) * 100;
-        } else {
-          fieldVariance = (fieldVal1 / fieldVal2) * (-100);
-        }
+      if (fieldVal2 >= fieldVal1) {
+        fieldVariance = (fieldVal2 / fieldVal1) * 100;
+      } else {
+        fieldVariance = (fieldVal1 / fieldVal2) * (-100);
       }
-      if (fieldVal1 > 0 && fieldVal2 < 0) {
-        fieldVariance = fieldVal2 - fieldVal1;
-      }
-      if (fieldVal1 < 0 && fieldVal2 > 0) {
-        fieldVariance = fieldVal2 - fieldVal1;
-      }
-      if (fieldVal1 < 0 && fieldVal2 < 0) {
-        if (fieldVal2 >= fieldVal1) {
-          fieldVariance = (fieldVal1 / fieldVal2) * 100;
-        } else {
-          fieldVariance = (fieldVal2 / fieldVal1) * (-100);
-        }
-      }
+      // if (fieldVal1 > 0 && fieldVal2 > 0) {
+        
+      // }
+      // if (fieldVal1 > 0 && fieldVal2 < 0) {
+      //   fieldVariance = fieldVal2 - fieldVal1;
+      // }
+      // if (fieldVal1 < 0 && fieldVal2 > 0) {
+      //   fieldVariance = fieldVal2 - fieldVal1;
+      // }
+      // if (fieldVal1 < 0 && fieldVal2 < 0) {
+      //   if (fieldVal2 >= fieldVal1) {
+      //     fieldVariance = (fieldVal1 / fieldVal2) * 100;
+      //   } else {
+      //     fieldVariance = (fieldVal2 / fieldVal1) * (-100);
+      //   }
+      // }
     }
     if (fieldVariance == 0) {
       $('.' + parentSelector).css("backgroundColor", varianceGreen);
     } else if (fieldVariance > 0) {
-      if (fieldSelector == "spnCashSpentVariance" || fieldSelector == "spnTotalExpenseVariance" || fieldSelector == "spnTotalAgedPayablesVariance")
-        $('.' + parentSelector).css("backgroundColor", varianceRed);
-      else
-        $('.' + parentSelector).css("backgroundColor", varianceGreen);
+      $('.' + parentSelector).css("backgroundColor", varianceGreen);
+      // if (fieldSelector == "spnCashSpentVariance" || fieldSelector == "spnTotalExpenseVariance" || fieldSelector == "spnTotalAgedPayablesVariance")
+      //   $('.' + parentSelector).css("backgroundColor", varianceRed);
+      // else
+      //   $('.' + parentSelector).css("backgroundColor", varianceGreen);
     } else {
-      if (fieldSelector == "spnCashSpentVariance" || fieldSelector == "spnTotalExpenseVariance" || fieldSelector == "spnTotalAgedPayablesVariance")
-        $('.' + parentSelector).css("backgroundColor", varianceGreen);
-      else
-        $('.' + parentSelector).css("backgroundColor", varianceRed);
+      $('.' + parentSelector).css("backgroundColor", varianceRed);
+      // if (fieldSelector == "spnCashSpentVariance" || fieldSelector == "spnTotalExpenseVariance" || fieldSelector == "spnTotalAgedPayablesVariance")
+      //   $('.' + parentSelector).css("backgroundColor", varianceGreen);
+      // else
+      //   $('.' + parentSelector).css("backgroundColor", varianceRed);
     }
-    if (fieldSelector == "spnCashSpentVariance" || fieldSelector == "spnTotalExpenseVariance" || fieldSelector == "spnTotalAgedPayablesVariance") {
-      fieldVariance = (-1) * fieldVariance;
-    }
-    $('.' + fieldSelector).html(fieldVariance.toFixed(1));
+    // if (fieldSelector == "spnCashSpentVariance" || fieldSelector == "spnTotalExpenseVariance" || fieldSelector == "spnTotalAgedPayablesVariance") {
+    //   fieldVariance = (-1) * fieldVariance;
+    // }
+    $('.' + fieldSelector).html(fieldVariance.toFixed(2));
   }
 
   templateObject.getDashboardExecutiveData = async (dateAsOf, dateChanged) => {

@@ -2100,7 +2100,8 @@ Template.emailsettings.events({
                     ofMonths += isFirst ? $(this).val() : ',' + $(this).val();
                     isFirst = false;
                 });
-                const startTime = $('#edtMonthlyStartTime').val();
+                // const startTime = $('#edtMonthlyStartTime').val();
+                const startTime = '05:00';
                 const startDate = $('#edtMonthlyStartDate').val();
     
                 setTimeout(function () {
@@ -2116,7 +2117,8 @@ Template.emailsettings.events({
                 const everyWeeks = $("#weeklyEveryXWeeks").val();
                 const selectDays = $(".selectDays input[type=checkbox]:checked").val();
                 selectDays = templateObject.getDayNumber(selectDays);
-                const startTime = $('#edtWeeklyStartTime').val();
+                // const startTime = $('#edtWeeklyStartTime').val();
+                const startTime = '05:00';
                 const startDate = $('#edtWeeklyStartDate').val();
                 setTimeout(function () {
                     $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-selectDays', selectDays);
@@ -2130,7 +2132,8 @@ Template.emailsettings.events({
             } else if (radioFrequency == "frequencyDaily") {
                 const dailyRadioOption = $('#dailySettings input[type=radio]:checked').attr('id');
                 const everyDays = $("#dailyEveryXDays").val();
-                const startTime = $('#edtDailyStartTime').val();
+                // const startTime = $('#edtDailyStartTime').val();
+                const startTime = '05:00';
                 const startDate = $('#edtDailyStartDate').val();
                 setTimeout(function () {
                     if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Daily, " + basedOnTypeTexts);
@@ -2142,7 +2145,8 @@ Template.emailsettings.events({
                     $("#frequencyModal").modal('toggle');
                 }, 100);
             } else if (radioFrequency == "frequencyOnetimeonly") {
-                const startTime = $('#edtOneTimeOnlyTime').val();
+                // const startTime = $('#edtOneTimeOnlyTime').val();
+                const startTime = '05:00';
                 const startDate = $('#edtOneTimeOnlyDate').val();
     
                 $('#edtOneTimeOnlyTimeError').css('display', 'none');
@@ -2251,7 +2255,7 @@ Template.emailsettings.events({
         $radioFrequencyType.filter('[id=frequencyMonthly]').trigger('click');
         $('.ofMonthList input[type="checkbox"]').prop('checked', false);
         $('#sltDay').val('day1');
-        $('#edtMonthlyStartTime').val('');
+        // $('#edtMonthlyStartTime').val('');
         $('#edtMonthlyStartDate').val('');
         $('.chkBoxDays').prop('checked', false);
         $('#formCheck-monday').prop('checked', true);
@@ -2279,7 +2283,7 @@ Template.emailsettings.events({
             //     else $(monthCheckboxes[i]).prop('checked', false);
             // };
             $('#edtMonthlyStartDate').val(startDate);
-            $('#edtMonthlyStartTime').val(startTime);
+            // $('#edtMonthlyStartTime').val(startTime);
             $('#monthlySettings').css('display', 'block');
         } else if (frequencyType === 'Weekly') {
             $radioFrequencyType.filter('[id=frequencyWeekly]').trigger('click');
@@ -2299,7 +2303,7 @@ Template.emailsettings.events({
             }
             $('#weeklyEveryXWeeks').val(everyWeeks);
             $('#edtWeeklyStartDate').val(startDate);
-            $('#edtWeeklyStartTime').val(startTime);
+            // $('#edtWeeklyStartTime').val(startTime);
             $('#weeklySettings').css('display', 'block');
         } else if (frequencyType === 'Daily') {
             $radioFrequencyType.filter('[id=frequencyDaily]').trigger('click');
@@ -2316,11 +2320,11 @@ Template.emailsettings.events({
                 $('#dailyEveryXDays').prop('disabled', false);
             }
             $('#edtDailyStartDate').val(startDate);
-            $('#edtDailyStartTime').val(startTime);
+            // $('#edtDailyStartTime').val(startTime);
             $('#dailySettings').css('display', 'block');
         } else if (frequencyType === 'One Time Only') {
             $('#edtOneTimeOnlyDate').val(startDate);
-            $('#edtOneTimeOnlyTime').val(startTime);
+            // $('#edtOneTimeOnlyTime').val(startTime);
             $radioFrequencyType.filter('[id=frequencyOnetimeonly]').trigger('click');
             $('#oneTimeOnlySettings').css('display', 'block');
         } else {

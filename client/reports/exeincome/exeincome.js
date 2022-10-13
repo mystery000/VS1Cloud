@@ -104,33 +104,34 @@ Template.exeincomereport.onRendered(() => {
         } else if (fieldVal2 == 0) {
             fieldVariance = (-1) * fieldVal1;
         } else {
-            if (fieldVal1 > 0 && fieldVal2 > 0) {
-                if (fieldVal2 >= fieldVal1) {
-                    fieldVariance = (fieldVal2 / fieldVal1) * 100;
-                } else {
-                    fieldVariance = (fieldVal1 / fieldVal2) * (-100);
-                }
+            if (fieldVal2 >= fieldVal1) {
+                fieldVariance = (fieldVal2 / fieldVal1) * 100;
+            } else {
+                fieldVariance = (fieldVal1 / fieldVal2) * (-100);
             }
-            if (fieldVal1 > 0 && fieldVal2 < 0) {
-                fieldVariance = fieldVal2 - fieldVal1;
-            }
-            if (fieldVal1 < 0 && fieldVal2 > 0) {
-                fieldVariance = fieldVal2 - fieldVal1;
-            }
-            if (fieldVal1 < 0 && fieldVal2 < 0) {
-                if (fieldVal2 >= fieldVal1) {
-                    fieldVariance = (fieldVal1 / fieldVal2) * 100;
-                } else {
-                    fieldVariance = (fieldVal2 / fieldVal1) * (-100);
-                }
-            }
+            // if (fieldVal1 > 0 && fieldVal2 > 0) {
+                
+            // }
+            // if (fieldVal1 > 0 && fieldVal2 < 0) {
+            //     fieldVariance = fieldVal2 - fieldVal1;
+            // }
+            // if (fieldVal1 < 0 && fieldVal2 > 0) {
+            //     fieldVariance = fieldVal2 - fieldVal1;
+            // }
+            // if (fieldVal1 < 0 && fieldVal2 < 0) {
+            //     if (fieldVal2 >= fieldVal1) {
+            //         fieldVariance = (fieldVal1 / fieldVal2) * 100;
+            //     } else {
+            //         fieldVariance = (fieldVal2 / fieldVal1) * (-100);
+            //     }
+            // }
         }
         if (fieldVariance >= 0) {
             $('.' + fieldSelector).css("color", varianceGreen);
         } else {
             $('.' + fieldSelector).css("color", varianceRed);
         }
-        $('.' + fieldSelector).html(fieldVariance.toFixed(1));
+        $('.' + fieldSelector).html(fieldVariance.toFixed(2));
     }
 
     templateObject.getIncomeReports = async (dateAsOf, ignoreDate = false) => {
