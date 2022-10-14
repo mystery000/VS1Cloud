@@ -174,7 +174,7 @@ Template.allChartLists.onRendered(function () {
         let chartList = [];
         const dashboardApis = new DashboardApi(); // Load all dashboard APIS
         let displayedCharts = 0;
-        
+
         let dashboardpreferences = await getVS1Data('Tvs1dashboardpreferences');
         dashboardpreferences = JSON.parse(dashboardpreferences[0].data);
         if(dashboardpreferences.length){
@@ -371,6 +371,17 @@ Template.allChartLists.onRendered(function () {
                     }
                 };
                 chartList.push(myTasksChart);
+
+                let myBankAccountschart= {
+                  fields: {
+                      Active: true,
+                      ChartGroup: "Dashboard",
+                      ChartName: "Bank Accountschart",
+                      ID: 1006,
+                      _chartSlug: "dashboard__bank_accountschart"
+                  }
+              };
+              chartList.push(myBankAccountschart);
             }
         }
 
@@ -380,7 +391,7 @@ Template.allChartLists.onRendered(function () {
             $('.sortable-chart-widget-js').addClass("hideelement");
             // the goal here is to get the right names so it can be used for preferences
             setTimeout(() => {
-                chartList.forEach((chart) => {                
+                chartList.forEach((chart) => {
                     chart.fields._chartSlug =
                         chart.fields.ChartGroup.toLowerCase() +
                         "__" +
@@ -677,7 +688,7 @@ Template.allChartLists.events({
         await chartsEditor.disable();
         await templateObject.hideChartElements();
         templateObject.checkChartToDisplay();
-    
+
         $(".fullScreenSpin").css("display", "none");
         Meteor._reload.reload();
     },

@@ -1439,6 +1439,7 @@ Template.salesoverview.onRendered(function () {
 
 Template.salesoverview.events({
   "click .btnViewDeleted": async function (e) {
+    $(".fullScreenSpin").css("display", "inline-block");
     e.stopImmediatePropagation();
     const templateObject = Template.instance();
     await clearData('TSalesList');
@@ -1447,6 +1448,7 @@ Template.salesoverview.events({
     await templateObject.getAllSalesOrderData(true);
   },
   "click .btnHideDeleted": async function (e) {
+    $(".fullScreenSpin").css("display", "inline-block");
     e.stopImmediatePropagation();
     let templateObject = Template.instance();
     await clearData('TSalesList');
