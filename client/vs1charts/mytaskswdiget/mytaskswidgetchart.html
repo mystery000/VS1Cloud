@@ -1,4 +1,20 @@
 <template name="mytaskswidgetchart">
+  <style>
+    .my-taskswidget {
+        display: flex;
+        flex-direction: column;
+        padding: 20px 10px;
+        background-color: #ededed;
+        border: 3px solid #878787;
+        border-radius: 14px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    #mytaskschartcol .mytaskHeader{
+      display:none;
+    }
+  </style>
     <div class="minHeight100" id="showearningchat">
         <div class="card overflow-hidden shadow mb-4 portlet">
             <div class="card-header mytaskswidgetchartheader d-flex justify-content-between align-items-center">
@@ -15,7 +31,7 @@
                     </div>
               </div>
           </div>
-          <div class=" card-body">
+          <div class=" card-body my-taskswidget">
                 <div class="canvasParentDiv canvasHeight100">
                   {{> myTasksWidget}}
                 </div>

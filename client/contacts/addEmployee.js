@@ -475,9 +475,9 @@ Template.employeescard.onRendered(function () {
         let data = await CachedHttp.get(erpObject.TProductVS1, async () => {
             return await productService.getNewProductListVS1();
         }, {
-            useIndexDb: true, 
+            useIndexDb: true,
             useLocalStorage: false,
-            fallBackToLocal: true, 
+            fallBackToLocal: true,
             validate: (cachedResponse) => {
                 return false;
             }
@@ -486,7 +486,7 @@ Template.employeescard.onRendered(function () {
         let products = data.tproductvs1;
         templateObject.allProducts.set(products); // we store the product in memory
     }
-    
+
 
     /**
      * This will load employee products
@@ -498,7 +498,7 @@ Template.employeescard.onRendered(function () {
         let data = await CachedHttp.get(erpObject.TRepServices, async () => {
             return await sideBarService.getSelectedProducts(employeeName);
         }, {
-            useIndexDb: true, 
+            useIndexDb: true,
             useLocalStorage: false,
             fallBackToLocal: true,
             validate: (cachedResponse) => {
@@ -515,7 +515,7 @@ Template.employeescard.onRendered(function () {
         const products = await templateObject.allProducts.get();
 
         let selectedProducts = objects.map(obj => products.find(p => p.ProductName == obj.ServiceDesc))
- 
+
         // objects.forEach((obj, index) => {
         //     objects[index] = products.find(p => p.ProductName == obj.ServiceDesc)
         // });
@@ -527,8 +527,8 @@ Template.employeescard.onRendered(function () {
 
         templateObject.selectedproducts.set(selectedProducts);
         templateObject.rebuildProductTable();
-       
-     
+
+
 
         LoadingOverlay.hide();
     }
@@ -759,9 +759,9 @@ Template.employeescard.onRendered(function () {
                         destroy: destroy,
                         // "searching": true,
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      
+
                             select: true,
-                           
+
                             colReorder: {
                                     fixedColumnsRight: 1
                                 },
@@ -786,7 +786,7 @@ Template.employeescard.onRendered(function () {
                                 $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#productListModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpServiceList_filter");
                                 $("<button class='btn btn-primary btnRefreshProductService' type='button' id='btnRefreshProductService' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpServiceList_filter");
                             }
-    
+
                   }).on('page', function () {
                       setTimeout(function () {
                           MakeNegative();
@@ -796,7 +796,7 @@ Template.employeescard.onRendered(function () {
                   }).on('search.dt', function (eventSearch, searchdata) {
                       let dataSearchName = $('#tblEmpServiceList_filter input').val();
                       if (searchdata.fnRecordsDisplay() > 0) {
-    
+
                       }else {
                         if(dataSearchName.replace(/\s/g, '') != ''){
                          $('#productListModal').modal();
@@ -804,16 +804,16 @@ Template.employeescard.onRendered(function () {
                             $('#tblInventoryService_filter .form-control-sm').focus();
                             $('#tblInventoryService_filter .form-control-sm').val(dataSearchName);
                             $('#tblInventoryService_filter .form-control-sm').trigger("input");
-    
+
                         }, 500);
                       }
                       }
                   }).on('column-reorder', function () {});
-        
+
                 }, 1000);
             }
        // }
-       
+
     }
 
     templateObject.addSelectedProduct = async () => {
@@ -854,10 +854,10 @@ Template.employeescard.onRendered(function () {
 
         // });
 
-      
 
 
-        
+
+
 
         $('#productListModal').modal('hide');
         return;
@@ -942,7 +942,7 @@ Template.employeescard.onRendered(function () {
 
         const findProductService = (searchedProduct) => {
             let product = tRepServices.find(s => searchedProduct.ProductName == s.fields.ServiceDesc);
-         
+
             return product;
         }
 
@@ -982,9 +982,9 @@ Template.employeescard.onRendered(function () {
     /**
      * Removing a product in the list of selected products
      * Wont be saved unless we press on save
-     * 
+     *
      * no API used here
-     * @param {integer} productId 
+     * @param {integer} productId
      */
     templateObject.removeSelectedProduct = async (productId) => {
 
@@ -1006,18 +1006,18 @@ Template.employeescard.onRendered(function () {
             });
             console.log("selected products", selectedProducts);
 
-           
+
 
             let removedProduct = selectedProducts.find(p => p.Id == productId);
             deletedProducts.push(removedProduct);
 
             let products = selectedProducts.filter(p => p.Id != removedProduct.Id);
-            
+
             await templateObject.deletedSelectedProducts.set(deletedProducts);
             await templateObject.selectedproducts.set(products);
         }
 
-      
+
     }
 
 
@@ -1640,7 +1640,7 @@ Template.employeescard.onRendered(function () {
         if(currentId.id) await templateObject.getEmployeeProducts(employeeID);
 
 
-       
+
     }
 
     templateObject.initData();
@@ -1837,7 +1837,7 @@ Template.employeescard.onRendered(function () {
         }
     }
 
-   
+
     function setEmployeeData(data) {
         $('.fullScreenSpin').css('display', 'none');
         let lineItems = [];
@@ -2261,33 +2261,17 @@ Template.employeescard.onRendered(function () {
     $(document).ready(function () {
         setTimeout(function () {
             $('#product-list').editableSelect();
+            $('#edtDashboardOptions').editableSelect();
             $('#product-list').editableSelect()
             .on('click.editable-select', function(e, li) {
                 const $earch = $(this);
                 const offset = $earch.offset();
                 const productDataName = e.target.value || '';
-                //var productDataID = el.context.value || '';
-                // if(el){
-                //   var productCostData = el.context.id || 0;
-                //   $('#edtProductCost').val(productCostData);
-                // }
                 edtProductSelect = "appointment"
                 if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
                     $('#productListModal').modal('toggle');
-                    // setTimeout(function () {
-                    //     $('#tblInventoryPayrollService_filter .form-control-sm').focus();
-                    //     $('#tblInventoryPayrollService_filter .form-control-sm').val('');
-                    //     $('#tblInventoryPayrollService_filter .form-control-sm').trigger("input");
-
-                    //     var datatable = $('#tblInventoryPayrollService').DataTable();
-                    //     datatable.draw();
-                    //     $('#tblInventoryPayrollService_filter .form-control-sm').trigger("input");
-
-                    // }, 500);
                 } else {
-                    // var productDataID = $(event.target).attr('prodid').replace(/\s/g, '') || '';
                     if (productDataName.replace(/\s/g, '') != '') {
-                        //FlowRouter.go('/productview?prodname=' + $(event.target).text());
                         let lineExtaSellItems = [];
                         let lineExtaSellObj = {};
                         LoadingOverlay.show();
@@ -2569,6 +2553,32 @@ Template.employeescard.onRendered(function () {
 
                 }
             });
+
+            $('#edtDashboardOptions').editableSelect().on('click.editable-select', function(e, li) {
+                const $earch = $(this);
+                const offset = $earch.offset();
+                const dashboardoptions = e.target.value || '';
+                const dashboardDefaultoptions = $("#edtDashboardOptions").attr("defaultlogin") || 'Accounts';
+                if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
+                    $('#dashboardOptionListModal').modal('toggle');
+                } else {
+                    if (dashboardoptions.replace(/\s/g, '') != '') {
+                      $("input[name=optradioDL][value=" + dashboardDefaultoptions + "]").attr('checked', 'checked');
+                      $('#dashboardOptionListModal').modal('toggle');
+                    } else {
+                        $('#dashboardOptionListModal').modal('toggle');
+
+                        setTimeout(function () {
+                            $('#tblDashboardOptions_filter .form-control-sm').focus();
+                            $('#tblDashboardOptions_filter .form-control-sm').val('');
+                            $('#tblDashboardOptions_filter .form-control-sm').trigger("input");
+                            $('#tblDashboardOptions_filter .form-control-sm').trigger("input");
+
+                        }, 500);
+                    }
+
+                }
+            });
         },1000)
 
         //On Click Client Type List
@@ -2581,6 +2591,16 @@ Template.employeescard.onRendered(function () {
                 $('#product-listID').val(productID);
                 $('#productListModal').modal('toggle');
             }
+        });
+
+        $(document).on("click", "#tblDashboardOptions tbody tr .colOptionsName", function (e) {
+                const tblDashboardOptions = $(this);
+                var listData = $(this).closest("tr").attr("id");
+                var optionName = $(event.target).closest("tr").find(".colOptionsName").text()||'All';
+                let isDefaultLogin = $("input[name=optradioDL]:checked").val() || "Accounts";
+                $('#edtDashboardOptions').val(optionName);
+                $('#edtDashboardOptions').attr("defaultlogin", isDefaultLogin);
+                $('#dashboardOptionListModal').modal('toggle');
         });
     });
     let prefObject = "";
@@ -5022,7 +5042,7 @@ Template.employeescard.events({
         let currentId = FlowRouter.current().queryParams.id;
         ui.getEmployeeProducts(currentId);
         //let tempCurrenctTRePService = templateObject.allrepservicedata.get() || '';
-       
+
         // if (currentId) {
         //     if (tempCurrenctTRePService.length > 0) {
         //         $('.fullScreenSpin').css('display', 'none');
@@ -5038,7 +5058,7 @@ Template.employeescard.events({
         await templateObject.removeSelectedProduct(productId);
 
         return;
-    
+
         var targetID = $(event.target).closest('tr').find('.colID').text() || ''; // table row ID
         let contactService = new ContactService();
         var tblRepService = $('#tblEmpServiceList').DataTable();
@@ -5160,7 +5180,7 @@ Template.employeescard.events({
         let contactService = new ContactService();
         let appointmentService = new AppointmentService();
         LoadingOverlay.show();
-      
+
 
         let title = $('#edtTitle').val();
         let firstname = $('#edtFirstName').val();

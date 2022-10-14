@@ -76,7 +76,7 @@ Template.productview.onCreated(() => {
 Template.productview.onRendered(function() {
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
-    
+
     let purchaseService = new PurchaseBoardService();
     let taxRateService = new TaxRateService();
     const records = [];
@@ -969,7 +969,7 @@ Template.productview.onRendered(function() {
 
                         }
                     });
-                
+
                 $('#newProcessModal #edtOverheadExpenseAccount').editableSelect()
                     .on('click.editable-select', function(e, li) {
                         accSelected = "bom-overhead-expense";
@@ -1120,8 +1120,8 @@ Template.productview.onRendered(function() {
                             }
 
                         }
-                    }); 
-       
+                    });
+
            //On Click Account List
            $(document).on("click", "#tblTaxRate tbody tr", function(e) {
                var table = $(this);
@@ -1242,7 +1242,7 @@ Template.productview.onRendered(function() {
 
 
     templateObject.getAllBOMProducts = function() {
-    
+
         let tempArray = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')): [];
         templateObject.bomProducts.set(tempArray);
     }
@@ -1857,7 +1857,7 @@ Template.productview.onRendered(function() {
                         //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
                         //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
                         // }, 5500);
-                        
+
                         let isBOMProduct = false;
                         let tempBOM = localStorage.getItem('TProcTree');
                         let bomProducts = tempBOM?JSON.parse(tempBOM): [];
@@ -1868,7 +1868,7 @@ Template.productview.onRendered(function() {
                         if(bomIndex > -1) {
                             isBOMProduct = true;
                         }
-                
+
 
                         let lineItems = [];
                         let lineItemObj = {};
@@ -2087,7 +2087,7 @@ Template.productview.onRendered(function() {
                             };
 
 
-                          
+
                                 templateObject.isManufactured.set(productrecord.isManufactured)
 
                             setTimeout(async function() {
@@ -2256,7 +2256,7 @@ Template.productview.onRendered(function() {
                             templateObject.isManufactured.set(productrecord.isManufactured)
 
 
-                          
+
 
                             setTimeout(async function() {
                               await templateObject.setEditableSelect();
@@ -2424,7 +2424,7 @@ Template.productview.onRendered(function() {
                         isManufactured: isBOMProduct
                     };
 
-                   
+
                     templateObject.isManufactured.set(productrecord.isManufactured);
 
                     setTimeout(async function() {
@@ -2547,20 +2547,20 @@ Template.productview.onRendered(function() {
             });
 
             setTimeout(()=>{
-                if(templateObject.records.get().isManufactured == true) {
+                //if(templateObject.records.get().isManufactured == true) {
                     // let objectArray = JSON.parse(localStorage.getItem('TProcTree'))
                     // let obj = objectArray.find(object => {
                     //     return object.fields.productName == templateObject.records.get().productname;
                     // });
-    
-    
+
+
                     // $('#BOMSetupModal .edtProcessName').editableSelect();
                     // // $('#BOMSetupModal .edtProcessNote').editableSelect();
                     // $('#BOMSetupModal #edtProcess').val(obj.fields.process);
                     // $('#BOMSetupModal .edtProcessNote').val(obj.fields.processNote || '');
                     // $('#BOMSetupModal .edtQuantity').val(obj.fields.qty || '1');
-    
-    
+
+
                     // if(obj.fields.subs.length >0) {
                     //     let subs = obj.fields.subs;
                     //     for(let i=0; i< subs.length; i++) {
@@ -2568,7 +2568,7 @@ Template.productview.onRendered(function() {
                     //         html = html + "<div class='product-content'>"+
                     //             "<div class='d-flex productRow'>"+
                     //                 "<div class='colProduct form-group d-flex'><div style='width: 29%'></div>" +
-                                        
+
                     //                     "<select type='search' class='edtProductName edtRaw form-control es-input' style='width: 30%'></select>" ;
 
                     //                     let bomIndex = objectArray.findIndex(object => {
@@ -2590,17 +2590,17 @@ Template.productview.onRendered(function() {
                     //                         "<input type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' ><ul class='es-list' style=''></ul></div>"+
                     //                         "<div class='colNote form-group'>" +
                     //                         "<input class='w-100 form-control edtProcessNote'  type='text'></div>" +
-                    //                         "<div class='colAttachment form-group'><a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-DealerDan' id='btn_Attachment' name='btn_Attachment'><i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div></div>" 
+                    //                         "<div class='colAttachment form-group'><a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-DealerDan' id='btn_Attachment' name='btn_Attachment'><i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div></div>"
                     //                 } else {
                     //                     html += "<div class='colProcess form-group'></div>"+
                     //                     "<div class='colNote form-group'></div>" +
-                    //                     "<div class='colAttachment form-group'></div>" 
+                    //                     "<div class='colAttachment form-group'></div>"
                     //                 }
-                                    
+
                     //                 html += "<div class='colDelete d-flex align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>" +
                     //             "</div>"+
                     //         "</div>"
-                            
+
                     //         let productContents = $('#BOMSetupModal .product-content');
                     //         $(html).insertAfter($(productContents[productContents.length-2]))
                     //         productContents = $('#BOMSetupModal .product-content');
@@ -2615,7 +2615,7 @@ Template.productview.onRendered(function() {
 
                     //     }
                     // }
-                }
+                //}
             }, 2000)
 
 
@@ -5569,7 +5569,7 @@ Template.productview.events({
                 html = html + "<div class='product-content'>"+
                     "<div class='d-flex productRow'>"+
                         "<div class='colProduct form-group d-flex'><div style='width: 29%'></div>" +
-                            
+
                             "<select type='search' class='edtProductName edtRaw form-control es-input' style='width: 30%'></select>" ;
 
                             // let bomIndex = objectArray.findIndex(object => {
@@ -5590,10 +5590,10 @@ Template.productview.events({
                             // getVS1Data('TProductVS1').then(function(dataObject){
                             //     if(dataObject.length == 0) {
                             //         productService.getOneProductdatavs1byname(subs[i].product).then(function(data){
-                                        
+
                             //             if(data.tproduct[0].fields.IsManufactured == true) {
                             //                 html +="<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>";
-                            //             }                                        
+                            //             }
                             //         })
                             //     } else {
                             //         let data = JSON.parse(dataObject[0].data);
@@ -5610,7 +5610,7 @@ Template.productview.events({
                             //     productService.getOneProductdatavs1byname(subs[i].product).then(function(data){
                             //         if(data.tproduct[0].fields.IsManufactured == true) {
                             //             html +="<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>";
-                            //         }                                        
+                            //         }
                             //     })
                             // })
 
@@ -5625,17 +5625,17 @@ Template.productview.events({
                                 "<input type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' value = '"+ subs[i].process +"' /></div>"+
                                 "<div class='colNote form-group'>" +
                                 "<input class='w-100 form-control edtProcessNote'  type='text' value='"+subs[i].note+"'></div>" +
-                                "<div class='colAttachment form-group'><a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-"+subs[i].product.replace(/[|&;$%@"<>()+," "]/g, '')+"' id='btn_Attachment' name='btn_Attachment'><i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div></div>" 
+                                "<div class='colAttachment form-group'><a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-"+subs[i].product.replace(/[|&;$%@"<>()+," "]/g, '')+"' id='btn_Attachment' name='btn_Attachment'><i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div></div>"
                         // } else {
                         //     html += "<div class='colProcess form-group'></div>"+
                         //     "<div class='colNote form-group'></div>" +
-                        //     "<div class='colAttachment form-group'></div>" 
+                        //     "<div class='colAttachment form-group'></div>"
                         // }
-                        
+
                         html += "<div class='colDelete d-flex align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>" +
                     "</div>"+
                 "</div>"
-                
+
                 let productContents = $('#BOMSetupModal .product-content');
                 $(html).insertAfter($(productContents[productContents.length-2]))
                 productContents = $('#BOMSetupModal .product-content');
@@ -5687,12 +5687,12 @@ Template.productview.events({
             let lastRow = $(grandParent).find('.product-content')[count-2];
             if(lastRow && lastRow != null) {
                 if ($(lastRow).find('.edtProductName').val() == '' || $(lastRow).find('.edtProcessName').val()== '' || $(lastRow).find('.edtQuantity').val() == '') {
-                    return 
+                    return
                 }
             }
         }
 
-        
+
         let colProduct = row.find('.colProduct');
         let colQty = row.find('.colQty');
         let colProcess = row.find('.colProcess');
@@ -5710,7 +5710,7 @@ Template.productview.events({
         $(colDelete).addClass('d-flex align-items-center justify-content-center')
         $(colDelete).append("<button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button>")
 
-       
+
 
         grandParent.append("<div class='product-content'><div class='d-flex productRow'>" +
                         "<div class='colProduct  d-flex form-group'>" +
@@ -5810,7 +5810,7 @@ Template.productview.events({
             if(parentBOM) {
                 subIndex = parentBOM.fields.subs.findIndex(sub=>{
                     return sub.product == productName;
-                }) 
+                })
             }
 
             if(subIndex > -1) {
@@ -5834,7 +5834,7 @@ Template.productview.events({
                                 "<div class='colAttachment'></div>" +
                                 "<div class='d-flex colDelete align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>" +
                                 "</div>")
-                                
+
                             let elements = $(row).find('.edtProductName')
                             $(elements[elements.length - 1]).editableSelect();
                             let inputElements = $(row).find('input.edtProductName');
@@ -5848,7 +5848,7 @@ Template.productview.events({
             } else {
 
                 let subs = bomProducts[bomIndex].fields.subs
-                
+
                     $(event.target).remove()
                     if(subs && subs.length) {
                         for (let i = 0; i < subs.length; i++) {
@@ -5867,7 +5867,7 @@ Template.productview.events({
                                 "<div class='colAttachment'></div>" +
                                 "<div class='d-flex colDelete align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>" +
                                 "</div>")
-                                
+
                             let elements = $(row).find('.edtProductName')
                             $(elements[elements.length - 1]).editableSelect();
                             let inputElements = $(row).find('input.edtProductName');
@@ -5924,7 +5924,7 @@ Template.productview.events({
                 $(colDelete).addClass('d-flex align-items-center justify-content-center')
                 $(colDelete).append("<button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button>")
                 let parent = row.parent();
-           
+
                 $(parent).append("<div class='d-flex productRow'>"+
                 "<div class='d-flex colProduct form-group'>"+
                 "<div class='d-flex align-items-center justify-content-end form-group' style='width: 60%'>"+
@@ -5956,7 +5956,7 @@ Template.productview.events({
         let buttonSub = $(event.target).closest('div.colProduct').find('.btnShowSub');
         if(buttonSub){$(buttonSub).remove()}
         let colRow = $(event.target).closest('div.productRow')
-        
+
         // $(event.target).editableSelect()
         templateObject.selectedProductField.set($(colProduct).children('.edtProductName'))
         $('#productListModal').modal('toggle');
@@ -5996,7 +5996,7 @@ Template.productview.events({
         //             if(data.tproduct[0].fields.IsManufactured == true) {
         //                 let colProduct = $(selEle).closest('.colProduct')
         //                 $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
-        //             }                                        
+        //             }
         //         })
         //     } else {
         //         let data = JSON.parse(dataObject[0].data);
@@ -6015,11 +6015,11 @@ Template.productview.events({
         //         if(data.tproduct[0].fields.IsManufactured == true) {
         //             let colProduct = $(selEle).closest('.colProduct')
         //             $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
-        //         }                                        
+        //         }
         //     })
         // })
 
-      
+
         $('#productListModal').modal('toggle')
     },
 
@@ -6125,7 +6125,7 @@ Template.productview.events({
                                     rawQty: sub.quantity,
                                     rawProcess: sub.process
                                 })
-                            }         
+                            }
                         }
                     }
                 }
@@ -6138,8 +6138,8 @@ Template.productview.events({
             type: 'TProcTree',
             fields: objDetails
         }
-        
-       
+
+
         let existIndex = bomProducts.findIndex(product =>{
             return product.fields.productName == object.fields.productName;
         })
