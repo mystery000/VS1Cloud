@@ -1507,7 +1507,6 @@ export const updateAllCurrencies = (employeeId,
      * Db currencies
      */
     let currencies = result.tcurrency;
-   
 
     // get all rates from xe currency
     FxApi.getAllRates({
@@ -1519,8 +1518,8 @@ export const updateAllCurrencies = (employeeId,
         const xeCurrencies = response.to;
 
         currencies.forEach((currency, index) => {
-         currencies[index].BuyRate = FxApi.findBuyRate(currency.Currency, xeCurrencies);
-         currencies[index].SellRate = FxApi.findSellRate(currency.Currency, xeCurrencies);
+         currencies[index].BuyRate = FxApi.findBuyRate(currency.Code, xeCurrencies);
+         currencies[index].SellRate = FxApi.findSellRate(currency.Code, xeCurrencies);
         });
 
         let formatedList = [];
