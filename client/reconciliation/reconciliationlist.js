@@ -190,7 +190,7 @@ Template.reconciliationlist.onRendered(function() {
 
         getVS1Data('TReconciliationList').then(function (dataObject) {
             if(dataObject.length == 0){
-              sideBarService.getAllTReconcilationListData(initialDataLoad,0).then(function (data) {
+              sideBarService.getAllTReconcilationListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                 addVS1Data('TReconciliationList',JSON.stringify(data));
                   let lineItems = [];
                   let lineItemObj = {};

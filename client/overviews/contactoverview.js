@@ -175,7 +175,14 @@ Template.contactoverview.onRendered(function () {
         width: reset_data[r].width ? reset_data[r].width : ''
       };
       custFields.push(customData);
+      if(reset_data[r].active == true){
+        $('#tblcontactoverview_wrapper .'+reset_data[r].class).removeClass('hiddenColumn');
+      }else if(reset_data[r].active == false){
+        $('#tblcontactoverview_wrapper .'+reset_data[r].class).addClass('hiddenColumn');
+      };
     }
+
+
     templateObject.displayfields.set(custFields);
   }
 
@@ -407,7 +414,7 @@ Template.contactoverview.onRendered(function () {
                         $(".fullScreenSpin").css("display", "none");
                       } else {
                         sideBarService
-                          .getAllContactCombineVS1("All", 1)
+                          .getAllContactCombineVS1(initialDataLoad, 1)
                           .then(function (data) {
                             let lineItems = [];
                             let lineItemObj = {};
@@ -1503,7 +1510,7 @@ Template.contactoverview.events({
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
     sideBarService
-      .getAllContactCombineVS1("All", 0)
+      .getAllContactCombineVS1(initialDataLoad, 0)
       .then(function (data) {
         addVS1Data("TERPCombinedContactsVS1", JSON.stringify(data))
           .then(function (datareturn) {
@@ -1870,7 +1877,7 @@ Template.contactoverview.events({
       $(".btnRefreshContact").trigger("click");
     }
   },
-  "click .btnRefreshContact": function (event) {
+  "click .btnRefreshContact": async function (event) {
     let templateObject = Template.instance();
     $('.fullScreenSpin').css('display', 'inline-block');
     const contactList = [];
@@ -1990,6 +1997,17 @@ Template.contactoverview.events({
                     //}
                 }
                 $('.dataTables_info').html('Showing 1 to ' + data.terpcombinedcontactsvs1.length + ' of ' + data.terpcombinedcontactsvs1.length + ' entries');
+                let reset_data = templateObject.reset_data.get();
+                let customFieldCount = reset_data.length;
+
+                for (let r = 0; r < customFieldCount; r++) {
+                  if(reset_data[r].active == true){
+                    $('#tblcontactoverview_wrapper .'+reset_data[r].class).removeClass('hiddenColumn');
+                  }else if(reset_data[r].active == false){
+                    $('#tblcontactoverview_wrapper .'+reset_data[r].class).addClass('hiddenColumn');
+                  };
+                };
+
                 // var datatable = $('#tblcontactoverview').DataTable();
                 // datatable.clear();
                 // datatable.rows.add(splashArrayContactList);

@@ -69,7 +69,7 @@ Template.contactlistpop.onRendered(function () {
       var customerpage = 0;
         getVS1Data('TERPCombinedContactsVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getAllContactCombineVS1('All', 0).then(function (data) {
+                sideBarService.getAllContactCombineVS1(initialDataLoad, 0).then(function (data) {
                     addVS1Data('TERPCombinedContactsVS1', JSON.stringify(data));
                     let lineItems = [];
                     let lineItemObj = {};
@@ -839,7 +839,7 @@ Template.contactlistpop.onRendered(function () {
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
             }
         }).catch(function (err) {
-            sideBarService.getAllContactCombineVS1('All', 0).then(function (data) {
+            sideBarService.getAllContactCombineVS1(initialDataLoad, 0).then(function (data) {
             // sideBarService.getAllContactCombineVS1(initialBaseDataLoad, 0).then(function (data) {
                 addVS1Data('TERPCombinedContactsVS1', JSON.stringify(data));
 

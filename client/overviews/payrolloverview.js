@@ -80,7 +80,7 @@ Template.payrolloverview.onRendered(function () {
 
     let payRunsHistory = JSON.parse(localStorage.getItem('TPayRunHistory')) || [];
     payRunsHistory = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
-  
+
     templateObject.draftPayRunRecords.set(payRunsHistory);
 
     setTimeout(() => {
@@ -158,13 +158,13 @@ Template.payrolloverview.onRendered(function () {
       });
     }, 500);
 
-   
+
   };
 
   templateObject.loadPayRunList = async () => {
     let payRunsHistory = JSON.parse(localStorage.getItem('TPayRunHistory')) || [];
     payRunsHistory = payRunsHistory.filter(p => p.stpFilling != PayRun.STPFilling.draft);
-   
+
     templateObject.payRunHistoryRecords.set(payRunsHistory);
 
     setTimeout(() => {
@@ -403,9 +403,7 @@ Template.payrolloverview.onRendered(function () {
           }, 100);
         },
         fnInitComplete: function () {
-            console.log('dddd')
             setTimeout(function() {
-            console.log('sad')
             $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
           }, 3500);
         },
@@ -418,19 +416,19 @@ Template.payrolloverview.onRendered(function () {
 
           return "Showing " + iStart + " to " + iEnd + " of " + countTableData;
         }
-       
+
       })
-      
+
     }, 500);
-    
+
   },
-  
+
   templateObject.loadEmployees = async (refresh = false) => {
     let data = await CachedHttp.get(erpObject.TEmployee, async () => {
       return await contactService.getAllEmployees();
     }, {
       useIndexDb: true,
-      fallBackToLocal: true, 
+      fallBackToLocal: true,
       useLocalStorage: false,
       forceOverride: refresh,
       validate: (cachedResponse) => {
@@ -442,7 +440,7 @@ Template.payrolloverview.onRendered(function () {
     let employees = data.temployee.map(e => e.fields);
 
     templateObject.employees.set(employees);
-   
+
 
     setTimeout(() => {
       $('#tblEmployeesList').DataTable({
@@ -500,7 +498,7 @@ Template.payrolloverview.onRendered(function () {
     await templateObject.payPeriods.set(calendars);
 
     if(await templateObject.payPeriods.get()) {
-    
+
       setTimeout(() => {
         $('#tblPayPeriodsList').DataTable({
           sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -532,7 +530,7 @@ Template.payrolloverview.onRendered(function () {
           },
           fnInfoCallback: function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
             let countTableData = data.Params.Count || 0; //get count from API data
-  
+
             return "Showing " + iStart + " to " + iEnd + " of " + countTableData;
           }
         });
@@ -590,7 +588,7 @@ Template.payrolloverview.onRendered(function () {
 
 }
 
-  
+
 
   var currentDate = new Date();
   var begunDate = moment(currentDate).format("DD/MM/YYYY");
@@ -6625,5 +6623,5 @@ Template.payrolloverview.helpers({
   payPeriods: () => {
     return Template.instance().payPeriods.get();
   }
- 
+
 });

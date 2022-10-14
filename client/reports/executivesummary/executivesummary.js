@@ -188,7 +188,7 @@ Template.executivesummaryreport.onRendered(() => {
         fieldVariance = (fieldVal1 / fieldVal2) * (-100);
       }
       // if (fieldVal1 > 0 && fieldVal2 > 0) {
-        
+
       // }
       // if (fieldVal1 > 0 && fieldVal2 < 0) {
       //   fieldVariance = fieldVal2 - fieldVal1;
@@ -361,7 +361,7 @@ Template.executivesummaryreport.onRendered(() => {
       templateObject.setFieldVariance(currentAsset[0], currentAsset[1], "spnCurrentAssetVariance");
       templateObject.setFieldVariance(termAsset[0], termAsset[1], "spnTermAssetVariance");
     } catch (err) {
-      console.log(err);
+
     }
     LoadingOverlay.hide();
   }
