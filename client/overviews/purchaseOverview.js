@@ -39,20 +39,20 @@ Template.purchasesoverview.onRendered(function () {
   // set initial table rest_data
   function init_reset_data() {
     let reset_data = [
-      { index: 0, label: 'Sort Date', class:'SortDate', active: false, display: false, width: "0" },
-      { index: 1, label: 'Order Date', class: 'OrderDate', active: true, width: 0, display: true },
-      { index: 2, label: 'Order No.', class: 'PurchaseNo', active: true, width: 0, display: true },
-      { index: 3, label: 'Type', class: 'Type', active: true, width: 0, display: true },
-      { index: 4, label: 'Supplier', class: 'Supplier', active: true, width: 0, display: true },
-      { index: 5, label: 'Amount (Ex)', class: 'AmountEx', active: true, width: 0, display: true },
-      { index: 6, label: 'Tax', class: 'Tax', active: true, width: 0, display: true },
-      { index: 7, label: 'Amount (Inc)', class: 'Amount', active: true, width: 0, display: true },
-      { index: 8, label: 'Outstanding', class: 'BalanceOutstanding', active: true, width: 0, display: true },
-      { index: 9, label: 'Status', class: 'Status', active: true, width: 0 , display: true},
-      { index: 10, label: 'Phone', class: 'PurchaseCustField1', active: false, width: 0, display: true },
-      { index: 11, label: 'Invoice No.', class: 'PurchaseCustField2', active: false, width: 0 , display: true},
-      { index: 12, label: 'Contact', class: 'Employee', active: false, width: 0, display: true },
-      { index: 13, label: 'Comments', class: 'Comments', active: true, width: 0, display: true }
+      { index: 0, label: 'Sort Date', class:'SortDate', active: false, display: false, width: "" },
+      { index: 1, label: 'Order Date', class: 'OrderDate', active: true, width: "", display: true },
+      { index: 2, label: 'Order No.', class: 'PurchaseNo', active: true, width: "", display: true },
+      { index: 3, label: 'Type', class: 'Type', active: true, width: "", display: true },
+      { index: 4, label: 'Supplier', class: 'Supplier', active: true, width: "", display: true },
+      { index: 5, label: 'Amount (Ex)', class: 'AmountEx', active: true, width: "", display: true },
+      { index: 6, label: 'Tax', class: 'Tax', active: true, width: "", display: true },
+      { index: 7, label: 'Amount (Inc)', class: 'Amount', active: true, width: "", display: true },
+      { index: 8, label: 'Outstanding', class: 'BalanceOutstanding', active: true, width: "", display: true },
+      { index: 9, label: 'Status', class: 'Status', active: true, width: "" , display: true},
+      { index: 10, label: 'Phone', class: 'PurchaseCustField1', active: false, width: "", display: true },
+      { index: 11, label: 'Invoice No.', class: 'PurchaseCustField2', active: false, width: "" , display: true},
+      { index: 12, label: 'Contact', class: 'Employee', active: false, width: "", display: true },
+      { index: 13, label: 'Comments', class: 'Comments', active: true, width: "", display: true }
     ];
 
     let templateObject = Template.instance();
@@ -99,6 +99,11 @@ Template.purchasesoverview.onRendered(function () {
         class: reset_data[r].class,
         display: reset_data[r].display,
         width: reset_data[r].width ? reset_data[r].width : ''
+      };
+      if(reset_data[r].active == true){
+        $('#tblPurchaseOverview_wrapper .col'+reset_data[r].class).removeClass('hiddenColumn');
+      }else if(reset_data[r].active == false){
+        $('#tblPurchaseOverview_wrapper .col'+reset_data[r].class).addClass('hiddenColumn');
       };
       custFields.push(customData);
     }
@@ -2043,7 +2048,7 @@ Template.purchasesoverview.events({
             confirmButtonText: 'OK'
           }).then((result) => {
               if (result.value) {
-                $('#tableWodthModal').modal('hide');
+                $('#tableWidthModal').modal('hide');
               }
           });
       } else {

@@ -198,10 +198,10 @@
                 </div>
             </div>
             <div class="col-6 col-md-4">
-                <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right" role="button" data-toggle="modal" href="#tableWodthModal" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
+                <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right" role="button" data-toggle="modal" href="#tableWidthModal" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
                 <button class="btn btnNav btn-primary printConfirm float-right" type="button" style="margin:12px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
                 <button class="btn btnNav btn-primary export float-right" type="button" style="margin: 12px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
-                <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#tableWodthModal" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
+                <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#tableWidthModal" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
         </div>
 
@@ -209,7 +209,7 @@
             <!-- Start {{> optionNavSalesOverview}} -->
             <div class="d-xl-flex justify-content-xl-end">
                 <div>
-                    <div class="modal fade" role="dialog" tabindex="-1" id="tableWodthModal">
+                    <div class="modal fade" role="dialog" tabindex="-1" id="tableWidthModal">
                         <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -258,6 +258,9 @@
 
                                                             }
                                                         }
+                                                        .table-responsive {
+                                                            overflow-y: hidden;
+                                                        } 
                                                     </style> 
 
                                                     {{#each displayfield in displayfields}}
