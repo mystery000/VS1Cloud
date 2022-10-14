@@ -418,7 +418,7 @@ Template.depositlist.onRendered(function() {
                           language: { search: "",searchPlaceholder: "Search List..." },
                           "fnInitComplete": function () {
                             this.fnPageChange('last');
-                              $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDepositList_filter");
+                              $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDepositList_filter");
 
                               $('.myvarFilterForm').appendTo(".colDateFilter");
                           },
@@ -713,7 +713,7 @@ Template.depositlist.onRendered(function() {
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
                           this.fnPageChange('last');
-                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDepositList_filter");
+                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDepositList_filter");
 
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
@@ -1003,7 +1003,7 @@ Template.depositlist.onRendered(function() {
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
                           this.fnPageChange('last');
-                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDepositList_filter");
+                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDepositList_filter");
 
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
