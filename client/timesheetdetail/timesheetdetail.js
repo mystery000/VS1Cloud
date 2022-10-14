@@ -45,6 +45,7 @@ Template.timesheetdetail.onCreated(function () {
   this.earningOptions = new ReactiveVar([]);
 
   this.weeklyTotal = new ReactiveVar(0.0);
+  this.timeSheetDetails = new ReactiveVar();
 });
 
 Template.timesheetdetail.onRendered(function () {
@@ -215,7 +216,7 @@ Template.timesheetdetail.onRendered(function () {
     await this.earningOptions.set(earnings);
 
     setTimeout(() => {
-      $("#tblEarnigRatesList").DataTable();
+      $("#tblEarnigRatesList").DataTable({destroy: true});
     }, 300);
   };
 
@@ -235,9 +236,6 @@ Template.timesheetdetail.onRendered(function () {
 
     const matchDateIndex = index => {
       let earningsDays = this.earningDays.get();
-
-      console.log("earninfg day", earningsDays);
-
       return earningsDays.find(earningDay => earningDay.index == index);
     };
 
@@ -345,6 +343,14 @@ Template.timesheetdetail.onRendered(function () {
     };
     await contactService.saveTimeSheetUpdate(objectDataConverted);
 
+    // We save the table data
+    const objToSave = {
+      timeSheetId: id,
+      dailyHours: earningLines
+    };
+
+    await this._saveTimeSheetDetails(objToSave);
+
     LoadingOverlay.hide(0);
     const result = await swal({
       title: `Timesheet ${id} has been canceled`,
@@ -404,16 +410,28 @@ Template.timesheetdetail.onRendered(function () {
   this.deleteTimeSheet = async () => {
     LoadingOverlay.show();
     const timesheet = await this.timesheet.get();
+    const hours = await this.calculateWeeklyHours();
+    const earningLines = this.buildNewObject();
+
     let objectDataConverted = {
       type: erpObject.TTimeSheet,
       fields: {
         Id: timesheet.ID,
         Status: "Deleted",
         Approved: false,
-        Active: false
+        Active: false,
+        Hours: hours
       }
     };
     await contactService.saveTimeSheetUpdate(objectDataConverted);
+
+    // We save the table data
+    const objToSave = {
+      timeSheetId: id,
+      dailyHours: earningLines
+    };
+
+    await this._saveTimeSheetDetails(objToSave);
 
     LoadingOverlay.hide(0);
     const result = await swal({
@@ -429,30 +447,31 @@ Template.timesheetdetail.onRendered(function () {
     } else if (result.dismiss === "cancel") {}
   };
 
-  this._buildApiObject = async () => {
-    let obj = this.buildNewObject();
+  // this._buildApiObject = async () => {
+  //   let obj = this.buildNewObject();
+  //   return {timeSheetId: id};
+  // };
 
-    console.log("object to be saved", obj);
-
-    return {timeSheetId: id};
+  this.loadTimeSheetDetails = async () => {
+    let timeSheetDetails = await this._getTimeSheetDetails(id);
+    await this.timeSheetDetails.set(timeSheetDetails);
   };
 
   // This will contain the logs to save this timesheet
   this._saveTimeSheetDetails = async (object = {}) => {
+    let res = await this._getTimeSheetDetails(object.timeSheetId);
+    if (res) {
+      return await this._updateTimeSheetDetails(object);
+    }
+
     try {
       LoadingOverlay.show();
-      let tableDetails = JSON.stringify(object);
+      let tableDetails = JSON.stringify([object]);
       await addVS1Data(erpObject.TTimeSheetDetails, tableDetails);
       LoadingOverlay.hide(0);
     } catch (e) {
       LoadingOverlay.hide(0);
-      const result = await swal({
-        title: `Timesheet details couldn't be saved`,
-        text: e,
-        type: "error",
-        showCancelButton: true,
-        confirmButtonText: "Retry"
-      });
+      const result = await swal({title: `Timesheet details couldn't be saved`, text: e, type: "error", showCancelButton: true, confirmButtonText: "Retry"});
 
       if (result.value) {
         this._saveTimeSheetDetails(object);
@@ -460,32 +479,59 @@ Template.timesheetdetail.onRendered(function () {
     }
   };
 
-  this._getTimeSheetDetails = async (timesheetId = null) => {
-    let response = await getVS1Data(erpObject.TTimeSheetDetails);
-    if (response.length > 0) {
-      let timesheetsDetails = JSON.parse(response[0].data);
+  this._updateTimeSheetDetails = async (obj = {}) => {
+    let details = await this._getTimeSheetDetails();
+    details.forEach((detail, index) => {
+      if (obj.timeSheetId == detail.timeSheetId) {
+        details[index] = obj;
+      }
+    });
+    await this._updateAllTimeSheetDetails(details);
+  };
+
+  this._updateAllTimeSheetDetails = async (details = []) => {
+    try {
+      await addVS1Data(erpObject.TTimeSheetDetails, JSON.stringify(details));
+    } catch (e) {
+      const result = await swal({title: `Timesheet details couldn't be saved`, text: e, type: "error", showCancelButton: true, confirmButtonText: "Retry"});
+
+      if (result.value) {
+        this._saveTimeSheetDetails(object);
+      } else if (result.dismiss === "cancel") {}
     }
   };
 
-  this._deleteTimSheetDetails = async (timesheetId) => {
+  /**
+     * This will return one or multiple
+     * @param {integer|null} timesheetId
+     * @returns {object|Array}
+     */
+  this._getTimeSheetDetails = async (timesheetId = null, list = false) => {
+    let response = await getVS1Data(erpObject.TTimeSheetDetails);
+    if (response.length > 0) {
+      let timesheetsDetails = JSON.parse(response[0].data);
 
-    try {
-      let response = await getVS1Data(erpObject.TTimeSheetDetails);
-      if(response.length > 0) {
-        let jsonData = JSON.parse(response[0].data);
-
-
-
-
-      } else {
-        throw "Couldn't be deleted"
+      if (timesheetId) {
+        return list == true
+          ? timesheetsDetails.filter(time => time.timeSheetId == timesheetId)
+          : timesheetsDetails.find(time => time.timeSheetId == timesheetId);
       }
 
-    } catch(e) {
-
+      return timesheetsDetails;
     }
+    return null;
+  };
 
-  }
+  this._deleteTimSheetDetails = async timesheetId => {
+    try {
+      let response = await getVS1Data(erpObject.TTimeSheetDetails);
+      if (response.length > 0) {
+        let jsonData = JSON.parse(response[0].data);
+      } else {
+        throw "Couldn't be deleted";
+      }
+    } catch (e) {}
+  };
 
   this.initPage = async () => {
     LoadingOverlay.show();
@@ -499,11 +545,17 @@ Template.timesheetdetail.onRendered(function () {
 
     await this.loadEarningSelector();
 
-    setTimeout(() => {
-      this.duplicateFirstLine();
-    });
-
     await this.calculateWeeklyHours();
+
+    //await this._getTimeSheetDetails();
+    // Lets load the timesheet data
+    await this.loadTimeSheetDetails();
+
+    if (!(await this.timeSheetDetails.get())) {
+      setTimeout(() => {
+        this.duplicateFirstLine();
+      }, 300);
+    }
 
     Datehandler.defaultDatePicker();
     LoadingOverlay.hide();
@@ -587,5 +639,15 @@ Template.timesheetdetail.helpers({
   },
   weeklyTotal: () => {
     return Template.instance().weeklyTotal.get();
+  },
+  timeSheetDetails: () => {
+    return Template.instance().timeSheetDetails.get();
+  },
+  indexMatchedHours: (_day, days = []) => {
+    let dayFound = days.find(day => moment(day.date).isSame(moment(_day.dateObject)));
+    if (dayFound == undefined) {
+      return 0;
+    }
+    return dayFound.hours;
   }
 });
