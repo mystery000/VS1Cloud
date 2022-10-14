@@ -217,14 +217,8 @@ Template.dashboardSalesCharts.onRendered(function () {
             (dateTo.getMonth() + 1) +
             "-" +
             dateTo.getDate();
-        if (
-            $("#dateFrom").val().replace(/\s/g, "") == "" &&
-            $("#dateTo").val().replace(/\s/g, "") == ""
-        ) {
-            renderCharts(formatDateFrom, formatDateTo, true);
-        } else {
-            renderCharts(formatDateFrom, formatDateTo, false);
-        }
+        
+        renderCharts(formatDateFrom, formatDateTo, false);
     }
 
     setTimeout(function(){

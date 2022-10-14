@@ -400,11 +400,7 @@ Template.dashboardManagerCharts.onRendered(function () {
         const dateTo = new Date($("#dateTo").datepicker("getDate"));
         formatDateFrom = dateFrom.getFullYear() +"-" +(dateFrom.getMonth() + 1) +"-" +dateFrom.getDate();
         formatDateTo = dateTo.getFullYear() +"-" +(dateTo.getMonth() + 1) +"-" +dateTo.getDate();
-        if ($("#dateFrom").val().replace(/\s/g, "") == "" && $("#dateFrom").val().replace(/\s/g, "") == ""){
-            templateObject.getDashboardData(formatDateFrom, formatDateTo, true);
-        } else {
-            templateObject.getDashboardData(formatDateFrom, formatDateTo, false);
-        }
+        templateObject.getDashboardData(formatDateFrom, formatDateTo, false);
     }
 
     setTimeout(function(){

@@ -5,7 +5,7 @@ export default class Tvs1ChartDashboardPreferenceField {
     ChartGroup,
     ChartID,
     ChartWidth,
-    Chartname,
+    ChartName,
     EmployeeID,
     Employeename,
     Gloablref,
@@ -23,7 +23,7 @@ export default class Tvs1ChartDashboardPreferenceField {
   }) {
     this.Active = Active;
     this.ChartGroup = ChartGroup;
-    this.Chartname = Chartname;
+    this.ChartName = ChartName;
     this.ChartID = ChartID;
     this.ChartWidth = ChartWidth;
     this.EmployeeID = EmployeeID;

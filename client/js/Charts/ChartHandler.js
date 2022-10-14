@@ -153,18 +153,17 @@ export default class ChartHandler {
       dashboardApis.collectionNames.Tvs1dashboardpreferences
     );
 
-    dashboardPreferencesEndpoint.url.searchParams.append(
-      "ListType",
-      "'Detail'"
-    );
+    // dashboardPreferencesEndpoint.url.searchParams.append(
+    //   "ListType",
+    //   "'Detail'"
+    // );
 
-    dashboardPreferencesEndpoint.url.searchParams.append(
-      "select",
-      `[employeeID]=${employeeId}`
-    );
+    // dashboardPreferencesEndpoint.url.searchParams.append(
+    //   "select",
+    //   `[employeeID]=${employeeId}`
+    // );
 
-    const dashboardPreferencesEndpointResponse =
-      await dashboardPreferencesEndpoint.fetch(); // here i should get from database all charts to be displayed
+    const dashboardPreferencesEndpointResponse = await dashboardPreferencesEndpoint.fetch(); // here i should get from database all charts to be displayed
     let dashboardPreferencesEndpointJsonResponse = {};  
     if (dashboardPreferencesEndpointResponse.ok == true) {
       dashboardPreferencesEndpointJsonResponse = await dashboardPreferencesEndpointResponse.json();
@@ -176,8 +175,10 @@ export default class ChartHandler {
   static async getLocalChartPreferences( _tabGroup ) {
     let tvs1ChartDashboardPreference = [];
     let Tvs1dashboardpreferences = await getVS1Data('Tvs1dashboardpreferences')
+    
     if( Tvs1dashboardpreferences.length ){
       let Tvs1ChartData = await JSON.parse(Tvs1dashboardpreferences[0].data)
+      console.log("=====", Tvs1ChartData);
       if( Tvs1ChartData ){
         tvs1ChartDashboardPreference = Tvs1ChartDashboardPreference.fromList(
           Tvs1ChartData.tvs1dashboardpreferences

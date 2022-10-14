@@ -678,8 +678,14 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                 let title = document.createElement('p');
                 if (event.event.title) {
                     title.innerHTML = event.timeText + ' ' + event.event.title;
+                    title.setAttribute("data-toggle", "tooltip");
+                    title.setAttribute("title", event.timeText + ' ' + event.event.title);
                     title.style.backgroundColor = event.backgroundColor;
                     title.style.color = "#ffffff";
+                    title.style.overflow = "hidden";
+                    setTimeout(function () {
+                        $('[data-toggle="tooltip"]').tooltip({html: true});
+                    }, 100);
                 } else {
                     title.innerHTML = event.timeText + ' ' + event.event.title;
                 }
@@ -1156,8 +1162,14 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                 let title = document.createElement('p');
                 if (event.event.title) {
                     title.innerHTML = event.timeText + ' ' + event.event.title;
+                    title.setAttribute("data-toggle", "tooltip");
+                    title.setAttribute("title", event.timeText + ' ' + event.event.title);
                     title.style.backgroundColor = event.backgroundColor;
                     title.style.color = "#ffffff";
+                    title.style.overflow = "hidden";
+                    setTimeout(function () {
+                        $('[data-toggle="tooltip"]').tooltip({html: true});
+                    }, 100);
                 } else {
                     title.innerHTML = event.timeText + ' ' + event.event.title;
                 }
@@ -3558,9 +3570,15 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                     eventContent: function (event) {
                         let title = document.createElement('p');
                         if (event.event.title) {
+                            title.setAttribute("data-toggle", "tooltip");
+                            title.setAttribute("title", event.timeText + ' ' + event.event.title);
                             title.innerHTML = event.timeText + ' ' + event.event.title;
                             title.style.backgroundColor = event.backgroundColor;
                             title.style.color = "#ffffff";
+                            title.style.overflow = "hidden";
+                            setTimeout(function () {
+                                $('[data-toggle="tooltip"]').tooltip({html: true});
+                            }, 100);
                         } else {
                             title.innerHTML = event.timeText + ' ' + event.event.title;
                         }
