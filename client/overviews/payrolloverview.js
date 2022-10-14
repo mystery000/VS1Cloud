@@ -552,7 +552,6 @@ Template.payrolloverview.onRendered(function () {
     const payPeriodId = $('.payperiod-select').attr('calendar-id');
     const selectedPeriod = payPeriods.find(p => p.ID == payPeriodId);
 
-    console.log('selected epriods', selectedPeriod);
     const timesheets  = await templateObject.timeSheetList.get();
 
 

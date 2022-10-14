@@ -23,7 +23,7 @@ import {ReportService} from "../reports/report-service";
 import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import moment from "moment";
 import Datehandler from "../DateHandler";
-import { getEarnings } from "../settings/payroll-settings/payrollrules";
+import {getEarnings} from "../settings/payroll-settings/payrollrules";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -106,8 +106,11 @@ Template.timesheetdetail.onRendered(function () {
     });
 
     data = data.response;
-   
-    let employees = data.temployee.map(e => e.fields != undefined ? e.fields : e);
+
+    let employees = data.temployee.map(
+      e => e.fields != undefined
+      ? e.fields
+      : e);
 
     try {
       const selectedEmployee = employees.find(e => e.EmployeeName == timesheet.EmployeeName);
@@ -175,7 +178,7 @@ Template.timesheetdetail.onRendered(function () {
     let i = 0;
     while (date.isBefore(endDate) == true) {
       date = aWeekAgo.add("1", "day");
-      days.push({index: i, dateObject: date, date: date.format("ddd DD MMM")});
+      days.push({index: i, dateObject: date.toDate(), date: date.format("ddd DD MMM")});
       i++;
     }
 
@@ -207,14 +210,13 @@ Template.timesheetdetail.onRendered(function () {
 
   this.loadEarningSelector = async () => {
     let earnings = await getEarnings();
-    earnings  = earnings.map(earning => earning.fields);
-    console.log('earnings', earnings);
-    
+    earnings = earnings.map(earning => earning.fields);
+
     await this.earningOptions.set(earnings);
 
     setTimeout(() => {
       $("#tblEarnigRatesList").DataTable();
-    }, 300)
+    }, 300);
   };
 
   this.calculateWeeklyHours = async () => {
@@ -229,63 +231,101 @@ Template.timesheetdetail.onRendered(function () {
 
   this.buildNewObject = () => {
     // Here we will build the object to save
-    const trs = $("#tblTimeSheetInner").find("tr");
+    const trs = $("#tblTimeSheetInner tbody").find("tr:not(.template)");
 
     const matchDateIndex = index => {
-      return this.earningDays.get().find(earningDay => earningDay.index == index);
+      let earningsDays = this.earningDays.get();
+
+      console.log("earninfg day", earningsDays);
+
+      return earningsDays.find(earningDay => earningDay.index == index);
     };
 
     const buildHourObject = input => {
       return {
-        date: matchDateIndex($(input).attr("date")),
+        date: matchDateIndex($(input).attr("date")).dateObject,
         hours: parseFloat($(input).val())
       };
     };
 
-    const buildEarningLineObject = tr => {
-      const inputs = $(tr).find("input.hours");
+    const buildEarningsLines = trs => {
       let lines = [];
-
-      $(inputs).each((index, input) => {
-        lines.push(buildHourObject(input));
+      $(trs).each((index, tr) => {
+        lines.push(buildEarningLineObject(tr));
       });
-
       return lines;
     };
 
-    return buildEarningLineObject(trs);
+    const buildEarningLineObject = tr => {
+      const hoursInput = $(tr).find("input.hours");
+      const earningsRateName = $(tr).find("input.select-rate-js").val();
+
+      let dailyHours = [];
+
+      $(hoursInput).each((index, input) => {
+        dailyHours.push(buildHourObject(input));
+      });
+
+      return {earningRateName: earningsRateName, dailyHours: dailyHours};
+    };
+
+    return buildEarningsLines(trs);
   };
 
   this.approveTimeSheet = async () => {
-    LoadingOverlay.show();
-    const timesheet = await this.timesheet.get();
-    const hours = await this.calculateWeeklyHours();
-    const earningLines = this.buildNewObject();
+    try {
+      LoadingOverlay.show();
+      const timesheet = await this.timesheet.get();
+      const hours = await this.calculateWeeklyHours();
+      const earningLines = this.buildNewObject();
 
-    let objectDataConverted = {
-      type: erpObject.TTimeSheet,
-      fields: {
-        Id: timesheet.ID,
-        Status: "Approved",
-        Approved: true,
-        Hours: hours
-      }
-    };
-    await contactService.saveTimeSheetUpdate(objectDataConverted);
+      let objectDataConverted = {
+        type: erpObject.TTimeSheet,
+        fields: {
+          Id: timesheet.ID,
+          Status: "Approved",
+          Approved: true,
+          Hours: hours
+        }
+      };
+      await contactService.saveTimeSheetUpdate(objectDataConverted);
 
-    LoadingOverlay.hide(0);
-    const result = await swal({
-      title: `Timesheet ${id} has been approved`,
-      //text: "Please log out to activate your changes.",
-      type: "success",
-      showCancelButton: false,
-      confirmButtonText: "OK"
-    });
+      // We save the table data
+      const objToSave = {
+        timeSheetId: id,
+        dailyHours: earningLines
+      };
 
-    if (result.value) {
-      //window.location.reload();
-      redirectToPayRollOverview();
-    } else if (result.dismiss === "cancel") {}
+      await this._saveTimeSheetDetails(objToSave);
+
+      LoadingOverlay.hide(0);
+      const result = await swal({
+        title: `Timesheet ${id} has been approved`,
+        //text: "Please log out to activate your changes.",
+        type: "success",
+        showCancelButton: false,
+        confirmButtonText: "OK"
+      });
+
+      if (result.value) {
+        //window.location.reload();
+        redirectToPayRollOverview();
+      } else if (result.dismiss === "cancel") {}
+    } catch (e) {
+      LoadingOverlay.hide(0);
+      const result = await swal({
+        title: `Timesheet ${id} couldn't be saved`,
+        //text: "Please log out to activate your changes.",
+        type: "error",
+        showCancelButton: true,
+        confirmButtonText: "Retry"
+      });
+
+      if (result.value) {
+        //window.location.reload();
+        await this.approveTimeSheet();
+      } else if (result.dismiss === "cancel") {}
+    }
   };
 
   this.cancelTimeSheet = async () => {
@@ -320,35 +360,45 @@ Template.timesheetdetail.onRendered(function () {
     } else if (result.dismiss === "cancel") {}
   };
 
-  this.darftTimeSheet = async () => {
-    LoadingOverlay.show();
-    const timesheet = await this.timesheet.get();
-    const hours = await this.calculateWeeklyHours();
-    const earningLines = this.buildNewObject();
+  this.draftTimeSheet = async () => {
+    try {
+      LoadingOverlay.show();
+      const timesheet = await this.timesheet.get();
+      const hours = await this.calculateWeeklyHours();
+      const earningLines = this.buildNewObject();
 
-    let objectDataConverted = {
-      type: erpObject.TTimeSheet,
-      fields: {
-        Id: timesheet.ID,
-        Status: "Draft",
-        Approved: false,
-        Hours: hours
-      }
-    };
-    await contactService.saveTimeSheetUpdate(objectDataConverted);
+      let objectDataConverted = {
+        type: erpObject.TTimeSheet,
+        fields: {
+          Id: timesheet.ID,
+          Status: "Draft",
+          Approved: false,
+          Hours: hours
+        }
+      };
+      await contactService.saveTimeSheetUpdate(objectDataConverted);
 
-    LoadingOverlay.hide(0);
-    const result = await swal({
-      title: `Timesheet ${id} has been drafted`,
-      //text: "Please log out to activate your changes.",
-      type: "success",
-      showCancelButton: false,
-      confirmButtonText: "OK"
-    });
+      // We save the table data
+      const objToSave = {
+        timeSheetId: id,
+        dailyHours: earningLines
+      };
 
-    if (result.value) {
-      redirectToPayRollOverview();
-    } else if (result.dismiss === "cancel") {}
+      await this._saveTimeSheetDetails(objToSave);
+
+      LoadingOverlay.hide(0);
+      const result = await swal({
+        title: `Timesheet ${id} has been drafted`,
+        //text: "Please log out to activate your changes.",
+        type: "success",
+        showCancelButton: false,
+        confirmButtonText: "OK"
+      });
+
+      if (result.value) {
+        redirectToPayRollOverview();
+      } else if (result.dismiss === "cancel") {}
+    } catch (e) {}
   };
 
   this.deleteTimeSheet = async () => {
@@ -378,6 +428,64 @@ Template.timesheetdetail.onRendered(function () {
       redirectToPayRollOverview();
     } else if (result.dismiss === "cancel") {}
   };
+
+  this._buildApiObject = async () => {
+    let obj = this.buildNewObject();
+
+    console.log("object to be saved", obj);
+
+    return {timeSheetId: id};
+  };
+
+  // This will contain the logs to save this timesheet
+  this._saveTimeSheetDetails = async (object = {}) => {
+    try {
+      LoadingOverlay.show();
+      let tableDetails = JSON.stringify(object);
+      await addVS1Data(erpObject.TTimeSheetDetails, tableDetails);
+      LoadingOverlay.hide(0);
+    } catch (e) {
+      LoadingOverlay.hide(0);
+      const result = await swal({
+        title: `Timesheet details couldn't be saved`,
+        text: e,
+        type: "error",
+        showCancelButton: true,
+        confirmButtonText: "Retry"
+      });
+
+      if (result.value) {
+        this._saveTimeSheetDetails(object);
+      } else if (result.dismiss === "cancel") {}
+    }
+  };
+
+  this._getTimeSheetDetails = async (timesheetId = null) => {
+    let response = await getVS1Data(erpObject.TTimeSheetDetails);
+    if (response.length > 0) {
+      let timesheetsDetails = JSON.parse(response[0].data);
+    }
+  };
+
+  this._deleteTimSheetDetails = async (timesheetId) => {
+
+    try {
+      let response = await getVS1Data(erpObject.TTimeSheetDetails);
+      if(response.length > 0) {
+        let jsonData = JSON.parse(response[0].data);
+
+
+
+
+      } else {
+        throw "Couldn't be deleted"
+      }
+
+    } catch(e) {
+
+    }
+
+  }
 
   this.initPage = async () => {
     LoadingOverlay.show();
@@ -450,7 +558,7 @@ Template.timesheetdetail.events({
     ui.deleteTimeSheet();
   },
   "click .save-draft": (e, ui) => {
-    ui.darftTimeSheet();
+    ui.draftTimeSheet();
   },
   "click .cancel-timesheet": (e, ui) => {
     ui.cancelTimeSheet();

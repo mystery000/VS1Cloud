@@ -307,6 +307,7 @@ openDb = function(dbName) {
             db.createObjectStore(erpObject.TPayrollSettingOvertimes, { keyPath: "EmployeeEmail" });
             db.createObjectStore(erpObject.TRateTypes, { keyPath: "EmployeeEmail" });
             db.createObjectStore(erpObject.TEarningData, { keyPath: "EmployeeEmail" });
+            db.createObjectStore(erpObject.TTimeSheetDetails, { keyPath: "EmployeeEmail" });
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });
