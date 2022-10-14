@@ -46,20 +46,20 @@ Template.reconciliationlist.onRendered(function() {
                 { index: 9, label: "Notes", class: "Notes", active: true, display: true, width: "" },
                 { index: 10, label: "Status", class: "Status", active: true, display: true, width: "" }
             ];
-    
+
             let templateObject = Template.instance();
             templateObject.reset_data.set(reset_data);
         }
         init_reset_data();
         // set initial table rest_data
-    
-    
+
+
         // custom field displaysettings
         templateObject.initCustomFieldDisplaySettings = function(data, listType) {
             let templateObject = Template.instance();
             let reset_data = templateObject.reset_data.get();
             templateObject.showCustomFieldDisplaySettings(reset_data);
-    
+
             try {
             getVS1Data("VS1_Customize").then(function (dataObject) {
                 if (dataObject.length == 0) {
@@ -78,14 +78,14 @@ Template.reconciliationlist.onRendered(function() {
             }
             return;
         }
-    
+
         templateObject.showCustomFieldDisplaySettings = function(reset_data){
         //function showCustomFieldDisplaySettings(reset_data) {
-    
+
             let custFields = [];
             let customData = {};
             let customFieldCount = reset_data.length;
-    
+
             for (let r = 0; r < customFieldCount; r++) {
             customData = {
                 active: reset_data[r].active,
@@ -419,7 +419,7 @@ Template.reconciliationlist.onRendered(function() {
                           language: { search: "",searchPlaceholder: "Search List..." },
                           "fnInitComplete": function () {
                             this.fnPageChange('last');
-                              $("<button class='btn btn-primary btnRefreshReconn' type='button' id='btnRefreshReconn' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblreconciliationlist_filter");
+                              $("<button class='btn btn-primary btnRefreshReconn' type='button' id='btnRefreshReconn' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblreconciliationlist_filter");
 
                               $('.myvarFilterForm').appendTo(".colDateFilter");
                           },
@@ -718,7 +718,7 @@ Template.reconciliationlist.onRendered(function() {
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
                           this.fnPageChange('last');
-                            $("<button class='btn btn-primary btnRefreshReconn' type='button' id='btnRefreshReconn' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblreconciliationlist_filter");
+                            $("<button class='btn btn-primary btnRefreshReconn' type='button' id='btnRefreshReconn' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblreconciliationlist_filter");
 
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
@@ -1013,7 +1013,7 @@ Template.reconciliationlist.onRendered(function() {
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
                           this.fnPageChange('last');
-                            $("<button class='btn btn-primary btnRefreshReconn' type='button' id='btnRefreshReconn' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblreconciliationlist_filter");
+                            $("<button class='btn btn-primary btnRefreshReconn' type='button' id='btnRefreshReconn' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblreconciliationlist_filter");
 
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
