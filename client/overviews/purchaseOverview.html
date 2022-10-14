@@ -258,7 +258,7 @@
 
                                                             }
                                                         }
-                                                    </style> 
+                                                    </style>
 
                                                     {{#each displayfield in displayfields}}
                                                     {{#if displayfield.display}}
@@ -272,7 +272,7 @@
                                                           <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                           <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
                                                       </div>
-                                                    </div> 
+                                                    </div>
                                                     {{/if}}
                                                     {{/each}}
                                                 </div>
@@ -365,10 +365,10 @@
                             {{#each displayfield in displayfields}}
                               {{#if displayfield.display}}
                               <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
-                                  {{displayfield.custfieldlabel}} 
+                                  {{displayfield.custfieldlabel}}
                                 </th>
                               {{/if}}
-                            {{/each}}   
+                            {{/each}}
                         </tr>
                     </thead>
                     <tbody>

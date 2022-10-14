@@ -101,6 +101,11 @@ Template.purchasesoverview.onRendered(function () {
         width: reset_data[r].width ? reset_data[r].width : ''
       };
       custFields.push(customData);
+      if(reset_data[r].active == true){
+        $('#tblPurchaseOverview_wrapper .'+reset_data[r].class).removeClass('hiddenColumn');
+      }else if(reset_data[r].active == false){
+        $('#tblPurchaseOverview_wrapper .'+reset_data[r].class).addClass('hiddenColumn');
+      };
     }
     templateObject.displayfields.set(custFields);
   }
@@ -638,38 +643,12 @@ Template.purchasesoverview.onRendered(function () {
             };
             //if (data.tbilllist[i].Deleted == false) {
               dataTableList.push(dataList);
-              if (data.tbilllist[i].Balance != 0) {
-                if (data.tbilllist[i].IsPO == true) {
-                  totAmount += Number(data.tbilllist[i].Balance);
-                }
-                if (data.tbilllist[i].IsBill == true) {
-                  totAmountBill += Number(data.tbilllist[i].Balance);
-                }
-                if (data.tbilllist[i].IsCredit == true) {
-                  totAmountCredit += Number(data.tbilllist[i].Balance);
-                }
-              }
-            //}
-            $(".suppAwaitingAmt").text(utilityService.modifynegativeCurrencyFormat(totAmount));
-            $(".billAmt").text(utilityService.modifynegativeCurrencyFormat(totAmountBill));
-            $(".creditAmt").text(utilityService.modifynegativeCurrencyFormat(totAmountCredit));
+              templateObject.datatablerecords.set(dataTableList);
+
           }
 
-          var totalPerc = Math.abs(totalCredit) + Math.abs(totalBill) + Math.abs(totalPO);
-
-          var xwidth = (Math.abs(totalCredit) / totalPerc) * 100;
-          var ywidth = (Math.abs(totalBill) / totalPerc) * 100;
-          var zwidth = (Math.abs(totalPO) / totalPerc) * 100;
-
-          templateObject.creditpercTotal.set(Math.round(xwidth));
-          templateObject.billpercTotal.set(Math.round(ywidth));
-          templateObject.popercTotal.set(Math.round(zwidth));
-
-          templateObject.datatablerecords.set(dataTableList);
-          $(".spExpenseTotal").text(utilityService.modifynegativeCurrencyFormat(totalExpense));
 
           if (templateObject.datatablerecords.get()) {
-
 
             function MakeNegative() {
                 $('td').each(function() {
@@ -682,40 +661,7 @@ Template.purchasesoverview.onRendered(function () {
                     if ($(this).text() == "Partial Paid") $(this).addClass('text-partialPaid');
                 });
             };
-            setTimeout(function () {
-            var myChart = new Chart(ctx, {
-              type: "pie",
-              data: {
-                labels: ["Credit", "Bill", "Purchase Order"],
-                datasets: [
-                  {
-                    label: "Credit",
-                    backgroundColor: [
-                      "#e74a3b",
-                      "#f6c23e",
-                      "#1cc88a",
-                      "#36b9cc",
-                    ],
-                    borderColor: ["#ffffff", "#ffffff", "#ffffff", "#ffffff"],
-                    data: [totCreditCount, totBillCount, totPOCount],
-                  },
-                ],
-              },
-              options: {
-                maintainAspectRatio: true,
-                legend: {
-                  display: true,
-                  position: "right",
-                  reverse: false,
-                },
-                title: {
-                  display: false,
-                },
-              },
-            });
-
-              MakeNegative();
-            }, 100);
+            MakeNegative();
           }
           setTimeout(function () {
             $(".fullScreenSpin").css("display", "none");
@@ -1534,11 +1480,124 @@ Template.purchasesoverview.events({
       $(".btnRefreshPurchaseOverview").removeClass("btnSearchAlert");
     }
     if (event.keyCode == 13) {
-      $(".btnRefresh").trigger("click");
+      $(".btnRefreshPurchaseOverview").trigger("click");
     }
   },
   "click .btnRefreshPurchaseOverview": function () {
+    let templateObject = Template.instance();
+    $('.fullScreenSpin').css('display', 'inline-block');
+    const contactList = [];
+    const clientList = [];
+    let salesOrderTable;
+    var splashArray = new Array();
+    var splashArrayContactList = new Array();
+    const dataTableList = [];
+    const tableHeaderList = [];
+    let dataSearchName = $('#tblPurchaseOverview_filter input').val();
+
+    if (dataSearchName.replace(/\s/g, '') != '') {
+        sideBarService.getTBillListDataByName(dataSearchName.toLowerCase()).then(function (data) {
+          let lineItems = [];
+          let lineItemObj = {};
+
+          let totalExpense = 0;
+          let totalBill = 0;
+          let totalCredit = 0;
+          let totalPO = 0;
+            $(".btnRefreshPurchaseOverview").removeClass('btnSearchAlert');
+            if (data.tbilllist.length > 0) {
+              $("#tblPurchaseOverview > tbody").empty();
+
+                for (let i = 0; i < data.tbilllist.length; i++) {
+
+                  let orderType = "PO";
+                  totalExpense += Number(data.tbilllist[i].TotalAmountInc);
+                  if (data.tbilllist[i].IsCredit == true) {
+                    orderType = "Credit";
+                    totalCredit += Number(data.tbilllist[i].TotalAmountInc);
+                  }
+
+                  if (data.tbilllist[i].IsBill == true) {
+                    orderType = "Bill";
+                    totalBill += Number(data.tbilllist[i].TotalAmountInc);
+                  }
+
+                  if (data.tbilllist[i].IsPO == true) {
+                    orderType = "PO";
+                    totalPO += Number(data.tbilllist[i].TotalAmountInc);
+                  }
+                  let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].TotalAmount) || 0.0;
+                  let totalTax = utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].TotalTax) || 0.0;
+                  let totalAmount =utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].TotalAmountInc) || 0.0;
+                  let amountPaidCalc =data.tbilllist[i].Payment||0.0;
+                  let totalPaid =utilityService.modifynegativeCurrencyFormat(amountPaidCalc) ||0.0;
+                  let totalOutstanding =utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].Balance) || 0.0;
+                  let orderstatus = data.tbilllist[i].OrderStatus || '';
+                  if(data.tbilllist[i].Deleted == true){
+                    orderstatus = "Deleted";
+                  }else if(data.tbilllist[i].SupplierName == ''){
+                    orderstatus = "Deleted";
+                  };
+                  let sortdate = data.tbilllist[i].OrderDate != "" ? moment(data.tbilllist[i].OrderDate).format("YYYY/MM/DD"): data.tbilllist[i].OrderDate;
+                  let orderdate = data.tbilllist[i].OrderDate != "" ? moment(data.tbilllist[i].OrderDate).format("DD/MM/YYYY"): data.tbilllist[i].OrderDate;
+                        $("#tblPurchaseOverview > tbody").append(
+                            ' <tr class="dnd-moved" id="' + data.tbilllist[i].PurchaseOrderID + '" style="cursor: pointer;">' +
+                            '<td contenteditable="false" class="colSortDate hiddenColumn">' + data.tbilllist[i].street + '</td>' +
+                            '<td contenteditable="false" class="colOrderDate" ><span style="display:none;">' +sortdate +"</span>" +orderdate +"</td>" +
+                            '<td contenteditable="false" class="colPurchaseNo">' + data.tbilllist[i].PurchaseOrderID + '</td>' +
+                            '<td contenteditable="false" class="colType">' + orderType + '</td>' +
+                            '<td contenteditable="false" class="colSupplier" >' + data.tbilllist[i].SupplierName + '</td>' +
+                            '<td contenteditable="false" class="colAmountEx" style="text-align: right!important;">' + totalAmountEx + '</td>' +
+                            '<td contenteditable="false" class="colTax" style="text-align: right!important;">' + totalTax + '</td>' +
+                            '<td contenteditable="false" class="colAmount" style="text-align: right!important;">' + totalAmount + '</td>' +
+                            '<td contenteditable="false" class="colBalanceOutstanding" style="text-align: right!important;">' + totalOutstanding + '</td>' +
+                            '<td contenteditable="false" class="colStatus">' + orderstatus + '</td>' +
+                            '<td contenteditable="false" class="colPurchaseCustField1">' + data.tbilllist[i].Phone + '</td>' +
+                            '<td contenteditable="false" class="colPurchaseCustField2">' + data.tbilllist[i].InvoiceNumber + '</td>' +
+                            '<td contenteditable="false" class="colEmployee">' + data.tbilllist[i].EmployeeName + '</td>' +
+                            '<td contenteditable="false" class="colComments">' + data.tbilllist[i].Comments + '</td>' +
+                            '</tr>');
+
+                }
+                $('.dataTables_info').html('Showing 1 to ' + data.tbilllist.length + ' of ' + data.tbilllist.length + ' entries');
+                let reset_data = templateObject.reset_data.get();
+                let customFieldCount = reset_data.length;
+                for (let r = 0; r < customFieldCount; r++) {
+                  if(reset_data[r].active == true){
+                    $('#tblPurchaseOverview_wrapper .col'+reset_data[r].class).removeClass('hiddenColumn');
+                  }else if(reset_data[r].active == false){
+                    $('#tblPurchaseOverview_wrapper .col'+reset_data[r].class).addClass('hiddenColumn');
+                  };
+                };
+
+                $('.fullScreenSpin').css('display', 'none');
+            } else {
+
+                $('.fullScreenSpin').css('display', 'none');
+                $('#contactListModal').modal('toggle');
+                swal({
+                    title: 'Question',
+                    text: "Order does not exist, would you like to create it?",
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No'
+                }).then((result) => {
+                    if (result.value) {
+
+                    } else if (result.dismiss === 'cancel') {
+                        $('#contactListModal').modal('toggle');
+                    }
+                });
+
+            }
+
+        }).catch(function (err) {
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    } else {
       $(".btnRefresh").trigger("click");
+    }
   },
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -2043,7 +2102,7 @@ Template.purchasesoverview.events({
             confirmButtonText: 'OK'
           }).then((result) => {
               if (result.value) {
-                $('#tableWodthModal').modal('hide');
+                $('#myModaPurchaseOverviewl2').modal('hide');
               }
           });
       } else {

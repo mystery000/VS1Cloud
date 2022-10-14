@@ -1384,6 +1384,73 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TBillList, options);
   }
 
+  getTBillListDataByName(dataSearchName) {
+    let options = "";
+    if(dataSearchName.toLowerCase().indexOf("bill") >= 0){
+      options = {
+        IgnoreDates:true,
+        OrderBy: "OrderDate desc",
+        IsPO: false,
+        IsBill: true,
+        IsCredit: false,
+        IsCheque: false,
+        IsRA: false,
+      };
+    }else if(dataSearchName.toLowerCase().indexOf("credit") >= 0){
+      options = {
+        IgnoreDates:true,
+        OrderBy: "OrderDate desc",
+        IsPO: false,
+        IsBill: false,
+        IsCredit: true,
+        IsCheque: false,
+        IsRA: false,
+      };
+    }else if(dataSearchName.toLowerCase().indexOf("po") >= 0){
+      options = {
+        IgnoreDates:true,
+        OrderBy: "OrderDate desc",
+        IsPO: true,
+        IsBill: false,
+        IsCredit: false,
+        IsCheque: false,
+        IsRA: false,
+      };
+    }else if(dataSearchName.toLowerCase().indexOf("cheque") >= 0){
+      options = {
+        IgnoreDates:true,
+        OrderBy: "OrderDate desc",
+        IsPO: false,
+        IsBill: false,
+        IsCredit: false,
+        IsCheque: true,
+        IsRA: false,
+      };
+    }else if(dataSearchName.toLowerCase().indexOf("check") >= 0){
+      options = {
+        IgnoreDates:true,
+        OrderBy: "OrderDate desc",
+        IsPO: false,
+        IsBill: false,
+        IsCredit: false,
+        IsCheque: true,
+        IsRA: false,
+      };
+    }else{
+    options = {
+      IgnoreDates: true,
+      OrderBy: "OrderDate desc",
+      IsPO: true,
+      IsBill: true,
+      IsCredit: true,
+      IsCheque: false,
+      IsRA: false,
+      Search: 'PurchaseOrderID = "' + dataSearchName + '" OR SupplierName = "' + dataSearchName + '"',
+    };
+   }
+    return this.getList(this.ERPObjects.TBillList, options);
+  }
+
   getAllAwaitingSupplierPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom,contactID) {
     let options = "";
     if(contactID != '' && contactID != undefined){

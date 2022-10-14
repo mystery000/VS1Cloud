@@ -106,7 +106,7 @@ Template.timesheetdetail.onRendered(function () {
     });
 
     data = data.response;
-   
+
     let employees = data.temployee.map(e => e.fields != undefined ? e.fields : e);
 
     try {
@@ -208,8 +208,7 @@ Template.timesheetdetail.onRendered(function () {
   this.loadEarningSelector = async () => {
     let earnings = await getEarnings();
     earnings  = earnings.map(earning => earning.fields);
-    console.log('earnings', earnings);
-    
+
     await this.earningOptions.set(earnings);
 
     setTimeout(() => {
