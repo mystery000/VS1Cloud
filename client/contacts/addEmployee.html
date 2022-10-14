@@ -389,7 +389,9 @@
                                                         <div class="col-12 col-md-3" style="padding: 0px;">
                                                             <div class="form-group" style="margin: 4px;">
                                                                 <label>Dashboard Options</label>
-                                                                <select class="form-control" id="edtDashboardOptions" name="edtDashboardOptions" style="cursor: pointer;">
+                                                                <select type="search" class="form-control" id="edtDashboardOptions" name="edtDashboardOptions" defaultlogin="All" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                </select>
+                                                                <!-- <select class="form-control" id="edtDashboardOptions" name="edtDashboardOptions" style="cursor: pointer;">
                                                                   {{#each item in dashboardOptionsList}}
                                                                       {{#if equals item record.dashboardOptions }}
                                                                           <option value="{{record.dashboardOptions}}" selected="">{{record.dashboardOptions}}</option>
@@ -397,7 +399,7 @@
                                                                           <option value="{{item}}">{{item}}</option>
                                                                       {{/if}}
                                                                   {{/each}}
-                                                              </select>
+                                                              </select> -->
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-md-2" style="padding: 0px;">
@@ -3678,6 +3680,10 @@
         {{> employeeproductlistpop}}
     </div>
 
+    <div class="modal fade" role="dialog" tabindex="-1" id="dashboardOptionListModal">
+        {{> dashboardoptionspopup}}
+    </div>
+
     <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
         {{> newproductpop}}
     </div>
@@ -3816,7 +3822,6 @@
     </div>
 
     {{> SelectPayCalendar }}
-
     <script>
         modalDraggable();
     </script>
