@@ -296,6 +296,15 @@ Template.departmentSettings.onRendered(function() {
                       action: function () {
                           $('#departmentList').DataTable().ajax.reload();
                       },
+                      language: { search: "",searchPlaceholder: "Search List..." },
+                      "fnInitComplete": function() {
+                       this.fnPageChange('last');
+                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#departmentList_filter");
+
+                       $("<button class='btn btn-primary btnRefreshdepartmentList' type='button' id='btnRefreshdepartmentList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#departmentList_filter");
+                      },
+
+
                       "fnDrawCallback": function (oSettings) {
                           setTimeout(function () {
                               MakeNegative();
@@ -473,6 +482,15 @@ Template.departmentSettings.onRendered(function() {
                 action: function () {
                     $('#departmentList').DataTable().ajax.reload();
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
+                "fnInitComplete": function() {
+                	this.fnPageChange('last');
+                	  $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#departmentList_filter");
+
+                	$("<button class='btn btn-primary btnRefreshdepartmentList' type='button' id='btnRefreshdepartmentList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#departmentList_filter");
+                },
+
+
                 "fnDrawCallback": function (oSettings) {
                     setTimeout(function () {
                         MakeNegative();
@@ -632,6 +650,16 @@ Template.departmentSettings.onRendered(function() {
                     action: function () {
                         $('#departmentList').DataTable().ajax.reload();
                     },
+                    language: { search: "",searchPlaceholder: "Search List..." },
+                    "fnInitComplete": function() {
+                    	this.fnPageChange('last');
+                    	  $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#departmentList_filter");
+
+                    	$("<button class='btn btn-primary btnRefreshdepartmentList' type='button' id='btnRefreshdepartmentList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#departmentList_filter");
+                    },
+
+
+
                     "fnDrawCallback": function (oSettings) {
                         setTimeout(function () {
                             MakeNegative();
