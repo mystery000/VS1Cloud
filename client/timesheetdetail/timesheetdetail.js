@@ -463,10 +463,13 @@ Template.timesheetdetail.onRendered(function () {
     if (res) {
       return await this._updateTimeSheetDetails(object);
     }
+    
 
     try {
       LoadingOverlay.show();
-      let tableDetails = JSON.stringify([object]);
+      let tableDetails = await this._getTimeSheetDetails(); // load from db
+      tableDetails.push(object);
+      tableDetails = JSON.stringify(tableDetails);
       await addVS1Data(erpObject.TTimeSheetDetails, tableDetails);
       LoadingOverlay.hide(0);
     } catch (e) {
