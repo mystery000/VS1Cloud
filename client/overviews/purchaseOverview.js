@@ -109,7 +109,7 @@ Template.purchasesoverview.onRendered(function () {
     }
     templateObject.displayfields.set(custFields);
   }
-  templateObject.initCustomFieldDisplaySettings("", "tblPurchaseOverview");
+  
   // custom field displaysettings
 
   let accountService = new AccountService();
@@ -198,7 +198,8 @@ Template.purchasesoverview.onRendered(function () {
     location.reload();
   };
 
-  templateObject.getAllPurchaseOrderAll = function () {
+  templateObject.getAllPurchaseOrderAll = async function () {
+    await templateObject.initCustomFieldDisplaySettings("", "tblPurchaseOverview");
     var currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
     let fromDateMonth = currentBeginDate.getMonth() + 1;
