@@ -5,6 +5,8 @@ import { ContactService } from "../../contacts/contact-service";
 let crmService = new CRMService();
 let sideBarService = new SideBarService();
 let contactService = new ContactService();
+let templateObject = Template.instance();
+var clickCount = 0;
 
 Template.alltaskdatatable.onCreated(function () {
   let templateObject = Template.instance();
@@ -145,7 +147,7 @@ Template.alltaskdatatable.onRendered(function () {
               $(td).attr("data-id", rowData[9]);
             },
             width: "100px",
-          }, 
+          },
           {
             targets: 3,
             className: "colSubDate openEditSubTaskModal",
@@ -400,7 +402,7 @@ Template.alltaskdatatable.onRendered(function () {
           // MakeNegative();
         }, 100);
       },
-      language: { search: "",searchPlaceholder: "Search List..." },
+      language: { search: "", searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchAllTaskDatatable' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>" +
@@ -632,7 +634,7 @@ Template.alltaskdatatable.onRendered(function () {
           // MakeNegative();
         }, 100);
       },
-      language: { search: "",searchPlaceholder: "Search List..." },
+      language: { search: "", searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchTodayTaskDatatable' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewTodayCompleted' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewTodayCompleted'>" +
@@ -823,7 +825,7 @@ Template.alltaskdatatable.onRendered(function () {
           // MakeNegative();
         }, 100);
       },
-      language: { search: "",searchPlaceholder: "Search List..." },
+      language: { search: "", searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchUpcomingTaskDatatable' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewUpcomingCompleted' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewUpcomingCompleted'>" +
@@ -975,7 +977,7 @@ Template.alltaskdatatable.onRendered(function () {
           contactService.getOneLeadDataEx(contactID).then(function (data) {
             return data;
           });
-  
+
         } else {
           let data = JSON.parse(dataObject[0].data);
           let useData = data.tprospectvs1;
@@ -990,7 +992,7 @@ Template.alltaskdatatable.onRendered(function () {
           return data;
         });
       });
-    } else { 
+    } else {
     }
     return null;
   }
@@ -1029,18 +1031,18 @@ Template.alltaskdatatable.onRendered(function () {
       tflag = `<i class="fas fa-flag task_modal_priority_${item.fields.priority}" data-id="${item.fields.ID}" aria-haspopup="true" aria-expanded="false"></i>`;
 
       // tempcode  need to add ContactName, AssignName fields to Tprojecttasks
-      if(item.fields.LeadID) {
+      if (item.fields.LeadID) {
         let cData = getContactDetailById(item.fields.LeadID, 'Lead');
         tcontact = cData ? cData.fields.ClientName : "";
-      } else if(item.fields.SupplierID) {
+      } else if (item.fields.SupplierID) {
         let cData = getContactDetailById(item.fields.SupplierID, 'Supplier');
         tcontact = cData ? cData.fields.ClientName : "";
-      } else if(item.fields.JobID) {
+      } else if (item.fields.JobID) {
         let cData = getContactDetailById(item.fields.LeadID, 'Job');
         tcontact = cData ? cData.fields.ClientName : "";
       } else {
 
-      } 
+      }
 
       if (item.fields.due_date == "" || item.fields.due_date == null) {
         td1 = "";
@@ -1433,7 +1435,7 @@ Template.alltaskdatatable.onRendered(function () {
       action: function () {
         $("#tblLabels").DataTable().ajax.reload();
       },
-      language: { search: "",searchPlaceholder: "Search List..." },
+      language: { search: "", searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnNewLabel' type='button' id='btnNewLabel' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus' style='margin-right: 5px'></i>New Label</button>"
@@ -1674,7 +1676,7 @@ Template.alltaskdatatable.onRendered(function () {
       action: function () {
         $("#tblProjectsDatatable").DataTable().ajax.reload();
       },
-      language: { search: "",searchPlaceholder: "Search List..." },
+      language: { search: "", searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchProjectsDatatable' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewProjectCompleted' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewProjectCompleted'>" +
@@ -1874,7 +1876,7 @@ Template.alltaskdatatable.onRendered(function () {
       action: function () {
         $("#tblProjectTasks").DataTable().ajax.reload();
       },
-      language: { search: "",searchPlaceholder: "Search List..." },
+      language: { search: "", searchPlaceholder: "Search List..." },
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchProjectTasksDatatable' type='button' id='btnRefreshProjectTasks' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
@@ -2313,7 +2315,7 @@ Template.alltaskdatatable.events({
     } else if (contactType == 'Supplier') {
       supplierID = contactID
     }
- 
+
     if (subTaskID) {
       var objDetails = {
         type: "Tprojecttasks",
@@ -3119,103 +3121,108 @@ Template.alltaskdatatable.events({
     });
   },
 
-  "dblclick #tblNewProjectsDatatable tbody tr": function (e) {
-    let id = e.target.dataset.id;
-    $("#editProjectID").val(id);
-
-    let templateObject = Template.instance();
-
-    if (id) {
-      $(".fullScreenSpin").css("display", "inline-block"); 
-      templateObject.view_projecttasks_completed.set("NO");
-
-      crmService.getTProjectDetail(id).then(function (data) {
-        $(".fullScreenSpin").css("display", "none");
-        if (data.fields.ID == id) { 
-
-          let projectName = data.fields.ProjectName;
-          let ProjectColour = data.fields.ProjectColour;
-          let ProjectDescription = data.fields.Description;
-
-          $("#editProjectID").val(id);
-          $("#editCrmProjectName").val(projectName);
-          $(".editCrmProjectName").html(projectName);
-          $("#editCrmProjectColor").val(ProjectColour);
-          $("#editCrmProjectDescription").val(ProjectDescription);
-
-          $("#editCrmProject").modal();
-        } else {
-          swal("Cannot edit this project", "", "warning");
-          return;
-        }
-      }).catch(function (err) {
-        $(".fullScreenSpin").css("display", "none");
-        swal("Cannot edit this project", "", "error");
-        return;
-      });
-    }
-  },
-
   // open task-project modal in projects table
   "click #tblNewProjectsDatatable tbody tr": function (e) {
-    if (e.target.classList.contains("no-modal")) { 
+    if (e.target.classList.contains("no-modal")) {
       e.preventDefault();
       return
     }
-
-    $("#newProjectTasksModal").modal("toggle");
-    let id = e.target.dataset.id;
-    $("#editProjectID").val(id);
     let templateObject = Template.instance();
 
-    if (id) {
-      $(".fullScreenSpin").css("display", "inline-block");
-      let active_projecttasks = [];
-      templateObject.view_projecttasks_completed.set("NO");
+    clickCount++;
+    if (clickCount == 1) {
+      setTimeout(function () {
+        if (clickCount == 1) {
 
-      crmService.getTProjectDetail(id).then(function (data) {
-        $(".fullScreenSpin").css("display", "none");
-        if (data.fields.ID == id) {
-          let selected_record = data.fields;
-
-          let projectName = data.fields.ProjectName;
-          let ProjectColour = data.fields.ProjectColour;
-          let ProjectDescription = data.fields.Description;
-
+          $("#newProjectTasksModal").modal("toggle");
+          let id = e.target.dataset.id;
           $("#editProjectID").val(id);
-          $("#editCrmProjectName").val(projectName);
-          $(".editCrmProjectName").html(projectName);
-          $("#editCrmProjectColor").val(ProjectColour);
-          $("#editCrmProjectDescription").val(ProjectDescription);
 
-          // set task list
-          let projecttasks = [];
-          if (selected_record.projecttasks) {
-            if (selected_record.projecttasks.fields == undefined) {
-              projecttasks = selected_record.projecttasks;
-            } else {
-              projecttasks.push(selected_record.projecttasks);
-            }
+          if (id) {
+            $(".fullScreenSpin").css("display", "inline-block");
+            let active_projecttasks = [];
+            templateObject.view_projecttasks_completed.set("NO");
 
-            active_projecttasks = projecttasks.filter(
-              (item) =>
-                item.fields.Active == true && item.fields.Completed == false
-            );
+            crmService.getTProjectDetail(id).then(function (data) {
+              $(".fullScreenSpin").css("display", "none");
+              if (data.fields.ID == id) {
+                let selected_record = data.fields;
+
+                let projectName = data.fields.ProjectName;
+                let ProjectColour = data.fields.ProjectColour;
+                let ProjectDescription = data.fields.Description;
+
+                $("#editProjectID").val(id);
+                $("#editCrmProjectName").val(projectName);
+                $(".editCrmProjectName").html(projectName);
+                $("#editCrmProjectColor").val(ProjectColour);
+                $("#editCrmProjectDescription").val(ProjectDescription);
+
+                // set task list
+                let projecttasks = [];
+                if (selected_record.projecttasks) {
+                  if (selected_record.projecttasks.fields == undefined) {
+                    projecttasks = selected_record.projecttasks;
+                  } else {
+                    projecttasks.push(selected_record.projecttasks);
+                  }
+
+                  active_projecttasks = projecttasks.filter(
+                    (item) =>
+                      item.fields.Active == true && item.fields.Completed == false
+                  );
+                }
+                templateObject.projecttasks.set(projecttasks);
+                templateObject.active_projecttasks.set(active_projecttasks);
+
+                // $("#tblProjectTasksBody").html(tr);
+                templateObject.initProjectTasksTable();
+              } else {
+                swal("Cannot edit this project", "", "warning");
+                return;
+              }
+            }).catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+              swal(err, "", "error");
+              return;
+            });
           }
-          templateObject.projecttasks.set(projecttasks);
-          templateObject.active_projecttasks.set(active_projecttasks);
-
-          // $("#tblProjectTasksBody").html(tr);
-          templateObject.initProjectTasksTable();
         } else {
-          swal("Cannot edit this project", "", "warning");
-          return;
+          let id = e.target.dataset.id;
+          $("#editProjectID").val(id); 
+
+          if (id) {
+            $(".fullScreenSpin").css("display", "inline-block");
+            templateObject.view_projecttasks_completed.set("NO");
+
+            crmService.getTProjectDetail(id).then(function (data) {
+              $(".fullScreenSpin").css("display", "none");
+              if (data.fields.ID == id) {
+
+                let projectName = data.fields.ProjectName;
+                let ProjectColour = data.fields.ProjectColour;
+                let ProjectDescription = data.fields.Description;
+
+                $("#editProjectID").val(id);
+                $("#editCrmProjectName").val(projectName);
+                $(".editCrmProjectName").html(projectName);
+                $("#editCrmProjectColor").val(ProjectColour);
+                $("#editCrmProjectDescription").val(ProjectDescription);
+
+                $("#editCrmProject").modal();
+              } else {
+                swal("Cannot edit this project", "", "warning");
+                return;
+              }
+            }).catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+              swal("Cannot edit this project", "", "error");
+              return;
+            });
+          }
         }
-      }).catch(function (err) {
-        $(".fullScreenSpin").css("display", "none");
-        swal(err, "", "error");
-        return;
-      });
+        clickCount = 0;
+      }, 300);
     }
   },
 
@@ -3899,7 +3906,7 @@ function openEditTaskModal(id, type) {
               </a>`
       );
 
-      if(projectName) {
+      if (projectName) {
         $('.taskDetailProjectName').show();
       } else {
         $('.taskDetailProjectName').hide();
@@ -4236,7 +4243,7 @@ function openEditTaskModal(id, type) {
       getContactData(contactID, contactType);
 
       // tempcode add code for getting assigned employee name
-      
+
       // tempcode add code for getting assigned employee name
 
     } else {
