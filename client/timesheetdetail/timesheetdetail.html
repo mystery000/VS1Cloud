@@ -295,6 +295,31 @@
                               
                                <td><button type="button" class="btn btn-danger btn-rounded btn-sm btnDeleteRow" data-id="1" autocomplete="off"><i class="fa fa-remove"></i></button></td>
                             </tr>
+
+                            {{#if timeSheetDetails}}
+                                {{#each t in timeSheetDetails.dailyHours}}
+                                <tr>
+                                    <td style="width: 250px; display: flex;">
+                                    <!-- <select style="width: auto;" class="es-input form-control">
+                                        <option>Select</option>
+                                        {{#if earningOptions}}
+                                            {{#each option in earningOptions}}
+                                                <option value="{{option.value}}">{{option.text}}</option>
+                                            {{/each}}
+                                        {{/if}}
+                                    </select> -->
+                                    <input value="{{ t.earningRateName }}" class="es-input --highlightSelect-- select-rate-js form-control" type="search" autocomplete="off">
+                                    </td>
+                                    {{#if earningDays}}
+                                        {{#each day in earningDays}}
+                                            <td><input class="hours form-control" date="{{day.index}}" type="text" value="{{indexMatchedHours day t.dailyHours}}"></td>
+                                        {{/each}}
+                                    {{/if}}
+                                
+                                    <td><button type="button" class="btn btn-danger btn-rounded btn-sm btnDeleteRow" data-id="1" autocomplete="off"><i class="fa fa-remove"></i></button></td>
+                                </tr>
+                                {{/each}}
+                             {{/if}}
                            
                             <!-- <tr>
                                <td>

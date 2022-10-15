@@ -1004,7 +1004,6 @@ Template.employeescard.onRendered(function () {
             selectedProducts = selectedProducts.filter(element => {
                 return element !== undefined;
             });
-            console.log("selected products", selectedProducts);
 
 
 

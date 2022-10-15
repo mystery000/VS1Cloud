@@ -278,35 +278,10 @@ Template.workorderlist.onRendered (function() {
         // templateObject.tableheaderrecords.set(tableHeaderList);
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
         $('#tblWorkorderList tbody').on('click', 'tr', function () {
-            // console.log('clicked')
             var listData = $(this).closest('tr').find('.colOrderNumber').text();
             var id = $(this).closest('tr').find('.colId').text();
             FlowRouter.go('/workordercard?id='+id)
-            // console.log('list data', listData)
-            // // getVS1Data('TSalesOrderEx').then(function(dataObject){
-            // //     if(dataObject.length == 0) {
-            // //         console.log('dasdas 0000')
-            // //         accountService.getOneSalesOrderdataEx(listData).then(function(data){
-            // //           FlowRouter.go('/workordercard?id=' + listData + "&lineId="+ data.fields.ID)
-            // //         })
-            // //     }else{
-            // //         console.log('sadasdasda not 0000')
-            // //         let data = JSON.parse(dataObject[0].data);
-            // //         let useData = data.tsalesorderex;
-            // //         FlowRouter.go('/workordercard?id=' + listData + "&lineId="+ useData.fields.ID)
-            // //     }}).catch(function(err) {
-            // //         console.log("ereere", err)
-            // //         accountService.getOneSalesOrderdataEx(listData).then(function(data){
-            // //             console.log('data', data.fields.ID)
-            // //             FlowRouter.go('/workordercard?id=' + listData + "&lineId="+ data.fields.ID)
-            // //         }).catch((error)=>console.log(error))
-            // //     })
-            
-            // let workorderlists = templateObject.datatablerecords.get();
-            // let index = workorderlists.findIndex(workorder => {
-            //     return workorder.ID == listData;
-            // })
-            // FlowRouter.go('/workordercard?id=' + index)
+
         });
 
         // templateObject.getCustomFieldData();
@@ -321,7 +296,7 @@ Template.workorderlist.onRendered (function() {
         let customData = {};
         let customFieldCount = 11;
         let listType = "ltWorkorderList";
-  
+
         let reset_data = [
           { label: 'Name', class: 'colName', active: true },
           { label: 'Description', class: 'colDescription', active: true },
@@ -335,7 +310,7 @@ Template.workorderlist.onRendered (function() {
           { label: 'Total Hourly Costs', class: 'colTotalHourlyCosts', active: true },
           { label: 'Inventory Asset Wastage', class: 'colWastage', active: true },
         ];
-  
+
         sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
           for (let x = 0; x < data.tcustomfieldlist.length; x++) {
             if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
@@ -362,7 +337,7 @@ Template.workorderlist.onRendered (function() {
               dispFields.push(customData);
             }
           }
-  
+
           if (custFields.length < 3) {
             let remainder = 3 - custFields.length;
             let getRemCustomFields = parseInt(custFields.length);
@@ -380,7 +355,7 @@ Template.workorderlist.onRendered (function() {
               custFields.push(customData);
             }
           }
-  
+
           if (dispFields.length < customFieldCount) {
             let remainder = customFieldCount - dispFields.length;
             let getRemCustomFields = parseInt(dispFields.length);
@@ -398,20 +373,20 @@ Template.workorderlist.onRendered (function() {
               dispFields.push(customData);
             }
           }
-  
+
           for (let index = 0; index < custFields.length; index++) {
             const element = custFields[index];
             dispFields.push(element);
-  
+
           }
-  
+
           templateObject.custfields.set(custFields);
           templateObject.displayfields.set(dispFields);
-  
+
         })
       }
 
-    
+
 });
 
 Template.workorderlist.helpers ({
@@ -424,7 +399,7 @@ Template.workorderlist.helpers ({
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
     }
-    
+
 })
 
 
@@ -510,7 +485,7 @@ Template.workorderlist.events({
         //         width: colWidth,
         //         thclass: colthClass
         //     }
-    
+
         //     lineItems.push(lineItemObj);
 
         //     if(fieldID && parseInt(fieldID) != 0){
@@ -573,16 +548,16 @@ Template.workorderlist.events({
             { label: 'Sale Date', class: 'colSaleDate', active: true },
             { label: 'Due Date', class: 'colDueDate', active: true },
         ];
-  
+
         $('.displaySettings').each(function(index) {
           var $tblrow = $(this);
           $tblrow.find(".divcolumn").text(reset_data[index].label);
           $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
-  
+
           // var title = datable.column( index+1 ).header();
           var title = $('#tblWorkorderList').find('th').eq(index + 1);
           $(title).html(reset_data[index].label);
-  
+
           if (reset_data[index].active) {
             $('.' + reset_data[index].class).css('display', 'table-cell');
             $('.' + reset_data[index].class).css('padding', '.75rem');
@@ -590,13 +565,13 @@ Template.workorderlist.events({
           } else {
             $('.' + reset_data[index].class).css('display', 'none');
           }
-  
+
         });
-  
+
       },
 
 
-      
+
     'click .workorderList .btnRefresh': function(e) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -605,19 +580,19 @@ Template.workorderlist.events({
             window.open('/workorderlist', '_self');
             }, 3000);
         },
-    
+
         'click .workorderList #exportbtn': function() {
             $('.fullScreenSpin').css('display', 'inline-block');
             jQuery('#tblWorkorderList_wrapper .dt-buttons .btntabletocsv').click();
             $('.fullScreenSpin').css('display', 'none');
         },
-    
+
         'click .workorderList .printConfirm': function() {
             $('.fullScreenSpin').css('display', 'inline-block');
             jQuery('#tblWorkorderList_wrapper .dt-buttons .btntabletopdf').click();
             $('.fullScreenSpin').css('display', 'none');
         },
-    
+
         'click .workorderList #btnNewWorkorder': function (e) {
             FlowRouter.go('/workordercard');
         }

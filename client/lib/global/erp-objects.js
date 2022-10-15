@@ -280,6 +280,7 @@ const erpObject = {
     TPayrollSettingOvertimes: "TPayrollSettingOvertimes",
     TRateTypes: "TRateTypes",
     TEarningData: "TEarningData",
+    TTimeSheetDetails: "TTimeSheetDetails"
 };
 
 export default erpObject;

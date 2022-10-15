@@ -258,10 +258,7 @@
 
                                                             }
                                                         }
-                                                        .table-responsive {
-                                                            overflow-y: hidden;
-                                                        } 
-                                                    </style> 
+                                                    </style>
 
                                                     {{#each displayfield in displayfields}}
                                                     {{#if displayfield.display}}
@@ -275,7 +272,7 @@
                                                           <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                           <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
                                                       </div>
-                                                    </div> 
+                                                    </div>
                                                     {{/if}}
                                                     {{/each}}
                                                 </div>
@@ -364,14 +361,13 @@
                 <table id="tblPurchaseOverview" style="width:100%" class="dataTable table table-striped table-bordered tblPurchaseOverview">
                     <thead>
                         <tr class="dnd-moved">
-                            <th class="th colSortDate hiddenColumn">id</th>
                             {{#each displayfield in displayfields}}
                               {{#if displayfield.display}}
-                              <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
-                                  {{displayfield.custfieldlabel}} 
+                              <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                                  {{displayfield.custfieldlabel}}
                                 </th>
                               {{/if}}
-                            {{/each}}   
+                            {{/each}}
                         </tr>
                     </thead>
                     <tbody>
