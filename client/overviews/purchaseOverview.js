@@ -2483,4 +2483,12 @@ Template.purchasesoverview.helpers({
   displayfields: () => {
     return Template.instance().displayfields.get();
   },
+
+  checkDisplayColumn( item ){
+     if( item.active == true && item.display == true ){
+      return true;
+     }
+     return false
+  }
+
 });
