@@ -249,6 +249,11 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colPriority openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
+            if (rowData[13] != 'transparent') {
+              $(td).css('background-color', rowData[13]);
+              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            }
           },
           width: "100px",
         },
@@ -258,6 +263,11 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colContact openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
+            if (rowData[13] != 'transparent') {
+              $(td).css('background-color', rowData[13]);
+              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            }
           },
           width: "100px",
         },
@@ -266,6 +276,11 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colDate openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
+            if (rowData[13] != 'transparent') {
+              $(td).css('background-color', rowData[13]);
+              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            }
           },
           width: "120px",
         },
@@ -274,6 +289,11 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colTaskName openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
+            if (rowData[13] != 'transparent') {
+              $(td).css('background-color', rowData[13]);
+              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            }
           },
         },
         {
@@ -281,6 +301,11 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colTaskDesc openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
+            if (rowData[13] != 'transparent') {
+              $(td).css('background-color', rowData[13]);
+              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            }
           },
         },
         {
@@ -288,6 +313,11 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colTaskLabels openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
+            if (rowData[13] != 'transparent') {
+              $(td).css('background-color', rowData[13]);
+              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            }
           },
         },
         {
@@ -295,8 +325,13 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colTaskProjects openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
-            $(td).css('background', rowData[13]);
-            $(td).css('color', '#ffffff');
+            // $(td).css('background', rowData[13]);
+            // $(td).css('color', '#ffffff');
+            if (rowData[13] != 'transparent') {
+              $(td).css('background-color', rowData[13]);
+              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            }
           },
         },
         {
@@ -305,6 +340,11 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colTaskActions",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
+            if (rowData[13] != 'transparent') {
+              $(td).css('background-color', rowData[13]);
+              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            }
           },
           width: "150px",
         },
@@ -3019,6 +3059,16 @@ Template.alltaskdatatable.events({
     }
   },
 
+  "click #editCrmProjectColor": function (e) {
+    console.log('editCrmProjectColor click');
+    $('button').each(function () {
+      var target = $(this);
+      if (target.text() == 'Other...' || target.val() == 'Other...') {
+        target.remove();
+      }
+    });
+  },
+
   // submit edit project
   "click .btnEditCrmProject": function (e) {
     let id = $("#editProjectID").val();
@@ -3189,7 +3239,7 @@ Template.alltaskdatatable.events({
           }
         } else {
           let id = e.target.dataset.id;
-          $("#editProjectID").val(id); 
+          $("#editProjectID").val(id);
 
           if (id) {
             $(".fullScreenSpin").css("display", "inline-block");
@@ -3210,6 +3260,7 @@ Template.alltaskdatatable.events({
                 $("#editCrmProjectDescription").val(ProjectDescription);
 
                 $("#editCrmProject").modal();
+
               } else {
                 swal("Cannot edit this project", "", "warning");
                 return;
