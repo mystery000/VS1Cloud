@@ -2,9 +2,11 @@ import "../lib/global/indexdbstorage.js";
 
 import { CRMService } from "./crm-service";
 import { ContactService } from "../contacts/contact-service";
+import { TaxRateService } from "../../client/settings/settings-service"
 
 let crmService = new CRMService();
 const contactService = new ContactService();
+const settingService = new TaxRateService();
 
 Template.crmoverview.onCreated(function () {
   let templateObject = Template.instance();
@@ -549,31 +551,34 @@ Template.crmoverview.onRendered(function () {
   });
   ///////////////////////////////////////////////////
 
-  // templateObject.getSettingsList = async function () { 
-  //   let data = [];
-  //   let details = [];
-  //   let dataObject = await getVS1Data('TERPPreference')
-  //   if (dataObject.length > 0) {
-  //     data = JSON.parse(dataObject[0].data);
-  //     details = data.terppreference.filter(function (item) {
-  //       if (settingFields.includes(item.PrefName)) {
-  //         return item;
-  //       }
-  //     });
-  //   }
-  //   if (details.length == 0) {
-  //     prefSettings = await settingService.getPreferenceSettings(settingFields);
-  //     details = prefSettings.terppreference;
-  //     data.terppreference.push(...details);
-  //     await addVS1Data('TERPPreference', JSON.stringify(data))
-  //   }
+  templateObject.getSettingsList = async function () {
+    let data = [];
+    let details = [];
+    const settingFields = ['VS1MailchimpApiKey', 'VS1MailchimpAudienceID', 'VS1MailchimpCampaignID'];
+    let dataObject = await getVS1Data('TERPPreference')
+    if (dataObject.length > 0) {
+      data = JSON.parse(dataObject[0].data);
+      details = data.terppreference.filter(function (item) {
+        if (settingFields.includes(item.PrefName)) {
+          return item;
+        }
+      });
+    }
+    if (details.length == 0) {
+      prefSettings = await settingService.getPreferenceSettings(settingFields);
+      details = prefSettings.terppreference;
+      data.terppreference.push(...details);
+      await addVS1Data('TERPPreference', JSON.stringify(data))
+    }
 
-  //   if (details.length > 0) {
-  //     templateObject.settingDetails.set(details); 
-  //   }  
-  // };
-  // templateObject.getSettingsList();
-  
+    if (details.length > 0) {
+      templateObject.settingDetails.set(details);
+    }
+    $('.fullScreenSpin').css('display', 'none');
+
+  };
+
+  templateObject.getSettingsList();
 });
 
 Template.crmoverview.events({
@@ -820,7 +825,7 @@ Template.crmoverview.events({
     Template.instance().currentTabID.set(e.target.id);
   },
 
-  "click #btn_send_to_mailchimp": function (e) {
+  "click #btn_send_to_mailchimp": async function (e) {
     let isCustomer = "off";
     let isSupplier = "off";
     let isEmployee = "off";
@@ -834,7 +839,18 @@ Template.crmoverview.events({
       isEmployee = "on";
     }
     $(".fullScreenSpin").css("display", "inline-block");
+
     try {
+
+      let templateObject = Template.instance();
+      let settingDetails = templateObject.settingDetails.get();
+
+      if (!settingDetails) {
+        swal("Mail Chimp Account not setup yet, do you wish to create the account now", "", "info");
+        $(".fullScreenSpin").css("display", "none");
+        return;
+      }
+
       var erpGet = erpDb();
       Meteor.call('createListMembers', erpGet, isSupplier, isCustomer, isEmployee, function (error, result) {
         if (error !== undefined) {
