@@ -369,6 +369,14 @@ authenticatedRoutes.route('/payrolloverview', {
         });
     }
 });
+authenticatedRoutes.route('/payrollleave', {
+    name: 'payrollleave',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'payrollleave'
+        });
+    }
+});
 
 authenticatedRoutes.route('/timesheetdetail', {
     name: 'timesheetdetail',
