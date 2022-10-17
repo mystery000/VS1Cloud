@@ -1493,6 +1493,8 @@ Template.purchasesoverview.onRendered(function () {
 
     }
 
+    console.log('curfields', custFields);
+    console.log('disp field', dispFields);
     templateObject.custfields.set(custFields);
     templateObject.displayfields.set(dispFields);
   }
@@ -1520,8 +1522,188 @@ Template.purchasesoverview.onRendered(function () {
       }
   }
 
-  templateObject.getAllCustomFieldDisplaySettings();
+  
 
+  templateObject.initDatatable = () => {
+    setTimeout(function () {
+      $(".fullScreenSpin").css("display", "none");
+      $("#tblPurchaseOverview").DataTable({
+          columnDefs: [
+            {
+              type: "date",
+              targets: 0,
+            },
+          ],
+          sDom: "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+          buttons: [
+            {
+              extend: "excelHtml5",
+              text: "",
+              download: "open",
+              className: "btntabletocsv hiddenColumn",
+              filename: "Purchase Overview List - " + moment().format(),
+              orientation: "portrait",
+              exportOptions: {
+                columns: ":visible",
+                format: {
+                  body: function (data, row, column) {
+                    if (data.includes("</span>")) {
+                      var res = data.split("</span>");
+                      data = res[1];
+                    }
+
+                    return column == 1
+                      ? data.replace(/<.*?>/gi, "")
+                      : data;
+                  },
+                },
+              },
+            },
+            {
+              extend: "print",
+              download: "open",
+              className: "btntabletopdf hiddenColumn",
+              text: "",
+              title: "Purchase Overview",
+              filename: "Purchase Overview List - " + moment().format(),
+              exportOptions: {
+                columns: ":visible",
+                stripHtml: false,
+              },
+            },
+          ],
+          select: true,
+          destroy: true,
+          colReorder: true,
+          pageLength: initialDatatableLoad,
+          bLengthChange: false,
+          lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
+          info: true,
+          responsive: true,
+          order: [[0, "desc"],[2, "desc"],],
+          action: function () {
+            $("#tblPurchaseOverview").DataTable().ajax.reload();
+          },
+          fnDrawCallback: function (oSettings) {
+            let checkurlIgnoreDate =
+              FlowRouter.current().queryParams.ignoredate;
+            $(".paginate_button.page-item").removeClass("disabled");
+            $("#tblPurchaseOverview_ellipsis").addClass("disabled");
+
+            if (oSettings._iDisplayLength == -1) {
+              if (oSettings.fnRecordsDisplay() > 150) {
+                $(".paginate_button.page-item.previous").addClass(
+                  "disabled"
+                );
+                $(".paginate_button.page-item.next").addClass(
+                  "disabled"
+                );
+              }
+            } else {
+            }
+            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+              $(".paginate_button.page-item.next").addClass("disabled");
+            }
+            $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function () {
+              $(".fullScreenSpin").css("display", "inline-block");
+              let dataLenght = oSettings._iDisplayLength;
+
+              var dateFrom = new Date(
+                $("#dateFrom").datepicker("getDate")
+              );
+              var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+              let formatDateFrom = dateFrom.getFullYear() +"-" +(dateFrom.getMonth() + 1) +"-" +dateFrom.getDate();
+              let formatDateTo =dateTo.getFullYear() +"-" +(dateTo.getMonth() + 1) +"-" +dateTo.getDate();
+              if(data.Params.IgnoreDates == true){
+                sideBarService.getAllPurchasesList(formatDateFrom,formatDateTo,true,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                    getVS1Data("TPurchasesList").then(function (dataObjectold) {
+                        if (dataObjectold.length == 0) {
+                        } else {
+                          let dataOld = JSON.parse(dataObjectold[0].data);
+                          var thirdaryData = $.merge($.merge([], dataObjectnew.tbilllist),dataOld.tbilllist);
+                          let objCombineData = {
+                            Params: dataOld.Params,
+                            tbilllist: thirdaryData,
+                          };
+
+                          addVS1Data("TPurchasesList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                              templateObject.resetData(objCombineData);
+                              $(".fullScreenSpin").css("display","none");
+                            }).catch(function (err) {
+                              $(".fullScreenSpin").css("display","none");
+                            });
+                        }
+                      }).catch(function (err) {});
+                  }).catch(function (err) {
+                    $(".fullScreenSpin").css("display", "none");
+                  });
+              } else {
+                sideBarService.getAllPurchasesList(formatDateFrom,formatDateTo,false,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                    getVS1Data("TPurchasesList").then(function (dataObjectold) {
+                        if (dataObjectold.length == 0) {
+                        } else {
+                          let dataOld = JSON.parse(dataObjectold[0].data);
+                          var thirdaryData = $.merge($.merge([], dataObjectnew.tbilllist),dataOld.tbilllist);
+                          let objCombineData = {
+                            Params: dataOld.Params,
+                            tbilllist: thirdaryData,
+                          };
+
+                          addVS1Data("TPurchasesList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                              templateObject.resetData(objCombineData);
+                              $(".fullScreenSpin").css("display","none");
+                            }).catch(function (err) {
+                              $(".fullScreenSpin").css("display","none");
+                            });
+                        }
+                      }).catch(function (err) {});
+                  }).catch(function (err) {
+                    $(".fullScreenSpin").css("display", "none");
+                  });
+              }
+            });
+
+            //}
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+          },
+          language: { search: "",searchPlaceholder: "Search List..." },
+          fnInitComplete: function () {
+            this.fnPageChange('last');
+            if(data.Params.Search.replace(/\s/g, "") == ""){
+              $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPurchaseOverview_filter");
+            }else{
+              $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPurchaseOverview_filter");
+            }
+            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshPurchaseOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPurchaseOverview_filter");
+
+            $(".myvarFilterForm").appendTo(".colDateFilter");
+          },
+          fnInfoCallback: function (oSettings,iStart,iEnd,iMax,iTotal,sPre) {
+            let countTableData = data.Params.Count || 0; //get count from API data
+            return ("Showing " +iStart +" to " +iEnd +" of " +countTableData);
+          },
+        }).on("page", function () {
+          setTimeout(function () {
+            MakeNegative();
+          }, 100);
+        }).on("column-reorder", function () {});
+      $(".fullScreenSpin").css("display", "none");
+      $("div.dataTables_filter input").addClass(
+        "form-control form-control-sm"
+      );
+    }, 0);
+  }
+
+  
+  templateObject.initPage = async () => {
+    await templateObject.getAllCustomFieldDisplaySettings();
+    await templateObject.initDatatable();
+  };
+
+  templateObject.initPage();
 });
 
 Template.purchasesoverview.events({
@@ -2327,8 +2509,8 @@ Template.purchasesoverview.helpers({
     return Template.instance().displayfields.get();
   },
 
-  checkDisplayColumn( item ){
-     if( item.active == true && item.display == true ){
+  checkDisplayColumn: ( item ) => {
+     if( item.active == true ){
       return true;
      }
      return false
