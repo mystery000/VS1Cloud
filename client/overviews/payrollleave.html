@@ -196,103 +196,56 @@
                                     </div>
                                     <div class="payrollList">
                                         <h3>To review</h3>
-                                        <div class="singleList">
-                                            <div class="previewIcon">
-                                                <span>OG</span>
-                                            </div>
-                                            <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
-                                                <p><strong>Oliver Gray</strong> Annual Leave</p>
-                                                <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
-                                            </a>
-                                            <div class="payrollAction">
-                                                <a class="btn btn-primary" data-toggle="dropdown" href="#">
-                                                    Approve
-                                                </a>
-                                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
-                                                <div class="dropdown-menu daterange" role="menu">
-                                                    <a class="dropdown-item" id="today" role="presentation">Edit</a>
-                                                    <a class="dropdown-item" id="today" role="presentation">Reject</a>
+                             
+                                        {{#if leaveRequestToReview}}
+                                            {{#each leave in leaveRequestToReview}}
+                                                <div class="singleList">
+                                                    <div class="previewIcon">
+                                                        <span>OG</span>
+                                                    </div>
+                                                    <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
+                                                        <p><strong>Oliver Gray</strong> Annual Leave</p>
+                                                        <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
+                                                    </a>
+                                                    <div class="payrollAction">
+                                                        <a class="btn btn-primary" data-toggle="dropdown" href="#">
+                                                            Approve
+                                                        </a>
+                                                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
+                                                        <div class="dropdown-menu daterange" role="menu">
+                                                            <a class="dropdown-item" id="today" role="presentation">Edit</a>
+                                                            <a class="dropdown-item" id="today" role="presentation">Reject</a>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="singleList">
-                                            <div class="previewIcon">
-                                                <span>OG</span>
-                                            </div>
-                                            <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
-                                                <p><strong>Oliver Gray</strong> Annual Leave</p>
-                                                <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
-                                            </a>
-                                            <div class="payrollAction">
-                                                <a class="btn btn-primary" data-toggle="dropdown" href="#">
-                                                    Approve
-                                                </a>
-                                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
-                                                <div class="dropdown-menu daterange" role="menu">
-                                                    <a class="dropdown-item" id="today" role="presentation">Edit</a>
-                                                    <a class="dropdown-item" id="today" role="presentation">Reject</a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                            {{/each}}
+                                        {{/if}}
                                         
                                         <h3>Upcoming</h3>
-                                        <div class="singleList">
-                                            <div class="previewIcon">
-                                                <span>OG</span>
-                                            </div>
-                                            <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
-                                                <p><strong>Oliver Gray</strong> Annual Leave</p>
-                                                <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
-                                            </a>
-                                            <div class="payrollAction">
-                                                <a class="btn btn-primary" data-toggle="dropdown" href="#">
-                                                    Approve
-                                                </a>
-                                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
-                                                <div class="dropdown-menu daterange" role="menu">
-                                                    <a class="dropdown-item" id="today" role="presentation">Edit</a>
-                                                    <a class="dropdown-item" id="today" role="presentation">Reject</a>
+                                        {{#if leaveRequestUpComming}}
+                                            {{#each leave in leaveRequestUpComming}}
+                                                <div class="singleList">
+                                                    <div class="previewIcon">
+                                                        <span>OG</span>
+                                                    </div>
+                                                    <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
+                                                        <p><strong>Oliver Gray</strong> Annual Leave</p>
+                                                        <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
+                                                    </a>
+                                                    <div class="payrollAction">
+                                                        <a class="btn btn-primary" data-toggle="dropdown" href="#">
+                                                            Approve
+                                                        </a>
+                                                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
+                                                        <div class="dropdown-menu daterange" role="menu">
+                                                            <a class="dropdown-item" id="today" role="presentation">Edit</a>
+                                                            <a class="dropdown-item" id="today" role="presentation">Reject</a>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="singleList">
-                                            <div class="previewIcon">
-                                                <span>OG</span>
-                                            </div>
-                                            <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
-                                                <p><strong>Oliver Gray</strong> Annual Leave</p>
-                                                <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
-                                            </a>
-                                            <div class="payrollAction">
-                                                <a class="btn btn-primary" data-toggle="dropdown" href="#">
-                                                    Approve
-                                                </a>
-                                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
-                                                <div class="dropdown-menu daterange" role="menu">
-                                                    <a class="dropdown-item" id="today" role="presentation">Edit</a>
-                                                    <a class="dropdown-item" id="today" role="presentation">Reject</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="singleList">
-                                            <div class="previewIcon">
-                                                <span>OG</span>
-                                            </div>
-                                            <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
-                                                <p><strong>Oliver Gray</strong> Annual Leave</p>
-                                                <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
-                                            </a>
-                                            <div class="payrollAction">
-                                                <a class="btn btn-primary" data-toggle="dropdown" href="#">
-                                                    Approve
-                                                </a>
-                                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
-                                                <div class="dropdown-menu daterange" role="menu">
-                                                    <a class="dropdown-item" id="today" role="presentation">Edit</a>
-                                                    <a class="dropdown-item" id="today" role="presentation">Reject</a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                            {{/each}}
+                                        {{/if}}
+                                      
                                     </div>
                                 </div>
 
@@ -324,21 +277,25 @@
                                         </div>
                                     </div>
                                     <div class="payrollList mt-3">
-                                        <div class="singleList">
-                                            <div class="previewIcon">
-                                                <span>OG</span>
-                                            </div>
-                                            <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
-                                                <p><strong>Oliver Gray</strong> Annual Leave <span class="rejected">Rejected</span></p>
-                                                <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
-                                            </a>
-                                            <div class="payrollAction width30">
-                                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
-                                                <div class="dropdown-menu daterange" role="menu">
-                                                    <a class="dropdown-item" id="today" role="presentation">View</a>
+                                        {{#if leaveRequestHistory}}
+                                            {{#each leave in leaveRequestHistory}}
+                                                <div class="singleList">
+                                                    <div class="previewIcon">
+                                                        <span>OG</span>
+                                                    </div>
+                                                    <a role="button" class="payrolContent" data-toggle="modal" href="#payrollModalEdit">
+                                                        <p><strong>Oliver Gray</strong> Annual Leave <span class="rejected">Rejected</span></p>
+                                                        <p>23 Nov 2022 <span class="dotIcon">•</span> Trip to Sydney</p>
+                                                    </a>
+                                                    <div class="payrollAction width30">
+                                                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
+                                                        <div class="dropdown-menu daterange" role="menu">
+                                                            <a class="dropdown-item" id="today" role="presentation">View</a>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                            {{/each}}
+                                        {{/if}}
                                     </div>
                                 </div>
 
