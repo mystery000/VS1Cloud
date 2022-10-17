@@ -133,6 +133,14 @@ Template.subTaxesSettings.onRendered(function () {
                 colReorder: {
                   fixedColumnsRight: 1,
                 },
+                language: { search: "",searchPlaceholder: "Search List..." },
+                fnInitComplete: function () {
+                  $(
+                    "<button class='btn btn-primary btnSearchtaxratesettings btnSearchtaxRatesList' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>" +
+                    btnFilterName +
+                    "</span></button>"
+                  ).insertAfter("#taxRatesList_filter");
+                },
                 // bStateSave: true,
                 // rowId: 0,
                 // pageLength: 25,
@@ -275,6 +283,14 @@ Template.subTaxesSettings.onRendered(function () {
             colReorder: {
               fixedColumnsRight: 1
             },
+            language: { search: "",searchPlaceholder: "Search List..." },
+            fnInitComplete: function () {
+              $(
+                "<button class='btn btn-primary btnSearchtaxratesettings btnSearchtaxRatesList' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>" +
+                btnFilterName +
+                "</span></button>"
+              ).insertAfter("#taxRatesList_filter");
+            },
             // bStateSave: true,
             // rowId: 0,
             // pageLength: 25,
@@ -415,6 +431,14 @@ Template.subTaxesSettings.onRendered(function () {
             // colReorder: true,
             colReorder: {
               fixedColumnsRight: 1
+            },
+            language: { search: "",searchPlaceholder: "Search List..." },
+            fnInitComplete: function () {
+              $(
+                "<button class='btn btn-primary btnSearchtaxratesettings btnSearchtaxRatesList' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>" +
+                btnFilterName +
+                "</span></button>"
+              ).insertAfter("#taxRatesList_filter");
             },
             // bStateSave: true,
             // rowId: 0,
