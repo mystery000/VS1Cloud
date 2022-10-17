@@ -1493,8 +1493,6 @@ Template.purchasesoverview.onRendered(function () {
 
     }
 
-    console.log('curfields', custFields);
-    console.log('disp field', dispFields);
     templateObject.custfields.set(custFields);
     templateObject.displayfields.set(dispFields);
   }
