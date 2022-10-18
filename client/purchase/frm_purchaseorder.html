@@ -1308,7 +1308,7 @@
                                           </div>
                                           <div class="modal-footer">
                                               <button class="btn btn-success btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                              <button class="btn btn-warning btnResetGridSettings" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                                              <button class="btn btn-warning btnResetGridSettings"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
                                               <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                           </div>
                                       </div>
@@ -1564,6 +1564,8 @@
                                           <td contenteditable="false" class="lineAmt convert-to-foreign colAmountInc colAmount {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{convertToForeignAmount item.TotalAmtInc}}</td>
 
                                           {{/if}}
+
+                                          <td class="th colFixedAsset {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnFixedAsset"  style="margin-left: 40px; font-size: 22px;" ></i></td>
 
                                           <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
                                       </tr>
