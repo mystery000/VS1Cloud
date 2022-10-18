@@ -2269,6 +2269,43 @@
           </div>
 
   <!-- End Help Video Modal -->
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="FixedAssetLineAddModal"> 
+    <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="title-header">Fixed Asset</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-6 col-md-6 col-lg-6">
+                  <div class="form-group"><label>Fixed Asset</label>
+                      <select type="search" class="form-control" id="fixedAssetLine" name="fixedAssetLine" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                      </select>
+                  </div>
+              </div>
+              <div class="col-6 col-md-6 col-lg-6">
+                  <div class="form-group"><label>Cost Type</label>
+                      <select type="search" class="form-control" id="costTypeLine" name="costTypeLine" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                      </select>
+                  </div>
+              </div>
+            </div>  
+          </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="fixedassetlistpopModal">
+    {{> fixedassetlistpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="costtypelistpopModal">
+    {{> costtypelistpop}}
+  </div>
+
   <script>
       modalDraggable();
   </script>

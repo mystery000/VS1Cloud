@@ -3189,6 +3189,8 @@ templateObject.getLastPOData = async function() {
         $('#sltDept').editableSelect();
         $('#sltStatus').editableSelect();
         $('#shipvia').editableSelect();
+        $('#fixedAssetLine').editableSelect();
+        $('#costTypeLine').editableSelect();
 
         $('#addRow').on('click', function() {
           var getTableFields = [ $('#tblPurchaseOrderLine tbody tr .lineProductName')];
@@ -5571,6 +5573,14 @@ Template.purchaseordercard.events({
     // 'click #sltStatus': function(event) {
     //     $('#statusPopModal').modal('toggle');
     // },
+
+    'click #fixedAssetLine': function(event) {
+      $('#fixedassetlistpopModal').modal('toggle');
+    },
+
+    'click #costTypeLine': function(event) {
+        $('#costtypelistpopModal').modal('toggle');
+    },
     'click #edtSupplierName': function(event) {
         $('#edtSupplierName').select();
         $('#edtSupplierName').editableSelect();
@@ -8685,9 +8695,9 @@ Template.purchaseordercard.events({
       let reset_data = templateObject.reset_data.get();
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       if(isBatchSerialNoTracking) {
-        reset_data[11].display = true;
+        reset_data[13].display = true;
       } else {
-        reset_data[11].display = false;
+        reset_data[13].display = false;
       }
       reset_data = reset_data.filter(redata => redata.display);
 
@@ -11350,7 +11360,11 @@ Template.purchaseordercard.events({
         let selectedunit = $(target).closest('tr').find('.lineOrdered').val();
         localStorage.setItem('productItem', selectedunit);
     },
-
+    
+    'click .btnFixedAsset': function(event) {
+      console.log('btnFixedAsset...')
+      $('#FixedAssetLineAddModal').modal();
+    },
     // add to custom field
   "click #edtSaleCustField1": function (e) {
     $("#clickedControl").val("one");
