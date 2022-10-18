@@ -28,90 +28,6 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
 Template.payrollleave.onCreated(function () {
-<<<<<<< HEAD
-  const templateObject = Template.instance();
-  templateObject.datatablerecords = new ReactiveVar([]);
-  templateObject.datatablerecords1 = new ReactiveVar([]);
-  templateObject.tableheaderrecords = new ReactiveVar([]);
-  templateObject.timesheetrecords = new ReactiveVar([]);
-  templateObject.jobsrecords = new ReactiveVar([]);
-  templateObject.selectedFile = new ReactiveVar();
-});
-
-Template.payrollleave.onRendered(function () {
-  // $('#tblPayleaveToReview').DataTable();
-  $("#tblPayleaveToReview").DataTable({
-    sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-    buttons: [
-      {
-        extend: "csvHtml5",
-        text: "",
-        download: "open",
-        className: "btntabletocsv hiddenColumn",
-        filename: "joboverview_" + moment().format(),
-        orientation: "portrait",
-        exportOptions: {
-          columns: ":visible"
-        }
-      }, {
-        extend: "print",
-        download: "open",
-        className: "btntabletopdf hiddenColumn",
-        text: "",
-        title: "Customer List",
-        filename: "Job List - " + moment().format(),
-        exportOptions: {
-          columns: ":visible",
-          stripHtml: false
-        }
-      }, {
-        extend: "excelHtml5",
-        title: "",
-        download: "open",
-        className: "btntabletoexcel hiddenColumn",
-        filename: "Job List - " + moment().format(),
-        orientation: "portrait",
-        exportOptions: {
-          columns: ":visible"
-        }
-      }
-    ],
-    select: true,
-    destroy: true,
-    colReorder: true,
-    // bStateSave: true,
-    // rowId: 0,
-    pageLength: initialDatatableLoad,
-    lengthMenu: [
-      [
-        initialDatatableLoad, -1
-      ],
-      [
-        initialDatatableLoad, "All"
-      ]
-    ],
-    info: true,
-    responsive: true,
-    order: [
-      [0, "asc"]
-    ],
-    action: function () {
-      $("#tblJoblist").DataTable().ajax.reload();
-    },
-    fnDrawCallback: function (oSettings) {
-      setTimeout(function () {
-        MakeNegative();
-      }, 100);
-    },
-    language: {
-      search: "",
-      searchPlaceholder: "Search List..."
-    },
-    fnInitComplete: function () {
-      $("<button class='btn btn-primary btnRefreshJobs' type='button' id='btnRefreshJobs' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJoblist_filter");
-    }
-  });
-=======
   this.leaveRequest = new ReactiveVar([]);
 
   this.leaveRequestToReview = new ReactiveVar([]);
@@ -246,14 +162,10 @@ Template.payrollleave.onRendered(function () {
   };
 
   this.initPage();
->>>>>>> 4e33f32b9f61f305ce794ed85f3ebf8c8f5dcafe
 });
 
 Template.payrollleave.events({});
 
-<<<<<<< HEAD
-Template.payrollleave.helpers({});
-=======
 Template.payrollleave.helpers({
   leaveRequestToReview: () => {
     return Template.instance().leaveRequestToReview.get();
@@ -265,4 +177,3 @@ Template.payrollleave.helpers({
     return Template.instance().leaveRequestHistory.get();
   }
 });
->>>>>>> 4e33f32b9f61f305ce794ed85f3ebf8c8f5dcafe
