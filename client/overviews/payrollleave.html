@@ -32,7 +32,7 @@
 
             <div class="col float-left flex-grow-1 mb-4">
                 <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                <button class="btn btn-primary toReview" type="button" style="margin: 6px;">To review</button>
+                <button id="toReviewBtn" class="btn btn-primary toReview" type="button" style="margin: 6px;">To review</button>
                 <button id="upcomingBtn" name="upcomingBtn" class="btn btn-primary" type="button" style="margin: 6px;">Upcoming</button>
                 <button id="historyBtn" name="historyBtn" class="btn btn-primary" type="button" style="margin: 6px;">History</button>
             </div>
@@ -129,48 +129,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Oliver Gray</td>
-                            <td>Annual Leave</td>
-                            <td>23 Nov 2022</td>
-                            <td>Trip to Sydney</td>
-                            <td>Approve</td>
-                            <td><button class="btn btn-success" type="button">Approve</button>
-                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
-                                <div class="dropdown-menu daterange" role="menu">
-                                    <a class="dropdown-item" role="presentation" data-toggle="modal" data-target="#newLeaveRequestModal">Edit</a>
-                                    <a class="dropdown-item" role="presentation">Reject</a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Oliver Gray</td>
-                            <td>Annual Leave</td>
-                            <td>23 Nov 2022</td>
-                            <td>Trip to Sydney</td>
-                            <td>Deleted</td>
-                            <td><button class="btn btn-success" type="button">Approve</button>
-                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
-                                <div class="dropdown-menu daterange" role="menu">
-                                    <a class="dropdown-item" role="presentation" data-toggle="modal" data-target="#newLeaveRequestModal">Edit</a>
-                                    <a class="dropdown-item" role="presentation">Reject</a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Oliver Gray</td>
-                            <td>Annual Leave</td>
-                            <td>23 Nov 2022</td>
-                            <td>Trip to Sydney</td>
-                            <td>Awaited</td>
-                            <td><button class="btn btn-success" type="button">Approve</button>
-                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off"><i class="fas fa-ellipsis-v"></i></button>
-                                <div class="dropdown-menu daterange" role="menu">
-                                    <a class="dropdown-item" role="presentation" data-toggle="modal" data-target="#newLeaveRequestModal">Edit</a>
-                                    <a class="dropdown-item" role="presentation">Reject</a>
-                                </div>
-                            </td>
-                        </tr>
+                        {{#if leaveRequestFiltered}}
+                            {{#each leave in leaveRequestFiltered}}
+                                <tr leave-id="{{leave.ID}}">
+                                    <td>{{ leave.Employee.EmployeeName }}</td>
+                                    <td>{{ leave.LeaveMethod }}</td>
+                                    <td>{{ formatDate leave.EndDate }}</td>
+                                    <td>{{ leave.Description }}</td>
+                                    <td>{{ leave.Status }}</td>
+                                    <td>
+                                        {{#if leave.isApproved}}
+                                        <button class="btn btn-success" type="button" leave-id="{{leave.ID}}">Approve</button>
+                                        {{/if}}
+
+                                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off" ><i class="fas fa-ellipsis-v"></i></button>
+                                        <div class="dropdown-menu daterange" role="menu">
+                                            <a class="dropdown-item" role="presentation" data-toggle="modal" data-target="#newLeaveRequestModal" leave-id="{{leave.ID}}">Edit</a>
+                                            <a class="dropdown-item" role="presentation" leave-id="{{leave.ID}}">Reject</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {{/each}}
+
+                        {{/if}}
+                       
+                      
                     </tbody>
                 </table>
             </div>

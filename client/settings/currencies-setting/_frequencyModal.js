@@ -370,7 +370,12 @@ Template._frequencyModal.onRendered(function () {
       const apiEndPoint = currencyApi.collection.findByName(erpObject.TCurrencyFrequencySettings);
       const response = await apiEndPoint.fetch(null, {
         method: "POST",
-        body: JSON.stringify(body)
+        body: JSON.stringify({
+          type: erpObject.TCurrencyFrequencySettings,
+          fields: [
+            body
+          ]
+        })
       });
 
       if (response.ok) {
