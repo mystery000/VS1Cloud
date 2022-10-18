@@ -63,10 +63,9 @@ Template.payrollleave.onRendered(function () {
     const response = data.response;
     const leaves = response.tleavrequest.map(e => e.fields);
 
-    console.log('leaves', leaves);
+    console.log("leaves", leaves);
 
     this.leaveRequest.set(leaves);
-
 
     const currentDate = moment();
     let allFutureLeaves = leaves.filter(leave => moment(leave.StartDate).isAfter(currentDate));
@@ -78,17 +77,89 @@ Template.payrollleave.onRendered(function () {
     await this.leaveRequestHistory.set(allPassedLeaves);
   };
 
+  this.dataTableSetup = () => {
+    // $('#tblPayleaveToReview').DataTable();
+    $("#tblPayleaveToReview").DataTable({
+      sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+      buttons: [
+        {
+          extend: "csvHtml5",
+          text: "",
+          download: "open",
+          className: "btntabletocsv hiddenColumn",
+          filename: "joboverview_" + moment().format(),
+          orientation: "portrait",
+          exportOptions: {
+            columns: ":visible"
+          }
+        }, {
+          extend: "print",
+          download: "open",
+          className: "btntabletopdf hiddenColumn",
+          text: "",
+          title: "Customer List",
+          filename: "Job List - " + moment().format(),
+          exportOptions: {
+            columns: ":visible",
+            stripHtml: false
+          }
+        }, {
+          extend: "excelHtml5",
+          title: "",
+          download: "open",
+          className: "btntabletoexcel hiddenColumn",
+          filename: "Job List - " + moment().format(),
+          orientation: "portrait",
+          exportOptions: {
+            columns: ":visible"
+          }
+        }
+      ],
+      select: true,
+      destroy: true,
+      colReorder: true,
+      // bStateSave: true,
+      // rowId: 0,
+      pageLength: initialDatatableLoad,
+      lengthMenu: [
+        [
+          initialDatatableLoad, -1
+        ],
+        [
+          initialDatatableLoad, "All"
+        ]
+      ],
+      info: true,
+      responsive: true,
+      order: [
+        [0, "asc"]
+      ],
+      action: function () {
+        $("#tblJoblist").DataTable().ajax.reload();
+      },
+      fnDrawCallback: function (oSettings) {
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+      },
+      language: {
+        search: "",
+        searchPlaceholder: "Search List..."
+      },
+      fnInitComplete: function () {
+        $("<button class='btn btn-primary btnRefreshJobs' type='button' id='btnRefreshJobs' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJoblist_filter");
+      }
+    });
+  };
 
   this.initPage = async () => {
     LoadingOverlay.show();
 
     await this.loadLeaves();
-
-
+    this.dataTableSetup();
 
     LoadingOverlay.hide();
   };
-
 
   this.initPage();
 });
