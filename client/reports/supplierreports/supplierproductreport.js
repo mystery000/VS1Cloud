@@ -150,7 +150,7 @@ Template.supplierproductreport.onRendered(() => {
 
   templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
     LoadingOverlay.show();
-
+    
     let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
       return await  await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
     }, {
@@ -226,7 +226,26 @@ Template.supplierproductreport.onRendered(() => {
        LoadingOverlay.hide();
       }, 1000);
     }  
-
+    let defaultOptions = templateObject.reportOptions.get();
+    if (defaultOptions) {
+      defaultOptions.fromDate = formatDateFrom;
+      defaultOptions.toDate = formatDateTo;
+      defaultOptions.ignoreDate = ignoreDate;
+    } else {
+      defaultOptions = {
+        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
+        toDate: moment().format("YYYY-MM-DD"),
+        ignoreDate: true
+      };
+    }
+    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $('.edtReportDates').attr('disabled', false)
+    if( ignoreDate == true ){
+      $('.edtReportDates').attr('disabled', true);
+      templateObject.dateAsAt.set("Current Date");
+    }
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
   }
   
 

@@ -366,7 +366,6 @@ Template.agedpayablessummary.onRendered(function() {
         grandthreeMonth = grandthreeMonth + parseFloat(total.ThreeMonth);
         grandOlder = grandOlder + parseFloat(total.OlderMonth);
       });
-
       // for (let n = 0; n < current.length; n++) {
 
       //     const grandcurrencyLength = Currency.length;
@@ -404,6 +403,8 @@ Template.agedpayablessummary.onRendered(function() {
         ThreeMonth: grandthreeMonth,
         OlderMonth: grandOlder
       };
+      console.log('allRecords', allRecords)
+      console.log('grandValObj', grandValObj)
 
       //  for (let key in records) {
       //      let dataArr = current[iterator]

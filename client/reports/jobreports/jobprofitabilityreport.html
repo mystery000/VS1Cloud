@@ -195,7 +195,7 @@
 
                   .table td,
                   .table th {
-                    min-width: 150px;
+                    min-width: 100px;
                   }
 
                   .table td:first-child,
@@ -225,16 +225,16 @@
                     <thead>
                       <tr class="table-active customDoubleTableHeading">
                         <th>Company</th>
-                        <th>Job Name</th>
+                        <th style="width: 120px;">Job Name</th>
                         <th>Job No</th>
                         <th colspan="{{countActive currencyList}}" class="text-center">Cost (ex)</th>
                         <th colspan="{{countActive currencyList}}" class="text-center">Income (ex)</th>
                         <th colspan="{{countActive currencyList}}" class="text-center">Quoted (ex)</th>
                         <th colspan="{{countActive currencyList}}" class="text-center">Diff Inc Cost</th>
-                        <th>Backorders</th>
+                        <th class="text-center">Backorders</th>
                         <th colspan="{{countActive currencyList}}" class="text-center">Credit</th>
                         <th class="text-right">Profit %</th>
-                        <th colspan="{{countActive currencyList}}" class="text-center">Profit</th>
+                        <th colspan="{{countActive currencyList}}">Profit</th>
                       </tr>
                       {{#if isOnlyDefaultActive equal "false" }}
                         <tr class="table-active tblAvoid customDoubleTableHeading">
@@ -350,7 +350,7 @@
                                   <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.DiffIncome_Cost }}</a>
                                 </td>
                               {{/if}}
-                              <td>
+                              <td class="text-center">
                                 <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Backorders }}</a>
                               </td>
 
