@@ -7,14 +7,14 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let fixedAssetService = new FixedAssetService();
 
-Template.fixedassetlisttable.onCreated(function () {
+Template.fixedassetlistpop.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.displayfields = new ReactiveVar([]);
   templateObject.reset_data = new ReactiveVar([]);
 });
 
-Template.fixedassetlisttable.onRendered(function () {
+Template.fixedassetlistpop.onRendered(function () {
   // $(".fullScreenSpin").css("display", "inline-block");
   let templateObject = Template.instance();
 
@@ -245,7 +245,7 @@ Template.fixedassetlisttable.onRendered(function () {
   tableResize();
 });
 
-Template.fixedassetlisttable.events({
+Template.fixedassetlistpop.events({
   "mouseover .card-header": (e) => {
     $(e.currentTarget).parent(".card").addClass("hovered");
   },
@@ -376,13 +376,9 @@ Template.fixedassetlisttable.events({
     });
   },
 
-  "click #btnAssetCostReport": function () {
-    FlowRouter.go('/assetcostreport');
-  },
-
 });
 
-Template.fixedassetlisttable.helpers({
+Template.fixedassetlistpop.helpers({
   datatablerecords: () => {
     return Template.instance().datatablerecords.get().sort(function (a, b) {
       if (a.assetname === "NA") {
