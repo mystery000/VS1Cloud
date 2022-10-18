@@ -45,10 +45,10 @@ export default class TableHandler {
           this.saveTableColumns( tableName );
         }
         let tableWidth = [];
-        $("#tblcontactoverview th").each(function () {
-          tableWidth.push($(this).outerWidth());
-          tableWidth.push($(this).index());
-        });
+        // $("#tblcontactoverview th").each(function () {
+        //   tableWidth.push($(this).outerWidth());
+        //   tableWidth.push($(this).index());
+        // });
       }
       // disabledColumns: [2]
     });
@@ -58,7 +58,7 @@ export default class TableHandler {
      * We first need to disable all previous events listeners related
      */
   disableDatatableResizable() {
-    $(".dataTable").colResizable({disable: true});
+    //$(".dataTable").colResizable({disable: true});
   }
 
   saveTableColumns( tableName ){
