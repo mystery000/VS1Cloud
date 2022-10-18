@@ -350,10 +350,7 @@ Template._frequencyModal.onRendered(function () {
     });
 
     const response = data.response;
-
     const currencySettings = response.tcurrencyfrequencysettings;
-
-    console.log("response", response);
 
     return currencySettings.length > 0
       ? currencySettings[0]
@@ -373,7 +370,7 @@ Template._frequencyModal.onRendered(function () {
       const apiEndPoint = currencyApi.collection.findByName(erpObject.TCurrencyFrequencySettings);
       const response = await apiEndPoint.fetch(null, {
         method: "POST",
-        body: body
+        body: JSON.stringify(body)
       });
 
       if (response.ok) {
