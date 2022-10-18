@@ -823,7 +823,7 @@ Template.accountslistchart.onRendered(()=>{
                   },
                   fnInitComplete: function() {
                       $(
-                          "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                          "<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                       ).insertAfter("#tblDashboardAccountChartList_filter");
                   },
               })
