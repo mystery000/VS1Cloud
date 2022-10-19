@@ -1,28 +1,28 @@
 export default class FormFrequencyModel {
   constructor({
-    MonthlyEveryDay = null,
-    MonthlyOfMonths = null,
-    MonthlyStartDate = null,
-    MonthlyStartTime = null,
+    MonthlyEveryDay = '',
+    MonthlyOfMonths = '',
+    MonthlyStartDate = '',
+    MonthlyStartTime = '',
 
-    WeeklySelectDays = null,
-    WeeklyEvery = null,
-    WeeklyStartDate = null,
-    WeeklyStartTime = null,
+    WeeklySelectDays = '',
+    WeeklyEvery = '',
+    WeeklyStartDate = '',
+    WeeklyStartTime = '',
 
-    DailyEveryDay = null,
-    DailyWeekDays = null,
-    DailyEvery = null,
-    DailyStartTime = null,
-    DailyStartDate = null,
+    DailyEveryDay = '',
+    DailyWeekDays = '',
+    DailyEvery = '',
+    DailyStartTime = '',
+    DailyStartDate = '',
 
-    OneTimeStartTime = null,
-    OneTimeStartDate = null,
+    OneTimeStartTime = '',
+    OneTimeStartDate = '',
 
-    OnEventLogIn = null,
-    OnEventLogOut = null,
+    OnEventLogIn = '',
+    OnEventLogOut = '',
 
-    EmployeeId = null
+    EmployeeId = ''
   }) {
     this.MonthlyEveryDay = MonthlyEveryDay;
     this.MonthlyOfMonths = MonthlyOfMonths;

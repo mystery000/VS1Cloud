@@ -369,6 +369,14 @@ authenticatedRoutes.route('/payrolloverview', {
         });
     }
 });
+authenticatedRoutes.route('/payrollleave', {
+    name: 'payrollleave',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'payrollleave'
+        });
+    }
+});
 
 authenticatedRoutes.route('/timesheetdetail', {
     name: 'timesheetdetail',
@@ -2239,6 +2247,24 @@ authenticatedRoutes.route('/assetcostreport', {
   action() {
       BlazeLayout.render('layout', {
           yield: 'assetcostreport'
+      });
+  }
+});
+
+authenticatedRoutes.route('/assetregisteroverview', {
+  name: 'assetregisteroverview',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'assetregisteroverview'
+      });
+  }
+});
+
+authenticatedRoutes.route('/servicelogcard', {
+  name: 'servicelogcard',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'servicelogcard'
       });
   }
 });

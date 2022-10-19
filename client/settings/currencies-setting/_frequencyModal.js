@@ -12,6 +12,10 @@ import {updateAllCurrencies} from "./currencies";
 import CronSetting from "../../CronSetting";
 import FormFrequencyModel from "./Model/FormFrequencyModel";
 import moment from "moment";
+import erpObject from "../../lib/global/erp-objects";
+import CachedHttp from "../../lib/global/CachedHttp";
+import CurrencyApi from "../../js/Api/CurrencyApi";
+import ApiService from "../../js/Api/Module/ApiService";
 
 let sideBarService = new SideBarService();
 let taxRateService = new TaxRateService();
@@ -127,7 +131,9 @@ Template._frequencyModal.onRendered(function () {
       employeeId: employeeId,
       startAt: new Date(),
       cronJob: () => updateAllCurrencies,
-      type: fxUpdateObject.type
+      type: fxUpdateObject == undefined
+        ? null
+        : fxUpdateObject.type
     });
 
     let _formFequencyModal = new FormFrequencyModel({});
@@ -296,6 +302,7 @@ Template._frequencyModal.onRendered(function () {
     _formFequencyModal.EmployeeId = employeeId;
 
     cronSetting.isProcessed = 1;
+    cronSetting.type = fxUpdateObject.type;
 
     cronSetting.buildParsedText();
     try {
@@ -317,22 +324,95 @@ Template._frequencyModal.onRendered(function () {
       });
     }
 
-    addVS1Data("TCurrencyFrequencySettings", JSON.stringify(_formFequencyModal)).then(function (datareturn) {
-      //location.reload(true);
-      $("#frequencyModal").modal("hide");
-    }).catch(function (err) {
-      //location.reload(true);
-    });
+    await templateObject._saveShedule(_formFequencyModal);
     LoadingOverlay.hide();
   };
 
+  templateObject._loadDefault = async () => {
+    //let defaultForm = await getVS1Data(erpObject.TCurrencyFrequencySettings);
+
+    let data = await CachedHttp.get(erpObject.TCurrencyFrequencySettings, async () => {
+      const currencyApi = new CurrencyApi();
+      const apiEndPoint = currencyApi.collection.findByName(erpObject.TCurrencyFrequencySettings);
+      const response = await apiEndPoint.fetch();
+
+      if (response.ok) {
+        const data = await response.json();
+
+        return data;
+      }
+      return null;
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: cachedResponse => {
+        return true;
+      }
+    });
+
+    const response = data.response;
+    const currencySettings = response.tcurrencyfrequencysettings;
+
+    return currencySettings.length > 0
+      ? currencySettings[0]
+      : null;
+  };
+
+  templateObject._saveShedule = async body => {
+    // addVS1Data(erpObject.TCurrencyFrequencySettings, JSON.stringify(_formFequencyModal)).then(function (datareturn) {
+    //   location.reload(true);
+    //   $("#frequencyModal").modal("hide");
+    // }).catch(function (err) {
+    //   location.reload(true);
+    // });
+
+    try {
+      const currencyApi = new CurrencyApi();
+      const apiEndPoint = currencyApi.collection.findByName(erpObject.TCurrencyFrequencySettings);
+      const response = await apiEndPoint.fetch(null, {
+        method: "POST",
+        headers: ApiService.getPostHeaders(),
+        body: JSON.stringify({
+          type: erpObject.TCurrencyFrequencySettings,
+          fields: [
+            body
+          ]
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        return data;
+      }
+      return null;
+    } catch (e) {
+      swal({
+        title: "Oooops...",
+        // text: "Couldn't save schedule",
+        text: e,
+        type: "error",
+        showCancelButton: true,
+        confirmButtonText: "Try Again"
+      }).then(result => {
+        if (result.value) {
+          $(".btnSaveFrequency").trigger("click");
+          // Meteor._reload.reload();
+        } else if (result.dismiss === "cancel") {}
+      });
+    }
+  };
+
   templateObject.loadDefault = async () => {
-    let defaultForm = await getVS1Data("TCurrencyFrequencySettings");
+    let defaultForm = await templateObject._loadDefault();
     if (!defaultForm) {
       document.querySelector("#frequencyDaily").click(); // this is the default
       return;
     }
-    let defaultFormFrequency = new FormFrequencyModel(defaultForm.length > 0 ? JSON.parse(defaultForm[0].data) : {});
+    let defaultFormFrequency = new FormFrequencyModel(
+      defaultForm.length > 0
+      ? JSON.parse(defaultForm[0].data)
+      : {});
 
     if (defaultFormFrequency.MonthlyStartDate) {
       // it is montly

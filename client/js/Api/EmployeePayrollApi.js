@@ -24,7 +24,6 @@ export default class EmployeePayrollApi {
         TPayTemplateDeductionLine: "TPayTemplateDeductionLine",
         TPayTemplateSuperannuationLine: "TPayTemplateSuperannuationLine",
         TPayTemplateReiumbursementLine: "TPayTemplateReiumbursementLine",
-        TAssignLeaveType: "TAssignLeaveType",
         TPaidLeave: "TPaidLeave",
         TUnpaidLeave: "TUnpaidLeave",
         TOpeningBalances: "TOpeningBalances",
@@ -119,7 +118,7 @@ export default class EmployeePayrollApi {
         }),
         new ApiEndpoint({
           name: this.collectionNames.TLeavRequest,
-          url: ApiService.getBaseUrl({ endpoint: "TLeavRequest" }),
+          url: ApiService.getBaseUrl({ endpoint: this.collectionNames.TLeavRequest }),
           headers: ApiService.getHeaders()
         })
     ]);

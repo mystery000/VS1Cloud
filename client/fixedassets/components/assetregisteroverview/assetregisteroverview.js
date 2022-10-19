@@ -7,27 +7,37 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let fixedAssetService = new FixedAssetService();
 
-Template.serviceloglisttable.onCreated(function () {
+Template.assetregisteroverview.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.displayfields = new ReactiveVar([]);
   templateObject.reset_data = new ReactiveVar([]);
 });
 
-Template.serviceloglisttable.onRendered(function () {
-  // $(".fullScreenSpin").css("display", "inline-block");
+Template.assetregisteroverview.onRendered(function () {
   let templateObject = Template.instance();
 
   // set initial table rest_data
   templateObject.init_reset_data = function () {
     let reset_data = [
-      { index: 0, label: 'ID', class: 'LogId', active: false, display: false, width: "0" },
-      { index: 1, label: 'Asset Code', class: 'AssetCode', active: true, display: true, width: "" },
-      { index: 2, label: 'Asset Name', class: 'AssetName', active: true, display: true, width: "" },
-      { index: 3, label: 'Service Type', class: 'ServiceType', active: true, display: true, width: "" },
-      { index: 4, label: 'Service Date', class: 'ServiceDate', active: true, display: true, width: "" },
-      { index: 5, label: 'Service Provider', class: 'ServiceProvider', active: true, display: true, width: "" },
-      { index: 6, label: 'Next Service Due Date', class: 'ServiceDueDate', active: true, display: true, width: "" }, 
+      { index: 0, label: 'ID', class: 'AssetRegisterId', active: false, display: false, width: "0" },
+      { index: 1, label: 'Asset Code', class: 'RegisterAssetCode', active: true, display: true, width: "" },
+      { index: 2, label: 'Asset Name', class: 'RegisterAssetName', active: true, display: true, width: "" },
+      { index: 3, label: 'Asset Description', class: 'RegisterAssetDescription', active: true, display: true, width: "" },
+      { index: 4, label: 'Asset Type', class: 'RegisterAssetType', active: true, display: true, width: "" },
+      { index: 5, label: 'Brand', class: 'RegisterAssetBrand', active: true, display: true, width: "" },
+      { index: 6, label: 'Model', class: 'RegisterAssetModel', active: true, display: true, width: "" },
+      { index: 7, label: 'Number', class: 'RegisterAssetNumber', active: true, display: true, width: "" },
+      { index: 8, label: 'Registration No', class: 'RegisterAssetRegistrationNo', active: true, display: true, width: "" }, 
+      { index: 9, label: 'Type', class: 'RegisterAssetType', active: true, display: true, width: "" }, 
+      { index: 10, label: 'Capacity Weight', class: 'RegisterAssetCapacityWeight', active: true, display: true, width: "" }, 
+      { index: 11, label: 'Capacity Volume', class: 'RegisterAssetCapacityVolume', active: true, display: true, width: "" }, 
+      { index: 12, label: 'Purchased Date', class: 'RegisterAssetPurchasedDate', active: true, display: true, width: "" }, 
+      { index: 13, label: 'Cost', class: 'RegisterAssetCost', active: true, display: true, width: "" }, 
+      { index: 14, label: 'Supplier', class: 'RegisterAssetSupplier', active: true, display: true, width: "" }, 
+      { index: 15, label: 'Registration Renewal Date', class: 'RegisterAssetRegisterRenewDate', active: true, display: true, width: "" }, 
+      { index: 16, label: 'Insurance Info', class: 'RegisterAssetInsuranceInfo', active: true, display: true, width: "" }, 
+      { index: 17, label: 'Renewal Date', class: 'RegisterAssetRenewDate', active: true, display: true, width: "" },  
     ];
 
     let templateObject = Template.instance();
@@ -78,153 +88,14 @@ Template.serviceloglisttable.onRendered(function () {
     templateObject.displayfields.set(custFields);
   }
 
-  templateObject.initCustomFieldDisplaySettings("tblServiceLogList");
+  templateObject.initCustomFieldDisplaySettings("tblAssetRegisterTable");
   // set initial table rest_data  //
 
-  templateObject.getFixedAssetsList = function () {
-    getVS1Data("TFixedAssets").then(function (dataObject) {
-      if (dataObject.length == 0) {
-        fixedAssetService.getTFixedAssetsList().then(function (data) {
-          setFixedAssetsList(data);
-        }).catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
-        });
-      } else {
-        let data = JSON.parse(dataObject[0].data);
-        setFixedAssetsList(data);
-      }
-    }).catch(function (err) {
-      fixedAssetService.getTFixedAssetsList().then(function (data) {
-        setFixedAssetsList(data);
-      }).catch(function (err) {
-        $(".fullScreenSpin").css("display", "none");
-      });
-    });
-  };
-
-  $(".fullScreenSpin").css("display", "inline-block");
-  templateObject.getFixedAssetsList();
-
-  function setFixedAssetsList(data) {
-    addVS1Data('TFixedAssets', JSON.stringify(data));
-    const dataTableList = [];
-
-    for (const asset of data.tfixedassets) {
-      const dataList = {
-        id: asset.fields.ID || "",
-        assetname: asset.fields.AssetName || "",
-        color: asset.fields.Colour || "",
-        brandname: asset.fields.BrandName || "",
-        manufacture: asset.fields.Manufacture || "",
-        model: asset.fields.Model || "",
-        assetcode: asset.fields.AssetCode || "",
-        assettype: asset.fields.AssetType || "",
-        department: asset.fields.Department || "",   // tempcode how to get department
-        purchdate: asset.fields.PurchDate ? moment(asset.fields.PurchDate).format("DD/MM/YYYY") : "",
-        purchcost: utilityService.modifynegativeCurrencyFormat(asset.fields.PurchCost) || 0.0,
-        serial: asset.fields.Serial || "",
-        qty: asset.fields.Qty || 0,
-        assetcondition: asset.fields.AssetCondition || "",
-        locationdescription: asset.fields.LocationDescription || "",
-        notes: asset.fields.Notes || "",
-        size: asset.fields.Size || "",
-        shape: asset.fields.Shape || "",
-        status: asset.fields.Status || "",
-        businessuse: asset.fields.BusinessUsePercent || 0.0,
-        businessuse2: asset.fields.BusinessUsePercent2 || 0.0,
-        estimatedvalue: utilityService.modifynegativeCurrencyFormat(asset.fields.EstimatedValue) || 0.0,
-        replacementcost: utilityService.modifynegativeCurrencyFormat(asset.fields.ReplacementCost) || 0.0,
-        warrantytype: asset.fields.WarrantyType || "",
-        warrantyexpiresDate: asset.fields.WarrantyExpiresDate ? moment(asset.fields.WarrantyExpiresDate).format("DD/MM/YYYY") : "",
-        insuredby: asset.fields.InsuredBy || "",
-        insurancepolicy: asset.fields.InsurancePolicy || "",
-        insureduntil: asset.fields.InsuredUntil ? moment(asset.fields.InsuredUntil).format("DD/MM/YYYY") : "",
-        active: asset.fields.Active || false
-      };
-      dataTableList.push(dataList);
-    }
-
-    templateObject.datatablerecords.set(dataTableList);
-
-    $(".fullScreenSpin").css("display", "none");
-    setTimeout(function () {
-      $("#tblServiceLogList").DataTable({
-        columnDefs: [
-        ],
-        select: true,
-        destroy: true,
-        colReorder: true,
-        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-        buttons: [{
-          extend: "csvHtml5",
-          text: "",
-          download: "open",
-          className: "btntabletocsv hiddenColumn",
-          filename: "FixedAssetsOverview__" + moment().format(),
-          orientation: "portrait",
-          exportOptions: {
-            columns: ":visible",
-          },
-        },
-        {
-          extend: "print",
-          download: "open",
-          className: "btntabletopdf hiddenColumn",
-          text: "",
-          title: "Accounts Overview",
-          filename: "Accounts Overview_" + moment().format(),
-          exportOptions: {
-            columns: ":visible",
-          },
-        },
-        {
-          extend: "excelHtml5",
-          title: "",
-          download: "open",
-          className: "btntabletoexcel hiddenColumn",
-          filename: "FixedAssetsOverview__" + moment().format(),
-          orientation: "portrait",
-          exportOptions: {
-            columns: ":visible",
-          },
-        },
-        ],
-        pageLength: initialDatatableLoad,
-        lengthMenu: [
-          [initialDatatableLoad, -1],
-          [initialDatatableLoad, "All"],
-        ],
-        info: true,
-        responsive: true,
-        order: [
-          [0, "asc"]
-        ],
-        // "aaSorting": [[1,'desc']],
-        action: function () {
-          $("#tblServiceLogList").DataTable().ajax.reload();
-        },
-        language: { search: "", searchPlaceholder: "Search List..." },
-        fnDrawCallback: function (oSettings) {
-        },
-        fnInitComplete: function () {
-          $(
-            "<button class='btn btn-primary btnSearchFixedAccount' type='button' id='btnSearchFixedAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-          ).insertAfter("#tblServiceLogList_filter");
-        },
-      })
-        .on("page", function () {
-          let draftRecord = templateObject.datatablerecords.get();
-          templateObject.datatablerecords.set(draftRecord);
-        })
-        .on("column-reorder", function () { })
-        .on("length.dt", function (e, settings, len) {
-        });
-    }, 10);
-  }
-
+ 
+  tableResize();
 });
 
-Template.serviceloglisttable.events({
+Template.assetregisteroverview.events({
   "mouseover .card-header": (e) => {
     $(e.currentTarget).parent(".card").addClass("hovered");
   },
@@ -300,7 +171,7 @@ Template.serviceloglisttable.events({
 
     try {
       let erpGet = erpDb();
-      let tableName = "tblServiceLogList";
+      let tableName = "tblAssetRegisterTable";
       let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID')) || 0;
       let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
@@ -313,7 +184,7 @@ Template.serviceloglisttable.events({
           confirmButtonText: 'OK'
         }).then((result) => {
           if (result.value) {
-            $('#myModal2').modal('hide');
+            $('#displaySettingsModal2').modal('hide');
           }
         });
       } else {
@@ -355,13 +226,9 @@ Template.serviceloglisttable.events({
     });
   },
 
-  "click #btnNewServiceLog": function() {
-    FlowRouter.go('/servicelogcard');
-  }
-
 });
 
-Template.serviceloglisttable.helpers({
+Template.assetregisteroverview.helpers({
   datatablerecords: () => {
     return Template.instance().datatablerecords.get().sort(function (a, b) {
       if (a.assetname === "NA") {

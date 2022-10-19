@@ -380,6 +380,10 @@ Template.fixedassetlisttable.events({
     FlowRouter.go('/assetcostreport');
   },
 
+  "click #btnAssetRegister": function () {
+    FlowRouter.go('/assetregisteroverview');
+  }
+
 });
 
 Template.fixedassetlisttable.helpers({

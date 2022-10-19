@@ -204,3 +204,9 @@ Template.assignLeaveTypePop.onCreated(function () {
     });
 
 });
+
+Template.assignLeaveTypePop.helpers({
+    terminationBalance: (t) => {
+        return t ?  'Paid Out': 'Not Paid Out';
+    }
+})
