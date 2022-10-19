@@ -2242,6 +2242,15 @@ authenticatedRoutes.route('/fixedassetlist', {
   }
 });
 
+authenticatedRoutes.route('/fixedassetcard', {
+  name: 'fixedassetcard',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'fixedassetcard'
+      });
+  }
+});
+
 authenticatedRoutes.route('/assetcostreport', {
   name: 'assetcostreport',
   action() {
