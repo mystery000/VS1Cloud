@@ -217,7 +217,7 @@ openDb = function(dbName) {
             db.createObjectStore("TPurchasesBackOrderReport", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TOverdueAwaitingCustomerPayment", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TOverdueAwaitingSupplierPayment", { keyPath: "EmployeeEmail" });
-            db.createObjectStore("TAssignLeaveType", { keyPath: "EmployeeEmail" });
+            db.createObjectStore(erpObject.TAssignLeaveType, { keyPath: "EmployeeEmail" });
             db.createObjectStore("Tvs1CardPreference", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TQuoteFilterList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TSalesOrderFilterList", { keyPath: "EmployeeEmail" });

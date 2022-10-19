@@ -24,7 +24,6 @@ export default class EmployeePayrollApi {
         TPayTemplateDeductionLine: "TPayTemplateDeductionLine",
         TPayTemplateSuperannuationLine: "TPayTemplateSuperannuationLine",
         TPayTemplateReiumbursementLine: "TPayTemplateReiumbursementLine",
-        TAssignLeaveType: "TAssignLeaveType",
         TPaidLeave: "TPaidLeave",
         TUnpaidLeave: "TUnpaidLeave",
         TOpeningBalances: "TOpeningBalances",
