@@ -625,7 +625,7 @@ Template.payrolloverview.onRendered(function () {
     isClockOnOff
   ) {
     templateObject.includePayrollClockOnOffOnly.set(true);
-    // $("#settingsModal").modal({"backdrop": "static"});
+    // $("#clockOnOffModal").modal({"backdrop": "static"});
   }
 
   if (launchClockOnOff == true && canClockOnClockOff == true) {
@@ -3998,26 +3998,28 @@ Template.payrolloverview.events({
   "click #btnTimesheet": function (event) {
     FlowRouter.go("/timesheet");
   },
-  "click #btnClockOnOff": function (event) {
-    const templateObject = Template.instance();
+  "click #btnClockOnOff": (event, templateObject) => {
+    // $("#clockOnOffModal").modal("show");
+    // return;
+   // const templateObject = Template.instance();
     let checkIncludeAllProducts = templateObject.includeAllProducts.get();
-    $("#employee_name").val(Session.get("mySessionEmployee"));
-    $("#sltJob").val("");
-    $("#product-list").val("");
-    $("#edtProductCost").val(0);
-    $("#updateID").val("");
-    $("#startTime").val("");
-    $("#endTime").val("");
-    $("#txtBookedHoursSpent").val("");
-    $("#startTime").prop("disabled", false);
-    $("#endTime").prop("disabled", false);
-    $("#btnClockOn").prop("disabled", false);
-    $("#btnHold").prop("disabled", false);
-    $("#btnClockOff").prop("disabled", false);
+    $("#clockOnOffModal #employee_name").val(Session.get("mySessionEmployee"));
+    $("#clockOnOffModal #sltJob").val("");
+    $("#clockOnOffModal #product-list").val("");
+    $("#clockOnOffModal #edtProductCost").val(0);
+    $("#clockOnOffModal #updateID").val("");
+    $("#clockOnOffModal #startTime").val("");
+    $("#clockOnOffModal #endTime").val("");
+    $("#clockOnOffModal #txtBookedHoursSpent").val("");
+    $("#clockOnOffModal #startTime").prop("disabled", false);
+    $("#clockOnOffModal #endTime").prop("disabled", false);
+    $("#clockOnOffModal #btnClockOn").prop("disabled", false);
+    $("#clockOnOffModal #btnHold").prop("disabled", false);
+    $("#clockOnOffModal #btnClockOff").prop("disabled", false);
     var curretDate = moment().format("DD/MM/YYYY");
     let getEmployeeID = Session.get("mySessionEmployeeLoggedID") || "";
     setTimeout(function () {
-      $("#dtSODate").val(curretDate);
+      $("#clockOnOffModal #dtSODate").val(curretDate);
     }, 100);
     if (checkIncludeAllProducts == true) {
       templateObject.getAllProductData();
@@ -4030,24 +4032,24 @@ Template.payrolloverview.events({
     }
     let clockList = templateObject.timesheetrecords.get();
     clockList = clockList.filter((clkList) => {
-      return clkList.employee == $("#employee_name").val();
+      return clkList.employee == $("#clockOnOffModal #employee_name").val();
     });
 
     if (clockList.length > 0) {
       if (clockList[clockList.length - 1].isPaused == "paused") {
-        $(".btnHold").prop("disabled", true);
+        $("#clockOnOffModal .btnHold").prop("disabled", true);
       } else {
-        $(".btnHold").prop("disabled", false);
+        $("#clockOnOffModal .btnHold").prop("disabled", false);
       }
 
       if (clockList[clockList.length - 1].isPaused == "paused") {
-        $(".paused").show();
-        $("#btnHold").prop("disabled", true);
-        $("#btnHold").addClass("mt-32");
+        $("#clockOnOffModal .paused").show();
+        $("#clockOnOffModal #btnHold").prop("disabled", true);
+        $("#clockOnOffModal #btnHold").addClass("mt-32");
       } else {
-        $(".paused").hide();
-        $("#btnHold").prop("disabled", false);
-        $("#btnHold").removeClass("mt-32");
+        $("#clockOnOffModal .paused").hide();
+        $("#clockOnOffModal #btnHold").prop("disabled", false);
+        $("#clockOnOffModal #btnHold").removeClass("mt-32");
       }
 
       if (
@@ -4059,32 +4061,32 @@ Template.payrolloverview.events({
         let date = clockList[clockList.length - 1].timesheetdate;
 
         if (startTime != "") {
-          $("#startTime").val(startTime.split(" ")[1]);
-          $("#dtSODate").val(date);
-          $("#txtBookedHoursSpent").val(
+          $("#clockOnOffModal #startTime").val(startTime.split(" ")[1]);
+          $("#clockOnOffModal #dtSODate").val(date);
+          $("#clockOnOffModal #txtBookedHoursSpent").val(
             clockList[clockList.length - 1].hourFormat
           );
-          $("#txtBookedHoursSpent1").val(clockList[clockList.length - 1].hours);
-          $("#updateID").val(clockList[clockList.length - 1].id);
-          $("#timesheetID").text(clockList[clockList.length - 1].id);
-          $("#txtNotes").val(clockList[clockList.length - 1].notes);
-          $("#sltJob").val(clockList[clockList.length - 1].job);
-          $("#product-list").val(clockList[clockList.length - 1].product);
-          $("#edtProductCost").val(
+          $("#clockOnOffModal #txtBookedHoursSpent1").val(clockList[clockList.length - 1].hours);
+          $("#clockOnOffModal #updateID").val(clockList[clockList.length - 1].id);
+          $("#clockOnOffModal #timesheetID").text(clockList[clockList.length - 1].id);
+          $("#clockOnOffModal #txtNotes").val(clockList[clockList.length - 1].notes);
+          $("#clockOnOffModal #sltJob").val(clockList[clockList.length - 1].job);
+          $("#clockOnOffModal #product-list").val(clockList[clockList.length - 1].product);
+          $("#clockOnOffModal #edtProductCost").val(
             clockList[clockList.length - 1].hourlyrate.replace(/[^0-9.-]+/g, "")
           );
           //$('#product-list').prepend('<option>' + clockList[clockList.length - 1].product + '</option>');
           //$("#product-list")[0].options[0].selected = true;
-          $("#hourly_rate").val(
+          $("#clockOnOffModal #hourly_rate").val(
             clockList[clockList.length - 1].hourlyrate.replace(/[^0-9.-]+/g, "")
           );
-          $("#startTime").prop("disabled", true);
+          $("#clockOnOffModal #startTime").prop("disabled", true);
           if (clockList[clockList.length - 1].isPaused == "completed") {
-            $("#endTime").val(endTime);
-            $("#endTime").prop("disabled", true);
-            $("#btnClockOn").prop("disabled", true);
-            $("#btnHold").prop("disabled", true);
-            $("#btnClockOff").prop("disabled", true);
+            $("#clockOnOffModal #endTime").val(endTime);
+            $("#clockOnOffModal #endTime").prop("disabled", true);
+            $("#clockOnOffModal #btnClockOn").prop("disabled", true);
+            $("#clockOnOffModal #btnHold").prop("disabled", true);
+            $("#clockOnOffModal #btnClockOff").prop("disabled", true);
           }
         }
       } else if (clockList[clockList.length - 1].isPaused != "completed") {
@@ -4095,20 +4097,20 @@ Template.payrolloverview.events({
             )[1];
           let date = clockList[clockList.length - 1].timesheetdate;
           if (startTime != "") {
-            $("#startTime").val(startTime);
-            $("#dtSODate").val(date);
-            $("#txtBookedHoursSpent").val(
+            $("#clockOnOffModal #startTime").val(startTime);
+            $("#clockOnOffModal #dtSODate").val(date);
+            $("#clockOnOffModal #txtBookedHoursSpent").val(
               clockList[clockList.length - 1].hourFormat
             );
-            $("#txtBookedHoursSpent1").val(
+            $("#clockOnOffModal #txtBookedHoursSpent1").val(
               clockList[clockList.length - 1].hours
             );
-            $("#updateID").val(clockList[clockList.length - 1].id);
-            $("#timesheetID").text(clockList[clockList.length - 1].id);
-            $("#txtNotes").val(clockList[clockList.length - 1].notes);
-            $("#sltJob").val(clockList[clockList.length - 1].job);
-            $("#product-list").val(clockList[clockList.length - 1].product);
-            $("#edtProductCost").val(
+            $("#clockOnOffModal #updateID").val(clockList[clockList.length - 1].id);
+            $("#clockOnOffModal #timesheetID").text(clockList[clockList.length - 1].id);
+            $("#clockOnOffModal #txtNotes").val(clockList[clockList.length - 1].notes);
+            $("#clockOnOffModal #sltJob").val(clockList[clockList.length - 1].job);
+            $("#clockOnOffModal #product-list").val(clockList[clockList.length - 1].product);
+            $("#clockOnOffModal #edtProductCost").val(
               clockList[clockList.length - 1].hourlyrate.replace(
                 /[^0-9.-]+/g,
                 ""
@@ -4116,30 +4118,30 @@ Template.payrolloverview.events({
             );
             //$('#product-list').prepend('<option>' + clockList[clockList.length - 1].product + '</option>');
             //$("#product-list")[0].options[0].selected = true;
-            $("#hourly_rate").val(
+            $("#clockOnOffModal #hourly_rate").val(
               clockList[clockList.length - 1].hourlyrate.replace(
                 /[^0-9.-]+/g,
                 ""
               )
             );
-            $("#startTime").prop("disabled", true);
+            $("#clockOnOffModal #startTime").prop("disabled", true);
             if (clockList[clockList.length - 1].isPaused == "completed") {
-              $("#endTime").val(endTime);
-              $("#endTime").prop("disabled", true);
-              $("#btnClockOn").prop("disabled", true);
-              $("#btnHold").prop("disabled", true);
-              $("#btnClockOff").prop("disabled", true);
+              $("#clockOnOffModal #endTime").val(endTime);
+              $("#clockOnOffModal #endTime").prop("disabled", true);
+              $("#clockOnOffModal #btnClockOn").prop("disabled", true);
+              $("#clockOnOffModal #btnHold").prop("disabled", true);
+              $("#clockOnOffModal #btnClockOff").prop("disabled", true);
             }
           }
         }
       }
     } else {
-      $(".paused").hide();
-      $("#btnHold").prop("disabled", false);
+      $("#clockOnOffModal .paused").hide();
+      $("#clockOnOffModal #btnHold").prop("disabled", false);
     }
-    $("#settingsModal").modal("show");
+    $("#clockOnOffModal").modal("show");
   },
-  "click #btnClockOn": function () {
+  "click #clockOnOffModal #btnClockOn": function () {
     const templateObject = Template.instance();
 
     let clockList = templateObject.timesheetrecords.get();
@@ -4944,7 +4946,7 @@ Template.payrolloverview.events({
             $("#startTime").prop("disabled", true);
             templateObject.timesheetrecords.set([]);
             templateObject.getAllTimeSheetDataClock();
-            $("#settingsModal").modal("hide");
+            $("#clockOnOffModal").modal("hide");
             // setTimeout(function(){
             //    let getTimesheetRecords = templateObject.timesheetrecords.get();
             //     let getLatestTimesheet = getTimesheetRecords.filter(clkList => {
