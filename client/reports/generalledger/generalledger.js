@@ -134,19 +134,19 @@ Template.generalledger.onRendered(() => {
             for (let i = 0; i < accountData.length; i++) {
               let recordObj = {};
               recordObj.Id = data.tgeneralledgerreport[i].PURCHASEORDERID;
-              recordObj.type = data.tgeneralledgerreport[i].TYPE;
+              recordObj.AccountName = data.tgeneralledgerreport[i].ACCOUNTNAME;
               recordObj.paymentId = data.tgeneralledgerreport[i].PAYMENTID;
               recordObj.saleId = data.tgeneralledgerreport[i].SALEID;
+              recordObj.type = data.tgeneralledgerreport[i].TYPE;
               recordObj.cheqNumber = data.tgeneralledgerreport[i].CHEQUENUMBER;
-              recordObj.AccountName = data.tgeneralledgerreport[i].ACCOUNTNAME;
               recordObj.dataArr = [
                 "",
                 data.tgeneralledgerreport[i].ACCOUNTNUMBER,
                 
-                data.tgeneralledgerreport[i]["CLIENT NAME"],
                 // data.tgeneralledgerreport[i].MEMO || "-",
                 // moment(data.tgeneralledgerreport[i].DATE).format("DD MMM YYYY") || '-',
                 data.tgeneralledgerreport[i].DATE != ""? moment(data.tgeneralledgerreport[i].DATE).format("DD/MM/YYYY"): data.tgeneralledgerreport[i].DATE,
+                data.tgeneralledgerreport[i]["CLIENT NAME"],
                 data.tgeneralledgerreport[i].TYPE,
                 // utilityService.modifynegativeCurrencyFormat(
                 //   data.tgeneralledgerreport[i].AMOUNTINC
@@ -379,23 +379,23 @@ Template.generalledger.onRendered(() => {
         for (let i = 0; i < accountData.length; i++) {
           let recordObj = {};
           recordObj.Id = data.tgeneralledgerreport[i].PURCHASEORDERID;
-          recordObj.type = data.tgeneralledgerreport[i].TYPE;
+          recordObj.AccountName = data.tgeneralledgerreport[i].ACCOUNTNAME;
           recordObj.paymentId = data.tgeneralledgerreport[i].PAYMENTID;
           recordObj.saleId = data.tgeneralledgerreport[i].SALEID;
           recordObj.cheqNumber = data.tgeneralledgerreport[i].CHEQUENUMBER;
-          recordObj.AccountName = data.tgeneralledgerreport[i].ACCOUNTNAME;
+          recordObj.type = data.tgeneralledgerreport[i].TYPE;
 
           recordObj.dataArr = [
             "",
-            data.tgeneralledgerreport[i].TYPE,
             data.tgeneralledgerreport[i].ACCOUNTNUMBER,
-
-            data.tgeneralledgerreport[i]["CLIENT NAME"],
+            
             // data.tgeneralledgerreport[i].MEMO || "-",
             // moment(data.tgeneralledgerreport[i].DATE).format("DD MMM YYYY") || '-',
             data.tgeneralledgerreport[i].DATE != ""
-              ? moment(data.tgeneralledgerreport[i].DATE).format("DD/MM/YYYY")
-              : data.tgeneralledgerreport[i].DATE,
+            ? moment(data.tgeneralledgerreport[i].DATE).format("DD/MM/YYYY")
+            : data.tgeneralledgerreport[i].DATE,
+            data.tgeneralledgerreport[i]["CLIENT NAME"],
+            data.tgeneralledgerreport[i].TYPE,
             // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].Current) || '-',
             {
               type: "amount",

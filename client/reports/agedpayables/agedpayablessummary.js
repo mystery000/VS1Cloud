@@ -302,7 +302,7 @@ Template.agedpayablessummary.onRendered(function() {
           threeMonth = threeMonth + parseFloat(entry.entries["90Days"]);
           Older = Older + parseFloat(entry.entries["120Days"]);
         });
-
+        
         record.total = {
           // new
           Title: "Total " + record.title,
@@ -403,8 +403,6 @@ Template.agedpayablessummary.onRendered(function() {
         ThreeMonth: grandthreeMonth,
         OlderMonth: grandOlder
       };
-      console.log('allRecords', allRecords)
-      console.log('grandValObj', grandValObj)
 
       //  for (let key in records) {
       //      let dataArr = current[iterator]
