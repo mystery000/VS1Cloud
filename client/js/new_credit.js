@@ -131,12 +131,13 @@ Template.creditcard.onRendered(() => {
         { index: 1, label: "Memo", class: "Memo", width: "", active: true, display: true },
         { index: 2, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
         { index: 3, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
-        { index: 4, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
-        { index: 5, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
-        { index: 6, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
-        { index: 7, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
-        { index: 8, label: "Custom Field 1", class: "CustomField1", width: "124", active: false, display: true },
-        { index: 9, label: "Custom Field 2", class: "CustomField2", width: "124", active: false, display: true },
+        { index: 4, label: "Fixed Asset", class: "FixedAsset", width: "124", active: true, display: true },
+        { index: 5, label: "Tax Rate", class: "TaxRate", width: "95", active: false, display: true },
+        { index: 6, label: "Tax Code", class: "TaxCode", width: "95", active: true, display: true },
+        { index: 7, label: "Tax Amt", class: "TaxAmount", width: "95", active: true, display: true },
+        { index: 8, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
+        { index: 9, label: "Custom Field 1", class: "CustomField1", width: "124", active: false, display: true },
+        { index: 10, label: "Custom Field 2", class: "CustomField2", width: "124", active: false, display: true },
       ];
 
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
@@ -7532,6 +7533,21 @@ Template.creditcard.events({
       }
     },
 
+    "click .chkFixedAsset": function (event) {
+      if ($(event.target).is(':checked')) {
+        $('.colFixedAsset').addClass('showColumn');
+        $('.colFixedAsset').removeClass('hiddenColumn');
+      } else {
+        $('.colFixedAsset').addClass('hiddenColumn');
+        $('.colFixedAsset').removeClass('showColumn');
+      }
+    },
+
+    // display settings 
+    'change .rngRangeFixedAsset': function(event) {
+      let range = $(event.target).val();
+      $('.colFixedAsset').css('width', range);
+    },
     'change .rngRangeSerialNo': function (event) {
       let range = $(event.target).val();
       $('.colSerialNo').css('width', range);

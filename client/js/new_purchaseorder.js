@@ -127,6 +127,7 @@ Template.purchaseordercard.onRendered(() => {
         { index: 13, label: "Serial/Lot No", class: "SerialNo", width: "124", active: true, display: true },
         { index: 14, label: "Amount (Ex)", class: "AmountEx", width: "140", active: true, display: true },
         { index: 15, label: "Amount (Inc)", class: "AmountInc", width: "140", active: false, display: true },
+        { index: 16, label: "Fixed Asset", class: "FixedAsset", width: "100", active: true, display: true },
       ];
 
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
@@ -3188,6 +3189,8 @@ templateObject.getLastPOData = async function() {
         $('#sltDept').editableSelect();
         $('#sltStatus').editableSelect();
         $('#shipvia').editableSelect();
+        $('#fixedAssetLine').editableSelect();
+        $('#costTypeLine').editableSelect();
 
         $('#addRow').on('click', function() {
           var getTableFields = [ $('#tblPurchaseOrderLine tbody tr .lineProductName')];
@@ -5570,6 +5573,14 @@ Template.purchaseordercard.events({
     // 'click #sltStatus': function(event) {
     //     $('#statusPopModal').modal('toggle');
     // },
+
+    'click #fixedAssetLine': function(event) {
+      $('#fixedassetlistpopModal').modal('toggle');
+    },
+
+    'click #costTypeLine': function(event) {
+        $('#costtypelistpopModal').modal('toggle');
+    },
     'click #edtSupplierName': function(event) {
         $('#edtSupplierName').select();
         $('#edtSupplierName').editableSelect();
@@ -5956,13 +5967,19 @@ Template.purchaseordercard.events({
 
         $('.colAmountInc').addClass('showColumn');
         $('.colAmountInc').removeClass('hiddenColumn');
-    },
+
+        $('.chkAmountInc').prop("checked", true);
+        $('.chkAmountEx').prop("checked", false);
+      },
     'click .th.colAmountInc': function(event) {
         $('.colAmountInc').addClass('hiddenColumn');
         $('.colAmountInc').removeClass('showColumn');
 
         $('.colAmountEx').addClass('showColumn');
         $('.colAmountEx').removeClass('hiddenColumn');
+
+        $('.chkAmountInc').prop("checked", false);
+        $('.chkAmountEx').prop("checked", true);
     },
     'click .th.colUnitPriceEx': function(event) {
         $('.colUnitPriceEx').addClass('hiddenColumn');
@@ -5970,6 +5987,9 @@ Template.purchaseordercard.events({
 
         $('.colUnitPriceInc').addClass('showColumn');
         $('.colUnitPriceInc').removeClass('hiddenColumn');
+
+        $('.chkUnitPriceInc').prop("checked", true);
+        $('.chkUnitPriceEx').prop("checked", false);
     },
     'click .th.colUnitPriceInc': function(event) {
         $('.colUnitPriceInc').addClass('hiddenColumn');
@@ -5977,6 +5997,9 @@ Template.purchaseordercard.events({
 
         $('.colUnitPriceEx').addClass('showColumn');
         $('.colUnitPriceEx').removeClass('hiddenColumn');
+
+        $('.chkUnitPriceInc').prop("checked", false);
+        $('.chkUnitPriceEx').prop("checked", true);
     },
     'click #btnCustomFileds': function(event) {
         var x = document.getElementById("divCustomFields");
@@ -8506,10 +8529,23 @@ Template.purchaseordercard.events({
         $('.colOrdered').removeClass('showColumn');
       }
     },
+    "click .chkFixedAsset": function (event) {
+      if ($(event.target).is(':checked')) {
+        $('.colFixedAsset').addClass('showColumn');
+        $('.colFixedAsset').removeClass('hiddenColumn');
+      } else {
+        $('.colFixedAsset').addClass('hiddenColumn');
+        $('.colFixedAsset').removeClass('showColumn');
+      }
+    },
     // display settings
     'change .rngRangeOrdered': function(event) {
       let range = $(event.target).val();
       $('.colOrdered').css('width', range);
+    },
+    'change .rngRangeFixedAsset': function(event) {
+      let range = $(event.target).val();
+      $('.colFixedAsset').css('width', range);
     },
     'change .rngRangeShipped': function(event) {
       let range = $(event.target).val();
@@ -8523,70 +8559,68 @@ Template.purchaseordercard.events({
       let range = $(event.target).val();
       $(".spWidthProductName").html(range);
       $('.colProductName').css('width', range);
-  },
-  'change .rngRangeDescription': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthDescription").html(range);
-      $('.colDescription').css('width', range);
-  },
-  'change .rngRangeQty': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthQty").html(range);
-      $('.colQty').css('width', range);
-  },
-  'change .rngRangeUnitPriceInc': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthUnitPrice").html(range);
-      $('.colUnitPriceInc').css('width', range);
-  },
-  'change .rngRangeUnitPriceEx': function(event) {
-      let range = $(event.target).val();
-      $('.colUnitPriceEx').css('width', range);
-  },
-  'change .rngRangeTaxRate': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthTaxRate").html(range);
-      $('.colTaxRate').css('width', range);
-  },
-  'change .rngRangeAmountInc': function (event) {
-      let range = $(event.target).val();
-      //$(".spWidthAmount").html(range);
-      $('.colAmountInc').css('width', range);
-  },
-  'change .rngRangeAmountEx': function (event) {
-      let range = $(event.target).val();
-      //$(".spWidthAmount").html(range);
-      $('.colAmountEx').css('width', range);
-  },
-  'change .rngRangeTaxAmount': function (event) {
-      let range = $(event.target).val();
-      //$(".spWidthAmount").html(range);
-      $('.colTaxAmount').css('width', range);
-  },
-  'change .rngRangeDiscount': function (event) {
-      let range = $(event.target).val();
-      $('.colDiscount').css('width', range);
-  },
-  'change .rngRangeSerialNo': function (event) {
-      let range = $(event.target).val();
-      $('.colSerialNo').css('width', range);
-  },
-  'change .rngRangeTaxCode': function (event) {
-      let range = $(event.target).val();
-      $('.colTaxCode').css('width', range);
-  },
-  'change .rngRangeCostPrice': function(event) {
-      let range = $(event.target).val();
-      $('.colCostPrice').css('width', range);
-  },
-  'change .rngRangeSalesLinesCustField1': function(event) {
-      let range = $(event.target).val();
-      $(".spWidthSalesLinesCustField1").html(range);
-      $('.colSalesLinesCustField1').css('width', range);
-  },
+    },
+    'change .rngRangeDescription': function(event) {
+        let range = $(event.target).val();
+        $(".spWidthDescription").html(range);
+        $('.colDescription').css('width', range);
+    },
+    'change .rngRangeQty': function(event) {
+        let range = $(event.target).val();
+        $(".spWidthQty").html(range);
+        $('.colQty').css('width', range);
+    },
+    'change .rngRangeUnitPriceInc': function(event) {
+        let range = $(event.target).val();
+        $(".spWidthUnitPrice").html(range);
+        $('.colUnitPriceInc').css('width', range);
+    },
+    'change .rngRangeUnitPriceEx': function(event) {
+        let range = $(event.target).val();
+        $('.colUnitPriceEx').css('width', range);
+    },
+    'change .rngRangeTaxRate': function(event) {
+        let range = $(event.target).val();
+        $(".spWidthTaxRate").html(range);
+        $('.colTaxRate').css('width', range);
+    },
+    'change .rngRangeAmountInc': function (event) {
+        let range = $(event.target).val();
+        //$(".spWidthAmount").html(range);
+        $('.colAmountInc').css('width', range);
+    },
+    'change .rngRangeAmountEx': function (event) {
+        let range = $(event.target).val();
+        //$(".spWidthAmount").html(range);
+        $('.colAmountEx').css('width', range);
+    },
+    'change .rngRangeTaxAmount': function (event) {
+        let range = $(event.target).val();
+        //$(".spWidthAmount").html(range);
+        $('.colTaxAmount').css('width', range);
+    },
+    'change .rngRangeDiscount': function (event) {
+        let range = $(event.target).val();
+        $('.colDiscount').css('width', range);
+    },
+    'change .rngRangeSerialNo': function (event) {
+        let range = $(event.target).val();
+        $('.colSerialNo').css('width', range);
+    },
+    'change .rngRangeTaxCode': function (event) {
+        let range = $(event.target).val();
+        $('.colTaxCode').css('width', range);
+    },
+    'change .rngRangeCostPrice': function(event) {
+        let range = $(event.target).val();
+        $('.colCostPrice').css('width', range);
+    },
+    'change .rngRangeSalesLinesCustField1': function(event) {
+        let range = $(event.target).val();
+        $('.colSalesLinesCustField1').css('width', range);
+    },
     'change .rngRangeCustomerJob': function(event) {
         let range = $(event.target).val();
-        // $(".spWidthCustomerJob").html(range + '%');
         $('.colCustomerJob').css('width', range);
     },
     'blur .divcolumn': function(event) {
@@ -8594,7 +8628,6 @@ Template.purchaseordercard.events({
         let columHeaderUpdate = $(event.target).attr("valueupdate");
         // $("" + columHeaderUpdate + "").html(columData);
         $("th.col" + columHeaderUpdate + "").html(columData);
-
     },
     'click .btnSaveGridSettings': async function(event) {
       let lineItems = [];
@@ -8662,9 +8695,9 @@ Template.purchaseordercard.events({
       let reset_data = templateObject.reset_data.get();
       let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
       if(isBatchSerialNoTracking) {
-        reset_data[11].display = true;
+        reset_data[13].display = true;
       } else {
-        reset_data[11].display = false;
+        reset_data[13].display = false;
       }
       reset_data = reset_data.filter(redata => redata.display);
 
@@ -11327,7 +11360,11 @@ Template.purchaseordercard.events({
         let selectedunit = $(target).closest('tr').find('.lineOrdered').val();
         localStorage.setItem('productItem', selectedunit);
     },
-
+    
+    'click .btnFixedAsset': function(event) {
+      console.log('btnFixedAsset...')
+      $('#FixedAssetLineAddModal').modal();
+    },
     // add to custom field
   "click #edtSaleCustField1": function (e) {
     $("#clickedControl").val("one");

@@ -1308,7 +1308,7 @@
                                           </div>
                                           <div class="modal-footer">
                                               <button class="btn btn-success btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                              <button class="btn btn-warning btnResetGridSettings" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                                              <button class="btn btn-warning btnResetGridSettings"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
                                               <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                           </div>
                                       </div>
@@ -1564,6 +1564,8 @@
                                           <td contenteditable="false" class="lineAmt convert-to-foreign colAmountInc colAmount {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{convertToForeignAmount item.TotalAmtInc}}</td>
 
                                           {{/if}}
+
+                                          <td class="th colFixedAsset {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnFixedAsset"  style="margin-left: 40px; font-size: 22px;" ></i></td>
 
                                           <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
                                       </tr>
@@ -2267,6 +2269,43 @@
           </div>
 
   <!-- End Help Video Modal -->
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="FixedAssetLineAddModal"> 
+    <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="title-header">Fixed Asset</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-6 col-md-6 col-lg-6">
+                  <div class="form-group"><label>Fixed Asset</label>
+                      <select type="search" class="form-control" id="fixedAssetLine" name="fixedAssetLine" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                      </select>
+                  </div>
+              </div>
+              <div class="col-6 col-md-6 col-lg-6">
+                  <div class="form-group"><label>Cost Type</label>
+                      <select type="search" class="form-control" id="costTypeLine" name="costTypeLine" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                      </select>
+                  </div>
+              </div>
+            </div>  
+          </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="fixedassetlistpopModal">
+    {{> fixedassetlistpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="costtypelistpopModal">
+    {{> costtypelistpop}}
+  </div>
+
   <script>
       modalDraggable();
   </script>
