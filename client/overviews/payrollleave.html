@@ -132,20 +132,21 @@
                         {{#if leaveRequestFiltered}}
                             {{#each leave in leaveRequestFiltered}}
                                 <tr leave-id="{{leave.ID}}">
-                                    <td>{{ leave.Employee.EmployeeName }}</td>
-                                    <td>{{ leave.LeaveMethod }}</td>
-                                    <td>{{ formatDate leave.EndDate }}</td>
-                                    <td>{{ leave.Description }}</td>
-                                    <td>{{ leave.Status }}</td>
+                                    <td class="clickable">{{ leave.Employee.EmployeeName }}</td>
+                                    <td class="clickable">{{ leave.LeaveMethod }}</td>
+                                    <td class="clickable">{{ formatDate leave.EndDate }}</td>
+                                    <td class="clickable">{{ leave.Description }}</td>
+                                    <td class="clickable">{{ leave.Status }}</td>
                                     <td>
                                         {{#if leave.isApproved}}
-                                        <button class="btn btn-success" type="button" leave-id="{{leave.ID}}">Approve</button>
+                                        {{else}}
+                                            <button class="btn btn-success approveLeave" type="button" leave-id="{{leave.ID}}">Approve</button>
                                         {{/if}}
 
                                         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" autocomplete="off" ><i class="fas fa-ellipsis-v"></i></button>
                                         <div class="dropdown-menu daterange" role="menu">
-                                            <a class="dropdown-item" role="presentation" data-toggle="modal" data-target="#newLeaveRequestModal" leave-id="{{leave.ID}}">Edit</a>
-                                            <a class="dropdown-item" role="presentation" leave-id="{{leave.ID}}">Reject</a>
+                                            <a class="dropdown-item editLeave" role="presentation" data-toggle="modal" data-target="#newLeaveRequestModal" leave-id="{{leave.ID}}">Edit</a>
+                                            <a class="dropdown-item rejectLeave" role="presentation" leave-id="{{leave.ID}}">Reject</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -491,7 +492,13 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="newLeaveRequestLabel">New Leave Request</h5>
+                        <style>
+                            .modal-title.hide {
+                                display: none;
+                            }
+                        </style>
+                        <h5 class="modal-title new-leave-title" id="newLeaveRequestLabel">New Leave Request</h5>
+                        <h5 class="modal-title edit-leave-title hide" id="newLeaveRequestLabel">Edit Leave Request</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -503,8 +510,10 @@
                                     <label>Type of Request</label>
                                     <input type="hidden" id="edtLeaveRequestID" value="0">
                                     <input type="hidden" id="edtLeaveTypeofRequestID" value="0">
-                                    <select type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;">
-                                    </select>
+                                    <!-- <select type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;">
+                                    </select>  -->
+                                    <input type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;" />
+                                    
                                 </div>
                             </div>
                             <div class="col-12">
@@ -567,8 +576,8 @@
                             </div>
                         </div>
                         <button type="button" id="removeLeaveRequestBtn" data-id="0" style="display: none;" class="btn btn-danger removeLeaveRequest mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
-                        <button type="button" id="btnSaveLeaveRequest" class="btn btn-success mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                        <button type="button" class="btn btn-secondary mt-3" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                        <button type="button " id="btnSaveLeaveRequest" class="btn btn-success mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                        <button type="button" class="btn btn-secondary mt-3 close-modal" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                     </div>
                 </div>
             </div>

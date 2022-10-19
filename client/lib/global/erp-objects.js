@@ -281,7 +281,8 @@ const erpObject = {
     TRateTypes: "TRateTypes",
     TEarningData: "TEarningData",
     TTimeSheetDetails: "TTimeSheetDetails",
-    TCurrencyFrequencySettings: "TCurrencyFrequencySettings"
+    TCurrencyFrequencySettings: "TCurrencyFrequencySettings",
+    TLeavRequest: "TLeavRequest"
 };
 
 export default erpObject;

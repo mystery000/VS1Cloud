@@ -15,6 +15,7 @@ import moment from "moment";
 import erpObject from "../../lib/global/erp-objects";
 import CachedHttp from "../../lib/global/CachedHttp";
 import CurrencyApi from "../../js/Api/CurrencyApi";
+import ApiService from "../../js/Api/Module/ApiService";
 
 let sideBarService = new SideBarService();
 let taxRateService = new TaxRateService();
@@ -370,6 +371,7 @@ Template._frequencyModal.onRendered(function () {
       const apiEndPoint = currencyApi.collection.findByName(erpObject.TCurrencyFrequencySettings);
       const response = await apiEndPoint.fetch(null, {
         method: "POST",
+        headers: ApiService.getPostHeaders(),
         body: JSON.stringify({
           type: erpObject.TCurrencyFrequencySettings,
           fields: [

@@ -24,6 +24,8 @@ import GlobalFunctions from "../GlobalFunctions";
 import moment from "moment";
 import Datehandler from "../DateHandler";
 import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
+import LeaveRequest from "../js/Api/Model/LeaveRequest";
+import LeaveRequestFields from "../js/Api/Model/LeaveRequestFields";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -57,7 +59,6 @@ Template.payrollleave.onRendered(function () {
       }
     });
 
-    console.log(employees);
     const response = data.response;
     const leaves = response.tleavrequest.map(e => {
       return {
@@ -66,8 +67,6 @@ Template.payrollleave.onRendered(function () {
         isApproved: e.fields.Status == "Approved"
       };
     });
-
-    console.log("leaves", leaves);
 
     this.leaveRequests.set(leaves);
   };
@@ -209,10 +208,254 @@ Template.payrollleave.onRendered(function () {
     }, 100);
   };
 
-  this.editLeave = async (id) => {
-    console.log('edit leave');
+  this.pasteLeaveToModal = async leaveId => {
+    if (!leaveId) 
+      leaveId = $("#newLeaveRequestModal #btnSaveLeaveRequest").attr("leave-id");
+    if (leaveId) {
+      const selectedLeave = this.leaveRequests.get().find(leave => leave.ID == leaveId);
+      $("#newLeaveRequestModal").find("#edtLeaveDescription").val(selectedLeave.Description);
+      $("#newLeaveRequestModal").find("#edtLeaveTypeofRequest").val(selectedLeave.LeaveMethod);
+      $("#newLeaveRequestModal").find("#edtLeaveStartDate").val(moment(selectedLeave.StartDate).format('DD/MM/YYYY'));
+      $("#newLeaveRequestModal").find("#edtLeaveEndDate").val(moment(selectedLeave.EndDate).format("DD/MM/YYYY"));
+      $("#newLeaveRequestModal").find("#edtLeavePayPeriod").val(selectedLeave.PayPeriod);
+      $("#newLeaveRequestModal").find("#edtLeaveHours").val(selectedLeave.Hours);
+      $("#newLeaveRequestModal").find("#edtLeavePayStatus").val(selectedLeave.Status);
 
-  }
+      $("#newLeaveRequestModal").find("#btnSaveLeaveRequest").attr("edit-mode", true);
+      $("#newLeaveRequestModal").find("#btnSaveLeaveRequest").attr("leave-id", leaveId);
+
+      $("#newLeaveRequestModal").find(".modal-title.new-leave-title").addClass("hide");
+      $("#newLeaveRequestModal").find(".modal-title.edit-leave-title").removeClass("hide");
+    }
+  };
+
+  this.saveLeave = async (leaveId = null) => {
+    if (!leaveId) 
+      return;
+    LoadingOverlay.show();
+
+    const selectedLeave = this.leaveRequests.get().find(leave => leave.ID == leaveId);
+
+    let ID = selectedLeave.ID;
+    let TypeofRequest = $("#edtLeaveTypeofRequestID").val();
+    let Leave = $("#edtLeaveTypeofRequest").val();
+    let Description = $("#edtLeaveDescription").val();
+    let StartDate = $("#edtLeaveStartDate").val();
+    let EndDate = $("#edtLeaveEndDate").val();
+    let PayPeriod = $("#edtLeavePayPeriod").val();
+    let Hours = $("#edtLeaveHours").val();
+    let Status = $("#edtLeavePayStatus").val();
+
+    const employeePayrolApis = new EmployeePayrollApi();
+    // now we have to make the post request to save the data in database
+    const apiEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TLeavRequest);
+   
+    if (isNaN(TypeofRequest)) {
+      handleValidationError("Request type must be a number!", "edtLeaveTypeofRequestID");
+      return false;
+    } else if (Description == "") {
+      handleValidationError("Please enter Leave Description!", "edtLeaveDescription");
+      return false;
+    } else if (PayPeriod == "") {
+      handleValidationError("Please enter Pay Period!", "edtLeavePayPeriod");
+      return false;
+    } else if (Hours == "") {
+      handleValidationError("Please enter Hours!", "edtLeaveHours");
+      return false;
+    } else if (isNaN(Hours)) {
+      handleValidationError("Hours must be a Number!", "edtLeaveHours");
+      return false;
+    } else if (Status == "") {
+      handleValidationError("HPlease select Status!", "edtLeavePayStatus");
+      return false;
+    } else {
+      $(".fullScreenSpin").css("display", "block");
+
+      let dbStartDate = moment(StartDate, "DD/MM/YYYY").format("YYYY-MM-DD HH:mm:ss");
+      let dbEndDate = moment(EndDate, "DD/MM/YYYY").format("YYYY-MM-DD HH:mm:ss");
+      // leaveRequests.push(
+      let leaveRequestSettings = new LeaveRequest({
+        type: "TLeavRequest",
+        fields: new LeaveRequestFields({
+          ID: parseInt(ID),
+          EmployeeID: parseInt(selectedLeave.Employee.ID),
+          TypeOfRequest: parseInt(TypeofRequest),
+          LeaveMethod: Leave,
+          Description: Description,
+          StartDate: dbStartDate,
+          EndDate: dbEndDate,
+          PayPeriod: PayPeriod,
+          Hours: parseInt(Hours),
+          Status: Status
+        })
+      });
+      // );
+
+      const ApiResponse = await apiEndpoint.fetch(null, {
+        method: "POST",
+        headers: ApiService.getPostHeaders(),
+        body: JSON.stringify(leaveRequestSettings)
+      });
+
+      try {
+        if (ApiResponse.ok == true) {
+          const jsonResponse = await ApiResponse.json();
+          $("#newLeaveRequestModal").modal("hide");
+          $("#edtLeaveTypeofRequestID, #edtLeaveTypeofRequest, #edtLeaveDescription, #edtLeavePayPeriod, #edtLeaveHours, #edtLeavePayStatus").val("");
+          LoadingOverlay.hide(0);
+          swal({title: "Leave request added successfully", text: "", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(result => {
+            if (result.value) {
+              if (result.value) {}
+            }
+          });
+        } else {
+          LoadingOverlay.hide(0);
+          swal({title: "Oooops...", text: ApiResponse.headers.get("errormessage"), type: "error", showCancelButton: false, confirmButtonText: "Try Again"}).then(result => {
+            if (result.value) {}
+          });
+        }
+      } catch (error) {
+        LoadingOverlay.hide(0);
+        swal({title: "Oooops...", text: error, type: "error", showCancelButton: false, confirmButtonText: "Try Again"}).then(result => {
+          if (result.value) {}
+        });
+      }
+    }
+  };
+
+  this.approveLeave = async leaveId => {
+    if (!leaveId) 
+      return;
+    LoadingOverlay.show();
+
+    const selectedLeave = this.leaveRequests.get().find(leave => leave.ID == leaveId);
+
+    const finalLeave = new LeaveRequest({
+      type: "TLeavRequest",
+      fields: new LeaveRequestFields({
+        ID: parseInt(selectedLeave.ID),
+        EmployeeID: parseInt(selectedLeave.Employee.ID),
+        TypeOfRequest: parseInt(selectedLeave.TypeofRequest),
+        LeaveMethod: selectedLeave.LeaveMethod,
+        Description: selectedLeave.Description,
+        StartDate: selectedLeave.StartDate,
+        EndDate: selectedLeave.EndDate,
+        PayPeriod: selectedLeave.PayPeriod,
+        Hours: parseInt(selectedLeave.Hours),
+        Status: "Approved"
+      })
+    });
+
+    const payrollApi = new EmployeePayrollApi();
+    const ApiEndpoint = payrollApi.collection.findByName(erpObject.TLeavRequest);
+
+    try {
+      const response = await ApiEndpoint.fetch(null, {
+        method: "POST",
+        headers: ApiService.getPostHeaders(),
+        body: JSON.stringify(finalLeave)
+      });
+      if (response.ok) {
+        LoadingOverlay.hide(0);
+        const result = await swal({
+          title: "Approved successfully",
+          // text: e,
+          type: "success",
+          showCancelButton: false,
+          confirmButtonText: "OK"
+        });
+
+        if (result.value) {
+          await this.initPage();
+        } else if (result.dismiss === "cancel") {}
+      } else {
+        throw response.status;
+      }
+    } catch (e) {
+      LoadingOverlay.hide(0);
+      const result = await swal({
+        title: "Couldn't approve",
+        text: e,
+        type: "error",
+        showCancelButton: true,
+        confirmButtonText: "Retry",
+        cancelButtonText: "Abort"
+      });
+
+      if (result.value) {
+        this.approveLeave(leaveId);
+      } else if (result.dismiss === "cancel") {}
+    }
+
+    LoadingOverlay.hide();
+  };
+
+  this.rejectLeave = async leaveId => {
+    if (!leaveId) 
+      return;
+    LoadingOverlay.show();
+
+    const selectedLeave = this.leaveRequests.get().find(leave => leave.ID == leaveId);
+
+    const finalLeave = new LeaveRequest({
+      type: "TLeavRequest",
+      fields: new LeaveRequestFields({
+        ID: parseInt(selectedLeave.ID),
+        EmployeeID: parseInt(selectedLeave.Employee.ID),
+        TypeOfRequest: parseInt(selectedLeave.TypeofRequest),
+        LeaveMethod: selectedLeave.LeaveMethod,
+        Description: selectedLeave.Description,
+        StartDate: selectedLeave.StartDate,
+        EndDate: selectedLeave.EndDate,
+        PayPeriod: selectedLeave.PayPeriod,
+        Hours: parseInt(selectedLeave.Hours),
+        Status: "Denied"
+      })
+    });
+
+    const payrollApi = new EmployeePayrollApi();
+    const ApiEndpoint = payrollApi.collection.findByName(erpObject.TLeavRequest);
+
+    try {
+      const response = await ApiEndpoint.fetch(null, {
+        method: "POST",
+        headers: ApiService.getPostHeaders(),
+        body: JSON.stringify(finalLeave)
+      });
+      if (response.ok) {
+        LoadingOverlay.hide(0);
+        const result = await swal({
+          title: "Rejected successfully",
+          // text: e,
+          type: "success",
+          showCancelButton: false,
+          confirmButtonText: "OK"
+        });
+
+        if (result.value) {
+          await this.initPage();
+        } else if (result.dismiss === "cancel") {}
+      } else {
+        throw response.status;
+      }
+    } catch (e) {
+      LoadingOverlay.hide(0);
+      const result = await swal({
+        title: "Couldn't reject",
+        text: e,
+        type: "error",
+        showCancelButton: true,
+        confirmButtonText: "Retry",
+        cancelButtonText: "Abort"
+      });
+
+      if (result.value) {
+        this.rejectLeave(leaveId);
+      } else if (result.dismiss === "cancel") {}
+    }
+
+    LoadingOverlay.hide();
+  };
 
   this.initPage = async () => {
     LoadingOverlay.show();
@@ -223,6 +466,7 @@ Template.payrollleave.onRendered(function () {
 
     this.dataTableSetup();
 
+    Datehandler.defaultDatePicker();
     LoadingOverlay.hide();
   };
 
@@ -240,12 +484,41 @@ Template.payrollleave.events({
     ui.loadLeavesToReview(true);
   },
   "click #tblPayleaveToReview tbody tr": (e, ui) => {
-    console.log(e);
-    if(e.target.nodeName != "BUTTON" || e.target.nodeName != "A") {
-      $('#newLeaveRequestModal').modal('show');
-      const id = $(e.currentTarget).attr('leave-id');
-      ui.editLeave(id);
+    if ($(e.target).closest("td").hasClass("clickable")) {
+      ui.pasteLeaveToModal($(e.currentTarget).attr("leave-id"));
+      $("#newLeaveRequestModal").modal("show");
+      // $('#newLeaveRequestModal').find('.modal-title.new-leave-title').addClass('hide');
+      // $('#newLeaveRequestModal').find('.modal-title.edit-leave-title').removeClass('hide');
     }
+  },
+  "click .editLeave": (e, ui) => {
+    const id = $(e.currentTarget).attr("leave-id");
+    ui.pasteLeaveToModal(id);
+  },
+  // in the modal
+  "click #newLeaveRequestModal #btnSaveLeaveRequest": (e, ui) => {
+    const id = $(e.currentTarget).attr("leave-id");
+    ui.saveLeave(id);
+    // the revert the modal into new leave modal
+    // will cancel Edit mode
+    $("#newLeaveRequestModal").find(".modal-title.new-leave-title").removeClass("hide");
+    $("#newLeaveRequestModal").find(".modal-title.edit-leave-title").addClass("hide");
+    $("#newLeaveRequestModal").find("#btnSaveLeaveRequest").removeAttr("leave-id");
+  },
+  "click #newLeaveRequestModal .close-modal": (e, ui) => {
+    // the revert the modal into new leave modal
+    // will cancel Edit mode
+    $("#newLeaveRequestModal").find(".modal-title.new-leave-title").removeClass("hide");
+    $("#newLeaveRequestModal").find(".modal-title.edit-leave-title").addClass("hide");
+    $("#newLeaveRequestModal").find("#btnSaveLeaveRequest").removeAttr("leave-id");
+  },
+  "click .rejectLeave": (e, ui) => {
+    const id = $(e.currentTarget).attr("leave-id");
+    ui.rejectLeave(id);
+  },
+  "click .approveLeave": (e, ui) => {
+    const id = $(e.currentTarget).attr("leave-id");
+    ui.approveLeave(id);
   }
 });
 
