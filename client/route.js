@@ -2251,6 +2251,15 @@ authenticatedRoutes.route('/assetcostreport', {
   }
 });
 
+authenticatedRoutes.route('/assetregisteroverview', {
+  name: 'assetregisteroverview',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'assetregisteroverview'
+      });
+  }
+});
+
 authenticatedRoutes.route('/serviceloglist', {
     name: 'serviceloglist',
     action() {
