@@ -85,7 +85,6 @@ Template.purchasesaleschart.onRendered(()=>{
                 });
                 amountdueTotal += item.AmountDue
                 currentTotal += item.Current
-                console.log('item.AmountDue',item.AmountDue)
             }
         }
         // let totalPayablesSummaryAmount = amountdueTotal + currentTotal;
