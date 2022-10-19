@@ -213,6 +213,10 @@ Template.salesoverview.onRendered(function () {
                 $("#dateFrom").val(data.Params.DateFrom != ""? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
                 $("#dateTo").val(data.Params.DateTo != ""? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
               }
+              deleteFilter = false;
+              if( data.Params.Search == ""){
+                deleteFilter = true;
+              }
               for (let i = 0; i < data.tsaleslist.length; i++) {
                 let totalAmountEx =
                   utilityService.modifynegativeCurrencyFormat(
@@ -605,6 +609,10 @@ Template.salesoverview.onRendered(function () {
           } else {
             $("#dateFrom").val(data.Params.DateFrom != ""? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
             $("#dateTo").val(data.Params.DateTo != ""? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+          }
+          deleteFilter = false;
+          if( data.Params.Search == ""){
+            deleteFilter = true;
           }
 
           let useData = data.tsaleslist;

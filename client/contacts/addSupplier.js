@@ -651,6 +651,12 @@ Template.supplierscard.onRendered(function () {
             isContractor:data.fields.Contractor || false,
             issupplier: data.fields.IsSupplier || false,
             iscustomer: data.fields.IsCustomer || false,
+            bankName: data.fields.BankName || '',
+            swiftCode: data.fields.SwiftCode || '',
+            routingNumber: data.fields.RoutingNumber || '',
+            bankAccountName: data.fields.BankAccountName || '',
+            bankAccountBSB: data.fields.BankAccountBSB || '',
+            bankAccountNo: data.fields.BankAccountNo || '',
             // openingbalancedate: data.fields.RewardPointsOpeningDate ? moment(data.fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
             // taxcode:data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get()
         };
@@ -936,7 +942,13 @@ Template.supplierscard.onRendered(function () {
             bpostalcode : '',
             bcountry : LoggedCountry || '',
             custFld1 : '',
-            custFld2 : ''
+            custFld2 : '',
+            bankName: '',
+            swiftCode: '',
+            routingNumber: '',
+            bankAccountName:  '',
+            bankAccountBSB: '',
+            bankAccountNo: '',
         };
         templateObject.isSameAddress.set(true);
         templateObject.records.set(lineItemObj);
@@ -1881,6 +1893,9 @@ Template.supplierscard.events({
                     BankAccountName: BankAccountName,
                     BankAccountBSB: BSB,
                     BankAccountNo: BankAccountNo,
+                    BankName: BankName,
+                    SwiftCode: SwiftCode,
+                    RoutingNumber: RoutingNumber
 
                 }
             };
@@ -1935,6 +1950,9 @@ Template.supplierscard.events({
                         BankAccountName: BankAccountName,
                         BankAccountBSB: BSB,
                         BankAccountNo: BankAccountNo,
+                        BankName: BankName,
+                        SwiftCode: SwiftCode,
+                        RoutingNumber: RoutingNumber
                     }
                 };
             } else {
@@ -1983,6 +2001,9 @@ Template.supplierscard.events({
                         BankAccountName: BankAccountName,
                         BankAccountBSB: BSB,
                         BankAccountNo: BankAccountNo,
+                        BankName: BankName,
+                        SwiftCode: SwiftCode,
+                        RoutingNumber: RoutingNumber
                     }
                 };
             }
