@@ -355,6 +355,10 @@ Template.serviceloglisttable.events({
     });
   },
 
+  "click #btnNewServiceLog": function() {
+    FlowRouter.go('/servicelogcard');
+  }
+
 });
 
 Template.serviceloglisttable.helpers({

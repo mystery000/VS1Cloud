@@ -1,0 +1,240 @@
+<template name="servicelogcard">
+  <div class="container-fluid purchasesmodule" style="padding-right: 0px;padding-left: 0px;">
+    <div class="fullScreenSpin" style="display:none;">
+      <div class="spinner"></div>
+    </div>
+
+    <form>
+      <header
+        style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
+        <h1 style="margin: 12px;margin-bottom: 0px;" class="heading">New Service Log
+
+          {{> helpbutton}}
+
+          <!-- Start Help View Modal -->
+          <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+            <div class="modal-dialog modal-sm" role="document">
+              <div class="modal-content">
+                <div class="modal-header" style="padding-bottom: 8px;">
+                  <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                      aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                  <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
+                      class="btn btn-primary helpModal">View Help Video</a></p>
+                  <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank"
+                      class="btn btn-primary">Download Help File</a></p>
+                  {{> helpadvisor}}
+                  {{> helpgotoforum}}
+                </div>
+                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal"
+                    type="button">Close</button></div>
+              </div>
+            </div>
+          </div>
+          <!-- End Help View Modal -->
+
+          <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i
+              class="icon ion-android-more-horizontal"></i></a>
+        </h1>
+      </header>
+
+      <div class="row" style="background-color: #ededed;">
+        <div class="col-12 col-xl-10">
+          <div class="row" style="margin: 8px 16px 0px 16px;">
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              <div class="form-group"><label>Supplier</label>
+                <select type="search" class="form-control" id="edtSupplierName" name="edtSupplierName" suppid=" "
+                  style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                </select>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              <div class="form-group"><label>Supplier Email</label>
+                <input class="form-control form-control" type="text" id="edtSupplierEmail" name="edtSupplierEmail"
+                  customerid=" ">
+              </div>
+              <div class="custom-control custom-control-inline custom-switch d-xl-flex align-items-xl-center"
+                style="margin: 0px 16px;padding: -2px;padding-left: 24px;width: 100%;">
+                <div class="form-group" style="margin-right: 35px; Width:50%;">
+                  <input class="custom-control-input chkEmailCopy" type="checkbox" id="formCheck-1"
+                    style="font-size: 22px;"><label class="custom-control-label" for="formCheck-1">Email
+                    Supplier</label>
+                </div>
+                <div class="form-group" style="margin-left: 35px; Width:50%;">
+                  <input class="custom-control-input chkEmailRep" type="checkbox" id="formCheck-2"
+                    style="font-size: 22px;"><label class="custom-control-label" for="formCheck-2">Email User</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="margin: 8px 16px 0px 16px;">
+            <div class="col-12 col-md-6 col-lg-2 col-xl-3">
+              <div class="form-group"><label>Billing Address</label>
+                <textarea class="form-control" rows="5" style="height: 120px;" id="txabillingAddress"
+                  name="txabillingAddress">{{purchaseorderrecord.invoiceToDesc}}</textarea>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-2 col-xl-3">
+              <div class="row">
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                  <div class="row">
+                    <div class="col-6 col-md-12 col-lg-12">
+                      <div class="form-group"><label>Order Date</label>
+                        <div class="input-group date" style="cursor: pointer;">
+                          <input type="text" class="form-control" id="dtSODate" name="dtSODate"
+                            value="{{purchaseorderrecord.saledate}}">
+                          <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-12 col-lg-12">
+                      <div class="form-group"><label>Reference</label>
+                        <input class="form-control form-control" type="text" id="edtRef" name="edtRef"
+                          value="{{purchaseorderrecord.reference}}">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                  <div class="row">
+                    <div class="col-6 col-md-12 col-lg-12">
+                      <div class="form-group"><label>Invoice Number</label>
+                        <input class="form-control form-control" type="text" id="ponumber" name="ponumber"
+                          value="{{purchaseorderrecord.invoicenumber}}">
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-12 col-lg-12">
+                      <div class="form-group"><label>Department</label>
+                        <select type="search" class="form-control" id="sltDept" name="sltDept"
+                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-2 col-xl-3">
+              <div class="row">
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                  <div class="row">
+                    <div class="col-6 col-md-12 col-lg-12">
+                      <div class="form-group"><label>Terms</label>
+                        <select type="search" class="form-control" id="sltTerms" name="sltTerms"
+                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-12 col-lg-12">
+                      <div class="form-group"><label>Via</label>
+                        <select type="search" class="form-control" id="shipvia" name="shipvia"
+                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                  <div class="row">
+                    <div class="col-6 col-md-12 col-lg-12">
+                      <div class="form-group"><label>Status</label>
+                        <select type="search" class="form-control" id="sltStatus" name="sltStatus"
+                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-12 col-lg-12">
+
+                      <div class="form-group" style="width: 90%; display: none;"><label>Due Date</label>
+                        <div class="input-group date" style="width: 150px;cursor: pointer;">
+                          <input type="text" class="form-control" id="dtDueDate" name="dtDueDate"
+                            value="{{purchaseorderrecord.duedate}}">
+                          <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-2 col-xl-3">
+              <div class="row">
+                {{#if isCurrencyEnable}}
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                  {{> CurrencyWidget rate="buy"}}
+                </div>
+                {{/if}}
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="one box checkbox1div"
+                        style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                        <div class="form-group">
+                          <label class="lblCustomField1">{{#if
+                            salesCloudPreferenceRec}}{{salesCloudPreferenceRec.customFields.[0].label}}{{else}}CustField1{{/if}}</label>
+                          <input class="form-control form-control" type="text" id="edtSaleCustField1"
+                            name="edtSaleCustField1" value="{{purchaseorderrecord.saleCustField1}}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="two box checkbox2div"
+                        style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                        <div class="form-group">
+                          <label class="lblCustomField2">{{#if
+                            salesCloudPreferenceRec}}{{salesCloudPreferenceRec.customFields.[1].label}}{{else}}CustField2{{/if}}<br></label>
+                          <input class="form-control form-control" type="text" id="edtSaleCustField2"
+                            name="edtSaleCustField2" value="{{purchaseorderrecord.saleCustField2}}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="three box checkbox3div"
+                        style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[2].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                        <div class="form-group">
+                          <label class="lblCustomField3">{{#if
+                            salesCloudPreferenceRec}}{{salesCloudPreferenceRec.customFields.[2].label}}{{else}}CustField3{{/if}}<br></label>
+                          <input class="form-control form-control" type="text" id="edtSaleCustField3"
+                            name="edtSaleCustField3" value="{{purchaseorderrecord.saleCustField3}}">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-xl-2">
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-md-11">
+          <div class="row justify-content-center desktopButtons">
+            <button class="btn btn-success btnSave btnFooter" type="button"
+              style="margin: 14px;margin-top: 0px;width: 100px;">
+              <i class="fa fa-save" style="padding-right: 8px;"></i>Save
+            </button>
+
+            <button class="btn btn-secondary btnBack btnFooter" type="button"
+              style="margin: 14px;margin-top: 0px;width: 100px;">
+              <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</template>

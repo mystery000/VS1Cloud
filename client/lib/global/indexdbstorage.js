@@ -308,6 +308,8 @@ openDb = function(dbName) {
             db.createObjectStore(erpObject.TRateTypes, { keyPath: "EmployeeEmail" });
             db.createObjectStore(erpObject.TEarningData, { keyPath: "EmployeeEmail" });
             db.createObjectStore(erpObject.TTimeSheetDetails, { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TServiceLog", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TServiceLogList", { keyPath: "EmployeeEmail" });
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });
