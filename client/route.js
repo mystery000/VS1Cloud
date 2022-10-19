@@ -2260,6 +2260,15 @@ authenticatedRoutes.route('/assetregisteroverview', {
   }
 });
 
+authenticatedRoutes.route('/servicelogcard', {
+  name: 'servicelogcard',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'servicelogcard'
+      });
+  }
+});
+
 authenticatedRoutes.route('/serviceloglist', {
     name: 'serviceloglist',
     action() {
