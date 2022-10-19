@@ -43,183 +43,103 @@
         <div class="col-12 col-xl-10">
           <div class="row" style="margin: 8px 16px 0px 16px;">
             <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-              <div class="form-group"><label>Supplier</label>
-                <select type="search" class="form-control" id="edtSupplierName" name="edtSupplierName" suppid=" "
+              <div class="form-group"><label>Asset Code</label>
+                <select type="search" class="form-control" id="edtAssetCode" name="edtAssetCode" suppid=" "
                   style="background-color:rgb(255, 255, 255); cursor: pointer;">
                 </select>
               </div>
             </div>
             <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-              <div class="form-group"><label>Supplier Email</label>
-                <input class="form-control form-control" type="text" id="edtSupplierEmail" name="edtSupplierEmail"
+              <div class="form-group"><label>Asset Name</label>
+                <input class="form-control" type="text" id="edtAssetName" name="edtAssetName"
                   customerid=" ">
               </div>
-              <div class="custom-control custom-control-inline custom-switch d-xl-flex align-items-xl-center"
-                style="margin: 0px 16px;padding: -2px;padding-left: 24px;width: 100%;">
-                <div class="form-group" style="margin-right: 35px; Width:50%;">
-                  <input class="custom-control-input chkEmailCopy" type="checkbox" id="formCheck-1"
-                    style="font-size: 22px;"><label class="custom-control-label" for="formCheck-1">Email
-                    Supplier</label>
-                </div>
-                <div class="form-group" style="margin-left: 35px; Width:50%;">
-                  <input class="custom-control-input chkEmailRep" type="checkbox" id="formCheck-2"
-                    style="font-size: 22px;"><label class="custom-control-label" for="formCheck-2">Email User</label>
-                </div>
-              </div>
             </div>
           </div>
+
           <div class="row" style="margin: 8px 16px 0px 16px;">
-            <div class="col-12 col-md-6 col-lg-2 col-xl-3">
-              <div class="form-group"><label>Billing Address</label>
-                <textarea class="form-control" rows="5" style="height: 120px;" id="txabillingAddress"
-                  name="txabillingAddress">{{purchaseorderrecord.invoiceToDesc}}</textarea>
-              </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-2 col-xl-3">
-              <div class="row">
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-                    <div class="col-6 col-md-12 col-lg-12">
-                      <div class="form-group"><label>Order Date</label>
-                        <div class="input-group date" style="cursor: pointer;">
-                          <input type="text" class="form-control" id="dtSODate" name="dtSODate"
-                            value="{{purchaseorderrecord.saledate}}">
-                          <div class="input-group-addon">
-                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-6 col-md-12 col-lg-12">
-                      <div class="form-group"><label>Reference</label>
-                        <input class="form-control form-control" type="text" id="edtRef" name="edtRef"
-                          value="{{purchaseorderrecord.reference}}">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-                    <div class="col-6 col-md-12 col-lg-12">
-                      <div class="form-group"><label>Invoice Number</label>
-                        <input class="form-control form-control" type="text" id="ponumber" name="ponumber"
-                          value="{{purchaseorderrecord.invoicenumber}}">
-                      </div>
-                    </div>
-                    <div class="col-6 col-md-12 col-lg-12">
-                      <div class="form-group"><label>Department</label>
-                        <select type="search" class="form-control" id="sltDept" name="sltDept"
-                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                        </select>
-                      </div>
-                    </div>
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              <div class="form-group"><label>Service Date</label>
+                <div class="input-group date" style="cursor: pointer;">
+                  <input type="text" class="form-control" id="dtServiceDate" name="dtServiceDate">
+                  <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-12 col-md-6 col-lg-2 col-xl-3">
-              <div class="row">
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-                    <div class="col-6 col-md-12 col-lg-12">
-                      <div class="form-group"><label>Terms</label>
-                        <select type="search" class="form-control" id="sltTerms" name="sltTerms"
-                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-6 col-md-12 col-lg-12">
-                      <div class="form-group"><label>Via</label>
-                        <select type="search" class="form-control" id="shipvia" name="shipvia"
-                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-                    <div class="col-6 col-md-12 col-lg-12">
-                      <div class="form-group"><label>Status</label>
-                        <select type="search" class="form-control" id="sltStatus" name="sltStatus"
-                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-6 col-md-12 col-lg-12">
-
-                      <div class="form-group" style="width: 90%; display: none;"><label>Due Date</label>
-                        <div class="input-group date" style="width: 150px;cursor: pointer;">
-                          <input type="text" class="form-control" id="dtDueDate" name="dtDueDate"
-                            value="{{purchaseorderrecord.duedate}}">
-                          <div class="input-group-addon">
-                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-
-
-                </div>
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              <div class="form-group"><label>Service Provider</label>
+                <input class="form-control" type="text" id="edtServiceProvider" name="edtServiceProvider"
+                  customerid=" ">
               </div>
             </div>
-            <div class="col-12 col-md-6 col-lg-2 col-xl-3">
+          </div>
+
+          <div class="row" style="margin: 8px 16px 0px 16px;">
+            <div class="col-12 col-md-6 col-lg-6 col-xl-6">
               <div class="row">
-                {{#if isCurrencyEnable}}
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  {{> CurrencyWidget rate="buy"}}
+                <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                  <div class="form-group"><label>Next Service Date</label>
+                    <div class="input-group date" style="cursor: pointer;">
+                      <input type="text" class="form-control" id="dtNextServiceDate" name="dtNextServiceDate">
+                      <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                      </div>
+                    </div> 
+                  </div>
                 </div>
-                {{/if}}
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-                    <div class="col-12">
-                      <div class="one box checkbox1div"
-                        style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                        <div class="form-group">
-                          <label class="lblCustomField1">{{#if
-                            salesCloudPreferenceRec}}{{salesCloudPreferenceRec.customFields.[0].label}}{{else}}CustField1{{/if}}</label>
-                          <input class="form-control form-control" type="text" id="edtSaleCustField1"
-                            name="edtSaleCustField1" value="{{purchaseorderrecord.saleCustField1}}">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-12">
-                      <div class="two box checkbox2div"
-                        style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                        <div class="form-group">
-                          <label class="lblCustomField2">{{#if
-                            salesCloudPreferenceRec}}{{salesCloudPreferenceRec.customFields.[1].label}}{{else}}CustField2{{/if}}<br></label>
-                          <input class="form-control form-control" type="text" id="edtSaleCustField2"
-                            name="edtSaleCustField2" value="{{purchaseorderrecord.saleCustField2}}">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-12">
-                      <div class="three box checkbox3div"
-                        style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[2].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                        <div class="form-group">
-                          <label class="lblCustomField3">{{#if
-                            salesCloudPreferenceRec}}{{salesCloudPreferenceRec.customFields.[2].label}}{{else}}CustField3{{/if}}<br></label>
-                          <input class="form-control form-control" type="text" id="edtSaleCustField3"
-                            name="edtSaleCustField3" value="{{purchaseorderrecord.saleCustField3}}">
-                        </div>
-                      </div>
-                    </div>
+                <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                  <div class="form-group"><label>Hour(s)</label>
+                    <input class="form-control" type="text" id="edtHours"
+                      name="edtHours" customerid=" ">
+                  </div>
+                </div>
+                <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                  <div class="form-group"><label>Km(s)</label>
+                    <input class="form-control" type="text" id="edtKms"
+                      name="edtKms" customerid=" ">
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <div class="row" style="margin: 8px 16px 0px 16px;">
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              <div class="form-group"><label>Rep</label>
+                <select type="search" class="form-control" id="edtRep" name="edtRep" suppid=" "
+                  style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                </select>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              <div class="form-group" style="float: right;"><label>Done</label>
+                <input class="" type="checkbox" id="edtDone" name="edtDone"
+                  customerid=" ">
+              </div>
+            </div>
+          </div>
+
+          <div class="row" style="margin: 8px 16px 0px 16px;">
+            <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+              <div class="form-group"><label>Service Notes</label>
+                <textarea class="form-control" rows="5" style="height: 120px;" id="txtServiceNotes"
+                  name="txtServiceNotes"></textarea>
+              </div>
+            </div>
+          </div>
+
         </div>
+
+
 
         <div class="col-12 col-xl-2">
 
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" style="margin-top: 24px;">
         <div class="col-12 col-md-11">
           <div class="row justify-content-center desktopButtons">
             <button class="btn btn-success btnSave btnFooter" type="button"
