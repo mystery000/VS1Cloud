@@ -645,7 +645,7 @@ export class ReportService extends BaseService {
         ListType: "'Detail'"
       };
     }
-    return this.getList(this.ERPObjects.TLeaveAccruals, options);
+    return this.getList(this.ERPObjects.TLeaveAccrualList, options);
   }
 
   getStockQuantityLocationReport(dateFrom, dateTo, ignoreDate = false) {
@@ -771,12 +771,14 @@ export class ReportService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
+        FilterIndex: 2
       };
     } else {
       options = {
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
+        FilterIndex: 2
       };
     }
     return this.getList(this.ERPObjects.TTransactionListReport, options);
