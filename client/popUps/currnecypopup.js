@@ -994,9 +994,11 @@ Template.currencypop.events({
     $("#newTaxRate").css("display", "block");
   },
   "click .btnCloseAddNewDept": function () {
+    playCancelAudio();
     $("#newTaxRate").css("display", "none");
   },
   "click .btnDeleteCurrency": function () {
+    playDeleteAudio();
     let taxRateService = new TaxRateService();
     let currencyId = $("#selectDeleteLineID").val();
 
@@ -1083,6 +1085,7 @@ Template.currencypop.events({
     }
   },
   "click .btnSaveCurrency": function () {
+    playSaveAudio();
     let taxRateService = new TaxRateService();
     $(".fullScreenSpin").css("display", "inline-block");
     var currencyid = $("#edtCurrencyID").val();

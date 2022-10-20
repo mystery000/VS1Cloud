@@ -968,6 +968,22 @@ authenticatedRoutes.route('/bankingoverview', {
         });
     }
 });
+authenticatedRoutes.route('/supplierdetail', {
+    name: 'supplierdetail',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'supplierdetail'
+        });
+    }
+});
+authenticatedRoutes.route('/suppliersummary', {
+    name: 'suppliersummary',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'suppliersummary'
+        });
+    }
+});
 
 authenticatedRoutes.route('/reconciliation', {
     name: 'reconciliation',
@@ -2242,6 +2258,15 @@ authenticatedRoutes.route('/fixedassetlist', {
   }
 });
 
+authenticatedRoutes.route('/fixedassetcard', {
+  name: 'fixedassetcard',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'fixedassetcard'
+      });
+  }
+});
+
 authenticatedRoutes.route('/assetcostreport', {
   name: 'assetcostreport',
   action() {
@@ -2256,6 +2281,15 @@ authenticatedRoutes.route('/assetregisteroverview', {
   action() {
       BlazeLayout.render('layout', {
           yield: 'assetregisteroverview'
+      });
+  }
+});
+
+authenticatedRoutes.route('/servicelogcard', {
+  name: 'servicelogcard',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'servicelogcard'
       });
   }
 });

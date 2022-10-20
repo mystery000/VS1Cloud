@@ -243,6 +243,7 @@ Template.profitandlosschart.onRendered(()=>{
    //  }
    // },
     'click .btnPrintReport':function (event) {
+      playPrintAudio();
       $(".printReport").print({
           title   :  document.title +" | Aged Receivables | "+loggedCompany,
           noPrintSelector : ".addSummaryEditor",

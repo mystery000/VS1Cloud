@@ -478,7 +478,7 @@ Template.paychexapi.events({
         window.open('/paychexapi','_self');
     },
 'click .printConfirm' : function(event){
-
+  playPrintAudio();
 $('.fullScreenSpin').css('display','inline-block');
 jQuery('#tblpaychex_wrapper .dt-buttons .btntabletopdf').click();
 $('.fullScreenSpin').css('display','none');

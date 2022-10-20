@@ -1025,7 +1025,7 @@ Template.serialnumberlist.events({
 
     },
     'click .printConfirm': function(event) {
-
+        playPrintAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblSerialNumberList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');

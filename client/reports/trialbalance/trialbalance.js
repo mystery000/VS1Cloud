@@ -122,6 +122,7 @@ Template.trialbalance.onRendered(() => {
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getTrialBalanceReports(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
   };
+  // templateObject.setReportOptions();
 
 
   /**
@@ -528,7 +529,6 @@ Template.trialbalance.onRendered(() => {
       $(".fullScreenSpin").css("display", "none");
     }
   };
-
   /**
    * This will be used 
    * 
@@ -786,6 +786,7 @@ Template.trialbalance.events({
     Meteor._reload.reload();
   },
   "click .btnPrintReport": function (event) {
+    playPrintAudio();
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {

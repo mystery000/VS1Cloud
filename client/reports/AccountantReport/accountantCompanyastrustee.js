@@ -1814,6 +1814,7 @@ Template.accountant_companyastrustee.events({
     },
 
     "click .btnSaveAccount": function() {
+        playSaveAudio();
         $(".fullScreenSpin").css("display", "inline-block");
         let templateObject = Template.instance();
         let accountService = new AccountService();
@@ -2285,6 +2286,7 @@ Template.accountant_companyastrustee.events({
     },
 
     "click .btnPrintReport": function(event) {
+        playPrintAudio();
         $(".printReport").show();
         $("a").attr("href", "/");
         document.title = "Company As Trustee";
@@ -2382,6 +2384,7 @@ Template.accountant_companyastrustee.events({
     },
 
     "click #btnSaveEditor": function(event) {
+        playSaveAudio();
         // $('#editor').wysiwyg();
         let iframe = document.getElementById("editor_ifr");
         var elmnt = $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html();

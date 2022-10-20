@@ -19,7 +19,7 @@ Template.overduecustomerawaitingpayments.onCreated(function () {
 });
 
 Template.overduecustomerawaitingpayments.onRendered(function () {
-    $('.fullScreenSpin').css('display', 'inline-block');
+    // $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     const customerList = [];
@@ -1763,7 +1763,7 @@ var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDat
         templateObject.getAllFilterAwaitingCustData('', toDate, true);
     },
     'click .printConfirm': function (event) {
-
+        playPrintAudio();
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {

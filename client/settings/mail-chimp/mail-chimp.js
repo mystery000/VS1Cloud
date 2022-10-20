@@ -63,6 +63,7 @@ Template.mailchimp.events({
       }
     },
     'click #saveMailChimpSetting': async function(){
+        playSaveAudio();
         $('.fullScreenSpin').css('display','block');
         let settingObject = [];
         const templateObject = Template.instance();

@@ -1370,7 +1370,23 @@ Template.appointments.onRendered(function () {
             templateObject
           );
         } else {
-          $("#customerListModal").modal();
+          let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+          var leaveFlag = false;
+          let empID = $(event.draggedEl.childNodes[1]).attr('id').split("_")[1];
+          templateObject.empID.set(empID);
+          leaveemployeerecords.forEach((item) => {
+            if(item.EmployeeID == empID && new Date(event.dateStr) >= new Date(item.StartDate) && new Date(event.dateStr) <= new Date(item.EndDate)){
+              swal(
+                "They are not available due to whatever leave they took",
+                "",
+                "warning"
+              );
+              leaveFlag = true;
+            }
+          });
+          if(!leaveFlag){
+            $("#customerListModal").modal();
+          }
         }
       },
 
@@ -2046,7 +2062,23 @@ Template.appointments.onRendered(function () {
             templateObject
           );
         } else {
-          $("#customerListModal").modal();
+          let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+          var leaveFlag = false;
+          let empID = $(event.draggedEl.childNodes[1]).attr('id').split("_")[1];
+          templateObject.empID.set(empID);
+          leaveemployeerecords.forEach((item) => {
+            if(item.EmployeeID == empID && new Date(event.dateStr) >= new Date(item.StartDate) && new Date(event.dateStr) <= new Date(item.EndDate)){
+              swal(
+                "They are not available due to whatever leave they took",
+                "",
+                "warning"
+              );
+              leaveFlag = true;
+            }
+          });
+          if(!leaveFlag){
+              $("#customerListModal").modal();
+          }
         }
       },
 
@@ -2110,7 +2142,6 @@ Template.appointments.onRendered(function () {
       const parent2 = child2.parentNode;
       $(parent1).css("min-width", 568).css("text-align", "center");
       $("#calendar .fc-toolbar-title").css("min-width", 270).css("text-align", "center");
-      // $(parent2).css("min-width", 260)
     }, 500);
   };
 
@@ -4751,7 +4782,23 @@ Template.appointments.onRendered(function () {
                       templateObject
                     );
                   } else {
-                    $("#customerListModal").modal();
+                    let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                    var leaveFlag = false;
+                    let empID = $(event.draggedEl.childNodes[1]).attr('id').split("_")[1];
+                    templateObject.empID.set(empID);
+                    leaveemployeerecords.forEach((item) => {
+                      if(item.EmployeeID == empID && new Date(event.dateStr) >= new Date(item.StartDate) && new Date(event.dateStr) <= new Date(item.EndDate)){
+                        swal(
+                          "They are not available due to whatever leave they took",
+                          "",
+                          "warning"
+                        );
+                        leaveFlag = true;
+                      }
+                    });
+                    if(!leaveFlag){
+                      $("#customerListModal").modal();
+                    }
                   }
                 },
 
@@ -7398,7 +7445,23 @@ Template.appointments.onRendered(function () {
                     templateObject
                   );
                 } else {
-                  $("#customerListModal").modal();
+                  let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                  var leaveFlag = false;
+                  let empID = $(event.draggedEl.childNodes[1]).attr('id').split("_")[1];
+                  templateObject.empID.set(empID);
+                  leaveemployeerecords.forEach((item) => {
+                    if(item.EmployeeID == empID && new Date(event.dateStr) >= new Date(item.StartDate) && new Date(event.dateStr) <= new Date(item.EndDate)){
+                      swal(
+                        "They are not available due to whatever leave they took",
+                        "",
+                        "warning"
+                      );
+                      leaveFlag = true;
+                    }
+                  });
+                  if(!leaveFlag){
+                    $("#customerListModal").modal();
+                  }
                 }
               },
 
@@ -7426,6 +7489,16 @@ Template.appointments.onRendered(function () {
             //}
           });
       });
+
+      setTimeout(() => {
+        const child1 = document.querySelector(".fc-appointments-button");
+        const parent1 = child1.parentNode;
+        const child2 = document.querySelector("h2.fc-toolbar-title");
+        const parent2 = child2.parentNode;
+        $(parent1).css("min-width", 568).css("text-align", "center");
+        $("#calendar .fc-toolbar-title").css("min-width", 270).css("text-align", "center");
+        // $(parent2).css("min-width", 260)
+      }, 2000);
   };
 
   templateObject.getAllClients = function () {
@@ -9964,7 +10037,23 @@ Template.appointments.onRendered(function () {
                     templateObject
                   );
                 } else {
-                  $("#customerListModal").modal();
+                  let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                  var leaveFlag = false;
+                  let empID = $(event.draggedEl.childNodes[1]).attr('id').split("_")[1];
+                  templateObject.empID.set(empID);
+                  leaveemployeerecords.forEach((item) => {
+                    if(item.EmployeeID == empID && new Date(event.dateStr) >= new Date(item.StartDate) && new Date(event.dateStr) <= new Date(item.EndDate)){
+                      swal(
+                        "They are not available due to whatever leave they took",
+                        "",
+                        "warning"
+                      );
+                      leaveFlag = true;
+                    }
+                  });
+                  if(!leaveFlag){
+                    $("#customerListModal").modal();
+                  }
                 }
               },
 
@@ -10821,6 +10910,7 @@ Template.appointments.events({
 
   // custom field displaysettings
   "click .btnSaveGridSettings": function (event) {
+    playSaveAudio();
     let lineItems = [];
     let organisationService = new OrganisationService();
 
@@ -11845,6 +11935,7 @@ Template.appointments.events({
     }
   },
   "click #btnSaveRepeat": function () {
+    playSaveAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
     let repeatDays = templateObject.repeatDays.get();
@@ -14672,6 +14763,7 @@ Template.appointments.events({
   },
 
   "click #btnSaveAppointment": async function () {
+    playSaveAudio();
     const templateObject = Template.instance();
     const isLeaveBooked = await templateObject.getLeaveRequests();
     if (isLeaveBooked === true) {
@@ -14828,6 +14920,7 @@ Template.appointments.events({
     }
   },
   "click .btnSaveIgnoreSMS": async function () {
+    playSaveAudio();
     $("#chkSMSCustomer").prop("checked", false);
     $("#chkSMSUser").prop("checked", false);
     let emailCustomer = $("#customerEmail").is(":checked");
@@ -16099,6 +16192,14 @@ Template.appointments.events({
     //   selectedProduct.push($("#product-list").val());
     // }
     let selectedProduct = $("#product-list").val() || "";
+    // if(templateObject.productFees.get() != ""){
+    //     if(selectedProduct == ""){
+    //         selectedProduct = templateObject.productFees.get();
+    //     }
+    //     else{
+    //         selectedProduct += "&&&" + templateObject.productFees.get();
+    //     }
+    // }
     let hourlyRate = "";
     let status = "Not Converted";
     let uploadedItems = templateObject.uploadedFiles.get();
@@ -16875,19 +16976,48 @@ Template.appointments.events({
       // }
    },
    'click .chkServiceCard': function(event) {
-       templateObject = Template.instance();
-       let productFees = templateObject.productFees.get();
-       let productFeesID = $(event.target).attr('id').split("-")[1];
-       productFeesID = productFeesID.split("x")[0];
-       if ($(event.target).prop('checked') == true) {
-           productFees.push(productFeesID);
-       } else {
-           productFees.splice(productFees.indexOf(productFeesID), 1);
-       }
-       templateObject.productFees.set(productFees);
+      //  templateObject = Template.instance();
+      //  let productFees = templateObject.productFees.get();
+      //  let productFeesID = $(event.target).attr('id').split("-")[1];
+      //  productFeesID = productFeesID.split("x")[0];
+      //  if ($(event.target).prop('checked') == true) {
+      //      productFees.push(productFeesID);
+      //  } else {
+      //      productFees.splice(productFees.indexOf(productFeesID), 1);
+      //  }
+      //  templateObject.productFees.set(productFees);
    },
    'click #btnselProductFees': function(event) {
        templateObject = Template.instance();
+
+      //  for (var i = 0; i < taxRateList.length; i++) {
+      //     if ($("#t-" + pan + "-" + taxRateList[i].Id).prop('checked') == true) {
+      //         for (var j = 0; j < taxSummaryList.length; j++) {
+      //             if (taxRateList[i].CodeName == taxSummaryList[j].taxcode) {
+      //                 total_tax += parseFloat(taxSummaryList[j].totaltaxdigit);
+      //             }
+      //         }
+      //     }
+      // }
+
+      const productFees = "";
+      const productCards = $(".chkServiceCard");
+      Array.prototype.forEach.call(productCards, (product) => {
+          if ($(product).prop('checked') == true) {
+              let productFeesID = $(product).attr('id').split("-")[1];
+              productFees += productFeesID + "&&&";
+          }
+      });
+
+      if(productFees != ""){
+          productFees = productFees.slice(0, -3);
+          $("#addExtraProduct").removeClass("btn-primary").addClass("btn-success");
+      }
+      else{
+          $("#addExtraProduct").removeClass("btn-success").addClass("btn-primary");
+      }
+
+      templateObject.productFees.set(productFees);
    }
 });
 

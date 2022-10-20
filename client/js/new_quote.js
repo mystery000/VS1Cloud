@@ -5698,6 +5698,7 @@ Template.new_quote.events({
         $('#clickedControl').val(clickedInput);
     },
     'click  #open_print_confirm': function(event) {
+        playPrintAudio();
         if($('#choosetemplate').is(':checked')) {
             $('#templateselection').modal('show');
         } else {
@@ -6828,6 +6829,7 @@ Template.new_quote.events({
 
     },
     'click .printConfirm':async function (event) {
+        playPrintAudio();
         const printTemplate = [];
         LoadingOverlay.show();
         const quotes = $('input[name="Quotes"]:checked').val();
@@ -7182,6 +7184,7 @@ Template.new_quote.events({
         }
     },
     'click .btnDeleteQuote': function(event) {
+        playDeleteAudio();
         LoadingOverlay.show();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
@@ -7230,6 +7233,7 @@ Template.new_quote.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnDeleteLine': function(event) {
+        playDeleteAudio();
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -7379,6 +7383,7 @@ Template.new_quote.events({
     //     $('#myModal4').modal('toggle');
     // },
     'click .btnSave': (e, templateObject) => {
+        playSaveAudio();
         let contactService = new ContactService();
         saveCurrencyHistory();
         //let templateObject = Template.instance();
@@ -8500,6 +8505,7 @@ Template.new_quote.events({
     },
     // custom field displaysettings
     'click .btnSaveGridSettings': async function(event) {
+        playSaveAudio();
         let lineItems = [];
         $(".fullScreenSpin").css("display", "inline-block");
         $(".displaySettings").each(function (index) {
@@ -9671,6 +9677,7 @@ Template.new_quote.events({
 
     },
     'click .btnBack': function(event) {
+        playCancelAudio();
         event.preventDefault();
         if(FlowRouter.current().queryParams.trans){
             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
@@ -9679,6 +9686,7 @@ Template.new_quote.events({
         }
     },
     'click #btnCopyToOrder': function(e) {
+        playCopyAudio();
         LoadingOverlay.show();
         let url = FlowRouter.current().path;
         if (url.indexOf('?id=') > 0) {
@@ -9948,6 +9956,7 @@ Template.new_quote.events({
         }
     },
     'click #btnCopyToInvoice': function(e) {
+        playCopyAudio();
         LoadingOverlay.show();
         let url = FlowRouter.current().path;
         if (url.indexOf('?id=') > 0) {

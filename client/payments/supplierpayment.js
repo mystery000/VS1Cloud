@@ -1774,7 +1774,7 @@ Template.supplierpayment.events({
         templateObject.getAllFilterSuppPaymentData('', '', true);
     },
     'click .printConfirm' : function(event){
-
+        playPrintAudio();
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblSupplierPayment_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');

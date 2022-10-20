@@ -642,6 +642,7 @@ Template.shipviapop.events({
         });
     },
     'click .btnDeleteTerms': function() {
+        playDeleteAudio();
         let taxRateService = new TaxRateService();
         let termsId = $('#selectDeleteLineID').val();
 
@@ -683,6 +684,7 @@ Template.shipviapop.events({
 
     },
     'click .btnSaveTerms': function() {
+        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
         let termsID = $('#edtTermsID').val();
@@ -889,6 +891,7 @@ Template.shipviapop.events({
         templateObject.includeEOMPlus.set(false);
     },
     'click .btnBack': function(event) {
+        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },

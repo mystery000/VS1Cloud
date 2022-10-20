@@ -829,6 +829,7 @@ Template.bankrulelist.events({
         templateObject.getAllFilterBankRule('', '', true);
     },
     'click .printConfirm' : function(event){
+        playPrintAudio();
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblbankrulelist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');

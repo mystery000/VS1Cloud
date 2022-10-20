@@ -497,6 +497,7 @@ Template.addsupplierpop.events({
     }
   },
   "click .addsupplierpop .btnBack": function (event) {
+    playCancelAudio();
     event.preventDefault();
     history.back(1);
   },
@@ -524,6 +525,7 @@ Template.addsupplierpop.events({
     }
   },
   "click .addsupplierpop .btnSaveSuppPOP": async function (event) {
+    playSaveAudio();
     let templateObject = Template.instance();
     let contactService = new ContactService();
     if ($("#edtSupplierCompany").val() === "") {
@@ -1116,6 +1118,7 @@ Template.addsupplierpop.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click .addsupplierpop .printConfirm": function (event) {
+    playPrintAudio();
     LoadingOverlay.show();
     jQuery("#tblTransactionlist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
@@ -1176,6 +1179,7 @@ Template.addsupplierpop.events({
     $(".lblCustomField4").text(inputValue4);
   },
   "click .addsupplierpop .btnSaveSettings": function (event) {
+    playSaveAudio();
     let templateObject = Template.instance();
 
     $(".lblCustomField1").html("");
@@ -1413,6 +1417,7 @@ Template.addsupplierpop.events({
     templateObject.getAllProductRecentTransactions(supplierName);
   },
   "click .addsupplierpop .btnDeleteSupplier": function (event) {
+    playDeleteAudio();
     LoadingOverlay.show();
 
     let templateObject = Template.instance();

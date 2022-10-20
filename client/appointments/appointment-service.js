@@ -2,6 +2,7 @@ import {BaseService} from '../js/base-service.js';
 export class AppointmentService extends BaseService {
 
     saveAppointment(data){
+        console.log("========", data);
         return this.POST(this.ERPObjects.TAppointment, data);
     }
 

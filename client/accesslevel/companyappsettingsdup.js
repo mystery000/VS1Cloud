@@ -240,6 +240,7 @@ Template.companyappsettingsdup.onRendered(function () {
             let additionModuleSettings = await getVS1Data('vscloudlogininfo');
             if( additionModuleSettings.length > 0 ){
                 let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
+                console.log('additionModules', additionModules)
                 if( additionModules.length > 0 ){
                     let adModulesList = additionModules.filter((item) => {
                         if( item.ExtraModules == true && item.ModuleActive == true ){
@@ -446,6 +447,7 @@ Template.companyappsettingsdup.events({
         }
     },
     'click .btnBack': function (event) {
+        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },
@@ -499,6 +501,7 @@ Template.companyappsettingsdup.events({
         }
     },
     'click .btnTopGlobalSave': function () {
+        playSaveAudio();
         // $('.fullScreenSpin').css('display', 'inline-block');
         const templateObject = Template.instance();
         let checkLinkTrueERP = false;
@@ -608,8 +611,9 @@ Template.companyappsettingsdup.events({
                     IsSubPackage: false
                 };
             }
-
-            lineItemsForm.push(lineItemObjForm);
+            if( $(this).prop('disabled') == false ){
+                lineItemsForm.push(lineItemObjForm);
+            }
 
         });
 
@@ -682,6 +686,7 @@ Template.companyappsettingsdup.events({
         for (let l = 0; l < lineItemsForm1.length; l++) {
             stringQuery = stringQuery + "product" + l + "=" + lineItemsForm1[l].ModuleName + "&price" + l + "=" + Currency + lineItemsForm1[l].Price + "&qty" + l + "=" + lineItemsForm1[l].RenewDiscountDesc + "&";
         }
+        $('.fullScreenSpin').css('display', 'block');
         stringQuery = stringQuery + "tax=0" + "&total=" + Currency + grandTotal + "&customer=" + Session.get('vs1companyName') + "&name=" + name + "&surname=" + surname + "&company=" + Session.get('vs1companyName') + "&customeremail=" + localStorage.getItem('mySession') + "&type=VS1 Modules Purchase&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
         var oPost = new XMLHttpRequest();
         oPost.open("POST", URLRequest + loggedserverIP + ':' + loggedserverPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_AddModules"', true);

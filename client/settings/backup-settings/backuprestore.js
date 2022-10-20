@@ -369,6 +369,7 @@ Template.backuprestore.events({
   */
 },
 'click .btnBack':function(event){
+  playCancelAudio();
   event.preventDefault();
   history.back();
 },

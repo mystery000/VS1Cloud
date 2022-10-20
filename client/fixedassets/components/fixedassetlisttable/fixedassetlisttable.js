@@ -376,6 +376,10 @@ Template.fixedassetlisttable.events({
     });
   },
 
+  "click #btnNewFixedAsset": function () {
+    FlowRouter.go('/fixedassetcard');
+  },
+
   "click #btnAssetCostReport": function () {
     FlowRouter.go('/assetcostreport');
   },

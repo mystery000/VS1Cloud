@@ -950,7 +950,7 @@ Template.stocktransferlist.events({
 
     },
     'click .printConfirm' : function(event){
-
+        playPrintAudio();
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblStockTransferList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
@@ -958,7 +958,7 @@ Template.stocktransferlist.events({
     },
 
     'click .printConfirm' : function(event){
-
+        playPrintAudio();
     $('.fullScreenSpin').css('display','inline-block');
     jQuery('#tblInventory_wrapper .dt-buttons .btntabletopdf').click();
     $('.fullScreenSpin').css('display','none');
