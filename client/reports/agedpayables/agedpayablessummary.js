@@ -302,7 +302,7 @@ Template.agedpayablessummary.onRendered(function() {
           threeMonth = threeMonth + parseFloat(entry.entries["90Days"]);
           Older = Older + parseFloat(entry.entries["120Days"]);
         });
-
+        
         record.total = {
           // new
           Title: "Total " + record.title,
@@ -366,7 +366,6 @@ Template.agedpayablessummary.onRendered(function() {
         grandthreeMonth = grandthreeMonth + parseFloat(total.ThreeMonth);
         grandOlder = grandOlder + parseFloat(total.OlderMonth);
       });
-
       // for (let n = 0; n < current.length; n++) {
 
       //     const grandcurrencyLength = Currency.length;

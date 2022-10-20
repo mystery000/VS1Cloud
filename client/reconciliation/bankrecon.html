@@ -278,6 +278,10 @@
                     margin-right: 24px;
                 }
             }
+
+            .dataTables_wrapper {
+                min-height: 10vh !important;
+            }
         </style>
         <script>
             function match() {
@@ -361,7 +365,7 @@
                                 <h5 style="margin-left: 16px; margin-bottom: 0;">Deposits</h5>
                             </div>
                             <div class="col-12 card-body p-3 rounded">
-                                <div class="table-responsive">
+                                <div class="table-responsive" style="max-height:400px; overflow-x:hidden; overflow-y:auto">
                                     <style>
                                         #tblVS1Dep_filter .form-control, #tblVS1Dep_filter label{
                                             display:none!important;
@@ -374,48 +378,28 @@
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6">
                                             <div class="dataTables_filter">
-                                                <label>Search-:<input type="search" class="searchInputDep" placeholder="" aria-controls="tblVS1Dep" autocomplete="off" id="myInputSearchDep" name="myInputSearchDep" style="margin-left: 0.5em;"></label>
+                                                <label><input type="search" class="searchInputDep" placeholder="" aria-controls="tblVS1Dep" autocomplete="off" id="myInputSearchDep" name="myInputSearchDep" style="margin-left: 0.5em;"></label>
                                             </div>
                                         </div>
                                     </div>
                                     <table id="tblVS1Dep" name="tblVS1Dep" class="table dataTable table-striped table-bordered tblVS1Dep">
                                         <thead>
                                             <tr class="dnd-moved">
-                                                <th class="no-sort" style="width:15px;">
+                                                <th class="no-sort" style="width:30px;">
                                                     <div class="custom-control custom-checkbox" id="" style="width:15px;">
                                                         <input type="checkbox" class="custom-control-input" id="checkallrecondep">
                                                         <label class="custom-control-label" for="checkallrecondep"></label>
                                                     </div>
                                                 </th>
-                                                <th class="th colSortDate hiddenColumn">id</th>
-                                                <th style="width:80px;">Date</th>
-                                                <th style="width:200px;">Ref</th>
-                                                <th style="width:200px;">Name</th>
-                                                <th>Description</th>
-                                                <th style="width: 90px;">Payment ID</th>
-                                                <th class="text-right" style="width: 80px;">Amount</th>
+                                                <th class="depositClick" style="width:100px;">Date</th>
+                                                <th class="depositClick" style="width:200px;">Ref</th>
+                                                <th class="depositClick" style="width:200px;">Name</th>
+                                                <th class="depositClick">Description</th>
+                                                <th class="depositClick" style="width: 100px;">Payment ID</th>
+                                                <th class="depositClick text-right" style="width: 100px;">Amount</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{#if reconVS1dep}}
-                                            {{#each depitem in reconVS1dep}}
-                                            <tr class="dnd-moved" id="checkboxtable_{{depitem.recondepid}}" depositLineID="{{depitem.depositLineID}}">
-                                                <td style="width:15px;">
-                                                    <div class="custom-control custom-checkbox pointer" id="checkboxtable_{{depitem.recondepid}}" style="width:15px;">
-                                                        <input type="checkbox" class="custom-control-input reconchkboxdep" id="formCheck_{{depitem.recondepid}}" />
-                                                        <label class="custom-control-label" for="formCheck_{{depitem.recondepid}}"></label>
-                                                    </div>
-                                                </td>
-                                                <td contenteditable="false" class="colSortDate hiddenColumn depositClick">{{depitem.sortdate}}</td>
-                                                <td class="depositClick" id="vs1recondate_{{depitem.recondepid}}" recondate="{{depitem.recondepdate}}"><span style="display:none;">{{depitem.sortdate}}</span>{{depitem.recondepdate}}</td>
-                                                <td class="depositClick" id="vs1reconref_{{depitem.recondepid}}">{{depitem.recondepref}}</td>
-                                                <td class="depositClick" id="vs1reconname_{{depitem.recondepid}}">{{depitem.recondepname}}</td>
-                                                <td class="colPaymentType depositClick" id="vs1recondesc_{{depitem.recondepid}}">{{depitem.recondeppaymenttype}}</td>
-                                                <td class="colDepositID depositClick" id="vs1reconpayid_{{depitem.recondepid}}">{{depitem.recondeppaymentid}}</td>
-                                                <td class="text-right depositClick" id="vs1reconamount_{{depitem.recondepid}}" name="vs1reconamount_{{depitem.recondepid}}">{{depitem.recondepamount}}</td>
-                                            </tr>
-                                            {{/each}}
-                                            {{/if}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -426,7 +410,7 @@
                                 <h5 style="margin-left: 16px; margin-bottom: 0;">Withdrawals</h5>
                             </div>
                             <div class="col-12 card-body p-3 rounded">
-                                <div class="table-responsive">
+                                <div class="table-responsive" style="max-height:400px; overflow-x:hidden; overflow-y:auto">
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6">
                                             <div class="dataTables_filter">
@@ -437,39 +421,21 @@
                                     <table id="tblVS1With" name="tblVS1With" class="table dataTable table-striped table-bordered tblVS1With">
                                         <thead>
                                             <tr class="dnd-moved">
-                                                <th style="width:15px;">
+                                                <th style="width:30px;">
                                                     <div class="custom-control custom-checkbox" id="" style="width:15px;">
                                                         <input type="checkbox" class="custom-control-input" id="checkallreconwith">
                                                         <label class="custom-control-label" for="checkallreconwith"></label>
                                                     </div>
                                                 </th>
-                                                <th style="width:80px;">Date</th>
+                                                <th style="width:100px;">Date</th>
                                                 <th style="width:200px;">Ref</th>
                                                 <th style="width:200px;">Name</th>
                                                 <th>Description</th>
-                                                <th style="width: 90px;">Payment ID</th>
-                                                <th class="text-right" style="width: 80px;">Amount</th>
+                                                <th style="width: 100px;">Payment ID</th>
+                                                <th class="text-right" style="width: 100px;">Amount</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            {{#if reconVS1with}}
-                                            {{#each withitem in reconVS1with}}
-                                            <tr class="dnd-moved" id="checkboxtable_{{withitem.reconwithid}}" depositLineID="{{withitem.depositLineID}}">
-                                                <td style="width:15px;">
-                                                    <div class="custom-control custom-checkbox" id="checkboxtable_{{withitem.reconwithid}}" style="width:15px;">
-                                                        <input type="checkbox" class="custom-control-input reconchkboxwith" id="formCheck_{{withitem.reconwithid}}" />
-                                                        <label class="custom-control-label" for="formCheck_{{withitem.reconwithid}}"></label>
-                                                    </div>
-                                                </td>
-                                                <td class="withClick" id="vs1recondatewith_{{withitem.reconwithid}}" recondate="{{withitem.reconwithdate}}"><span style="display:none;">{{withitem.sortdate}}</span>{{withitem.reconwithdate}}</td>
-                                                <td class="withClick" id="vs1reconrefwith_{{withitem.reconwithid}}">{{withitem.reconwithref}}</td>
-                                                <td class="withClick" id="vs1reconnamewith_{{withitem.reconwithid}}">{{withitem.reconwithname}}</td>
-                                                <td class="colPaymentType withClick" id="vs1recondescwith_{{withitem.reconwithid}}">{{withitem.reconwithpaymenttype}}</td>
-                                                <td class="colWithdrawlID withClick" id="vs1reconpayidwith_{{withitem.reconwithid}}">{{withitem.reconwithpaymentid}}</td>
-                                                <td class="withClick text-right" id="vs1reconamountwith_{{withitem.reconwithid}}" name="vs1reconamountwith_{{withitem.reconwithid}}">{{withitem.reconwithamount}}</td>
-                                            </tr>
-                                            {{/each}}
-                                            {{/if}}
+                                        <tbody>                                            
                                         </tbody>
                                     </table>
                                 </div>
@@ -705,14 +671,199 @@
                             </div>
                         </div>
                         <div class="row no-gutters d-xl-flex justify-content-xl-end">
-
                             <button class="btn btn-primary reconbtn reconBtnBottom" type="button" style="margin: 12px;" disabled><span>Reconcile</span></button>
                             <button class="btn btn-success btnHold" type="button" style="margin: 12px;" disabled><span><i class="fa fa-clock" style="margin-right: 5px;"></i>Hold</span></button>
+                            <button class="btn btn-primary printConfirm" type="button" style="margin: 12px;" autocomplete="off"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
                             <button class="btn btn-danger btnDeleteRecon" type="button" style="margin: 12px;" autocomplete="off"><span><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</span></button>
                             <button class="btn btn-secondary btnBack" id="btnBack" type="button" style="margin: 12px;">Cancel</button>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        @media print {
+            .pagebreak { page-break-before: always; padding-top:10px} /* page-break-after works, as well */
+        }
+    </style>
+
+    <div class="printBankRecon" id="printBankRecon" style="display:block; font-size:14px">
+        <div class="pagebreak" style="display:block; border:1px solid #fff">
+            <div class="row no-gutters" style="padding: 8px;">
+                <div class="col">
+                    <h3 style="margin-left: 16px; margin-bottom: 0; text-align: center;">Not Reconciled Report</h3>
+                    <h6 style="margin-left: 16px; margin-top: 20px;">Account: <span id="print_accountName1"></span></h6>
+                </div>                    
+                <div class="col card-body p-3 rounded">
+                    <div class="table-responsive" style="overflow-x:hidden; overflow-y:auto">
+                        <style>
+                            #tblVS1Dep_filter .form-control, #tblVS1Dep_filter label{
+                                display:none!important;
+                            }
+
+                            #tblVS1With_filter .form-control, #tblVS1With_filter label{
+                                display:none!important;
+                            }
+                        </style>
+                        <table id="print_tblVS1notrecon" name="print_tblVS1notrecon" class="table dataTable table-striped">
+                            <tbody>
+                                <tr class="dnd-moved">
+                                    <td class="no-sort" style="width:35%; font-weight:bold">Type</td>
+                                    <td style="width:15%; font-weight:bold">Date</td>
+                                    <td style="width:20%; font-weight:bold">Ref / Chq#</td>
+                                    <td style="width:15%; font-weight:bold">Payee</td>
+                                    <td style="width:15%; font-weight:bold">Amount</td>
+                                </tr>
+                                <tr class="dnd-moved">
+                                    <td colspan="5">Deposits</td>
+                                </tr>
+                                {{#if notreconVS1dep}}
+                                {{#each notdepitem in notreconVS1dep}}
+                                    <tr class="dnd-moved">
+                                        <td>{{notdepitem.recondeppaymenttype}}</td>
+                                        <td>{{notdepitem.recondepdate}}</td>
+                                        <td>{{notdepitem.recondepref}}</td>
+                                        <td>{{notdepitem.recondepname}}</td>                                            
+                                        <td class="text-right">{{notdepitem.recondepamount}}</td>
+                                    </tr>
+                                {{/each}}
+                                {{/if}}
+                                <tr class="dnd-moved">
+                                    <td class="text-right" colspan="4">Total</td>
+                                    <td class="text-right" id="print_totalnotrecondepamount">$0</td>
+                                </tr>
+                                <tr class="dnd-moved">
+                                    <td colspan="5">Withdrawals</td>
+                                </tr>
+                                {{#if notreconVS1with}}
+                                {{#each notwithitem in notreconVS1with}}
+                                    <tr class="dnd-moved">
+                                        <td>{{notwithitem.reconwithpaymenttype}}</td>
+                                        <td>{{notwithitem.reconwithdate}}</td>
+                                        <td>{{notwithitem.reconwithref}}</td>
+                                        <td>{{notwithitem.reconwithname}}</td>                                            
+                                        <td class="text-right">{{notwithitem.reconwithamount}}</td>
+                                    </tr>
+                                {{/each}}
+                                {{/if}}
+                                <tr class="dnd-moved">
+                                    <td class="text-right" colspan="4">Total</td>
+                                    <td class="text-right" id="print_totalnotreconwithamount">$0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pagebreak" style="display:block; border:1px solid #fff">
+            <div class="row no-gutters" style="padding: 8px;">
+                <div class="col">
+                    <h3 style="margin-left: 16px; margin-bottom: 0; text-align: center;">Reconciliation Report</h3>
+                    <h6 style="margin-left: 16px; margin-top: 20px;">Account: <span id="print_accountName2"></span></h6>
+                </div>                    
+                <div class="col card-body p-3 rounded">
+                    <div class="table-responsive" style="overflow-x:hidden; overflow-y:auto">
+                        <style>
+                            #tblVS1Dep_filter .form-control, #tblVS1Dep_filter label{
+                                display:none!important;
+                            }
+
+                            #tblVS1With_filter .form-control, #tblVS1With_filter label{
+                                display:none!important;
+                            }
+                        </style>
+                        <table id="print_tblVS1okrecon" name="print_tblVS1okrecon" class="table dataTable table-striped">
+                            <tbody>
+                                <tr class="dnd-moved">
+                                    <td class="no-sort" colspan="2" style="font-weight:bold">
+                                        Reconciliation On :
+                                        <span id="print_statementDate"></span><br>
+                                        Account : 
+                                        <span id="print_accountName2"></span>
+                                    </td>
+                                    <td style="font-weight:bold">
+                                        Statement #<br>
+                                        <span id="print_statementNo"></span>
+                                    </td>
+                                    <td style="font-weight:bold">
+                                        Opening Balance<br>
+                                        <span id="print_openBalance2"></span>
+                                    </td>
+                                    <td style="font-weight:bold">
+                                        Closing Balance<br>
+                                        <span id="print_closeBalance"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="no-sort" style="width:40%; font-weight:bold">Type</td>
+                                    <td style="width:15%; font-weight:bold">Transaction Date</td>
+                                    <td style="width:15%; font-weight:bold">Ref / Chq#</td>
+                                    <td style="width:15%; font-weight:bold">Payee</td>
+                                    <td style="width:15%; font-weight:bold">Amount</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5">Deposits</td>
+                                </tr>
+                                {{#if okreconVS1dep}}
+                                {{#each okdepitem in okreconVS1dep}}
+                                    <tr>
+                                        <td>{{okdepitem.recondeppaymenttype}}</td>
+                                        <td>{{okdepitem.recondepdate}}</td>
+                                        <td>{{okdepitem.recondepref}}</td>
+                                        <td>{{okdepitem.recondepname}}</td>                                            
+                                        <td class="text-right">{{okdepitem.recondepamount}}</td>
+                                    </tr>
+                                {{/each}}
+                                {{/if}}
+                                <tr>
+                                    <td class="text-right" colspan="4">Total</td>
+                                    <td class="text-right" id="print_totalokrecondepamount">$0</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5">Withdrawals</td>
+                                </tr>
+                                {{#if okreconVS1with}}
+                                {{#each okwithitem in okreconVS1with}}
+                                    <tr>
+                                        <td>{{okwithitem.reconwithpaymenttype}}</td>
+                                        <td>{{okwithitem.reconwithdate}}</td>
+                                        <td>{{okwithitem.reconwithref}}</td>
+                                        <td>{{okwithitem.reconwithname}}</td>                                            
+                                        <td class="text-right">{{okwithitem.reconwithamount}}</td>
+                                    </tr>
+                                {{/each}}
+                                {{/if}}
+                                <tr>
+                                    <td class="text-right" colspan="4">Total</td>
+                                    <td class="text-right" id="print_totalokreconwithamount">$0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row no-gutters" style="padding: 8px;">
+                <div style="width:80%">
+                    <span style="float:right; text-align:right; clear: both; font-weight:bold">Opening Balance :</span>
+                    <span style="float:right; text-align:right; clear: both; font-weight:bold">Add : Deposits and Other Credits :</span>
+                    <span style="float:right; text-align:right; clear: both; font-weight:bold">Deduct : Cheques and Payments :</span>
+                    <span style="float:right; text-align:right; clear: both; font-weight:bold">Expected Balance on Statement :</span>
+                    <span style="float:right; text-align:right; clear: both; font-weight:bold">Deduct Outstanding Deposits :</span>
+                    <span style="float:right; text-align:right; clear: both; font-weight:bold">Add Outstanding Cheques :</span>
+                    <span style="float:right; text-align:right; clear: both; font-weight:bold">Balance on Balance Sheet :</span>
+                </div>                    
+                <div style="width:20%; padding-right:20px">
+                    <span id="print_openBalance" style="float:right; text-align:right; clear: both;">$0</span>
+                    <span id="print_okdepositAmount" style="float:right; text-align:right; clear: both;">$0</span>
+                    <span id="print_okwithdrawalAmount" style="float:right; text-align:right; clear: both;">$0</span>
+                    <span id="print_expectedBalance" style="float:right; text-align:right; clear: both;">$0</span>
+                    <span id="print_outstandingDeposits" style="float:right; text-align:right; clear: both;">$0</span>
+                    <span id="print_outstandingWithdrawals" style="float:right; text-align:right; clear: both;">$0</span>
+                    <span id="print_totalBalance" style="float:right; text-align:right; clear: both;">$0</span>
+                </div>                    
             </div>
         </div>
     </div>

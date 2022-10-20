@@ -498,6 +498,7 @@ Template.jobprofitabilityreport.events({
         GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
         false
       );
+      templateObject.dateAsAt.set($('#dateTo').val());
     },
     ...Datehandler.getDateRangeEvents()
 });

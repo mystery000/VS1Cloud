@@ -3329,7 +3329,6 @@ Template.paymentcard.onRendered(() => {
                                 }
                             }
                         }
-
                     }
 
                     if (!added) {

@@ -19,7 +19,7 @@ Template.overduecustomerawaitingpayments.onCreated(function () {
 });
 
 Template.overduecustomerawaitingpayments.onRendered(function () {
-    $('.fullScreenSpin').css('display', 'inline-block');
+    // $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     const customerList = [];
