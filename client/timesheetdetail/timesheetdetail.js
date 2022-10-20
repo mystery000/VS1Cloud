@@ -52,8 +52,8 @@ Template.timesheetdetail.onRendered(function () {
   const id = FlowRouter.current().queryParams.tid;
 
   this.loadTimeSheet = async (refresh = false) => {
-    let data = await CachedHttp.get(erpObject.TTimeSheetEntry, async () => {
-      return await contactService.getAllTimeSheetEntry();
+    let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
+      return await contactService.getAllTimeSheetList();
     }, {
       useIndexDb: true,
       useLocalStorage: false,
@@ -65,13 +65,13 @@ Template.timesheetdetail.onRendered(function () {
     });
     data = data.response;
 
-
     let timesheets = data.ttimesheet.map(t => t.fields);
     timesheets.forEach((t, index) => {
       if (t.Status == "") {
         t.Status = "Draft";
       }
     });
+
     let timesheet = timesheets.find(o => o.ID == id);
 
     if (timesheet) {
@@ -465,7 +465,6 @@ Template.timesheetdetail.onRendered(function () {
     if (res) {
       return await this._updateTimeSheetDetails(object);
     }
-    
 
     try {
       LoadingOverlay.show();
