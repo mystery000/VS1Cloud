@@ -272,37 +272,37 @@
                                             {{#if records}}
                                                 {{#each arrayify records}}
                                                     <tr>
-                                                        <td style="font-weight: 800;">{{ value.Name }}</td>
-                                                        <td style="font-weight: 800;">{{ value.Phone }}</td>
-                                                        <td style="font-weight: 800;"></td>
+                                                        <td>{{ value.Name }}</td>
+                                                        <td>{{ value.Phone }}</td>
+                                                        <td></td>
                                                         {{#if isOnlyDefaultActive }}
                                                             {{#if currencyList}}
                                                                 {{#each c in currencyList }}
                                                                     {{# if c.active}}
-                                                                        <td style="font-weight: 800;"></td>
+                                                                        <td></td>
                                                                     {{/if}}
                                                                 {{/each}}
                                                                 {{#each c in currencyList }}
                                                                     {{# if c.active}}
-                                                                        <td style="font-weight: 800;"></td>
+                                                                        <td></td>
                                                                     {{/if}}
                                                                 {{/each}}
                                                                 {{#each c in currencyList }}
                                                                     {{# if c.active}}
-                                                                        <td style="font-weight: 800;"></td>
+                                                                        <td></td>
                                                                     {{/if}}
                                                                 {{/each}}
                                                             {{/if}}
                                                         {{else}}
-                                                            <td style="font-weight: 800;"></td>
-                                                            <td style="font-weight: 800;"></td>
-                                                            <td style="font-weight: 800;"></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
                                                         {{/if}}
-                                                         <td style="font-weight: 800;"></td>
-                                                         <td style="font-weight: 800;">{{ value.Address }}</td>
-                                                         <td style="font-weight: 800;">{{ value.Address_2 }}</td>
-                                                         <td style="font-weight: 800;">{{ value.Postcode }}</td>
-                                                         <td style="font-weight: 800;">{{ value.State }}</td>
+                                                         <td></td>
+                                                         <td>{{ value.Address }}</td>
+                                                         <td>{{ value.Address_2 }}</td>
+                                                         <td>{{ value.Postcode }}</td>
+                                                         <td>{{ value.State }}</td>
                                                     </tr>
                                                     {{#each item in value.SubAccounts}}
                                                         {{#if checkEmptySubAccount item }}
@@ -343,37 +343,37 @@
                                                     {{/each}}
                                                     {{#if checkEmpty value }}
                                                         <tr>
-                                                            <td style="font-weight: 800;"></td>
-                                                            <td style="font-weight: 800;"></td>
-                                                            <td style="font-weight: 800;"></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
                                                             {{#if isOnlyDefaultActive }}
                                                                 {{#if currencyList}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right" style="font-weight: 800;">{{ convertAmount value.TotalEx c}}</td>
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right">{{ convertAmount value.TotalEx c}}</td>
                                                                         {{/if}}
                                                                     {{/each}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right" style="font-weight: 800;">{{ convertAmount value.TotalInc c}}</td>
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right">{{ convertAmount value.TotalInc c}}</td>
                                                                         {{/if}}
                                                                     {{/each}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right" style="font-weight: 800;">{{ convertAmount value.TotalGrossProfit c}}</td>
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right">{{ convertAmount value.TotalGrossProfit c}}</td>
                                                                         {{/if}}
                                                                     {{/each}}
                                                                 {{/if}}
                                                             {{else}}
-                                                                <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalEx }}</td>
-                                                                <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalInc }}</td>
-                                                                <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalGrossProfit }}</td>
+                                                                <td class="text-right">{{ formatPrice value.TotalEx }}</td>
+                                                                <td class="text-right">{{ formatPrice value.TotalInc }}</td>
+                                                                <td class="text-right">{{ formatPrice value.TotalGrossProfit }}</td>
                                                             {{/if}}
-                                                            <td class="text-right" style="font-weight: 800;">0</td>
-                                                            <td style="font-weight: 800;"></td>
-                                                            <td style="font-weight: 800;"></td>
-                                                            <td style="font-weight: 800;"></td>
-                                                            <td style="font-weight: 800;"></td>
+                                                            <td class="text-right">0</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
                                                         </tr>
                                                     {{/if}}
                                                 {{/each}}
