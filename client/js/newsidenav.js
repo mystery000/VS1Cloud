@@ -6572,6 +6572,17 @@ Template.newsidenav.onRendered(function() {
 
 });
 Template.newsidenav.events({
+  'click #sidebarToggleBtn': function(event) {
+      if ($('#sidebar').hasClass("top")) {
+          $('#sidebar').removeClass('top');
+          $('#bodyContainer').removeClass('top');
+          $('#sidebarToggleBtn').text('Top');
+      } else {
+          $('#sidebar').addClass('top');
+          $('#bodyContainer').addClass('top');
+          $('#sidebarToggleBtn').text('Side');
+      }
+  },
     'click #sidenavaccessLevel': function(event) {
         window.open('#', '_self');
     },
@@ -8143,7 +8154,7 @@ Template.newsidenav.events({
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavprojects': function(event) {
-        event.preventDefault(); 
+        event.preventDefault();
         if (FlowRouter.current().path == "/crmoverview") {
           $(".menu_project").trigger("click");
         } else {
@@ -8153,7 +8164,7 @@ Template.newsidenav.events({
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavmailchimp': function(event) {
-        event.preventDefault(); 
+        event.preventDefault();
         if (FlowRouter.current().path == "/crmoverview") {
           $('#crmMailchimpModal').modal();
         } else {

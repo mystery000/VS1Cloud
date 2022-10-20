@@ -738,6 +738,7 @@ Template.new_invoice.onRendered(function() {
             for (let i in data.ttermsvs1) {
               let termrecordObj = {
                 termsname: data.ttermsvs1[i].TermsName || " ",
+                isSalesdefault: data.ttermsvs1[i].isSalesdefault || ""
               };
 
               if (data.ttermsvs1[i].isSalesdefault == true) {
@@ -758,6 +759,7 @@ Template.new_invoice.onRendered(function() {
           for (let i in useData) {
             let termrecordObj = {
               termsname: useData[i].TermsName || " ",
+              isSalesdefault: useData[i].isSalesdefault || ""
             };
             if (useData[i].isSalesdefault == true) {
               templateObject.defaultsaleterm.set(useData[i].TermsName);
@@ -773,6 +775,7 @@ Template.new_invoice.onRendered(function() {
           for (let i in data.ttermsvs1) {
             let termrecordObj = {
               termsname: data.ttermsvs1[i].TermsName || " ",
+              isSalesdefault: data.ttermsvs1[i].isSalesdefault || ""
             };
             if (data.ttermsvs1[i].isSalesdefault == true) {
               Session.setPersistent(
@@ -4061,7 +4064,7 @@ Template.new_invoice.onRendered(function() {
                       cust_data.customername == useData[d].fields.ClientName
                     );
                   });
-                  
+
                   getVS1Data("TAppointment").then(function (dataObject) {
                     let appointments = JSON.parse(dataObject[0].data);
                     let allAppointments = appointments.tappointmentex;
@@ -9017,7 +9020,107 @@ Template.new_invoice.onRendered(function() {
           $("#pdfCustomerAddress").html(postalAddress);
           $(".pdfCustomerAddress").text(postalAddress);
           $("#txaShipingInfo").val(postalAddress);
-          $("#sltTerms").val(clientList[i].termsName || "");
+          $("#sltTerms").val(clientList[i].termsName || templateObject.defaultsaleterm.get() || "");
+          if (!clientList[i].termsName) {
+            //What is the code for? @Sunny
+                      sideBarService.getOneCustomerDataExByName(selectedCustomer).then(function(data) {
+                              if (data.tcustomer && data.tcustomer[0]) {
+                                  let {
+                                      ID,
+                                      Title,
+                                      ClientName,
+                                      FirstName,
+                                      CUSTFLD10,
+                                      LastName,
+                                      PublishOnVS1,
+                                      Email,
+                                      Phone,
+                                      Mobile,
+                                      SkypeName,
+                                      Faxnumber,
+                                      ClientTypeName,
+                                      Street,
+                                      Street2,
+                                      Suburb,
+                                      State,
+                                      PostCode,
+                                      Country,
+                                      BillStreet,
+                                      BillStreet2,
+                                      BillState,
+                                      BillPostCode,
+                                      Billcountry,
+                                      IsSupplier,
+                                      Notes,
+                                      URL,
+                                      PaymentMethodName,
+                                      TermsName,
+                                      ShippingMethodName,
+                                      TaxCodeName,
+                                      Attachments,
+                                      CUSTFLD4,
+                                      Discount
+                                  } = data.tcustomer[0].fields;
+                                  //Here you need only the ID and the TermsName only to update the Customer TermsName ~ Rasheed
+                                  let filteredPayload = {
+                                      type: "TCustomerEx",
+                                      fields: {
+                                          ID,
+                                          // Title,
+                                          // ClientName,
+                                          // FirstName: FirstName || "[first name]",
+                                          // CUSTFLD10,
+                                          // LastName: LastName || "[last name]",
+                                          // PublishOnVS1,
+                                          // Email,
+                                          // Phone,
+                                          // Mobile,
+                                          // SkypeName,
+                                          // Faxnumber,
+                                          // ClientTypeName,
+                                          // Street,
+                                          // Street2,
+                                          // Suburb,
+                                          // State,
+                                          // PostCode,
+                                          // Country,
+                                          // BillStreet,
+                                          // BillStreet2,
+                                          // BillState,
+                                          // BillPostCode,
+                                          // Billcountry,
+                                          // IsSupplier,
+                                          // Notes,
+                                          // URL,
+                                          // PaymentMethodName,
+                                          // ShippingMethodName,
+                                          // TaxCodeName,
+                                          // Attachments,
+                                          // CUSTFLD4,
+                                          // Discount,
+                                          TermsName: templateObject.defaultsaleterm.get()
+                                      }
+                                  }
+                                  contactService.saveCustomerEx(filteredPayload).then(function(objDetails) {}).catch(function(err) {
+                                    //Error handling not needed here ~ Rasheed
+                                      // swal({
+                                      //     title: 'Oooops...',
+                                      //     text: err,
+                                      //     type: 'error',
+                                      //     showCancelButton: false,
+                                      //     confirmButtonText: 'Try Again'
+                                      // }).then((result) => {
+                                      //     if (result.value) {
+                                      //         // Meteor._reload.reload();
+                                      //     } else if (result.dismiss === 'cancel') {
+                                      //
+                                      //     }
+                                      // });
+                                      LoadingOverlay.hide();
+                                  });
+                              }
+                          });
+                  }
         }
       }
     }
