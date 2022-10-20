@@ -437,7 +437,9 @@ Template.payrolloverview.onRendered(function () {
     });
     data = data.response;
 
-    let employees = data.temployee.map(e => e.fields);
+    // console.log('employees', data);
+
+    let employees = data.temployee[0].fields != undefined ? data.temployee.map(e => e.fields) : data.temployee;
 
     templateObject.employees.set(employees);
 

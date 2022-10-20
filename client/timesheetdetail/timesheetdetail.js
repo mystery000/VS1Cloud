@@ -53,7 +53,7 @@ Template.timesheetdetail.onRendered(function () {
 
   this.loadTimeSheet = async (refresh = false) => {
     let data = await CachedHttp.get(erpObject.TTimeSheetEntry, async () => {
-      return await new ContactService().getAllTimeSheetList();
+      return await contactService.getAllTimeSheetList();
     }, {
       useIndexDb: true,
       useLocalStorage: false,
@@ -95,7 +95,7 @@ Template.timesheetdetail.onRendered(function () {
     let timesheet = await this.timesheet.get();
 
     let data = await CachedHttp.get(erpObject.TEmployee, async () => {
-      return await new ContactService().getAllEmployees();
+      return await contactService.getAllEmployees();
     }, {
       useIndexDb: true,
       useLocalStorage: false,

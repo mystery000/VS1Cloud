@@ -116,11 +116,12 @@ Template.payrollleave.onRendered(function () {
     }
   };
 
-  this.loadDefaultScreen = async () => {
-    await this.loadLeavesToReview();
+  this.loadDefaultScreen = async (refresh = false) => {
+    await this.loadLeavesToReview(refresh);
   };
 
   this.loadEmployees = async (refresh = false) => {
+    await this.employees.set([]);
     let data = await CachedHttp.get(erpObject.TEmployee, async () => {
       return await contactService.getAllEmployees();
     }, {
@@ -476,11 +477,13 @@ Template.payrollleave.onRendered(function () {
           $("#newLeaveRequestModal").modal("hide");
           $("#edtLeaveTypeofRequestID, #edtLeaveTypeofRequest, #edtLeaveDescription, #edtLeavePayPeriod, #edtLeaveHours, #edtLeavePayStatus").val("");
           LoadingOverlay.hide(0);
-          swal({title: "Leave request added successfully", text: "", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(result => {
-            if (result.value) {
-              if (result.value) {}
-            }
-          });
+          const result = await swal({title: "Leave request added successfully", text: "", type: "success", showCancelButton: false, confirmButtonText: "OK"});
+
+          if(result.value) {
+            await this.initPage(true);
+
+          }
+
         } else {
           LoadingOverlay.hide(0);
           swal({title: "Oooops...", text: ApiResponse.headers.get("errormessage"), type: "error", showCancelButton: false, confirmButtonText: "Try Again"}).then(result => {
@@ -539,7 +542,7 @@ Template.payrollleave.onRendered(function () {
         });
 
         if (result.value) {
-          await this.initPage();
+          await this.initPage(true);
         } else if (result.dismiss === "cancel") {}
       } else {
         throw response.status;
@@ -556,7 +559,7 @@ Template.payrollleave.onRendered(function () {
       });
 
       if (result.value) {
-        this.approveLeave(leaveId);
+        await this.approveLeave(leaveId);
       } else if (result.dismiss === "cancel") {}
     }
 
@@ -606,7 +609,7 @@ Template.payrollleave.onRendered(function () {
         });
 
         if (result.value) {
-          await this.initPage();
+          await this.initPage(true);
         } else if (result.dismiss === "cancel") {}
       } else {
         throw response.status;
@@ -631,6 +634,8 @@ Template.payrollleave.onRendered(function () {
   };
 
   this.loadLeaveTypes = async (refresh = false) => {
+    await this.leaveTypes.set([]);
+
     let cachedRequest = await CachedHttp.get(erpObject.TAssignLeaveType, async () => {
       const employeePayrolApis = new EmployeePayrollApi();
       // now we have to make the post request to save the data in database
@@ -655,7 +660,7 @@ Template.payrollleave.onRendered(function () {
     let response = cachedRequest.response;
     let leaveTypes = response.tassignleavetype.map(l => l.fields);
 
-    this.leaveTypes.set(leaveTypes);
+     await this.leaveTypes.set(leaveTypes);
   };
 
   this.initPage = async (refresh = false) => {
@@ -664,11 +669,11 @@ Template.payrollleave.onRendered(function () {
     await this.loadEmployees(refresh);
     await this.loadLeaveTypes(refresh);
     await this.loadLeaves(refresh);
-    await this.loadDefaultScreen();
+    await this.loadDefaultScreen(refresh);
 
-    this.dataTableSetup();
+    this.dataTableSetup(refresh);
 
-    Datehandler.defaultDatePicker();
+    if(!refresh) Datehandler.defaultDatePicker();
     LoadingOverlay.hide();
   };
 
