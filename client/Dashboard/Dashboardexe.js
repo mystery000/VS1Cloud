@@ -214,7 +214,7 @@ Template.dashboardexe.onRendered(function () {
     });
   });
   let varianceRed = "#ff420e";
-  let varianceGreen = "#579D1C"; //#1cc88a
+  let varianceGreen = "#1cc88a"; //#579D1C
   
   let minPerc = 0;
 
