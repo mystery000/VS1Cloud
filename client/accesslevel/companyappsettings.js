@@ -52,7 +52,6 @@ Template.companyappsettings.events({
      }
    },
    'click .btnBack':function(event){
-     playCancelAudio();
      event.preventDefault();
      history.back(1);
    },

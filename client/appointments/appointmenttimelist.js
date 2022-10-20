@@ -1645,7 +1645,7 @@ Template.appointmenttimelist.events({
 
     },
     'click .printConfirm': function(event) {
-        playPrintAudio();
+
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblappointmenttimelist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');

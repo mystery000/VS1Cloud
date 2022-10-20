@@ -283,7 +283,6 @@ if (result.value) {
 },
 
 'click .btnSaveAccess': function () {
-  playSaveAudio();
   let objDetails =
     {
       Name: "VS1_NewRego",

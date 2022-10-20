@@ -1044,12 +1044,10 @@ Template.newdepartmentpop.events({
 
     },
     'click .btnCloseAddNewDept': function() {
-        playCancelAudio();
         $('#newTaxRate').css('display', 'none');
 
     },
     'click .btnDeleteDepartment': function() {
-        playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
         let deptId = $('#selectDeleteLineID').val();
@@ -1092,7 +1090,6 @@ Template.newdepartmentpop.events({
 
     },
     'click .btnSaveDept': function() {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
         let deptID = $('#edtDepartmentID').val();
@@ -1285,7 +1282,6 @@ Template.newdepartmentpop.events({
         $('#edtDeptDesc').val('');
     },
     'click .btnBack': function(event) {
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },
@@ -1319,7 +1315,6 @@ Template.newdepartmentpop.events({
 
     },
     'click .btnSaveRoom': function() {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
 

@@ -88,7 +88,6 @@ Template.addNewEftModal.onRendered(function () {
 Template.addNewEftModal.events({
 
   "click .btnSaveEftOptions": (e) => {
-    playSaveAudio();
     const templateObject = Template.instance();
     let eftOptions = templateObject.eftOptionsList.get();
 
@@ -120,7 +119,6 @@ Template.addNewEftModal.events({
   },
 
   "click .btnCancelEftOptions": (e) => {
-    playCancelAudio();
     $('#addNewEftModal').modal('hide');
   },
 

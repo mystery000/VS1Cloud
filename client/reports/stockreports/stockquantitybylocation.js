@@ -251,7 +251,6 @@ Template.stockquantitybylocation.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click .btnPrintReport": function (event) {
-    playPrintAudio();
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {

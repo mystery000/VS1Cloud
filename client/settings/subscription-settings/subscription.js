@@ -58,7 +58,6 @@ Template.subscriptionSettings.onRendered(function() {
 
 Template.subscriptionSettings.events({
     'click .btnBack': function(event) {
-        playCancelAudio();
         event.preventDefault();
         history.back();
     },
@@ -81,7 +80,6 @@ Template.subscriptionSettings.events({
         })
     },
     'click .btnCancelSub': function(event) {
-        playCancelAudio();
         let loggeduserEmail = localStorage.getItem('mySession');
         let loggeduserName = Session.get('mySessionEmployee');
         let currentURL = FlowRouter.current().queryParams;
@@ -288,7 +286,6 @@ Template.subscriptionSettings.events({
     //   }
     // },
     'click .btnSaveCreditCard': function(event) {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let cardnumber = $('#txtCardNo').val();
         let month = $('#txtExpireDate').val().split('/')[0];

@@ -638,39 +638,3 @@ handleValidationError = async function ( errorMessage, fieldID ) {
       }
   });
 }
-
-playCancelAudio = function () {
-  var audioElement = document.createElement('audio');
-  audioElement.setAttribute('src', 'sounds/Cancel.mp3');
-  audioElement.play();
-}
-
-playCopyAudio = function () {
-  var audioElement = document.createElement('audio');
-  audioElement.setAttribute('src', 'sounds/Copy.mp3');
-  audioElement.play();
-}
-
-playDeleteAudio = function () {
-  var audioElement = document.createElement('audio');
-  audioElement.setAttribute('src', 'sounds/Delete.mp3');
-  audioElement.play();
-}
-
-playEmailAudio = function () {
-  var audioElement = document.createElement('audio');
-  audioElement.setAttribute('src', 'sounds/Email.mp3');
-  audioElement.play();
-}
-
-playPrintAudio = function () {
-  var audioElement = document.createElement('audio');
-  audioElement.setAttribute('src', 'sounds/Print.mp3');
-  audioElement.play();
-}
-
-playSaveAudio = function () {
-  var audioElement = document.createElement('audio');
-  audioElement.setAttribute('src', 'sounds/Save.mp3');
-  audioElement.play();
-}

@@ -386,7 +386,6 @@ Template.profitlossreport.events({
     Meteor._reload.reload();
   },
   "click .btnPrintReport": function (event) {
-    playPrintAudio();
     document.title = "Profit and Loss Report";
     $(".printReport").print({
       title: document.title + " | Profit and Loss | " + loggedCompany,

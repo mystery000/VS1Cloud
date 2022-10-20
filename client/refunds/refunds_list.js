@@ -2098,7 +2098,7 @@ Template.refundlist.events({
         templateObject.getAllFilterRefundData('', '', true);
     },
     'click .printConfirm': function (event) {
-      playPrintAudio();
+
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblRefundlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');

@@ -182,7 +182,7 @@
                   .table th,
                   .table td {
                       text-align: right;
-                      /* min-width: 150px; */
+                      min-width: 150px;
                   }
                   .table th:first-child,
                   .table td:first-child {
@@ -208,10 +208,10 @@
                     <thead>
                       <tr class="table-active customDoubleTableHeading">
                         <th>Company</th>
-                        <!-- <th style="width: 130px;">Type</th>
+                        <th style="width: 130px;">Type</th>
                         <th>Order No.</th>
                         <th>Order Date</th>
-                        <th>Phone</th> -->
+                        <th>Phone</th>
 
                         <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Total Amount (Ex)</th>
                         <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Total Tax</th>
@@ -221,10 +221,10 @@
                       {{#if isOnlyDefaultActive equal "false" }}
                         <tr class="table-active tblAvoid">
                           <th></th>
-                          <!-- <th></th>
                           <th></th>
                           <th></th>
-                          <th></th> -->
+                          <th></th>
+                          <th></th>
 
                           {{#if currencyList}}
                             {{#each c in currencyList }}
@@ -264,7 +264,7 @@
                                 
                                   <a href="/purchasesreport?contact={{items.contact}}" style="text-decoration:none!important;">{{items.contact}}</a>
                                 </span></td>
-                            <!-- <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
+                            <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                               <span class="table-cells">
                                 
                                   <a href="#" style="text-decoration:none!important;">{{items.type}}</a>
@@ -283,7 +283,7 @@
                               <span class="table-cells">
                                 
                                   <a href="#" style="text-decoration:none!important;">{{items.phone}}</a>
-                                </span></td> -->
+                                </span></td>
 
                             {{#if isOnlyDefaultActive}}
                               {{#if currencyList}}
@@ -386,10 +386,10 @@
                           <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
 
                             <td>{{grandrecords.Title}}</td>
-                            <!-- <td></td>
                             <td></td>
                             <td></td>
-                            <td></td> -->
+                            <td></td>
+                            <td></td>
 
                             {{#if isOnlyDefaultActive }}
                               {{#if currencyList}}

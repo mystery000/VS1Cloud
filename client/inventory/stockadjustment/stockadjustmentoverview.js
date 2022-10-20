@@ -942,7 +942,7 @@ Template.stockadjustmentoverview.events({
 
     },
     'click .printConfirm' : function(event){
-        playPrintAudio();
+
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblStockAdjustOverview_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');

@@ -1998,7 +1998,6 @@ Template.alltaskdatatable.events({
   },
 
   "click .btnCancelAddTask": function (event) {
-    playCancelAudio();
     $(".btnAddSubTask").css("display", "block");
     $(".newTaskRow").css("display", "none");
     $(".addTaskModal").css("display", "none");
@@ -2247,7 +2246,6 @@ Template.alltaskdatatable.events({
 
   // update task rename task
   "click .btnSaveEditTask": function (e) {
-    playSaveAudio();
     let taskID = $("#txtCrmTaskID").val();
     if (taskID) {
       let selected_lbls = [];
@@ -2317,7 +2315,6 @@ Template.alltaskdatatable.events({
   },
   // submit save new task add task
   "click .btnSaveAddTask": function (e) {
-    playSaveAudio();
     let task_name = $("#add_task_name").val();
     let task_description = $("#add_task_description").val();
     let subTaskID = $("#txtCrmSubTaskID").val();
@@ -2818,7 +2815,6 @@ Template.alltaskdatatable.events({
 
   // submit save new project
   "click .btnSaveNewCrmProject": function (e) {
-    playSaveAudio();
     let projectName = $("#crmProjectName").val();
     let projectColor = $("#crmProjectColor").val();
     let projectDescription = $("#crmProjectDescription").val();
@@ -3414,7 +3410,6 @@ Template.alltaskdatatable.events({
   },
 
   "click .btnSaveEditLabel": function (e) {
-    playSaveAudio();
     let id = $("#editLabelID").val();
     let labelName = $("#editLabelName").val();
     let labelColor = $("#editLabelColor").val();
@@ -3445,7 +3440,6 @@ Template.alltaskdatatable.events({
   },
 
   "click .btnDeleteLabel": function (e) {
-    playDeleteAudio();
     let id = e.target.dataset.id;
 
     if (id) {

@@ -22,12 +22,10 @@ Template.clienttypemodal.onRendered(function () {
 
 Template.clienttypemodal.events({
     'click .btnCloseAddNewDept': function () {
-        playCancelAudio();
         $('#newTaxRate').css('display', 'none');
 
     },
     'click .btnSaveClientType': function () {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         var url = FlowRouter.current().path;
         let contactService = new ContactService();
@@ -118,7 +116,6 @@ Template.clienttypemodal.events({
     },
 
     'click .btnBack': function (event) {
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },

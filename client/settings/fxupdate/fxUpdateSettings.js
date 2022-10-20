@@ -736,7 +736,6 @@ Template.fixUpdates.events({
         // } else {}
     },
     'click .btnSaveFrequency': function() {
-        playSaveAudio();
         //FxEditorSetting.save();
 
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -1001,7 +1000,6 @@ Template.fixUpdates.events({
         }
     },
     'click .btnSaveBasedOn': (e) => {
-        playSaveAudio();
         let radioFrequency = $('input[type=radio][name=basedOnRadio]:checked').attr('id');
 
         // We get the ID of the row

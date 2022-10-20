@@ -5206,7 +5206,6 @@ Template.creditcard.helpers({
 Template.creditcard.events({
     'click  #open_print_confirm':function(event)
     {
-        playPrintAudio();
         if($('#choosetemplate').is(':checked'))
         {
             $('#templateselection').modal('show');
@@ -6157,7 +6156,6 @@ Template.creditcard.events({
 
     },
     'click .printConfirm':  async function(event) {
-        playPrintAudio();
         var printTemplate = [];
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#html-2-pdfwrapper').css('display', 'block');
@@ -6596,7 +6594,6 @@ Template.creditcard.events({
         }
     },
     'click .btnDeleteCredit': function(event) {
-        playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -6647,7 +6644,6 @@ Template.creditcard.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnDeleteLine': function(event) {
-        playDeleteAudio();
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -6774,11 +6770,10 @@ Template.creditcard.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnSaveSettings': function(event) {
-        playSaveAudio();
+
         $('#myModal4').modal('toggle');
     },
     'click .btnSave': (event, templateObject) => {
-        playSaveAudio();
         saveCurrencyHistory();
         //let templateObject = Template.instance();
         let suppliername = $('#edtSupplierName');
@@ -7631,7 +7626,6 @@ Template.creditcard.events({
 
     },
     'click .btnSaveGridSettings': async function(event) {
-        playSaveAudio();
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -8134,7 +8128,6 @@ Template.creditcard.events({
 
     },
     'click .btnBack': function(event) {
-        playCancelAudio();
         event.preventDefault();
         if(FlowRouter.current().queryParams.trans){
           FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');

@@ -4650,7 +4650,6 @@ Template.payrolloverview.events({
     $("#frmOnHoldModal").modal("show");
   },
   "click .btnSaveTimeSheet": async function () {
-    playSaveAudio();
     LoadingOverlay.show();
     let templateObject = Template.instance();
     let showTimesheetStatus = Session.get("CloudShowTimesheet") || true;
@@ -6050,7 +6049,6 @@ Template.payrolloverview.events({
     $("#lunch").prop("checked", false);
   },
   "click .btnDeleteTimeSheet": function () {
-    playDeleteAudio();
     let templateObject = Template.instance();
     let contactService = new ContactService();
 
@@ -6180,7 +6178,6 @@ Template.payrolloverview.events({
     //   });
   },
   "click .printConfirm": function (event) {
-    playPrintAudio();
     LoadingOverlay.show();
     jQuery("#tblPayHistorylist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");

@@ -2065,7 +2065,6 @@ Template.bankrecon2.events({
         });
     },
     'click .btnDeleteRecon span': function(e) {
-        playDeleteAudio();
         if ($(".btnDeleteRecon").is(":disabled")) {
             swal({
                 title: 'Cannot delete this reconciliation. Please delete the most recent reconciliations first.',
@@ -2085,7 +2084,6 @@ Template.bankrecon2.events({
 
     },
     'click .btnDeleteRecon': function(e) {
-        playDeleteAudio();
         let recService = new ReconService();
         swal({
             title: 'Delete Bank Reconciliation',
@@ -2246,7 +2244,6 @@ Template.bankrecon2.events({
         }
     },
     'click .btnBack': function(event) {
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },

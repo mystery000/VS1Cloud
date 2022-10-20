@@ -10,7 +10,6 @@ Template.newstatuspop.onRendered(() => {});
 Template.newstatuspop.helpers({});
 Template.newstatuspop.events({
     'click .btnSaveStatus': function() {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let clientService = new SalesBoardService()
         let statusName = $('#newStatus').val();

@@ -430,7 +430,6 @@ Template.clienttypepopup.events({
 
     },
     'click .btnDeleteDClientType': function () {
-        playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
         let deptId = $('#selectDeleteLineID').val();
@@ -666,7 +665,6 @@ Template.clienttypepopup.events({
 
     },
     'click .btnBack': function(event) {
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },

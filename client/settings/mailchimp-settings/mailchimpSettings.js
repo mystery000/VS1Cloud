@@ -81,7 +81,6 @@ Template.mailchimpSettings.events({
   },
 
   'click #saveMailchimpSettings': async function () {
-    playSaveAudio();
     $('.fullScreenSpin').css('display', 'inline-block');
 
     const templateObject = Template.instance();

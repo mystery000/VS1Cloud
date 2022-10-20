@@ -797,7 +797,6 @@ Template.crmoverview.events({
   },
 
   "click .printConfirm": function (event) {
-    playPrintAudio();
     let currentTabID = Template.instance().currentTabID.get();
 
     $(".fullScreenSpin").css("display", "inline-block");

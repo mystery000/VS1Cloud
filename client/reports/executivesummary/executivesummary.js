@@ -118,7 +118,7 @@ Template.executivesummaryreport.onRendered(() => {
   });
 
   let varianceRed = "#ff420e";
-  let varianceGreen = "#579D1C"; //#1cc88a
+  let varianceGreen = "#579D1C;";
 
   let cashReceived = [0, 0];
   let cashSpent = [0, 0];
@@ -182,23 +182,27 @@ Template.executivesummaryreport.onRendered(() => {
     } else if (fieldVal2 == 0) {
       fieldVariance = (-1) * fieldVal1;
     } else {
-      // if (fieldVal2 >= fieldVal1) {
-      //   fieldVariance = (fieldVal2 / fieldVal1) * 100;
-      // } else {
-      //   fieldVariance = (fieldVal1 / fieldVal2) * (-100);
+      if (fieldVal2 >= fieldVal1) {
+        fieldVariance = (fieldVal2 / fieldVal1) * 100;
+      } else {
+        fieldVariance = (fieldVal1 / fieldVal2) * (-100);
+      }
+      // if (fieldVal1 > 0 && fieldVal2 > 0) {
+
       // }
-      if (fieldVal1 > 0 && fieldVal2 > 0) {
-        fieldVariance = (fieldVal2 / fieldVal1) * 100;
-      }
-      if (fieldVal1 > 0 && fieldVal2 < 0) {
-        fieldVariance = (Math.abs(fieldVal2) / fieldVal1) * 100;
-      }
-      if (fieldVal1 < 0 && fieldVal2 > 0) {
-        fieldVariance = (Math.abs(fieldVal1) / fieldVal2) * 100;
-      }
-      if (fieldVal1 < 0 && fieldVal2 < 0) {
-        fieldVariance = (fieldVal2 / fieldVal1) * 100;
-      }
+      // if (fieldVal1 > 0 && fieldVal2 < 0) {
+      //   fieldVariance = fieldVal2 - fieldVal1;
+      // }
+      // if (fieldVal1 < 0 && fieldVal2 > 0) {
+      //   fieldVariance = fieldVal2 - fieldVal1;
+      // }
+      // if (fieldVal1 < 0 && fieldVal2 < 0) {
+      //   if (fieldVal2 >= fieldVal1) {
+      //     fieldVariance = (fieldVal1 / fieldVal2) * 100;
+      //   } else {
+      //     fieldVariance = (fieldVal2 / fieldVal1) * (-100);
+      //   }
+      // }
     }
     if (fieldVariance == 0) {
       $('.' + fieldSelector).css("color", varianceGreen);
@@ -357,7 +361,7 @@ Template.executivesummaryreport.onRendered(() => {
       templateObject.setFieldVariance(currentAsset[0], currentAsset[1], "spnCurrentAssetVariance");
       templateObject.setFieldVariance(termAsset[0], termAsset[1], "spnTermAssetVariance");
     } catch (err) {
-      console.log(err);
+
     }
     LoadingOverlay.hide();
   }
@@ -448,7 +452,6 @@ Template.executivesummaryreport.events({
     LoadingOverlay.hide();
   },
   "click .btnPrintReport": function (event) {
-    playPrintAudio();
     $("a").attr("href", "/");
     document.title = "Executive Summary Report";
     $(".printReport").print({

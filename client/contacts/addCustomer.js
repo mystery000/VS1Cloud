@@ -1932,7 +1932,6 @@ Template.customerscard.onRendered(function () {
         $('#taxRateListModal').modal('toggle');
     });
     $(document).on("click", "#referenceLetterModal .btnSaveLetterTemp", function (e) {
-        playSaveAudio();
         if($("input[name='refTemp']:checked").attr('value') == undefined || $("input[name='refTemp']:checked").attr('value') == null ) {
             swal({
                 title: 'Oooops...',
@@ -2395,13 +2394,11 @@ Template.customerscard.events({
         }
     },
     'click .btnBack': function (event) {
-        playCancelAudio();
         // event.preventDefault();
         history.back(1);
       //  FlowRouter.go('/customerlist');
     },
     'click .btnSaveDept': function () {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ContactService();
 
@@ -2575,7 +2572,6 @@ Template.customerscard.events({
     */
     },
     'click .btnSave': async function (e) {
-        playSaveAudio();
         let templateObject = Template.instance();
         let contactService = new ContactService();
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -2837,7 +2833,6 @@ Template.customerscard.events({
         });
     },
     'click .btnSaveJob': function (event) {
-        playSaveAudio();
         let templateObject = Template.instance();
         let contactService = new ContactService();
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -3297,19 +3292,16 @@ Template.customerscard.events({
         $('.fullScreenSpin').css('display', 'none');
     },
     'click .printConfirmTransaction': function (event) {
-        playPrintAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
     },
     'click .printConfirmCrm': function (event) {
-        playPrintAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblCrmList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
     },
     'click .printConfirmJob': function (event) {
-        playPrintAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
@@ -3517,7 +3509,6 @@ Template.customerscard.events({
     'click .btnOpenSettings': function (event) {
     },
     'click .btnSaveSettings': function (event) {
-        playSaveAudio();
         let templateObject = Template.instance();
         $('.lblCustomField1').html('');
         $('.lblCustomField2').html('');
@@ -3812,7 +3803,6 @@ Template.customerscard.events({
         }
     },
     'click .btnDeleteCustomer': function (event) {
-        playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ContactService();
         let currentId = FlowRouter.current().queryParams;
@@ -3859,7 +3849,6 @@ Template.customerscard.events({
         }
     },
     'click .btnCustomerEmail': function (event) {
-        playEmailAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
@@ -3931,7 +3920,6 @@ Template.customerscard.events({
         }
     },
     'click .btnJobEmail': function (event) {
-        playEmailAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.jobid)) {

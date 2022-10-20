@@ -13152,7 +13152,6 @@ Template.new_invoice.events({
     $("#clickedControl").val(clickedInput);
   },
   "click  #open_print_confirm": function (event) {
-    playPrintAudio();
     if ($("#choosetemplate").is(":checked")) {
       let invoice_type = FlowRouter.current().queryParams.type;
 
@@ -15897,7 +15896,6 @@ Template.new_invoice.events({
     }
   },
   "click .printConfirm": async function (event) {
-  playPrintAudio();
     var printTemplate = [];
     $(".fullScreenSpin").css("display", "inline-block");
     $("#html-2-pdfwrapper").css("display", "block");
@@ -16773,7 +16771,6 @@ Template.new_invoice.events({
     }
   },
   "click .btnDeleteInvoice": function (event) {
-    playDeleteAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
     let salesService = new SalesBoardService();
@@ -16835,7 +16832,6 @@ Template.new_invoice.events({
     $("#deleteLineModal").modal("toggle");
   },
   "click .btnDeleteLine": function (event) {
-    playDeleteAudio();
     let templateObject = Template.instance();
     let taxcodeList = templateObject.taxraterecords.get();
     let utilityService = new UtilityService();
@@ -17044,7 +17040,6 @@ Template.new_invoice.events({
   //     $('#myModal4').modal('toggle');
   // },
   "click .btnSave":  (event, templateObject) => {
-  playSaveAudio();
     saveCurrencyHistory();
     // let templateObject = Template.instance();
     let stripe_id = templateObject.accountID.get();
@@ -18446,7 +18441,6 @@ Template.new_invoice.events({
 
   // custom field displaysettings
   "click .btnSaveGridSettings": async function (event) {
-    playSaveAudio();
     let lineItems = [];
     $(".fullScreenSpin").css("display", "inline-block");
 
@@ -19518,7 +19512,6 @@ Template.new_invoice.events({
     }
   },
   "click .btnBack": function (event) {
-    playCancelAudio();
     event.preventDefault();
     if (FlowRouter.current().queryParams.trans) {
       FlowRouter.go(
@@ -19531,7 +19524,6 @@ Template.new_invoice.events({
     }
   },
   "click #btnCopyInvoice": function () {
-    playCopyAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     var url = FlowRouter.current().path;
     if (

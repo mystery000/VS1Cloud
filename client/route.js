@@ -968,22 +968,6 @@ authenticatedRoutes.route('/bankingoverview', {
         });
     }
 });
-authenticatedRoutes.route('/supplierdetail', {
-    name: 'supplierdetail',
-    action() {
-        BlazeLayout.render('layout', {
-            yield: 'supplierdetail'
-        });
-    }
-});
-authenticatedRoutes.route('/suppliersummary', {
-    name: 'suppliersummary',
-    action() {
-        BlazeLayout.render('layout', {
-            yield: 'suppliersummary'
-        });
-    }
-});
 
 authenticatedRoutes.route('/reconciliation', {
     name: 'reconciliation',

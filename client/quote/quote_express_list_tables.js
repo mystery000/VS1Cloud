@@ -2872,7 +2872,7 @@ Template.quoteslist.events({
 
     },
     'click .printConfirm' : function(event){
-      playPrintAudio();
+
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {

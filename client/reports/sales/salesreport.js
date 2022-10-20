@@ -520,7 +520,7 @@ Template.salesreport.events({
     //     // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
     // },
     'click .btnPrintReport': function(event) {
-        playPrintAudio();
+
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {

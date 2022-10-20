@@ -591,7 +591,6 @@ Template.timesheetdetail.events({
     ui.duplicateFirstLine();
   },
   "click .btnDeleteRow": function (e) {
-    playDeleteAudio();
     $(e.target).parents("tr").remove();
   },
 

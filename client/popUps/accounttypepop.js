@@ -1932,7 +1932,6 @@ Template.accounttypepop.events({
         });
     },
     'click .btnSaveAccount': function () {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let accountService = new AccountService();
@@ -2297,7 +2296,7 @@ Template.accounttypepop.events({
         $('.isCreditAccount').addClass('isNotCreditAccount');
     },
     'click .printConfirm': function (event) {
-        playPrintAudio();
+
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblAccountOverview_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
@@ -2509,7 +2508,6 @@ Template.accounttypepop.events({
 
     },
     'click .btnDeleteAccount': function () {
-        playDeleteAudio();
         swal({
             title: 'Delete Account',
             text: "Are you sure you want to Delete Account?",

@@ -519,7 +519,6 @@ Template.leadlist.events({
         });
     },
     'click .printConfirm' : function(event){
-        playPrintAudio();
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblLeadlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');

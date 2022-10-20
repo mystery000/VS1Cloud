@@ -974,7 +974,6 @@ Template.addAccountModal.events({
   },
 
   "click .btnSaveAccount": function () {
-    playSaveAudio();
     LoadingOverlay.show();
     let templateObject = Template.instance();
     let accountService = new AccountService();
@@ -1407,7 +1406,6 @@ Template.addAccountModal.events({
     // }
   },
   "click .btnDeleteAccount": (e, template) => {
-    playDeleteAudio();
     template.deleteAccount();
   },
 

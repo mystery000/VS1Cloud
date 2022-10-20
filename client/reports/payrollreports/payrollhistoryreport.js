@@ -254,7 +254,6 @@ Template.payrollhistoryreport.events({
     let rows = [];
   },
   "click .btnPrintReport": function (event) {
-    playPrintAudio();
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -362,8 +361,6 @@ Template.payrollhistoryreport.events({
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
       false
       );
-    templateObject.dateAsAt.set(moment(endDate).format('DD/MM/YYYY'));
-
   },
   "click #lastQuarter": async function () {
     // LoadingOverlay.hide();
@@ -379,8 +376,6 @@ Template.payrollhistoryreport.events({
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
       false
       );
-    templateObject.dateAsAt.set(moment(endDate).format('DD/MM/YYYY'));
-
   },
   "click #last12Months": async function () {
     // LoadingOverlay.hide();
@@ -416,8 +411,6 @@ Template.payrollhistoryreport.events({
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
       false
       );
-      var newdate = $("#dateTo").val();
-      templateObject.dateAsAt.set(newdate);
   },
   "click #ignoreDate": async function () {
     // LoadingOverlay.hide();

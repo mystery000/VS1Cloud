@@ -645,7 +645,6 @@ Template.newtaxratepop.onRendered(function() {
 
 Template.newtaxratepop.events({
     'click .btnSaveTaxRate': function() {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         var url = FlowRouter.current().path;
         let taxRateService = new TaxRateService();

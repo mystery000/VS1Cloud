@@ -711,7 +711,6 @@ Template.paymentmethodSettings.onRendered(function() {
 
 
         $("#saveStripeID").click(function(){
-          playSaveAudio();
           $('.fullScreenSpin').css('display','inline-block');
           let companyID = 1;
           let feeMethod  = "apply";
@@ -989,7 +988,6 @@ Template.paymentmethodSettings.events({
     });
   },
   'click .btnDeletePaymentMethod': function () {
-    playDeleteAudio();
     let taxRateService = new TaxRateService();
     let paymentMethodId = $('#selectDeleteLineID').val();
 
@@ -1031,7 +1029,6 @@ Template.paymentmethodSettings.events({
 
   },
   'click .btnSavePaymentMethod': function () {
-    playSaveAudio();
     $('.fullScreenSpin').css('display','inline-block');
     let taxRateService = new TaxRateService();
     let paymentMethodID = $('#edtPaymentMethodID').val();
@@ -1184,7 +1181,6 @@ Template.paymentmethodSettings.events({
       templateObject.includeCreditCard.set(false);
   },
   'click .btnBack':function(event){
-    playCancelAudio();
     event.preventDefault();
     history.back(1);
   }

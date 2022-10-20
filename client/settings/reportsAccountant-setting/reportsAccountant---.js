@@ -923,7 +923,6 @@ Template.reportsAccountantSettings123.events({
       });
     },
     'click .btnDeleteAccountant': function () {
-        playDeleteAudio();
         $('.fullScreenSpin').css('display','inline-block');
         let taxRateService = new TaxRateService();
         let accountantId = $('#selectDeleteLineID').val();
@@ -964,7 +963,6 @@ Template.reportsAccountantSettings123.events({
         });
     },
     'click .btnSaveAccountant': function () {
-        playSaveAudio();
         $('.fullScreenSpin').css('display','inline-block');
         let taxRateService = new TaxRateService();
         let accountantID = $('#edtAccountantID').val();
@@ -1258,12 +1256,10 @@ Template.reportsAccountantSettings123.events({
         // $('#edtDeptName').prop('readonly', false);
     },
     'click .btnBack':function(event){
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },
     'click .btnSaveRoom': function () {
-        playSaveAudio();
         $('.fullScreenSpin').css('display','inline-block');
         let taxRateService = new TaxRateService();
 

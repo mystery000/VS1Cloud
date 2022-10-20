@@ -3624,7 +3624,6 @@ Template.accessleveldup.events({
         }
     },
     'click .btnGlobalSave': function () {
-        playSaveAudio();
         let templateObject = Template.instance();
         let accesslevelService = new AccessLevelService();
 
@@ -3974,7 +3973,6 @@ Template.accessleveldup.events({
         }
     },
     'click .btnTopGlobalSaveUpdate-Ras': function () {
-        playSaveAudio();
         swal({
             title: 'Do you want to save both VS1 and Employee Modules?',
             text: 'Yes to Save Both and No to Save only the VS1 Modules.',
@@ -3991,7 +3989,6 @@ Template.accessleveldup.events({
         })
     },
     'click .btnSaveAccess': function () {
-        playSaveAudio();
         let templateObject = Template.instance();
         let accesslevelService = new AccessLevelService();
 
@@ -4460,7 +4457,6 @@ Template.accessleveldup.events({
         return false;
     },
     'click .btnBack':function(event){
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },

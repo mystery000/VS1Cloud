@@ -1376,9 +1376,6 @@ Template.journalentrylist.onRendered(function() {
 });
 
 Template.journalentrylist.events({
-  'click #copyJournal': function(event) {
-    playCopyAudio();
-  },
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
@@ -1842,7 +1839,6 @@ Template.journalentrylist.events({
     LoadingOverlay.hide();
   },
   "click .printConfirm": function (event) {
-    playPrintAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblJournalList_wrapper .dt-buttons .btntabletopdf").click();
     LoadingOverlay.hide();

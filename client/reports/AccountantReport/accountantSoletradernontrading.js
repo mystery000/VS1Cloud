@@ -1804,7 +1804,6 @@ Template.accountant_soletradernontrading.events({
     },
 
     "click .btnSaveAccount": function() {
-        playSaveAudio();
         $(".fullScreenSpin").css("display", "inline-block");
         let templateObject = Template.instance();
         let accountService = new AccountService();
@@ -2278,7 +2277,6 @@ Template.accountant_soletradernontrading.events({
     },
 
     "click .btnPrintReport": function(event) {
-        playPrintAudio();
         $(".printReport").show();
         $("a").attr("href", "/");
         document.title = "Sole Trader Non Trading";

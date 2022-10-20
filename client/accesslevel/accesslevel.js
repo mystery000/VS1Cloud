@@ -333,7 +333,6 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
        }
      },
      'click .btnGlobalSaveNOT': function () {
-      playSaveAudio();
        let templateObject = Template.instance();
        let accesslevelService = new AccessLevelService();
         var erpGet = erpDb();
@@ -851,7 +850,6 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
      }
    },
    'click .btnTopGlobalSave': function () {
-    playSaveAudio();
      swal({
        title: 'Do you want to save both VS1 and Employee Modules?',
        text: 'Yes to Save Both and No to Save only the VS1 Modules.',
@@ -868,7 +866,6 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
      })
  },
      'click .btnSaveAccess': function () {
-      playSaveAudio();
        let templateObject = Template.instance();
        let accesslevelService = new AccessLevelService();
        
@@ -1382,7 +1379,6 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
         return false;
      },
      'click .btnBack':function(event){
-       playCancelAudio(); 
        event.preventDefault();
        history.back(1);
      },

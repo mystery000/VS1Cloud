@@ -702,7 +702,6 @@ Template.employeetimeclock.events({
     window.open('/timesheet', '_self');
   },
   'click .btnSaveTimeSheet': function () {
-    playSaveAudio();
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let contactService = new ContactService();
@@ -802,13 +801,11 @@ Template.employeetimeclock.events({
     $('#edtBankAccountNo').val('');
   },
   'click .printConfirm': function (event) {
-    playPrintAudio();
     $('.fullScreenSpin').css('display', 'inline-block');
     jQuery('#tblTimeSheet_wrapper .dt-buttons .btntabletopdf').click();
     $('.fullScreenSpin').css('display', 'none');
   },
   'click .btnDeleteTimeSheet': function () {
-    playDeleteAudio();
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let contactService = new ContactService();

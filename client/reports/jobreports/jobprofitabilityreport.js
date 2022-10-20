@@ -197,7 +197,6 @@ Template.jobprofitabilityreport.events({
     let rows = [];
   },
   "click .btnPrintReport": function (event) {
-    playPrintAudio();
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -498,7 +497,6 @@ Template.jobprofitabilityreport.events({
         GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
         false
       );
-      templateObject.dateAsAt.set($('#dateTo').val());
     },
     ...Datehandler.getDateRangeEvents()
 });

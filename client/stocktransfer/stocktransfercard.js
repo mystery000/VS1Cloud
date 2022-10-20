@@ -1357,7 +1357,6 @@ Template.stocktransfercard.onRendered(function() {
 
     StockTransferRow();
     $("#btnsaveallocline").click(function() {
-        playSaveAudio();
         $('#tblStocktransfer tr:eq(' + rowIndex + ')').find("[id=pqa]").text("");
         var splashLineArrayAlloc = new Array();
         let lineItemObjFormAlloc = {};
@@ -3104,7 +3103,7 @@ Template.stocktransfercard.events({
         }
     },
     'click .btnprintDockets': function(e) {
-        playPrintAudio();
+
         let invoiceID = parseInt($("#SalesId").val());
         let templateObject = Template.instance();
         let isInvoice = templateObject.includeInvoiceAttachment.get();
@@ -3131,13 +3130,11 @@ Template.stocktransfercard.events({
 
     },
     'click .btnprintInvoice': function(e) {
-        playPrintAudio();
         let templateObject = Template.instance();
         let printType = "InvoiceOnly";
         templateObject.SendShippingDetails(printType);
     },
     'click .btnprintDelDocket': function(e) {
-        playPrintAudio();
         let templateObject = Template.instance();
         let printType = "DeliveryDocketsOnly";
         templateObject.SendShippingDetails(printType);
@@ -3158,12 +3155,10 @@ Template.stocktransfercard.events({
         $('.viewLessSerialNo').css('display', 'none');
     },
     'click .btnBack': function(event) {
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },
     'click .printConfirm': function(event) {
-        playPrintAudio();
       $('.fullScreenSpin').css('display', 'inline-block');
         $('#html-2-pdfwrapper').css('display', 'block');
         $('.pdfCustomerName').html($('#sltDepartment').val());
@@ -3910,7 +3905,6 @@ Template.stocktransfercard.events({
 
     },
     'click .btnSave': function(event) {
-        playSaveAudio();
         if ($('.chkEmailCopy').is(':checked')) {
         $('#html-2-pdfwrapper').css('display', 'block');
         }
@@ -4258,7 +4252,6 @@ Template.stocktransfercard.events({
 
     },
     'click .btnDeleteStock': function(event) {
-        playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
@@ -4300,7 +4293,6 @@ Template.stocktransfercard.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnDeleteStockTransfer': function(event) {
-        playDeleteAudio();
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
         swal({
@@ -4354,7 +4346,6 @@ Template.stocktransfercard.events({
 
     },
     'click .btnDeleteLine': function(event) {
-        playDeleteAudio();
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let selectLineID = $('#selectDeleteLineID').val();

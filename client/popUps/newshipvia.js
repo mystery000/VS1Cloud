@@ -25,7 +25,6 @@ Template.newshipvia.onRendered(() => {});
 Template.newshipvia.helpers({});
 Template.newshipvia.events({
     'click .btnSaveShipVia': function() {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let clientService = new SalesBoardService()
         let shipViaData = $('#edtShipVia').val() || '';

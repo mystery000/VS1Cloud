@@ -1800,7 +1800,7 @@ Template.customerpayment.events({
         templateObject.getAllFilterCustPaymentData('', '', true);
     },
     'click .printConfirm' : function(event){
-        playPrintAudio();
+
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {

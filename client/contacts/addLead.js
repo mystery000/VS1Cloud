@@ -1138,7 +1138,6 @@ Template.leadscard.events({
         }
     },
     'click .btnBack': function (event) {
-        playCancelAudio();
         // event.preventDefault();
         history.back(1);
       //  FlowRouter.go('/leadlist');
@@ -1166,7 +1165,6 @@ Template.leadscard.events({
     */
     },
     'click .btnSave': async function (event) {
-        playSaveAudio();
         let templateObject = Template.instance();
         let contactService = new ContactService();
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -1567,7 +1565,6 @@ Template.leadscard.events({
         $('.fullScreenSpin').css('display', 'none');
     },
     'click .printConfirm': function (event) {
-        playPrintAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblCrmList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
@@ -1649,7 +1646,6 @@ Template.leadscard.events({
         $('.lblCustomField4').text(inputValue4);
     },
     'click .btnSaveSettings': function (event) {
-        playSaveAudio();
         let templateObject = Template.instance();
         $('.lblCustomField1').html('');
         $('.lblCustomField2').html('');
@@ -1796,7 +1792,6 @@ Template.leadscard.events({
         }
     },
     'click .btnDeleteLead': function (event) {
-        playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ContactService();
         let currentId = FlowRouter.current().queryParams;
@@ -1843,7 +1838,6 @@ Template.leadscard.events({
         }
     },
     'click .btnEmail': function (event) {
-        playEmailAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {

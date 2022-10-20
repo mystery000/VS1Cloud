@@ -1971,7 +1971,6 @@ Template.addemployeepop.events({
         }
     },
     'click .addemployeepop .btnSaveEmpPop': async function (event) {
-        playSaveAudio();
         let templateObject = Template.instance();
         let contactService = new ContactService();
         let appointmentService = new AppointmentService();
@@ -3057,7 +3056,6 @@ Template.addemployeepop.events({
         }
     },
     'click .addemployeepop .btnBack': function (event) {
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },
@@ -3397,7 +3395,7 @@ Template.addemployeepop.events({
 
     },
     'click .addemployeepop .printConfirm': function (event) {
-        playPrintAudio();
+
         LoadingOverlay.show();
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
         LoadingOverlay.hide();
@@ -3461,7 +3459,6 @@ Template.addemployeepop.events({
         $('.addemployeepop .lblCustomField4').text(inputValue4);
     },
     'click .addemployeepop .btnSaveSettings': function (event) {
-        playSaveAudio();
         let templateObject = Template.instance();
 
         $('.addemployeepop .lblCustomField1').html('');
@@ -3702,7 +3699,6 @@ Template.addemployeepop.events({
         }
     },
     'click .addemployeepop .btnDeleteEmployee': function (event) {
-        playDeleteAudio();
         LoadingOverlay.show();
 
         let templateObject = Template.instance();

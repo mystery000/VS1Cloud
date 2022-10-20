@@ -1246,7 +1246,6 @@ Template.customfieldpop.onRendered(() => {
 
 Template.customfieldpop.events({
   "click .btnSaveCustomFieldDropdown": function (e) {
-    playSaveAudio();
     const templateObject = Template.instance();
     let organisationService = new OrganisationService();
     let customFieldDropdownId = $("#customFieldDropdownId").val() ? parseInt($("#customFieldDropdownId").val()) : 0;
@@ -1321,7 +1320,6 @@ Template.customfieldpop.events({
   },
 
   "click .btnSaveCustomField": function () {
-    playSaveAudio();
     const templateObject = Template.instance();
 
     let data_id = $("#currentCustomField").val();

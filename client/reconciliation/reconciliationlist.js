@@ -1555,7 +1555,7 @@ Template.reconciliationlist.events({
         templateObject.getAllFilterReconData('', '', true);
     },
     'click .printConfirm' : function(event){
-        playPrintAudio();
+
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblreconciliationlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');

@@ -245,7 +245,6 @@ Template.payrollleavetaken.events({
     let rows = [];
   },
   "click .btnPrintReport": function (event) {
-    playPrintAudio();
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -566,7 +565,6 @@ Template.payrollleavetaken.helpers({
     return Template.instance().records.get();
   },
   redirectionType(item) {
-    console.log('asd',Template.instance().records.get())
       return '/employeescard?id=' + item.EmployeeID;
   },
   formatPrice( amount ){
@@ -581,7 +579,7 @@ Template.payrollleavetaken.helpers({
      return ( value == 0 )? '': value;
   },
   formatDate: ( date ) => {
-    return ( date )? moment(date).format("DD/MM/YYYY") : '';
+    return ( date )? moment(date).format("YYYY/MM/DD") : '';
   },
   // convertAmount: (amount, currencyData) => {
   //   let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory

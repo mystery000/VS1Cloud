@@ -5125,7 +5125,6 @@ Template.employeescard.events({
         // $('#deleteServiceModal').modal('toggle');
     },
     'click .btnDeleteProductService': function (event) {
-        playDeleteAudio();
         let selectLineID = $('#selectDeleteServiceID').val()||'';
         let contactService = new ContactService();
         if ($.isNumeric(selectLineID)) {
@@ -5176,7 +5175,6 @@ Template.employeescard.events({
        templateObject.addSelectedProduct();
     },
     'click .btnSave': async (e, templateObject) => {
-        playSaveAudio();
         await templateObject.saveSelectedProduct();
         let contactService = new ContactService();
         let appointmentService = new AppointmentService();
@@ -6251,7 +6249,6 @@ Template.employeescard.events({
     },
     // Save LeaveRequest Popup
     'click #btnSaveLeaveRequest': async function(event) {
-        playSaveAudio();
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -6371,7 +6368,6 @@ Template.employeescard.events({
     },
     // Save AssignLeaveType Popup
     'click #btnSaveAssignLeaveType': async function(event) {
-        playSaveAudio();
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -7890,7 +7886,6 @@ Template.employeescard.events({
     },
     // Save active tab data
     'click #btnSaveEmployeePayroll': async (event) => {
-        playSaveAudio();
         let activeTab = "";
         if($('div#taxes').attr("class").indexOf("active") >= 0) activeTab = "taxes";
         if($('div#leave').attr("class").indexOf("active") >= 0) activeTab = "leave";
@@ -9372,7 +9367,6 @@ Template.employeescard.events({
         }
     },
     'click .btnBack': function (event) {
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },
@@ -9686,7 +9680,7 @@ Template.employeescard.events({
         $('.fullScreenSpin').css('display', 'none');
     },
     'click .printConfirm': function (event) {
-        playPrintAudio();
+
         LoadingOverlay.show();
 
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
@@ -9775,7 +9769,6 @@ Template.employeescard.events({
         $('.lblCustomField4').text(inputValue4);
     },
     'click .btnSaveSettings': function (event) {
-        playSaveAudio();
         let templateObject = Template.instance();
 
         $('.lblCustomField1').html('');
@@ -10035,7 +10028,6 @@ Template.employeescard.events({
         }
     },
     'click .btnDeleteEmployee': function (event) {
-        playDeleteAudio();
         LoadingOverlay.show();
         let templateObject = Template.instance();
         let contactService2 = new ContactService();
@@ -10138,7 +10130,6 @@ Template.employeescard.events({
         $("#clickedControl").val("three");
     },
     "click .btnDeletePayslip": function (e){
-        playDeleteAudio();
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id') || '';
         swal({
@@ -10226,7 +10217,6 @@ Template.employeescard.events({
         });
     },
     "click .btnDeleteAssignLeaveType": function (e){
-        playDeleteAudio();
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id') || '';
         swal({
@@ -10401,7 +10391,6 @@ Template.employeescard.events({
         });
     },
     "click .btnDeletePayNote": function (e){
-        playDeleteAudio();
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id') || '';
         swal({

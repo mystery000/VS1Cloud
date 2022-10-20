@@ -339,7 +339,6 @@ Template.new_workorder.events({
     },
 
     'click .btnSave': function(event) {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let record = templateObject.workorderrecord.get();
@@ -776,7 +775,6 @@ Template.new_workorder.events({
     },
 
     'click #BOMSetupModal .btn-save-bom': function(event) {
-        playSaveAudio();
         let finalStructure = {};
         let templateObject = Template.instance();
         let bomProduct = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')): [];
@@ -880,10 +878,9 @@ Template.new_workorder.events({
     },
 
     'click #BOMSetupModal .btn-cancel-bom': function(event) {
-        playCancelAudio();
         let productContents = $('#BOMSetupModal').find('.product-content');
         for (let l = 1; l < productContents.length -1; l++) {
-            $(productContents[l]).remove();
+            $(productContents[l]).remove()
         }
         $('#BOMSetupModal').modal('toggle');
     }

@@ -940,7 +940,6 @@ Template.timesheettimelog.onRendered(function () {
 
 
           $(".printConfirm").click(function(){
-            playPrintAudio();
             $('.fullScreenSpin').css('display', 'inline-block');
              jQuery('#tblTimeSheet_wrapper .dt-buttons .btntabletopdf').click();
             $('.fullScreenSpin').css('display', 'none');
@@ -1277,7 +1276,6 @@ Template.timesheettimelog.onRendered(function () {
             $('.fullScreenSpin').css('display', 'none');
         },
         'click .btnSaveTimeSheet': function () {
-            playSaveAudio();
             $('.fullScreenSpin').css('display', 'inline-block');
             let templateObject = Template.instance();
             let contactService = new ContactService();
@@ -1436,7 +1434,6 @@ Template.timesheettimelog.onRendered(function () {
             $('#edtBankAccountNo').val('');
         },
         'click .btnDeleteTimeSheet': function () {
-            playDeleteAudio();
             $('.fullScreenSpin').css('display', 'inline-block');
             let templateObject = Template.instance();
             let contactService = new ContactService();

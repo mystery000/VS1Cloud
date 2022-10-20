@@ -7696,7 +7696,6 @@ Template.new_salesorder.events({
 
         'click  #open_print_confirm':function(event)
         {
-            playPrintAudio();
             if($('#choosetemplate').is(':checked'))
             {
                 $('#templateselection').modal('show');
@@ -8769,7 +8768,7 @@ Template.new_salesorder.events({
 
     },
     'click .printConfirm':async function (event) {
-        playPrintAudio();
+
           var printTemplate = [];
           LoadingOverlay.show();
           var sales_orders = $('input[name="Sales Order"]:checked').val();
@@ -9361,7 +9360,6 @@ Template.new_salesorder.events({
         }
     },
     'click .btnDeleteSO': function(event) {
-        playDeleteAudio();
         LoadingOverlay.show();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
@@ -9402,7 +9400,6 @@ Template.new_salesorder.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnDeleteLine': function(event) {
-        playDeleteAudio();
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -9556,11 +9553,10 @@ Template.new_salesorder.events({
         templateObject.checkAbleToMakeWorkOrder();
     },
     'click .btnSaveSettings': function(event) {
-    playSaveAudio();
+
         $('#myModal4').modal('toggle');
     },
     'click .btnSave': (event, templateObject) => {
-        playSaveAudio();
         saveCurrencyHistory();
        // let templateObject = Template.instance();
         let stripe_id = templateObject.accountID.get();
@@ -10725,7 +10721,6 @@ Template.new_salesorder.events({
 
     // custom field displaysettings
     'click .btnSaveGridSettings': async function(event) {
-        playSaveAudio();
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -11979,7 +11974,6 @@ Template.new_salesorder.events({
 
     },
     'click .btnBack': function(event) {
-        playCancelAudio();
         event.preventDefault();
         if(FlowRouter.current().queryParams.trans){
           FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
@@ -11988,7 +11982,6 @@ Template.new_salesorder.events({
         };
     },
     'click #btnCopyToInvoice': function() {
-        playCopyAudio();
         //FlowRouter.go('/salesorderslist');
         //window.open('/invoicelist','_self');
         LoadingOverlay.show();

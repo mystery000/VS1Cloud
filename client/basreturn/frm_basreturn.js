@@ -2837,7 +2837,6 @@ Template.basreturn.events({
         }
     },
     'click .printConfirm': function(event) {
-        playPrintAudio();
         $(".printBasReturn").show();
         $("a").attr("href", "/");
         document.title = "BAS Return";
@@ -2885,7 +2884,6 @@ Template.basreturn.events({
         }
     },
     'click .btnDelete': function(event) {
-        playDeleteAudio();
         let templateObject = Template.instance();
 
         if (templateObject.getId.get()) {
@@ -2931,11 +2929,10 @@ Template.basreturn.events({
         }
     },
     'click .btnSaveSettings': function(event) {
-        playSaveAudio();
+
         $('#myModal4').modal('toggle');
     },
     'click .btnSave': function(event) {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         templateObject = Template.instance();
         let taxRateList = templateObject.taxRateList.get();
@@ -3432,7 +3429,6 @@ Template.basreturn.events({
 
     },
     'click .btnSaveGridSettings': function(event) {
-        playSaveAudio();
         let lineItems = [];
 
         $('.columnSettings').each(function(index) {
@@ -3584,7 +3580,6 @@ Template.basreturn.events({
         }
     },
     'click .btnBack': function(event) {
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
     }

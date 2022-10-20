@@ -492,7 +492,6 @@ Template._frequencyModal.events({
     ui.loadDefault();
   },
   "click .btnSaveFrequency": (e, ui) => {
-    playSaveAudio();
     ui.saveShedule();
   },
   'click input[name="frequencyRadio"]': event => {

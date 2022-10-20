@@ -1103,9 +1103,6 @@ Template.depositlist.onRendered(function() {
 });
 
 Template.depositlist.events({
-    'click #copyDeposit': function(event) {
-        playCopyAudio();
-    },
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display','inline-block');
         let templateObject = Template.instance();
@@ -1552,7 +1549,7 @@ Template.depositlist.events({
 
     },
     'click .printConfirm' : function(event){
-        playPrintAudio();
+
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblDepositList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');

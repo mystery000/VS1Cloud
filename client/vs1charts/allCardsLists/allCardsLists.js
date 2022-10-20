@@ -241,7 +241,6 @@ Template.allCardsLists.events({
         }
     },
     "click .editCardBtn": async function (e) {
-        playSaveAudio();
         e.preventDefault();
         let templateObject = Template.instance();
         $(".card-visibility").removeClass('hideelement');
@@ -326,7 +325,6 @@ Template.allCardsLists.events({
 
     },
     "click .cancelCards": async function(e){
-        playCancelAudio();
         e.preventDefault();
         let templateObject = Template.instance();
         $(".fullScreenSpin").css("display", "block");

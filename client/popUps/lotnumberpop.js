@@ -116,7 +116,6 @@ Template.lotnumberpop.events({
         }
     },
     'click .btnPrint': async function(event) {
-        playPrintAudio();
         const rowNumber = $('#lotNumberModal').attr('data-row');
         const productName = $(`table tbody tr:nth-child(${rowNumber}) td.colProductName input`).val();
         $('.tblLNlist').print({
@@ -152,7 +151,6 @@ Template.lotnumberpop.events({
         $('#availableLotNumberModal').modal('show');
     },
     'click .btnDelete': function() {
-        playDeleteAudio();
         autofilled = false;
         const rowNumber = $('#lotNumberModal').attr('data-row');
         $(`table tbody tr:nth-child(${rowNumber}) td.colSerialNo`).attr('data-lotnumbers', '');

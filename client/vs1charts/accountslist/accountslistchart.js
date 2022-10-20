@@ -1290,7 +1290,6 @@ Template.accountslistchart.onRendered(()=>{
            });
    },
    "click .accountslistchart .btnSaveAccount": function() {
-        playSaveAudio();
        $(".fullScreenSpin").css("display", "inline-block");
        let templateObject = Template.instance();
        let accountService = new AccountService();
@@ -1526,7 +1525,6 @@ Template.accountslistchart.onRendered(()=>{
        $(".isCreditAccount").addClass("isNotCreditAccount");
    },
    "click .accountslistchart .printConfirm": function(event) {
-    playPrintAudio();
        $(".fullScreenSpin").css("display", "inline-block");
        jQuery("#tblDashboardAccountChartList_wrapper .dt-buttons .btntabletopdf").click();
        $(".fullScreenSpin").css("display", "none");
@@ -1913,7 +1911,6 @@ Template.accountslistchart.onRendered(()=>{
        // }
    },
    "click .accountslistchart .btnDeleteAccount": function() {
-       playDeleteAudio();
        swal({
            title: "Delete Account",
            text: "Are you sure you want to Delete Account?",
@@ -2135,7 +2132,6 @@ Template.accountslistchart.onRendered(()=>{
        }
    },
    'click .accountslistchart #addReceiptCategoryModal .btnSave': function(event) {
-        playSaveAudio();
        $('.fullScreenSpin').css('display', 'inline-block');
        let receiptService = new ReceiptService();
        let receiptCategoryID = $('#edtReceiptCategoryID').val();

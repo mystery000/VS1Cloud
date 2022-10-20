@@ -1730,7 +1730,6 @@ Template.accountsoverview.events({
             });
     },
     "click .btnSaveAccount": function() {
-        playSaveAudio();
         $(".fullScreenSpin").css("display", "inline-block");
         let templateObject = Template.instance();
         let accountService = new AccountService();
@@ -1966,7 +1965,6 @@ Template.accountsoverview.events({
         $(".isCreditAccount").addClass("isNotCreditAccount");
     },
     "click .printConfirm": function(event) {
-        playPrintAudio();
         $(".fullScreenSpin").css("display", "inline-block");
         jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletopdf").click();
         $(".fullScreenSpin").css("display", "none");
@@ -2355,7 +2353,6 @@ Template.accountsoverview.events({
         // }
     },
     "click .btnDeleteAccount": function() {
-        playDeleteAudio();
         swal({
             title: "Delete Account",
             text: "Are you sure you want to Delete Account?",
@@ -2577,7 +2574,6 @@ Template.accountsoverview.events({
         }
     },
     'click #addReceiptCategoryModal .btnSave': function(event) {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let receiptService = new ReceiptService();
         let receiptCategoryID = $('#edtReceiptCategoryID').val();

@@ -2128,7 +2128,6 @@ Template.inventorylist.events({
         $(".fullScreenSpin").css("display", "none");
     },
     "click #btnSave": async function() {
-        playSaveAudio();
         let productService = new ProductService();
         let productCode = $("#edtproductvs1code").val();
         let productName = $("#edtproductvs1name").val();
@@ -2321,7 +2320,6 @@ Template.inventorylist.events({
         }
     },
     "click .btnSaveSelect": async function() {
-        playSaveAudio();
         $("#myModalDepartment").modal("toggle");
         $(".fullScreenSpin").css("display", "none");
         $(".modal-backdrop").css("display", "none");
@@ -2330,7 +2328,6 @@ Template.inventorylist.events({
         FlowRouter.go("/productview");
     },
     "click .printConfirm": function(event) {
-        playPrintAudio();
         $(".fullScreenSpin").css("display", "inline-block");
         jQuery("#tblInventoryOverview_wrapper .dt-buttons .btntabletopdf").click();
         $(".fullScreenSpin").css("display", "none");

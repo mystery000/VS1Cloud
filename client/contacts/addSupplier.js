@@ -1677,7 +1677,6 @@ Template.supplierscard.events({
         }
     },
     'click .btnBack':function(event){
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },
@@ -1704,7 +1703,6 @@ Template.supplierscard.events({
         }
     },
     'click .btnSave': async function (event) {
-        playSaveAudio();
         let templateObject = Template.instance();
         let contactService = new ContactService();
         if ($('#edtSupplierCompany').val() === ''){
@@ -2243,7 +2241,7 @@ Template.supplierscard.events({
 
     },
     'click .printConfirm' : function(event){
-        playPrintAudio();
+
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
@@ -2324,7 +2322,6 @@ Template.supplierscard.events({
         $('.lblCustomField4').text(inputValue4);
     },
     'click .btnSaveSettings': function(event){
-        playSaveAudio();
         $('.lblCustomField1').html('');
         $('.lblCustomField2').html('');
         $('.lblCustomField3').html('');
@@ -2505,7 +2502,6 @@ Template.supplierscard.events({
         templateObject.getAllProductRecentTransactions(supplierName);
     },
     'click .btnDeleteSupplier': function (event) {
-        playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let contactService2 = new ContactService();
@@ -2554,7 +2550,6 @@ Template.supplierscard.events({
         }
     },
     'click .btnEmail': function (event) {
-        playEmailAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {

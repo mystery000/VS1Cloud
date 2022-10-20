@@ -616,7 +616,6 @@ Template.accountlistpop.events({
         }
     },
     'click .btnSaveStatus': function () {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let clientService = new SalesBoardService();
         let status = $('#status').val();
@@ -828,7 +827,6 @@ Template.accountlistpop.events({
         $('#selectLineID').val(targetID);
     },
     'click .printConfirm': function(event) {
-        playPrintAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#html-2-pdfwrapper').css('display', 'block');
         $('.pdfCustomerName').html($('#edtSupplierName').val());
@@ -970,7 +968,6 @@ Template.accountlistpop.events({
         }
     },
     'click .btnDeleteCredit': function(event) {
-        playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -1013,7 +1010,6 @@ Template.accountlistpop.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnDeleteLine': function(event) {
-        playDeleteAudio();
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -1140,11 +1136,10 @@ Template.accountlistpop.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnSaveSettings': function(event) {
-        playSaveAudio();
+
         $('#myModal4').modal('toggle');
     },
     'click .btnSave': function(event) {
-        playSaveAudio();
         let templateObject = Template.instance();
         let suppliername = $('#edtSupplierName');
         let purchaseService = new PurchaseBoardService();
@@ -1720,7 +1715,6 @@ Template.accountlistpop.events({
 
     },
     'click .btnSaveGridSettings': function(event) {
-        playSaveAudio();
         let lineItems = [];
 
         $('.columnSettings').each(function(index) {
@@ -2189,7 +2183,6 @@ Template.accountlistpop.events({
 
     },
     'click .btnBack': function(event) {
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
 

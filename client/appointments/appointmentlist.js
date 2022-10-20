@@ -25,6 +25,8 @@ Template.appointmentlist.onCreated(function() {
 });
 
 Template.appointmentlist.onRendered(async function() {
+    localStorage.setItem("appt_historypage", "");
+    
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let accountService = new AccountService();
@@ -1961,6 +1963,7 @@ Template.appointmentlist.events({
             });
             return false;
         } else {
+            localStorage.setItem("appt_historypage", "appointmentlist");
             FlowRouter.go('/appointments');
         };
 
@@ -3198,7 +3201,7 @@ Template.appointmentlist.events({
 
     },
     'click .printConfirm': function(event) {
-        playPrintAudio();
+
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblappointmentlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');

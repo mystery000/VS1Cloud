@@ -2749,7 +2749,6 @@ Template.invoicelist.events({
     templateObject.getAllFilterInvoiceData("", "", true);
   },
   "click .printConfirm": function (event) {
-    playPrintAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblInvoicelist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");

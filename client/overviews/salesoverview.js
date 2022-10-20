@@ -2267,7 +2267,6 @@ Template.salesoverview.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click .printConfirm": function (event) {
-    playPrintAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblSalesOverview_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");

@@ -193,7 +193,7 @@
                   .table th,
                   .table td {
                       text-align: right;
-                      min-width: 100px;
+                      min-width: 150px;
                   }
                   .table th.text-left,
                   .table td.text-left {
@@ -227,10 +227,10 @@
                     <thead>
                       <tr class="table-active customDoubleTableHeading">
                         <th class="text-left">Contact</th>
-                        <!-- <th class="text-left" style="width: 130px;">Type</th> -->
+                        <th class="text-left" style="width: 130px;">Type</th>
                         <th class="text-left">PO No.</th>
                         <th class="text-left">Due Date</th>
-                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Total Amount Due</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Amount Due</th>
                         <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Current</th>
                         <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">1 - 30 Days</th>
                         <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">30 - 60 Days</th>
@@ -241,7 +241,7 @@
                       {{#if isOnlyDefaultActive equal "false" }}
                         <tr class="table-active tblAvoid">
                           <th></th>
-                          <!-- <th></th> -->
+                          <th></th>
                           <th></th>
                           <th></th>
 
@@ -305,11 +305,11 @@
                                 
                                   <a href="/supplierscard?id={{items.clientid}}" style="text-decoration:none!important;">{{items.contact}}</a>
                                 </span></td>
-                            <!-- <td class="Total1Indented MenuLeft TotalField">
+                            <td class="Total1Indented MenuLeft TotalField">
                               <span class="table-cells">
                                 
                                   <a href="#" style="text-decoration:none!important;">{{items.type}}</a>
-                                </span></td> -->
+                                </span></td>
                             <td class="Total1Indented MenuLeft TotalField text-left">
                               <span class="table-cells">
                                 
@@ -445,7 +445,7 @@
                           <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
 
                             <td>{{grandrecords.Title}}</td>
-                            <!-- <td></td> -->
+                            <td></td>
                             <td></td>
                             <td></td>
 

@@ -1641,7 +1641,6 @@ Template.newproductpop.events({
     templateObject.getAllProductRecentTransactions();
   },
   "click #btnSaveProdPOP": async function (e) {
-    playSaveAudio();
     let productService = new ProductService();
     let productCode = $("#edtproductcode").val();
     let productName = $("#edtproductname").val();
@@ -2809,7 +2808,6 @@ Template.newproductpop.events({
     // if ($(".setup-wizard")) $(".setup-wizard .setup-step-9 .btnRefresh").click();
   },
   "click .btnBack": function (event) {
-    playCancelAudio();
     event.preventDefault();
     history.back(1);
   },
@@ -2891,7 +2889,6 @@ Template.newproductpop.events({
     $(".lblCustomField2").text(inputValue2);
   },
   "click .btnSaveSettings": function (event) {
-    playSaveAudio();
     $("#myModal2").modal("toggle");
   },
   "click .btnResetSettings": function (event) {
@@ -2991,7 +2988,6 @@ Template.newproductpop.events({
     }
   },
   "click .btnDeleteInv": function (event) {
-    playDeleteAudio();
     let templateObject = Template.instance();
     let productService = new ProductService();
     swal({

@@ -571,7 +571,6 @@ Template.leadstatussettings.events({
         $('#statusDescription').val("");
     },
     'click .btnDeleteLeadStatus': function () {
-        playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ContactService();
         let statusId = $('#selectDeleteLineID').val();
@@ -606,7 +605,6 @@ Template.leadstatussettings.events({
         });
     },
     'click .btnSaveLeadStatus': function () {
-        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let objDetails = {};
         let statusName = $('#edtLeadStatusName').val() || '';
@@ -670,7 +668,6 @@ Template.leadstatussettings.events({
         }
     },
     'click .btnBack': function (event) {
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
     }

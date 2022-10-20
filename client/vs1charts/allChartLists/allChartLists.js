@@ -672,7 +672,6 @@ Template.allChartLists.events({
         // templateObject.deactivateDraggable();
     },
     "click #btnCancel": async () => {
-        playCancelAudio();
         $(".fullScreenSpin").css("display", "block");
         chartsEditor.disable();
         const templateObject = Template.instance();
@@ -683,7 +682,6 @@ Template.allChartLists.events({
         //templateObject.deactivateDraggable();
     },
     "click #btnDone": async () => {
-        playSaveAudio();
         const templateObject = Template.instance();
         $(".fullScreenSpin").css("display", "inline-block");
         await saveCharts();

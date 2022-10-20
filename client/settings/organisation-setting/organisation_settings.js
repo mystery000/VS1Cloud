@@ -987,7 +987,6 @@ Template.organisationsettings.events({
         }
     },
     "click #saveCompanyInfo": function(event) {
-        playSaveAudio();
         $(".fullScreenSpin").css("display", "inline-block");
         const templateObject = Template.instance();
         let companyID = 1;
@@ -1288,7 +1287,6 @@ Template.organisationsettings.events({
         //Router.current().render(Template.organisationSettings);
     },
     "click .btnBack": function(event) {
-        playCancelAudio();
         event.preventDefault();
         history.back(1);
 
@@ -1320,7 +1318,6 @@ Template.organisationsettings.events({
         });
     },
     "click .btnCancelSub": function(event) {
-        playCancelAudio();
         let loggeduserEmail = localStorage.getItem("mySession");
         let currentURL = FlowRouter.current().queryParams;
         swal({

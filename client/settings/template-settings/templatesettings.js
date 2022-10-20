@@ -3876,7 +3876,7 @@ Template.templatesettings.events({
 },
 
 'click .btnTopGlobalSave':function(){
-  playSaveAudio();
+  
     $('.fullScreenSpin').css('display', 'inline-block');
     var bill = $('input[name="Bills"]:checked').val();
     var credits = $('input[name="Credits"]:checked').val();

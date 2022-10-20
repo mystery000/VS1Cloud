@@ -1241,7 +1241,6 @@ Template.balancesheetreport.events({
         LoadingOverlay.hide();
     },
     "click .btnPrintReport": function(event) {
-        playPrintAudio();
         $("a").attr("href", "/");
         document.title = "Balance Sheet Report";
         $(".printReport").print({
