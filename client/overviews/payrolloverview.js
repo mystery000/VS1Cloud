@@ -558,6 +558,7 @@ Template.payrolloverview.onRendered(function () {
     let timeSheet = {
       type: erpObject.TTimeSheet,
       fields: {
+        Active: true,
         EmployeeName: selectedEmployee.EmployeeName,
         Allowedit: true,
         Hours: 1,
@@ -576,7 +577,8 @@ Template.payrolloverview.onRendered(function () {
     }
 
     // Here i need to create a new timesheet
-    let response = await contactService.saveTimeSheet(timeSheetEntry);
+    let response = await contactService._saveTimeSheet(timeSheet);
+
     LoadingOverlay.hide(0);
 
     $('.add-new-timesheet').attr('disabled', true);
