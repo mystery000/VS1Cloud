@@ -537,13 +537,33 @@ export class ContactService extends BaseService {
         return this.getList(this.ERPObjects.TJobVS1, options);
     }
 
-    getAllTimeSheetList(){
+    // TODO: This needs to be fixed to get only one object
+    getTimeSheetById(id) {
+        let options = {
+            ListType: "Detail",
+            select: `[ID]=${id}`
+      }
+         return this.getList(this.ERPObjects.TTimeSheet, options);
+    }
+
+    getAllTimeSheetList(activeOnly = true){
+        if(activeOnly) {
+            return this.getAllTimeSheetActive();
+        }
+
      let options = {
             ListType: "Detail",
-            select: "[Active]=true"
+            //select: "[Active]=true"
       }
          return this.getList(this.ERPObjects.TTimeSheet, options);
      }
+    getAllTimeSheetActive(){
+        let options = {
+                ListType: "Detail",
+                select: "[Active]=true"
+            }
+        return this.getList(this.ERPObjects.TTimeSheet, options);
+    }
     getAllTimeSheetListEmp(){
      let options = {
             ListType: "Detail",
@@ -556,10 +576,14 @@ export class ContactService extends BaseService {
          return this.POST(this.ERPObjects.TTimeSheetEntry, data);
      }
 
+     _saveTimeSheet(data) {
+        return this.POST(this.ERPObjects.TTimeSheet, data);
+     }
+
     getAllTimeSheetEntry(){
         let options = {
             ListType: "Detail",
-            select: "[Active]=true"
+            //select: "[Active]=true"
         }
         return this.getList(this.ERPObjects.TTimeSheetEntry, options);
     }
