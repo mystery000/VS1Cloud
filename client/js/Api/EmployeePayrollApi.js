@@ -118,7 +118,7 @@ export default class EmployeePayrollApi {
         }),
         new ApiEndpoint({
           name: this.collectionNames.TLeavRequest,
-          url: ApiService.getBaseUrl({ endpoint: this.collectionNames.TLeavRequest }),
+          url: ApiService.getBaseUrl({ endpoint: "TLeavRequest" }),
           headers: ApiService.getHeaders()
         })
     ]);

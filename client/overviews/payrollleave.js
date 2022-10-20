@@ -451,7 +451,7 @@ Template.payrollleave.onRendered(function () {
         type: "TLeavRequest",
         fields: new LeaveRequestFields({
           ID: parseInt(ID),
-          EmployeeID: parseInt(selectedLeave.Employee.ID),
+          EmployeeID: parseInt(selectedLeave.Employee.ID != undefined ? selectedLeave.Employee.ID : selectedLeave.Employee.Id),
           TypeOfRequest: parseInt(TypeofRequest),
           LeaveMethod: Leave,
           Description: Description,
@@ -507,7 +507,7 @@ Template.payrollleave.onRendered(function () {
       type: "TLeavRequest",
       fields: new LeaveRequestFields({
         ID: parseInt(selectedLeave.ID),
-        EmployeeID: parseInt(selectedLeave.Employee.ID),
+        EmployeeID:parseInt(selectedLeave.Employee.ID != undefined ? selectedLeave.Employee.ID : selectedLeave.Employee.Id),
         TypeOfRequest: parseInt(selectedLeave.TypeofRequest),
         LeaveMethod: selectedLeave.LeaveMethod,
         Description: selectedLeave.Description,
@@ -520,7 +520,7 @@ Template.payrollleave.onRendered(function () {
     });
 
     const payrollApi = new EmployeePayrollApi();
-    const ApiEndpoint = payrollApi.collection.findByName(erpObject.TLeavRequest);
+    const ApiEndpoint = payrollApi.collection.findByName(payrollApi.collectionNames.TLeavRequest);
 
     try {
       const response = await ApiEndpoint.fetch(null, {
@@ -574,7 +574,7 @@ Template.payrollleave.onRendered(function () {
       type: "TLeavRequest",
       fields: new LeaveRequestFields({
         ID: parseInt(selectedLeave.ID),
-        EmployeeID: parseInt(selectedLeave.Employee.ID),
+        EmployeeID: parseInt(selectedLeave.Employee.ID != undefined ? selectedLeave.Employee.ID : selectedLeave.Employee.Id),
         TypeOfRequest: parseInt(selectedLeave.TypeofRequest),
         LeaveMethod: selectedLeave.LeaveMethod,
         Description: selectedLeave.Description,
@@ -587,7 +587,7 @@ Template.payrollleave.onRendered(function () {
     });
 
     const payrollApi = new EmployeePayrollApi();
-    const ApiEndpoint = payrollApi.collection.findByName(erpObject.TLeavRequest);
+    const ApiEndpoint = payrollApi.collection.findByName(payrollApi.collectionNames.TLeavRequest);
 
     try {
       const response = await ApiEndpoint.fetch(null, {
