@@ -447,6 +447,7 @@ Template.companyappsettingsdup.events({
         }
     },
     'click .btnBack': function (event) {
+        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },
@@ -500,6 +501,7 @@ Template.companyappsettingsdup.events({
         }
     },
     'click .btnTopGlobalSave': function () {
+        playSaveAudio();
         // $('.fullScreenSpin').css('display', 'inline-block');
         const templateObject = Template.instance();
         let checkLinkTrueERP = false;

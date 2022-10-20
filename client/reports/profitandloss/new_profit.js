@@ -1009,6 +1009,7 @@ Template.newprofitandloss.events({
     Meteor._reload.reload();
   },
   "click .btnPrintReport": function (event) {
+    playPrintAudio();
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -1110,6 +1111,7 @@ Template.newprofitandloss.events({
 
   //custom selection period number
   "click .btnSaveComparisonPeriods": async function (event) {
+    playSaveAudio();
     let periods = $("#comparisonPeriodNum").val();
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();

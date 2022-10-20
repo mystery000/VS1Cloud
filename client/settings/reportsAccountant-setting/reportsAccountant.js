@@ -139,6 +139,7 @@ Template.reportsAccountantSettings.helpers({
 
 Template.reportsAccountantSettings.events({
   "click #saveAccountantInfo": function (event) {
+    playSaveAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     const templateObject = Template.instance();
     let accountantID = 1;
@@ -173,6 +174,7 @@ Template.reportsAccountantSettings.events({
     });
   },
   "click .btnBack": function (event) {
+    playCancelAudio();
     event.preventDefault();
     history.back(1);
     //FlowRouter.go('/settings');

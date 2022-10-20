@@ -1343,6 +1343,7 @@ Template.balancetransactionlist.events({
 
   },
   'click .printConfirm' : function(event){
+    playPrintAudio();
     $('.fullScreenSpin').css('display','inline-block');
     jQuery('#tblBalanceTransactionList_wrapper .dt-buttons .btntabletopdf').click();
      $('.fullScreenSpin').css('display','none');

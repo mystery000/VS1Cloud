@@ -4998,6 +4998,7 @@ Template.paymentcard.events({
     //     $('#departmentModal').modal('toggle');
     // },
     'click .btnSave': (e, templateObject) => {
+        playSaveAudio();
         LoadingOverlay.show();
 
         /**
@@ -9375,6 +9376,7 @@ Template.paymentcard.events({
         $('.appliedAmount').text(utilityService.modifynegativeCurrencyFormat(appliedGrandTotal));
     },
     'click .btnBack': function (event) {
+        playCancelAudio();
         event.preventDefault();
         if (FlowRouter.current().queryParams.trans) {
             FlowRouter.go('/customerscard?id=' + FlowRouter.current().queryParams.trans + '&transTab=active');
@@ -9383,7 +9385,7 @@ Template.paymentcard.events({
         }
     },
     'click .printConfirm': async function (event) {
-
+    playPrintAudio();
         var printTemplate = [];
         LoadingOverlay.show();
         var customer_payment = $('input[name="Customer Payments"]:checked').val();
@@ -9595,6 +9597,7 @@ Template.paymentcard.events({
     },
 
     'click  #open_print_confirm': function (event) {
+        playPrintAudio();
         if ($('#choosetemplate').is(':checked')) {
             $('#templateselection').modal('show');
         } else {
@@ -9682,7 +9685,7 @@ Template.paymentcard.events({
         }
     },
     'click .btnDeletePayment': async function (event) {
-
+        playDeleteAudio();
         let templateObject = Template.instance();
         let paymentService = new PaymentsService();
         var url = FlowRouter.current().path;
@@ -9795,6 +9798,7 @@ Template.paymentcard.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnDeleteLine': function (event) {
+        playDeleteAudio();
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let selectLineID = $('#selectDeleteLineID').val() || 0;
@@ -9965,7 +9969,7 @@ Template.paymentcard.events({
         }
     },
     'click .btnSaveGridSettings': function (event) {
-
+        playSaveAudio();
         let lineItems = [];
         //let lineItemObj = {};
         $('.columnSettings').each(function (index) {

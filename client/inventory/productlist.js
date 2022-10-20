@@ -1607,6 +1607,7 @@ Template.productlist.helpers({
 
       },
       'click #btnSave': async function () {
+        playSaveAudio();
         let productService = new ProductService();
         let productCode = $("#edtproductvs1code").val();
         let productName = $("#edtproductvs1name").val();
@@ -1828,6 +1829,7 @@ Template.productlist.helpers({
         // }
       },
       'click .btnSaveSelect': async function () {
+        playSaveAudio();
         $('#myModalDepartment').modal('toggle');
         // let templateObject = Template.instance();
         // templateObject.getAllProductData('All');
@@ -1836,7 +1838,7 @@ Template.productlist.helpers({
         FlowRouter.go('/productview');
       },
 'click .printConfirm' : function(event){
-
+  playPrintAudio();
 $('.fullScreenSpin').css('display','inline-block');
 jQuery('#tblInventory_wrapper .dt-buttons .btntabletopdf').click();
 $('.fullScreenSpin').css('display','none');

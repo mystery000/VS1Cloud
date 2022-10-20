@@ -432,6 +432,7 @@ Template.deductionSettings.events({
 
     },
     'click .btnSaveDeduction': async function (event) {
+        playSaveAudio();
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         

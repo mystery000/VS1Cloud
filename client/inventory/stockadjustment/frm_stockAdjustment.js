@@ -2089,6 +2089,7 @@ Template.stockadjustmentcard.events({
         $('#selectLineID').val(targetID);
     },
     'click .printConfirm': function (event) {
+        playPrintAudio();
         $('#html-2-pdfwrapper').css('display', 'block');
         $('.pdfCustomerName').html($('#sltAccountName').val());
         $('.pdfCustomerAddress').html($('#txabillingAddress').val());
@@ -2149,6 +2150,7 @@ Template.stockadjustmentcard.events({
         }
     },
     'click .btnDeleteStock': function (event) {
+        playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
@@ -2190,6 +2192,7 @@ Template.stockadjustmentcard.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnDeleteStockAdjust': function (event) {
+        playDeleteAudio();
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
         swal({
@@ -2243,6 +2246,7 @@ Template.stockadjustmentcard.events({
 
     },
     'click .btnDeleteLine': function (event) {
+        playDeleteAudio();
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let selectLineID = $('#selectDeleteLineID').val();
@@ -2280,6 +2284,7 @@ Template.stockadjustmentcard.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnSaveSettings': function (event) {
+        playSaveAudio();
         $('#myModal4').modal('toggle');
     },
     'click .btnProcess': function (event) {
@@ -3186,6 +3191,7 @@ Template.stockadjustmentcard.events({
 
     },
     'click .btnSaveGridSettings': function (event) {
+        playSaveAudio();
         let lineItems = [];
         //let lineItemObj = {};
         $('.columnSettings').each(function (index) {
@@ -3447,6 +3453,7 @@ Template.stockadjustmentcard.events({
         }
     },
     'click .btnBack': function (event) {
+        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },

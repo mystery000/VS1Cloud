@@ -1013,6 +1013,7 @@ Template.basreturnlist.events({
         $(".fullScreenSpin").css("display", "none");
     },
     "click .printConfirm": function(event) {
+        playPrintAudio();
         $(".fullScreenSpin").css("display", "inline-block");
         jQuery("#tblBasReturnList_wrapper .dt-buttons .btntabletopdf").click();
         $(".fullScreenSpin").css("display", "none");

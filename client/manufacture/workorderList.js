@@ -588,6 +588,7 @@ Template.workorderlist.events({
         },
 
         'click .workorderList .printConfirm': function() {
+            playPrintAudio();
             $('.fullScreenSpin').css('display', 'inline-block');
             jQuery('#tblWorkorderList_wrapper .dt-buttons .btntabletopdf').click();
             $('.fullScreenSpin').css('display', 'none');

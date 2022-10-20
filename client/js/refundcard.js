@@ -5922,6 +5922,7 @@ Template.refundcard.events({
 
     'click  #open_print_confirm':function(event)
     {
+        playPrintAudio();
         if($('#choosetemplate').is(':checked'))
         {
             $('#templateselection').modal('show');
@@ -6948,7 +6949,7 @@ Template.refundcard.events({
 
     },
     'click .printConfirm':async function (event) {
-
+        playPrintAudio();
         var printTemplate = [];
         LoadingOverlay.show();
 
@@ -7308,6 +7309,7 @@ Template.refundcard.events({
         }
     },
     'click .btnDeleteRefund': function(event) {
+        playDeleteAudio();
         LoadingOverlay.show();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
@@ -7348,6 +7350,7 @@ Template.refundcard.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnDeleteLine': function(event) {
+        playDeleteAudio();
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -7463,7 +7466,7 @@ Template.refundcard.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnSaveSettings': function(event) {
-
+        playSaveAudio();
         $('#myModal4').modal('toggle');
     },
     'click .btnSave':(event, templateObject) => {
@@ -8419,6 +8422,7 @@ Template.refundcard.events({
 
     // custom field displaysettings
     'click .btnSaveGridSettings': async function(event) {
+        playSaveAudio();
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -8934,6 +8938,7 @@ Template.refundcard.events({
         window.open('/paymentcard?custname=' + customer + '&from=' + currentInvoice, '_self');
      },
     'click .btnBack': function(event) {
+        playCancelAudio();
         event.preventDefault();
         if(FlowRouter.current().queryParams.trans){
           FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');

@@ -2027,7 +2027,7 @@ Template.creditlist.events({
         templateObject.getAllFilterCreditData('', '', true);
     },
     'click .printConfirm' : function(event){
-
+        playPrintAudio();
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblcreditlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');

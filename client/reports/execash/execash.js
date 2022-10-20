@@ -95,7 +95,7 @@ Template.execashreport.onRendered(() => {
     let bankBalance = [0, 0];
 
     let varianceRed = "#ff420e";
-    let varianceGreen = "#579D1C;";
+    let varianceGreen = "#579D1C"; //#1cc88a
 
     templateObject.setFieldVariance = function (fieldVal1, fieldVal2, fieldSelector) {
         var fieldVariance = 0;
@@ -107,27 +107,23 @@ Template.execashreport.onRendered(() => {
         } else if (fieldVal2 == 0) {
             fieldVariance = (-1) * fieldVal1;
         } else {
-            if (fieldVal2 >= fieldVal1) {
+            // if (fieldVal2 >= fieldVal1) {
+            //     fieldVariance = (fieldVal2 / fieldVal1) * 100;
+            // } else {
+            //     fieldVariance = (fieldVal1 / fieldVal2) * (-100);
+            // }
+            if (fieldVal1 > 0 && fieldVal2 > 0) {
                 fieldVariance = (fieldVal2 / fieldVal1) * 100;
-            } else {
-                fieldVariance = (fieldVal1 / fieldVal2) * (-100);
             }
-            // if (fieldVal1 > 0 && fieldVal2 > 0) {
-                
-            // }
-            // if (fieldVal1 > 0 && fieldVal2 < 0) {
-            //     fieldVariance = fieldVal2 - fieldVal1;
-            // }
-            // if (fieldVal1 < 0 && fieldVal2 > 0) {
-            //     fieldVariance = fieldVal2 - fieldVal1;
-            // }
-            // if (fieldVal1 < 0 && fieldVal2 < 0) {
-            //     if (fieldVal2 >= fieldVal1) {
-            //         fieldVariance = (fieldVal1 / fieldVal2) * 100;
-            //     } else {
-            //         fieldVariance = (fieldVal2 / fieldVal1) * (-100);
-            //     }
-            // }
+            if (fieldVal1 > 0 && fieldVal2 < 0) {
+                fieldVariance = (Math.abs(fieldVal2) / fieldVal1) * 100;
+            }
+            if (fieldVal1 < 0 && fieldVal2 > 0) {
+                fieldVariance = (Math.abs(fieldVal1) / fieldVal2) * 100;
+            }
+            if (fieldVal1 < 0 && fieldVal2 < 0) {
+                fieldVariance = (fieldVal2 / fieldVal1) * 100;
+            }
         }
         if (fieldVariance == 0) {
             $('.' + fieldSelector).css("color", varianceGreen);
@@ -467,6 +463,7 @@ Template.execashreport.events({
         LoadingOverlay.hide();
     },
     "click .btnPrintReport": function (event) {
+        playPrintAudio();
         $("a").attr("href", "/");
         document.title = "Cash (Executive) Report";
         $(".printReport").print({

@@ -627,6 +627,7 @@ Template.report1099.onRendered(()=>{
         // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
     },
     'click .btnPrintReport':function (event) {
+      playPrintAudio();
       document.title = '1099 Transactional Report';
       $(".printReport").print({
           title   :  document.title +" | 1099 Transactional | "+loggedCompany,

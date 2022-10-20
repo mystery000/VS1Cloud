@@ -131,6 +131,7 @@ Template.mailchimpList.events({
   },
 
   "click .printConfirm": function (event) {
+    playPrintAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblEmailList_wrapper .dt-buttons .btntabletopdf").click();
 

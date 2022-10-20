@@ -8172,6 +8172,7 @@ Template.supplierpaymentcard.events({
     }
   },
   "click .printConfirm": async function (event) {
+    playPrintAudio();
     var printTemplate = [];
     LoadingOverlay.show();
 
@@ -8397,6 +8398,7 @@ Template.supplierpaymentcard.events({
   },
 
   "click  #open_print_confirm": function (event) {
+    playPrintAudio();
     if ($("#choosetemplate").is(":checked")) {
         $('#templateselection').modal('show');
     } else {
@@ -8483,7 +8485,7 @@ Template.supplierpaymentcard.events({
     }, 300);
   },
   "click .btnSave": (e, ui) => {
-
+  playSaveAudio();
     LoadingOverlay.show();
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
@@ -12502,6 +12504,7 @@ Template.supplierpaymentcard.events({
 
   },
   "click .btnBack": function (event) {
+    playCancelAudio();
     event.preventDefault();
     if (FlowRouter.current().queryParams.trans) {
       FlowRouter.go("/customerscard?id=" +FlowRouter.current().queryParams.trans +"&transTab=active");
@@ -12625,7 +12628,7 @@ Template.supplierpaymentcard.events({
     }
   },
   "click .btnDeletePayment": async function (event) {
-
+    playDeleteAudio();
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     var url = FlowRouter.current().path;
@@ -12681,6 +12684,7 @@ Template.supplierpaymentcard.events({
     $("#deleteLineModal").modal("toggle");
   },
   "click .btnDeleteLine": function (event) {
+    playDeleteAudio();
     let templateObject = Template.instance();
     let utilityService = new UtilityService();
     let selectLineID = $("#selectDeleteLineID").val() || 0;
@@ -12859,6 +12863,7 @@ Template.supplierpaymentcard.events({
     }
   },
   "click .btnSaveGridSettings": function (event) {
+    playSaveAudio();
     let lineItems = [];
     //let lineItemObj = {};
     $(".columnSettings").each(function (index) {

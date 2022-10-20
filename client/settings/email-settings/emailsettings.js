@@ -176,7 +176,7 @@ Template.emailsettings.onRendered(function () {
         });
     };
 
-    $("#date-input,#edtWeeklyStartDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtDailyStartDate,#edtOneTimeOnlyDate").datepicker({
+    $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
         showOn: 'button',
         buttonText: 'Show Date',
         buttonImageOnly: true,
@@ -1533,10 +1533,13 @@ Template.emailsettings.onRendered(function () {
                             const starttime = frequencyEl.attr('data-starttime');
 
                             const startdate = frequencyEl.attr('data-startdate');
+                            const finishdate = frequencyEl.attr('data-finishdate');
 
                             const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
+                            const convertedFinishDate = finishdate ? finishdate.split('/')[2] + '-' + finishdate.split('/')[1] + '-' + finishdate.split('/')[0] : '';
 
                             const sDate = startdate ? moment(convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
+                            const fDate = finishdate ? moment(convertedFinishDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
 
                             const frequencyName = frequencyEl.text() != '' ? frequencyEl.text().split(',')[0] : '';
 
@@ -1553,7 +1556,7 @@ Template.emailsettings.onRendered(function () {
                                     ContinueIndefinitely: true,
                                     EmployeeId: parseInt(recipientId),
                                     Every: 1,
-                                    EndDate: "",
+                                    EndDate: fDate,
                                     FormID: parseInt(formID),
                                     LastEmaileddate: "",
                                     MonthDays: 0,
@@ -1583,7 +1586,7 @@ Template.emailsettings.onRendered(function () {
                                             ContinueIndefinitely: true,
                                             EmployeeId: recipientId + '_' + (attachIndex + 1),
                                             Every: 1,
-                                            EndDate: "",
+                                            EndDate: fDate,
                                             FormID: parseInt(formID),
                                             LastEmaileddate: "",
                                             MonthDays: 0,
@@ -1820,8 +1823,11 @@ Template.emailsettings.onRendered(function () {
                 let savePromise = recipientIds.map(async (recipientId) => {
                     const starttime = frequencyEl.attr('data-starttime');
                     const startdate = frequencyEl.attr('data-startdate');
+                    const finishdate = frequencyEl.attr('data-finishdate');
                     const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
+                    const convertedFinishDate = finishdate ? finishdate.split('/')[2] + '-' + finishdate.split('/')[1] + '-' + finishdate.split('/')[0] : '';
                     const sDate = startdate ? moment(convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
+                    const fDate = finishdate ? moment(convertedFinishDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
 
                     const frequencyName = frequencyEl.text() != '' ? frequencyEl.text().split(',')[0] : '';
                     let objDetail = {
@@ -1832,7 +1838,7 @@ Template.emailsettings.onRendered(function () {
                             ContinueIndefinitely: true,
                             EmployeeId: parseInt(recipientId),
                             Every: 1,
-                            EndDate: "",
+                            EndDate: fDate,
                             FormID: parseInt(formID),
                             LastEmaileddate: "",
                             MonthDays: 0,
@@ -2051,6 +2057,7 @@ Template.emailsettings.events({
         }
     },
     'click .btnSaveFrequency': function () {
+        playSaveAudio();
         // let taxRateService = new TaxRateService();
         let templateObject = Template.instance();
         // let startTime = "";
@@ -2103,7 +2110,7 @@ Template.emailsettings.events({
                 // const startTime = $('#edtMonthlyStartTime').val();
                 const startTime = '05:00';
                 const startDate = $('#edtMonthlyStartDate').val();
-    
+                const finishDate = $('#edtMonthlyFinishDate').val();
                 setTimeout(function () {
                     if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Monthly, " + basedOnTypeTexts);
                     else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Monthly");
@@ -2111,6 +2118,7 @@ Template.emailsettings.events({
                     $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-ofMonths', ofMonths);
                     $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
                     $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-finishDate', finishDate);
                     $("#frequencyModal").modal('toggle');
                 }, 100);
             } else if (radioFrequency == "frequencyWeekly") {
@@ -2120,11 +2128,13 @@ Template.emailsettings.events({
                 // const startTime = $('#edtWeeklyStartTime').val();
                 const startTime = '05:00';
                 const startDate = $('#edtWeeklyStartDate').val();
+                const finishDate = $('#edtWeeklyFinishDate').val();
                 setTimeout(function () {
                     $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-selectDays', selectDays);
                     $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-everyWeeks', everyWeeks);
                     $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
                     $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-finishDate', finishDate);
                     if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Weekly, " + basedOnTypeTexts);
                     else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Weekly");
                     $("#frequencyModal").modal('toggle');
@@ -2135,6 +2145,7 @@ Template.emailsettings.events({
                 // const startTime = $('#edtDailyStartTime').val();
                 const startTime = '05:00';
                 const startDate = $('#edtDailyStartDate').val();
+                const finishDate = $('#edtDailyFinishDate').val();
                 setTimeout(function () {
                     if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Daily, " + basedOnTypeTexts);
                     else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Daily");
@@ -2142,6 +2153,7 @@ Template.emailsettings.events({
                     $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-everydays', everyDays);
                     $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
                     $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
+                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-finishDate', finishDate);
                     $("#frequencyModal").modal('toggle');
                 }, 100);
             } else if (radioFrequency == "frequencyOnetimeonly") {
@@ -2507,6 +2519,7 @@ Template.emailsettings.events({
         }
     },
     'click .btnSaveBasedOn': function () {
+        playSaveAudio();
         event.preventDefault();
         let radioBasedOn = $('input[type=radio][name=basedOnRadio]:checked').attr('id');
         const selectedBasedOnId = localStorage.getItem('selected_editBasedOn_id');

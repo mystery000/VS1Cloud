@@ -57,6 +57,7 @@ Template.paychex.events({
     window.open("https://www.paychex.com");
   },
   'click #savePaychexSettings': async function(){
+    playSaveAudio();
     $('.fullScreenSpin').css('display','block');
     let settingObject = [];
     const templateObject = Template.instance();

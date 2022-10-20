@@ -545,11 +545,13 @@ Template.addcustomerpop.events({
         }
     },
     'click .btnBack': function (event) {
+        playCancelAudio();
         // event.preventDefault();
         history.back(1);
         //FlowRouter.go('/customerlist');
     },
     'click .btnSaveDept': function (e) {
+        playSaveAudio();
         LoadingOverlay.show();
         let contactService = new ContactService();
 
@@ -726,6 +728,7 @@ Template.addcustomerpop.events({
 
     },
     'click .addcustomerpop .btnSaveCustPOP': async function (event) {
+        playSaveAudio();
         let templateObject = Template.instance();
         let contactService = new ContactService();
         LoadingOverlay.show();
@@ -1017,6 +1020,7 @@ Template.addcustomerpop.events({
 
     },
     'click .addcustomerpop .btnSaveJob': function (event) {
+        playSaveAudio();
         let templateObject = Template.instance();
         let contactService = new ContactService();
         LoadingOverlay.show();
@@ -1482,6 +1486,7 @@ Template.addcustomerpop.events({
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletocsv').click();
     },
     'click .addcustomerpop .printConfirm': function (event) {
+        playPrintAudio();
         LoadingOverlay.show();
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
     },
@@ -1490,6 +1495,7 @@ Template.addcustomerpop.events({
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletocsv').click();
     },
     'click .addcustomerpop .printConfirmJob': function (event) {
+        playPrintAudio();
         LoadingOverlay.show();
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletopdf').click();
     },
@@ -1657,6 +1663,7 @@ Template.addcustomerpop.events({
         $('.lblCustomField4').text(inputValue4);
     },
     'click .addcustomerpop .btnSaveSettings': function (event) {
+        playSaveAudio();
         let templateObject = Template.instance();
         $('.addcustomerpop .lblCustomField1').html('');
         $('.addcustomerpop .lblCustomField2').html('');
@@ -2067,6 +2074,7 @@ Template.addcustomerpop.events({
         }
     },
     'click .addcustomerpop .btnDeleteCustomer': function (event) {
+        playDeleteAudio();
         LoadingOverlay.show();
 
         let templateObject = Template.instance();

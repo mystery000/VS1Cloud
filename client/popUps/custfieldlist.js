@@ -867,6 +867,7 @@ Template.custfieldlist.events({
         });
     },
     'click .btnDeleteTerms': function() {
+        playDeleteAudio();
         let taxRateService = new TaxRateService();
         let termsId = $('#selectDeleteLineID').val();
 
@@ -908,6 +909,7 @@ Template.custfieldlist.events({
 
     },
     'click .btnSaveTerms': function() {
+        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
         let termsID = $('#edtTermsID').val();
@@ -1114,6 +1116,7 @@ Template.custfieldlist.events({
         templateObject.includeEOMPlus.set(false);
     },
     'click .btnBack': function(event) {
+        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },

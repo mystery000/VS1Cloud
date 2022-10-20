@@ -2712,6 +2712,7 @@ Template.depositcard.events({
         $('#selectLineID').val(targetID);
     },
     'click .printConfirm' : function(event){
+        playPrintAudio();
         $('#html-2-pdfwrapper').css('display','block');
 
 
@@ -2808,7 +2809,7 @@ Template.depositcard.events({
         }
     },
     'click .btnDelete': function(event){
-
+        playDeleteAudio();
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         swal({
@@ -2866,6 +2867,7 @@ Template.depositcard.events({
 
     },
     'click .btnDeleteNothing': function(event){
+        playDeleteAudio();
         $('.fullScreenSpin').css('display','inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -2907,6 +2909,7 @@ Template.depositcard.events({
 
     },
     'click .btnDeleteLine': function(event){
+        playDeleteAudio();
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -2952,10 +2955,11 @@ Template.depositcard.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnSaveSettings': function(event){
-
+        playSaveAudio();
         $('#myModal4').modal('toggle');
     },
     'click .btnSave': function(event){
+        playSaveAudio();
         let templateObject = Template.instance();
         let account = $('#sltAccountName').val();
         let depositTotal = $('#depositTotal').val();
@@ -3359,6 +3363,7 @@ Template.depositcard.events({
 
     },
     'click .btnSaveGridSettings' : function(event){
+        playSaveAudio();
         let lineItems = [];
 
         $('.columnSettings').each(function (index) {
@@ -3590,6 +3595,7 @@ Template.depositcard.events({
         }
     },
     'click .btnBack':function(event){
+        playCancelAudio();
         event.preventDefault();
         history.back(1);
 
