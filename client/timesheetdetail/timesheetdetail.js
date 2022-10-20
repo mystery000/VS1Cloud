@@ -53,7 +53,7 @@ Template.timesheetdetail.onRendered(function () {
 
   this.loadTimeSheet = async (refresh = false) => {
     let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
-      return await contactService.getAllTimeSheetList(false);
+      return await contactService.getAllTimeSheetList();
     }, {
       useIndexDb: true,
       useLocalStorage: false,
@@ -63,9 +63,7 @@ Template.timesheetdetail.onRendered(function () {
         return true;
       }
     });
-     data = data.response;
-  
-    console.log("response", data);
+    data = data.response;
 
     let timesheets = data.ttimesheet.map(t => t.fields);
     timesheets.forEach((t, index) => {
@@ -75,7 +73,6 @@ Template.timesheetdetail.onRendered(function () {
     });
 
     let timesheet = timesheets.find(o => o.ID == id);
-    
 
     if (timesheet) {
       this.timesheet.set(timesheet);
@@ -468,7 +465,6 @@ Template.timesheetdetail.onRendered(function () {
     if (res) {
       return await this._updateTimeSheetDetails(object);
     }
-    
 
     try {
       LoadingOverlay.show();
