@@ -5280,7 +5280,23 @@ Template.payrollrules.onRendered(function() {
 
         setTimeout(() => {
             $('#OvertimeTable').DataTable({
-                destroy: true
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                destroy: true,
+                colReorder: true,
+                // bStateSave: true,
+                // rowId: 0,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[ 1, "asc" ]],
+                action: function () {
+                    $('#OvertimeTable').DataTable().ajax.reload();
+                },
+                language: { search: "",searchPlaceholder: "Search List..." },
+                fnInitComplete: function () {
+                    $("<button class='btn btn-primary btnRefreshOvertime ' type='button' id='btnRefreshOvertime' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#OvertimeTable_filter");
+                }
             });
         }, 100);
     }
@@ -5368,6 +5384,7 @@ Template.payrollrules.onRendered(function() {
 
         await templateObject.overtimes.set(overtimes);
         await templateObject.setupOvertimeTable();
+        await templateObject.resetOvertimeModal();
 
         $('#btnAddNewOvertime').modal('hide');
         LoadingOverlay.hide();
