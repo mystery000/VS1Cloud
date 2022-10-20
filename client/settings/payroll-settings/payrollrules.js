@@ -5276,6 +5276,8 @@ Template.payrollrules.onRendered(function() {
     }
 
     templateObject.setupOvertimeTable  = async () => {
+        $('#OvertimeTable').DataTable().destroy();
+
         setTimeout(() => {
             $('#OvertimeTable').DataTable({
                 destroy: true
