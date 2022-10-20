@@ -2526,7 +2526,7 @@ Template.bankrecon.events({
 
         setTimeout(function() {
             $("a").attr("href", "#");
-            // $(".printBankRecon").hide();
+            $(".printBankRecon").hide();
         }, 100);
     },
 });
