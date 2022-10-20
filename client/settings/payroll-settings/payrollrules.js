@@ -5272,11 +5272,15 @@ Template.payrollrules.onRendered(function() {
 
         await templateObject.overtimes.set(overtimes);
 
+        await templateObject.setupOvertimeTable();
+    }
+
+    templateObject.setupOvertimeTable  = async () => {
         setTimeout(() => {
             $('#OvertimeTable').DataTable({
                 destroy: true
             });
-        }, 300);
+        }, 100);
     }
 
     templateObject.getOvertimes();
@@ -5333,10 +5337,9 @@ Template.payrollrules.onRendered(function() {
         const rateTypes = await templateObject.rateTypes.get();
 
         const hours = $('#overtimeHours').val();
-        const rateType = rateTypes.find(rate => rate.ID == $('#overtimeRateType').val());
+        const rateType = rateTypes.find(rate => rate.ID == $('#overtimeRateType').attr('rate-type-id'));
         const hourlyMultiplier = $('#overtimeHourlyMultiplier').val();
         const weekEndDay = $('#OvertimeWeekEndDay').val();
-
 
         const object = {
             hours: hours,
@@ -5362,6 +5365,7 @@ Template.payrollrules.onRendered(function() {
         });
 
         await templateObject.overtimes.set(overtimes);
+        await templateObject.setupOvertimeTable();
 
         $('#btnAddNewOvertime').modal('hide');
         LoadingOverlay.hide();
@@ -5390,11 +5394,13 @@ Template.payrollrules.onRendered(function() {
                 if(overtime.id == overtimeId) {
                     const hours = $('#overtimeHours').val();
                     const rateType = $('#overtimeRateType').val();
+                    const rateTypeId =  $('#overtimeRateType').attr('rate-type-id');
                     const hourlyMultiplier = $('#overtimeHourlyMultiplier').val();
                     const weekEndDay = $('#OvertimeWeekEndDay').val();
                     return  {
                         ...overtime,
-                        hours: hours, 
+                        hours: hours,
+                        rateTypeId: rateTypeId,
                         rateType: rateType,
                         hourlyMultiplier: hourlyMultiplier,
                         rule: rateType == "Weekend" ? `${rateType} : (${weekEndDay})` : `${rateType}`,
@@ -5425,6 +5431,7 @@ Template.payrollrules.onRendered(function() {
    
         $('#overtimeHours').val(overtime.hours);
         $('#overtimeRateType').val(overtime.rateType);
+        $('#overtimeRateType').attr('rate-type-id', overtime.rateTypeId);
         $('#overtimeHourlyMultiplier').val(overtime.hourlyMultiplier);
         $('#OvertimeWeekEndDay').val(overtime.day);
 
@@ -5435,6 +5442,7 @@ Template.payrollrules.onRendered(function() {
     templateObject.resetOvertimeModal = async () => {
         $('#overtimeHours').val('');
         $('#overtimeRateType').val('');
+        $('#overtimeRateType').attr('rate-type-id', '');
         $('#overtimeHourlyMultiplier').val(0);
         $('#OvertimeWeekEndDay').val('');
     }
@@ -21928,6 +21936,8 @@ Template.payrollrules.events({
         const rateName = $(tr).find('td:first').text();
 
         $('.paste-rate').val(rateName);
+        $('.paste-rate').attr('rate-type-id', $(tr).attr('rate-type-id'));
+
         $('#select-ratetype-modal').modal('hide');
         $(".paste-rate").removeClass('paste-rate');
 
