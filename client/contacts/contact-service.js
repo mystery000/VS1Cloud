@@ -556,6 +556,14 @@ export class ContactService extends BaseService {
          return this.POST(this.ERPObjects.TTimeSheetEntry, data);
      }
 
+    getAllTimeSheetEntry(){
+        let options = {
+            ListType: "Detail",
+            select: "[Active]=true"
+        }
+        return this.getList(this.ERPObjects.TTimeSheetEntry, options);
+    }
+
       saveClockTimeSheet(data) {
          return this.POST(this.ERPObjects.TTimeSheet, data);
      }
