@@ -14,16 +14,21 @@ import "../../lib/global/indexdbstorage";
 import GlobalFunctions from "../../GlobalFunctions";
 import Employee from "../../js/Api/Model/Employee";
 import EmployeePayrollApi from "../../js/Api/EmployeePayrollApi";
+import PayRunHandler from "../../js/ObjectManager/PayRunHandler";
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 
-/**
- *
- * @returns {Array} []
- */
-const getPayRuns = () => {
-  return JSON.parse(localStorage.getItem("TPayRunHistory")) || [];
+let payRunHandler = new PayRunHandler();
+
+
+const redirectToPayRollOverview = () => {
+  window.location.href = `/payrolloverview`;
+};
+
+const getPayRuns = async () => {
+  return await payRunHandler.loadFromLocal();
+  // return JSON.parse(localStorage.getItem("TPayRunHistory")) || [];
 };
 const setPayRuns = items => {
   return localStorage.setItem("TPayRunHistory", JSON.stringify(items));
@@ -155,6 +160,8 @@ Template.payrundetails.onRendered(function () {
 
     data = data.response;
 
+    console.log("response", data);
+
     let calendar = null;
 
     if (id) {
@@ -245,18 +252,34 @@ Template.payrundetails.onRendered(function () {
   templateObject.loadPayRunData = async () => {
     LoadingOverlay.show();
     let payRunDetails = null;
+    let data = await CachedHttp.get(erpObject.TPayRunHistory, async () => {
+      return await getPayRuns();
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      fallBackToLocal: true,
+      forceOverride: true,
+      validate: cachedResponse => {
+        return true;
+      }
+    });
+
+    data = data.response;
+    let payRunsHistory = PayRun.fromList(data);
 
     if (urlParams.has("cid")) {
-      let payRunsHistory = JSON.parse(localStorage.getItem("TPayRunHistory")) || []; // we get the list and find
-      payRunDetails = payRunsHistory.find(p => p.calendar.ID == urlParams.get("cid"));
+      // Lets find the matching calendar
+      const calendarId = urlParams.get("cid");
+      payRunDetails = payRunsHistory.find(p => p.calendarId == calendarId); // we search by calendar ID
 
       if (!payRunDetails) {
-        const calendar = await templateObject.loadCalendar(urlParams.get("cid")); // single calendar
+        const calendar = await templateObject.loadCalendar(calendarId); // single calendar
         const employees = await templateObject.loadEmployees();
 
         payRunDetails = new PayRun({
           stpFilling: PayRun.STPFilling.draft,
           calendar: calendar,
+          calendarId: calendarId,
           employees: employees,
           netPay: 0.0,
           superAnnuation: 0.0,
@@ -267,14 +290,39 @@ Template.payrundetails.onRendered(function () {
 
         payRunsHistory.push(payRunDetails);
 
-        localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
+        payRunHandler.add(payRunDetails);
+        console.log("payrundetails", payRunHandler);
+        //localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
       } else {
         payRunDetails.employees = Employee.fromList(payRunDetails.employees);
         payRunDetails.employees.forEach(e => {
           e.selected = true;
-        })
+        });
       }
+    } else if (urlParams.has("id")) {
+      //let payRunsHistory = payRuns;  we get the list and find
+      const payRunId = urlParams.get("id");
+      payRunDetails = payRunsHistory.find(p => p.Id == payRunId);
 
+      if (payRunDetails) {
+        payRunDetails.employees = Employee.fromList(payRunDetails.employees);
+        payRunDetails.employees.forEach(e => {
+          e.selected = true;
+        });
+      } else {
+        LoadingOverlay.hide(0);
+        const result = await swal({
+          title: `Couldn't find PayRun ${payRunId}`,
+          //text: "Please log out to activate your changes.",
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "OK"
+        });
+
+        if (result.value) {
+          redirectToPayRollOverview();
+        } else if (result.dismiss === "cancel") {}
+      }
     }
 
     /**
@@ -382,19 +430,21 @@ Template.payrundetails.onRendered(function () {
 
     newPayRunDetails.employees = employees;
 
-    /**
-         * UPdate the payrun
-         */
-    // Get from the list
-    let payRunsHistory = getPayRuns(); // we get the list and find
-    // let payRunDetails = payRunsHistory.find(p => p.calendar.ID == urlParams.get("cid"));
+    // /**
+    //      * UPdate the payrun
+    //      */
+    // // Get from the list
+    // let payRunsHistory = getPayRuns(); // we get the list and find
+    // // let payRunDetails = payRunsHistory.find(p => p.calendar.ID == urlParams.get("cid"));
 
-    const index = payRunsHistory.findIndex(p => p.calendar.ID == urlParams.get("cid"));
-    payRunsHistory[index] = newPayRunDetails;
+    // const index = payRunsHistory.findIndex(p => p.calendar.ID == urlParams.get("cid"));
+    // payRunsHistory[index] = newPayRunDetails;
+    // //templateObject.payRunDetails.set(newPayRunDetails);  no need to update this object
+    // localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
 
-    //templateObject.payRunDetails.set(newPayRunDetails);  no need to update this object
+    payRunHandler.update(newPayRunDetails);
 
-    localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
+
     window.location.href = "/payrolloverview";
   };
 
@@ -402,11 +452,16 @@ Template.payrundetails.onRendered(function () {
      * Delete the currency payrun
      */
   templateObject.deletePayRun = async () => {
-    let payRuns = getPayRuns();
-    const index = payRuns.findIndex(p => p.calendar.ID == urlParams.get("cid"));
-    payRuns.splice(index, 1);
+    // let payRuns = getPayRuns();
+    // const index = payRuns.findIndex(p => p.calendar.ID == urlParams.get("cid"));
+    // payRuns.splice(index, 1);
 
-    setPayRuns(payRuns);
+    // setPayRuns(payRuns);
+
+    
+    await payRunHandler.remove(await this.payRunDetails.get());
+    await payRunHandler.saveToLocal();
+    await payRunHandler.sync();
 
     window.location.href = "/payrolloverview";
   };

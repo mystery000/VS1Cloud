@@ -26,7 +26,7 @@ Template.AddPayRunModal.onCreated(function () {
 Template.AddPayRunModal.onRendered(() => {
   const templateObject = Template.instance();
 
-  templateObject.loadPayRuns = async () => {
+  templateObject.loadCalendars = async () => {
     LoadingOverlay.show();
 
     let list = [];
@@ -232,14 +232,14 @@ Template.AddPayRunModal.onRendered(() => {
   $("#payperiod").editableSelect("add", "Monthly");
   $("#payperiod").editableSelect("add", "Quarterly");
 
-  //templateObject.loadPayRuns();
+  //templateObject.loadCalendars();
 
   Datehandler.defaultDatePicker();
 });
 
 Template.AddPayRunModal.events({
   "click .selectAPayRun": (e, ui) => {
-    ui.loadPayRuns();
+    ui.loadCalendars();
     //$('#AppTableModal').modal("show");
   },
   "click .btnPayRunNext": event => {
@@ -313,20 +313,20 @@ Template.AddPayRunModal.events({
                   $("#closemodel").trigger("click");
                   LoadingOverlay.show();
                   // window.open("/payrollrules?active_key=calender", "_self");
-                  ui.loadPayRuns();
+                  ui.loadCalendars();
                 }).catch(function (err) {
                   $("#closemodel").trigger("click");
                   LoadingOverlay.show();
 
                   // window.open("/payrollrules?active_key=calender", "_self");
-                  ui.loadPayRuns();
+                  ui.loadCalendars();
                 });
               }).catch(function (err) {
                 $("#closemodel").trigger("click");
                 LoadingOverlay.show();
 
                 // window.open("/payrollrules?active_key=calender", "_self");
-                ui.loadPayRuns();
+                ui.loadCalendars();
               });
             } else if (result.dismiss === "cancel") {}
           });
@@ -364,18 +364,18 @@ Template.AddPayRunModal.events({
                     $("#closemodel").trigger("click");
                     LoadingOverlay.show();
                     // window.open("/payrollrules?active_key=calender", "_self");
-                    ui.loadPayRuns();
+                    ui.loadCalendars();
                   }).catch(function (err) {
                     $("#closemodel").trigger("click");
                     LoadingOverlay.show();
                     // window.open("/payrollrules?active_key=calender", "_self");
-                    ui.loadPayRuns();
+                    ui.loadCalendars();
                   });
                 }).catch(function (err) {
                   $("#closemodel").trigger("click");
                   LoadingOverlay.show();
                   // window.open("/payrollrules?active_key=calender", "_self");
-                  ui.loadPayRuns();
+                  ui.loadCalendars();
                 });
               } else if (result.dismiss === "cancel") {}
             });
@@ -406,18 +406,18 @@ Template.AddPayRunModal.events({
                     $("#closemodel").trigger("click");
                     LoadingOverlay.show();
                     // window.open("/payrollrules?active_key=calender", "_self");
-                    ui.loadPayRuns();
+                    ui.loadCalendars();
                   }).catch(function (err) {
                     $("#closemodel").trigger("click");
                     LoadingOverlay.show();
                     // window.open("/payrollrules?active_key=calender", "_self");
-                    ui.loadPayRuns();
+                    ui.loadCalendars();
                   });
                 }).catch(function (err) {
                   $("#closemodel").trigger("click");
                   LoadingOverlay.show();
                   // window.open("/payrollrules?active_key=calender", "_self");
-                  ui.loadPayRuns();
+                  ui.loadCalendars();
                 });
               } else if (result.dismiss === "cancel") {}
             });
@@ -472,17 +472,17 @@ Template.AddPayRunModal.events({
                 // $("#hidedeleteca").trigger("click");
 
                 // window.open("/payrollrules?active_key=calender", "_self");
-                ui.loadPayRuns();
+                ui.loadCalendars();
               }).catch(function (err) {
                 LoadingOverlay.show();
                 // window.open("/payrollrules?active_key=calender", "_self");
-                ui.loadPayRuns();
+                ui.loadCalendars();
               });
             }).catch(function (err) {
               $("#hidedeleteca").trigger("click");
               LoadingOverlay.show();
               // window.open("/payrollrules?active_key=calender", "_self");
-              ui.loadPayRuns();
+              ui.loadCalendars();
             });
           } else if (result.dismiss === "cancel") {}
         });

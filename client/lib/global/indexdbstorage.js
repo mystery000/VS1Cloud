@@ -310,6 +310,7 @@ openDb = function(dbName) {
             db.createObjectStore(erpObject.TTimeSheetDetails, { keyPath: "EmployeeEmail" });
             db.createObjectStore("TServiceLog", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TServiceLogList", { keyPath: "EmployeeEmail" });
+            db.createObjectStore(erpObject.TPayRunHistory, { keyPath: "EmployeeEmail" });
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });

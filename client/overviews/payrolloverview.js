@@ -23,9 +23,11 @@ import { map } from "jquery";
 import GlobalFunctions from "../GlobalFunctions";
 import moment from "moment";
 import Datehandler from "../DateHandler";
+import PayRunHandler from "../js/ObjectManager/PayRunHandler";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
+let payRunHandler = new PayRunHandler();
 
 Template.payrolloverview.onCreated(function () {
   const templateObject = Template.instance();
@@ -51,6 +53,7 @@ Template.payrolloverview.onCreated(function () {
   templateObject.deptrecords = new ReactiveVar();
 
 
+  templateObject.payRuns = new ReactiveVar([]);
   templateObject.draftPayRunRecords = new ReactiveVar([]);
   templateObject.payRunHistoryRecords = new ReactiveVar([]);
   templateObject.timeSheetList = new ReactiveVar([]);
@@ -75,10 +78,30 @@ Template.payrolloverview.onRendered(function () {
   const jobsList = [];
   let clockEntry = [];
 
+  templateObject.loadPayRuns = async () => {
+
+    let data = await CachedHttp.get(erpObject.TPayRunHistory, async () => {
+      return await payRunHandler.loadFromLocal();
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      forceOverride: true,
+      validate: (cachedResponse) => {
+        return true;
+      }
+    });
+
+    data = data.response;
+    const payRuns = PayRun.fromList(data);
+
+    this.payRuns.set(payRuns)
+  }
+
 
   templateObject.loadDraftPayrun = async () => {
 
-    let payRunsHistory = JSON.parse(localStorage.getItem('TPayRunHistory')) || [];
+    let payRunsHistory = PayRun.fromList(await templateObject.payRuns.get());
+   
     payRunsHistory = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
 
     templateObject.draftPayRunRecords.set(payRunsHistory);
@@ -161,8 +184,9 @@ Template.payrolloverview.onRendered(function () {
 
   };
 
-  templateObject.loadPayRunList = async () => {
-    let payRunsHistory = JSON.parse(localStorage.getItem('TPayRunHistory')) || [];
+  templateObject.loadPayRunHistory = async () => {
+    let payRunsHistory = PayRun.fromList(await templateObject.payRuns.get());
+    console.log("payruns history", payRunsHistory);
     payRunsHistory = payRunsHistory.filter(p => p.stpFilling != PayRun.STPFilling.draft);
 
     templateObject.payRunHistoryRecords.set(payRunsHistory);
@@ -3812,13 +3836,14 @@ Template.payrolloverview.onRendered(function () {
 
   templateObject.initPage = async (refresh = false) => {
     LoadingOverlay.show();
+    await templateObject.loadPayRuns();
 
     // Timesheet
     await templateObject.loadTimeSheet(refresh);
 
     // PayRuns
     await templateObject.loadDraftPayrun(refresh);
-    await templateObject.loadPayRunList(refresh);
+    await templateObject.loadPayRunHistory(refresh);
 
     // Add timsheet modal
     await templateObject.loadEmployees(refresh);
@@ -6423,8 +6448,17 @@ Template.payrolloverview.events({
   },
 
   "click .redirect-to-payrun-details": (e, ui) => {
+    // if($(e.currentTarget).attr('id')) {
+    //   const id = $(e.currentTarget).attr('id');
+    //   window.location.href = `/payrundetails?id=${id}`;
+    // } else {
+    //   const id = $(e.currentTarget).attr('calendar-id');
+    //   window.location.href = `/payrundetails?cid=${id}`;
+    // }
+
     const id = $(e.currentTarget).attr('calendar-id');
     window.location.href = `/payrundetails?cid=${id}`;
+   
   },
 
   "change .employee-select": (e, ui) => {

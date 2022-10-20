@@ -1,8 +1,12 @@
+import erpObject from "../../../lib/global/erp-objects";
+import ObjectManager from "../../ObjectManager/ObjectManager";
+
 export default class PayRun {
   constructor({
     id = null,
     stpFilling = null, // draft, aproved, overdue
     calendar = {},
+    calendarId = null,
     netPay = 0.0,
     superAnnuation = 0.0,
     taxes = 0.0,
@@ -11,9 +15,10 @@ export default class PayRun {
     employees = [],
     selected = false
   }) {
-    this.id = id;
+    this.id = id || ObjectManager.init(erpObject.TPayRunHistory);
     this.stpFilling = stpFilling;
     this.calendar = calendar;
+    this.calendarId = calendarId;
     this.netPay = netPay;
     this.superAnnuation = superAnnuation;
     this.taxes = taxes;
@@ -27,4 +32,32 @@ export default class PayRun {
     overdue: "overdue",
     notfilled: "notfilled"
   };
+
+  buildRemoteObject() {
+    return {
+      type: erpObject.TPayRunHistory,
+      fields: this
+    }
+  }
+
+  static fromList(arrayOfObjects = []) {
+    return arrayOfObjects.map(object => new PayRun(object));
+  }
+
+  setMatchedCalendar(calendars = []) {
+    this.calendar = calendars.find(c => c.ID == this.calendarId);
+  }
+
+  /**
+   * 
+   * @param {PayRun[]} payRuns 
+   * @param {*} calendars 
+   * @returns 
+   */
+  static fetchCalendars(payRuns, calendars) {
+    return payRuns.map(payRun => {
+      payRun.setMatchedCalendar(calendars);
+      return payRun;
+    })
+  }
 }
