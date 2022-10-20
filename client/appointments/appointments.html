@@ -1378,6 +1378,22 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
         </div>
     </div>
 
+    <div class="modal fade employeeListModal" role="dialog" tabindex="-1" id="employeeListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
+            <div class="modal-content customerListContent">
+                <div class="modal-header">
+                    <h4>Employee List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
+                    {{> employeelistpop}}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <style>
         .fc-next-button {
             margin-right: 12px !important;
@@ -1386,6 +1402,10 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
         .fc-today-button {
             margin: 0 5px 0 5px !important;
 
+        }
+
+        .fc-newappointment-button {
+            margin: 0 5px 0 5px !important;
         }
 
         .fc-appointments-button {
@@ -1680,6 +1700,10 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                 margin-bottom: 8px;
             }
 
+            .fc-newappointment-button {
+                margin-bottom: 8px;
+            }
+            
             .fc-appointments-button {
                 margin-bottom: 8px;
             }
@@ -1810,6 +1834,10 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                 margin-bottom: 8px;
             }
 
+            .fc-newappointment-button {
+                margin-bottom: 8px;
+            }
+            
             .fc-appointments-button {
                 margin-bottom: 8px;
             }
@@ -1869,7 +1897,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
 
         @media screen and (max-width: 1366px) {
             .fc-toolbar-chunk>* {
-                margin: 8px;
+                margin: 0px;
             }
         }
     </style>

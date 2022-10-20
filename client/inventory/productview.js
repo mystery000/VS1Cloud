@@ -1260,8 +1260,8 @@ Template.productview.onRendered(function() {
                 salestaxcode = lastProduct.TaxCodeSales;
                 purchasetaxcode = lastProduct.TaxCodePurchase;
                 setTimeout(function() {
-                    $('#slttaxcodesales').val(salestaxcode);
-                    $('#slttaxcodepurchase').val(purchasetaxcode);
+                  $('#slttaxcodesales').val(loggedTaxCodeSalesInc);
+                  $('#slttaxcodepurchase').val(loggedTaxCodePurchaseInc);
                 }, 500);
             }
 
