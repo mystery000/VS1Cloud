@@ -59,6 +59,7 @@ Template.CurrencyWidget.events({
   "keyup #exchange_rate": e => onExhangeRateChanged(e),
   "change #exchange_rate": e => onExhangeRateChanged(e),
   "click .btnSave": (e, ui) => {
+    playSaveAudio();
     saveCurrencyHistory();
   }
 });

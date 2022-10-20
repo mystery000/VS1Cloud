@@ -87,10 +87,11 @@ Template.purchasesaleschart.onRendered(()=>{
                 currentTotal += item.Current
             }
         }
-        let totalPayablesSummaryAmount = amountdueTotal + currentTotal;
+        // let totalPayablesSummaryAmount = amountdueTotal + currentTotal;
+        let totalPayablesSummaryAmount = amountdueTotal;
         $('.suppAwaitingAP').text(data.Params.Count);
         if (!isNaN(totalPayablesSummaryAmount)) {
-            $('.suppAwaitingAPAmtdash').text(utilityService.modifynegativeCurrencyFormat(totalPayablesSummaryAmount));
+            $('.suppAwaitingAPAmtdash').text(utilityService.modifynegativeCurrencyFormat(amountdueTotal));
         }else{
             $('.suppAwaitingAPAmtdash').text(Currency+'0.00');
         }

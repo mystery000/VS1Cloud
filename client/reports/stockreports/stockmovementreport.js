@@ -226,6 +226,7 @@ Template.stockmovementreport.events({
     let rows = [];
   },
   "click .btnPrintReport": function (event) {
+    playPrintAudio();
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -325,6 +326,8 @@ Template.stockmovementreport.events({
     let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
     localStorage.setItem('VS1StockMovement_Report', '');
     await templateObject.setReportOptions(false, fromDate, endDate);
+    templateObject.dateAsAt.set($('#dateTo').val());
+    console.log('rr' + $('#dateTo').val())
   },
   "click #lastQuarter": async function () {
     $(".fullScreenSpin").css("display", "block");
@@ -333,6 +336,8 @@ Template.stockmovementreport.events({
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
     localStorage.setItem('VS1StockMovement_Report', '');
     await templateObject.setReportOptions(false, fromDate, endDate);
+    console.log('cc' + $('#dateTo').val())
+    templateObject.dateAsAt.set($('#dateTo').val());
   },
   "click #last12Months": async function () {
     $(".fullScreenSpin").css("display", "block");
@@ -362,6 +367,8 @@ Template.stockmovementreport.events({
     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
     localStorage.setItem('VS1StockMovement_Report', '');
     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
+    console.log('dd' + $('#dateTo').val())
+    templateObject.dateAsAt.set($('#dateTo').val());
   },
   "click #ignoreDate": async function () {
     let templateObject = Template.instance();

@@ -634,7 +634,7 @@ Template.productsaleslist.events({
 
   },
   'click .printConfirm' : function(event){
-
+    playPrintAudio();
     $('.fullScreenSpin').css('display','inline-block');
     jQuery('#tblProductalesReport_wrapper .dt-buttons .btntabletopdf').click();
      $('.fullScreenSpin').css('display','none');

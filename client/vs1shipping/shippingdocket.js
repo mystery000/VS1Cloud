@@ -1054,6 +1054,7 @@ Template.shippingdocket.onRendered(function() {
 
     ShippingRow();
     $("#btnsaveallocline").click(function() {
+        playSaveAudio();
         $('#tblShippingDocket tr:eq(' + rowIndex + ')').find("[id=pqa]").text("");
         //   var allocLinesTable = $('#serailscanlist tbody tr').map(function (idxRow, ele) {
         //   var typeName = "TPQASN";
@@ -1991,7 +1992,7 @@ Template.shippingdocket.events({
         }
     },
     'click .btnprintDockets': function(e) {
-
+        playPrintAudio();
         let shipID = parseInt($("#SalesId").val()) || '';
         let templateObject = Template.instance();
         let isInvoice = templateObject.includeInvoiceAttachment.get();
@@ -2018,11 +2019,13 @@ Template.shippingdocket.events({
 
     },
     'click .btnprintInvoice': function(e) {
+        playPrintAudio();
         let templateObject = Template.instance();
         let printType = "InvoiceOnly";
         templateObject.SendShippingDetails(printType);
     },
     'click .btnprintDelDocket': function(e) {
+        playPrintAudio();
         let templateObject = Template.instance();
         let printType = "DeliveryDocketsOnly";
         templateObject.SendShippingDetails(printType);
@@ -2031,6 +2034,7 @@ Template.shippingdocket.events({
         const templateObject = Template.instance();
     },
     'click .btnBack': function(event) {
+        playCancelAudio();
         event.preventDefault();
         history.back(1);
 
@@ -2059,6 +2063,7 @@ Template.shippingdocket.events({
         }
     },
     'click .btnDeleteLine': function(event) {
+        playDeleteAudio();
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let selectLineID = $('#selectDeleteLineID').val();
@@ -2091,6 +2096,7 @@ Template.shippingdocket.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnDeleteInvoice': function(event) {
+        playDeleteAudio();
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
         swal({

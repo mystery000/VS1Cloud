@@ -887,6 +887,7 @@ Template.newbankrule.events({
         }
     },
     'click .btnSave': function (event) {
+        playSaveAudio();
         let selectedCard = $('#selectedCard').val();
         if (selectedCard == "spent") {
             let tblSpentConditionRows = $('#tblSpentCondition tbody tr');

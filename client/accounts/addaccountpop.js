@@ -365,6 +365,7 @@ Template.addaccountpop.onRendered(function () {
 Template.addaccountpop.events({
 
     'click .btnSaveAccountPOP': function () {
+        playSaveAudio();
         var url = FlowRouter.current().path;
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
@@ -901,6 +902,7 @@ Template.addaccountpop.events({
 
     },
     'click .btnDeleteAccount': function () {
+        playDeleteAudio();
         swal({
             title: 'Delete Account',
             text: "Are you sure you want to Delete Account?",

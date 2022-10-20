@@ -951,6 +951,7 @@ Template.FxCurrencyHistory.events({
     LoadingOverlay.hide();
   },
   "click .printConfirm": function (event) {
+    playPrintAudio();
     LoadingOverlay.show();
     // jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletopdf").click();
 

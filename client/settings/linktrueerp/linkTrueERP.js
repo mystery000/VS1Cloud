@@ -51,6 +51,7 @@ Template.linktrueerp.onRendered(function(){
 });
 Template.linktrueerp.events({
 'click .btnSave': function () {
+  playSaveAudio();
   var erpGet = erpDb();
   $('.fullScreenSpin').css('display','inline-block');
   let firstName = $('.edtFirstName').val();
@@ -179,6 +180,7 @@ Template.linktrueerp.events({
   }
 },
 'click .btnBack':function(event){
+  playCancelAudio();
   event.preventDefault();
   history.back();
 },

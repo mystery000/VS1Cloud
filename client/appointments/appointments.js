@@ -200,9 +200,6 @@ Template.appointments.onRendered(function () {
   let globalSet = {};
   let launchAllocations = Session.get("CloudAppointmentAllocationLaunch");
 
-
-  // $("#employeeListModal").modal("show");
-
   let currentId = FlowRouter.current().context.hash;
   if (currentId == "allocationModal") {
     setTimeout(function () {
@@ -751,14 +748,7 @@ Template.appointments.onRendered(function () {
     });
   $(".fullScreenSpin").css("display", "inline-block");
 
-  const refreshPage = () => {
-    if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-      window.open(localStorage.getItem("appt_historypage"), "_self");
-    }
-    else{
-      window.open("/appointments", "_self");
-    }
-  }
+  const refreshPage = () => window.open("/appointments", "_self");
 
   templateObject.fetchAppointments = function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -811,12 +801,6 @@ Template.appointments.onRendered(function () {
       hiddenDays: hideDays, // hide Sunday and Saturday
       longPressDelay: 100,
       customButtons: {
-        newappointment: {
-          text: "New Appointment",
-          click: function () {
-            // FlowRouter.go("/appointmentlist");
-          },
-        },
         appointments: {
           text: "Appointment List",
           click: function () {
@@ -834,7 +818,7 @@ Template.appointments.onRendered(function () {
         ...settingsModalButton,
       },
       headerToolbar: {
-        left: "prev,next today newappointment appointments allocation refresh",
+        left: "prev,next today appointments allocation refresh",
         center: "title",
         right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
       },
@@ -1190,31 +1174,16 @@ Template.appointments.onRendered(function () {
                   .then(function (dataUpdate) {
                     addVS1Data("TAppointment", JSON.stringify(dataUpdate))
                       .then(function (datareturn) {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       })
                       .catch(function (err) {});
                   })
                   .catch(function (err) {
-                    if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                      window.open(localStorage.getItem("appt_historypage"), "_self");
-                    }
-                    else{
-                      window.open("/appointments", "_self");
-                    }
+                    window.open("/appointments", "_self");
                   });
               })
               .catch(function (err) {
-                if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                  window.open(localStorage.getItem("appt_historypage"), "_self");
-                }
-                else{
-                  window.open("/appointments", "_self");
-                }
+                window.open("/appointments", "_self");
               });
           }
         }
@@ -1447,13 +1416,9 @@ Template.appointments.onRendered(function () {
       const parent1 = child1.parentNode;
       const child2 = document.querySelector("h2.fc-toolbar-title");
       const parent2 = child2.parentNode;
-      $(parent1).css("min-width", 736).css("text-align", "center");
+      $(parent1).css("min-width", 568).css("text-align", "center");
       $("#calendar .fc-toolbar-title").css("min-width", 270).css("text-align", "center");
       // $(parent2).css("min-width", 260)
-
-      if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-        $("#employeeListModal").modal("show");
-      }
     }, 500);
 
   };
@@ -1495,13 +1460,6 @@ Template.appointments.onRendered(function () {
       hiddenDays: hideDays, // hide Sunday and Saturday
       longPressDelay: 100,
       customButtons: {
-        newappointment: {
-          text: "New Appointment",
-          click: function () {
-            // FlowRouter.go("/appointmentlist");
-            $("#employeeListModal").modal("show");
-          },
-        },
         appointments: {
           text: "Appointment List",
           click: function () {
@@ -1519,7 +1477,7 @@ Template.appointments.onRendered(function () {
         ...settingsModalButton,
       },
       headerToolbar: {
-        left: "prev,next today newappointment appointments allocation refresh",
+        left: "prev,next today appointments allocation refresh",
         center: "title",
         right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
       },
@@ -1906,38 +1864,18 @@ Template.appointments.onRendered(function () {
                   .then(function (dataUpdate) {
                     addVS1Data("TAppointment", JSON.stringify(dataUpdate))
                       .then(function (datareturn) {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       })
                       .catch(function (err) {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       });
                   })
                   .catch(function (err) {
-                    if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                      window.open(localStorage.getItem("appt_historypage"), "_self");
-                    }
-                    else{
-                      window.open("/appointments", "_self");
-                    }
+                    window.open("/appointments", "_self");
                   });
               })
               .catch(function (err) {
-                if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                  window.open(localStorage.getItem("appt_historypage"), "_self");
-                }
-                else{
-                  window.open("/appointments", "_self");
-                }
+                window.open("/appointments", "_self");
               });
           }
         }
@@ -2202,12 +2140,8 @@ Template.appointments.onRendered(function () {
       const parent1 = child1.parentNode;
       const child2 = document.querySelector("h2.fc-toolbar-title");
       const parent2 = child2.parentNode;
-      $(parent1).css("min-width", 736).css("text-align", "center");
+      $(parent1).css("min-width", 568).css("text-align", "center");
       $("#calendar .fc-toolbar-title").css("min-width", 270).css("text-align", "center");
-
-      if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-        $("#employeeListModal").modal("show");
-      }
     }, 500);
   };
 
@@ -4391,13 +4325,6 @@ Template.appointments.onRendered(function () {
                 initialView: "timeGridWeek",
                 hiddenDays: [0, 6], // hide Sunday and Saturday
                 customButtons: {
-                  newappointment: {
-                    text: "New Appointment",
-                    click: function () {
-                      // FlowRouter.go("/appointmentlist");
-                      $("#employeeListModal").modal("show");
-                    },
-                  },
                   appointments: {
                     text: "Appointment List",
                     click: function () {
@@ -4415,7 +4342,7 @@ Template.appointments.onRendered(function () {
                   ...settingsModalButton,
                 },
                 headerToolbar: {
-                  left: "prev,next today newappointment appointments allocation refresh",
+                  left: "prev,next today appointments allocation refresh",
                   center: "title",
                   right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
                 },
@@ -4637,31 +4564,16 @@ Template.appointments.onRendered(function () {
                                 JSON.stringify(dataUpdate)
                               )
                                 .then(function (datareturn) {
-                                  if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                    window.open(localStorage.getItem("appt_historypage"), "_self");
-                                  }
-                                  else{
-                                    window.open("/appointments", "_self");
-                                  }
+                                  window.open("/appointments", "_self");
                                 })
                                 .catch(function (err) {});
                             })
                             .catch(function (err) {
-                              if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                window.open(localStorage.getItem("appt_historypage"), "_self");
-                              }
-                              else{
-                                window.open("/appointments", "_self");
-                              }
+                              window.open("/appointments", "_self");
                             });
                         })
                         .catch(function (err) {
-                          if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                            window.open(localStorage.getItem("appt_historypage"), "_self");
-                          }
-                          else{
-                            window.open("/appointments", "_self");
-                          }
+                          window.open("/appointments", "_self");
                         });
                     }
                   }
@@ -7091,13 +7003,6 @@ Template.appointments.onRendered(function () {
               initialView: "timeGridWeek",
               hiddenDays: [0, 6], // hide Sunday and Saturday
               customButtons: {
-                newappointment: {
-                  text: "New Appointment",
-                  click: function () {
-                    // FlowRouter.go("/appointmentlist");
-                    $("#employeeListModal").modal("show");
-                  },
-                },
                 appointments: {
                   text: "Appointment List",
                   click: function () {
@@ -7115,7 +7020,7 @@ Template.appointments.onRendered(function () {
                 ...settingsModalButton,
               },
               headerToolbar: {
-                left: "prev,next today newappointment appointments allocation refresh",
+                left: "prev,next today appointments allocation refresh",
                 center: "title",
                 right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
               },
@@ -7330,31 +7235,16 @@ Template.appointments.onRendered(function () {
                               JSON.stringify(dataUpdate)
                             )
                               .then(function (datareturn) {
-                                if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                  window.open(localStorage.getItem("appt_historypage"), "_self");
-                                }
-                                else{
-                                  window.open("/appointments", "_self");
-                                }
+                                window.open("/appointments", "_self");
                               })
                               .catch(function (err) {});
                           })
                           .catch(function (err) {
-                            if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                              window.open(localStorage.getItem("appt_historypage"), "_self");
-                            }
-                            else{
-                              window.open("/appointments", "_self");
-                            }
+                            window.open("/appointments", "_self");
                           });
                       })
                       .catch(function (err) {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       });
                   }
                 }
@@ -7605,13 +7495,9 @@ Template.appointments.onRendered(function () {
         const parent1 = child1.parentNode;
         const child2 = document.querySelector("h2.fc-toolbar-title");
         const parent2 = child2.parentNode;
-        $(parent1).css("min-width", 736).css("text-align", "center");
+        $(parent1).css("min-width", 568).css("text-align", "center");
         $("#calendar .fc-toolbar-title").css("min-width", 270).css("text-align", "center");
         // $(parent2).css("min-width", 260)
-
-        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-          $("#employeeListModal").modal("show");
-        }
       }, 2000);
   };
 
@@ -8817,15 +8703,6 @@ Template.appointments.onRendered(function () {
       }
     });
 
-  $(document).on("click", "#tblEmployeelist tbody tr", function (e) {
-      let employeeName = $(this).find(".colEmployeeName").text() || '';
-      let employeeID = $(this).find(".colID").text() || '';
-      templateObject.empID.set(employeeID);
-      $('#employee_name').val(employeeName);
-      $('#employeeListModal').modal('toggle');
-      $("#event-modal").modal();
-  });
-  
   $(document).on("click", "#addExtraProduct", function (e) {
     $("#productListModal1").modal("toggle");
     // var targetID = $(event.target).closest("tr").attr("id");
@@ -9574,13 +9451,6 @@ Template.appointments.onRendered(function () {
               initialView: "timeGridWeek",
               hiddenDays: hideDays, // hide Sunday and Saturday
               customButtons: {
-                newappointment: {
-                  text: "New Appointment",
-                  click: function () {
-                    // FlowRouter.go("/appointmentlist");
-                    $("#employeeListModal").modal("show");
-                  },
-                },
                 appointments: {
                   text: "Appointment List",
                   click: function () {
@@ -9598,7 +9468,7 @@ Template.appointments.onRendered(function () {
                 ...settingsModalButton,
               },
               headerToolbar: {
-                left: "prev,next today newappointment appointments allocation refresh",
+                left: "prev,next today appointments allocation refresh",
                 center: "title",
                 right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
               },
@@ -9957,31 +9827,16 @@ Template.appointments.onRendered(function () {
                               JSON.stringify(dataUpdate)
                             )
                               .then(function (datareturn) {
-                                if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                  window.open(localStorage.getItem("appt_historypage"), "_self");
-                                }
-                                else{
-                                  window.open("/appointments", "_self");
-                                }
+                                window.open("/appointments", "_self");
                               })
                               .catch(function (err) {});
                           })
                           .catch(function (err) {
-                            if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                              window.open(localStorage.getItem("appt_historypage"), "_self");
-                            }
-                            else{
-                              window.open("/appointments", "_self");
-                            }
+                            window.open("/appointments", "_self");
                           });
                       })
                       .catch(function (err) {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       });
                   }
                 }
@@ -11055,6 +10910,7 @@ Template.appointments.events({
 
   // custom field displaysettings
   "click .btnSaveGridSettings": function (event) {
+    playSaveAudio();
     let lineItems = [];
     let organisationService = new OrganisationService();
 
@@ -11342,29 +11198,14 @@ Template.appointments.events({
                   .then(function (data) {
                     addVS1Data("TAppointment", JSON.stringify(data))
                       .then(function (datareturn) {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       })
                       .catch(function (err) {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       });
                   })
                   .catch(function (err) {
-                    if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                      window.open(localStorage.getItem("appt_historypage"), "_self");
-                    }
-                    else{
-                      window.open("/appointments", "_self");
-                    }
+                    window.open("/appointments", "_self");
                   });
               } else {
                 $(".modal-backdrop").css("display", "none");
@@ -12094,6 +11935,7 @@ Template.appointments.events({
     }
   },
   "click #btnSaveRepeat": function () {
+    playSaveAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
     let repeatDays = templateObject.repeatDays.get();
@@ -12215,29 +12057,14 @@ Template.appointments.events({
                   .then(function (data) {
                     addVS1Data("TAppointment", JSON.stringify(data))
                       .then(function (datareturn) {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       })
                       .catch(function (err) {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       });
                   })
                   .catch(function (err) {
-                    if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                      window.open(localStorage.getItem("appt_historypage"), "_self");
-                    }
-                    else{
-                      window.open("/appointments", "_self");
-                    }
+                    window.open("/appointments", "_self");
                   });
               }
             } else {
@@ -12368,29 +12195,14 @@ Template.appointments.events({
               .then(function (data) {
                 addVS1Data("TAppointment", JSON.stringify(data))
                   .then(function (datareturn) {
-                    if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                      window.open(localStorage.getItem("appt_historypage"), "_self");
-                    }
-                    else{
-                      window.open("/appointments", "_self");
-                    }
+                    window.open("/appointments", "_self");
                   })
                   .catch(function (err) {
-                    if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                      window.open(localStorage.getItem("appt_historypage"), "_self");
-                    }
-                    else{
-                      window.open("/appointments", "_self");
-                    }
+                    window.open("/appointments", "_self");
                   });
               })
               .catch(function (err) {
-                if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                  window.open(localStorage.getItem("appt_historypage"), "_self");
-                }
-                else{
-                  window.open("/appointments", "_self");
-                }
+                window.open("/appointments", "_self");
               });
           } else {
             $(".modal-backdrop").css("display", "none");
@@ -14032,23 +13844,13 @@ Template.appointments.events({
       templateObject.checkRefresh.get() == true ||
       $("#updateID").val() == ""
     ) {
-      if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-        window.open(localStorage.getItem("appt_historypage"), "_self");
-      }
-      else{
-        window.open("/appointments", "_self");
-      }
+      window.open("/appointments", "_self");
     }
   },
   "click btnDeleteAppointment": function () {
     const templateObject = Template.instance();
     if (templateObject.checkRefresh.get() == true) {
-      if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-        window.open(localStorage.getItem("appt_historypage"), "_self");
-      }
-      else{
-        window.open("/appointments", "_self");
-      }
+      window.open("/appointments", "_self");
     }
   },
   "click #btnStartAppointmentConfirm": async function () {
@@ -14277,12 +14079,7 @@ Template.appointments.events({
                               }
                             });
                             $(".fullScreenSpin").css("display", "none");
-                            if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                              window.open(localStorage.getItem("appt_historypage"), "_self");
-                            }
-                            else{
-                              window.open("/appointments", "_self");
-                            }
+                            window.open("/appointments", "_self");
                           });
                       })
                       .catch(function (err) {
@@ -14410,12 +14207,7 @@ Template.appointments.events({
                           }
                         });
                         $(".fullScreenSpin").css("display", "none");
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       });
                   })
                   .catch(function (err) {
@@ -14642,12 +14434,7 @@ Template.appointments.events({
                       }
                     });
                     $(".fullScreenSpin").css("display", "none");
-                    if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                      window.open(localStorage.getItem("appt_historypage"), "_self");
-                    }
-                    else{
-                      window.open("/appointments", "_self");
-                    }
+                    window.open("/appointments", "_self");
                   });
               })
               .catch(function (err) {
@@ -14780,12 +14567,7 @@ Template.appointments.events({
             if (result.value) {
               $("#startAppointmentModal").modal("hide");
             } else {
-              if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                window.open(localStorage.getItem("appt_historypage"), "_self");
-              }
-              else{
-                window.open("/appointments", "_self");
-              }
+              window.open("/appointments", "_self");
             }
           });
         } else {
@@ -14981,6 +14763,7 @@ Template.appointments.events({
   },
 
   "click #btnSaveAppointment": async function () {
+    playSaveAudio();
     const templateObject = Template.instance();
     const isLeaveBooked = await templateObject.getLeaveRequests();
     if (isLeaveBooked === true) {
@@ -15137,6 +14920,7 @@ Template.appointments.events({
     }
   },
   "click .btnSaveIgnoreSMS": async function () {
+    playSaveAudio();
     $("#chkSMSCustomer").prop("checked", false);
     $("#chkSMSUser").prop("checked", false);
     let emailCustomer = $("#customerEmail").is(":checked");
@@ -15562,30 +15346,15 @@ Template.appointments.events({
                   addVS1Data("TAppointment", JSON.stringify(dataList))
                     .then(function (datareturn) {
                       setTimeout(function () {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       }, 500);
                     })
                     .catch(function (err) {
-                      if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                        window.open(localStorage.getItem("appt_historypage"), "_self");
-                      }
-                      else{
-                        window.open("/appointments", "_self");
-                      }
+                      window.open("/appointments", "_self");
                     });
                 })
                 .catch(function (err) {
-                  if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                    window.open(localStorage.getItem("appt_historypage"), "_self");
-                  }
-                  else{
-                    window.open("/appointments", "_self");
-                  }
+                  window.open("/appointments", "_self");
                 });
             })
             .catch(function (err) {
@@ -15850,29 +15619,14 @@ Template.appointments.events({
             .then(function (dataAppointment) {
               addVS1Data("TERPPreference", JSON.stringify(dataAppointment))
                 .then(function (datareturn) {
-                  if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                    window.open(localStorage.getItem("appt_historypage"), "_self");
-                  }
-                  else{
-                    window.open("/appointments", "_self");
-                  }
+                  window.open("/appointments", "_self");
                 })
                 .catch(function (err) {
-                  if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                    window.open(localStorage.getItem("appt_historypage"), "_self");
-                  }
-                  else{
-                    window.open("/appointments", "_self");
-                  }
+                  window.open("/appointments", "_self");
                 });
             })
             .catch(function (err) {
-              if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                window.open(localStorage.getItem("appt_historypage"), "_self");
-              }
-              else{
-                window.open("/appointments", "_self");
-              }
+              window.open("/appointments", "_self");
             });
         } else {
           $(".modal-backdrop").css("display", "none");
@@ -16134,29 +15888,14 @@ Template.appointments.events({
                         .then(function (data) {
                           addVS1Data("TAppointment", JSON.stringify(data))
                             .then(function (datareturn) {
-                              if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                window.open(localStorage.getItem("appt_historypage"), "_self");
-                              }
-                              else{
-                                window.open("/appointments", "_self");
-                              }
+                              window.open("/appointments", "_self");
                             })
                             .catch(function (err) {
-                              if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                window.open(localStorage.getItem("appt_historypage"), "_self");
-                              }
-                              else{
-                                window.open("/appointments", "_self");
-                              }
+                              window.open("/appointments", "_self");
                             });
                         })
                         .catch(function (err) {
-                          if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                            window.open(localStorage.getItem("appt_historypage"), "_self");
-                          }
-                          else{
-                            window.open("/appointments", "_self");
-                          }
+                          window.open("/appointments", "_self");
                         });
                     })
                     .catch(function (err) {
@@ -16330,29 +16069,14 @@ Template.appointments.events({
               .then(function (data) {
                 addVS1Data("TAppointment", JSON.stringify(data))
                   .then(function (datareturn) {
-                    if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                      window.open(localStorage.getItem("appt_historypage"), "_self");
-                    }
-                    else{
-                      window.open("/appointments", "_self");
-                    }
+                    window.open("/appointments", "_self");
                   })
                   .catch(function (err) {
-                    if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                      window.open(localStorage.getItem("appt_historypage"), "_self");
-                    }
-                    else{
-                      window.open("/appointments", "_self");
-                    }
+                    window.open("/appointments", "_self");
                   });
               })
               .catch(function (err) {
-                if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                  window.open(localStorage.getItem("appt_historypage"), "_self");
-                }
-                else{
-                  window.open("/appointments", "_self");
-                }
+                window.open("/appointments", "_self");
               });
           })
           .catch(function (err) {
@@ -16731,39 +16455,19 @@ Template.appointments.events({
                                         });
                                     })
                                     .catch(function (err) {
-                                      if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                        window.open(localStorage.getItem("appt_historypage"), "_self");
-                                      }
-                                      else{
-                                        window.open("/appointments", "_self");
-                                      }
+                                      window.open("/appointments", "_self");
                                     });
                                 })
                                 .catch(function (err) {
-                                  if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                    window.open(localStorage.getItem("appt_historypage"), "_self");
-                                  }
-                                  else{
-                                    window.open("/appointments", "_self");
-                                  }
+                                  window.open("/appointments", "_self");
                                 });
                             })
                             .catch(function (err) {
-                              if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                window.open(localStorage.getItem("appt_historypage"), "_self");
-                              }
-                              else{
-                                window.open("/appointments", "_self");
-                              }
+                              window.open("/appointments", "_self");
                             });
                         })
                         .catch(function (err) {
-                          if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                            window.open(localStorage.getItem("appt_historypage"), "_self");
-                          }
-                          else{
-                            window.open("/appointments", "_self");
-                          }
+                          window.open("/appointments", "_self");
                         });
                     } else {
                       sideBarService
@@ -16820,40 +16524,20 @@ Template.appointments.events({
                                         JSON.stringify(data)
                                       );
                                       setTimeout(function () {
-                                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                                        }
-                                        else{
-                                          window.open("/appointments", "_self");
-                                        }
+                                        window.open("/appointments", "_self");
                                       }, 500);
                                     });
                                 })
                                 .catch(function (err) {
-                                  if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                    window.open(localStorage.getItem("appt_historypage"), "_self");
-                                  }
-                                  else{
-                                    window.open("/appointments", "_self");
-                                  }
+                                  window.open("/appointments", "_self");
                                 });
                             })
                             .catch(function (err) {
-                              if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                window.open(localStorage.getItem("appt_historypage"), "_self");
-                              }
-                              else{
-                                window.open("/appointments", "_self");
-                              }
+                              window.open("/appointments", "_self");
                             });
                         })
                         .catch(function (err) {
-                          if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                            window.open(localStorage.getItem("appt_historypage"), "_self");
-                          }
-                          else{
-                            window.open("/appointments", "_self");
-                          }
+                          window.open("/appointments", "_self");
                         });
                     }
                   } else {
@@ -16863,40 +16547,20 @@ Template.appointments.events({
                         addVS1Data("TAppointment", JSON.stringify(data))
                           .then(function (datareturn) {
                             setTimeout(function () {
-                              if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                window.open(localStorage.getItem("appt_historypage"), "_self");
-                              }
-                              else{
-                                window.open("/appointments", "_self");
-                              }
+                              window.open("/appointments", "_self");
                             }, 500);
                           })
                           .catch(function (err) {
-                            if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                              window.open(localStorage.getItem("appt_historypage"), "_self");
-                            }
-                            else{
-                              window.open("/appointments", "_self");
-                            }
+                            window.open("/appointments", "_self");
                           });
                       })
                       .catch(function (err) {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       });
                   }
                 })
                 .catch(function (err) {
-                  if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                    window.open(localStorage.getItem("appt_historypage"), "_self");
-                  }
-                  else{
-                    window.open("/appointments", "_self");
-                  }
+                  window.open("/appointments", "_self");
                 });
             } else {
               //return false;
@@ -16906,30 +16570,15 @@ Template.appointments.events({
                   addVS1Data("TAppointment", JSON.stringify(data))
                     .then(function (datareturn) {
                       setTimeout(function () {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       }, 500);
                     })
                     .catch(function (err) {
-                      if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                        window.open(localStorage.getItem("appt_historypage"), "_self");
-                      }
-                      else{
-                        window.open("/appointments", "_self");
-                      }
+                      window.open("/appointments", "_self");
                     });
                 })
                 .catch(function (err) {
-                  if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                    window.open(localStorage.getItem("appt_historypage"), "_self");
-                  }
-                  else{
-                    window.open("/appointments", "_self");
-                  }
+                  window.open("/appointments", "_self");
                 });
             }
           })
@@ -17105,49 +16754,24 @@ Template.appointments.events({
                                           JSON.stringify(data)
                                         );
                                         setTimeout(function () {
-                                          if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                            window.open(localStorage.getItem("appt_historypage"), "_self");
-                                          }
-                                          else{
-                                            window.open("/appointments", "_self");
-                                          }
+                                          window.open("/appointments", "_self");
                                         }, 500);
                                       });
                                   })
                                   .catch(function (err) {
-                                    if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                      window.open(localStorage.getItem("appt_historypage"), "_self");
-                                    }
-                                    else{
-                                      window.open("/appointments", "_self");
-                                    }
+                                    window.open("/appointments", "_self");
                                   });
                               })
                               .catch(function (err) {
-                                if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                  window.open(localStorage.getItem("appt_historypage"), "_self");
-                                }
-                                else{
-                                  window.open("/appointments", "_self");
-                                }
+                                window.open("/appointments", "_self");
                               });
                           })
                           .catch(function (err) {
-                            if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                              window.open(localStorage.getItem("appt_historypage"), "_self");
-                            }
-                            else{
-                              window.open("/appointments", "_self");
-                            }
+                            window.open("/appointments", "_self");
                           });
                       })
                       .catch(function (err) {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       });
                   } else {
                     sideBarService
@@ -17204,40 +16828,20 @@ Template.appointments.events({
                                       JSON.stringify(data)
                                     );
                                     setTimeout(function () {
-                                      if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                        window.open(localStorage.getItem("appt_historypage"), "_self");
-                                      }
-                                      else{
-                                        window.open("/appointments", "_self");
-                                      }
+                                      window.open("/appointments", "_self");
                                     }, 500);
                                   });
                               })
                               .catch(function (err) {
-                                if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                                  window.open(localStorage.getItem("appt_historypage"), "_self");
-                                }
-                                else{
-                                  window.open("/appointments", "_self");
-                                }
+                                window.open("/appointments", "_self");
                               });
                           })
                           .catch(function (err) {
-                            if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                              window.open(localStorage.getItem("appt_historypage"), "_self");
-                            }
-                            else{
-                              window.open("/appointments", "_self");
-                            }
+                            window.open("/appointments", "_self");
                           });
                       })
                       .catch(function (err) {
-                        if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                          window.open(localStorage.getItem("appt_historypage"), "_self");
-                        }
-                        else{
-                          window.open("/appointments", "_self");
-                        }
+                        window.open("/appointments", "_self");
                       });
                   }
                 } else {
@@ -17247,40 +16851,20 @@ Template.appointments.events({
                       addVS1Data("TAppointment", JSON.stringify(data))
                         .then(function (datareturn) {
                           setTimeout(function () {
-                            if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                              window.open(localStorage.getItem("appt_historypage"), "_self");
-                            }
-                            else{
-                              window.open("/appointments", "_self");
-                            }
+                            window.open("/appointments", "_self");
                           }, 500);
                         })
                         .catch(function (err) {
-                          if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                            window.open(localStorage.getItem("appt_historypage"), "_self");
-                          }
-                          else{
-                            window.open("/appointments", "_self");
-                          }
+                          window.open("/appointments", "_self");
                         });
                     })
                     .catch(function (err) {
-                      if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                        window.open(localStorage.getItem("appt_historypage"), "_self");
-                      }
-                      else{
-                        window.open("/appointments", "_self");
-                      }
+                      window.open("/appointments", "_self");
                     });
                 }
               })
               .catch(function (err) {
-                if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                  window.open(localStorage.getItem("appt_historypage"), "_self");
-                }
-                else{
-                  window.open("/appointments", "_self");
-                }
+                window.open("/appointments", "_self");
               });
           } else {
             //return false;
@@ -17290,30 +16874,15 @@ Template.appointments.events({
                 addVS1Data("TAppointment", JSON.stringify(data))
                   .then(function (datareturn) {
                     setTimeout(function () {
-                      if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                        window.open(localStorage.getItem("appt_historypage"), "_self");
-                      }
-                      else{
-                        window.open("/appointments", "_self");
-                      }
+                      window.open("/appointments", "_self");
                     }, 500);
                   })
                   .catch(function (err) {
-                    if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                      window.open(localStorage.getItem("appt_historypage"), "_self");
-                    }
-                    else{
-                      window.open("/appointments", "_self");
-                    }
+                    window.open("/appointments", "_self");
                   });
               })
               .catch(function (err) {
-                if(localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != ""){
-                  window.open(localStorage.getItem("appt_historypage"), "_self");
-                }
-                else{
-                  window.open("/appointments", "_self");
-                }
+                window.open("/appointments", "_self");
               });
           }
         })

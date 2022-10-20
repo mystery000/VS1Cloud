@@ -1,10 +1,10 @@
-<template name="customersummaryreport">
+<template name="suppliersummary">
     <div style="margin-top: -24px;">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
         <header style="padding: 16px;">
-            <h2 style="margin: 16px;">Customer Summary {{> helpbutton}}</h2>
+            <h2 style="margin: 16px;">Supplier Summary {{> helpbutton}}</h2>
         </header>
 
         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -28,7 +28,7 @@
             <div class="modal-dialog" role="document" style="max-width: 670px!important;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="title-header">Customer Summary</h4>
+                        <h4 class="title-header">Supplier Summary</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
@@ -53,16 +53,13 @@
             }
         </style>
         <div class="row no-gutters justify-content-center mb-3" style="padding: 32px;">
-            <div class="col-12 col-md-8">
+            <div class="col-12 col-md-11">
                 <div class="card shadow mb-3">
                     <div class="card-header py-3" style="background-color: rgb(248,249,252);">
-                        <div class="row no-gutters justify-content-between">
-                            <p class="text-primary m-0 font-weight-bold">Customer Summary</p>
-                            <button type="button" class="btn btn-primary" id="btnDetails"><i class="fas fa-repeat" style="margin-right: 5px;"></i> Details</button>
-                        </div>
+                        <p class="text-primary m-0 font-weight-bold">Supplier Summary</p>
                     </div>
                     <div class="card-body">
-                        <div class="row no-gutters justify-content-between">
+                        <div class="row">
                             <div class="col-12 col-md-5">
                                 <div class="row no-gutters">
                                     <div class="form-group" style="margin: 8px;">
@@ -100,7 +97,7 @@
                                 <style>
                                     #uploadedImage {
                                         margin: 0 auto !important;
-                                        width: 100%;
+                                        display: block;
                                     }
                                 </style>
                                 <img class="imageUpload img-fluid" id="uploadedImage" src="assets/img/VS1.png">
@@ -125,7 +122,7 @@
                                     <div class="form-group" style="margin: 8px;">
                                         <label>From</label>
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control edtReportDates" id="dateFrom" name="dateFrom">
+                                            <input type="text" class="form-control" id="dateFrom" name="dateFrom">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -134,7 +131,7 @@
                                     <div class="form-group" style="margin: 8px;">
                                         <label>To</label>
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control edtReportDates" id="dateTo" name="dateTo">
+                                            <input type="text" class="form-control" id="dateTo" name="dateTo">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -150,7 +147,7 @@
                         <div class="printReport">
                             <div class="row">
                                 <div class="col">
-                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Customer Summary</p>
+                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Supplier Summary</p>
                                     <p class="text-center" style="margin-bottom: 0px;">{{companyname}}&nbsp;</p>
                                     <p class="text-center" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
                                 </div>
@@ -173,89 +170,90 @@
                                     .text-right {
                                         text-align: right !important;
                                     }
+                                    .table td {
+                                        color: #00a3d3;
+                                    }
+                                    .table td[style="font-weight: 800;"] {
+                                        color: #858796;
+                                    }
+
                                     .table th,
                                     .table td {
-                                        min-width: 110px;
+                                        text-align: left;
+                                        min-width: 150px;
+                                    }
+                                    .table th:first-child,
+                                    .table td:first-child {
+                                        text-align: left;
                                     }
                                     table tr .text-danger,
                                     table tr .text-danger a {
                                         color: #e74a3b !important;
                                     }
-                                    
-                                    table tr .text-success,
-                                    table tr .text-success a {
-                                        color: #1cc88a !important
-                                    }
-                                    
                                     .customDoubleTableHeading + tr th {
                                         border-right: 1px solid #cbcbcb !important;
                                     }
                                     .customDoubleTableHeading + tr th:last-child {
                                         border-right: none !important;
                                     }
-                                    .text-center1,
-                                    .text-center0 {
-                                        text-align: right !important;
-                                    }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table table-sm" id="tableExport" name="tableExport">
                                         <thead>
                                             <tr class="table-active customDoubleTableHeading">
-                                                <th>Name</th>
-                                                <th>Phone</th>
-                                                <th style="min-width: 180px;">Address</th>
-                                                <th>City</th>
-                                                <th>ZIP</th>
-                                                <th>State</th>
-                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total (Ex)</th>
-                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total</th>
-                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Gross Profit</th>
-                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Margin</th>
+                                                <th>Supplier</th>
+                                                <th>PO No</th>
+                                                <th>Trans Type</th>
+                                                <th>Product ID</th>
+                                                <th>Product Desc</th>
+                                                <th colspan="{{countActive currencyList}}" class="text-center">Cost (ex)</th>
+                                                <th colspan="{{countActive currencyList}}" class="text-center">Tax</th>
+                                                <th colspan="{{countActive currencyList}}" class="text-center">Cost (inc)</th>
+                                                <th class="text-right">Tax Code</th>
+                                                <th class="text-right">Qty Ordered</th>
+                                                <th class="text-right">Qty Received</th>
+                                                <th class="text-right">Qty BO</th>
+                                                <th>ETA Date</th>
+                                                <th>Order Date</th>
+                                                <th>Received Date</th>
                                             </tr>
 
                                             {{#if isOnlyDefaultActive equal "false" }}
-                                                <tr class="table-active tblAvoid">
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
+                                                <tr class="table-active tblAvoid customDoubleTableHeading">
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                        
+                                                {{#if currencyList}}
+                                                    {{#each c in currencyList }}
+                                                    {{# if c.active}}
+                                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                                    {{/if}}
+                                                    {{/each}}
+                                                
+                                                    {{#each c in currencyList }}
+                                                    {{# if c.active}}
+                                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                                    {{/if}}
+                                                    {{/each}}
+                                            
+                                                    {{#each c in currencyList }}
+                                                    {{# if c.active}}
+                                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                                    {{/if}}
+                                                    {{/each}}
+                                                {{/if}}
 
-                                                    {{#if currencyList}}
-                                                        {{#each c in currencyList }}
-                                                            {{# if c.active}}
-                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                                                            {{/if}}
-                                                        {{/each}}
-                                                    {{/if}}
-
-                                                    {{#if currencyList}}
-                                                        {{#each c in currencyList }}
-                                                            {{# if c.active}}
-                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                                                            {{/if}}
-                                                        {{/each}}
-                                                    {{/if}}
-
-                                                    {{#if currencyList}}
-                                                        {{#each c in currencyList }}
-                                                            {{# if c.active}}
-                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                                                            {{/if}}
-                                                        {{/each}}
-                                                    {{/if}}
-                                                    {{#if currencyList}}
-                                                        {{#each c in currencyList }}
-                                                            {{# if c.active}}
-                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                                                            {{/if}}
-                                                        {{/each}}
-                                                    {{/if}}
-                                                  
-                                                  
-                                                  
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                        
                                                 </tr>
                                             {{/if}}
                                         </thead>
@@ -263,70 +261,97 @@
                                             {{#if records}}
                                                 {{#each arrayify records}}
                                                     <tr>
-                                                        <td><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ value.Name }}</a></td>
-                                                        <td><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ value.Phone }}</a></td>
-                                                        <td><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ value.Address }}</a></td>
-                                                        <td><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ value.Address_2 }}</a></td>
-                                                        <td><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ value.Postcode }}</a></td>
-                                                        <td><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ value.State }}</a></td>
-                                                        <!-- <td class="text-right text-success">{{ formatPrice value.Total_Amount_Ex }}</td>
-                                                        <td class="text-right text-success">{{ formatPrice value.Total_Amount_Inc }}</td>
-                                                        <td class="text-right text-success">{{ formatPrice value.Gross_Profit }}</td> -->
+                                                        <td colspan="15" style="font-weight: 800;">{{ value.Supplier_Name }}</td>
+                                                    </tr>
+                                                    {{#each item in value.SubAccounts}}
+                                                    <tr data-type="{{item.Transaction_Type}}">
+                                                        <td></td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Purchase_Order_Number }}</a></td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Transaction_Type }}</a></td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.ProductID }}</a></td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Product_Description }}</a></td>
 
-                                                        {{#if isOnlyDefaultActive }}
+                                                        {{#if isOnlyDefaultActive}}
+
                                                             {{#if currencyList}}
-                                                                {{#each c in currencyList }}
-                                                                    {{# if c.active}}
-                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Total_Amount_Ex c}} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Total_Amount_Ex c}}</a></td>
-                                                                    {{/if}}
-                                                                {{/each}}
-                                                                {{#each c in currencyList }}
-                                                                    {{# if c.active}}
-                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Total_Amount_Inc c}} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Total_Amount_Inc c}}</a></td>
-                                                                    {{/if}}
-                                                                {{/each}}
-                                                                {{#each c in currencyList }}
-                                                                    {{# if c.active}}
-                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Gross_Profit c}} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Gross_Profit c}}</a></td>
-                                                                    {{/if}}
-                                                                {{/each}}
-                                                                {{#each c in currencyList }}
-                                                                    {{# if c.active}}
-                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Margin c}} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ convertAmount value.Margin c}}</a></td>
-                                                                    {{/if}}
-                                                                {{/each}}
+
+                                                            {{#each c in currencyList }}
+                                                                {{# if c.active}}
+                                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Line_Cost_Ex c}}</a></td>
+                                                                {{/if}}
+                                                            {{/each}}
+
+                                                            {{#each c in currencyList }}
+                                                                {{# if c.active}}
+                                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Line_Tax c}}</a></td>
+                                                                {{/if}}
+                                                            {{/each}}
+
+                                                            {{#each c in currencyList }}
+                                                                {{# if c.active}}
+                                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Line_Cost_Inc c}}</a></td>
+                                                                {{/if}}
+                                                            {{/each}}
+
                                                             {{/if}}
+
                                                         {{else}}
-                                                            <td class="text-right text-success"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ formatPrice value.Total_Amount_Ex }}</a></td>
-                                                            <td class="text-right text-success"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ formatPrice value.Total_Amount_Inc }}</a></td>
-                                                            <td class="text-right text-success"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ formatPrice value.Gross_Profit }}</a></td>
-                                                            <td class="text-right"><a href="{{redirectionType value}}" style="text-decoration:none!important;">{{ formatPrice value.Margin }}</a></td>
+                                                            <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Line_Cost_Ex }}</a></td>
+                                                            <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Line_Tax }}</a></td>
+                                                            <td class="text-right text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Line_Cost_Inc }}</a></td>
 
                                                         {{/if}}
+                                                      
+                                                        
+                                                        
+                                                        <td class="text-right"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Tax_Code }}</a></td>
+                                                        <td class="text-right"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Ordered }}</a></td>
+                                                        <td class="text-right"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.BackOrder }}</a></td>
+                                                        <td class="text-right"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.BackOrder }}</a></td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatDate item.ETADate }}</a></td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatDate item.Order_Date }}</a></td>
+                                                        <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatDate item.ReceivedDate }}</a></td>
+                                                    </tr>
+                                                    {{/each}}
+                                                    <tr>
+                                                        <td style="font-weight: 800;" colspan="5">{{ value.Supplier_Name }} Total</td>
+
+
+                                                        {{#if isOnlyDefaultActive}}
+
+                                                            {{#if currencyList}}
+
+                                                                {{#each c in currencyList }}
+                                                                    {{#if c.active}}
+                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right" style="font-weight: 800;">{{ convertAmount value.TotalCostEx c}}</td>
+                                                                    {{/if}}
+                                                                {{/each}}
+
+                                                                {{#each c in currencyList }}
+                                                                    {{#if c.active}}
+                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right" style="font-weight: 800;">{{ convertAmount value.TotalTax c}}</td>
+                                                                    {{/if}}
+                                                                {{/each}}
+
+                                                                {{#each c in currencyList }}
+                                                                    {{#if c.active}}
+                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right" style="font-weight: 800;">{{ convertAmount value.TotalCostInc c}}</td>
+                                                                    {{/if}}
+                                                                {{/each}}
+
+                                                            {{/if}}
+
+                                                        {{else}}
+                                                         
+                                                            <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalCostEx }}</td>
+                                                            <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalTax }}</td>
+                                                            <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalCostInc }}</td>
+                                                        {{/if}}
+                                                      
+                                                        <td colspan="7"></td>
                                                     </tr>
                                                 {{/each}}
-                                            {{else}}
-                                                <tr class="odd" style="text-align: center;">
-                                                    <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
-                                                </tr>
                                             {{/if}}
-                                                        
-                                            <!-- {{#if records}}
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                            {{else}}
-                                                <tr class="odd" style="text-align: center;">
-                                                    <td valign="top" colspan="12" class="dataTables_empty">No data available in table</td>
-                                                </tr>
-                                            {{/if}} -->
                                         </tbody>
                                     </table>
                                 </div>

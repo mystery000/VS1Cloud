@@ -55,6 +55,7 @@ Template.adp.events({
         window.open("https://in.adp.com");
     },
     'click #saveAdpSetting': async function(){
+        playSaveAudio();
         $('.fullScreenSpin').css('display','block');
         let settingObject = [];
         const templateObject = Template.instance();

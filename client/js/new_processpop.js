@@ -75,6 +75,7 @@ Template.new_processpop.helpers({
 
 Template.new_processpop.events({
     'click #btnSaveProcess': function(event) {
+        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentID = FlowRouter.current().queryParams.id;
         let tempArray = localStorage.getItem('TProcesses');
@@ -189,6 +190,7 @@ Template.new_processpop.events({
     },
 
     'click #btnCancel': function(event) {
+        playCancelAudio();
         $('#newProcessModal').modal('toggle');
         $('#processListModal').modal('toggle')
     },

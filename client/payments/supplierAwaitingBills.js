@@ -423,7 +423,7 @@ Template.supplierawaitingbills.events({
       Meteor._reload.reload();
     },
   'click .printConfirm' : function(event){
-
+    playPrintAudio();
     $('.fullScreenSpin').css('display','inline-block');
     jQuery('#tblSupplierAwaitingBills_wrapper .dt-buttons .btntabletopdf').click();
      $('.fullScreenSpin').css('display','none');

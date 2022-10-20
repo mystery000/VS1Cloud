@@ -2789,6 +2789,7 @@ Template.journalentrycard.events({
 
     },
     'click .printConfirm': function(event) {
+        playPrintAudio();
         $('#html-2-pdfwrapper').css('display', 'block');
 
 
@@ -2908,7 +2909,7 @@ Template.journalentrycard.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnDelete': function(event) {
-
+        playDeleteAudio();
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         swal({
@@ -2979,6 +2980,7 @@ Template.journalentrycard.events({
 
     },
     'click .btnDeleteLine': function(event) {
+        playDeleteAudio();
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -3034,10 +3036,11 @@ Template.journalentrycard.events({
         $('#deleteLineModal').modal('toggle');
     },
     'click .btnSaveSettings': function(event) {
-
+        playSaveAudio();
         $('#myModal4').modal('toggle');
     },
     'click .btnSave': function(event) {
+        playSaveAudio();
         let templateObject = Template.instance();
         let department = $('#sltDepartment').val();
         let headMemo = $('#txaMemo').val();
@@ -3306,6 +3309,7 @@ Template.journalentrycard.events({
 
     },
     'click .btnSaveGridSettings': function(event) {
+        playSaveAudio();
         let lineItems = [];
 
         $('.columnSettings').each(function(index) {
@@ -3572,6 +3576,7 @@ Template.journalentrycard.events({
         }
     },
     'click .btnBack': function(event) {
+        playCancelAudio();
         event.preventDefault();
         history.back(1);
 

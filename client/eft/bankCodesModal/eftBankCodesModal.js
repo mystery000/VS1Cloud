@@ -89,6 +89,7 @@ Template.eftBankCodesModal.onRendered(function () {
 Template.eftBankCodesModal.events({
 
   "click .btnSaveEftBankCodes": (e) => {
+    playSaveAudio();
     const templateObject = Template.instance();
     let eftBankCodes = templateObject.eftBankCodeList.get();
 
@@ -120,6 +121,7 @@ Template.eftBankCodesModal.events({
   },
 
   "click .btnCancelEftBankCodes": (e) => {
+    playCancelAudio();
     $('#eftBankCodesModal').modal('hide');
   },
 

@@ -94,6 +94,7 @@ Template.smssettings.events({
     window.open("https://twilio.com/try-twilio");
   },
   'click #saveTwilioSettings': async function() {
+    playSaveAudio();
     $('.fullScreenSpin').css('display','inline-block');
 
     const templateObject = Template.instance();

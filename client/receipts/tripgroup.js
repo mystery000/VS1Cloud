@@ -160,6 +160,7 @@ Template.tripgroup.events({
         });
     },
     'click .btnDelete': function () {
+        playDeleteAudio();
         $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
         let tripGroupId = $('#selectDeleteLineID').val();
@@ -199,6 +200,7 @@ Template.tripgroup.events({
 
     },
     'click .btnSave': function () {
+        playSaveAudio();
         $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
         let tripGroupID = $('#edtTripGroupID').val();
@@ -290,6 +292,7 @@ Template.tripgroup.events({
         $('#edtTripGroupDesc').val('');
     },
     'click .btnBack':function(event){
+        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },

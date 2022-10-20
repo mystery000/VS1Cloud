@@ -605,6 +605,7 @@ Template.processList.events({
         },
     
         'click .processList .printConfirm': function() {
+            playPrintAudio();
             $('.fullScreenSpin').css('display', 'inline-block');
             jQuery('#tblProcessList_wrapper .dt-buttons .btntabletopdf').click();
             $('.fullScreenSpin').css('display', 'none');
