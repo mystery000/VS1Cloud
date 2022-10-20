@@ -1939,7 +1939,7 @@ Template.billlist.events({
         templateObject.getAllFilterBillData('', '', true);
     },
     'click .printConfirm' : function(event){
-
+        playPrintAudio();
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblbilllist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');

@@ -702,6 +702,7 @@ Template.newpaymentmethodpop.onRendered(function() {
 
 
         $("#saveStripeID").click(function() {
+            playSaveAudio();
             $('.fullScreenSpin').css('display', 'inline-block');
             let companyID = 1;
             let feeMethod = "apply";
@@ -789,6 +790,7 @@ Template.newpaymentmethodpop.onRendered(function() {
 
 Template.newpaymentmethodpop.events({
     'click .btnSavePaymentMethodPOP': function() {
+        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
         var currentLoc = FlowRouter.current().path;

@@ -597,6 +597,7 @@ Template.myTasksWidget.events({
     },
     // update task rename task
     "click .btnSaveEditTask": function (e) {
+        playSaveAudio();
         let taskID = $("#txtCrmTaskID").val();
         if (taskID) {
             let selected_lbls = [];
@@ -663,6 +664,7 @@ Template.myTasksWidget.events({
     },
     // submit save new task add task
     "click .btnSaveAddTask": function (e) {
+        playSaveAudio();
         let objDetails;
         let task_name = $("#add_task_name").val();
         let task_description = $("#add_task_description").val();

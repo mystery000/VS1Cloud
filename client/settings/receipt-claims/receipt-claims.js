@@ -58,6 +58,7 @@ Template.receiptclaims.events({
     window.open("https://hub.veryfi.com/");
   },
   'click #saveReceiptClaimsSettings': async function(){
+    playSaveAudio();
     $('.fullScreenSpin').css('display','block');
     let settingObject = [];
     const templateObject = Template.instance();

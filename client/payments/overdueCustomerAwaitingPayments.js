@@ -1763,7 +1763,7 @@ var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDat
         templateObject.getAllFilterAwaitingCustData('', toDate, true);
     },
     'click .printConfirm': function (event) {
-
+        playPrintAudio();
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {

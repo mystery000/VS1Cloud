@@ -4398,6 +4398,7 @@ Template.setup.events({
     LoadingOverlay.hide();
   },
   "click .btnBack": (event, templateObject) => {
+    playCancelAudio();
     LoadingOverlay.show();
     let skippedSteps = templateObject.skippedSteps.get();
     let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
@@ -4934,6 +4935,7 @@ Template.setup.events({
     $("#newTaxRate").css("display", "block");
   },
   "click .btnCloseAddNewTax": function () {
+    playCancelAudio();
     $("#newTaxRate").css("display", "none");
   },
   "click #saveStep2": function () {
@@ -5094,6 +5096,7 @@ Template.setup.events({
     }
   },
   "click .btnSaveTaxRate": function () {
+    playSaveAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     let taxRateService = new TaxRateService();
     let taxtID = $("#edtTaxID").val();
@@ -5263,6 +5266,7 @@ Template.setup.events({
     $("#edtTaxDesc").val("");
   },
   "click .btnDeleteTaxRate": function () {
+    playDeleteAudio();
     let taxRateService = new TaxRateService();
     let taxCodeId = $("#selectDeleteLineID").val();
 
@@ -5553,6 +5557,7 @@ Template.setup.events({
       });
   },
   "click .btnDeletePaymentMethod": function () {
+    playDeleteAudio();
     let taxRateService = new TaxRateService();
     let paymentMethodId = $("#selectDeleteLineID").val();
 
@@ -5599,6 +5604,7 @@ Template.setup.events({
       });
   },
   "click .btnSavePaymentMethod": function () {
+    playSaveAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     let taxRateService = new TaxRateService();
     let paymentMethodID = $("#edtPaymentMethodID").val();
@@ -6041,6 +6047,7 @@ Template.setup.events({
       });
   },
   "click .btnDeleteTerms": function () {
+    playDeleteAudio();
     let taxRateService = new TaxRateService();
     let termsId = $("#selectDeleteLineID").val();
 
@@ -6087,6 +6094,7 @@ Template.setup.events({
       });
   },
   "click .btnSaveTerms": function () {
+    playSaveAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     let taxRateService = new TaxRateService();
     let termsID = $("#edtTermsID").val();
@@ -6498,6 +6506,7 @@ Template.setup.events({
 
   // TODO: Step 5
   "click .btnSaveEmpPop": (e) => {
+    playSaveAudio();
     $("#addEmployeeModal").modal("toggle");
 
     // const templateObject = Template.instance();
@@ -7004,6 +7013,7 @@ Template.setup.events({
   //     });
   // },
   "click .printConfirmEmployee": function (event) {
+    playPrintAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblEmployeelist_wrapper .dt-buttons .btntabletopdf").click();
     LoadingOverlay.hide();
@@ -7454,6 +7464,7 @@ Template.setup.events({
     }
   },
   "click .btnSaveStatus": function () {
+    playSaveAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     let clientService = new SalesBoardService();
     let status = $("#status").val();
@@ -8393,6 +8404,7 @@ Template.setup.events({
     $("" + columHeaderUpdate + "").html(columData);
   },
   "click .btnSaveGridSettings": function (event) {
+    playSaveAudio();
     let lineItems = [];
 
     $(".columnSettings").each(function (index) {
@@ -9617,6 +9629,7 @@ Template.setup.events({
     }
   },
   "click .printConfirm": (e) => {
+    playPrintAudio();
     const type = $(e.currentTarget).attr("data-target");
     if (type) {
       LoadingOverlay.show();

@@ -1836,6 +1836,7 @@ Template.newbankrecon.events({
         setCalculated();
     },
     'click #btnCancel': function() {
+        playCancelAudio();
         closeTransactionDetail();
     },
     'click #addLine': function() {
@@ -2555,6 +2556,7 @@ Template.newbankrecon.events({
         }
     },
     'click #btnMatchCancel': function() {
+        playCancelAudio();
         closeTransactionDetail();
     },
     'click #btnGoSearch': function(event) {

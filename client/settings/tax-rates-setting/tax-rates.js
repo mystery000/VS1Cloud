@@ -962,6 +962,7 @@ Template.taxRatesSettings.events({
       });
   },
   "click .btnSaveDefaultTax": function () {
+    playSaveAudio();
     let purchasetaxcode = $("input[name=optradioP]:checked").val() || "";
     let salestaxcode = $("input[name=optradioS]:checked").val() || "";
 
@@ -1067,6 +1068,7 @@ Template.taxRatesSettings.events({
     $('#add-subtax-title').text('Add Sub Tax');
   },
   "click .btnSaveSubTax": function () {
+    playSaveAudio();
     let templateObject = Template.instance();
     let edtSubTaxLineId = $("#edtSubTaxLineId").val();
     let subTaxId = $('#subTaxCode').val();
@@ -1117,6 +1119,7 @@ Template.taxRatesSettings.events({
     $('#addSubTaxModal').modal('hide');
   },
   'click .btnSaveTaxRate': function () {
+    playSaveAudio();
     let templateObject = Template.instance();
     $('.fullScreenSpin').css('display', 'inline-block');
     let taxRateService = new TaxRateService();
@@ -1365,6 +1368,7 @@ Template.taxRatesSettings.events({
     FlowRouter.go('/subtaxsettings');
   },
   'click .btnDeleteTaxRate': function () {
+    playDeleteAudio();
     let taxRateService = new TaxRateService();
     let taxCodeId = $('#selectDeleteLineID').val();
 
@@ -1411,6 +1415,7 @@ Template.taxRatesSettings.events({
       });
   },
   "click .btnBack": function (event) {
+    playCancelAudio();
     event.preventDefault();
     history.back(1);
   },
@@ -1422,6 +1427,7 @@ Template.taxRatesSettings.events({
     $("#deleteLineModal").modal("toggle");
   },
   'click .btnBack': function (event) {
+    playCancelAudio();
     event.preventDefault();
     history.back(1);
   }

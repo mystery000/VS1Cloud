@@ -5110,6 +5110,7 @@ Template.chequecard.events({
     }
   },
   "click .printConfirm": function (event) {
+    playPrintAudio();
     $("#html-2-pdfwrapper").css("display", "block");
     $(".pdfCustomerName").html($("#edtSupplierName").val());
     $(".pdfCustomerAddress").html(
@@ -5381,6 +5382,7 @@ Template.chequecard.events({
     }
   },
   "click .btnDeleteCheque": function (event) {
+    playDeleteAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
     let purchaseService = new PurchaseBoardService();
@@ -5431,6 +5433,7 @@ Template.chequecard.events({
     $("#deleteLineModal").modal("toggle");
   },
   "click .btnDeleteLine": function (event) {
+    playDeleteAudio();
     let templateObject = Template.instance();
     let taxcodeList = templateObject.taxraterecords.get();
     let utilityService = new UtilityService();
@@ -5579,9 +5582,11 @@ Template.chequecard.events({
     $("#deleteLineModal").modal("toggle");
   },
   "click .btnSaveSettings": function (event) {
+    playSaveAudio();
     $("#myModal4").modal("toggle");
   },
   "click .btnSave": function (event) {
+    playSaveAudio();
     let templateObject = Template.instance();
     let suppliername = $("#edtSupplierName");
     let purchaseService = new PurchaseBoardService();
@@ -6404,6 +6409,7 @@ Template.chequecard.events({
     $("" + columHeaderUpdate + "").html(columData);
   },
   "click .btnSaveGridSettings": function (event) {
+    playSaveAudio();
     let lineItems = [];
 
     $(".columnSettings").each(function (index) {
@@ -6702,6 +6708,7 @@ Template.chequecard.events({
     }
   },
   "click .btnBack": function (event) {
+    playCancelAudio();
     event.preventDefault();
     if(FlowRouter.current().queryParams.trans){
       FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');

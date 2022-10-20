@@ -287,6 +287,7 @@ Template.eftExportModal.events({
   },
 
   "click .btnCancelEftExport": (e) => {
+    playCancelAudio();
     $('#eftExportModal').modal('hide');
   },
 
@@ -370,6 +371,7 @@ Template.eftExportModal.events({
   },
 
   "click .btnDoEftExport": (e) => {
+    playSaveAudio();
     let sltAccountType = $('#sltAccountType').val();
     let sltBankName = $('#sltBankName').val();
     let eftProcessingDate = $('#eftProcessingDate').val();

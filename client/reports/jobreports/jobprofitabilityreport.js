@@ -197,6 +197,7 @@ Template.jobprofitabilityreport.events({
     let rows = [];
   },
   "click .btnPrintReport": function (event) {
+    playPrintAudio();
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {

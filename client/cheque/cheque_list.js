@@ -536,6 +536,9 @@ Template.chequelist.onRendered(function() {
 });
 
 Template.chequelist.events({
+    'click #copyCheque': function(event) {
+        playCopyAudio();
+    },
     'click #btnNewCheque': function(event) {
         FlowRouter.go('/chequecard');
     },
@@ -1073,7 +1076,7 @@ Template.chequelist.events({
         templateObject.getAllFilterChequeData('', '', true);
     },
     'click .printConfirm': function(event) {
-
+        playPrintAudio();
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {

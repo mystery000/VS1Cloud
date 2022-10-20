@@ -4421,6 +4421,7 @@ Template.productview.events({
         templateObject.getAllProductRecentTransactions();
     },
     'click #btnSave': async function() {
+        playSaveAudio();
         let templateObject = Template.instance();
         let productCode = $("#edtproductcode").val();
         let productName = $("#edtproductname").val();
@@ -4988,6 +4989,7 @@ Template.productview.events({
 
     },
     'click .btnBack': function(event) {
+        playCancelAudio();
         event.preventDefault();
         history.back(1);
     },
@@ -5109,6 +5111,7 @@ Template.productview.events({
         $('.lblCustomField2').text(inputValue2);
     },
     'click .btnSaveSettings': function(event) {
+        playSaveAudio();
         $('#myModal2').modal('toggle');
     },
     'click .btnResetSettings': function(event) {
@@ -5384,6 +5387,7 @@ Template.productview.events({
 
     },
     'click .btnDeleteInv': function(event) {
+        playDeleteAudio();
         let templateObject = Template.instance();
         swal({
             title: 'Delete Product',
@@ -5442,6 +5446,7 @@ Template.productview.events({
         $('#myModalClientType').modal();
     },
     'click .btnSaveDept': function() {
+        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ProductService();
 
@@ -6051,6 +6056,7 @@ Template.productview.events({
     },
 
     'click .btn-save-bom': function(event) {
+        playSaveAudio();
         $('.fullScreenSpin').css('display', 'none')
         let tempObject = Template.instance();
         let mainProductName = $('#edtMainProductName').val();
@@ -6163,6 +6169,7 @@ Template.productview.events({
 
 
     'click .btn-print-bom': function(event) {
+        playPrintAudio();
         document.title = 'Product BOM Setup';
         $("#BOMSetupModal .modal-body").print({
             // title   :  document.title +" | Product Sales Report | "+loggedCompany,
@@ -6174,9 +6181,10 @@ Template.productview.events({
     },
 
     'click .btn-cancel-bom': function(event) {
+        playCancelAudio();
         let productContents = $('#BOMSetupModal').find('.product-content');
         for (let l = 1; l < productContents.length -1; l++) {
-            $(productContents[l]).remove()
+            $(productContents[l]).remove();
         }
         $('#BOMSetupModal').modal('toggle');
     },

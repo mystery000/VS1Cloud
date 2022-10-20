@@ -2039,7 +2039,7 @@ Template.purchaseorderlist.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click .printConfirm": function (event) {
-
+    playPrintAudio();
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {

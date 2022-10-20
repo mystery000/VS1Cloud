@@ -10910,6 +10910,7 @@ Template.appointments.events({
 
   // custom field displaysettings
   "click .btnSaveGridSettings": function (event) {
+    playSaveAudio();
     let lineItems = [];
     let organisationService = new OrganisationService();
 
@@ -11934,6 +11935,7 @@ Template.appointments.events({
     }
   },
   "click #btnSaveRepeat": function () {
+    playSaveAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
     let repeatDays = templateObject.repeatDays.get();
@@ -14761,6 +14763,7 @@ Template.appointments.events({
   },
 
   "click #btnSaveAppointment": async function () {
+    playSaveAudio();
     const templateObject = Template.instance();
     const isLeaveBooked = await templateObject.getLeaveRequests();
     if (isLeaveBooked === true) {
@@ -14917,6 +14920,7 @@ Template.appointments.events({
     }
   },
   "click .btnSaveIgnoreSMS": async function () {
+    playSaveAudio();
     $("#chkSMSCustomer").prop("checked", false);
     $("#chkSMSUser").prop("checked", false);
     let emailCustomer = $("#customerEmail").is(":checked");

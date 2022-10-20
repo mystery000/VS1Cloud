@@ -93,6 +93,7 @@ Template.new_process.helpers({
 
 Template.new_process.events({
     'click #btnSaveProcess': function(event) {
+        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentID = FlowRouter.current().queryParams.id;
         let tempArray = localStorage.getItem('TProcesses');
@@ -206,6 +207,7 @@ Template.new_process.events({
     },
 
     'click #btnCancel': function(event) {
+        playCancelAudio();
         FlowRouter.go('/processlist')
     },
 

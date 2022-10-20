@@ -745,6 +745,9 @@ templateObject.tableheaderrecords.set(tableHeaderList);
 
 
 Template.invoiceemail.events({
+    'click #emailinvoice':function(event){
+      playEmailAudio();
+    },
     'click #btnNewInvoice':function(event){
         FlowRouter.go('/invoicecard');
     },
@@ -1180,7 +1183,7 @@ Template.invoiceemail.events({
       templateObject.getAllFilterInvoiceEmailData('', '', true);
   },
   'click .printConfirm' : function(event){
-
+    playPrintAudio();
     $('.fullScreenSpin').css('display','inline-block');
     jQuery('#tblInvoicelistemail_wrapper .dt-buttons .btntabletopdf').click();
      $('.fullScreenSpin').css('display','none');
