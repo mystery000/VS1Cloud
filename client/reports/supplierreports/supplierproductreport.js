@@ -54,13 +54,13 @@ Template.supplierproductreport.onRendered(() => {
     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
-    //await templateObject.getSupplierProductReportData();
+    await templateObject.getSupplierProductReportData();
 
-    // await templateObject.loadReport(
-    //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-    //   GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
-    //   ignoreDate
-    // );
+    await templateObject.loadReport(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+      ignoreDate
+    );
   };
 
 
@@ -150,7 +150,7 @@ Template.supplierproductreport.onRendered(() => {
 
   templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
     LoadingOverlay.show();
-
+    
     let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
       return await  await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
     }, {
@@ -226,7 +226,26 @@ Template.supplierproductreport.onRendered(() => {
        LoadingOverlay.hide();
       }, 1000);
     }  
-
+    let defaultOptions = templateObject.reportOptions.get();
+    if (defaultOptions) {
+      defaultOptions.fromDate = formatDateFrom;
+      defaultOptions.toDate = formatDateTo;
+      defaultOptions.ignoreDate = ignoreDate;
+    } else {
+      defaultOptions = {
+        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
+        toDate: moment().format("YYYY-MM-DD"),
+        ignoreDate: true
+      };
+    }
+    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $('.edtReportDates').attr('disabled', false)
+    if( ignoreDate == true ){
+      $('.edtReportDates').attr('disabled', true);
+      templateObject.dateAsAt.set("Current Date");
+    }
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
   }
   
 
@@ -240,16 +259,16 @@ Template.supplierproductreport.onRendered(() => {
     }
   };
 
-
+  templateObject.setReportOptions();
   templateObject.initDate();
   templateObject.initUploadedImage();
   //templateObject.setReportOptions();
 
-  templateObject.loadReport(
-    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-    GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
-    false
-  );
+  // templateObject.loadReport(
+  //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+  //   GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+  //   false
+  // );
  
  
 });
@@ -432,24 +451,19 @@ Template.supplierproductreport.events({
   //   await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
   //   //LoadingOverlay.hide();
   // },
-  "click #ignoreDate": async (e, templateObject) => {
+  "click #ignoreDate": async () => {
     // $(".fullScreenSpin").css("display", "inline-block");
     // $("#dateFrom").attr("readonly", true);
     // $("#dateTo").attr("readonly", true);
     // localStorage.setItem('VS1SupplierProduct_Report', '');
 
-    templateObject.initDate();
+    let templateObject = Template.instance();
+    LoadingOverlay.show();
+    localStorage.setItem("VS1SupplierProduct_Report", "");
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
     templateObject.dateAsAt.set("Current Date");
-    // await templateObject.setReportOptions(true);
-     
-    // $("#dateTo").trigger("change");
-    templateObject.loadReport(
-      null, 
-      null, 
-      true
-    );
+    templateObject.setReportOptions(true);
   },
 
   // CURRENCY MODULE //
@@ -523,6 +537,7 @@ Template.supplierproductreport.events({
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
       false
     );
+    templateObject.dateAsAt.set($('#dateTo').val());
   },
   ...Datehandler.getDateRangeEvents()
 });

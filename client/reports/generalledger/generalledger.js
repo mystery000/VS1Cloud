@@ -134,20 +134,20 @@ Template.generalledger.onRendered(() => {
             for (let i = 0; i < accountData.length; i++) {
               let recordObj = {};
               recordObj.Id = data.tgeneralledgerreport[i].PURCHASEORDERID;
-              recordObj.type = data.tgeneralledgerreport[i].TYPE;
+              recordObj.AccountName = data.tgeneralledgerreport[i].ACCOUNTNAME;
               recordObj.paymentId = data.tgeneralledgerreport[i].PAYMENTID;
               recordObj.saleId = data.tgeneralledgerreport[i].SALEID;
+              recordObj.type = data.tgeneralledgerreport[i].TYPE;
               recordObj.cheqNumber = data.tgeneralledgerreport[i].CHEQUENUMBER;
-              recordObj.AccountName = data.tgeneralledgerreport[i].ACCOUNTNAME;
               recordObj.dataArr = [
                 "",
-                data.tgeneralledgerreport[i].TYPE,
                 data.tgeneralledgerreport[i].ACCOUNTNUMBER,
-
-                data.tgeneralledgerreport[i]["CLIENT NAME"],
+                
                 // data.tgeneralledgerreport[i].MEMO || "-",
                 // moment(data.tgeneralledgerreport[i].DATE).format("DD MMM YYYY") || '-',
                 data.tgeneralledgerreport[i].DATE != ""? moment(data.tgeneralledgerreport[i].DATE).format("DD/MM/YYYY"): data.tgeneralledgerreport[i].DATE,
+                data.tgeneralledgerreport[i]["CLIENT NAME"],
+                data.tgeneralledgerreport[i].TYPE,
                 // utilityService.modifynegativeCurrencyFormat(
                 //   data.tgeneralledgerreport[i].AMOUNTINC
                 // ) || "-",
@@ -158,11 +158,6 @@ Template.generalledger.onRendered(() => {
                 // utilityService.modifynegativeCurrencyFormat(
                 //   data.tgeneralledgerreport[i].CREDITSEX
                 // ) || "-",
-                {
-                  type: "amount",
-                  value:utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].AMOUNTINC) || "-",
-                  amount: data.tgeneralledgerreport[i].AMOUNTINC || "-",
-                },
                 // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].Current) || '-',
                 {
                   type: "amount",
@@ -173,6 +168,11 @@ Template.generalledger.onRendered(() => {
                   type: "amount",
                   value:utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].CREDITSEX) || "-",
                   amount: data.tgeneralledgerreport[i].CREDITSEX || "-",
+                },
+                {
+                  type: "amount",
+                  value:utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].AMOUNTINC) || "-",
+                  amount: data.tgeneralledgerreport[i].AMOUNTINC || "-",
                 },
                 // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i]["60-90Days"]) || '-',
                 // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i][">90Days"]) || '-',
@@ -260,12 +260,6 @@ Template.generalledger.onRendered(() => {
               {
                 type: "amount",
                 value:
-                  utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
-                amount: grandtwoMonth,
-              },
-              {
-                type: "amount",
-                value:
                   utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
                 amount: grandthreeMonth,
               },
@@ -273,6 +267,12 @@ Template.generalledger.onRendered(() => {
                 type: "amount",
                 value: utilityService.modifynegativeCurrencyFormat(grandOlder),
                 amount: grandOlder,
+              },
+              {
+                type: "amount",
+                value:
+                  utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
+                amount: grandtwoMonth,
               },
             ];
 
@@ -379,31 +379,23 @@ Template.generalledger.onRendered(() => {
         for (let i = 0; i < accountData.length; i++) {
           let recordObj = {};
           recordObj.Id = data.tgeneralledgerreport[i].PURCHASEORDERID;
-          recordObj.type = data.tgeneralledgerreport[i].TYPE;
+          recordObj.AccountName = data.tgeneralledgerreport[i].ACCOUNTNAME;
           recordObj.paymentId = data.tgeneralledgerreport[i].PAYMENTID;
           recordObj.saleId = data.tgeneralledgerreport[i].SALEID;
           recordObj.cheqNumber = data.tgeneralledgerreport[i].CHEQUENUMBER;
-          recordObj.AccountName = data.tgeneralledgerreport[i].ACCOUNTNAME;
+          recordObj.type = data.tgeneralledgerreport[i].TYPE;
 
           recordObj.dataArr = [
             "",
-            data.tgeneralledgerreport[i].TYPE,
             data.tgeneralledgerreport[i].ACCOUNTNUMBER,
-
-            data.tgeneralledgerreport[i]["CLIENT NAME"],
+            
             // data.tgeneralledgerreport[i].MEMO || "-",
             // moment(data.tgeneralledgerreport[i].DATE).format("DD MMM YYYY") || '-',
             data.tgeneralledgerreport[i].DATE != ""
-              ? moment(data.tgeneralledgerreport[i].DATE).format("DD/MM/YYYY")
-              : data.tgeneralledgerreport[i].DATE,
-            {
-              type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tgeneralledgerreport[i].AMOUNTINC
-                ) || "-",
-              amount: data.tgeneralledgerreport[i].AMOUNTINC || "-",
-            },
+            ? moment(data.tgeneralledgerreport[i].DATE).format("DD/MM/YYYY")
+            : data.tgeneralledgerreport[i].DATE,
+            data.tgeneralledgerreport[i]["CLIENT NAME"],
+            data.tgeneralledgerreport[i].TYPE,
             // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].Current) || '-',
             {
               type: "amount",
@@ -420,6 +412,14 @@ Template.generalledger.onRendered(() => {
                   data.tgeneralledgerreport[i].CREDITSEX
                 ) || "-",
               amount: data.tgeneralledgerreport[i].CREDITSEX || "-",
+            },
+            {
+              type: "amount",
+              value:
+                utilityService.modifynegativeCurrencyFormat(
+                  data.tgeneralledgerreport[i].AMOUNTINC
+                ) || "-",
+              amount: data.tgeneralledgerreport[i].AMOUNTINC || "-",
             },
 
             // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i]["60-90Days"]) || '-',
@@ -601,7 +601,7 @@ Template.generalledger.onRendered(() => {
       $(".fullScreenSpin").css("display", "none");
     }
   };
-
+  templateObject.setReportOptions();
   var currentDate2 = new Date();
   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
 
