@@ -1376,9 +1376,7 @@ Template.journalentrylist.onRendered(function() {
 });
 
 Template.journalentrylist.events({
-  'click #copyJournal': function(event) {
-    playCopyAudio();
-  },
+  
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();

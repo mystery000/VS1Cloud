@@ -2223,6 +2223,9 @@ Template.depositcard.helpers({
 });
 
 Template.depositcard.events({
+    'click #copyDeposit': function(event) {
+        playCopyAudio();
+    },
     'click #edtSupplierName': function(event){
         $('#edtSupplierName').select();
         $('#edtSupplierName').editableSelect();

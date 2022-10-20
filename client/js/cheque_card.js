@@ -4176,6 +4176,9 @@ Template.chequecard.helpers({
 });
 
 Template.chequecard.events({
+  'click #copyCheque': function(event) {
+    playCopyAudio();
+  },
   // 'click #sltCurrency': function(event) {
   //     $('#currencyModal').modal('toggle');
   // },
