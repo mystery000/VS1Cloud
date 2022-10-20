@@ -714,6 +714,7 @@ Template.subTaxesSettings.events({
     });
   },
   'click .btnSaveSubTax': function () {
+    playSaveAudio();
     $('.fullScreenSpin').css('display', 'inline-block');
     let taxtID = $('#edtTaxID').val();
     let taxCode = $('#edtTaxCode').val();
@@ -875,6 +876,7 @@ Template.subTaxesSettings.events({
     $('#edtTaxDesc').val('');
   },
   'click .btnDeleteSubTax': function () {
+    playDeleteAudio();
     // add actions
     let taxCodeId = $('#selectDeleteLineID').val();
 
@@ -928,6 +930,7 @@ Template.subTaxesSettings.events({
     $("#deleteLineModal").modal("toggle");
   },
   'click .btnBack': function (event) {
+    playCancelAudio();
     event.preventDefault();
     history.back(1);
   },

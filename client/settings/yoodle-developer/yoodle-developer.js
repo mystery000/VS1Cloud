@@ -57,6 +57,7 @@ Template.yoodledeveloper.events({
     window.open("https://developer.yodlee.com/user/login");
   },
   'click #saveYoodleDeveloperSettings': async function(){
+    playSaveAudio();
     $('.fullScreenSpin').css('display','block');
     let settingObject = [];
     const templateObject = Template.instance();

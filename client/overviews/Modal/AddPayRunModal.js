@@ -447,6 +447,7 @@ Template.AddPayRunModal.events({
   // }
 
   "click .btnDeleteCalender": (e, ui) => {
+    playDeleteAudio();
     let taxRateService = new TaxRateService();
     let calenderid = $("#selectColDeleteLineID").val() || 0;
     let calendername = $("#selectCalenderName").val() || 0;

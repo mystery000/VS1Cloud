@@ -121,6 +121,7 @@ Template.serialnumberpop.events({
         $('#availableSerialNumberModal').modal('show');
     },
     'click .btnDelete': function() {
+        playDeleteAudio();
         autofilled = false;
         const rowNumber = $('#serialNumberModal').attr('data-row');
         $(`table tbody tr:nth-child(${rowNumber}) td.colSerialNo`).attr('data-serialnumbers', '');
@@ -140,6 +141,7 @@ Template.serialnumberpop.events({
         $('#tblSeriallist tbody').html(defaultRow);
     },
     'click .btnPrint': async function(event) {
+        playPrintAudio();
         const rowNumber = $('#serialNumberModal').attr('data-row');
         const productName = $(`table tbody tr:nth-child(${rowNumber}) td.colProductName input`).val();
         $('.tblSNlist').print({

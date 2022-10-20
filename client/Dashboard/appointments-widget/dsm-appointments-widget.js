@@ -4640,6 +4640,7 @@ Template.dsmAppointmentsWidget.events({
 
     },
     'click #btnSaveRepeat': function () {
+        playSaveAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let repeatDays = templateObject.repeatDays.get();
@@ -6660,6 +6661,7 @@ Template.dsmAppointmentsWidget.events({
         $('#btnEndActualTime').trigger('click');
     },
     'click #btnSaveAppointment': async function() {
+        playSaveAudio();
         const templateObject = Template.instance();
         templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
@@ -6729,6 +6731,7 @@ Template.dsmAppointmentsWidget.events({
         }
     },
     'click .btnSaveIgnoreSMS': function() {
+        playSaveAudio();
        $('#chkSMSCustomer').prop('checked', false);
         $('#chkSMSUser').prop('checked', false);
         $('#frmAppointment').trigger('submit');
@@ -6743,6 +6746,7 @@ Template.dsmAppointmentsWidget.events({
         $('#saveAppointmentModal').modal('hide');
     },
     'click #btnSaveAppointmentSubmit': async function(e) {
+        playSaveAudio();
         e.preventDefault();
         const templateObject = Template.instance();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');

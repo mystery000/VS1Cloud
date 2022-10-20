@@ -2237,6 +2237,7 @@ Template.receiptsoverview.events({
         }
     },
     'click #addReceiptCategoryModal .btnSave': function(event) {
+        playSaveAudio();
         $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
         let receiptCategoryID = $('#edtReceiptCategoryID').val();
@@ -2415,6 +2416,7 @@ Template.receiptsoverview.events({
         }
     },
     'click #addTripGroupModal .btnSave': function(event) {
+        playSaveAudio();
         $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
         let tripGroupID = $('#edtTripGroupID').val();
@@ -2541,6 +2543,7 @@ Template.receiptsoverview.events({
         $('#nav-time .edtTotal').val('$' + (numVal * hours));
     },
     'click #viewReceiptModal .btnSave': function(e) {
+        playSaveAudio();
         let imageData = $('#viewReceiptModal .receiptPhoto').css('background-image');
         let imageName = $('#viewReceiptModal .receiptPhoto').attr('data-name');
         let attachment;
@@ -2666,6 +2669,7 @@ Template.receiptsoverview.events({
         $(parentElement + ' .img-placeholder').css('opacity', 1);
     },
     'click #newReceiptModal .btnSave': function(e) {
+        playSaveAudio();
         if ($('#newReceiptModal .tab-pane#nav-multiple').hasClass('active')) {
             const receipts = [];
             let loggedUserName = Session.get('mySessionEmployee');
@@ -2945,6 +2949,7 @@ Template.receiptsoverview.events({
         $('#dtSplitEnd').datepicker('setDate', moment(receipt.DateTime, "DD/MM/YYYY").add(1, 'days').format("DD/MM/YYYY"));
     },
     'click #btnSplitByDays': function(e) {
+        playSaveAudio();
         let endDate = $('#dtSplitEnd').val();
         let startDate = $('#dtSplitStart').val();
         if (!endDate || !startDate) {
@@ -3004,6 +3009,7 @@ Template.receiptsoverview.events({
         template.refreshSplitTable(lineItems);
     },
     'click #splitExpenseModal .btnSave': function(e) {
+        playSaveAudio();
         let template = Template.instance();
         let receipt = template.editExpenseClaim.get();
         receipt.Description = receipt.Description ? receipt.Description : "Receipt Claim";
@@ -3319,6 +3325,7 @@ Template.receiptsoverview.events({
         }
     },
     'click #mergeDetailModal .btnSave': function(e) {
+        playSaveAudio();
         let template = Template.instance();
         let receiptRecords = template.mergeReceiptRecords.get();
         let index = template.mergeReceiptSelectedIndex.get();

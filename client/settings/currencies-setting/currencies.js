@@ -1032,6 +1032,7 @@ Template.currenciessettings.events({
     $("#newTaxRate").css("display", "block");
   },
   "click .btnCloseAddNewDept": function () {
+    playCancelAudio();
     $("#newTaxRate").css("display", "none");
   },
 
@@ -1222,6 +1223,7 @@ Template.currenciessettings.events({
     });
   },
   "click .btnDeleteCurrency": function () {
+    playDeleteAudio();
     let taxRateService = new TaxRateService();
     let currencyId = $("#selectDeleteLineID").val();
 
@@ -1321,6 +1323,7 @@ Template.currenciessettings.events({
   //   LoadingOverlay.hide();
   // },
   "click .btnSaveCurrency": e => {
+    playSaveAudio();
     let taxRateService = new TaxRateService();
     LoadingOverlay.show();
     var currencyid = $("#edtCurrencyID").val();

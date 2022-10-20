@@ -114,19 +114,19 @@ Template.contactoverview.onRendered(function () {
     }
 
     let reset_data = [
-      { index: 0, label: 'Contact Name', class: 'colClientName', active: true, display: true, width: "200" },
-      { index: 1, label: 'Type', class: 'colType', active: true, display: true, width: "130" },
-      { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
-      { index: 3, label: 'Mobile', class: 'colMobile', active: false, display: true, width: "0" },
-      { index: 4, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "80" },
-      { index: 5, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "80" },
-      { index: 6, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
-      { index: 7, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "80" },
-      { index: 8, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
-      { index: 9, label: 'Email', class: 'colEmail', active: false, display: true, width: "0" },
-      { index: 10, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "0" },
-      { index: 11, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "0" },
-      { index: 12, label: 'Address', class: 'colAddress', active: true, display: true, width: "80" },
+      { index: 0, label: 'Contact Name', class: 'ClientName', active: true, display: true, width: "200" },
+      { index: 1, label: 'Type', class: 'Type', active: true, display: true, width: "130" },
+      { index: 2, label: 'Phone', class: 'Phone', active: true, display: true, width: "95" },
+      { index: 3, label: 'Mobile', class: 'Mobile', active: false, display: true, width: "0" },
+      { index: 4, label: 'AR Balance', class: 'ARBalance', active: true, display: true, width: "80" },
+      { index: 5, label: 'Credit Balance', class: 'CreditBalance', active: true, display: true, width: "80" },
+      { index: 6, label: 'Balance', class: 'Balance', active: true, display: true, width: "80" },
+      { index: 7, label: 'Credit Limit', class: 'CreditLimit', active: false, display: true, width: "80" },
+      { index: 8, label: 'Order Balance', class: 'SalesOrderBalance', active: true, display: true, width: "120" },
+      { index: 9, label: 'Email', class: 'Email', active: false, display: true, width: "0" },
+      { index: 10, label: 'Custom Field 1', class: 'CustFld1', active: false, display: true, width: "0" },
+      { index: 11, label: 'Custom Field 2', class: 'CustFld2', active: false, display: true, width: "0" },
+      { index: 12, label: 'Address', class: 'Address', active: true, display: true, width: "80" },
     ];
     let templateObject = Template.instance();
     templateObject.reset_data.set(reset_data);
@@ -2225,6 +2225,7 @@ Template.contactoverview.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click .printConfirm": function (event) {
+    playPrintAudio();
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblcontactoverview_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
