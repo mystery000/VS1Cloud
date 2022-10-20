@@ -285,7 +285,8 @@ const erpObject = {
     TLeavRequest: "TLeavRequest",
     TAssignLeaveType: "TAssignLeaveType",
     TServiceLog: "TServiceLog",
-    TServiceLogList: "TServiceLogList"
+    TServiceLogList: "TServiceLogList",
+    TLeaveAccrualList: "TLeaveAccrualList"
 };
 
 export default erpObject;
