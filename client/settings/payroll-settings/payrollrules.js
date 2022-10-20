@@ -5381,6 +5381,7 @@ Template.payrollrules.onRendered(function() {
         let overtimes  = await templateObject.overtimes.get();
         overtimes =  overtimes.filter(overtime => overtime.id != overtimeId);
         await templateObject.overtimes.set(overtimes);
+        await templateObject.setupOvertimeTable();
 
         LoadingOverlay.hide();
     }
