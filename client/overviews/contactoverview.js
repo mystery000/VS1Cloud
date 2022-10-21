@@ -30,24 +30,6 @@ Template.contactoverview.events({
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
-    var currentBeginDate = new Date();
-    var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-    let fromDateMonth = currentBeginDate.getMonth() + 1;
-    let fromDateDay = currentBeginDate.getDate();
-    if (currentBeginDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
-    } else {
-      fromDateMonth = currentBeginDate.getMonth() + 1;
-    }
-
-    if (currentBeginDate.getDate() < 10) {
-      fromDateDay = "0" + currentBeginDate.getDate();
-    }
-    var toDate = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-    let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
-
-
-
     sideBarService.getAllContactCombineVS1(initialDataLoad, 0).then(function (data) {
         addVS1Data("TERPCombinedContactsVS1", JSON.stringify(data)).then(function (datareturn) {
           sideBarService.getCurrentLoggedUser().then(function (dataUsers) {
@@ -586,7 +568,7 @@ Template.contactoverview.events({
                 datatable.clear();
                 datatable.rows.add(splashArrayContactOverviewSearch);
                 datatable.draw(false);
-                //$('.dataTables_info').html('Showing 1 to ' + data.terpcombinedcontactsvs1.length + ' of ' + data.terpcombinedcontactsvs1.length + ' entries');
+                $('.dataTables_info').html('Showing 1 to ' + data.terpcombinedcontactsvs1.length + ' of ' + data.terpcombinedcontactsvs1.length + ' entries');
                 let reset_data = templateObject.reset_data.get();
                 let customFieldCount = reset_data.length;
 
@@ -780,8 +762,13 @@ Template.contactoverview.events({
       let tableName = "tblcontactoverview";
       let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
       let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-      $(".fullScreenSpin").css("display", "none");
+
       if(added){
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+            addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+        }).catch(function (err) {
+        });
+        $(".fullScreenSpin").css("display", "none");
         swal({
           title: 'SUCCESS',
           text: "Display settings is updated!",
@@ -793,6 +780,8 @@ Template.contactoverview.events({
                 $('#tblcontactoverview_Modal').modal('hide');
             }
         });
+      }else{
+        $(".fullScreenSpin").css("display", "none");
       }
 
     },

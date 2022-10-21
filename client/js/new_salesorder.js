@@ -5164,7 +5164,7 @@ Template.new_salesorder.onRendered(() => {
             $('#' + selectLineID + " .lineQty").val(1);
             $('#' + selectLineID + " .lineUnitPrice").val(lineUnitPrice);
 
-            
+
             templateObject.checkAbleToMakeWorkOrder();
 
             if ($('.printID').attr('id') == undefined || $('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
@@ -7381,6 +7381,14 @@ Template.new_salesorder.onRendered(function() {
             });
           } else {
             let data = JSON.parse(dataObject[0].data);
+            if(data.ProcessLog.Obj.CustomLayout.length > 0){
+             for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+               if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                 showCustomFieldDisplaySettings(reset_data);
+               }
+             }
+           };
             // handle process here
           }
         });
@@ -7425,7 +7433,7 @@ Template.new_salesorder.onRendered(function() {
             let line =  orderlines[i];
             let productName = $(line).find('.lineProductName').val();
             let existBOM = false;
-            
+
             let index = bomProducts.findIndex(product => {
                 return product.fields.productName == productName
             })
@@ -10351,7 +10359,7 @@ Template.new_salesorder.events({
                 }
 
                  // End Send Email
-        
+
                  if (customerID !== " ") {
                     let customerEmailData = {
                         type: "TCustomer",
@@ -10437,7 +10445,7 @@ Template.new_salesorder.events({
                 }
             }
             salesService.saveSalesOrderEx(objDetails).then(function(data) {
-                
+
                 sideBarService.getAllSalesOrderList(initialDataLoad, 0).then(function (dataUpdated) {
                     addVS1Data('TSalesOrderEx', JSON.stringify(dataUpdated)).then(function(dataReturn) {
                         saveFunc()
@@ -12414,7 +12422,7 @@ Template.new_salesorder.events({
                 }
 
                 // if(retValue == false) {
-                   
+
                 // }
             }
             if(changeAble == true) {
@@ -12429,15 +12437,15 @@ Template.new_salesorder.events({
                     for(let i = 0; i< lines.length; i++) {
                         let isBOMProduct = false;
                         let isExisting = false;
-                        
-    
+
+
                         let index = bomProducts.findIndex(product => {
                             return product.fields.productName == lines[i].item
                         })
                         if(index > -1) {
                             isBOMProduct = true;
                         }
-    
+
                         if(isBOMProduct == true) {
                             //check if the workorder is already exists
                             workorderList.map(order => {
@@ -12446,16 +12454,16 @@ Template.new_salesorder.events({
                                     isAvailable = false;
                                 }
                             })
-    
+
                             if(isExisting == false) {
                                 FlowRouter.go('/workordercard?salesorderid='+FlowRouter.current().queryParams.id + '&lineId='+ i);
                                 return;
                             }
                         }
-    
+
                     }
                 }
-    
+
                 if(isAvailable == false) {
                     swal('No available data to make work order!', '', 'warning');
                 }

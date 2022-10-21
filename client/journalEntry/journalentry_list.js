@@ -98,7 +98,7 @@ Template.journalentrylist.onRendered(function() {
   };
 
 
-  
+
   // set initial table rest_data
   function init_reset_data() {
     let reset_data = [
@@ -140,6 +140,14 @@ Template.journalentrylist.onRendered(function() {
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
+          if(data.ProcessLog.Obj.CustomLayout.length > 0){
+           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+               templateObject.showCustomFieldDisplaySettings(reset_data);
+             }
+           }
+         };
           // handle process here
         }
       });
@@ -273,7 +281,7 @@ Template.journalentrylist.onRendered(function() {
       //$.fn.dataTable.moment('DD/MM/YY');
       $("#tblJournalList").DataTable({
         // dom: 'lBfrtip',
-        
+
         columnDefs: [
           {
             type: "date",
@@ -307,7 +315,7 @@ Template.journalentrylist.onRendered(function() {
         select: true,
         destroy: true,
         colReorder: true,
-     
+
         pageLength: initialDatatableLoad,
         bLengthChange: false,
         info: true,
@@ -1335,7 +1343,7 @@ Template.journalentrylist.onRendered(function() {
     });
 
 
-     
+
   }
 
   //templateObject.getAllJournalEntryData();
@@ -1376,7 +1384,7 @@ Template.journalentrylist.onRendered(function() {
 });
 
 Template.journalentrylist.events({
-  
+
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();

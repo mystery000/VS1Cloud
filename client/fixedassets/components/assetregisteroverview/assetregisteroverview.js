@@ -28,16 +28,16 @@ Template.assetregisteroverview.onRendered(function () {
       { index: 5, label: 'Brand', class: 'RegisterAssetBrand', active: true, display: true, width: "" },
       { index: 6, label: 'Model', class: 'RegisterAssetModel', active: true, display: true, width: "" },
       { index: 7, label: 'Number', class: 'RegisterAssetNumber', active: true, display: true, width: "" },
-      { index: 8, label: 'Registration No', class: 'RegisterAssetRegistrationNo', active: true, display: true, width: "" }, 
-      { index: 9, label: 'Type', class: 'RegisterAssetType', active: true, display: true, width: "" }, 
-      { index: 10, label: 'Capacity Weight', class: 'RegisterAssetCapacityWeight', active: true, display: true, width: "" }, 
-      { index: 11, label: 'Capacity Volume', class: 'RegisterAssetCapacityVolume', active: true, display: true, width: "" }, 
-      { index: 12, label: 'Purchased Date', class: 'RegisterAssetPurchasedDate', active: true, display: true, width: "" }, 
-      { index: 13, label: 'Cost', class: 'RegisterAssetCost', active: true, display: true, width: "" }, 
-      { index: 14, label: 'Supplier', class: 'RegisterAssetSupplier', active: true, display: true, width: "" }, 
-      { index: 15, label: 'Registration Renewal Date', class: 'RegisterAssetRegisterRenewDate', active: true, display: true, width: "" }, 
-      { index: 16, label: 'Insurance Info', class: 'RegisterAssetInsuranceInfo', active: true, display: true, width: "" }, 
-      { index: 17, label: 'Renewal Date', class: 'RegisterAssetRenewDate', active: true, display: true, width: "" },  
+      { index: 8, label: 'Registration No', class: 'RegisterAssetRegistrationNo', active: true, display: true, width: "" },
+      { index: 9, label: 'Type', class: 'RegisterAssetType', active: true, display: true, width: "" },
+      { index: 10, label: 'Capacity Weight', class: 'RegisterAssetCapacityWeight', active: true, display: true, width: "" },
+      { index: 11, label: 'Capacity Volume', class: 'RegisterAssetCapacityVolume', active: true, display: true, width: "" },
+      { index: 12, label: 'Purchased Date', class: 'RegisterAssetPurchasedDate', active: true, display: true, width: "" },
+      { index: 13, label: 'Cost', class: 'RegisterAssetCost', active: true, display: true, width: "" },
+      { index: 14, label: 'Supplier', class: 'RegisterAssetSupplier', active: true, display: true, width: "" },
+      { index: 15, label: 'Registration Renewal Date', class: 'RegisterAssetRegisterRenewDate', active: true, display: true, width: "" },
+      { index: 16, label: 'Insurance Info', class: 'RegisterAssetInsuranceInfo', active: true, display: true, width: "" },
+      { index: 17, label: 'Renewal Date', class: 'RegisterAssetRenewDate', active: true, display: true, width: "" },
     ];
 
     let templateObject = Template.instance();
@@ -61,6 +61,14 @@ Template.assetregisteroverview.onRendered(function () {
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
+          if(data.ProcessLog.Obj.CustomLayout.length > 0){
+           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+               showCustomFieldDisplaySettings(reset_data);
+             }
+           }
+         };
           // handle process here
         }
       });
@@ -91,7 +99,7 @@ Template.assetregisteroverview.onRendered(function () {
   templateObject.initCustomFieldDisplaySettings("tblAssetRegisterTable");
   // set initial table rest_data  //
 
- 
+
   tableResize();
 });
 

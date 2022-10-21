@@ -46,6 +46,14 @@ Template.crm_top_menu.onRendered(function () {
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
+          if(data.ProcessLog.Obj.CustomLayout.length > 0){
+           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+               showCustomFieldDisplaySettings(reset_data);
+             }
+           }
+         };
           // handle process here
         }
       });
@@ -74,7 +82,7 @@ Template.crm_top_menu.onRendered(function () {
   }
 
   templateObject.initCustomFieldDisplaySettings("tblAllTaskDatatable");
-  // set initial table rest_data  // 
+  // set initial table rest_data  //
 });
 
 Template.crm_top_menu.events({
@@ -98,7 +106,7 @@ Template.crm_top_menu.events({
     //   default:
     //     tableName = "tblAllTaskDatatable";
     //     break;
-    // } 
+    // }
   },
 
   // custom field displaysettings
