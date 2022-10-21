@@ -33,9 +33,9 @@ Template.employeelist.onRendered(function() {
     const splashArray = [];
     const dataTableList = [];
     const tableHeaderList = [];
-    if(FlowRouter.current().queryParams.success){
-        $('.btnRefresh').addClass('btnRefreshAlert');
-    }
+    // if(FlowRouter.current().queryParams.success){
+    //     $('.btnRefresh').addClass('btnRefreshAlert');
+    // }
     Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelist', function(error, result){
         if(error){
 
@@ -517,7 +517,7 @@ Template.employeelist.onRendered(function() {
         LoadingOverlay.hide();
     }
 
-    templateObject.initPage();
+    templateObject.initPage(FlowRouter.current().queryParams.success ? true : false);
 });
 
 Template.employeelist.events({
