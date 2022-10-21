@@ -2650,7 +2650,7 @@ Template.customerscard.events({
         let sourceName = $('#leadSource').val()||'';
         let repName = $('#leadRep').val()||'';
         let status = $('#leadStatus').val()||'';
-        let salesQuota = $('#edtSalesQuota').val()||'';
+        //let salesQuota = $('#edtSalesQuota').val()||'';
 
         if (company == '') {
           $('.fullScreenSpin').css('display', 'none');
@@ -2803,7 +2803,7 @@ Template.customerscard.events({
                 Status: status,
                 SourceName: sourceName,
                 RepName: repName,
-                CUSTFLD12: salesQuota,
+                //CUSTFLD12: salesQuota,
             }
         };
         contactService.saveCustomerEx(objDetails).then(function (objDetails) {

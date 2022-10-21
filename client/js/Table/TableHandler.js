@@ -38,6 +38,7 @@ export default class TableHandler {
       gripInnerHtml: "<div class='grip'></div>",
       draggingClass: "dragging",
       resizeMode: "overflow",
+      minWidth: 100,
       onResize: e => {
         var table = $(e.currentTarget); //reference to the resized table
         let tableName = table.attr('id');

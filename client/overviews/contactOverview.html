@@ -126,13 +126,16 @@
                 <button class="btn btnNav btn-primary export float-right vs1ButtonMargin" type="button" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
                  <button  class="btn btn-primary vs1ButtonMargin" role="button" data-toggle="modal" href="#importContactOverviewModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
                 <button class="btn btnNav btn-primary printConfirm float-right vs1ButtonMargin" type="button"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                <a class="btn btnOpenSettings btnNavMore float-right vs1LastButtonMargin" role="button" data-toggle="modal" href="#myContactOverviewModal" ><i class="icon ion-android-more-horizontal"></i></a>
+                <!-- <a class="btn btnOpenSettings btnNavMore float-right vs1LastButtonMargin" role="button" data-toggle="modal" href="#tblcontactoverview_Modal" ><i class="icon ion-android-more-horizontal"></i></a> -->
+                {{> display_settings_list}}
             </div>
 
         </div>
 
         <div class="card-body px-0 py-2 rounded">
+          {{> non_transactional_list}}
             <!-- Start {{> optionNavSalesOverview}} -->
+            <!--
             <div class="d-xl-flex justify-content-xl-end">
                 <div>
                     <div class="modal fade" role="dialog" tabindex="-1" id="myContactOverviewModal">
@@ -143,7 +146,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <div>
-                                        {{#if tableheaderrecords}}
+
                                             <form class="d-xl-flex align-items-xl-center">
                                                 <div class="flex-grow-1">
                                                     <style>
@@ -186,46 +189,29 @@
                                                             }
                                                         }
                                                     </style>
-                                                    {{#each item in tableheaderrecords}}
-                                                        {{#if equals item.sTitle "id"}}
-                                                        {{else}}
-
-                                                            <div id="{{item.sIndex}}" class="columnSettings">
+                                                    {{#each displayfield in displayfields}}
+                                                        {{#if displayfield.display}}
+                                                            <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                    <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}"
-                                                                        checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
-                                                                    <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
-                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
+                                                                    <input class="custom-control-input chk{{displayfield.class}}" type="checkbox" id="formCheck-0{{displayfield.id}}" checked="{{displayfield.active}}">
+                                                                    <label class="custom-control-label" for="formCheck-0{{displayfield.id}}"></label>
+                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">{{displayfield.custfieldlabel}}</div>
                                                                 </div>
                                                                 <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                                                    <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:
-                                                                        <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
-                                                                    </label>
-                                                                    <input class="custom-range rngRange" type="number" style="margin: 8px; width: 75px;" value="{{item.sWidth}}" min="0" max="1000">
-                                                                    <!-- <div contenteditable="true" class="groove rngRange" type="text" value="{{item.sWidth}}" min="0" max="1000">{{item.sWidth}}px</div> -->
+                                                                    <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                                    <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-
-                                                            {{#if equals item.sVisible true}}
-                                                                <script>
-                                                                    $("#" + {{ item.sIndex }} + ".chkDatatable").attr("checked", "checked");
-                                                                </script>
-                                                            {{else}}
-                                                                <script>
-                                                                    $("#" + {{ item.sIndex }} + ".chkDatatable").removeAttr("checked");
-                                                                </script>
-                                                            {{/if}}
-
                                                         {{/if}}
                                                     {{/each}}
                                                 </div>
                                             </form>
-                                        {{/if}}
+
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button class="btn btn-primary saveTable" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                    <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                                    <button class="btn btn-warning resetTable" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
                                     <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                 </div>
                             </div>
@@ -233,7 +219,7 @@
                     </div>
                 </div>
             </div>
-            <!-- End -->
+
             <div class="table-responsive">
                 <style>
                     th {
@@ -268,46 +254,7 @@
                         opacity: 1;
                     }
                 </style>
-                <!-- <div class="row no-gutters d-xl-flex align-items-xl-end">
-                    <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
-                    </div>
-                    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end">
-                        <div class="dropdown" style="margin: 8px; margin-top: 0px;">
-                            <style>
-                                .btn-daterange::after {
-                                    display: none;
-                                }
-                            </style>
-                            <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
-                            <div class="dropdown-menu" role="menu">
-                                <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                <a class="dropdown-item lastMonth"  id="lastMonth" role="presentation" href="#">Last Month</a>
-                                <a class="dropdown-item lastQuarter"  id="lastQuarter" role="presentation" href="#">Last Quarter</a>
-                                <a class="dropdown-item last12Months"  id="last12Months" role="presentation" href="#">Last 12 Months</a>
-                                <a class="dropdown-item ignoreDate"  id="ignoreDate" role="presentation" href="#">Ignore Date</a>
-                            </div>
-                        </div>
-                        <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
-                            <label style="margin-top: 8px; margin-right: 16px;">From</label>
-                            <div class="input-group date" style="width: 160px;">
-                                <input type="text" class="form-control" id="dateFrom" name="dateFrom" >
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
-                            <label style="margin-top: 8px; margin-right: 16px;">To</label>
-                            <div class="input-group date" style="width: 160px;">
-                                <input type="text" class="form-control" id="dateTo" name="dateTo" >
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
                 <table id="tblcontactoverview" class="dataTable table table-striped table-bordered tblcontactoverview">
                     <thead>
                         <tr class="dnd-moved">
@@ -318,19 +265,7 @@
                                     </th>
                                 {{/if}}
                             {{/each}}
-                            <!-- <th class="th colClientName" style="width:200px;">Contact Name</th>
-                            <th class="th colType" style="width:130px;">Type</th>
-                            <th class="th colPhone" style="width:95px;">Phone</th>
-                            <th class="th colMobile hiddenColumn">Mobile</th>
-                            <th class="th colARBalance" style="width:80px;">AR Balance</th>
-                            <th class="th colCreditBalance" style="width:80px;">Credit Balance</th>
-                            <th class="th colBalance" style="width:80px;">Balance</th>
-                            <th class="th colCreditLimit" style="width:80px;">Credit Limit</th>
-                            <th class="th colSalesOrderBalance" style="width:80px;">Order Balance</th>
-                            <th class="th colEmail hiddenColumn">Email</th>
-                            <th class="th colCustFld1 hiddenColumn">Custom Field 1</th>
-                            <th class="th colCustFld2 hiddenColumn">Custom Field 2</th>
-                            <th class="th colAddress">Address</th> -->
+
                         </tr>
                     </thead>
                     <tbody>
@@ -362,7 +297,9 @@
                     </tbody>
                 </table>
             </div>
+            -->
         </div>
+
 
         <!-- Start Help Video Modal -->
         <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">

@@ -870,8 +870,9 @@ export class SideBarService extends BaseService {
     options = {
       //ListType: "Detail",
       //select: '[name] f7like "' + dataSearchName + '"',
+      orderby: '"name asc"',
       IgnoreDates:true,
-      search: 'Company='+ dataSearchName+ ' OR Employeename="' + dataSearchName + '"',
+      search: 'name='+ dataSearchName+ ' OR Employeename="' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TERPCombinedContactsVS1, options);
   }
@@ -881,33 +882,39 @@ export class SideBarService extends BaseService {
     if(dataSearchName.toLowerCase().indexOf("supplier") >= 0){
       options = {
         IgnoreDates:true,
+        orderby: '"name asc"',
         search: 'issupplier=true',
       };
     }else if(dataSearchName.toLowerCase().indexOf("customer") >= 0){
       options = {
         IgnoreDates:true,
+        orderby: '"name asc"',
         search: 'iscustomer=true',
       };
     }else if(dataSearchName.toLowerCase().indexOf("employee") >= 0){
       options = {
         IgnoreDates:true,
+        orderby: '"name asc"',
         search: 'isemployee=true',
       };
     }else if(dataSearchName.toLowerCase().indexOf("lead") >= 0){
       options = {
         IgnoreDates:true,
+        orderby: '"name asc"',
         search: 'isprospect=true',
       };
     }else{
       if($.isNumeric(dataSearchName)){
         options = {
           IgnoreDates:true,
-          search: 'ID='+ dataSearchName+ ' OR printname="' + dataSearchName + '"',
+          orderby: '"name asc"',
+          search: 'ID='+ dataSearchName+ ' OR name="' + dataSearchName + '"',
         };
       }else{
         options = {
           IgnoreDates:true,
-          search: 'printname="' + dataSearchName + '"',
+          orderby: '"name asc"',
+          search: 'name="' + dataSearchName + '"',
         };
       }
 
@@ -1015,24 +1022,40 @@ export class SideBarService extends BaseService {
       return this.getList(this.ERPObjects.TPayRateType, options);
   }
 
-  getAllContactCombineVS1(limitcount, limitfrom) {
+  getAllContactCombineVS1(limitcount, limitfrom, deleteFilter) {
     let options = "";
-    if (limitcount == "All") {
-      options = {
-        //IgnoreDates:true,
-        IgnoreDates:true,
-        select: "[Active]=true",
-      };
-    } else {
-      options = {
-        // orderby:'"ClientID desc"',
-        // ListType: "Detail",
-        IgnoreDates:true,
-        select: "[Active]=true",
-        LimitCount: parseInt(limitcount),
-        LimitFrom: parseInt(limitfrom),
-      };
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+          IgnoreDates:true,
+          orderby: '"name asc"',
+          Search: "Active = true",
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"name asc"',
+          Search: "Active = true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+          orderby: '"name asc"',
+          IgnoreDates:true,
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"name asc"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
     }
+
     return this.getList(this.ERPObjects.TERPCombinedContactsVS1, options);
   }
 
