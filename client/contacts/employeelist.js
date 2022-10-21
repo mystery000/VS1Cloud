@@ -5,6 +5,9 @@ import {UtilityService} from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import CachedHttp from "../lib/global/CachedHttp";
+import erpObject from "../lib/global/erp-objects";
+import LoadingOverlay from "../LoadingOverlay";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -16,6 +19,9 @@ Template.employeelist.onCreated(function(){
     templateObject.selectedFile = new ReactiveVar();
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+
+
+    templateObject.employees = new ReactiveVar([]); 
 });
 
 Template.employeelist.onRendered(function() {
@@ -52,185 +58,347 @@ Template.employeelist.onRendered(function() {
         }
     });
 
-    templateObject.getEmployees = function () {
-        getVS1Data('TEmployee').then(function (dataObject) {
-            if(dataObject.length == 0){
-                sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function (data) {
-                    setAllEmployees(data);
-                }).catch(function (err) {
-                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                    $('.fullScreenSpin').css('display','none');
-                    // Meteor._reload.reload();
-                });
-            }else{
-                let data = JSON.parse(dataObject[0].data);
-                setAllEmployees(data);
-            }
-        }).catch(function (err) {
-            sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function (data) {
-                setAllEmployees(data);
-            }).catch(function (err) {
-                // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                $('.fullScreenSpin').css('display','none');
-                // Meteor._reload.reload();
-            });
-        });
-    }
-    function setAllEmployees(data) {
-        addVS1Data('TEmployee',JSON.stringify(data));
-        let lineItems = [];
-        let lineItemObj = {};
-        for(let i=0; i<data.temployee.length; i++){
-            let mobile = contactService.changeDialFormat(data.temployee[i].fields.Mobile, data.temployee[i].fields.Country)
-            const dataList = {
-                id: data.temployee[i].fields.ID || '',
-                employeeno: data.temployee[i].fields.EmployeeNo || '',
-                employeename: data.temployee[i].fields.EmployeeName || '',
-                firstname: data.temployee[i].fields.FirstName || '',
-                lastname: data.temployee[i].fields.LastName || '',
-                phone: data.temployee[i].fields.Phone || '',
-                mobile: mobile || '',
-                email: data.temployee[i].fields.Email || '',
-                address: data.temployee[i].fields.Street || '',
-                country: data.temployee[i].fields.Country || '',
-                department: data.temployee[i].fields.DefaultClassName || '',
-                custFld1: data.temployee[i].fields.CustFld1 || '',
-                custFld2: data.temployee[i].fields.CustFld2 || '',
-                custFld3: data.temployee[i].fields.CustFld3 || '',
-                custFld4: data.temployee[i].fields.CustFld4 || ''
-            };
-            if(data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != ''){
-                dataTableList.push(dataList);
-            }
-            //}
+    templateObject.loadEmployees = async (refresh = false) => {
+      let data = await CachedHttp.get(
+        erpObject.TEmployee,
+        async () => {
+          return await sideBarService.getAllEmployees(initialBaseDataLoad, 0);
+        },
+        {
+          useIndexDb: true,
+          useLocalStorage: false,
+          fallBackToLocal: true,
+          forceOverride: refresh,
+          validate: (cachedResponse) => {
+            return true; // this will validate and not do eny extra checks
+          },
         }
-        templateObject.datatablerecords.set(dataTableList);
+      );
 
-        if(templateObject.datatablerecords.get()){
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelist', function(error, result){
-                if (error) {
+      data = data.response;
 
-                } else {
-                    if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                            let customcolumn = result.customFields;
-                            let columData = customcolumn[i].label;
-                            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                            let hiddenColumn = customcolumn[i].hidden;
-                            let columnClass = columHeaderUpdate.split('.')[1];
-                            let columnWidth = customcolumn[i].width;
-                            let columnindex = customcolumn[i].index + 1;
-                            if(hiddenColumn == true){
-                                $("."+columnClass+"").addClass('hiddenColumn');
-                                $("."+columnClass+"").removeClass('showColumn');
-                            }else if(hiddenColumn == false){
-                                $("."+columnClass+"").removeClass('hiddenColumn');
-                                $("."+columnClass+"").addClass('showColumn');
-                            }
-                        }
-                    }
+      let employees = data.temployee.map((e) => {
+        return {
+          ...e.fields,
+          Mobile: contactService.changeDialFormat(
+            e.fields.Mobile,
+            e.fields.Country
+          ),
+        };
+      });
+
+      await templateObject.employees.set(employees);
+
+      Meteor.call(
+        "readPrefMethod",
+        Session.get("mycloudLogonID"),
+        "tblEmployeelist",
+        function (error, result) {
+          if (error) {
+          } else {
+            if (result) {
+              for (let i = 0; i < result.customFields.length; i++) {
+                let customcolumn = result.customFields;
+                let columData = customcolumn[i].label;
+                let columHeaderUpdate = customcolumn[i].thclass.replace(
+                  / /g,
+                  "."
+                );
+                let hiddenColumn = customcolumn[i].hidden;
+                let columnClass = columHeaderUpdate.split(".")[1];
+                let columnWidth = customcolumn[i].width;
+                let columnindex = customcolumn[i].index + 1;
+                if (hiddenColumn == true) {
+                  $("." + columnClass + "").addClass("hiddenColumn");
+                  $("." + columnClass + "").removeClass("showColumn");
+                } else if (hiddenColumn == false) {
+                  $("." + columnClass + "").removeClass("hiddenColumn");
+                  $("." + columnClass + "").addClass("showColumn");
                 }
-            });
+              }
+            }
+          }
         }
-        setTimeout(function () {
-            $('#tblEmployeelist').DataTable({
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                buttons: [
-                    {
-                        extend: 'csvHtml5',
-                        text: '',
-                        download: 'open',
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "Employee List - "+ moment().format(),
-                        orientation:'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    },{
-                        extend: 'print',
-                        download: 'open',
-                        className: "btntabletopdf hiddenColumn",
-                        text: '',
-                        title: 'Employee List',
-                        filename: "Employee List - "+ moment().format(),
-                        exportOptions: {
-                            columns: ':visible',
-                            stripHtml: false
-                        }
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        title: '',
-                        download: 'open',
-                        className: "btntabletoexcel hiddenColumn",
-                        filename: "Employee List - "+ moment().format(),
-                        orientation:'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
+      );
 
-                    }],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                // bStateSave: true,
-                // rowId: 0,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                info: true,
-                responsive: true,
-                "order": [[ 1, "asc" ]],
-                action: function () {
-                    $('#tblEmployeelist').DataTable().ajax.reload();
+      setTimeout(function () {
+        $("#tblEmployeelist")
+          .DataTable({
+            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            buttons: [
+              {
+                extend: "csvHtml5",
+                text: "",
+                download: "open",
+                className: "btntabletocsv hiddenColumn",
+                filename: "Employee List - " + moment().format(),
+                orientation: "portrait",
+                exportOptions: {
+                  columns: ":visible",
                 },
-                language: { search: "",searchPlaceholder: "Search List..." },
-                "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnRefreshEmployees ' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
-                }
-            }).on('page', function () {
-                let draftRecord = templateObject.datatablerecords.get();
-                templateObject.datatablerecords.set(draftRecord);
-            }).on('column-reorder', function () {
+              },
+              {
+                extend: "print",
+                download: "open",
+                className: "btntabletopdf hiddenColumn",
+                text: "",
+                title: "Employee List",
+                filename: "Employee List - " + moment().format(),
+                exportOptions: {
+                  columns: ":visible",
+                  stripHtml: false,
+                },
+              },
+              {
+                extend: "excelHtml5",
+                title: "",
+                download: "open",
+                className: "btntabletoexcel hiddenColumn",
+                filename: "Employee List - " + moment().format(),
+                orientation: "portrait",
+                exportOptions: {
+                  columns: ":visible",
+                },
+              },
+            ],
+            select: true,
+            destroy: true,
+            colReorder: true,
+            // bStateSave: true,
+            // rowId: 0,
+            pageLength: initialDatatableLoad,
+            lengthMenu: [
+              [initialDatatableLoad, -1],
+              [initialDatatableLoad, "All"],
+            ],
+            info: true,
+            responsive: true,
+            order: [[1, "asc"]],
+            action: function () {
+              $("#tblEmployeelist").DataTable().ajax.reload();
+            },
+            language: { search: "", searchPlaceholder: "Search List..." },
+            fnInitComplete: function () {
+              $(
+                "<button class='btn btn-primary btnRefreshEmployees ' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+              ).insertAfter("#tblEmployeelist_filter");
+            },
+          })
+          .on("page", function () {
+            let draftRecord = templateObject.employees.get();
+            templateObject.employees.set(draftRecord);
+          })
+          .on("column-reorder", function () {});
+      }, 0);
 
-            });
-            // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
-            $('.fullScreenSpin').css('display','none');
-        }, 0);
+      const columns = $("#tblEmployeelist th");
+      let sTible = "";
+      let sWidth = "";
+      let sIndex = "";
+      let sVisible = "";
+      let columVisible = false;
+      let sClass = "";
+      $.each(columns, function (i, v) {
+        if (v.hidden == false) {
+          columVisible = true;
+        }
+        if (v.className.includes("hiddenColumn")) {
+          columVisible = false;
+        }
+        sWidth = v.style.width.replace("px", "");
+        let datatablerecordObj = {
+          sTitle: v.innerText || "",
+          sWidth: sWidth || "",
+          sIndex: v.cellIndex || 0,
+          sVisible: columVisible || false,
+          sClass: v.className || "",
+        };
+        tableHeaderList.push(datatablerecordObj);
+      });
+      templateObject.tableheaderrecords.set(tableHeaderList);
+      $("div.dataTables_filter input").addClass("form-control form-control-sm");
+    
+    };
 
-        const columns = $('#tblEmployeelist th');
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i,v) {
-            if(v.hidden == false){
-                columVisible =  true;
-            }
-            if((v.className.includes("hiddenColumn"))){
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || 0,
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
-        $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
-            const listData = $(this).closest('tr').attr('id');
-            if(listData){
-                FlowRouter.go('/employeescard?id=' + listData);
-            }
-        });
-    }
-    templateObject.getEmployees();
+    // templateObject.getEmployees = function () {
+    //     getVS1Data('TEmployee').then(function (dataObject) {
+    //         if(dataObject.length == 0){
+    //             sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function (data) {
+    //                 setAllEmployees(data);
+    //             }).catch(function (err) {
+    //                 // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    //                 $('.fullScreenSpin').css('display','none');
+    //                 // Meteor._reload.reload();
+    //             });
+    //         }else{
+    //             let data = JSON.parse(dataObject[0].data);
+    //             setAllEmployees(data);
+    //         }
+    //     }).catch(function (err) {
+    //         sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function (data) {
+    //             setAllEmployees(data);
+    //         }).catch(function (err) {
+    //             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    //             $('.fullScreenSpin').css('display','none');
+    //             // Meteor._reload.reload();
+    //         });
+    //     });
+    // }
+    // function setAllEmployees(data) {
+    //     addVS1Data('TEmployee',JSON.stringify(data));
+    //     let lineItems = [];
+    //     let lineItemObj = {};
+    //     for(let i=0; i<data.temployee.length; i++){
+    //         let mobile = contactService.changeDialFormat(data.temployee[i].fields.Mobile, data.temployee[i].fields.Country)
+    //         const dataList = {
+    //             id: data.temployee[i].fields.ID || '',
+    //             employeeno: data.temployee[i].fields.EmployeeNo || '',
+    //             employeename: data.temployee[i].fields.EmployeeName || '',
+    //             firstname: data.temployee[i].fields.FirstName || '',
+    //             lastname: data.temployee[i].fields.LastName || '',
+    //             phone: data.temployee[i].fields.Phone || '',
+    //             mobile: mobile || '',
+    //             email: data.temployee[i].fields.Email || '',
+    //             address: data.temployee[i].fields.Street || '',
+    //             country: data.temployee[i].fields.Country || '',
+    //             department: data.temployee[i].fields.DefaultClassName || '',
+    //             custFld1: data.temployee[i].fields.CustFld1 || '',
+    //             custFld2: data.temployee[i].fields.CustFld2 || '',
+    //             custFld3: data.temployee[i].fields.CustFld3 || '',
+    //             custFld4: data.temployee[i].fields.CustFld4 || ''
+    //         };
+    //         if(data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != ''){
+    //             dataTableList.push(dataList);
+    //         }
+    //         //}
+    //     }
+    //     templateObject.datatablerecords.set(dataTableList);
+
+    //     if(templateObject.datatablerecords.get()){
+    //         Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelist', function(error, result){
+    //             if (error) {
+
+    //             } else {
+    //                 if (result) {
+    //                     for (let i = 0; i < result.customFields.length; i++) {
+    //                         let customcolumn = result.customFields;
+    //                         let columData = customcolumn[i].label;
+    //                         let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                         let hiddenColumn = customcolumn[i].hidden;
+    //                         let columnClass = columHeaderUpdate.split('.')[1];
+    //                         let columnWidth = customcolumn[i].width;
+    //                         let columnindex = customcolumn[i].index + 1;
+    //                         if(hiddenColumn == true){
+    //                             $("."+columnClass+"").addClass('hiddenColumn');
+    //                             $("."+columnClass+"").removeClass('showColumn');
+    //                         }else if(hiddenColumn == false){
+    //                             $("."+columnClass+"").removeClass('hiddenColumn');
+    //                             $("."+columnClass+"").addClass('showColumn');
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         });
+    //     }
+    //     setTimeout(function () {
+    //         $('#tblEmployeelist').DataTable({
+    //             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //             buttons: [
+    //                 {
+    //                     extend: 'csvHtml5',
+    //                     text: '',
+    //                     download: 'open',
+    //                     className: "btntabletocsv hiddenColumn",
+    //                     filename: "Employee List - "+ moment().format(),
+    //                     orientation:'portrait',
+    //                     exportOptions: {
+    //                         columns: ':visible'
+    //                     }
+    //                 },{
+    //                     extend: 'print',
+    //                     download: 'open',
+    //                     className: "btntabletopdf hiddenColumn",
+    //                     text: '',
+    //                     title: 'Employee List',
+    //                     filename: "Employee List - "+ moment().format(),
+    //                     exportOptions: {
+    //                         columns: ':visible',
+    //                         stripHtml: false
+    //                     }
+    //                 },
+    //                 {
+    //                     extend: 'excelHtml5',
+    //                     title: '',
+    //                     download: 'open',
+    //                     className: "btntabletoexcel hiddenColumn",
+    //                     filename: "Employee List - "+ moment().format(),
+    //                     orientation:'portrait',
+    //                     exportOptions: {
+    //                         columns: ':visible'
+    //                     }
+
+    //                 }],
+    //             select: true,
+    //             destroy: true,
+    //             colReorder: true,
+    //             // bStateSave: true,
+    //             // rowId: 0,
+    //             pageLength: initialDatatableLoad,
+    //             lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //             info: true,
+    //             responsive: true,
+    //             "order": [[ 1, "asc" ]],
+    //             action: function () {
+    //                 $('#tblEmployeelist').DataTable().ajax.reload();
+    //             },
+    //             language: { search: "",searchPlaceholder: "Search List..." },
+    //             "fnInitComplete": function () {
+    //                 $("<button class='btn btn-primary btnRefreshEmployees ' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
+    //             }
+    //         }).on('page', function () {
+    //             let draftRecord = templateObject.datatablerecords.get();
+    //             templateObject.datatablerecords.set(draftRecord);
+    //         }).on('column-reorder', function () {
+
+    //         });
+    //         // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
+    //         $('.fullScreenSpin').css('display','none');
+    //     }, 0);
+
+    //     const columns = $('#tblEmployeelist th');
+    //     let sTible = "";
+    //     let sWidth = "";
+    //     let sIndex = "";
+    //     let sVisible = "";
+    //     let columVisible = false;
+    //     let sClass = "";
+    //     $.each(columns, function(i,v) {
+    //         if(v.hidden == false){
+    //             columVisible =  true;
+    //         }
+    //         if((v.className.includes("hiddenColumn"))){
+    //             columVisible = false;
+    //         }
+    //         sWidth = v.style.width.replace('px', "");
+    //         let datatablerecordObj = {
+    //             sTitle: v.innerText || '',
+    //             sWidth: sWidth || '',
+    //             sIndex: v.cellIndex || 0,
+    //             sVisible: columVisible || false,
+    //             sClass: v.className || ''
+    //         };
+    //         tableHeaderList.push(datatablerecordObj);
+    //     });
+    //     templateObject.tableheaderrecords.set(tableHeaderList);
+    //     $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //     $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
+    //         const listData = $(this).closest('tr').attr('id');
+    //         if(listData){
+    //             FlowRouter.go('/employeescard?id=' + listData);
+    //         }
+    //     });
+    // }
+    //templateObject.getEmployees();
 
     // set initial table rest_data
     function init_reset_data() {
@@ -262,29 +430,52 @@ Template.employeelist.onRendered(function() {
 
 
       // custom field displaysettings
-      templateObject.initCustomFieldDisplaySettings = function(data, listType) {
-        let templateObject = Template.instance();
-        let reset_data = templateObject.reset_data.get();
+    //   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
+    //     let templateObject = Template.instance();
+    //     let reset_data = templateObject.reset_data.get();
+    //     showCustomFieldDisplaySettings(reset_data);
+
+    //     try {
+    //       getVS1Data("VS1_Customize").then(function (dataObject) {
+    //         if (dataObject.length == 0) {
+    //           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+    //               // reset_data = data.ProcessLog.CustomLayout.Columns;
+    //               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+    //               showCustomFieldDisplaySettings(reset_data);
+    //           }).catch(function (err) {
+    //           });
+    //         } else {
+    //           let data = JSON.parse(dataObject[0].data);
+    //           // handle process here
+    //         }
+    //       });
+    //     } catch (error) {
+    //     }
+    //     return;
+    //   }
+
+      templateObject.initCustomFieldDisplaySettings = async (data, listType) => {
+        let reset_data = await templateObject.reset_data.get();
         showCustomFieldDisplaySettings(reset_data);
 
         try {
-          getVS1Data("VS1_Customize").then(function (dataObject) {
+          let dataObject = await getVS1Data("VS1_Customize");
+
             if (dataObject.length == 0) {
-              sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-                  // reset_data = data.ProcessLog.CustomLayout.Columns;
-                  reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                  showCustomFieldDisplaySettings(reset_data);
-              }).catch(function (err) {
-              });
+              let data = await sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType);
+                // reset_data = data.ProcessLog.CustomLayout.Columns;
+                reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                showCustomFieldDisplaySettings(reset_data);
             } else {
               let data = JSON.parse(dataObject[0].data);
               // handle process here
             }
-          });
+          
         } catch (error) {
         }
         return;
-      }
+      };
+
 
       function showCustomFieldDisplaySettings(reset_data) {
 
@@ -306,19 +497,36 @@ Template.employeelist.onRendered(function() {
         templateObject.displayfields.set(custFields);
       }
 
-      templateObject.initCustomFieldDisplaySettings("", "tblEmployeelist");
+    //   templateObject.initCustomFieldDisplaySettings("", "tblEmployeelist");
       // set initial table rest_data  //
 
 
-    $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
-        const listData = $(this).closest('tr').attr('id');
-        if(listData){
-            FlowRouter.go('/employeescard?id=' + listData);
-        }
-    });
+    // $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
+    //     const listData = $(this).closest('tr').attr('id');
+    //     if(listData){
+    //         FlowRouter.go('/employeescard?id=' + listData);
+    //     }
+    // });
+
+    templateObject.initPage = async (refresh = false) => {
+        LoadingOverlay.show();
+        await templateObject.loadEmployees(refresh);
+        await templateObject.initCustomFieldDisplaySettings("", "tblEmployeelist");
+
+
+        LoadingOverlay.hide();
+    }
+
+    templateObject.initPage();
 });
 
 Template.employeelist.events({
+    "click #tblEmployeelist tbody tr": (e, ui) => {
+        const id = $(e.currentTarget).attr('id');
+        if(id){
+            FlowRouter.go(`/employeescard?id=${id}`);
+        }
+    },
     'click #btnNewEmployee':function(event){
         FlowRouter.go('/employeescard');
     },
@@ -370,100 +578,101 @@ Template.employeelist.events({
           }
       },
 
-    'click .btnRefreshEmployees':function(event){
-         let templateObject = Template.instance();
-        let utilityService = new UtilityService();
-        let contactService = new ContactService();
-        let tableProductList;
-        const dataTableList = [];
-        var splashArrayInvoiceList = new Array();
-        const lineExtaSellItems = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let dataSearchName = $('#tblEmployeelist_filter input').val();
-        if (dataSearchName.replace(/\s/g, '') != '') {
-            sideBarService.getNewEmployeeByNameOrID(dataSearchName).then(function (data) {
-                $(".btnRefreshEmployees").removeClass('btnSearchAlert');
-                let lineItems = [];
-                let lineItemObj = {};
-                if (data.temployee.length > 0) {
-                    for(let i=0; i<data.temployee.length; i++){
-                        let mobile = contactService.changeDialFormat(data.temployee[i].fields.Mobile, data.temployee[i].fields.Country);
-                        var dataList = {
-                            id: data.temployee[i].fields.ID || '',
-                            employeeno: data.temployee[i].fields.EmployeeNo || '',
-                            employeename:data.temployee[i].fields.EmployeeName || '',
-                            firstname: data.temployee[i].fields.FirstName || '',
-                            lastname: data.temployee[i].fields.LastName || '',
-                            phone: data.temployee[i].fields.Phone || '',
-                            mobile: mobile || '',
-                            email: data.temployee[i].fields.Email || '',
-                            address: data.temployee[i].fields.Street || '',
-                            country: data.temployee[i].fields.Country || '',
-                            department: data.temployee[i].fields.DefaultClassName || '',
-                            custFld1: data.temployee[i].fields.CustFld1 || '',
-                            custFld2: data.temployee[i].fields.CustFld2 || '',
-                            custFld3: data.temployee[i].fields.CustFld3 || '',
-                            custFld4: data.temployee[i].fields.CustFld4 || ''
-                        };
+    'click .btnRefreshEmployees': async (event, ui) => {
+        await ui.loadEmployees(true);
+        //  let templateObject = Template.instance();
+        // let utilityService = new UtilityService();
+        // let contactService = new ContactService();
+        // let tableProductList;
+        // const dataTableList = [];
+        // var splashArrayInvoiceList = new Array();
+        // const lineExtaSellItems = [];
+        // $('.fullScreenSpin').css('display', 'inline-block');
+        // let dataSearchName = $('#tblEmployeelist_filter input').val();
+        // if (dataSearchName.replace(/\s/g, '') != '') {
+        //     sideBarService.getNewEmployeeByNameOrID(dataSearchName).then(function (data) {
+        //         $(".btnRefreshEmployees").removeClass('btnSearchAlert');
+        //         let lineItems = [];
+        //         let lineItemObj = {};
+        //         if (data.temployee.length > 0) {
+        //             for(let i=0; i<data.temployee.length; i++){
+        //                 let mobile = contactService.changeDialFormat(data.temployee[i].fields.Mobile, data.temployee[i].fields.Country);
+        //                 var dataList = {
+        //                     id: data.temployee[i].fields.ID || '',
+        //                     employeeno: data.temployee[i].fields.EmployeeNo || '',
+        //                     employeename:data.temployee[i].fields.EmployeeName || '',
+        //                     firstname: data.temployee[i].fields.FirstName || '',
+        //                     lastname: data.temployee[i].fields.LastName || '',
+        //                     phone: data.temployee[i].fields.Phone || '',
+        //                     mobile: mobile || '',
+        //                     email: data.temployee[i].fields.Email || '',
+        //                     address: data.temployee[i].fields.Street || '',
+        //                     country: data.temployee[i].fields.Country || '',
+        //                     department: data.temployee[i].fields.DefaultClassName || '',
+        //                     custFld1: data.temployee[i].fields.CustFld1 || '',
+        //                     custFld2: data.temployee[i].fields.CustFld2 || '',
+        //                     custFld3: data.temployee[i].fields.CustFld3 || '',
+        //                     custFld4: data.temployee[i].fields.CustFld4 || ''
+        //                 };
 
-                        if(data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != ''){
-                            dataTableList.push(dataList);
-                        }
-                    //}
-                    }
+        //                 if(data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != ''){
+        //                     dataTableList.push(dataList);
+        //                 }
+        //             //}
+        //             }
 
-                    templateObject.datatablerecords.set(dataTableList);
+        //             templateObject.datatablerecords.set(dataTableList);
 
-                    let item = templateObject.datatablerecords.get();
-                    $('.fullScreenSpin').css('display', 'none');
-                    if (dataTableList) {
-                        var datatable = $('#tblEmployeelist').DataTable();
-                        $("#tblEmployeelist > tbody").empty();
-                        for (let x = 0; x < item.length; x++) {
-                            $("#tblEmployeelist > tbody").append(
-                                ' <tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
-                                '<td contenteditable="false" class="colEmployeeID">' + item[x].id + '</td>' +
-                                '<td contenteditable="false" class="colEmployeeName" >' + item[x].employeename + '</td>' +
-                                '<td contenteditable="false" class="colFirstName">' + item[x].firstname + '</td>' +
-                                '<td contenteditable="false" class="colLastName" >' + item[x].lastname + '</td>' +
-                                '<td contenteditable="false" class="colPhone">' + item[x].phone + '</td>' +
-                                '<td contenteditable="false" class="colMobile">' + item[x].mobile + '</td>' +
-                                '<td contenteditable="false" class="colEmail">' + item[x].email + '</td>' +
-                                '<td contenteditable="false" class="colDepartment">' + item[x].department + '</td>' +
-                                '<td contenteditable="false" class="colCountry hiddenColumn">' + item[x].country + '</td>' +
-                                '<td contenteditable="false" class="colCustFld1 hiddenColumn">' + item[x].custFld1 + '</td>' +
-                                '<td contenteditable="false" class="colCustFld2 hiddenColumn">' + item[x].custFld2 + '</td>' +
-                                '<td contenteditable="false" class="colAddress">' + item[x].address + '</td>' +
-                                '</tr>');
+        //             let item = templateObject.datatablerecords.get();
+        //             $('.fullScreenSpin').css('display', 'none');
+        //             if (dataTableList) {
+        //                 var datatable = $('#tblEmployeelist').DataTable();
+        //                 $("#tblEmployeelist > tbody").empty();
+        //                 for (let x = 0; x < item.length; x++) {
+        //                     $("#tblEmployeelist > tbody").append(
+        //                         ' <tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
+        //                         '<td contenteditable="false" class="colEmployeeID">' + item[x].id + '</td>' +
+        //                         '<td contenteditable="false" class="colEmployeeName" >' + item[x].employeename + '</td>' +
+        //                         '<td contenteditable="false" class="colFirstName">' + item[x].firstname + '</td>' +
+        //                         '<td contenteditable="false" class="colLastName" >' + item[x].lastname + '</td>' +
+        //                         '<td contenteditable="false" class="colPhone">' + item[x].phone + '</td>' +
+        //                         '<td contenteditable="false" class="colMobile">' + item[x].mobile + '</td>' +
+        //                         '<td contenteditable="false" class="colEmail">' + item[x].email + '</td>' +
+        //                         '<td contenteditable="false" class="colDepartment">' + item[x].department + '</td>' +
+        //                         '<td contenteditable="false" class="colCountry hiddenColumn">' + item[x].country + '</td>' +
+        //                         '<td contenteditable="false" class="colCustFld1 hiddenColumn">' + item[x].custFld1 + '</td>' +
+        //                         '<td contenteditable="false" class="colCustFld2 hiddenColumn">' + item[x].custFld2 + '</td>' +
+        //                         '<td contenteditable="false" class="colAddress">' + item[x].address + '</td>' +
+        //                         '</tr>');
 
-                        }
-                        $('.dataTables_info').html('Showing 1 to ' + data.temployee.length + ' of ' + data.temployee.length + ' entries');
+        //                 }
+        //                 $('.dataTables_info').html('Showing 1 to ' + data.temployee.length + ' of ' + data.temployee.length + ' entries');
 
-                    }
-                } else {
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: 'Question',
-                        text: "Employee does not exist, would you like to create it?",
-                        type: 'question',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'No'
-                    }).then((result) => {
-                        if (result.value) {
-                            FlowRouter.go('/employeescard');
-                        } else if (result.dismiss === 'cancel') {
-                            //$('#productListModal').modal('toggle');
-                        }
-                    });
-                }
+        //             }
+        //         } else {
+        //             $('.fullScreenSpin').css('display', 'none');
+        //             swal({
+        //                 title: 'Question',
+        //                 text: "Employee does not exist, would you like to create it?",
+        //                 type: 'question',
+        //                 showCancelButton: true,
+        //                 confirmButtonText: 'Yes',
+        //                 cancelButtonText: 'No'
+        //             }).then((result) => {
+        //                 if (result.value) {
+        //                     FlowRouter.go('/employeescard');
+        //                 } else if (result.dismiss === 'cancel') {
+        //                     //$('#productListModal').modal('toggle');
+        //                 }
+        //             });
+        //         }
 
-            }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-          $(".btnRefresh").trigger("click");
-        }
+        //     }).catch(function (err) {
+        //         $('.fullScreenSpin').css('display', 'none');
+        //     });
+        // } else {
+        //   $(".btnRefresh").trigger("click");
+        // }
     },
     'click .resetTable' : function(event){
         var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
@@ -613,43 +822,44 @@ Template.employeelist.events({
         jQuery('#tblEmployeelist_wrapper .dt-buttons .btntabletoexcel').click();
         $('.fullScreenSpin').css('display','none');
     },
-    'click .btnRefresh': function () {
+    'click .btnRefresh':  (e, ui) => {
+        ui.initPage(true);
 
-        $('.fullScreenSpin').css('display','inline-block');
-        let templateObject = Template.instance();
-        sideBarService.getAllAppointmentPredList().then(function (dataPred) {
-            addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
-              sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
-                  addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
-                      window.open('/employeelist','_self');
-                  }).catch(function (err) {
-                      window.open('/employeelist','_self');
-                  });
-              }).catch(function(err) {
-                  window.open('/employeelist','_self');
-              });
-            }).catch(function (err) {
-              sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
-                  addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
-                      window.open('/employeelist','_self');
-                  }).catch(function (err) {
-                      window.open('/employeelist','_self');
-                  });
-              }).catch(function(err) {
-                  window.open('/employeelist','_self');
-              });
-            });
-        }).catch(function (err) {
-          sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
-              addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
-                  window.open('/employeelist','_self');
-              }).catch(function (err) {
-                  window.open('/employeelist','_self');
-              });
-          }).catch(function(err) {
-              window.open('/employeelist','_self');
-          });
-        });
+        // $('.fullScreenSpin').css('display','inline-block');
+        // let templateObject = Template.instance();
+        // sideBarService.getAllAppointmentPredList().then(function (dataPred) {
+        //     addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
+        //       sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
+        //           addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
+        //               window.open('/employeelist','_self');
+        //           }).catch(function (err) {
+        //               window.open('/employeelist','_self');
+        //           });
+        //       }).catch(function(err) {
+        //           window.open('/employeelist','_self');
+        //       });
+        //     }).catch(function (err) {
+        //       sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
+        //           addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
+        //               window.open('/employeelist','_self');
+        //           }).catch(function (err) {
+        //               window.open('/employeelist','_self');
+        //           });
+        //       }).catch(function(err) {
+        //           window.open('/employeelist','_self');
+        //       });
+        //     });
+        // }).catch(function (err) {
+        //   sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
+        //       addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
+        //           window.open('/employeelist','_self');
+        //       }).catch(function (err) {
+        //           window.open('/employeelist','_self');
+        //       });
+        //   }).catch(function(err) {
+        //       window.open('/employeelist','_self');
+        //   });
+        // });
 
     },
     'click .printConfirm' : function(event){
@@ -860,4 +1070,5 @@ Template.employeelist.helpers({
     displayfields: () => {
     return Template.instance().displayfields.get();
     },
+    employees: () => Template.instance().employees.get()
 });
