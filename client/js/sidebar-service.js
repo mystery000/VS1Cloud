@@ -877,39 +877,31 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TERPCombinedContactsVS1, options);
   }
 
-  getAllContactOverviewVS1ByName(limitcount = initialBaseDataLoad, limitfrom = 0,dataSearchName) {
+  getAllContactOverviewVS1ByName(dataSearchName) {
     let options = "";
     if(dataSearchName.toLowerCase().indexOf("supplier") >= 0){
       options = {
         IgnoreDates:true,
         orderby: '"name asc"',
         search: 'issupplier=true',
-        LimitCount: parseInt(limitcount),
-        LimitFrom: parseInt(limitfrom),
       };
     }else if(dataSearchName.toLowerCase().indexOf("customer") >= 0){
       options = {
         IgnoreDates:true,
         orderby: '"name asc"',
         search: 'iscustomer=true',
-        LimitCount: parseInt(limitcount),
-        LimitFrom: parseInt(limitfrom),
       };
     }else if(dataSearchName.toLowerCase().indexOf("employee") >= 0){
       options = {
         IgnoreDates:true,
         orderby: '"name asc"',
         search: 'isemployee=true',
-        LimitCount: parseInt(limitcount),
-        LimitFrom: parseInt(limitfrom),
       };
     }else if(dataSearchName.toLowerCase().indexOf("lead") >= 0){
       options = {
         IgnoreDates:true,
         orderby: '"name asc"',
         search: 'isprospect=true',
-        LimitCount: parseInt(limitcount),
-        LimitFrom: parseInt(limitfrom),
       };
     }else{
       if($.isNumeric(dataSearchName)){
@@ -917,16 +909,12 @@ export class SideBarService extends BaseService {
           IgnoreDates:true,
           orderby: '"name asc"',
           search: 'ID='+ dataSearchName+ ' OR name="' + dataSearchName + '"',
-          LimitCount: parseInt(limitcount),
-          LimitFrom: parseInt(limitfrom),
         };
       }else{
         options = {
           IgnoreDates:true,
           orderby: '"name asc"',
           search: 'name="' + dataSearchName + '"',
-          LimitCount: parseInt(limitcount),
-          LimitFrom: parseInt(limitfrom),
         };
       }
 
