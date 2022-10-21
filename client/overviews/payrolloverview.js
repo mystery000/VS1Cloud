@@ -6448,17 +6448,17 @@ Template.payrolloverview.events({
   },
 
   "click .redirect-to-payrun-details": async (e, ui) => {
-    // if($(e.currentTarget).attr('id')) {
-    //   const id = $(e.currentTarget).attr('id');
-    //   window.location.href = `/payrundetails?id=${id}`;
-    // } else {
-    //   const id = $(e.currentTarget).attr('calendar-id');
-    //   window.location.href = `/payrundetails?cid=${id}`;
-    // }
+    if($(e.currentTarget).attr('id')) {
+      const id = $(e.currentTarget).attr('id');
+      window.location.href = `/payrundetails?id=${id}`;
+    } else {
+      const id = $(e.currentTarget).attr('calendar-id');
+      window.location.href = `/payrundetails?cid=${id}`;
+    }
 
-    const id = $(e.currentTarget).attr('calendar-id');
-    window.location.href = `/payrundetails?cid=${id}`;
-   
+    // const id = $(e.currentTarget).attr('calendar-id');
+    // window.location.href = `/payrundetails?cid=${id}`;
+
    
    
   },

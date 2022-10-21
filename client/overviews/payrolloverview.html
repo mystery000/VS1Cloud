@@ -953,7 +953,7 @@
                                 <tbody>
                                     {{#if draftPayRunRecords}}
                                         {{#each item in draftPayRunRecords}}
-                                            <tr class="dnd-moved redirect-to-payrun-details" id="{{item.id}}" name="{{item.id}}" calendar-id="{{item.calendar.ID}}">
+                                            <tr class="dnd-moved redirect-to-payrun-details" calendar-id="{{item.calendar.ID}}">
                                                 <td class="colPayRunCalendar" contenteditable="false">{{ item.calendar.PayrollCalendarName }}</td>
                                                 <td class="colPayRunPeriod" contenteditable="false">{{ item.calendar.PayrollCalendarPayPeriod }}</td>
                                                 <td class="colPayRunPaymentDate" contenteditable="false">{{ PaymentDateFormat item.calendar.PayrollCalendarFirstPaymentDate }}</td>
@@ -1150,7 +1150,7 @@
                                                 <td class="colPayRunNetPay" contenteditable="false"></td>
                                             </tr> -->
 
-                                            <tr class="dnd-moved redirect-to-payrun-details" id="{{item.id}}" name="{{item.id}}" calendar-id="{{item.calendar.ID}}">
+                                            <tr class="dnd-moved redirect-to-payrun-details" id="{{item.id}}" calendar-id="{{item.calendar.ID}}">
                                                 <td class="colPayRunCalendar" contenteditable="false">{{ item.calendar.PayrollCalendarName }}</td>
                                                 <td class="colPayRunPeriod" contenteditable="false">{{ item.calendar.PayrollCalendarPayPeriod }}</td>
                                                 <td class="colPayRunPaymentDate" contenteditable="false">{{ PaymentDateFormat item.calendar.PayrollCalendarFirstPaymentDate }}</td>
