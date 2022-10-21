@@ -592,7 +592,7 @@
                                                                     margin-top: 20px;
                                                                 }
                                                             </style>
-                                                            
+
                                                             {{#each displayfield in displayfields}}
                                                             {{#if displayfield.display}}
                                                             <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
@@ -605,7 +605,7 @@
                                                                   <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                                   <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
                                                               </div>
-                                                            </div> 
+                                                            </div>
                                                             {{/if}}
                                                             {{/each}}
 
@@ -785,11 +785,11 @@
                                         {{displayfield.custfieldlabel}}
                                         {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>
                                           {{else}}
-                                          {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>  
+                                          {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>
                                             {{else}}
-                                            {{#if equals displayfield.class 'UnitPriceEx'}} <i class="fas fa-random"></i> 
+                                            {{#if equals displayfield.class 'UnitPriceEx'}} <i class="fas fa-random"></i>
                                               {{else}}
-                                              {{#if equals displayfield.class 'UnitPriceInc'}} <i class="fas fa-random fa-trans"></i> 
+                                              {{#if equals displayfield.class 'UnitPriceInc'}} <i class="fas fa-random fa-trans"></i>
                                               {{/if}}
                                             {{/if}}
                                           {{/if}}
@@ -828,7 +828,7 @@
                                         {{item.description}}</td>
                                       <td class="colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input
                                           class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
-                                      
+
                                         <td class="colUnitPriceEx colUnitPrice {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input
                                           class="lineUnitPrice colUnitPriceEx colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}">
                                       </td>
@@ -849,8 +849,8 @@
                                       {{item.DiscountPercent}}</td>
                                       <td class="colCostPrice {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><input
                                           class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}"></td>
-                                      
-                                      
+
+
                                           <td contenteditable="true"
                                         class="lineSalesLinesCustField1 colSalesLinesCustField1  {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">
                                         {{item.SalesLinesCustField1}}</td>
@@ -859,7 +859,7 @@
                                         style="text-align: right!important;">{{item.taxRate}}</td>
                                       <td contenteditable="false" class="colTaxCode {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"><input
                                           class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
-                                     
+
                                           <td contenteditable="false"
                                         class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"
                                         style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
@@ -868,7 +868,7 @@
                                             class="lineTaxAmount convert-to-foreign colTaxAmount pointer {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"
                                             style="text-align: right!important;cursor: pointer;">{{convertToForeignAmount item.TaxTotal}}</td>
                                         {{/if}}
-                                        
+
                                       {{#if isBatchSerialNoTracking 'true'}}
                                       <td class="th colSerialNo {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnSnLotmodal"
                                         style="margin-left: 40px; font-size: 22px;"></i></td>
@@ -957,8 +957,8 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-12 col-md-4">
-                                <div class="row justify-content-center desktopButtons">
+                            <div class="col-12 col-md-1">
+                                <div class="row justify-content-left desktopButtons" style="margin-left:0px;">
 
                                     <div class="custom-control custom-switch">
                                         <input class="custom-control-input chkGlobalSettings" id="choosetemplate" type="checkbox" style="cursor: pointer;">
@@ -969,7 +969,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-12 col-md-8">
+                            <div class="col-12 col-md-12">
                                 <div class="row justify-content-center desktopButtons">
 
 
