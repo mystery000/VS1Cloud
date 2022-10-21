@@ -296,7 +296,7 @@
                             <tbody>
                                 {{#if employees}}
                                 {{#each item in employees}}
-                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                <tr class="dnd-moved" id="{{item.ID}}" style="cursor: pointer;">
                                     <!-- <td contenteditable="false" class="colEmployeeNo" >{{item.id}}</td> -->
                                     <td contenteditable="false" class="colEmployeeNo {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}" >{{item.ID}}</td>
                                     <td contenteditable="false" class="colEmployeeName {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" >{{item.EmployeeName}}</td>
