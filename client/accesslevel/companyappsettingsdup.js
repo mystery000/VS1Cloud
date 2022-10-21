@@ -240,7 +240,6 @@ Template.companyappsettingsdup.onRendered(function () {
             let additionModuleSettings = await getVS1Data('vscloudlogininfo');
             if( additionModuleSettings.length > 0 ){
                 let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
-                console.log('additionModules', additionModules)
                 if( additionModules.length > 0 ){
                     let adModulesList = additionModules.filter((item) => {
                         if( item.ExtraModules == true && item.ModuleActive == true ){
@@ -279,7 +278,7 @@ Template.companyappsettingsdup.onRendered(function () {
                 e.isPurchased = false
                 if (matchingItemsMonth.length === 0) {
                     if( purchaedAdModuleList.includes(monthArr[i].moduleName) == true ){
-                        e.isPurchased = true                        
+                        e.isPurchased = true
                     }
                     monthResult.push(e);
                 }
@@ -408,7 +407,7 @@ Template.companyappsettingsdup.onRendered(function () {
         }
         mediaQuery(x)
         x.addListener(mediaQuery)
-    }, 250);    
+    }, 250);
 
 });
 Template.companyappsettingsdup.events({

@@ -11378,7 +11378,6 @@ Template.purchaseordercard.events({
     },
 
     'click .btnFixedAsset': function(event) {
-      console.log('btnFixedAsset...')
       $('#FixedAssetLineAddModal').modal();
     },
     // add to custom field

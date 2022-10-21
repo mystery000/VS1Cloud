@@ -176,7 +176,6 @@ Template.allChartLists.onRendered(function () {
         let displayedCharts = 0;
 
         let dashboardpreferences = await getVS1Data('Tvs1dashboardpreferences');
-        console.log(dashboardpreferences);
         if (dashboardpreferences.length == 0) {
         }else{
           dashboardpreferences = JSON.parse(dashboardpreferences[0].data);

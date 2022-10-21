@@ -171,7 +171,7 @@ Template.stockmovementreport.onRendered(() => {
             return item;
         });
     }
-    templateObject.records.set(movementReport);       
+    templateObject.records.set(movementReport);
     setTimeout(function() {
         MakeNegative();
     }, 1000);
@@ -327,7 +327,6 @@ Template.stockmovementreport.events({
     localStorage.setItem('VS1StockMovement_Report', '');
     await templateObject.setReportOptions(false, fromDate, endDate);
     templateObject.dateAsAt.set($('#dateTo').val());
-    console.log('rr' + $('#dateTo').val())
   },
   "click #lastQuarter": async function () {
     $(".fullScreenSpin").css("display", "block");
@@ -336,7 +335,6 @@ Template.stockmovementreport.events({
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
     localStorage.setItem('VS1StockMovement_Report', '');
     await templateObject.setReportOptions(false, fromDate, endDate);
-    console.log('cc' + $('#dateTo').val())
     templateObject.dateAsAt.set($('#dateTo').val());
   },
   "click #last12Months": async function () {
@@ -367,7 +365,6 @@ Template.stockmovementreport.events({
     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
     localStorage.setItem('VS1StockMovement_Report', '');
     await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-    console.log('dd' + $('#dateTo').val())
     templateObject.dateAsAt.set($('#dateTo').val());
   },
   "click #ignoreDate": async function () {
@@ -429,7 +426,7 @@ Template.stockmovementreport.events({
 
     LoadingOverlay.hide();
   },
-  
+
   "click [href='#noInfoFound']": function () {
     swal({
         title: 'Information',

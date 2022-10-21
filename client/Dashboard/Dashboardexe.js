@@ -215,7 +215,7 @@ Template.dashboardexe.onRendered(function () {
   });
   let varianceRed = "#ff420e";
   let varianceGreen = "#1cc88a"; //#579D1C
-  
+
   let minPerc = 0;
 
   let cashReceived = [0, 0];
@@ -582,7 +582,7 @@ Template.dashboardexe.onRendered(function () {
         $(`[key='${arrChartKey[i]}']`).hide();
       }
     }
-    // if ($(`[key='dashboardexe_cash'] .on-editor-change-mode`).attr("is-hidden") == "true") { 
+    // if ($(`[key='dashboardexe_cash'] .on-editor-change-mode`).attr("is-hidden") == "true") {
     // }
   };
 
@@ -971,7 +971,6 @@ Template.dashboardexe.onRendered(function () {
       templateObject.setFieldVariance(currentAsset[0], currentAsset[1], "spnCurrentAssetVariance", "divCurrentAssetVariance");
       templateObject.setFieldVariance(termAsset[0], termAsset[1], "spnTermAssetVariance", "divTermAssetVariance");
     } catch (err) {
-      console.log(err);
     }
     LoadingOverlay.hide();
   }
