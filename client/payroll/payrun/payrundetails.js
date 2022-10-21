@@ -443,8 +443,6 @@ Template.payrundetails.onRendered(function () {
     await payRunHandler.update(newPayRunDetails);
     await payRunHandler.saveToLocal();
 
-    return;
-
     window.location.href = "/payrolloverview";
   };
 
@@ -502,6 +500,12 @@ Template.payrundetails.events({
     });
 
     ui.payRunDetails.set(payRunDetails);
+  },
+  "click .close-payrun": (e, ui) => {
+    window.location.href = "/payrolloverview";
+  },
+  "click .reset-payrun": (e, ui) =>{
+    window.location.reload();
   }
 });
 
