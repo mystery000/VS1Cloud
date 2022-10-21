@@ -176,7 +176,12 @@ Template.allChartLists.onRendered(function () {
         let displayedCharts = 0;
 
         let dashboardpreferences = await getVS1Data('Tvs1dashboardpreferences');
-        dashboardpreferences = JSON.parse(dashboardpreferences[0].data);
+        console.log(dashboardpreferences);
+        if (dashboardpreferences.length == 0) {
+        }else{
+          dashboardpreferences = JSON.parse(dashboardpreferences[0].data);
+        };
+
         if(dashboardpreferences.length){
             dashboardpreferences.forEach((chart) => {
                 if(chart.fields != undefined && chart.fields.TabGroup == _tabGroup){

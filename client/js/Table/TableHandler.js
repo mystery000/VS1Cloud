@@ -62,7 +62,7 @@ export default class TableHandler {
     //$(".dataTable").colResizable({disable: true});
   }
 
-  saveTableColumns( tableName ){
+  async saveTableColumns( tableName ){
     let lineItems = [];
     $(".fullScreenSpin").css("display", "inline-block");
     $(`#${tableName} thead tr th`).each(function (index) {
@@ -93,9 +93,13 @@ export default class TableHandler {
       let erpGet = erpDb();
       let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
       let sideBarService = new SideBarService();
-      let added = sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+      let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
       if(added) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+              addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+          }).catch(function (err) {
+          });
           swal({
             title: 'SUCCESS',
             text: "Display settings is updated!",

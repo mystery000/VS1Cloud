@@ -8374,6 +8374,9 @@ Template.billcard.events({
         let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+              addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+          });
             swal({
               title: 'SUCCESS',
               text: "Display settings is updated!",
