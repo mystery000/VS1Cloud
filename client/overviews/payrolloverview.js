@@ -186,7 +186,6 @@ Template.payrolloverview.onRendered(function () {
 
   templateObject.loadPayRunHistory = async () => {
     let payRunsHistory = PayRun.fromList(await templateObject.payRuns.get());
-    console.log("payruns history", payRunsHistory);
     payRunsHistory = payRunsHistory.filter(p => p.stpFilling != PayRun.STPFilling.draft);
 
     templateObject.payRunHistoryRecords.set(payRunsHistory);
@@ -460,8 +459,6 @@ Template.payrolloverview.onRendered(function () {
       }
     });
     data = data.response;
-
-    // console.log('employees', data);
 
     let employees = data.temployee[0].fields != undefined ? data.temployee.map(e => e.fields) : data.temployee;
 
