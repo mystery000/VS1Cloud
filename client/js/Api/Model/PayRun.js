@@ -18,7 +18,7 @@ export default class PayRun {
     this.id = id || ObjectManager.init(erpObject.TPayRunHistory);
     this.stpFilling = stpFilling;
     this.calendar = calendar;
-    this.calendarId = calendarId;
+    this.calendarId = parseInt(calendarId);
     this.netPay = netPay;
     this.superAnnuation = superAnnuation;
     this.taxes = taxes;

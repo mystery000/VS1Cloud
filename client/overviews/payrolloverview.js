@@ -6447,7 +6447,7 @@ Template.payrolloverview.events({
     $(e.currentTarget).parent(".card").removeClass("hovered");
   },
 
-  "click .redirect-to-payrun-details": (e, ui) => {
+  "click .redirect-to-payrun-details": async (e, ui) => {
     // if($(e.currentTarget).attr('id')) {
     //   const id = $(e.currentTarget).attr('id');
     //   window.location.href = `/payrundetails?id=${id}`;
@@ -6458,6 +6458,8 @@ Template.payrolloverview.events({
 
     const id = $(e.currentTarget).attr('calendar-id');
     window.location.href = `/payrundetails?cid=${id}`;
+   
+   
    
   },
 

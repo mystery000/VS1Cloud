@@ -2,6 +2,7 @@ import {ReactiveVar} from "meteor/reactive-var";
 import moment from "moment";
 import {AccountService} from "../../accounts/account-service";
 import Datehandler from "../../DateHandler";
+import PayRunHandler from "../../js/ObjectManager/PayRunHandler";
 import {OrganisationService} from "../../js/organisation-service";
 import {SideBarService} from "../../js/sidebar-service";
 import CachedHttp from "../../lib/global/CachedHttp";
@@ -15,6 +16,7 @@ let sideBarService = new SideBarService();
 let accountService = new AccountService();
 let taxRateService = new TaxRateService();
 let organisationService = new OrganisationService();
+let payRunHandler = new PayRunHandler();
 
 Template.AddPayRunModal.onCreated(function () {
   const templateObject = Template.instance();
@@ -27,6 +29,7 @@ Template.AddPayRunModal.onRendered(() => {
   const templateObject = Template.instance();
 
   templateObject.loadCalendars = async () => {
+    payRunHandler.loadFromLocal();
     LoadingOverlay.show();
 
     let list = [];
@@ -235,6 +238,7 @@ Template.AddPayRunModal.onRendered(() => {
   //templateObject.loadCalendars();
 
   Datehandler.defaultDatePicker();
+  
 });
 
 Template.AddPayRunModal.events({
@@ -242,11 +246,15 @@ Template.AddPayRunModal.events({
     ui.loadCalendars();
     //$('#AppTableModal').modal("show");
   },
-  "click .btnPayRunNext": event => {
+  "click .btnPayRunNext": async event => {
     $(".modal-backdrop").css("display", "none");
     const id = $("#selectAPayRun").attr("calendar-id");
-    // FlowRouter.go(`/payrundetails?cid=${id}`);
-    window.location.href = `/payrundetails?cid=${id}`;
+
+    if (await payRunHandler.isPayRunCalendarAlreadyDrafted(id)) {
+      window.location.href = `/payrundetails?cid=${id}`;
+    } else {
+      const result = await swal({title: "Can't create duplicate draft PayRuns", text: "You can't select this Pay Pariod while one is in draft. Please Approve or Delete it to create a new one first", type: "error", showCancelButton: true, confirmButtonText: "Ok"});
+    }
   },
 
   "click .btnAddNewPayCalender": (e, ui) => {

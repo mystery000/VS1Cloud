@@ -160,8 +160,6 @@ Template.payrundetails.onRendered(function () {
 
     data = data.response;
 
-    console.log("response", data);
-
     let calendar = null;
 
     if (id) {
@@ -273,6 +271,7 @@ Template.payrundetails.onRendered(function () {
       payRunDetails = payRunsHistory.find(p => p.calendarId == calendarId); // we search by calendar ID
 
       if (!payRunDetails) {
+
         const calendar = await templateObject.loadCalendar(calendarId); // single calendar
         const employees = await templateObject.loadEmployees();
 
@@ -288,10 +287,9 @@ Template.payrundetails.onRendered(function () {
           selected: false
         });
 
-        payRunsHistory.push(payRunDetails);
+        //payRunsHistory.push(payRunDetails);
 
-        payRunHandler.add(payRunDetails);
-        console.log("payrundetails", payRunHandler);
+        await payRunHandler.add(payRunDetails);
         //localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
       } else {
         payRunDetails.employees = Employee.fromList(payRunDetails.employees);
@@ -302,7 +300,7 @@ Template.payrundetails.onRendered(function () {
     } else if (urlParams.has("id")) {
       //let payRunsHistory = payRuns;  we get the list and find
       const payRunId = urlParams.get("id");
-      payRunDetails = payRunsHistory.find(p => p.Id == payRunId);
+      payRunDetails = payRunsHistory.find(p => p.id == payRunId);
 
       if (payRunDetails) {
         payRunDetails.employees = Employee.fromList(payRunDetails.employees);
@@ -442,8 +440,10 @@ Template.payrundetails.onRendered(function () {
     // //templateObject.payRunDetails.set(newPayRunDetails);  no need to update this object
     // localStorage.setItem("TPayRunHistory", JSON.stringify(payRunsHistory));
 
-    payRunHandler.update(newPayRunDetails);
+    await payRunHandler.update(newPayRunDetails);
+    await payRunHandler.saveToLocal();
 
+    return;
 
     window.location.href = "/payrolloverview";
   };
