@@ -1848,6 +1848,9 @@ Template.journalentrycard.helpers({
 });
 
 Template.journalentrycard.events({
+    'click #copyJournal': function(event) {
+        playCopyAudio();
+    },
     "click #tblCurrencyPopList tbody tr": (e) => {
         const rateType = $(".currency-js").attr("type"); // String "buy" | "sell"
 

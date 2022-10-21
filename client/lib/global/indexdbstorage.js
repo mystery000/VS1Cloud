@@ -311,6 +311,7 @@ openDb = function(dbName) {
             db.createObjectStore("TServiceLog", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TServiceLogList", { keyPath: "EmployeeEmail" });
             db.createObjectStore(erpObject.TPayRunHistory, { keyPath: "EmployeeEmail" });
+            db.createObjectStore('TProcessStep', {keyPath: 'EmployeeEmail'});
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });

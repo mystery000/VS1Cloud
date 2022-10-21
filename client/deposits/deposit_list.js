@@ -1103,9 +1103,6 @@ Template.depositlist.onRendered(function() {
 });
 
 Template.depositlist.events({
-    'click #copyDeposit': function(event) {
-        playCopyAudio();
-    },
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display','inline-block');
         let templateObject = Template.instance();

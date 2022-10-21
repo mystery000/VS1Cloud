@@ -972,7 +972,7 @@
             <div class="modal-content" >
                 <div class="modal-header" >
                     <h4 class="title-header" >BOM Set up</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeBOMSetupModal"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <style>
@@ -1033,7 +1033,7 @@
                                 <input class="edtMainProductName form-control" id="edtMainProductName" disabled style="width: 60%" value="{{productrecord.productname}}"/>
                             </div>
                             <div class="colQty form-group">
-                                <input type="text" class="edtQuantity form-control w-100" value="1"/>
+                                <input type="text" class="edtQuantity form-control w-100" value="1" disabled/>
                             </div>
                             <div class="colProcess form-group">
                                 <select type="search" id="edtProcess" class="edtProcessName form-control w-100" name="edtProcess"></select>

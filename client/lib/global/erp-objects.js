@@ -287,7 +287,8 @@ const erpObject = {
     TServiceLog: "TServiceLog",
     TServiceLogList: "TServiceLogList",
     TLeaveAccrualList: "TLeaveAccrualList",
-    TPayRunHistory: "TPayRunHistory"
+    TPayRunHistory: "TPayRunHistory",
+    TProcessStep: "TProcessStep",
 };
 
 export default erpObject;

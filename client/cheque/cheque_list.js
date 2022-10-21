@@ -536,9 +536,7 @@ Template.chequelist.onRendered(function() {
 });
 
 Template.chequelist.events({
-    'click #copyCheque': function(event) {
-        playCopyAudio();
-    },
+    
     'click #btnNewCheque': function(event) {
         FlowRouter.go('/chequecard');
     },
