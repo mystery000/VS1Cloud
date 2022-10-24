@@ -209,11 +209,13 @@
                             <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 customerInfo" id="customerInfo" style="color: #00A3D3;">
 
                                    {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}}
-                                    {{record.joblastname}}
+                                    {{record.joblastname}}-{{record.phone}}
+                                    <!-- {{#if isJob}} {{record.jobcompany}} - {{record.jobfirstname}}
+                                     {{record.joblastname}}-{{record.phone}} -->
                                     <!-- {{record.joblastname}} - {{record.jobphone}} -->
                                    {{else}}
                                    <!-- {{record.company}} - {{record.firstname}} {{record.lastname}} -->
-                                   {{record.company}} - {{record.firstname}} {{record.lastname}}
+                                   {{record.company}} 
                                    {{/if}}
                             </h6>
                             <!--here-->
