@@ -168,6 +168,14 @@ Template.creditcard.onRendered(() => {
             });
           } else {
             let data = JSON.parse(dataObject[0].data);
+            if(data.ProcessLog.Obj.CustomLayout.length > 0){
+             for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+               if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+                 reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                 showCustomFieldDisplaySettings(reset_data);
+               }
+             }
+           };
             // handle process here
           }
         });
@@ -7548,7 +7556,7 @@ Template.creditcard.events({
       }
     },
 
-    // display settings 
+    // display settings
     'change .rngRangeFixedAsset': function(event) {
       let range = $(event.target).val();
       $('.colFixedAsset').css('width', range);
@@ -7672,6 +7680,9 @@ Template.creditcard.events({
         let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+              addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+          });
             swal({
               title: 'SUCCESS',
               text: "Display settings is updated!",

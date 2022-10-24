@@ -100,9 +100,9 @@ Template.payrollleavetaken.onRendered(() => {
     $("#dateFrom").val(defaultOptions.fromDate);
     $("#dateTo").val(defaultOptions.toDate);
     await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getLeaveTakenReportData( 
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    await templateObject.getLeaveTakenReportData(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false);
   };
 
@@ -120,8 +120,8 @@ Template.payrollleavetaken.onRendered(() => {
       useIndexDb: true,
       useLocalStorage: false,
       validate: (cachedResponse) => {
-        if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
-        && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+        if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom)
+        && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo)
         && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
           return true;
         }
@@ -146,7 +146,7 @@ Template.payrollleavetaken.onRendered(() => {
     // }
     let reportData = [];
     if( data.tleavetaken.length > 0 ){
-      for (const item of data.tleavetaken ) {   
+      for (const item of data.tleavetaken ) {
         let isExist = reportData.filter((subitem) => {
           if( subitem.EmployeeID == item.EmployeeID ){
               subitem.SubAccounts.push(item)
@@ -163,7 +163,7 @@ Template.payrollleavetaken.onRendered(() => {
           });
         }
         LoadingOverlay.hide();
-      }     
+      }
     }
     // No balance field is available in the api response
     // let useData = reportData.filter((item) => {
@@ -176,7 +176,7 @@ Template.payrollleavetaken.onRendered(() => {
     //   item.TotalOrCost = TotalOrCost;
     //   item.TotalCrCost = TotalCrCost;
     //   return item;
-    // });    
+    // });
     templateObject.records.set(reportData);
     if (templateObject.records.get()) {
       setTimeout(function () {
@@ -194,7 +194,7 @@ Template.payrollleavetaken.onRendered(() => {
         });
         LoadingOverlay.hide();
       }, 1000);
-    }  
+    }
 
     LoadingOverlay.hide();
   }
@@ -385,9 +385,9 @@ Template.payrollleavetaken.events({
 
     // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
 
-    templateObject.getLeaveTakenReportData( 
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    templateObject.getLeaveTakenReportData(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false);
   },
   "click #lastQuarter": function () {
@@ -432,9 +432,9 @@ Template.payrollleavetaken.events({
     let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
     // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
 
-    templateObject.getLeaveTakenReportData( 
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    templateObject.getLeaveTakenReportData(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false);
   },
   "click #last12Months": function () {
@@ -475,9 +475,9 @@ Template.payrollleavetaken.events({
       currentDate2.getDate();
     // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
 
-    templateObject.getLeaveTakenReportData( 
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    templateObject.getLeaveTakenReportData(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false);
   },
   "click #ignoreDate": function () {
@@ -500,62 +500,7 @@ Template.payrollleavetaken.events({
         confirmButtonText: 'Ok'
       })
   }
-  // ...FxGlobalFunctions.getEvents(),
-  // // CURRENCY MODULE //
-  // "click .fx-rate-btn": async (e) => {
-  //   await loadCurrency();
-  //   //loadCurrencyHistory();
-  // },
-  // "click .currency-modal-save": (e) => {
-  //   //$(e.currentTarget).parentsUntil(".modal").modal("hide");
-  //   LoadingOverlay.show();
 
-  //   let templateObject = Template.instance();
-
-  //   // Get all currency list
-  //   let _currencyList = templateObject.currencyList.get();
-
-  //   // Get all selected currencies
-  //   const currencySelected = $(".currency-selector-js:checked");
-  //   let _currencySelectedList = [];
-  //   if (currencySelected.length > 0) {
-  //     $.each(currencySelected, (index, e) => {
-  //       const sellRate = $(e).attr("sell-rate");
-  //       const buyRate = $(e).attr("buy-rate");
-  //       const currencyCode = $(e).attr("currency");
-  //       const currencyId = $(e).attr("currency-id");
-  //       let _currency = _currencyList.find((c) => c.id == currencyId);
-  //       _currency.active = true;
-  //       _currencySelectedList.push(_currency);
-  //     });
-  //   } else {
-  //     let _currency = _currencyList.find((c) => c.code == defaultCurrencyCode);
-  //     _currency.active = true;
-  //     _currencySelectedList.push(_currency);
-  //   }
-
-  //   _currencyList.forEach((value, index) => {
-  //     if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
-  //       _currencyList[index].active = _currencySelectedList.find(
-  //         (c) => c.id == _currencyList[index].id
-  //       ).active;
-  //     } else {
-  //       _currencyList[index].active = false;
-  //     }
-  //   });
-
-  //   _currencyList = _currencyList.sort((a, b) => {
-  //     if (a.code == defaultCurrencyCode) {
-  //       return -1;
-  //     }
-  //     return 1;
-  //   });
-
-  //   // templateObject.activeCurrencyList.set(_activeCurrencyList);
-  //   templateObject.currencyList.set(_currencyList);
-
-  //   LoadingOverlay.hide();
-  // },
 });
 
 Template.payrollleavetaken.helpers({
@@ -566,7 +511,6 @@ Template.payrollleavetaken.helpers({
     return Template.instance().records.get();
   },
   redirectionType(item) {
-    console.log('asd',Template.instance().records.get())
       return '/employeescard?id=' + item.EmployeeID;
   },
   formatPrice( amount ){

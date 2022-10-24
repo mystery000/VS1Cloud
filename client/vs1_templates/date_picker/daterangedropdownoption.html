@@ -3,19 +3,23 @@
       <h6 class="dropdown-header" role="presentation">Date ranges</h6>
       <a class="dropdown-item today"  id="today" role="presentation" >Today</a>
       <a class="dropdown-item yesterday"  id="yesterday" role="presentation" >Yesterday</a>
+      <div class="dropdown-divider"></div>
       <a class="dropdown-item lastweek"  id="lastweek" role="presentation" >Last Week</a>
       <a class="dropdown-item lastMonth"  id="lastMonth" role="presentation" >Last Month</a>
       <a class="dropdown-item lastQuarter"  id="lastQuarter" role="presentation" >Last Quarter</a>
       <a class="dropdown-item last12Months"  id="last12Months" role="presentation" >Last 12 Months</a>
+      <div class="dropdown-divider"></div>
       <a class="dropdown-item previousweek"  id="previousweek" role="presentation" >Previous Week</a>
       <a class="dropdown-item previousmonth"  id="previousmonth" role="presentation" >Previous Month</a>
       <a class="dropdown-item previousquarter"  id="previousquarter" role="presentation" >Previous Quarter</a>
       <a class="dropdown-item previousfinancialyear"  id="previousfinancialyear" role="presentation" >Previous Financial Year</a>
+      <div class="dropdown-divider"></div>
       <a class="dropdown-item thisweek"  id="thisweek" role="presentation" >This Week</a>
       <a class="dropdown-item thisMonth"  id="thisMonth" role="presentation" >This Month</a>
       <a class="dropdown-item thisQuarter"  id="thisQuarter" role="presentation" >This Quarter</a>
       <a class="dropdown-item thisfinancialyear"  id="thisfinancialyear" role="presentation" >This Financial Year</a>
       <a class="dropdown-item thisfinancialyeartodate"  id="thisfinancialyeartodate" role="presentation" >This Financial Year To Date</a>
+      <div class="dropdown-divider"></div>
       <a class="dropdown-item ignoreDate"  id="ignoreDate" role="presentation" >Ignore Date</a>
   </div>
   <style media="screen">
@@ -42,6 +46,10 @@
       color: #224abe!important;
       text-decoration: underline!important
     }
-
+    .dropdown-menu.daterange{
+      height: 350px;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
   </style>
 </template>

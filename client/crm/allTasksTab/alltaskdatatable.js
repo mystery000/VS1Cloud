@@ -3064,7 +3064,6 @@ Template.alltaskdatatable.events({
   },
 
   "click #editCrmProjectColor": function (e) {
-    console.log('editCrmProjectColor click');
     $('button').each(function () {
       var target = $(this);
       if (target.text() == 'Other...' || target.val() == 'Other...') {

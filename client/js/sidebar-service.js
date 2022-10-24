@@ -3628,6 +3628,14 @@ export class SideBarService extends BaseService {
       let oPost = new XMLHttpRequest();
 
       return new Promise((resolve, reject) => {
+        oPost.open("POST",URLRequest +erpGet.ERPIPAddress +":" +erpGet.ERPPort +"/" +'erpapi/VS1_Cloud_Task/Method',true);
+        oPost.setRequestHeader("database", erpGet.ERPDatabase);
+        oPost.setRequestHeader("username", erpGet.ERPUsername);
+        oPost.setRequestHeader("password", erpGet.ERPPassword);
+        oPost.setRequestHeader("Accept", "application/json");
+        oPost.setRequestHeader("Accept", "application/html");
+        oPost.setRequestHeader("Content-type", "application/json");
+        oPost.send(myCustomizeString);
         oPost.onreadystatechange = (e) => {
           if (oPost.readyState !== 4) {
             return false;
@@ -3639,15 +3647,6 @@ export class SideBarService extends BaseService {
             return false;
           }
         };
-
-        oPost.open("POST",URLRequest +erpGet.ERPIPAddress +":" +erpGet.ERPPort +"/" +'erpapi/VS1_Cloud_Task/Method',true);
-        oPost.setRequestHeader("database", erpGet.ERPDatabase);
-        oPost.setRequestHeader("username", erpGet.ERPUsername);
-        oPost.setRequestHeader("password", erpGet.ERPPassword);
-        oPost.setRequestHeader("Accept", "application/json");
-        oPost.setRequestHeader("Accept", "application/html");
-        oPost.setRequestHeader("Content-type", "application/json");
-        oPost.send(myCustomizeString);
       });
     } catch (error) {
       return false

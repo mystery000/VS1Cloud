@@ -973,7 +973,9 @@ Template.newsidenav.onRendered(function() {
     $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
     $('.headerprogressbar').addClass('headerprogressbarShow');
     $('.headerprogressbar').removeClass('headerprogressbarHidden');
-
+    sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+        addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+    });
     getVS1Data('Tvs1charts').then(function(dataObject) {
       if (dataObject.length == 0) {
         sideBarService.getTvs1charts().then(function(data) {

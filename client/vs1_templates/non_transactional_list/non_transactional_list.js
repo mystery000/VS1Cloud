@@ -99,6 +99,14 @@ Template.non_transactional_list.onRendered(function() {
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
+          if(data.ProcessLog.Obj.CustomLayout.length > 0){
+           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+               templateObject.showCustomFieldDisplaySettings(reset_data);
+             }
+           }
+         };
           // handle process here
         }
       });
@@ -140,7 +148,7 @@ Template.non_transactional_list.onRendered(function() {
 
   templateObject.getContactOverviewData = async function (deleteFilter = false) {
     var customerpage = 0;
-    getVS1Data('TERPCombinedContactsVS1').then(function (dataObject) {
+    getVS1Data('TERPCombinedContactsVS11').then(function (dataObject) {
         if (dataObject.length == 0) {
             sideBarService.getAllContactCombineVS1(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
                 await addVS1Data('TERPCombinedContactsVS1', JSON.stringify(data));
@@ -334,7 +342,7 @@ Template.non_transactional_list.onRendered(function() {
             lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
             info: true,
             responsive: true,
-            "order": [[0, "asc"]],
+            "order": [[1, "asc"]],
             "autoWidth": false,
             action: function () {
                 $('#tblcontactoverview').DataTable().ajax.reload();
@@ -435,7 +443,6 @@ Template.non_transactional_list.onRendered(function() {
                     splashArrayContactOverview.push(dataListContactDupp);
                     //}
                 }
-
                 let uniqueChars = [...new Set(splashArrayContactOverview)];
                 templateObject.transactiondatatablerecords.set(uniqueChars);
                 var datatable = $('#tblcontactoverview').DataTable();
@@ -524,7 +531,7 @@ Template.non_transactional_list.events({
       $('.btnViewDeleted').css('display','none');
       $('.btnHideDeleted').css('display','inline-block');
       await clearData('TERPCombinedContactsVS1');
-      await templateObject.getContactOverviewData(true);
+      templateObject.getContactOverviewData(true);
     },
   "click .btnHideDeleted": async function (e) {
       $(".fullScreenSpin").css("display", "inline-block");
@@ -534,7 +541,7 @@ Template.non_transactional_list.events({
       $('.btnHideDeleted').css('display','none');
       $('.btnViewDeleted').css('display','inline-block');
       await clearData('TERPCombinedContactsVS1');
-      await templateObject.getContactOverviewData(false);
+      templateObject.getContactOverviewData(false);
     },
   'change .custom-range': async function(event) {
     const tableHandler = new TableHandler();

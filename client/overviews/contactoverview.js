@@ -30,24 +30,6 @@ Template.contactoverview.events({
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
-    var currentBeginDate = new Date();
-    var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-    let fromDateMonth = currentBeginDate.getMonth() + 1;
-    let fromDateDay = currentBeginDate.getDate();
-    if (currentBeginDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
-    } else {
-      fromDateMonth = currentBeginDate.getMonth() + 1;
-    }
-
-    if (currentBeginDate.getDate() < 10) {
-      fromDateDay = "0" + currentBeginDate.getDate();
-    }
-    var toDate = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-    let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
-
-
-
     sideBarService.getAllContactCombineVS1(initialDataLoad, 0).then(function (data) {
         addVS1Data("TERPCombinedContactsVS1", JSON.stringify(data)).then(function (datareturn) {
           sideBarService.getCurrentLoggedUser().then(function (dataUsers) {
@@ -586,7 +568,7 @@ Template.contactoverview.events({
                 datatable.clear();
                 datatable.rows.add(splashArrayContactOverviewSearch);
                 datatable.draw(false);
-                //$('.dataTables_info').html('Showing 1 to ' + data.terpcombinedcontactsvs1.length + ' of ' + data.terpcombinedcontactsvs1.length + ' entries');
+                $('#tblcontactoverview_wrapper .dataTables_info').html('Showing 1 to ' + data.terpcombinedcontactsvs1.length + ' of ' + data.terpcombinedcontactsvs1.length + ' entries');
                 let reset_data = templateObject.reset_data.get();
                 let customFieldCount = reset_data.length;
 
@@ -629,92 +611,40 @@ Template.contactoverview.events({
             $('.fullScreenSpin').css('display', 'none');
         });
     } else {
-      sideBarService.getAllContactCombineVS1(initialBaseDataLoad, 0,deleteFilter).then(function (dataObjectnew) {
-
-      for (let j = 0; j < dataObjectnew.terpcombinedcontactsvs1.length; j++) {
-        isprospect = dataObjectnew.terpcombinedcontactsvs1[j].isprospect;
-        iscustomer = dataObjectnew.terpcombinedcontactsvs1[j].iscustomer;
-        isEmployee = dataObjectnew.terpcombinedcontactsvs1[j].isEmployee;
-        issupplier = dataObjectnew.terpcombinedcontactsvs1[j].issupplier;
-
-        if (isprospect == true && iscustomer == true && isEmployee == true && issupplier == true) {
-          clienttype = "Customer / Employee / Supplier";
-        } else if (isprospect == true && iscustomer == true && issupplier == true) {
-          clienttype = "Customer / Supplier";
-        } else if (iscustomer == true && issupplier == true) {
-          clienttype = "Customer / Supplier";
-        } else if (iscustomer == true) {
-          if (dataObjectnew.terpcombinedcontactsvs1[j].name.toLowerCase().indexOf("^") >= 0) {
-            clienttype = "Job";
-          } else {
-            clienttype = "Customer";
-          }
-        } else if (isEmployee == true) {
-          clienttype = "Employee";
-        } else if (issupplier == true) {
-          clienttype = "Supplier";
-        } else if (isprospect == true) {
-          clienttype = "Lead";
-        } else {
-          clienttype = " ";
-        }
-
-        let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance) || 0.0;
-        let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance) || 0.0;
-        let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].Balance) ||0.0;
-        let creditLimit =utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit) || 0.0;
-        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance) || 0.0;
-        if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)) {
-          arBalance = Currency + "0.00";
-        }
-
-        if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance)) {
-          creditBalance = Currency + "0.00";
-        }
-        if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].Balance)) {
-          balance = Currency + "0.00";
-        }
-        if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)) {
-          creditLimit = Currency + "0.00";
-        }
-
-        if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)) {
-          salesOrderBalance = Currency + "0.00";
-        }
-
-          var dataListContactDupp = [
-            dataObjectnew.terpcombinedcontactsvs1[j].ID || "",
-            dataObjectnew.terpcombinedcontactsvs1[j].name || "",
-            clienttype || "",
-            dataObjectnew.terpcombinedcontactsvs1[j].phone || "",
-            dataObjectnew.terpcombinedcontactsvs1[j].mobile || "",
-            arBalance || 0.0,
-            creditBalance || 0.0,
-            balance || 0.0,
-            creditLimit || 0.0,
-            salesOrderBalance || 0.0,
-            dataObjectnew.terpcombinedcontactsvs1[j].email || "",
-            dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD1 || "",
-            dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD2 || "",
-            dataObjectnew.terpcombinedcontactsvs1[j].street || "",
-          ];
-
-          splashArrayContactOverview.push(dataListContactDupp);
-          //}
-      }
-
-      let uniqueChars = [...new Set(splashArrayContactOverview)];
-
-      var datatable = $('#tblcontactoverview').DataTable();
-      datatable.clear();
-      datatable.rows.add(uniqueChars);
-      datatable.draw(false);
-
       $('.fullScreenSpin').css('display', 'none');
+        getVS1Data("TERPCombinedContactsVS1").then(function (dataObjectold) {
+          if (dataObjectold.length == 0) {
+          } else {
+            let dataOld = JSON.parse(dataObjectold[0].data);
+            let dataNew = templateObject.transactiondatatablerecords.get()||'';
 
-      }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
-      });
+            var datatable = $('#tblcontactoverview').DataTable();
+            datatable.clear();
+            datatable.rows.add(dataNew);
+            datatable.draw(false);
+            if(dataNew.length < 25){
+              $('#tblcontactoverview_wrapper .dataTables_info').html('Showing 1 to ' + dataNew.length + ' of ' + dataOld.Params.Count + ' entries');
+            }else{
+              $('#tblcontactoverview_wrapper .dataTables_info').html('Showing 1 to ' + '25' + ' of ' + dataOld.Params.Count + ' entries');
+            }
+
+            let reset_data = templateObject.reset_data.get();
+            let customFieldCount = reset_data.length;
+
+            for (let r = 0; r < customFieldCount; r++) {
+              if(reset_data[r].active == true){
+                $('#tblcontactoverview_wrapper .'+reset_data[r].class).removeClass('hiddenColumn');
+              }else if(reset_data[r].active == false){
+                $('#tblcontactoverview_wrapper .'+reset_data[r].class).addClass('hiddenColumn');
+              };
+            };
+
+
+          }
+        }).catch(function (err) {
+
+        });
+
       //$('.fullScreenSpin').css('display', 'none');
     }
   },
@@ -780,8 +710,13 @@ Template.contactoverview.events({
       let tableName = "tblcontactoverview";
       let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
       let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-      $(".fullScreenSpin").css("display", "none");
+
       if(added){
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+            addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+        }).catch(function (err) {
+        });
+        $(".fullScreenSpin").css("display", "none");
         swal({
           title: 'SUCCESS',
           text: "Display settings is updated!",
@@ -793,6 +728,8 @@ Template.contactoverview.events({
                 $('#tblcontactoverview_Modal').modal('hide');
             }
         });
+      }else{
+        $(".fullScreenSpin").css("display", "none");
       }
 
     },

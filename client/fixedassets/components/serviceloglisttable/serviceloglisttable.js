@@ -27,7 +27,7 @@ Template.serviceloglisttable.onRendered(function () {
       { index: 3, label: 'Service Type', class: 'ServiceType', active: true, display: true, width: "" },
       { index: 4, label: 'Service Date', class: 'ServiceDate', active: true, display: true, width: "" },
       { index: 5, label: 'Service Provider', class: 'ServiceProvider', active: true, display: true, width: "" },
-      { index: 6, label: 'Next Service Due Date', class: 'ServiceDueDate', active: true, display: true, width: "" }, 
+      { index: 6, label: 'Next Service Due Date', class: 'ServiceDueDate', active: true, display: true, width: "" },
     ];
 
     let templateObject = Template.instance();
@@ -51,6 +51,14 @@ Template.serviceloglisttable.onRendered(function () {
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
+          if(data.ProcessLog.Obj.CustomLayout.length > 0){
+           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+               showCustomFieldDisplaySettings(reset_data);
+             }
+           }
+         };
           // handle process here
         }
       });
@@ -305,6 +313,9 @@ Template.serviceloglisttable.events({
       let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
       if (added) {
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+            addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+        });
         swal({
           title: 'SUCCESS',
           text: "Display settings is updated!",

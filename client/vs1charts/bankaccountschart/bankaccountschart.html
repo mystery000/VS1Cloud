@@ -28,16 +28,20 @@
           <div class=" card-body">
             <style media="screen">
               .colReconDate{
-                width:140px!Important;
+                width:80px!Important;
               }
               .colNotReconcilied{
-                width:140px!Important;
+                width:100px!Important;
               }
               .colReconBalance{
                 width:80px!Important;
               }
+              .colReconAccountName{
+                width:120px!Important;
+              }
             </style>
                 <div class="canvasParentDiv canvasHeight100">
+                  <div class="table-responsive">
                   <table id="tblBankAccountChartList" style="width:100%" class="dataTable table table-striped table-bordered tblBankAccountChartList">
                       <thead>
                           <tr class="dnd-moved">
@@ -45,7 +49,7 @@
                               <th class="th colReconAccountName" style="width:80px;">Account Name</th>
                               <th class="th colReconBalance" style="width:80px;">Balance</th>
                               <th class="th colNotReconcilied" style="width:140px;">Not Reconciled</th>
-                              <th class="th colReconDate" style="width:140px;">Last Reconciled</th>
+                              <th class="th colReconDate" style="width:140px!;">Last Reconciled</th>
                           </tr>
                       </thead>
                       <tbody>
@@ -64,6 +68,7 @@
                           {{/if}}
                       </tbody>
                   </table>
+                  </div>
                 </div>
             </div>
         </div>

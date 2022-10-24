@@ -69,7 +69,6 @@ Template.refundlist.onRendered(function () {
       let templateObject = Template.instance();
       let reset_data = templateObject.reset_data.get();
       showCustomFieldDisplaySettings(reset_data);
-
       try {
         getVS1Data("VS1_Customize").then(function (dataObject) {
           if (dataObject.length == 0) {
@@ -80,7 +79,15 @@ Template.refundlist.onRendered(function () {
             }).catch(function (err) {
             });
           } else {
-            let data = JSON.parse(dataObject[0].data);
+             let data = JSON.parse(dataObject[0].data);
+             if(data.ProcessLog.Obj.CustomLayout.length > 0){
+              for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+                if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+                  reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                  showCustomFieldDisplaySettings(reset_data);
+                }
+              }
+            };
             // handle process here
           }
         });
@@ -1530,6 +1537,9 @@ Template.refundlist.events({
         let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
         $(".fullScreenSpin").css("display", "none");
         if(added) {
+          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+              addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+          });
             swal({
               title: 'SUCCESS',
               text: "Display settings is updated!",

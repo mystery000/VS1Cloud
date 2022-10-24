@@ -29,7 +29,7 @@ Template.costtypelistpop.onRendered(function () {
       { index: 5, label: 'Loan/Lease', class: 'Loan', active: true, display: true, width: "" },
       { index: 6, label: 'Maintenance', class: 'Maintenance', active: true, display: true, width: "" },
       { index: 7, label: 'Registration', class: 'Registration', active: true, display: true, width: "" },
-      { index: 8, label: 'Tolls', class: 'Tolls', active: true, display: true, width: "" }, 
+      { index: 8, label: 'Tolls', class: 'Tolls', active: true, display: true, width: "" },
     ];
 
     let templateObject = Template.instance();
@@ -53,6 +53,14 @@ Template.costtypelistpop.onRendered(function () {
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
+          if(data.ProcessLog.Obj.CustomLayout.length > 0){
+           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+               showCustomFieldDisplaySettings(reset_data);
+             }
+           }
+         };
           // handle process here
         }
       });
@@ -83,7 +91,7 @@ Template.costtypelistpop.onRendered(function () {
   templateObject.initCustomFieldDisplaySettings("tblFixedAssetCostType");
   // set initial table rest_data  //
 
- 
+
   tableResize();
 });
 
@@ -168,6 +176,9 @@ Template.costtypelistpop.events({
       let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
       if (added) {
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+            addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+        });
         swal({
           title: 'SUCCESS',
           text: "Display settings is updated!",

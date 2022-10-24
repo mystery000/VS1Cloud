@@ -649,3 +649,13 @@ div.dataTables_wrapper .row button{
     margin-right :0px !important;
 
 }
+
+@media (min-width: 576px){
+.dropdown-menu.daterange {
+ width: 210px;
+}
+}
+.table-responsive{
+overflow-x: auto!important;
+overflow-y: hidden!important;
+}

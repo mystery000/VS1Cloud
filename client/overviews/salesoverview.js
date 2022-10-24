@@ -72,6 +72,14 @@ Template.salesoverview.onRendered(function () {
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
+          if(data.ProcessLog.Obj.CustomLayout.length > 0){
+           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+               showCustomFieldDisplaySettings(reset_data);
+             }
+           }
+         };
           // handle process here
         }
       });
@@ -554,8 +562,7 @@ Template.salesoverview.onRendered(function () {
                     setTimeout(function () {
                       MakeNegative();
                     }, 100);
-                    let draftRecord = templateObject.datatablerecords.get();
-                    templateObject.datatablerecords.set(draftRecord);
+
                   })
                   .on("column-reorder", function () {});
 
@@ -928,8 +935,7 @@ Template.salesoverview.onRendered(function () {
                 setTimeout(function () {
                   MakeNegative();
                 }, 100);
-                let draftRecord = templateObject.datatablerecords.get();
-                templateObject.datatablerecords.set(draftRecord);
+
               })
               .on("column-reorder", function () {});
           }, 0);
@@ -1318,8 +1324,7 @@ Template.salesoverview.onRendered(function () {
                   setTimeout(function () {
                     MakeNegative();
                   }, 100);
-                  let draftRecord = templateObject.datatablerecords.get();
-                  templateObject.datatablerecords.set(draftRecord);
+
                 })
                 .on("column-reorder", function () {});
             }, 0);
@@ -1400,7 +1405,7 @@ Template.salesoverview.onRendered(function () {
           });
       }).catch(function (err) {
         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        templateObject.datatablerecords.set("");
+        //templateObject.datatablerecords.set("");
         $(".fullScreenSpin").css("display", "none");
         // Meteor._reload.reload();
       });
@@ -2178,6 +2183,9 @@ Template.salesoverview.events({
       let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
       if(added) {
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+            addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+        });
           swal({
             title: 'SUCCESS',
             text: "Display settings is updated!",
