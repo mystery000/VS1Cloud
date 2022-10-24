@@ -510,7 +510,7 @@ Template.crmoverview.onRendered(function () {
   $(".crmSelectEmployeeList").editableSelect();
   $(".crmSelectEmployeeList").editableSelect().on("click.editable-select", function (e, li) {
     $("#employeeListModal").modal();
-  });
+  }); 
   $(document).on("click", "#tblContactlist tbody tr", function (e) {
     var table = $(this);
     let colClientName = table.find(".colClientName").text();
