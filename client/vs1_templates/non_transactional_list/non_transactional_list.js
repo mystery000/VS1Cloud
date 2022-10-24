@@ -52,10 +52,6 @@ Template.non_transactional_list.onRendered(function() {
   templateObject.init_reset_data = function(){
       let reset_data = [];
       if (url.includes("/contactoverview")) {
-        let bsbname = "Branch Code";
-        if (Session.get("ERPLoggedCountry") === "Australia") {
-            bsbname = "BSB";
-        }
 
          reset_data = [
           { index: 0, label: '#ID', class:'colContactID', active: false, display: true, width: "0" },
@@ -63,8 +59,8 @@ Template.non_transactional_list.onRendered(function() {
           { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "130" },
           { index: 3, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
           { index: 4, label: 'Mobile', class: 'colMobile', active: false, display: true, width: "0" },
-          { index: 5, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "80" },
-          { index: 6, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "80" },
+          { index: 5, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
+          { index: 6, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
           { index: 7, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
           { index: 8, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "80" },
           { index: 9, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
@@ -148,7 +144,7 @@ Template.non_transactional_list.onRendered(function() {
 
   templateObject.getContactOverviewData = async function (deleteFilter = false) {
     var customerpage = 0;
-    getVS1Data('TERPCombinedContactsVS11').then(function (dataObject) {
+    getVS1Data('TERPCombinedContactsVS1').then(function (dataObject) {
         if (dataObject.length == 0) {
             sideBarService.getAllContactCombineVS1(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
                 await addVS1Data('TERPCombinedContactsVS1', JSON.stringify(data));
@@ -281,24 +277,75 @@ Template.non_transactional_list.onRendered(function() {
             data: splashArrayContactOverview,
             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             columnDefs: [
-                {className: "colContactID colID hiddenColumn", "targets": [0],
+                {
+                targets: 0,
+                className: "colContactID colID hiddenColumn",
                 createdCell: function (td, cellData, rowData, row, col) {
                   $(td).closest("tr").attr("id", rowData[0]);
                   $(td).closest("tr").attr("isjob", rowData[2]);
                 }},
-                {className: "colClientName", "targets": [1]},
-                {className: "colType","targets": [2]},
-                {className: "colPhone","targets": [3]},
-                {className: "colMobile hiddenColumn","targets": [4]},
-                {className: "colARBalance text-right","targets": [5]},
-                {className: "colCreditBalance text-right","targets": [6]},
-                {className: "colBalance text-right","targets": [7]},
-                {className: "colCreditLimit hiddenColumn text-right","targets": [8]},
-                {className: "colSalesOrderBalance text-right","targets": [9]},
-                {className: "colEmail hiddenColumn","targets": [10]},
-                {className: "colCustFld1 hiddenColumn","targets": [11]},
-                {className: "colCustFld2 hiddenColumn","targets": [12]},
-                {className: "colAddress","targets": [13]},
+                {
+                  targets: 1,
+                  className: "colClientName",
+                  width: "200px",
+                },
+                {
+                  targets: 2,
+                  className: "colType",
+                  width: "130px",
+                },
+                {
+                  targets: 3,
+                  className: "colPhone",
+                  width: "95px",
+                },
+                {
+                  targets: 4,
+                  className: "colMobile hiddenColumn",
+                  width: "95px",
+                },
+                {
+                  targets: 5,
+                  className: "colARBalance text-right",
+                  width: "90px",
+                },
+                {
+                  targets: 6,
+                  className: "colCreditBalance text-right",
+                  width: "110px",
+                },
+                {
+                  targets: 7,
+                  className: "colBalance text-right",
+                  width: "110px",
+                },
+                {
+                  targets: 8,
+                  className: "colCreditLimit hiddenColumn text-right",
+                  width: "90px",
+                },
+                {
+                  targets: 9,
+                  className: "colSalesOrderBalance text-right",
+                  width: "120px",
+                },
+                {
+                  targets: 10,
+                  className: "colEmail hiddenColumn",
+                  width: "95px",
+                },
+                {
+                  targets: 11,
+                  className: "colCustFld1 hiddenColumn",
+                },
+                {
+                  targets: 12,
+                  className: "colCustFld2 hiddenColumn",
+                },
+                {
+                  targets: 13,
+                  className: "colAddress"
+                }
             ],
             buttons: [
                 {
@@ -343,14 +390,11 @@ Template.non_transactional_list.onRendered(function() {
             info: true,
             responsive: true,
             "order": [[1, "asc"]],
-            "autoWidth": false,
+            // "autoWidth": false,
             action: function () {
                 $('#tblcontactoverview').DataTable().ajax.reload();
             },
             "fnDrawCallback": function (oSettings) {
-              setTimeout(function () {
-                  tableResize();
-              }, 100);
                 $('.paginate_button.page-item').removeClass('disabled');
                 $('#tblcontactoverview_ellipsis').addClass('disabled');
                 if (oSettings._iDisplayLength == -1) {
@@ -466,9 +510,6 @@ Template.non_transactional_list.onRendered(function() {
             },
             language: { search: "",searchPlaceholder: "Search List..." },
             "fnInitComplete": function (oSettings) {
-              setTimeout(function () {
-                  tableResize();
-              }, 100);
                   if(data.Params.Search.replace(/\s/g, "") == ""){
                     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblcontactoverview_filter");
                   }else{
@@ -506,10 +547,6 @@ Template.non_transactional_list.onRendered(function() {
             }, 100);
         });
         $(".fullScreenSpin").css("display", "none");
-
-        setTimeout(async function () {
-            await tableResize();
-        }, 100);
     }, 0);
 
     $('div.dataTables_filter input').addClass('form-control form-control-sm');
@@ -519,7 +556,7 @@ Template.non_transactional_list.onRendered(function() {
   templateObject.getContactOverviewData();
   }
 
-
+// tableResize();
 });
 
 Template.non_transactional_list.events({
