@@ -79,5 +79,16 @@ export default class PayrollSettingsOvertimes {
     ]
   }
 
+  /**
+   * 
+   * @param {PayrollSettingsOvertimes} Overtime 
+   */
+  calculateAmount(Overtime, workedHours = 10, productPrice = 1.5) {
+
+
+
+
+  }
+
 
 }

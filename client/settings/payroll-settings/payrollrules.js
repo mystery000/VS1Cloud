@@ -22243,7 +22243,16 @@ export const saveOvertimes = async (overtimes = []) => {
 
 export const getRateTypes = async (refresh = false) => {
     // sideBarService.getRateTypes(initialBaseDataLoad, 0)
-    let data = await getVS1Data(erpObject.TRateTypes); 
+   // let data = await getVS1Data(erpObject.TRateTypes); 
+
+    let data = await CachedHttp.get(erpObject.TRateTypes, async () => {
+        return await sideBarService.getRateTypes(initialBaseDataLoad, 0);
+    }, {
+        forceOverride: refresh,
+        fallBackToLocal: true,
+    });
+
+    console.log('data',data);
     let rateTypes = data.length > 0 ? JSON.parse(data[0].data) : [];
     return rateTypes;
 }

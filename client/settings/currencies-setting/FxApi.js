@@ -1,5 +1,6 @@
 import Base64 from "../../js/Base64";
 import {TaxRateService} from "../settings-service";
+import {getXeCurrencyKeys} from "../xe-currencies/xe-currencies";
 
 class FxApi {
   /**
@@ -15,7 +16,8 @@ class FxApi {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Basic " + await this.getEmployeeFxCurrencyCredentials()
+          Authorization: "Basic " + (
+          await this.getEmployeeFxCurrencyCredentials())
         }
       });
 
@@ -40,7 +42,8 @@ class FxApi {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Basic " + await this.getEmployeeFxCurrencyCredentials()
+        Authorization: "Basic " + (
+        await this.getEmployeeFxCurrencyCredentials())
       }
     });
 
@@ -57,7 +60,8 @@ class FxApi {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Basic " + await this.getEmployeeFxCurrencyCredentials()
+        Authorization: "Basic " + (
+        await this.getEmployeeFxCurrencyCredentials())
       }
     });
 
@@ -79,7 +83,8 @@ class FxApi {
     const response = await fetch(`https://xecdapi.xe.com/v1/convert_from.json/?to=${to}&from=${from}&amount=${amount}&inverse=true`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Basic " + await this.getEmployeeFxCurrencyCredentials()
+        Authorization: "Basic " + (
+        await this.getEmployeeFxCurrencyCredentials())
       }
     });
 
@@ -123,8 +128,10 @@ class FxApi {
      * This function will return employeeCredentials;
      */
   async getEmployeeFxCurrencyCredentials(ApiID = "userheight41774646", ApiKey = "lgfqm73fb3id5vmqhnnfkgkk0v") {
-   
-    // here we need to load from db the user credentials 
+    // here we need to load from db the user credentials
+    const credentials = await getXeCurrencyKeys();
+    ApiID = credentials.ApiClientId;
+    ApiKey = credentials.ApiSecretKey;
 
     const encoded = Base64.encode(`${ApiID}:${ApiKey}`);
 
