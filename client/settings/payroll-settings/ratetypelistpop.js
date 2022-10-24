@@ -13,183 +13,226 @@ import { autoTable } from "jspdf-autotable";
 import 'jquery-editable-select';
 import { SideBarService } from "../../js/sidebar-service";
 import '../../lib/global/indexdbstorage.js';
+import { getRateTypes } from "./payrollrules";
+import LoadingOverlay from "../../LoadingOverlay";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let rateTypeService = new RateTypeService();
 var times = 0;
 
 Template.ratetypelistpop.onCreated(() => {
-    const templateObject = Template.instance();
-    templateObject.RateTypeList = new ReactiveVar([]);
+    this.RateTypeList = new ReactiveVar([]);
+    this.rateTypes = new ReactiveVar([]);
 });
 
 Template.ratetypelistpop.onRendered(function() {
-    $('.fullScreenSpin').css('display','inline-block');
-    let tempObj = Template.instance();
-    let sideBarService = new SideBarService();
-    let utilityService = new UtilityService();
-    let rateTypeService = new RateTypeService();
-    let description = '';
-    var splashArrayRateTypeList = new Array(); 
-    var currentLoc = FlowRouter.current().route.path;
+    const currentLoc = FlowRouter.current().route.path;
    
-    tempObj.getAllRateType = function() {
-        getVS1Data('TRateTypes').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                sideBarService.getRateListVS1().then(function(data) {
-                    let records = [];
-                    let inventoryData = [];
-                    addVS1Data('TRateTypes',JSON.stringify(data));
-                    for (let i = 0; i < data.tpayratetype.length; i++) {
-                       if (!isNaN(data.tpayratetype[i].fields.Description)) {
-                        description = data.tpayratetype[i].fields.Description || '';
-                      } else {
-                        description = "";
-                      }
-                      var dataList = [                   
-                      	data.tpayratetype[i].fields.Description || '',                    
-                      ];                 
-                        splashArrayRateTypeList.push(dataList);
-                    }
+    // tempObj.getAllRateType = function() {
+    //     getVS1Data('TRateTypes').then(function(dataObject) {
+    //         if (dataObject.length == 0) {
+    //             sideBarService.getRateListVS1().then(function(data) {
+    //                 let records = [];
+    //                 let inventoryData = [];
+    //                 addVS1Data('TRateTypes',JSON.stringify(data));
+    //                 for (let i = 0; i < data.tpayratetype.length; i++) {
+    //                    if (!isNaN(data.tpayratetype[i].fields.Description)) {
+    //                     description = data.tpayratetype[i].fields.Description || '';
+    //                   } else {
+    //                     description = "";
+    //                   }
+    //                   var dataList = [                   
+    //                   	data.tpayratetype[i].fields.Description || '',                    
+    //                   ];                 
+    //                     splashArrayRateTypeList.push(dataList);
+    //                 }
             
-                    if(splashArrayRateTypeList) {
-                       $('#tblratetypelist').dataTable({
-                            data: splashArrayRateTypeList,
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            columnDefs: [
-                                { className: "thDescription", "targets": [0] },                                     
-                                { className: "thRateID hiddenColumn", "targets": [1] }                              
-                            ],
-                            select: true,
-                            destroy: true,
-                            colReorder: true,
-                            pageLength: initialDatatableLoad,
-                            lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                            info: true,
-                            responsive: true,
-                            "fnInitComplete": function () {
-                              $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
-                              $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
-                            }
+    //                 if(splashArrayRateTypeList) {
+    //                    $('#tblratetypelist').dataTable({
+    //                         data: splashArrayRateTypeList,
+    //                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                         columnDefs: [
+    //                             { className: "thDescription", "targets": [0] },                                     
+    //                             { className: "thRateID hiddenColumn", "targets": [1] }                              
+    //                         ],
+    //                         select: true,
+    //                         destroy: true,
+    //                         colReorder: true,
+    //                         pageLength: initialDatatableLoad,
+    //                         lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //                         info: true,
+    //                         responsive: true,
+    //                         "fnInitComplete": function () {
+    //                           $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
+    //                           $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
+    //                         }
 
-                        });
-                        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //                     });
+    //                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-                    }
-                });
-              } 
-              else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tpayratetype;           
-                let records = [];
-                let inventoryData = [];
-                for (let i = 0; i < useData.length; i++) {
-                    if (!isNaN(useData[i].fields.Description)) {
-                        description = useData[i].fields.Description || '';
-                    } else {
-                        description = '';
-                    }
-                    var dataList = [
-                        useData[i].fields.Description || '-',
-                        useData[i].fields.ID || ''
-                    ];                  
-                    splashArrayRateTypeList.push(dataList);
+    //                 }
+    //             });
+    //           } 
+    //           else {
+    //             let data = JSON.parse(dataObject[0].data);
+    //             let useData = data.tpayratetype;           
+    //             let records = [];
+    //             let inventoryData = [];
+    //             for (let i = 0; i < useData.length; i++) {
+    //                 if (!isNaN(useData[i].fields.Description)) {
+    //                     description = useData[i].fields.Description || '';
+    //                 } else {
+    //                     description = '';
+    //                 }
+    //                 var dataList = [
+    //                     useData[i].fields.Description || '-',
+    //                     useData[i].fields.ID || ''
+    //                 ];                  
+    //                 splashArrayRateTypeList.push(dataList);
                    
 
-                }
-                if (splashArrayRateTypeList) {
+    //             }
+    //             if (splashArrayRateTypeList) {
 
-                    $('#tblratetypelist').dataTable({
-                        data: splashArrayRateTypeList,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        paging: true,
-                        "aaSorting": [],
-                        "orderMulti": true,
-                        columnDefs: [
+    //                 $('#tblratetypelist').dataTable({
+    //                     data: splashArrayRateTypeList,
+    //                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                     paging: true,
+    //                     "aaSorting": [],
+    //                     "orderMulti": true,
+    //                     columnDefs: [
                                
-                                { className: "thDescription", "targets": [0] },                                     
-                                { className: "thRateID hiddenColumn", "targets": [1]}   
-                        ],
-                        colReorder: true,
-                        "order": [
-                            [0, "asc"]
-                        ],
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        info: true,
-                        responsive: true,
-                        "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
-                            $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
-                        }
+    //                             { className: "thDescription", "targets": [0] },                                     
+    //                             { className: "thRateID hiddenColumn", "targets": [1]}   
+    //                     ],
+    //                     colReorder: true,
+    //                     "order": [
+    //                         [0, "asc"]
+    //                     ],
+    //                     pageLength: initialDatatableLoad,
+    //                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //                     info: true,
+    //                     responsive: true,
+    //                     "fnInitComplete": function () {
+    //                         $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
+    //                         $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
+    //                     }
 
-                    });
+    //                 });
 
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-                }
-            }
-        }).catch(function(err) {
-            sideBarService.getRateListVS1().then(function(data) {
+    //             }
+    //         }
+    //     }).catch(function(err) {
+    //         sideBarService.getRateListVS1().then(function(data) {
 
-                let records = [];
-                let inventoryData = [];
-                for (let i = 0; i < data.tpayratetype.length; i++) {
-                   if (!isNaN(data.tpayratetype[i].fields.Description)) {
-                    Description = data.tpayratetype[i].fields.Description || '';
-                  } else {
-                    Description = '';
-                  }
-                  var dataList = [
+    //             let records = [];
+    //             let inventoryData = [];
+    //             for (let i = 0; i < data.tpayratetype.length; i++) {
+    //                if (!isNaN(data.tpayratetype[i].fields.Description)) {
+    //                 Description = data.tpayratetype[i].fields.Description || '';
+    //               } else {
+    //                 Description = '';
+    //               }
+    //               var dataList = [
       
-                    data.tpayratetype[i].fields.Description || '',          
-                    data.tpayratetype[i].fields.ID || ''
-                  ];            
-                  splashArrayRateTypeList.push(dataList);
+    //                 data.tpayratetype[i].fields.Description || '',          
+    //                 data.tpayratetype[i].fields.ID || ''
+    //               ];            
+    //               splashArrayRateTypeList.push(dataList);
                 
 
-              }
-                //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
+    //           }
+    //             //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
 
-                if (splashArrayRateTypeList) {
+    //             if (splashArrayRateTypeList) {
 
-                    $('#tblratetypelist').dataTable({
-                        data: splashArrayRateTypeList,
+    //                 $('#tblratetypelist').dataTable({
+    //                     data: splashArrayRateTypeList,
 
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        paging: true,
-                        "aaSorting": [],
-                        "orderMulti": true,
-                        columnDefs: [
-                            { className: "thDescription", "targets": [0] },                                     
-                            { className: "thRateID hiddenColumn", "targets": [1]}   
-                        ],
-                        colReorder: true,
+    //                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                     paging: true,
+    //                     "aaSorting": [],
+    //                     "orderMulti": true,
+    //                     columnDefs: [
+    //                         { className: "thDescription", "targets": [0] },                                     
+    //                         { className: "thRateID hiddenColumn", "targets": [1]}   
+    //                     ],
+    //                     colReorder: true,
 
-                        "order": [
-                            [0, "asc"]
-                        ],
+    //                     "order": [
+    //                         [0, "asc"]
+    //                     ],
 
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        info: true,
-                        responsive: true,
-                        "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
-                            $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
-                        }
+    //                     pageLength: initialDatatableLoad,
+    //                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //                     info: true,
+    //                     responsive: true,
+    //                     "fnInitComplete": function () {
+    //                         $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
+    //                         $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
+    //                     }
 
-                    });
+    //                 });
 
-                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //                  $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
+    //             }
+    //         });
+    //     });
+    // };
+    //tempObj.getAllRateType();
+    this.loadRateTypes = async (refresh = false) => {
+        let rates = await getRateTypes(refresh);
+        rates = rates.tpayratetype.map(rate => rate.fields);
+        await this.rateTypes.set(rates);
+
+        setTimeout(() => {
+            if (splashArrayRateTypeList) {
+            $("#tblratetypelist").dataTable({
+                // data: splashArrayRateTypeList,
+                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                // columnDefs: [
+                //     { className: "thDescription", "targets": [0] },
+                //     { className: "thRateID hiddenColumn", "targets": [1] }
+                // ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                [
+                    initialDatatableLoad, -1
+                ],
+                [
+                    initialDatatableLoad, "All"
+                ]
+                ],
+                info: true,
+                responsive: true,
+                fnInitComplete: function () {
+                $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
+                $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
                 }
             });
-        });
+            $("div.dataTables_filter input").addClass("form-control form-control-sm");
+            }
+        }, 300);
     };
-    tempObj.getAllRateType();
+
+    this.initData = async (refresh = false) => {
+        LoadingOverlay.show();
+        await this.loadRateTypes(refresh);
+
+        LoadingOverlay.hide();
+    }
+
+    //this.initData();
 
 });
+
 Template.ratetypelistpop.helpers({
    
     deptrecords: () => {
@@ -214,6 +257,9 @@ Template.ratetypelistpop.helpers({
 
         return isMobile;
     },
+    rateTypes: () => {
+        return Template.instance().rateTypes.get();
+    }, 
    
 });
 
@@ -224,91 +270,92 @@ Template.ratetypelistpop.events({
    
     },
 
-    'click .btnRefreshRateType': function (event) {
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        const customerList = [];
-        const clientList = [];
-        let salesOrderTable;
-        var splashArray = new Array();
-        var splashArrayRateTypeList = new Array(); 
-        let utilityService = new UtilityService();
-        const dataTableList = [];
-        const tableHeaderList = [];
-        let sideBarService = new SideBarService();
-        let rateTypeService = new RateTypeService();
-        let dataSearchName = $('#tblratetypelist_filter input').val();
-        var currentLoc = FlowRouter.current().route.path;
-        if (dataSearchName.replace(/\s/g, '') != '') {
-            sideBarService.getRateTypeByName(dataSearchName).then(function (data) {
-                let lineItems = [];
-                let lineItemObj = {};
-                if (data.tratetypes.length > 0) {
-                  for (let i = 0; i < data.tratetypes.length; i++) {
-                    var dataList = [                  
-                    	data.tratetypes[i].fields.Description || '',
-                        data.tratetypes[i].fields.ID || ''
-                    ];
+    'click .btnRefreshRateType': async (event, ui) => {
+        await ui.initData(true);
+        // let templateObject = Template.instance();
+        // $('.fullScreenSpin').css('display', 'inline-block');
+        // const customerList = [];
+        // const clientList = [];
+        // let salesOrderTable;
+        // var splashArray = new Array();
+        // var splashArrayRateTypeList = new Array(); 
+        // let utilityService = new UtilityService();
+        // const dataTableList = [];
+        // const tableHeaderList = [];
+        // let sideBarService = new SideBarService();
+        // let rateTypeService = new RateTypeService();
+        // let dataSearchName = $('#tblratetypelist_filter input').val();
+        // var currentLoc = FlowRouter.current().route.path;
+        // if (dataSearchName.replace(/\s/g, '') != '') {
+        //     sideBarService.getRateTypeByName(dataSearchName).then(function (data) {
+        //         let lineItems = [];
+        //         let lineItemObj = {};
+        //         if (data.tratetypes.length > 0) {
+        //           for (let i = 0; i < data.tratetypes.length; i++) {
+        //             var dataList = [                  
+        //             	data.tratetypes[i].fields.Description || '',
+        //                 data.tratetypes[i].fields.ID || ''
+        //             ];
                 
-                      splashArrayRateTypeList.push(dataList);
+        //               splashArrayRateTypeList.push(dataList);
                     
 
-                    }
-                    var datatable = $('#tblratetypelist').DataTable();
-                    datatable.clear();
-                    datatable.rows.add(splashArrayRateTypeList);
-                    datatable.draw(false);
+        //             }
+        //             var datatable = $('#tblratetypelist').DataTable();
+        //             datatable.clear();
+        //             datatable.rows.add(splashArrayRateTypeList);
+        //             datatable.draw(false);
 
-                    $('.fullScreenSpin').css('display', 'none');
-                } else {
+        //             $('.fullScreenSpin').css('display', 'none');
+        //         } else {
 
-                    $('.fullScreenSpin').css('display', 'none');
-                    $('#rateTypeListModel').modal('toggle');
-                    swal({
-                        title: 'Question',
-                        text: "Rate Type does not exist, would you like to create it?",
-                        type: 'question',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'No'
-                    }).then((result) => {
-                        if (result.value) {
-                            $('#addRateModel').modal('toggle');
-                            $('#edtRateDescription').val(dataSearchName);
-                        } else if (result.dismiss === 'cancel') {
-                            $('#rateTypeListModel').modal('toggle');
-                        }
-                    });
+        //             $('.fullScreenSpin').css('display', 'none');
+        //             $('#rateTypeListModel').modal('toggle');
+        //             swal({
+        //                 title: 'Question',
+        //                 text: "Rate Type does not exist, would you like to create it?",
+        //                 type: 'question',
+        //                 showCancelButton: true,
+        //                 confirmButtonText: 'Yes',
+        //                 cancelButtonText: 'No'
+        //             }).then((result) => {
+        //                 if (result.value) {
+        //                     $('#addRateModel').modal('toggle');
+        //                     $('#edtRateDescription').val(dataSearchName);
+        //                 } else if (result.dismiss === 'cancel') {
+        //                     $('#rateTypeListModel').modal('toggle');
+        //                 }
+        //             });
 
-                }
+        //         }
 
-            }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-          sideBarService.getRateListVS1().then(function(data) {
+        //     }).catch(function (err) {
+        //         $('.fullScreenSpin').css('display', 'none');
+        //     });
+        // } else {
+        //   sideBarService.getRateListVS1().then(function(data) {
 
-                  let records = [];
-                  let inventoryData = [];
-                  for (let i = 0; i < data.tratetypes.length; i++) {
-                      var dataList = [
+        //           let records = [];
+        //           let inventoryData = [];
+        //           for (let i = 0; i < data.tratetypes.length; i++) {
+        //               var dataList = [
                   
-                          data.tratetypes[i].fields.Description || '',
-                          data.tratetypes[i].fields.ID || ''
-                      ];
+        //                   data.tratetypes[i].fields.Description || '',
+        //                   data.tratetypes[i].fields.ID || ''
+        //               ];
 
-                      splashArrayRateTypeList.push(dataList);
-                  }
+        //               splashArrayRateTypeList.push(dataList);
+        //           }
                   
-                  var datatable = $('#tblratetypelist').DataTable();
-                    datatable.clear();
-                    datatable.rows.add(splashArrayRateTypeList);
-                    datatable.draw(false);
-                   $('.fullScreenSpin').css('display', 'none');
-                   }).catch(function (err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
-                    }
+        //           var datatable = $('#tblratetypelist').DataTable();
+        //             datatable.clear();
+        //             datatable.rows.add(splashArrayRateTypeList);
+        //             datatable.draw(false);
+        //            $('.fullScreenSpin').css('display', 'none');
+        //            }).catch(function (err) {
+        //                     $('.fullScreenSpin').css('display', 'none');
+        //                 });
+        //             }
     },
     'keyup #tblratetypelist_filter input': function (event) {
       if (event.keyCode == 13) {
@@ -332,12 +379,13 @@ Template.ratetypelistpop.events({
             $('#tblratetypelist_filter .form-control-sm').focus();
         }, 500);
     },
-    'click #rateTypeListModel #refreshpagelist': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let templateObject = Template.instance();
-        Meteor._reload.reload();
-        templateObject.getAllRateType();
+    'click #rateTypeListModel #refreshpagelist': (e, ui) => {
+        // $('.fullScreenSpin').css('display', 'inline-block');
+        // let templateObject = Template.instance();
+        // Meteor._reload.reload();
+        // templateObject.getAllRateType();
 
+        ui.initData(true);
     },
  
 

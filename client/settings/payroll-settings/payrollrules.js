@@ -15,6 +15,8 @@ import { over, template } from "lodash";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import LoadingOverlay from "../../LoadingOverlay";
+import PayrollSettingsOvertimes from "../../js/Api/Model/PayrollSettingsOvertimes";
+import GlobalFunctions from "../../GlobalFunctions";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -208,293 +210,547 @@ Template.payrollrules.onRendered(function() {
         location.reload();
     }
 
-    template.getPayrollOrgainzations = async function()
+    // This has been improved
+    templateObject.getPayrollOrgainzations = async (refresh = false) =>
     {
-           getVS1Data('TPayrollOrganization').then(function(dataObject) {
-               $('.fullScreenSpin').css('display', 'inline-block');
-                if (dataObject.length == 0) {
-                  sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TPayrollOrganization', JSON.stringify(data));
-                  for (let i = 0; i < data.tpayrollorganization.length; i++) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
-                        $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
-                        $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
-                        $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
-                        $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
-                        $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
-                        $('#employegroup').val(data.tpayrollorganization[i].fields.EmployeeGroup);
-                        $('#timesheetcat').val(data.tpayrollorganization[i].fields.TimeSheetCategory);
-                        $('#payorgnization_id').val(data.tpayrollorganization[i].fields.ID);
 
-                        if(data.tpayrollorganization[i].fields.showannualsalary == true)
-                        {
-                            $('#swtShowAnnualSalary').attr("checked","checked");
-                        }
-                        else{
-                        $('#swtShowAnnualSalary').removeAttr('checked');
-                        }
+        let data = await CachedHttp.get(erpObject.TPayrollOrganization, async () => {
+            return await sideBarService.getPayrollinformation(initialBaseDataLoad, 0);
+        }, {
+            useIndexDb: true,
+            useLocalStorage: false,
+            forceOverride: refresh,
+            validate: (cachedResponse) => {
+                return true;
+            }
+        });
+        data = data.response;
+        for (let i = 0; i < data.tpayrollorganization.length; i++) {
+            // $('.fullScreenSpin').css('display', 'inline-block');
+            $("#editbankaccount").val(data.tpayrollorganization[i].fields.bankaccount);
+            $("#editpaygbankaccount").val(data.tpayrollorganization[i].fields.paygaacount);
+            $("#editwagesexpbankaccount").val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
+            $("#editwagespaybankaccount").val(data.tpayrollorganization[i].fields.wagespayablesaccount);
+            $("#editsuperliabbankaccount").val(data.tpayrollorganization[i].fields.Superlibaccount);
+            $("#editsuperexpbankaccount").val(data.tpayrollorganization[i].fields.Supperexpaccount);
+            $("#employegroup").val(data.tpayrollorganization[i].fields.EmployeeGroup);
+            $("#timesheetcat").val(data.tpayrollorganization[i].fields.TimeSheetCategory);
+            $("#payorgnization_id").val(data.tpayrollorganization[i].fields.ID);
 
-                        if(data.tpayrollorganization[i].fields.showemployeebases == true)
-                        {
-                            $('#swtShowEmploymentBasis').attr("checked","checked");
-                        }
-                        else{
-                        $('#swtShowEmploymentBasis').removeAttr('checked');
-                        }
+            if (data.tpayrollorganization[i].fields.showannualsalary == true) {
+                $("#swtShowAnnualSalary").attr("checked", "checked");
+            } else {
+                $("#swtShowAnnualSalary").removeAttr("checked");
+            }
 
+            if (data.tpayrollorganization[i].fields.showemployeebases == true) {
+                $("#swtShowEmploymentBasis").attr("checked", "checked");
+            } else {
+                $("#swtShowEmploymentBasis").removeAttr("checked");
+            }
 
-
-
-                        let src  =  'data:image/jpeg;base64,'+data.tpayrollorganization[i].fields.attachment;
-                        $('#uploadedImage').attr('src', src);
-                        $('#uploadedImage').attr('width','100%');
-                        $('#uploadedImage').attr('height','100%');
-                        $('#removeLogo').show();
-                        $('#changeLogo').show();
-
-
-                    setTimeout(function () { LoadingOverlay.hide();},2000);
-
-                  }
+            let src = "data:image/jpeg;base64," + data.tpayrollorganization[i].fields.attachment;
+            $("#uploadedImage").attr("src", src);
+            $("#uploadedImage").attr("width", "100%");
+            $("#uploadedImage").attr("height", "100%");
+            $("#removeLogo").show();
+            $("#changeLogo").show();
+        }
 
 
 
-                 }).catch(function (err) {
-                  LoadingOverlay.hide();
-                  });
-                }else{
+        //    getVS1Data('TPayrollOrganization').then(function(dataObject) {
+        //        // $('.fullScreenSpin').css('display', 'inline-block');
+        //         if (dataObject.length == 0) {
+        //           sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
+        //           addVS1Data('TPayrollOrganization', JSON.stringify(data));
+        //           for (let i = 0; i < data.tpayrollorganization.length; i++) {
+        //                 // $('.fullScreenSpin').css('display', 'inline-block');
+        //                 $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
+        //                 $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
+        //                 $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
+        //                 $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
+        //                 $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
+        //                 $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
+        //                 $('#employegroup').val(data.tpayrollorganization[i].fields.EmployeeGroup);
+        //                 $('#timesheetcat').val(data.tpayrollorganization[i].fields.TimeSheetCategory);
+        //                 $('#payorgnization_id').val(data.tpayrollorganization[i].fields.ID);
 
-                    $('.fullScreenSpin').css('display', 'inline-block');
-                     sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
+        //                 if(data.tpayrollorganization[i].fields.showannualsalary == true)
+        //                 {
+        //                     $('#swtShowAnnualSalary').attr("checked","checked");
+        //                 }
+        //                 else{
+        //                 $('#swtShowAnnualSalary').removeAttr('checked');
+        //                 }
 
-                        let useData = data;
-
-
-                        for (let i = 0; i < data.tpayrollorganization.length; i++) {
-
-                        $('.fullScreenSpin').css('display', 'inline-block');
-
-                        $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
-                        $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
-                        $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
-                        $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
-                        $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
-                        $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
-                        $('#employegroup').val(data.tpayrollorganization[i].fields.EmployeeGroup);
-                        $('#timesheetcat').val(data.tpayrollorganization[i].fields.TimeSheetCategory);
-                        $('#payorgnization_id').val(data.tpayrollorganization[i].fields.ID);
-
-                        if(data.tpayrollorganization[i].fields.showannualsalary == true)
-                        {
-                            $('#swtShowAnnualSalary').attr("checked","checked");
-                        }
-                        else{
-                        $('#swtShowAnnualSalary').removeAttr('checked');
-                        }
-
-                        if(data.tpayrollorganization[i].fields.showemployeebases == true)
-                        {
-                            $('#swtShowEmploymentBasis').attr("checked","checked");
-                        }
-                        else{
-                        $('#swtShowEmploymentBasis').removeAttr('checked');
-                        }
-                        let src  =  'data:image/jpeg;base64,'+data.tpayrollorganization[i].fields.attachment;
-                         $('#uploadedImage').attr('src', src);
-                        //$('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
-                        $('#uploadedImage').attr('width','100%');
-                        $('#uploadedImage').attr('height','100%');
-                        $('#removeLogo').show();
-                        $('#changeLogo').show();
-
-                        setTimeout(function () { LoadingOverlay.hide();},2000);
-
-                        }
-
-
-                     });
+        //                 if(data.tpayrollorganization[i].fields.showemployeebases == true)
+        //                 {
+        //                     $('#swtShowEmploymentBasis').attr("checked","checked");
+        //                 }
+        //                 else{
+        //                 $('#swtShowEmploymentBasis').removeAttr('checked');
+        //                 }
 
 
 
 
-               }
-           }).catch(function(err) {
-
-                $('.fullScreenSpin').css('display', 'inline-block');
-                sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TPayrollOrganization', JSON.stringify(data));
-                let lineItems = [];
-                let lineItemObj = {};
-
-                for (let i = 0; i < data.tpayrollorganization.length; i++) {
-                    $('.fullScreenSpin').css('display', 'inline-block');
-                    $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
-                    $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
-                    $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
-                    $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
-                    $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
-                    $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
-                    $('#employegroup').val(data.tpayrollorganization[i].fields.EmployeeGroup);
-                    $('#timesheetcat').val(data.tpayrollorganization[i].fields.TimeSheetCategory);
-                    $('#payorgnization_id').val(data.tpayrollorganization[i].fields.ID);
-
-                    if(data.tpayrollorganization[i].fields.showannualsalary == true)
-                    {
-                        $('#swtShowAnnualSalary').attr("checked","checked");
-                    }
-                    else{
-                    $('#swtShowAnnualSalary').removeAttr('checked');
-                    }
-
-                    if(data.tpayrollorganization[i].fields.showemployeebases == true)
-                    {
-                        $('#swtShowEmploymentBasis').attr("checked","checked");
-                    }
-                    else{
-                    $('#swtShowEmploymentBasis').removeAttr('checked');
-                    }
-
-                    let src  =  'data:image/jpeg;base64,'+data.tpayrollorganization[i].fields.attachment;
-                    $('#uploadedImage').attr('src', src);
-
-                    $('#uploadedImage').attr('width','100%');
-                    $('#uploadedImage').attr('height','100%');
-                    $('#removeLogo').show();
-                    $('#changeLogo').show();
-                    setTimeout(function () { LoadingOverlay.hide();},2000);
-                }
+        //                 let src  =  'data:image/jpeg;base64,'+data.tpayrollorganization[i].fields.attachment;
+        //                 $('#uploadedImage').attr('src', src);
+        //                 $('#uploadedImage').attr('width','100%');
+        //                 $('#uploadedImage').attr('height','100%');
+        //                 $('#removeLogo').show();
+        //                 $('#changeLogo').show();
 
 
-                }).catch(function (err) {
+        //             setTimeout(function () { LoadingOverlay.hide();},2000);
 
-                });
-           });
+        //           }
+
+
+
+        //          }).catch(function (err) {
+        //           LoadingOverlay.hide();
+        //           });
+        //         }else{
+
+        //             // $('.fullScreenSpin').css('display', 'inline-block');
+        //              sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
+
+        //                 let useData = data;
+
+
+        //                 for (let i = 0; i < data.tpayrollorganization.length; i++) {
+
+        //                 // $('.fullScreenSpin').css('display', 'inline-block');
+
+        //                 $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
+        //                 $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
+        //                 $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
+        //                 $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
+        //                 $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
+        //                 $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
+        //                 $('#employegroup').val(data.tpayrollorganization[i].fields.EmployeeGroup);
+        //                 $('#timesheetcat').val(data.tpayrollorganization[i].fields.TimeSheetCategory);
+        //                 $('#payorgnization_id').val(data.tpayrollorganization[i].fields.ID);
+
+        //                 if(data.tpayrollorganization[i].fields.showannualsalary == true)
+        //                 {
+        //                     $('#swtShowAnnualSalary').attr("checked","checked");
+        //                 }
+        //                 else{
+        //                 $('#swtShowAnnualSalary').removeAttr('checked');
+        //                 }
+
+        //                 if(data.tpayrollorganization[i].fields.showemployeebases == true)
+        //                 {
+        //                     $('#swtShowEmploymentBasis').attr("checked","checked");
+        //                 }
+        //                 else{
+        //                 $('#swtShowEmploymentBasis').removeAttr('checked');
+        //                 }
+        //                 let src  =  'data:image/jpeg;base64,'+data.tpayrollorganization[i].fields.attachment;
+        //                  $('#uploadedImage').attr('src', src);
+        //                 //$('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
+        //                 $('#uploadedImage').attr('width','100%');
+        //                 $('#uploadedImage').attr('height','100%');
+        //                 $('#removeLogo').show();
+        //                 $('#changeLogo').show();
+
+        //                 setTimeout(function () { LoadingOverlay.hide();},2000);
+
+        //                 }
+
+
+        //              });
+
+
+
+
+        //        }
+        //    }).catch(function(err) {
+
+        //         // $('.fullScreenSpin').css('display', 'inline-block');
+        //         sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
+        //         addVS1Data('TPayrollOrganization', JSON.stringify(data));
+        //         let lineItems = [];
+        //         let lineItemObj = {};
+
+        //         for (let i = 0; i < data.tpayrollorganization.length; i++) {
+        //             // $('.fullScreenSpin').css('display', 'inline-block');
+        //             $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
+        //             $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
+        //             $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
+        //             $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
+        //             $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
+        //             $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
+        //             $('#employegroup').val(data.tpayrollorganization[i].fields.EmployeeGroup);
+        //             $('#timesheetcat').val(data.tpayrollorganization[i].fields.TimeSheetCategory);
+        //             $('#payorgnization_id').val(data.tpayrollorganization[i].fields.ID);
+
+        //             if(data.tpayrollorganization[i].fields.showannualsalary == true)
+        //             {
+        //                 $('#swtShowAnnualSalary').attr("checked","checked");
+        //             }
+        //             else{
+        //             $('#swtShowAnnualSalary').removeAttr('checked');
+        //             }
+
+        //             if(data.tpayrollorganization[i].fields.showemployeebases == true)
+        //             {
+        //                 $('#swtShowEmploymentBasis').attr("checked","checked");
+        //             }
+        //             else{
+        //             $('#swtShowEmploymentBasis').removeAttr('checked');
+        //             }
+
+        //             let src  =  'data:image/jpeg;base64,'+data.tpayrollorganization[i].fields.attachment;
+        //             $('#uploadedImage').attr('src', src);
+
+        //             $('#uploadedImage').attr('width','100%');
+        //             $('#uploadedImage').attr('height','100%');
+        //             $('#removeLogo').show();
+        //             $('#changeLogo').show();
+        //             setTimeout(function () { LoadingOverlay.hide();},2000);
+        //         }
+
+
+        //         }).catch(function (err) {
+
+        //         });
+        //    });
 
 
 
     }
 
-    template.getPayrollOrgainzations();
     templateObject.getAllAllowance = function() {
-    getVS1Data('TAllowance').then(function(dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService.getAllowance(initialBaseDataLoad, 0).then(function (data) {
-              addVS1Data('TAllowance', JSON.stringify(data));
-              let lineItems = [];
-              let lineItemObj = {};
-              for (let i = 0; i < data.tallowance.length; i++) {
-                  let allowanceAmount = utilityService.modifynegativeCurrencyFormat(data.tallowance[i].fields.Amount) || 0.00;
+        getVS1Data('TAllowance').then(function(dataObject) {
+            if (dataObject.length == 0) {
+            sideBarService.getAllowance(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TAllowance', JSON.stringify(data));
+                let lineItems = [];
+                let lineItemObj = {};
+                for (let i = 0; i < data.tallowance.length; i++) {
+                    let allowanceAmount = utilityService.modifynegativeCurrencyFormat(data.tallowance[i].fields.Amount) || 0.00;
 
-                  var dataListAllowance = [
-                      data.tallowance[i].fields.ID || 0,
-                      data.tallowance[i].fields.Description || '-',
-                      data.tallowance[i].fields.AllowanceType || '',
-                      data.tallowance[i].fields.DisplayName || '',
-                      allowanceAmount || 0.00,
-                      data.tallowance[i].fields.Accountname || '',
-                      data.tallowance[i].fields.Accountid || 0,
-                      data.tallowance[i].fields.Payrolltaxexempt || false,
-                      data.tallowance[i].fields.Superinc || false,
-                      data.tallowance[i].fields.Workcoverexempt || false,
-                      '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                  ];
+                    var dataListAllowance = [
+                        data.tallowance[i].fields.ID || 0,
+                        data.tallowance[i].fields.Description || '-',
+                        data.tallowance[i].fields.AllowanceType || '',
+                        data.tallowance[i].fields.DisplayName || '',
+                        allowanceAmount || 0.00,
+                        data.tallowance[i].fields.Accountname || '',
+                        data.tallowance[i].fields.Accountid || 0,
+                        data.tallowance[i].fields.Payrolltaxexempt || false,
+                        data.tallowance[i].fields.Superinc || false,
+                        data.tallowance[i].fields.Workcoverexempt || false,
+                        '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                    ];
 
-                  splashArrayAllowanceList.push(dataListAllowance);
-              }
+                    splashArrayAllowanceList.push(dataListAllowance);
+                }
 
-              function MakeNegative() {
-                  $('td').each(function () {
-                      if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-                  });
-              };
+                function MakeNegative() {
+                    $('td').each(function () {
+                        if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+                    });
+                };
 
 
-              setTimeout(function () {
-                  MakeNegative();
-              }, 100);
-              setTimeout(function () {
-                  $('#tblAlowances').DataTable({
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+                setTimeout(function () {
+                    $('#tblAlowances').DataTable({
 
-                      data: splashArrayAllowanceList,
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      columnDefs: [
-                          {
-                              className: "colAlowancesID hiddenColumn",
-                              "targets": [0]
-                          },
-                          {
-                              className: "colAllowancesNames",
-                              "targets": [1]
-                          },  {
-                              className: "colAllowancesType",
-                              "targets": [2]
-                          }, {
-                              className: "colAllowancesDisplayName",
-                              "targets": [3]
-                          }, {
-                              className: "colAllowancesAmount  text-right",
-                              "targets": [4]
-                          }, {
-                              className: "colAllowancesAccounts",
-                              "targets": [5]
-                          }, {
-                              className: "colAllowancesAccountsID hiddenColumn",
-                              "targets": [6]
-                          }, {
-                              className: "colAllowancesPAYG hiddenColumn",
-                              "targets": [7]
-                          }, {
-                              className: "colAllowancesSuperannuation hiddenColumn",
-                              "targets": [8]
-                          }, {
-                              className: "colAllowancesReportableasW1 hiddenColumn",
-                              "targets": [9]
-                          }, {
-                              className: "colDeleteAllowances",
-                              "orderable": false,
-                              "targets": -1
-                          }
-                      ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                      info: true,
-                      responsive: true,
-                      "order": [[0, "asc"]],
-                      action: function () {
-                          $('#tblAlowances').DataTable().ajax.reload();
-                      },
-                      "fnDrawCallback": function (oSettings) {
-                          $('.paginate_button.page-item').removeClass('disabled');
-                          $('#tblAlowances_ellipsis').addClass('disabled');
-                          if (oSettings._iDisplayLength == -1) {
-                              if (oSettings.fnRecordsDisplay() > 150) {
+                        data: splashArrayAllowanceList,
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        columnDefs: [
+                            {
+                                className: "colAlowancesID hiddenColumn",
+                                "targets": [0]
+                            },
+                            {
+                                className: "colAllowancesNames",
+                                "targets": [1]
+                            },  {
+                                className: "colAllowancesType",
+                                "targets": [2]
+                            }, {
+                                className: "colAllowancesDisplayName",
+                                "targets": [3]
+                            }, {
+                                className: "colAllowancesAmount  text-right",
+                                "targets": [4]
+                            }, {
+                                className: "colAllowancesAccounts",
+                                "targets": [5]
+                            }, {
+                                className: "colAllowancesAccountsID hiddenColumn",
+                                "targets": [6]
+                            }, {
+                                className: "colAllowancesPAYG hiddenColumn",
+                                "targets": [7]
+                            }, {
+                                className: "colAllowancesSuperannuation hiddenColumn",
+                                "targets": [8]
+                            }, {
+                                className: "colAllowancesReportableasW1 hiddenColumn",
+                                "targets": [9]
+                            }, {
+                                className: "colDeleteAllowances",
+                                "orderable": false,
+                                "targets": -1
+                            }
+                        ],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        pageLength: initialDatatableLoad,
+                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                        info: true,
+                        responsive: true,
+                        "order": [[0, "asc"]],
+                        action: function () {
+                            $('#tblAlowances').DataTable().ajax.reload();
+                        },
+                        "fnDrawCallback": function (oSettings) {
+                            $('.paginate_button.page-item').removeClass('disabled');
+                            $('#tblAlowances_ellipsis').addClass('disabled');
+                            if (oSettings._iDisplayLength == -1) {
+                                if (oSettings.fnRecordsDisplay() > 150) {
 
-                              }
-                          } else {
+                                }
+                            } else {
 
-                          }
-                          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                              $('.paginate_button.page-item.next').addClass('disabled');
-                          }
+                            }
+                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                $('.paginate_button.page-item.next').addClass('disabled');
+                            }
 
-                          $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                              .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
-                                  var splashArrayAllowanceListDupp = new Array();
-                                  let dataLenght = oSettings._iDisplayLength;
-                                  let customerSearch = $('#tblAlowances_filter input').val();
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                .on('click', function () {
+                                    // $('.fullScreenSpin').css('display', 'inline-block');
+                                    var splashArrayAllowanceListDupp = new Array();
+                                    let dataLenght = oSettings._iDisplayLength;
+                                    let customerSearch = $('#tblAlowances_filter input').val();
 
-                                  sideBarService.getAllowance(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                    sideBarService.getAllowance(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
 
-                                              for (let j = 0; j < dataObjectnew.tallowance.length; j++) {
+                                                for (let j = 0; j < dataObjectnew.tallowance.length; j++) {
 
-                                                  let allowanceAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tallowance[j].fields.Amount) || 0.00;
+                                                    let allowanceAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tallowance[j].fields.Amount) || 0.00;
 
-                                                  var dataListCustomerDupp = [
+                                                    var dataListCustomerDupp = [
+                                                        dataObjectnewdataObjectnew.tallowance[i].fields.ID || 0,
+                                                        dataObjectnew.tallowance[i].fields.Description || '-',
+                                                        dataObjectnew.tallowance[i].fields.AllowanceType || '',
+                                                        dataObjectnew.tallowance[i].fields.DisplayName || '',
+                                                        allowanceAmount || 0.00,
+                                                        dataObjectnew.tallowance[i].fields.Accountname || '',
+                                                        dataObjectnew.tallowance[i].fields.Accountid || 0,
+                                                        dataObjectnew.tallowance[i].fields.Payrolltaxexempt || false,
+                                                        dataObjectnewdataObjectnew.tallowance[i].fields.Superinc || false,
+                                                        dataObjectnew.tallowance[i].fields.Workcoverexempt || false,
+                                                        '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                                                    ];
+
+                                                    splashArrayAllowanceList.push(dataListCustomerDupp);
+                                                    //}
+                                                }
+
+                                                let uniqueChars = [...new Set(splashArrayAllowanceList)];
+                                                var datatable = $('#tblAlowances').DataTable();
+                                                datatable.clear();
+                                                datatable.rows.add(uniqueChars);
+                                                datatable.draw(false);
+                                                setTimeout(function () {
+                                                    $("#tblAlowances").dataTable().fnPageChange('last');
+                                                }, 400);
+
+                                                LoadingOverlay.hide();
+
+
+                                    }).catch(function (err) {
+                                        LoadingOverlay.hide();
+                                    });
+
+                                });
+                            setTimeout(function () {
+                                MakeNegative();
+                            }, 100);
+                        },
+                        "fnInitComplete": function () {
+                            $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#allowanceModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
+                            $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
+
+                        }
+
+                    }).on('page', function () {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+
+                    }).on('column-reorder', function () {
+
+                    }).on('length.dt', function (e, settings, len) {
+                        //// $('.fullScreenSpin').css('display', 'inline-block');
+                        let dataLenght = settings._iDisplayLength;
+                        splashArrayAllowanceList = [];
+                        if (dataLenght == -1) {
+                        LoadingOverlay.hide();
+
+                        } else {
+                            if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                                LoadingOverlay.hide();
+                            } else {
+                                sideBarService.getAllowance(dataLenght, 0).then(function (dataNonBo) {
+
+                                    addVS1Data('TAllowance', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                        templateObject.resetData(dataNonBo);
+                                        LoadingOverlay.hide();
+                                    }).catch(function (err) {
+                                        LoadingOverlay.hide();
+                                    });
+                                }).catch(function (err) {
+                                    LoadingOverlay.hide();
+                                });
+                            }
+                        }
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    });
+
+
+                }, 0);
+
+                $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+                LoadingOverlay.hide();
+            }).catch(function (err) {
+                LoadingOverlay.hide();
+            });
+            }else{
+
+            let data = JSON.parse(dataObject[0].data);
+
+            let useData = data;
+            let lineItems = [];
+            let lineItemObj = {};
+            for (let i = 0; i < data.tallowance.length; i++) {
+                let allowanceAmount = utilityService.modifynegativeCurrencyFormat(data.tallowance[i].fields.Amount) || 0.00;
+
+                var dataListAllowance = [
+                    data.tallowance[i].fields.ID || 0,
+                    data.tallowance[i].fields.Description || '-',
+                    data.tallowance[i].fields.AllowanceType || '',
+                    data.tallowance[i].fields.DisplayName || '',
+                    allowanceAmount || 0.00,
+                    data.tallowance[i].fields.Accountname || '',
+                    data.tallowance[i].fields.Accountid || 0,
+                    data.tallowance[i].fields.Payrolltaxexempt || false,
+                    data.tallowance[i].fields.Superinc || false,
+                    data.tallowance[i].fields.Workcoverexempt || false,
+                    '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                ];
+
+                splashArrayAllowanceList.push(dataListAllowance);
+            }
+
+            function MakeNegative() {
+                $('td').each(function () {
+                    if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+                });
+            };
+
+
+            setTimeout(function () {
+                MakeNegative();
+            }, 100);
+            setTimeout(function () {
+                $('#tblAlowances').DataTable({
+
+                    data: splashArrayAllowanceList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [
+                        {
+                            className: "colAlowancesID hiddenColumn",
+                            "targets": [0]
+                        },
+                        {
+                            className: "colAllowancesNames",
+                            "targets": [1]
+                        },  {
+                            className: "colAllowancesType",
+                            "targets": [2]
+                        }, {
+                            className: "colAllowancesDisplayName",
+                            "targets": [3]
+                        }, {
+                            className: "colAllowancesAmount  text-right",
+                            "targets": [4]
+                        }, {
+                            className: "colAllowancesAccounts",
+                            "targets": [5]
+                        }, {
+                            className: "colAllowancesAccountsID hiddenColumn",
+                            "targets": [6]
+                        }, {
+                            className: "colAllowancesPAYG hiddenColumn",
+                            "targets": [7]
+                        }, {
+                            className: "colAllowancesSuperannuation hiddenColumn",
+                            "targets": [8]
+                        }, {
+                            className: "colAllowancesReportableasW1 hiddenColumn",
+                            "targets": [9]
+                        }, {
+                            className: "colDeleteAllowances",
+                            "orderable": false,
+                            "targets": -1
+                        }
+                    ],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[0, "asc"]],
+                    action: function () {
+                        $('#tblAlowances').DataTable().ajax.reload();
+                    },
+                    "fnDrawCallback": function (oSettings) {
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#tblAlowances_ellipsis').addClass('disabled');
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
+
+                            }
+                        } else {
+
+                        }
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
+
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                            .on('click', function () {
+                                // $('.fullScreenSpin').css('display', 'inline-block');
+                                var splashArrayAllowanceListDupp = new Array();
+                                let dataLenght = oSettings._iDisplayLength;
+                                let customerSearch = $('#tblAlowances_filter input').val();
+
+                                sideBarService.getAllowance(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+
+                                            for (let j = 0; j < dataObjectnew.tallowance.length; j++) {
+
+                                                let allowanceAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tallowance[j].fields.Amount) || 0.00;
+
+                                                var dataListCustomerDupp = [
                                                     dataObjectnewdataObjectnew.tallowance[i].fields.ID || 0,
                                                     dataObjectnew.tallowance[i].fields.Description || '-',
                                                     dataObjectnew.tallowance[i].fields.AllowanceType || '',
@@ -506,52 +762,52 @@ Template.payrollrules.onRendered(function() {
                                                     dataObjectnewdataObjectnew.tallowance[i].fields.Superinc || false,
                                                     dataObjectnew.tallowance[i].fields.Workcoverexempt || false,
                                                     '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                                  ];
+                                                ];
 
-                                                  splashArrayAllowanceList.push(dataListCustomerDupp);
-                                                  //}
-                                              }
+                                                splashArrayAllowanceList.push(dataListCustomerDupp);
+                                                //}
+                                            }
 
-                                              let uniqueChars = [...new Set(splashArrayAllowanceList)];
-                                              var datatable = $('#tblAlowances').DataTable();
-                                              datatable.clear();
-                                              datatable.rows.add(uniqueChars);
-                                              datatable.draw(false);
-                                              setTimeout(function () {
+                                            let uniqueChars = [...new Set(splashArrayAllowanceList)];
+                                            var datatable = $('#tblAlowances').DataTable();
+                                            datatable.clear();
+                                            datatable.rows.add(uniqueChars);
+                                            datatable.draw(false);
+                                            setTimeout(function () {
                                                 $("#tblAlowances").dataTable().fnPageChange('last');
-                                              }, 400);
+                                            }, 400);
 
-                                              LoadingOverlay.hide();
+                                            LoadingOverlay.hide();
 
 
-                                  }).catch(function (err) {
-                                      LoadingOverlay.hide();
-                                  });
+                                }).catch(function (err) {
+                                    LoadingOverlay.hide();
+                                });
 
-                              });
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-                      },
-                      "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#allowanceModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
-                          $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
+                            });
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#allowanceModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
+                        $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
 
-                      }
+                    }
 
-                  }).on('page', function () {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
+                }).on('page', function () {
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
 
-                  }).on('column-reorder', function () {
+                }).on('column-reorder', function () {
 
-                  }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
+                }).on('length.dt', function (e, settings, len) {
+                    //// $('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
                     splashArrayAllowanceList = [];
                     if (dataLenght == -1) {
-                      LoadingOverlay.hide();
+                    LoadingOverlay.hide();
 
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
@@ -570,566 +826,578 @@ Template.payrollrules.onRendered(function() {
                             });
                         }
                     }
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  });
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                });
 
 
-              }, 0);
+            }, 0);
 
-              $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-              LoadingOverlay.hide();
-          }).catch(function (err) {
+            $('div.dataTables_filter input').addClass('form-control form-control-sm');
             LoadingOverlay.hide();
-          });
-        }else{
 
-          let data = JSON.parse(dataObject[0].data);
+            }
+        }).catch(function(err) {
+        sideBarService.getAllowance(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TAllowance', JSON.stringify(data));
+            let lineItems = [];
+            let lineItemObj = {};
+            for (let i = 0; i < data.tallowance.length; i++) {
+                let allowanceAmount = utilityService.modifynegativeCurrencyFormat(data.tallowance[i].fields.Amount) || 0.00;
 
-          let useData = data;
-          let lineItems = [];
-          let lineItemObj = {};
-          for (let i = 0; i < data.tallowance.length; i++) {
-              let allowanceAmount = utilityService.modifynegativeCurrencyFormat(data.tallowance[i].fields.Amount) || 0.00;
+                var dataListAllowance = [
+                    data.tallowance[i].fields.ID || 0,
+                    data.tallowance[i].fields.Description || '-',
+                    data.tallowance[i].fields.AllowanceType || '',
+                    data.tallowance[i].fields.DisplayName || '',
+                    allowanceAmount || 0.00,
+                    data.tallowance[i].fields.Accountname || '',
+                    data.tallowance[i].fields.Accountid || 0,
+                    data.tallowance[i].fields.Payrolltaxexempt || false,
+                    data.tallowance[i].fields.Superinc || false,
+                    data.tallowance[i].fields.Workcoverexempt || false,
+                    '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                ];
 
-              var dataListAllowance = [
-                  data.tallowance[i].fields.ID || 0,
-                  data.tallowance[i].fields.Description || '-',
-                  data.tallowance[i].fields.AllowanceType || '',
-                  data.tallowance[i].fields.DisplayName || '',
-                  allowanceAmount || 0.00,
-                  data.tallowance[i].fields.Accountname || '',
-                  data.tallowance[i].fields.Accountid || 0,
-                  data.tallowance[i].fields.Payrolltaxexempt || false,
-                  data.tallowance[i].fields.Superinc || false,
-                  data.tallowance[i].fields.Workcoverexempt || false,
-                  '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-              ];
+                splashArrayAllowanceList.push(dataListAllowance);
+            }
 
-              splashArrayAllowanceList.push(dataListAllowance);
-          }
-
-          function MakeNegative() {
-              $('td').each(function () {
-                  if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-              });
-          };
-
-
-          setTimeout(function () {
-              MakeNegative();
-          }, 100);
-          setTimeout(function () {
-              $('#tblAlowances').DataTable({
-
-                  data: splashArrayAllowanceList,
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  columnDefs: [
-                      {
-                          className: "colAlowancesID hiddenColumn",
-                          "targets": [0]
-                      },
-                      {
-                          className: "colAllowancesNames",
-                          "targets": [1]
-                      },  {
-                          className: "colAllowancesType",
-                          "targets": [2]
-                      }, {
-                          className: "colAllowancesDisplayName",
-                          "targets": [3]
-                      }, {
-                          className: "colAllowancesAmount  text-right",
-                          "targets": [4]
-                      }, {
-                          className: "colAllowancesAccounts",
-                          "targets": [5]
-                      }, {
-                          className: "colAllowancesAccountsID hiddenColumn",
-                          "targets": [6]
-                      }, {
-                          className: "colAllowancesPAYG hiddenColumn",
-                          "targets": [7]
-                      }, {
-                          className: "colAllowancesSuperannuation hiddenColumn",
-                          "targets": [8]
-                      }, {
-                          className: "colAllowancesReportableasW1 hiddenColumn",
-                          "targets": [9]
-                      }, {
-                          className: "colDeleteAllowances",
-                          "orderable": false,
-                          "targets": -1
-                      }
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  pageLength: initialDatatableLoad,
-                  lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                  info: true,
-                  responsive: true,
-                  "order": [[0, "asc"]],
-                  action: function () {
-                      $('#tblAlowances').DataTable().ajax.reload();
-                  },
-                  "fnDrawCallback": function (oSettings) {
-                      $('.paginate_button.page-item').removeClass('disabled');
-                      $('#tblAlowances_ellipsis').addClass('disabled');
-                      if (oSettings._iDisplayLength == -1) {
-                          if (oSettings.fnRecordsDisplay() > 150) {
-
-                          }
-                      } else {
-
-                      }
-                      if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                          $('.paginate_button.page-item.next').addClass('disabled');
-                      }
-
-                      $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                          .on('click', function () {
-                              $('.fullScreenSpin').css('display', 'inline-block');
-                              var splashArrayAllowanceListDupp = new Array();
-                              let dataLenght = oSettings._iDisplayLength;
-                              let customerSearch = $('#tblAlowances_filter input').val();
-
-                              sideBarService.getAllowance(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-
-                                          for (let j = 0; j < dataObjectnew.tallowance.length; j++) {
-
-                                              let allowanceAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tallowance[j].fields.Amount) || 0.00;
-
-                                              var dataListCustomerDupp = [
-                                                dataObjectnewdataObjectnew.tallowance[i].fields.ID || 0,
-                                                dataObjectnew.tallowance[i].fields.Description || '-',
-                                                dataObjectnew.tallowance[i].fields.AllowanceType || '',
-                                                dataObjectnew.tallowance[i].fields.DisplayName || '',
-                                                allowanceAmount || 0.00,
-                                                dataObjectnew.tallowance[i].fields.Accountname || '',
-                                                dataObjectnew.tallowance[i].fields.Accountid || 0,
-                                                dataObjectnew.tallowance[i].fields.Payrolltaxexempt || false,
-                                                dataObjectnewdataObjectnew.tallowance[i].fields.Superinc || false,
-                                                dataObjectnew.tallowance[i].fields.Workcoverexempt || false,
-                                                '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                              ];
-
-                                              splashArrayAllowanceList.push(dataListCustomerDupp);
-                                              //}
-                                          }
-
-                                          let uniqueChars = [...new Set(splashArrayAllowanceList)];
-                                          var datatable = $('#tblAlowances').DataTable();
-                                          datatable.clear();
-                                          datatable.rows.add(uniqueChars);
-                                          datatable.draw(false);
-                                          setTimeout(function () {
-                                            $("#tblAlowances").dataTable().fnPageChange('last');
-                                          }, 400);
-
-                                          LoadingOverlay.hide();
+            function MakeNegative() {
+                $('td').each(function () {
+                    if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+                });
+            };
 
 
-                              }).catch(function (err) {
-                                  LoadingOverlay.hide();
-                              });
+            setTimeout(function () {
+                MakeNegative();
+            }, 100);
+            setTimeout(function () {
+                $('#tblAlowances').DataTable({
 
-                          });
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  },
-                  "fnInitComplete": function () {
-                      $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#allowanceModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
-                      $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
+                    data: splashArrayAllowanceList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [
+                        {
+                            className: "colAlowancesID hiddenColumn",
+                            "targets": [0]
+                        },
+                        {
+                            className: "colAllowancesNames",
+                            "targets": [1]
+                        },  {
+                            className: "colAllowancesType",
+                            "targets": [2]
+                        }, {
+                            className: "colAllowancesDisplayName",
+                            "targets": [3]
+                        }, {
+                            className: "colAllowancesAmount  text-right",
+                            "targets": [4]
+                        }, {
+                            className: "colAllowancesAccounts",
+                            "targets": [5]
+                        }, {
+                            className: "colAllowancesAccountsID hiddenColumn",
+                            "targets": [6]
+                        }, {
+                            className: "colAllowancesPAYG hiddenColumn",
+                            "targets": [7]
+                        }, {
+                            className: "colAllowancesSuperannuation hiddenColumn",
+                            "targets": [8]
+                        }, {
+                            className: "colAllowancesReportableasW1 hiddenColumn",
+                            "targets": [9]
+                        }, {
+                            className: "colDeleteAllowances",
+                            "orderable": false,
+                            "targets": -1
+                        }
+                    ],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[0, "asc"]],
+                    action: function () {
+                        $('#tblAlowances').DataTable().ajax.reload();
+                    },
+                    "fnDrawCallback": function (oSettings) {
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#tblAlowances_ellipsis').addClass('disabled');
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
 
-                  }
+                            }
+                        } else {
 
-              }).on('page', function () {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
+                        }
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
 
-              }).on('column-reorder', function () {
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                            .on('click', function () {
+                                // $('.fullScreenSpin').css('display', 'inline-block');
+                                var splashArrayAllowanceListDupp = new Array();
+                                let dataLenght = oSettings._iDisplayLength;
+                                let customerSearch = $('#tblAlowances_filter input').val();
 
-              }).on('length.dt', function (e, settings, len) {
-                //$('.fullScreenSpin').css('display', 'inline-block');
-                let dataLenght = settings._iDisplayLength;
-                splashArrayAllowanceList = [];
-                if (dataLenght == -1) {
-                  LoadingOverlay.hide();
+                                sideBarService.getAllowance(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
 
-                } else {
-                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                        LoadingOverlay.hide();
+                                            for (let j = 0; j < dataObjectnew.tallowance.length; j++) {
+
+                                                let allowanceAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tallowance[j].fields.Amount) || 0.00;
+
+                                                var dataListCustomerDupp = [
+                                                    dataObjectnewdataObjectnew.tallowance[i].fields.ID || 0,
+                                                    dataObjectnew.tallowance[i].fields.Description || '-',
+                                                    dataObjectnew.tallowance[i].fields.AllowanceType || '',
+                                                    dataObjectnew.tallowance[i].fields.DisplayName || '',
+                                                    allowanceAmount || 0.00,
+                                                    dataObjectnew.tallowance[i].fields.Accountname || '',
+                                                    dataObjectnew.tallowance[i].fields.Accountid || 0,
+                                                    dataObjectnew.tallowance[i].fields.Payrolltaxexempt || false,
+                                                    dataObjectnewdataObjectnew.tallowance[i].fields.Superinc || false,
+                                                    dataObjectnew.tallowance[i].fields.Workcoverexempt || false,
+                                                    '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                                                ];
+
+                                                splashArrayAllowanceList.push(dataListCustomerDupp);
+                                                //}
+                                            }
+
+                                            let uniqueChars = [...new Set(splashArrayAllowanceList)];
+                                            var datatable = $('#tblAlowances').DataTable();
+                                            datatable.clear();
+                                            datatable.rows.add(uniqueChars);
+                                            datatable.draw(false);
+                                            setTimeout(function () {
+                                                $("#tblAlowances").dataTable().fnPageChange('last');
+                                            }, 400);
+
+                                            LoadingOverlay.hide();
+
+
+                                }).catch(function (err) {
+                                    LoadingOverlay.hide();
+                                });
+
+                            });
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#allowanceModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
+                        $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
+
+                    }
+
+                }).on('page', function () {
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+
+                }).on('column-reorder', function () {
+
+                }).on('length.dt', function (e, settings, len) {
+                    //// $('.fullScreenSpin').css('display', 'inline-block');
+                    let dataLenght = settings._iDisplayLength;
+                    splashArrayAllowanceList = [];
+                    if (dataLenght == -1) {
+                    LoadingOverlay.hide();
+
                     } else {
-                        sideBarService.getAllowance(dataLenght, 0).then(function (dataNonBo) {
+                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                            LoadingOverlay.hide();
+                        } else {
+                            sideBarService.getAllowance(dataLenght, 0).then(function (dataNonBo) {
 
-                            addVS1Data('TAllowance', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                templateObject.resetData(dataNonBo);
-                                LoadingOverlay.hide();
+                                addVS1Data('TAllowance', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                    templateObject.resetData(dataNonBo);
+                                    LoadingOverlay.hide();
+                                }).catch(function (err) {
+                                    LoadingOverlay.hide();
+                                });
                             }).catch(function (err) {
                                 LoadingOverlay.hide();
                             });
-                        }).catch(function (err) {
-                            LoadingOverlay.hide();
-                        });
+                        }
                     }
-                }
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-              });
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                });
 
 
-          }, 0);
+            }, 0);
 
-          $('div.dataTables_filter input').addClass('form-control form-control-sm');
-          LoadingOverlay.hide();
+            $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-        }
-    }).catch(function(err) {
-      sideBarService.getAllowance(initialBaseDataLoad, 0).then(function (data) {
-          addVS1Data('TAllowance', JSON.stringify(data));
-          let lineItems = [];
-          let lineItemObj = {};
-          for (let i = 0; i < data.tallowance.length; i++) {
-              let allowanceAmount = utilityService.modifynegativeCurrencyFormat(data.tallowance[i].fields.Amount) || 0.00;
-
-              var dataListAllowance = [
-                  data.tallowance[i].fields.ID || 0,
-                  data.tallowance[i].fields.Description || '-',
-                  data.tallowance[i].fields.AllowanceType || '',
-                  data.tallowance[i].fields.DisplayName || '',
-                  allowanceAmount || 0.00,
-                  data.tallowance[i].fields.Accountname || '',
-                  data.tallowance[i].fields.Accountid || 0,
-                  data.tallowance[i].fields.Payrolltaxexempt || false,
-                  data.tallowance[i].fields.Superinc || false,
-                  data.tallowance[i].fields.Workcoverexempt || false,
-                  '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-              ];
-
-              splashArrayAllowanceList.push(dataListAllowance);
-          }
-
-          function MakeNegative() {
-              $('td').each(function () {
-                  if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-              });
-          };
-
-
-          setTimeout(function () {
-              MakeNegative();
-          }, 100);
-          setTimeout(function () {
-              $('#tblAlowances').DataTable({
-
-                  data: splashArrayAllowanceList,
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  columnDefs: [
-                      {
-                          className: "colAlowancesID hiddenColumn",
-                          "targets": [0]
-                      },
-                      {
-                          className: "colAllowancesNames",
-                          "targets": [1]
-                      },  {
-                          className: "colAllowancesType",
-                          "targets": [2]
-                      }, {
-                          className: "colAllowancesDisplayName",
-                          "targets": [3]
-                      }, {
-                          className: "colAllowancesAmount  text-right",
-                          "targets": [4]
-                      }, {
-                          className: "colAllowancesAccounts",
-                          "targets": [5]
-                      }, {
-                          className: "colAllowancesAccountsID hiddenColumn",
-                          "targets": [6]
-                      }, {
-                          className: "colAllowancesPAYG hiddenColumn",
-                          "targets": [7]
-                      }, {
-                          className: "colAllowancesSuperannuation hiddenColumn",
-                          "targets": [8]
-                      }, {
-                          className: "colAllowancesReportableasW1 hiddenColumn",
-                          "targets": [9]
-                      }, {
-                          className: "colDeleteAllowances",
-                          "orderable": false,
-                          "targets": -1
-                      }
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  pageLength: initialDatatableLoad,
-                  lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                  info: true,
-                  responsive: true,
-                  "order": [[0, "asc"]],
-                  action: function () {
-                      $('#tblAlowances').DataTable().ajax.reload();
-                  },
-                  "fnDrawCallback": function (oSettings) {
-                      $('.paginate_button.page-item').removeClass('disabled');
-                      $('#tblAlowances_ellipsis').addClass('disabled');
-                      if (oSettings._iDisplayLength == -1) {
-                          if (oSettings.fnRecordsDisplay() > 150) {
-
-                          }
-                      } else {
-
-                      }
-                      if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                          $('.paginate_button.page-item.next').addClass('disabled');
-                      }
-
-                      $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                          .on('click', function () {
-                              $('.fullScreenSpin').css('display', 'inline-block');
-                              var splashArrayAllowanceListDupp = new Array();
-                              let dataLenght = oSettings._iDisplayLength;
-                              let customerSearch = $('#tblAlowances_filter input').val();
-
-                              sideBarService.getAllowance(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-
-                                          for (let j = 0; j < dataObjectnew.tallowance.length; j++) {
-
-                                              let allowanceAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tallowance[j].fields.Amount) || 0.00;
-
-                                              var dataListCustomerDupp = [
-                                                dataObjectnewdataObjectnew.tallowance[i].fields.ID || 0,
-                                                dataObjectnew.tallowance[i].fields.Description || '-',
-                                                dataObjectnew.tallowance[i].fields.AllowanceType || '',
-                                                dataObjectnew.tallowance[i].fields.DisplayName || '',
-                                                allowanceAmount || 0.00,
-                                                dataObjectnew.tallowance[i].fields.Accountname || '',
-                                                dataObjectnew.tallowance[i].fields.Accountid || 0,
-                                                dataObjectnew.tallowance[i].fields.Payrolltaxexempt || false,
-                                                dataObjectnewdataObjectnew.tallowance[i].fields.Superinc || false,
-                                                dataObjectnew.tallowance[i].fields.Workcoverexempt || false,
-                                                '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                              ];
-
-                                              splashArrayAllowanceList.push(dataListCustomerDupp);
-                                              //}
-                                          }
-
-                                          let uniqueChars = [...new Set(splashArrayAllowanceList)];
-                                          var datatable = $('#tblAlowances').DataTable();
-                                          datatable.clear();
-                                          datatable.rows.add(uniqueChars);
-                                          datatable.draw(false);
-                                          setTimeout(function () {
-                                            $("#tblAlowances").dataTable().fnPageChange('last');
-                                          }, 400);
-
-                                          LoadingOverlay.hide();
-
-
-                              }).catch(function (err) {
-                                  LoadingOverlay.hide();
-                              });
-
-                          });
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  },
-                  "fnInitComplete": function () {
-                      $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#allowanceModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
-                      $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
-
-                  }
-
-              }).on('page', function () {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-
-              }).on('column-reorder', function () {
-
-              }).on('length.dt', function (e, settings, len) {
-                //$('.fullScreenSpin').css('display', 'inline-block');
-                let dataLenght = settings._iDisplayLength;
-                splashArrayAllowanceList = [];
-                if (dataLenght == -1) {
-                  LoadingOverlay.hide();
-
-                } else {
-                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                        LoadingOverlay.hide();
-                    } else {
-                        sideBarService.getAllowance(dataLenght, 0).then(function (dataNonBo) {
-
-                            addVS1Data('TAllowance', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                templateObject.resetData(dataNonBo);
-                                LoadingOverlay.hide();
-                            }).catch(function (err) {
-                                LoadingOverlay.hide();
-                            });
-                        }).catch(function (err) {
-                            LoadingOverlay.hide();
-                        });
-                    }
-                }
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-              });
-
-
-          }, 0);
-
-          $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-          LoadingOverlay.hide();
-      }).catch(function (err) {
-        LoadingOverlay.hide();
-      });
-    });
+            LoadingOverlay.hide();
+        }).catch(function (err) {
+            LoadingOverlay.hide();
+        });
+        });
     };
-    templateObject.getAllAllowance();
+
+  
 
     templateObject.getAllDeductions = function() {
-    getVS1Data('TDeduction').then(function(dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService.getDeduction(initialBaseDataLoad, 0).then(function (data) {
-              addVS1Data('TDeduction', JSON.stringify(data));
-              let lineItems = [];
-              let lineItemObj = {};
-              let deductionTypeVal = 'None';
-              for (let i = 0; i < data.tdeduction.length; i++) {
-                  let deductionAmount = utilityService.modifynegativeCurrencyFormat(data.tdeduction[i].fields.Amount) || 0.00;
-                  if(data.tdeduction[i].fields.Taxexempt == true){
+        getVS1Data('TDeduction').then(function(dataObject) {
+            if (dataObject.length == 0) {
+            sideBarService.getDeduction(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TDeduction', JSON.stringify(data));
+                let lineItems = [];
+                let lineItemObj = {};
+                let deductionTypeVal = 'None';
+                for (let i = 0; i < data.tdeduction.length; i++) {
+                    let deductionAmount = utilityService.modifynegativeCurrencyFormat(data.tdeduction[i].fields.Amount) || 0.00;
+                    if(data.tdeduction[i].fields.Taxexempt == true){
+                        deductionTypeVal = 'None';
+                    }else{
+                        if(data.tdeduction[i].fields.IsWorkPlacegiving == true){
+                        deductionTypeVal = 'Workplace Giving';
+                        }
+
+                        if(data.tdeduction[i].fields.Unionfees == true){
+                        deductionTypeVal = 'Union / Association Fees';
+                        }
+                    }
+                    var dataListDeduction = [
+                        data.tdeduction[i].fields.ID || 0,
+                        data.tdeduction[i].fields.Description || '-',
+                        data.tdeduction[i].fields.DeductionType,
+                        data.tdeduction[i].fields.Displayin || '',
+                        deductionAmount || 0.00,
+                        data.tdeduction[i].fields.Accountname || '',
+                        data.tdeduction[i].fields.Accountid || 0,
+                        data.tdeduction[i].fields.Taxexempt || false,
+                        data.tdeduction[i].fields.SuperInc || false,
+                        data.tdeduction[i].fields.WorkCoverExempt || false,
+                        '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                    ];
+
+                    splashArrayDeductionList.push(dataListDeduction);
+                }
+
+                function MakeNegative() {
+                    $('td').each(function () {
+                        if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+                    });
+                };
+
+
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+                setTimeout(function () {
+                    $('#tblDeductions').DataTable({
+
+                        data: splashArrayDeductionList,
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        columnDefs: [
+                            {
+                                className: "colDeductionsID hiddenColumn",
+                                "targets": [0]
+                            },
+                            {
+                                className: "colDeductionsNames",
+                                "targets": [1]
+                            },  {
+                                className: "colDeductionsType",
+                                "targets": [2]
+                            }, {
+                                className: "colDeductionsDisplayName",
+                                "targets": [3]
+                            }, {
+                                className: "colDeductionsAmount  text-right",
+                                "targets": [4]
+                            }, {
+                                className: "colDeductionsAccounts",
+                                "targets": [5]
+                            }, {
+                                className: "colDeductionsAccountsID hiddenColumn",
+                                "targets": [6]
+                            }, {
+                                className: "colDeductionsPAYG hiddenColumn",
+                                "targets": [7]
+                            }, {
+                                className: "colDeductionsSuperannuation hiddenColumn",
+                                "targets": [8]
+                            }, {
+                                className: "colDeductionsReportableasW1 hiddenColumn",
+                                "targets": [9]
+                            }, {
+                                className: "colDeleteDeductions",
+                                "orderable": false,
+                                "targets": -1
+                            }
+                        ],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        pageLength: initialDatatableLoad,
+                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                        info: true,
+                        responsive: true,
+                        "order": [[0, "asc"]],
+                        action: function () {
+                            $('#tblDeductions').DataTable().ajax.reload();
+                        },
+                        "fnDrawCallback": function (oSettings) {
+                            $('.paginate_button.page-item').removeClass('disabled');
+                            $('#tblDeductions_ellipsis').addClass('disabled');
+                            if (oSettings._iDisplayLength == -1) {
+                                if (oSettings.fnRecordsDisplay() > 150) {
+
+                                }
+                            } else {
+
+                            }
+                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                $('.paginate_button.page-item.next').addClass('disabled');
+                            }
+
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                .on('click', function () {
+                                    // $('.fullScreenSpin').css('display', 'inline-block');
+                                    var splashArrayDeductionListDupp = new Array();
+                                    let dataLenght = oSettings._iDisplayLength;
+                                    let customerSearch = $('#tblDeductions_filter input').val();
+
+                                    sideBarService.getDeduction(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+
+                                                for (let j = 0; j < dataObjectnew.tdeduction.length; j++) {
+
+                                                    let deductionAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tdeduction[j].fields.Amount) || 0.00;
+
+                                                    var dataListDeduction = [
+                                                        data.tdeduction[i].fields.ID || 0,
+                                                        data.tdeduction[i].fields.Description || '-',
+                                                        data.tdeduction[i].fields.DeductionType,
+                                                        data.tdeduction[i].fields.Displayin || '',
+                                                        deductionAmount || 0.00,
+                                                        data.tdeduction[i].fields.Accountname || '',
+                                                        data.tdeduction[i].fields.Accountid || 0,
+                                                        data.tdeduction[i].fields.Taxexempt || false,
+                                                        data.tdeduction[i].fields.SuperInc || false,
+                                                        data.tdeduction[i].fields.WorkCoverExempt || false,
+                                                        '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                                                    ];
+
+                                                    splashArrayDeductionList.push(dataListCustomerDupp);
+                                                    //}
+                                                }
+
+                                                let uniqueChars = [...new Set(splashArrayDeductionList)];
+                                                var datatable = $('#tblDeductions').DataTable();
+                                                datatable.clear();
+                                                datatable.rows.add(uniqueChars);
+                                                datatable.draw(false);
+                                                setTimeout(function () {
+                                                    $("#tblDeductions").dataTable().fnPageChange('last');
+                                                }, 400);
+
+                                                LoadingOverlay.hide();
+
+
+                                    }).catch(function (err) {
+                                        LoadingOverlay.hide();
+                                    });
+
+                                });
+                            setTimeout(function () {
+                                MakeNegative();
+                            }, 100);
+                        },
+                        "fnInitComplete": function () {
+                            $("<button class='btn btn-primary btnAddNewDeduction' data-dismiss='modal' data-toggle='modal'  type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblDeductions_filter");
+                            $("<button class='btn btn-primary btnRefreshDeduction' type='button' id='btnRefreshDeduction' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDeductions_filter");
+
+                        }
+
+                    }).on('page', function () {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+
+                    }).on('column-reorder', function () {
+
+                    }).on('length.dt', function (e, settings, len) {
+                        //// $('.fullScreenSpin').css('display', 'inline-block');
+                        let dataLenght = settings._iDisplayLength;
+                        splashArrayDeductionList = [];
+                        if (dataLenght == -1) {
+                        LoadingOverlay.hide();
+
+                        } else {
+                            if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                                LoadingOverlay.hide();
+                            } else {
+                                sideBarService.getDeduction(dataLenght, 0).then(function (dataNonBo) {
+
+                                    addVS1Data('TDeduction', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                        templateObject.resetData(dataNonBo);
+                                        LoadingOverlay.hide();
+                                    }).catch(function (err) {
+                                        LoadingOverlay.hide();
+                                    });
+                                }).catch(function (err) {
+                                    LoadingOverlay.hide();
+                                });
+                            }
+                        }
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    });
+
+
+                }, 0);
+
+                $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+                LoadingOverlay.hide();
+            }).catch(function (err) {
+                LoadingOverlay.hide();
+            });
+            }else{
+
+            let data = JSON.parse(dataObject[0].data);
+
+            let useData = data;
+            let lineItems = [];
+            let lineItemObj = {};
+            let deductionTypeVal = 'None';
+            for (let i = 0; i < data.tdeduction.length; i++) {
+                let deductionAmount = utilityService.modifynegativeCurrencyFormat(data.tdeduction[i].fields.Amount) || 0.00;
+                if(data.tdeduction[i].fields.Taxexempt == true){
                     deductionTypeVal = 'None';
-                  }else{
+                }else{
                     if(data.tdeduction[i].fields.IsWorkPlacegiving == true){
-                      deductionTypeVal = 'Workplace Giving';
+                    deductionTypeVal = 'Workplace Giving';
                     }
 
                     if(data.tdeduction[i].fields.Unionfees == true){
-                      deductionTypeVal = 'Union / Association Fees';
+                    deductionTypeVal = 'Union / Association Fees';
                     }
-                  }
-                  var dataListDeduction = [
-                      data.tdeduction[i].fields.ID || 0,
-                      data.tdeduction[i].fields.Description || '-',
-                      data.tdeduction[i].fields.DeductionType,
-                      data.tdeduction[i].fields.Displayin || '',
-                      deductionAmount || 0.00,
-                      data.tdeduction[i].fields.Accountname || '',
-                      data.tdeduction[i].fields.Accountid || 0,
-                      data.tdeduction[i].fields.Taxexempt || false,
-                      data.tdeduction[i].fields.SuperInc || false,
-                      data.tdeduction[i].fields.WorkCoverExempt || false,
-                      '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                  ];
+                }
+                var dataListDeduction = [
+                    data.tdeduction[i].fields.ID || 0,
+                    data.tdeduction[i].fields.Description || '-',
+                    data.tdeduction[i].fields.DeductionType,
+                    data.tdeduction[i].fields.Displayin || '',
+                    deductionAmount || 0.00,
+                    data.tdeduction[i].fields.Accountname || '',
+                    data.tdeduction[i].fields.Accountid || 0,
+                    data.tdeduction[i].fields.Taxexempt || false,
+                    data.tdeduction[i].fields.SuperInc || false,
+                    data.tdeduction[i].fields.WorkCoverExempt || false,
+                    '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                ];
 
-                  splashArrayDeductionList.push(dataListDeduction);
-              }
+                splashArrayDeductionList.push(dataListDeduction);
+            }
 
-              function MakeNegative() {
-                  $('td').each(function () {
-                      if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-                  });
-              };
+            function MakeNegative() {
+                $('td').each(function () {
+                    if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+                });
+            };
 
 
-              setTimeout(function () {
-                  MakeNegative();
-              }, 100);
-              setTimeout(function () {
-                  $('#tblDeductions').DataTable({
+            setTimeout(function () {
+                MakeNegative();
+            }, 100);
+            setTimeout(function () {
+                $('#tblDeductions').DataTable({
 
-                      data: splashArrayDeductionList,
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      columnDefs: [
-                          {
-                              className: "colDeductionsID hiddenColumn",
-                              "targets": [0]
-                          },
-                          {
-                              className: "colDeductionsNames",
-                              "targets": [1]
-                          },  {
-                              className: "colDeductionsType",
-                              "targets": [2]
-                          }, {
-                              className: "colDeductionsDisplayName",
-                              "targets": [3]
-                          }, {
-                              className: "colDeductionsAmount  text-right",
-                              "targets": [4]
-                          }, {
-                              className: "colDeductionsAccounts",
-                              "targets": [5]
-                          }, {
-                              className: "colDeductionsAccountsID hiddenColumn",
-                              "targets": [6]
-                          }, {
-                              className: "colDeductionsPAYG hiddenColumn",
-                              "targets": [7]
-                          }, {
-                              className: "colDeductionsSuperannuation hiddenColumn",
-                              "targets": [8]
-                          }, {
-                              className: "colDeductionsReportableasW1 hiddenColumn",
-                              "targets": [9]
-                          }, {
-                              className: "colDeleteDeductions",
-                              "orderable": false,
-                              "targets": -1
-                          }
-                      ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                      info: true,
-                      responsive: true,
-                      "order": [[0, "asc"]],
-                      action: function () {
-                          $('#tblDeductions').DataTable().ajax.reload();
-                      },
-                      "fnDrawCallback": function (oSettings) {
-                          $('.paginate_button.page-item').removeClass('disabled');
-                          $('#tblDeductions_ellipsis').addClass('disabled');
-                          if (oSettings._iDisplayLength == -1) {
-                              if (oSettings.fnRecordsDisplay() > 150) {
+                    data: splashArrayDeductionList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [
+                        {
+                            className: "colDeductionsID hiddenColumn",
+                            "targets": [0]
+                        },
+                        {
+                            className: "colDeductionsNames",
+                            "targets": [1]
+                        },  {
+                            className: "colDeductionsType",
+                            "targets": [2]
+                        }, {
+                            className: "colDeductionsDisplayName",
+                            "targets": [3]
+                        }, {
+                            className: "colDeductionsAmount  text-right",
+                            "targets": [4]
+                        }, {
+                            className: "colDeductionsAccounts",
+                            "targets": [5]
+                        }, {
+                            className: "colDeductionsAccountsID hiddenColumn",
+                            "targets": [6]
+                        }, {
+                            className: "colDeductionsPAYG hiddenColumn",
+                            "targets": [7]
+                        }, {
+                            className: "colDeductionsSuperannuation hiddenColumn",
+                            "targets": [8]
+                        }, {
+                            className: "colDeductionsReportableasW1 hiddenColumn",
+                            "targets": [9]
+                        }, {
+                            className: "colDeleteDeductions",
+                            "orderable": false,
+                            "targets": -1
+                        }
+                    ],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[0, "asc"]],
+                    action: function () {
+                        $('#tblDeductions').DataTable().ajax.reload();
+                    },
+                    "fnDrawCallback": function (oSettings) {
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#tblDeductions_ellipsis').addClass('disabled');
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
 
-                              }
-                          } else {
+                            }
+                        } else {
 
-                          }
-                          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                              $('.paginate_button.page-item.next').addClass('disabled');
-                          }
+                        }
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
 
-                          $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                              .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
-                                  var splashArrayDeductionListDupp = new Array();
-                                  let dataLenght = oSettings._iDisplayLength;
-                                  let customerSearch = $('#tblDeductions_filter input').val();
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                            .on('click', function () {
+                                // $('.fullScreenSpin').css('display', 'inline-block');
+                                var splashArrayDeductionListDupp = new Array();
+                                let dataLenght = oSettings._iDisplayLength;
+                                let customerSearch = $('#tblDeductions_filter input').val();
 
-                                  sideBarService.getDeduction(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                sideBarService.getDeduction(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
 
-                                              for (let j = 0; j < dataObjectnew.tdeduction.length; j++) {
+                                            for (let j = 0; j < dataObjectnew.tdeduction.length; j++) {
 
-                                                  let deductionAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tdeduction[j].fields.Amount) || 0.00;
+                                                let deductionAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tdeduction[j].fields.Amount) || 0.00;
 
-                                                  var dataListDeduction = [
+                                                var dataListDeduction = [
                                                     data.tdeduction[i].fields.ID || 0,
                                                     data.tdeduction[i].fields.Description || '-',
                                                     data.tdeduction[i].fields.DeductionType,
@@ -1143,50 +1411,50 @@ Template.payrollrules.onRendered(function() {
                                                     '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                                 ];
 
-                                                  splashArrayDeductionList.push(dataListCustomerDupp);
-                                                  //}
-                                              }
+                                                splashArrayDeductionList.push(dataListCustomerDupp);
+                                                //}
+                                            }
 
-                                              let uniqueChars = [...new Set(splashArrayDeductionList)];
-                                              var datatable = $('#tblDeductions').DataTable();
-                                              datatable.clear();
-                                              datatable.rows.add(uniqueChars);
-                                              datatable.draw(false);
-                                              setTimeout(function () {
+                                            let uniqueChars = [...new Set(splashArrayDeductionList)];
+                                            var datatable = $('#tblDeductions').DataTable();
+                                            datatable.clear();
+                                            datatable.rows.add(uniqueChars);
+                                            datatable.draw(false);
+                                            setTimeout(function () {
                                                 $("#tblDeductions").dataTable().fnPageChange('last');
-                                              }, 400);
+                                            }, 400);
 
-                                              LoadingOverlay.hide();
+                                            LoadingOverlay.hide();
 
 
-                                  }).catch(function (err) {
-                                      LoadingOverlay.hide();
-                                  });
+                                }).catch(function (err) {
+                                    LoadingOverlay.hide();
+                                });
 
-                              });
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-                      },
-                      "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddNewDeduction' data-dismiss='modal' data-toggle='modal'  type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblDeductions_filter");
-                          $("<button class='btn btn-primary btnRefreshDeduction' type='button' id='btnRefreshDeduction' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDeductions_filter");
+                            });
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary btnAddNewDeduction' data-dismiss='modal' data-toggle='modal'  type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblDeductions_filter");
+                        $("<button class='btn btn-primary btnRefreshDeduction' type='button' id='btnRefreshDeduction' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDeductions_filter");
 
-                      }
+                    }
 
-                  }).on('page', function () {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
+                }).on('page', function () {
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
 
-                  }).on('column-reorder', function () {
+                }).on('column-reorder', function () {
 
-                  }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
+                }).on('length.dt', function (e, settings, len) {
+                    //// $('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
                     splashArrayDeductionList = [];
                     if (dataLenght == -1) {
-                      LoadingOverlay.hide();
+                    LoadingOverlay.hide();
 
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
@@ -1205,475 +1473,255 @@ Template.payrollrules.onRendered(function() {
                             });
                         }
                     }
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  });
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                });
 
 
-              }, 0);
+            }, 0);
 
-              $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-              LoadingOverlay.hide();
-          }).catch(function (err) {
+            $('div.dataTables_filter input').addClass('form-control form-control-sm');
             LoadingOverlay.hide();
-          });
-        }else{
 
-          let data = JSON.parse(dataObject[0].data);
+            }
+        }).catch(function(err) {
+        sideBarService.getDeduction(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TDeduction', JSON.stringify(data));
+            let lineItems = [];
+            let lineItemObj = {};
+            let deductionTypeVal = 'None';
+            for (let i = 0; i < data.tdeduction.length; i++) {
+                let deductionAmount = utilityService.modifynegativeCurrencyFormat(data.tdeduction[i].fields.Amount) || 0.00;
+                if(data.tdeduction[i].fields.Taxexempt == true){
+                    deductionTypeVal = 'None';
+                }else{
+                    if(data.tdeduction[i].fields.IsWorkPlacegiving == true){
+                    deductionTypeVal = 'Workplace Giving';
+                    }
 
-          let useData = data;
-          let lineItems = [];
-          let lineItemObj = {};
-          let deductionTypeVal = 'None';
-          for (let i = 0; i < data.tdeduction.length; i++) {
-              let deductionAmount = utilityService.modifynegativeCurrencyFormat(data.tdeduction[i].fields.Amount) || 0.00;
-              if(data.tdeduction[i].fields.Taxexempt == true){
-                deductionTypeVal = 'None';
-              }else{
-                if(data.tdeduction[i].fields.IsWorkPlacegiving == true){
-                  deductionTypeVal = 'Workplace Giving';
+                    if(data.tdeduction[i].fields.Unionfees == true){
+                    deductionTypeVal = 'Union / Association Fees';
+                    }
                 }
+                var dataListDeduction = [
+                    data.tdeduction[i].fields.ID || 0,
+                    data.tdeduction[i].fields.Description || '-',
+                    data.tdeduction[i].fields.DeductionType,
+                    data.tdeduction[i].fields.Displayin || '',
+                    deductionAmount || 0.00,
+                    data.tdeduction[i].fields.Accountname || '',
+                    data.tdeduction[i].fields.Accountid || 0,
+                    data.tdeduction[i].fields.Taxexempt || false,
+                    data.tdeduction[i].fields.SuperInc || false,
+                    data.tdeduction[i].fields.WorkCoverExempt || false,
+                    '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                ];
 
-                if(data.tdeduction[i].fields.Unionfees == true){
-                  deductionTypeVal = 'Union / Association Fees';
-                }
-              }
-              var dataListDeduction = [
-                data.tdeduction[i].fields.ID || 0,
-                data.tdeduction[i].fields.Description || '-',
-                data.tdeduction[i].fields.DeductionType,
-                data.tdeduction[i].fields.Displayin || '',
-                deductionAmount || 0.00,
-                data.tdeduction[i].fields.Accountname || '',
-                data.tdeduction[i].fields.Accountid || 0,
-                data.tdeduction[i].fields.Taxexempt || false,
-                data.tdeduction[i].fields.SuperInc || false,
-                data.tdeduction[i].fields.WorkCoverExempt || false,
-                '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-            ];
+                splashArrayDeductionList.push(dataListDeduction);
+            }
 
-              splashArrayDeductionList.push(dataListDeduction);
-          }
-
-          function MakeNegative() {
-              $('td').each(function () {
-                  if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-              });
-          };
+            function MakeNegative() {
+                $('td').each(function () {
+                    if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+                });
+            };
 
 
-          setTimeout(function () {
-              MakeNegative();
-          }, 100);
-          setTimeout(function () {
-              $('#tblDeductions').DataTable({
-
-                  data: splashArrayDeductionList,
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  columnDefs: [
-                      {
-                          className: "colDeductionsID hiddenColumn",
-                          "targets": [0]
-                      },
-                      {
-                          className: "colDeductionsNames",
-                          "targets": [1]
-                      },  {
-                          className: "colDeductionsType",
-                          "targets": [2]
-                      }, {
-                          className: "colDeductionsDisplayName",
-                          "targets": [3]
-                      }, {
-                          className: "colDeductionsAmount  text-right",
-                          "targets": [4]
-                      }, {
-                          className: "colDeductionsAccounts",
-                          "targets": [5]
-                      }, {
-                          className: "colDeductionsAccountsID hiddenColumn",
-                          "targets": [6]
-                      }, {
-                          className: "colDeductionsPAYG hiddenColumn",
-                          "targets": [7]
-                      }, {
-                          className: "colDeductionsSuperannuation hiddenColumn",
-                          "targets": [8]
-                      }, {
-                          className: "colDeductionsReportableasW1 hiddenColumn",
-                          "targets": [9]
-                      }, {
-                          className: "colDeleteDeductions",
-                          "orderable": false,
-                          "targets": -1
-                      }
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  pageLength: initialDatatableLoad,
-                  lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                  info: true,
-                  responsive: true,
-                  "order": [[0, "asc"]],
-                  action: function () {
-                      $('#tblDeductions').DataTable().ajax.reload();
-                  },
-                  "fnDrawCallback": function (oSettings) {
-                      $('.paginate_button.page-item').removeClass('disabled');
-                      $('#tblDeductions_ellipsis').addClass('disabled');
-                      if (oSettings._iDisplayLength == -1) {
-                          if (oSettings.fnRecordsDisplay() > 150) {
-
-                          }
-                      } else {
-
-                      }
-                      if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                          $('.paginate_button.page-item.next').addClass('disabled');
-                      }
-
-                      $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                          .on('click', function () {
-                              $('.fullScreenSpin').css('display', 'inline-block');
-                              var splashArrayDeductionListDupp = new Array();
-                              let dataLenght = oSettings._iDisplayLength;
-                              let customerSearch = $('#tblDeductions_filter input').val();
-
-                              sideBarService.getDeduction(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-
-                                          for (let j = 0; j < dataObjectnew.tdeduction.length; j++) {
-
-                                              let deductionAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tdeduction[j].fields.Amount) || 0.00;
-
-                                              var dataListDeduction = [
-                                                data.tdeduction[i].fields.ID || 0,
-                                                data.tdeduction[i].fields.Description || '-',
-                                                data.tdeduction[i].fields.DeductionType,
-                                                data.tdeduction[i].fields.Displayin || '',
-                                                deductionAmount || 0.00,
-                                                data.tdeduction[i].fields.Accountname || '',
-                                                data.tdeduction[i].fields.Accountid || 0,
-                                                data.tdeduction[i].fields.Taxexempt || false,
-                                                data.tdeduction[i].fields.SuperInc || false,
-                                                data.tdeduction[i].fields.WorkCoverExempt || false,
-                                                '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                            ];
-
-                                              splashArrayDeductionList.push(dataListCustomerDupp);
-                                              //}
-                                          }
-
-                                          let uniqueChars = [...new Set(splashArrayDeductionList)];
-                                          var datatable = $('#tblDeductions').DataTable();
-                                          datatable.clear();
-                                          datatable.rows.add(uniqueChars);
-                                          datatable.draw(false);
-                                          setTimeout(function () {
-                                            $("#tblDeductions").dataTable().fnPageChange('last');
-                                          }, 400);
-
-                                          LoadingOverlay.hide();
+            setTimeout(function () {
+                MakeNegative();
+            }, 100);
 
 
-                              }).catch(function (err) {
-                                  LoadingOverlay.hide();
-                              });
 
-                          });
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  },
-                  "fnInitComplete": function () {
-                      $("<button class='btn btn-primary btnAddNewDeduction' data-dismiss='modal' data-toggle='modal'  type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblDeductions_filter");
-                      $("<button class='btn btn-primary btnRefreshDeduction' type='button' id='btnRefreshDeduction' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDeductions_filter");
+            
 
-                  }
+            setTimeout(function () {
+                $('#tblDeductions').DataTable({
 
-              }).on('page', function () {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
+                    data: splashArrayDeductionList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [
+                        {
+                            className: "colDeductionsID hiddenColumn",
+                            "targets": [0]
+                        },
+                        {
+                            className: "colDeductionsNames",
+                            "targets": [1]
+                        },  {
+                            className: "colDeductionsType",
+                            "targets": [2]
+                        }, {
+                            className: "colDeductionsDisplayName",
+                            "targets": [3]
+                        }, {
+                            className: "colDeductionsAmount  text-right",
+                            "targets": [4]
+                        }, {
+                            className: "colDeductionsAccounts",
+                            "targets": [5]
+                        }, {
+                            className: "colDeductionsAccountsID hiddenColumn",
+                            "targets": [6]
+                        }, {
+                            className: "colDeductionsPAYG hiddenColumn",
+                            "targets": [7]
+                        }, {
+                            className: "colDeductionsSuperannuation hiddenColumn",
+                            "targets": [8]
+                        }, {
+                            className: "colDeductionsReportableasW1 hiddenColumn",
+                            "targets": [9]
+                        }, {
+                            className: "colDeleteDeductions",
+                            "orderable": false,
+                            "targets": -1
+                        }
+                    ],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[0, "asc"]],
+                    action: function () {
+                        $('#tblDeductions').DataTable().ajax.reload();
+                    },
+                    "fnDrawCallback": function (oSettings) {
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#tblDeductions_ellipsis').addClass('disabled');
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
 
-              }).on('column-reorder', function () {
+                            }
+                        } else {
 
-              }).on('length.dt', function (e, settings, len) {
-                //$('.fullScreenSpin').css('display', 'inline-block');
-                let dataLenght = settings._iDisplayLength;
-                splashArrayDeductionList = [];
-                if (dataLenght == -1) {
-                  LoadingOverlay.hide();
+                        }
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
 
-                } else {
-                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                        LoadingOverlay.hide();
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                            .on('click', function () {
+                                // $('.fullScreenSpin').css('display', 'inline-block');
+                                var splashArrayDeductionListDupp = new Array();
+                                let dataLenght = oSettings._iDisplayLength;
+                                let customerSearch = $('#tblDeductions_filter input').val();
+
+                                sideBarService.getDeduction(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+
+                                            for (let j = 0; j < dataObjectnew.tdeduction.length; j++) {
+
+                                                let allowanceAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tdeduction[j].fields.Amount) || 0.00;
+
+                                                var dataListCustomerDupp = [
+                                                    dataObjectnewdataObjectnew.tdeduction[i].fields.ID || 0,
+                                                    dataObjectnew.tdeduction[i].fields.Description || '-',
+                                                    dataObjectnew.tdeduction[i].fields.DeductionType || '',
+                                                    dataObjectnew.tdeduction[i].fields.DisplayIn || '',
+                                                    allowanceAmount || 0.00,
+                                                    dataObjectnew.tdeduction[i].fields.Accountname || '',
+                                                    dataObjectnew.tdeduction[i].fields.Accountid || 0,
+                                                    dataObjectnew.tdeduction[i].fields.Payrolltaxexempt || false,
+                                                    dataObjectnewdataObjectnew.tdeduction[i].fields.Superinc || false,
+                                                    dataObjectnew.tdeduction[i].fields.Workcoverexempt || false,
+                                                    '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                                                ];
+
+                                                splashArrayDeductionList.push(dataListCustomerDupp);
+                                                //}
+                                            }
+
+                                            let uniqueChars = [...new Set(splashArrayDeductionList)];
+                                            var datatable = $('#tblDeductions').DataTable();
+                                            datatable.clear();
+                                            datatable.rows.add(uniqueChars);
+                                            datatable.draw(false);
+                                            setTimeout(function () {
+                                                $("#tblDeductions").dataTable().fnPageChange('last');
+                                            }, 400);
+
+                                            LoadingOverlay.hide();
+
+
+                                }).catch(function (err) {
+                                    LoadingOverlay.hide();
+                                });
+
+                            });
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary btnAddNewDeduction' data-dismiss='modal' data-toggle='modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblDeductions_filter");
+                        $("<button class='btn btn-primary btnRefreshDeduction' type='button' id='btnRefreshDeduction' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDeductions_filter");
+
+                    }
+
+                }).on('page', function () {
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+
+                }).on('column-reorder', function () {
+
+                }).on('length.dt', function (e, settings, len) {
+                    //// $('.fullScreenSpin').css('display', 'inline-block');
+                    let dataLenght = settings._iDisplayLength;
+                    splashArrayDeductionList = [];
+                    if (dataLenght == -1) {
+                    LoadingOverlay.hide();
+
                     } else {
-                        sideBarService.getDeduction(dataLenght, 0).then(function (dataNonBo) {
+                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                            LoadingOverlay.hide();
+                        } else {
+                            sideBarService.getDeduction(dataLenght, 0).then(function (dataNonBo) {
 
-                            addVS1Data('TDeduction', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                templateObject.resetData(dataNonBo);
-                                LoadingOverlay.hide();
+                                addVS1Data('TDeduction', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                    templateObject.resetData(dataNonBo);
+                                    LoadingOverlay.hide();
+                                }).catch(function (err) {
+                                    LoadingOverlay.hide();
+                                });
                             }).catch(function (err) {
                                 LoadingOverlay.hide();
                             });
-                        }).catch(function (err) {
-                            LoadingOverlay.hide();
-                        });
+                        }
                     }
-                }
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-              });
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                });
 
 
-          }, 0);
+            }, 0);
 
-          $('div.dataTables_filter input').addClass('form-control form-control-sm');
-          LoadingOverlay.hide();
+            $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-        }
-    }).catch(function(err) {
-      sideBarService.getDeduction(initialBaseDataLoad, 0).then(function (data) {
-          addVS1Data('TDeduction', JSON.stringify(data));
-          let lineItems = [];
-          let lineItemObj = {};
-          let deductionTypeVal = 'None';
-          for (let i = 0; i < data.tdeduction.length; i++) {
-              let deductionAmount = utilityService.modifynegativeCurrencyFormat(data.tdeduction[i].fields.Amount) || 0.00;
-              if(data.tdeduction[i].fields.Taxexempt == true){
-                deductionTypeVal = 'None';
-              }else{
-                if(data.tdeduction[i].fields.IsWorkPlacegiving == true){
-                  deductionTypeVal = 'Workplace Giving';
-                }
-
-                if(data.tdeduction[i].fields.Unionfees == true){
-                  deductionTypeVal = 'Union / Association Fees';
-                }
-              }
-              var dataListDeduction = [
-                data.tdeduction[i].fields.ID || 0,
-                data.tdeduction[i].fields.Description || '-',
-                data.tdeduction[i].fields.DeductionType,
-                data.tdeduction[i].fields.Displayin || '',
-                deductionAmount || 0.00,
-                data.tdeduction[i].fields.Accountname || '',
-                data.tdeduction[i].fields.Accountid || 0,
-                data.tdeduction[i].fields.Taxexempt || false,
-                data.tdeduction[i].fields.SuperInc || false,
-                data.tdeduction[i].fields.WorkCoverExempt || false,
-                '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-            ];
-
-              splashArrayDeductionList.push(dataListDeduction);
-          }
-
-          function MakeNegative() {
-              $('td').each(function () {
-                  if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-              });
-          };
-
-
-          setTimeout(function () {
-              MakeNegative();
-          }, 100);
-
-
-
-          
-
-          setTimeout(function () {
-              $('#tblDeductions').DataTable({
-
-                  data: splashArrayDeductionList,
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  columnDefs: [
-                      {
-                          className: "colDeductionsID hiddenColumn",
-                          "targets": [0]
-                      },
-                      {
-                          className: "colDeductionsNames",
-                          "targets": [1]
-                      },  {
-                          className: "colDeductionsType",
-                          "targets": [2]
-                      }, {
-                          className: "colDeductionsDisplayName",
-                          "targets": [3]
-                      }, {
-                          className: "colDeductionsAmount  text-right",
-                          "targets": [4]
-                      }, {
-                          className: "colDeductionsAccounts",
-                          "targets": [5]
-                      }, {
-                          className: "colDeductionsAccountsID hiddenColumn",
-                          "targets": [6]
-                      }, {
-                          className: "colDeductionsPAYG hiddenColumn",
-                          "targets": [7]
-                      }, {
-                          className: "colDeductionsSuperannuation hiddenColumn",
-                          "targets": [8]
-                      }, {
-                          className: "colDeductionsReportableasW1 hiddenColumn",
-                          "targets": [9]
-                      }, {
-                          className: "colDeleteDeductions",
-                          "orderable": false,
-                          "targets": -1
-                      }
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  pageLength: initialDatatableLoad,
-                  lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                  info: true,
-                  responsive: true,
-                  "order": [[0, "asc"]],
-                  action: function () {
-                      $('#tblDeductions').DataTable().ajax.reload();
-                  },
-                  "fnDrawCallback": function (oSettings) {
-                      $('.paginate_button.page-item').removeClass('disabled');
-                      $('#tblDeductions_ellipsis').addClass('disabled');
-                      if (oSettings._iDisplayLength == -1) {
-                          if (oSettings.fnRecordsDisplay() > 150) {
-
-                          }
-                      } else {
-
-                      }
-                      if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                          $('.paginate_button.page-item.next').addClass('disabled');
-                      }
-
-                      $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                          .on('click', function () {
-                              $('.fullScreenSpin').css('display', 'inline-block');
-                              var splashArrayDeductionListDupp = new Array();
-                              let dataLenght = oSettings._iDisplayLength;
-                              let customerSearch = $('#tblDeductions_filter input').val();
-
-                              sideBarService.getDeduction(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-
-                                          for (let j = 0; j < dataObjectnew.tdeduction.length; j++) {
-
-                                              let allowanceAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tdeduction[j].fields.Amount) || 0.00;
-
-                                              var dataListCustomerDupp = [
-                                                dataObjectnewdataObjectnew.tdeduction[i].fields.ID || 0,
-                                                dataObjectnew.tdeduction[i].fields.Description || '-',
-                                                dataObjectnew.tdeduction[i].fields.DeductionType || '',
-                                                dataObjectnew.tdeduction[i].fields.DisplayIn || '',
-                                                allowanceAmount || 0.00,
-                                                dataObjectnew.tdeduction[i].fields.Accountname || '',
-                                                dataObjectnew.tdeduction[i].fields.Accountid || 0,
-                                                dataObjectnew.tdeduction[i].fields.Payrolltaxexempt || false,
-                                                dataObjectnewdataObjectnew.tdeduction[i].fields.Superinc || false,
-                                                dataObjectnew.tdeduction[i].fields.Workcoverexempt || false,
-                                                '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                              ];
-
-                                              splashArrayDeductionList.push(dataListCustomerDupp);
-                                              //}
-                                          }
-
-                                          let uniqueChars = [...new Set(splashArrayDeductionList)];
-                                          var datatable = $('#tblDeductions').DataTable();
-                                          datatable.clear();
-                                          datatable.rows.add(uniqueChars);
-                                          datatable.draw(false);
-                                          setTimeout(function () {
-                                            $("#tblDeductions").dataTable().fnPageChange('last');
-                                          }, 400);
-
-                                          LoadingOverlay.hide();
-
-
-                              }).catch(function (err) {
-                                  LoadingOverlay.hide();
-                              });
-
-                          });
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  },
-                  "fnInitComplete": function () {
-                      $("<button class='btn btn-primary btnAddNewDeduction' data-dismiss='modal' data-toggle='modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblDeductions_filter");
-                      $("<button class='btn btn-primary btnRefreshDeduction' type='button' id='btnRefreshDeduction' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDeductions_filter");
-
-                  }
-
-              }).on('page', function () {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-
-              }).on('column-reorder', function () {
-
-              }).on('length.dt', function (e, settings, len) {
-                //$('.fullScreenSpin').css('display', 'inline-block');
-                let dataLenght = settings._iDisplayLength;
-                splashArrayDeductionList = [];
-                if (dataLenght == -1) {
-                  LoadingOverlay.hide();
-
-                } else {
-                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                        LoadingOverlay.hide();
-                    } else {
-                        sideBarService.getDeduction(dataLenght, 0).then(function (dataNonBo) {
-
-                            addVS1Data('TDeduction', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                templateObject.resetData(dataNonBo);
-                                LoadingOverlay.hide();
-                            }).catch(function (err) {
-                                LoadingOverlay.hide();
-                            });
-                        }).catch(function (err) {
-                            LoadingOverlay.hide();
-                        });
-                    }
-                }
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-              });
-
-
-          }, 0);
-
-          $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-          LoadingOverlay.hide();
-      }).catch(function (err) {
-        LoadingOverlay.hide();
-      });
-    });
+            LoadingOverlay.hide();
+        }).catch(function (err) {
+            LoadingOverlay.hide();
+        });
+        });
     };
-    templateObject.getAllDeductions();
 
-    templateObject.getCalenders = async () => {
-        LoadingOverlay.show();
+   
 
+    templateObject.getCalenders = async (refresh = false) => {
         let _data = await CachedHttp.get(erpObject.TPayrollCalendars, async () => {
             return await sideBarService.getCalender(initialBaseDataLoad, 0);
         }, {
             useIndexDb: true,
             useLocalStorage: false,
+            forceOverride: refresh,
             validate: (cachedResponse) => {
-                return false;
+                return true;
             }
-
         });
 
         let data = _data.response;
@@ -1754,7 +1802,7 @@ Template.payrollrules.onRendered(function() {
 
                     $('.paginate_button.next:not(.disabled)', this.api().table().container())
                         .on('click', function () {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            // $('.fullScreenSpin').css('display', 'inline-block');
                             var splashArrayCalenderListDupp = new Array();
                             let dataLenght = oSettings._iDisplayLength;
                             let customerSearch = $('#tblPayCalendars_filter input').val();
@@ -1811,7 +1859,7 @@ Template.payrollrules.onRendered(function() {
             }).on('column-reorder', function () {
 
             }).on('length.dt', function (e, settings, len) {
-              //$('.fullScreenSpin').css('display', 'inline-block');
+              //// $('.fullScreenSpin').css('display', 'inline-block');
               let dataLenght = settings._iDisplayLength;
               splashArrayCalenderList = [];
               if (dataLenght == -1) {
@@ -1843,10 +1891,6 @@ Template.payrollrules.onRendered(function() {
         }, 0);
 
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-        LoadingOverlay.hide();
-
-
 
         // getVS1Data('TPayrollCalendars').then(function(dataObject) {
 
@@ -1933,7 +1977,7 @@ Template.payrollrules.onRendered(function() {
 
         //                       $('.paginate_button.next:not(.disabled)', this.api().table().container())
         //                           .on('click', function () {
-        //                               $('.fullScreenSpin').css('display', 'inline-block');
+        //                               // $('.fullScreenSpin').css('display', 'inline-block');
         //                               var splashArrayCalenderListDupp = new Array();
         //                               let dataLenght = oSettings._iDisplayLength;
         //                               let customerSearch = $('#tblPayCalendars_filter input').val();
@@ -1990,7 +2034,7 @@ Template.payrollrules.onRendered(function() {
         //               }).on('column-reorder', function () {
 
         //               }).on('length.dt', function (e, settings, len) {
-        //                 //$('.fullScreenSpin').css('display', 'inline-block');
+        //                 //// $('.fullScreenSpin').css('display', 'inline-block');
         //                 let dataLenght = settings._iDisplayLength;
         //                 splashArrayCalenderList = [];
         //                 if (dataLenght == -1) {
@@ -2113,7 +2157,7 @@ Template.payrollrules.onRendered(function() {
 
         //                   $('.paginate_button.next:not(.disabled)', this.api().table().container())
         //                       .on('click', function () {
-        //                           $('.fullScreenSpin').css('display', 'inline-block');
+        //                           // $('.fullScreenSpin').css('display', 'inline-block');
         //                           var splashArrayCalenderListDupp = new Array();
         //                           let dataLenght = oSettings._iDisplayLength;
         //                           let customerSearch = $('#tblPayCalendars_filter input').val();
@@ -2168,7 +2212,7 @@ Template.payrollrules.onRendered(function() {
         //           }).on('column-reorder', function () {
 
         //           }).on('length.dt', function (e, settings, len) {
-        //             //$('.fullScreenSpin').css('display', 'inline-block');
+        //             //// $('.fullScreenSpin').css('display', 'inline-block');
         //             let dataLenght = settings._iDisplayLength;
         //             splashArrayCalenderList = [];
         //             if (dataLenght == -1) {
@@ -2285,7 +2329,7 @@ Template.payrollrules.onRendered(function() {
 
         //                   $('.paginate_button.next:not(.disabled)', this.api().table().container())
         //                       .on('click', function () {
-        //                           $('.fullScreenSpin').css('display', 'inline-block');
+        //                           // $('.fullScreenSpin').css('display', 'inline-block');
         //                           var splashArrayCalenderListDupp = new Array();
         //                           let dataLenght = oSettings._iDisplayLength;
         //                           let customerSearch = $('#tblPayCalendars_filter input').val();
@@ -2341,7 +2385,7 @@ Template.payrollrules.onRendered(function() {
         //           }).on('column-reorder', function () {
 
         //           }).on('length.dt', function (e, settings, len) {
-        //             //$('.fullScreenSpin').css('display', 'inline-block');
+        //             //// $('.fullScreenSpin').css('display', 'inline-block');
         //             let dataLenght = settings._iDisplayLength;
         //             splashArrayCalenderList = [];
         //             if (dataLenght == -1) {
@@ -2380,535 +2424,687 @@ Template.payrollrules.onRendered(function() {
         //   });
         // });
     };
-    templateObject.getCalenders();
-
-    templateObject.getHolidayData = function(){
-
-        getVS1Data('TPayrollHolidays').then(function(dataObject) {
-
-            if(dataObject.length == 0) {
-              sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TPayrollHolidays', JSON.stringify(data));
-
-                  let lineItems = [];
-                  let lineItemObj = {};
-
-
-
-                  for (let i = 0; i < data.tpayrollholidays.length; i++) {
-
-                            var dataListAllowance = [
-                                data.tpayrollholidays[i].fields.ID || '',
-                                data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                                moment( data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
-                                data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',
-                                '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                            ];
-                            splashArrayHolidayList.push(dataListAllowance);
-                  }
-
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-                  setTimeout(function () {
-                      $('#tblHolidays').DataTable({
-
-                          data: splashArrayHolidayList,
-                          "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                          columnDefs: [
-
-                            {
-                              className: "colHolidayID hiddenColumn",
-                              "targets": [0]
-                            },
-                            {
-                               className: "colHolidayName",
-                               "targets": [1]
-                            },
-                            {
-                               className: "colHolidayDate",
-                               "targets": [2]
-                            },
-                            {
-                                className: "colHolidaygroup hiddenColumn",
-                                "targets": [3]
-                            },
-                            {
-                               className: "colHolidayDelete",
-                               "orderable": false,
-                               "targets": -1
-                            }
-                          ],
-                          select: true,
-                          destroy: true,
-                          colReorder: true,
-                          pageLength: initialDatatableLoad,
-                          lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                          info: true,
-                          responsive: true,
-                          "order": [[0, "asc"]],
-                          action: function () {
-                              $('#tblHolidays').DataTable().ajax.reload();
-                          },
-                          "fnDrawCallback": function (oSettings) {
-                              $('.paginate_button.page-item').removeClass('disabled');
-                              $('#tblHolidays_ellipsis').addClass('disabled');
-                              if (oSettings._iDisplayLength == -1) {
-                                  if (oSettings.fnRecordsDisplay() > 150) {
-
-                                  }
-                              } else {
-
-                              }
-                              if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                  $('.paginate_button.page-item.next').addClass('disabled');
-                              }
-
-                              $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                  .on('click', function () {
-                                      $('.fullScreenSpin').css('display', 'inline-block');
-                                      var splashArrayHolidayList = new Array();
-                                      let dataLenght = oSettings._iDisplayLength;
-                                      let customerSearch = $('#tblHolidays_filter input').val();
-
-                                      sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-                                        for (let i = 0; i < data.tpayrollholidays.length; i++) {
-
-                                                var dataListAllowance = [
-                                                    data.tpayrollholidays[i].fields.ID || '',
-                                                    data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                                                    moment( data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
-                                                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',
-                                                    '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                                ];
-
-                                            splashArrayHolidayList.push(dataListAllowance);
-                                        }
-
-                                                  let uniqueChars = [...new Set(splashArrayHolidayList)];
-                                                  var datatable = $('#tblHolidays').DataTable();
-                                                  datatable.clear();
-                                                  datatable.rows.add(uniqueChars);
-                                                  datatable.draw(false);
-                                                  setTimeout(function () {
-                                                    $("#tblHolidays").dataTable().fnPageChange('last');
-                                                  }, 400);
-
-                                                  LoadingOverlay.hide();
-
-
-                                      }).catch(function (err) {
-                                          LoadingOverlay.hide();
-                                      });
-
-                                  });
-                              setTimeout(function () {
-                                  MakeNegative();
-                              }, 100);
-                          },
-                          "fnInitComplete": function () {
-
-                            $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
-                            $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
-
-                          }
-
-                      }).on('page', function () {
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-
-                      }).on('column-reorder', function () {
-
-                      }).on('length.dt', function (e, settings, len) {
-                        //$('.fullScreenSpin').css('display', 'inline-block');
-                        let dataLenght = settings._iDisplayLength;
-                        splashArrayHolidayList = [];
-                        if (dataLenght == -1) {
-                          LoadingOverlay.hide();
-
-                        } else {
-                            if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                LoadingOverlay.hide();
-                            } else {
-                                sideBarService.getHolidayData(dataLenght, 0).then(function (dataNonBo) {
-
-                                    addVS1Data('TPayrollHolidays', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                        templateObject.resetData(dataNonBo);
-                                        LoadingOverlay.hide();
-                                    }).catch(function (err) {
-                                        LoadingOverlay.hide();
-                                    });
-                                }).catch(function (err) {
-                                    LoadingOverlay.hide();
-                                });
-                            }
-                        }
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-                      });
-
-
-                  }, 0);
-
-                  $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-                  LoadingOverlay.hide();
-              }).catch(function (err) {
-                LoadingOverlay.hide();
-              });
-            }else{
-
-              let data = JSON.parse(dataObject[0].data);
-
-
-
-              let useData = data;
-              let lineItems = [];
-              let lineItemObj = {};
-              for (let i = 0; i < data.tpayrollholidays.length; i++) {
-
-                var dataListAllowance = [
-                    data.tpayrollholidays[i].fields.ID || '',
-                    data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                    moment( data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
-                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',
-                    '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                ];
-
-                splashArrayHolidayList.push(dataListAllowance);
-            }
-
-
-
-
-              setTimeout(function () {
-                  MakeNegative();
-              }, 100);
-              setTimeout(function () {
-                  $('#tblHolidays').DataTable({
-
-                      data: splashArrayHolidayList,
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      columnDefs: [
-
-                        {
-                          className: "colHolidayID hiddenColumn",
-                          "targets": [0]
-                        },
-                        {
-                           className: "colHolidayName",
-                           "targets": [1]
-                        },
-                        {
-                           className: "colHolidayDate",
-                           "targets": [2]
-                        },
-                        {
-                            className: "colHolidaygroup hiddenColumn",
-                            "targets": [3]
-                        },
-                        {
-                           className: "colHolidayDelete",
-                           "orderable": false,
-                           "targets": -1
-                        }
-                      ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                      info: true,
-                      responsive: true,
-                      "order": [[0, "asc"]],
-                      action: function () {
-                          $('#tblHolidays').DataTable().ajax.reload();
-                      },
-                      "fnDrawCallback": function (oSettings) {
-                          $('.paginate_button.page-item').removeClass('disabled');
-                          $('#tblHolidays_ellipsis').addClass('disabled');
-                          if (oSettings._iDisplayLength == -1) {
-                              if (oSettings.fnRecordsDisplay() > 150) {
-
-                              }
-                          } else {
-
-                          }
-                          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                              $('.paginate_button.page-item.next').addClass('disabled');
-                          }
-
-                          $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                              .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
-                                  var splashArrayHolidayListPop = new Array();
-                                  let dataLenght = oSettings._iDisplayLength;
-                                  let customerSearch = $('#tblHolidays_filter input').val();
-
-                                  sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-                                    for (let i = 0; i < data.tpayrollholidays.length; i++) {
-
-                                        var dataListAllowance = [
-                                            data.tpayrollholidays[i].fields.ID || '',
-                                            data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                                            moment( data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
-                                            data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',
-                                            '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                        ];
-
-                                        splashArrayHolidayList.push(dataListAllowance);
-                                    }
-
-                                              let uniqueChars = [...new Set(splashArrayCalenderList)];
-                                              var datatable = $('#tblHolidays').DataTable();
-                                              datatable.clear();
-                                              datatable.rows.add(uniqueChars);
-                                              datatable.draw(false);
-                                              setTimeout(function () {
-                                                $("#tblHolidays").dataTable().fnPageChange('last');
-                                              }, 400);
-
-                                              LoadingOverlay.hide();
-
-
-                                  }).catch(function (err) {
-                                      LoadingOverlay.hide();
-                                  });
-
-                              });
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-                      },
-                      "fnInitComplete": function () {
-
-                    $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
-                    $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
-
-                      }
-
-                  }).on('page', function () {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-
-                  }).on('column-reorder', function () {
-
-                  }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
-                    let dataLenght = settings._iDisplayLength;
-                    splashArrayHolidayList = [];
-                    if (dataLenght == -1) {
-                      LoadingOverlay.hide();
-
-                    } else {
-                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            LoadingOverlay.hide();
-                        } else {
-                            sideBarService.getHolidayData(dataLenght, 0).then(function (dataNonBo) {
-
-                                addVS1Data('TPayrollHolidays', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                    templateObject.resetData(dataNonBo);
-                                    LoadingOverlay.hide();
-                                }).catch(function (err) {
-                                    LoadingOverlay.hide();
-                                });
-                            }).catch(function (err) {
-                                LoadingOverlay.hide();
-                            });
-                        }
-                    }
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  });
-
-
-              }, 0);
-
-              $('div.dataTables_filter input').addClass('form-control form-control-sm');
-              LoadingOverlay.hide();
-
-            }
-        }).catch(function(err) {
-          sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (data) {
-              addVS1Data('TPayrollHolidays', JSON.stringify(data));
-              let lineItems = [];
-              let lineItemObj = {};
-              for (let i = 0; i < data.tpayrollholidays.length; i++) {
-
-                var dataListAllowance = [
-                    data.tpayrollholidays[i].fields.ID || '',
-                    data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                    moment( data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
-                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',
-                    '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                ];
-
-                splashArrayHolidayList.push(dataListAllowance);
-            }
-
-
-              setTimeout(function () {
-                  MakeNegative();
-              }, 100);
-              setTimeout(function () {
-                  $('#tblHolidays').DataTable({
-
-                      data: splashArrayHolidayList,
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      columnDefs: [
-
-                        {
-                          className: "colHolidayID hiddenColumn",
-                          "targets": [0]
-                        },
-                        {
-                           className: "colHolidayName",
-                           "targets": [1]
-                        },
-                        {
-                           className: "colHolidayDate",
-                           "targets": [2]
-                        },
-                        {
-                            className: "colHolidaygroup hiddenColumn",
-                            "targets": [3]
-                        },
-                        {
-                           className: "colHolidayDelete",
-                           "orderable": false,
-                           "targets": -1
-                        }
-                     ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                      info: true,
-                      responsive: true,
-                      "order": [[0, "asc"]],
-                      action: function () {
-                          $('#tblHolidays').DataTable().ajax.reload();
-                      },
-                      "fnDrawCallback": function (oSettings) {
-                          $('.paginate_button.page-item').removeClass('disabled');
-                          $('#tblHolidays_ellipsis').addClass('disabled');
-                          if (oSettings._iDisplayLength == -1) {
-                              if (oSettings.fnRecordsDisplay() > 150) {
-
-                              }
-                          } else {
-
-                          }
-                          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                              $('.paginate_button.page-item.next').addClass('disabled');
-                          }
-
-                          $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                              .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
-                                  var splashArrayHolidayListDupp = new Array();
-                                  let dataLenght = oSettings._iDisplayLength;
-                                  let customerSearch = $('#tblHolidays_filter input').val();
-
-                                  sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-                                    for (let i = 0; i < data.tpayrollholidays.length; i++) {
-
-                                        var dataListAllowance = [
-                                            data.tpayrollholidays[i].fields.ID || '',
-                                            data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                                            moment( data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
-                                            data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',
-                                            '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                        ];
-
-                                        splashArrayHolidayList.push(dataListAllowance);
-                                    }
-
-                                         let uniqueChars = [...new Set(splashArrayCalenderList)];
-                                         var datatable = $('#tblHolidays').DataTable();
-                                              datatable.clear();
-                                              datatable.rows.add(uniqueChars);
-                                              datatable.draw(false);
-                                              setTimeout(function () {
-                                                $("#tblHolidays").dataTable().fnPageChange('last');
-                                              }, 400);
-
-                                              LoadingOverlay.hide();
-
-
-                                  }).catch(function (err) {
-                                      LoadingOverlay.hide();
-                                  });
-
-                              });
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-                      },
-                      "fnInitComplete": function () {
-                        $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
-                        $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
-
-                      }
-
-                  }).on('page', function () {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-
-                  }).on('column-reorder', function () {
-
-                  }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
-                    let dataLenght = settings._iDisplayLength;
-                    splashArrayCalenderList = [];
-                    if (dataLenght == -1) {
-                      LoadingOverlay.hide();
-
-                    } else {
-                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            LoadingOverlay.hide();
-                        } else {
-                            sideBarService.getHolidayData(dataLenght, 0).then(function (dataNonBo) {
-
-                                addVS1Data('TPayrollHolidays', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                    templateObject.resetData(dataNonBo);
-                                    LoadingOverlay.hide();
-                                }).catch(function (err) {
-                                    LoadingOverlay.hide();
-                                });
-                            }).catch(function (err) {
-                                LoadingOverlay.hide();
-                            });
-                        }
-                    }
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  });
-
-
-              }, 0);
-
-              $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-              LoadingOverlay.hide();
-          }).catch(function (err) {
-            LoadingOverlay.hide();
-          });
+   
+
+    // This has been improved
+    templateObject.getHolidayData = async (refresh = false) => {
+        let data = await CachedHttp.get(erpObject.TPayrollHolidays, async () =>{
+            return await  sideBarService.getHolidayData(initialBaseDataLoad, 0);
+        }, {
+            forceOverride: refresh,
         });
+
+        data = data.response;
+
+
+        for (let i = 0; i < data.tpayrollholidays.length; i++) {
+            var dataListAllowance = [
+                    data.tpayrollholidays[i].fields.ID || "",
+                    data.tpayrollholidays[i].fields.PayrollHolidaysName || "",
+                    moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format("DD/MM/YYYY") || "",
+                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || "",
+                    '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                ];
+            splashArrayHolidayList.push(dataListAllowance);
+        }
+
+        setTimeout(function () {
+            MakeNegative();
+        }, 100);
+        setTimeout(function () {
+            $("#tblHolidays").DataTable({
+                data: splashArrayHolidayList,
+                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                {
+                    className: "colHolidayID hiddenColumn",
+                    targets: [0]
+                }, {
+                    className: "colHolidayName",
+                    targets: [1]
+                }, {
+                    className: "colHolidayDate",
+                    targets: [2]
+                }, {
+                    className: "colHolidaygroup hiddenColumn",
+                    targets: [3]
+                }, {
+                    className: "colHolidayDelete",
+                    orderable: false,
+                    targets: -1
+                }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                [
+                    initialDatatableLoad, -1
+                ],
+                [
+                    initialDatatableLoad, "All"
+                ]
+                ],
+                info: true,
+                responsive: true,
+                order: [
+                [0, "asc"]
+                ],
+                action: function () {
+                $("#tblHolidays").DataTable().ajax.reload();
+                },
+                fnDrawCallback: function (oSettings) {
+                $(".paginate_button.page-item").removeClass("disabled");
+                $("#tblHolidays_ellipsis").addClass("disabled");
+                if (oSettings._iDisplayLength == -1) {
+                    if (oSettings.fnRecordsDisplay() > 150) {}
+                } else {}
+                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                    $(".paginate_button.page-item.next").addClass("disabled");
+                }
+
+                $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
+                    // $('.fullScreenSpin').css('display', 'inline-block');
+                    var splashArrayHolidayList = new Array();
+                    let dataLenght = oSettings._iDisplayLength;
+                    let customerSearch = $("#tblHolidays_filter input").val();
+
+                    sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+                    for (let i = 0; i < data.tpayrollholidays.length; i++) {
+                        var dataListAllowance = [
+                        data.tpayrollholidays[i].fields.ID || "",
+                        data.tpayrollholidays[i].fields.PayrollHolidaysName || "",
+                        moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format("DD/MM/YYYY") || "",
+                        data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || "",
+                        '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                        ];
+
+                        splashArrayHolidayList.push(dataListAllowance);
+                    }
+
+                    let uniqueChars = [...new Set(splashArrayHolidayList)];
+                    var datatable = $("#tblHolidays").DataTable();
+                    datatable.clear();
+                    datatable.rows.add(uniqueChars);
+                    datatable.draw(false);
+                    setTimeout(function () {
+                        $("#tblHolidays").dataTable().fnPageChange("last");
+                    }, 400);
+
+                    LoadingOverlay.hide();
+                    }).catch(function (err) {
+                    LoadingOverlay.hide();
+                    });
+                });
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+                },
+                fnInitComplete: function () {
+                $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
+                $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
+                }
+            }).on("page", function () {
+                setTimeout(function () {
+                MakeNegative();
+                }, 100);
+            }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
+                //// $('.fullScreenSpin').css('display', 'inline-block');
+                let dataLenght = settings._iDisplayLength;
+                splashArrayHolidayList = [];
+                if (dataLenght == -1) {
+                LoadingOverlay.hide();
+                } else {
+                if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                    LoadingOverlay.hide();
+                } else {
+                    sideBarService.getHolidayData(dataLenght, 0).then(function (dataNonBo) {
+                    addVS1Data("TPayrollHolidays", JSON.stringify(dataNonBo)).then(function (datareturn) {
+                        templateObject.resetData(dataNonBo);
+                        LoadingOverlay.hide();
+                    }).catch(function (err) {
+                        LoadingOverlay.hide();
+                    });
+                    }).catch(function (err) {
+                    LoadingOverlay.hide();
+                    });
+                }
+                }
+                setTimeout(function () {
+                MakeNegative();
+                }, 100);
+            });
+        }, 0);
+
+        $("div.dataTables_filter input").addClass("form-control form-control-sm");
+
+
+        // getVS1Data('TPayrollHolidays').then(function(dataObject) {
+
+        //     if(dataObject.length == 0) {
+        //       sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (data) {
+        //           addVS1Data('TPayrollHolidays', JSON.stringify(data));
+
+        //           let lineItems = [];
+        //           let lineItemObj = {};
+
+
+
+        //           for (let i = 0; i < data.tpayrollholidays.length; i++) {
+
+        //                     var dataListAllowance = [
+        //                         data.tpayrollholidays[i].fields.ID || '',
+        //                         data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
+        //                         moment( data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
+        //                         data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',
+        //                         '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        //                     ];
+        //                     splashArrayHolidayList.push(dataListAllowance);
+        //           }
+
+        //           setTimeout(function () {
+        //               MakeNegative();
+        //           }, 100);
+        //           setTimeout(function () {
+        //               $('#tblHolidays').DataTable({
+
+        //                   data: splashArrayHolidayList,
+        //                   "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        //                   columnDefs: [
+
+        //                     {
+        //                       className: "colHolidayID hiddenColumn",
+        //                       "targets": [0]
+        //                     },
+        //                     {
+        //                        className: "colHolidayName",
+        //                        "targets": [1]
+        //                     },
+        //                     {
+        //                        className: "colHolidayDate",
+        //                        "targets": [2]
+        //                     },
+        //                     {
+        //                         className: "colHolidaygroup hiddenColumn",
+        //                         "targets": [3]
+        //                     },
+        //                     {
+        //                        className: "colHolidayDelete",
+        //                        "orderable": false,
+        //                        "targets": -1
+        //                     }
+        //                   ],
+        //                   select: true,
+        //                   destroy: true,
+        //                   colReorder: true,
+        //                   pageLength: initialDatatableLoad,
+        //                   lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+        //                   info: true,
+        //                   responsive: true,
+        //                   "order": [[0, "asc"]],
+        //                   action: function () {
+        //                       $('#tblHolidays').DataTable().ajax.reload();
+        //                   },
+        //                   "fnDrawCallback": function (oSettings) {
+        //                       $('.paginate_button.page-item').removeClass('disabled');
+        //                       $('#tblHolidays_ellipsis').addClass('disabled');
+        //                       if (oSettings._iDisplayLength == -1) {
+        //                           if (oSettings.fnRecordsDisplay() > 150) {
+
+        //                           }
+        //                       } else {
+
+        //                       }
+        //                       if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+        //                           $('.paginate_button.page-item.next').addClass('disabled');
+        //                       }
+
+        //                       $('.paginate_button.next:not(.disabled)', this.api().table().container())
+        //                           .on('click', function () {
+        //                               // $('.fullScreenSpin').css('display', 'inline-block');
+        //                               var splashArrayHolidayList = new Array();
+        //                               let dataLenght = oSettings._iDisplayLength;
+        //                               let customerSearch = $('#tblHolidays_filter input').val();
+
+        //                               sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+
+        //                                 for (let i = 0; i < data.tpayrollholidays.length; i++) {
+
+        //                                         var dataListAllowance = [
+        //                                             data.tpayrollholidays[i].fields.ID || '',
+        //                                             data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
+        //                                             moment( data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
+        //                                             data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',
+        //                                             '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        //                                         ];
+
+        //                                     splashArrayHolidayList.push(dataListAllowance);
+        //                                 }
+
+        //                                           let uniqueChars = [...new Set(splashArrayHolidayList)];
+        //                                           var datatable = $('#tblHolidays').DataTable();
+        //                                           datatable.clear();
+        //                                           datatable.rows.add(uniqueChars);
+        //                                           datatable.draw(false);
+        //                                           setTimeout(function () {
+        //                                             $("#tblHolidays").dataTable().fnPageChange('last');
+        //                                           }, 400);
+
+        //                                           LoadingOverlay.hide();
+
+
+        //                               }).catch(function (err) {
+        //                                   LoadingOverlay.hide();
+        //                               });
+
+        //                           });
+        //                       setTimeout(function () {
+        //                           MakeNegative();
+        //                       }, 100);
+        //                   },
+        //                   "fnInitComplete": function () {
+
+        //                     $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
+        //                     $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
+
+        //                   }
+
+        //               }).on('page', function () {
+        //                   setTimeout(function () {
+        //                       MakeNegative();
+        //                   }, 100);
+
+        //               }).on('column-reorder', function () {
+
+        //               }).on('length.dt', function (e, settings, len) {
+        //                 //// $('.fullScreenSpin').css('display', 'inline-block');
+        //                 let dataLenght = settings._iDisplayLength;
+        //                 splashArrayHolidayList = [];
+        //                 if (dataLenght == -1) {
+        //                   LoadingOverlay.hide();
+
+        //                 } else {
+        //                     if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+        //                         LoadingOverlay.hide();
+        //                     } else {
+        //                         sideBarService.getHolidayData(dataLenght, 0).then(function (dataNonBo) {
+
+        //                             addVS1Data('TPayrollHolidays', JSON.stringify(dataNonBo)).then(function (datareturn) {
+        //                                 templateObject.resetData(dataNonBo);
+        //                                 LoadingOverlay.hide();
+        //                             }).catch(function (err) {
+        //                                 LoadingOverlay.hide();
+        //                             });
+        //                         }).catch(function (err) {
+        //                             LoadingOverlay.hide();
+        //                         });
+        //                     }
+        //                 }
+        //                   setTimeout(function () {
+        //                       MakeNegative();
+        //                   }, 100);
+        //               });
+
+
+        //           }, 0);
+
+        //           $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+        //           LoadingOverlay.hide();
+        //       }).catch(function (err) {
+        //         LoadingOverlay.hide();
+        //       });
+        //     }else{
+
+        //       let data = JSON.parse(dataObject[0].data);
+
+
+
+        //       let useData = data;
+        //       let lineItems = [];
+        //       let lineItemObj = {};
+        //       for (let i = 0; i < data.tpayrollholidays.length; i++) {
+
+        //         var dataListAllowance = [
+        //             data.tpayrollholidays[i].fields.ID || '',
+        //             data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
+        //             moment( data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
+        //             data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',
+        //             '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        //         ];
+
+        //         splashArrayHolidayList.push(dataListAllowance);
+        //     }
+
+
+
+
+        //       setTimeout(function () {
+        //           MakeNegative();
+        //       }, 100);
+        //       setTimeout(function () {
+        //           $('#tblHolidays').DataTable({
+
+        //               data: splashArrayHolidayList,
+        //               "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        //               columnDefs: [
+
+        //                 {
+        //                   className: "colHolidayID hiddenColumn",
+        //                   "targets": [0]
+        //                 },
+        //                 {
+        //                    className: "colHolidayName",
+        //                    "targets": [1]
+        //                 },
+        //                 {
+        //                    className: "colHolidayDate",
+        //                    "targets": [2]
+        //                 },
+        //                 {
+        //                     className: "colHolidaygroup hiddenColumn",
+        //                     "targets": [3]
+        //                 },
+        //                 {
+        //                    className: "colHolidayDelete",
+        //                    "orderable": false,
+        //                    "targets": -1
+        //                 }
+        //               ],
+        //               select: true,
+        //               destroy: true,
+        //               colReorder: true,
+        //               pageLength: initialDatatableLoad,
+        //               lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+        //               info: true,
+        //               responsive: true,
+        //               "order": [[0, "asc"]],
+        //               action: function () {
+        //                   $('#tblHolidays').DataTable().ajax.reload();
+        //               },
+        //               "fnDrawCallback": function (oSettings) {
+        //                   $('.paginate_button.page-item').removeClass('disabled');
+        //                   $('#tblHolidays_ellipsis').addClass('disabled');
+        //                   if (oSettings._iDisplayLength == -1) {
+        //                       if (oSettings.fnRecordsDisplay() > 150) {
+
+        //                       }
+        //                   } else {
+
+        //                   }
+        //                   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+        //                       $('.paginate_button.page-item.next').addClass('disabled');
+        //                   }
+
+        //                   $('.paginate_button.next:not(.disabled)', this.api().table().container())
+        //                       .on('click', function () {
+        //                           // $('.fullScreenSpin').css('display', 'inline-block');
+        //                           var splashArrayHolidayListPop = new Array();
+        //                           let dataLenght = oSettings._iDisplayLength;
+        //                           let customerSearch = $('#tblHolidays_filter input').val();
+
+        //                           sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+
+        //                             for (let i = 0; i < data.tpayrollholidays.length; i++) {
+
+        //                                 var dataListAllowance = [
+        //                                     data.tpayrollholidays[i].fields.ID || '',
+        //                                     data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
+        //                                     moment( data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
+        //                                     data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',
+        //                                     '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        //                                 ];
+
+        //                                 splashArrayHolidayList.push(dataListAllowance);
+        //                             }
+
+        //                                       let uniqueChars = [...new Set(splashArrayCalenderList)];
+        //                                       var datatable = $('#tblHolidays').DataTable();
+        //                                       datatable.clear();
+        //                                       datatable.rows.add(uniqueChars);
+        //                                       datatable.draw(false);
+        //                                       setTimeout(function () {
+        //                                         $("#tblHolidays").dataTable().fnPageChange('last');
+        //                                       }, 400);
+
+        //                                       LoadingOverlay.hide();
+
+
+        //                           }).catch(function (err) {
+        //                               LoadingOverlay.hide();
+        //                           });
+
+        //                       });
+        //                   setTimeout(function () {
+        //                       MakeNegative();
+        //                   }, 100);
+        //               },
+        //               "fnInitComplete": function () {
+
+        //             $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
+        //             $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
+
+        //               }
+
+        //           }).on('page', function () {
+        //               setTimeout(function () {
+        //                   MakeNegative();
+        //               }, 100);
+
+        //           }).on('column-reorder', function () {
+
+        //           }).on('length.dt', function (e, settings, len) {
+        //             //// $('.fullScreenSpin').css('display', 'inline-block');
+        //             let dataLenght = settings._iDisplayLength;
+        //             splashArrayHolidayList = [];
+        //             if (dataLenght == -1) {
+        //               LoadingOverlay.hide();
+
+        //             } else {
+        //                 if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+        //                     LoadingOverlay.hide();
+        //                 } else {
+        //                     sideBarService.getHolidayData(dataLenght, 0).then(function (dataNonBo) {
+
+        //                         addVS1Data('TPayrollHolidays', JSON.stringify(dataNonBo)).then(function (datareturn) {
+        //                             templateObject.resetData(dataNonBo);
+        //                             LoadingOverlay.hide();
+        //                         }).catch(function (err) {
+        //                             LoadingOverlay.hide();
+        //                         });
+        //                     }).catch(function (err) {
+        //                         LoadingOverlay.hide();
+        //                     });
+        //                 }
+        //             }
+        //               setTimeout(function () {
+        //                   MakeNegative();
+        //               }, 100);
+        //           });
+
+
+        //       }, 0);
+
+        //       $('div.dataTables_filter input').addClass('form-control form-control-sm');
+        //       LoadingOverlay.hide();
+
+        //     }
+        // }).catch(function(err) {
+        //   sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (data) {
+        //       addVS1Data('TPayrollHolidays', JSON.stringify(data));
+        //       let lineItems = [];
+        //       let lineItemObj = {};
+        //       for (let i = 0; i < data.tpayrollholidays.length; i++) {
+
+        //         var dataListAllowance = [
+        //             data.tpayrollholidays[i].fields.ID || '',
+        //             data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
+        //             moment( data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
+        //             data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',
+        //             '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        //         ];
+
+        //         splashArrayHolidayList.push(dataListAllowance);
+        //     }
+
+
+        //       setTimeout(function () {
+        //           MakeNegative();
+        //       }, 100);
+        //       setTimeout(function () {
+        //           $('#tblHolidays').DataTable({
+
+        //               data: splashArrayHolidayList,
+        //               "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        //               columnDefs: [
+
+        //                 {
+        //                   className: "colHolidayID hiddenColumn",
+        //                   "targets": [0]
+        //                 },
+        //                 {
+        //                    className: "colHolidayName",
+        //                    "targets": [1]
+        //                 },
+        //                 {
+        //                    className: "colHolidayDate",
+        //                    "targets": [2]
+        //                 },
+        //                 {
+        //                     className: "colHolidaygroup hiddenColumn",
+        //                     "targets": [3]
+        //                 },
+        //                 {
+        //                    className: "colHolidayDelete",
+        //                    "orderable": false,
+        //                    "targets": -1
+        //                 }
+        //              ],
+        //               select: true,
+        //               destroy: true,
+        //               colReorder: true,
+        //               pageLength: initialDatatableLoad,
+        //               lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+        //               info: true,
+        //               responsive: true,
+        //               "order": [[0, "asc"]],
+        //               action: function () {
+        //                   $('#tblHolidays').DataTable().ajax.reload();
+        //               },
+        //               "fnDrawCallback": function (oSettings) {
+        //                   $('.paginate_button.page-item').removeClass('disabled');
+        //                   $('#tblHolidays_ellipsis').addClass('disabled');
+        //                   if (oSettings._iDisplayLength == -1) {
+        //                       if (oSettings.fnRecordsDisplay() > 150) {
+
+        //                       }
+        //                   } else {
+
+        //                   }
+        //                   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+        //                       $('.paginate_button.page-item.next').addClass('disabled');
+        //                   }
+
+        //                   $('.paginate_button.next:not(.disabled)', this.api().table().container())
+        //                       .on('click', function () {
+        //                           // $('.fullScreenSpin').css('display', 'inline-block');
+        //                           var splashArrayHolidayListDupp = new Array();
+        //                           let dataLenght = oSettings._iDisplayLength;
+        //                           let customerSearch = $('#tblHolidays_filter input').val();
+
+        //                           sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+
+        //                             for (let i = 0; i < data.tpayrollholidays.length; i++) {
+
+        //                                 var dataListAllowance = [
+        //                                     data.tpayrollholidays[i].fields.ID || '',
+        //                                     data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
+        //                                     moment( data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
+        //                                     data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',
+        //                                     '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        //                                 ];
+
+        //                                 splashArrayHolidayList.push(dataListAllowance);
+        //                             }
+
+        //                                  let uniqueChars = [...new Set(splashArrayCalenderList)];
+        //                                  var datatable = $('#tblHolidays').DataTable();
+        //                                       datatable.clear();
+        //                                       datatable.rows.add(uniqueChars);
+        //                                       datatable.draw(false);
+        //                                       setTimeout(function () {
+        //                                         $("#tblHolidays").dataTable().fnPageChange('last');
+        //                                       }, 400);
+
+        //                                       LoadingOverlay.hide();
+
+
+        //                           }).catch(function (err) {
+        //                               LoadingOverlay.hide();
+        //                           });
+
+        //                       });
+        //                   setTimeout(function () {
+        //                       MakeNegative();
+        //                   }, 100);
+        //               },
+        //               "fnInitComplete": function () {
+        //                 $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
+        //                 $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
+
+        //               }
+
+        //           }).on('page', function () {
+        //               setTimeout(function () {
+        //                   MakeNegative();
+        //               }, 100);
+
+        //           }).on('column-reorder', function () {
+
+        //           }).on('length.dt', function (e, settings, len) {
+        //             //// $('.fullScreenSpin').css('display', 'inline-block');
+        //             let dataLenght = settings._iDisplayLength;
+        //             splashArrayCalenderList = [];
+        //             if (dataLenght == -1) {
+        //               LoadingOverlay.hide();
+
+        //             } else {
+        //                 if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+        //                     LoadingOverlay.hide();
+        //                 } else {
+        //                     sideBarService.getHolidayData(dataLenght, 0).then(function (dataNonBo) {
+
+        //                         addVS1Data('TPayrollHolidays', JSON.stringify(dataNonBo)).then(function (datareturn) {
+        //                             templateObject.resetData(dataNonBo);
+        //                             LoadingOverlay.hide();
+        //                         }).catch(function (err) {
+        //                             LoadingOverlay.hide();
+        //                         });
+        //                     }).catch(function (err) {
+        //                         LoadingOverlay.hide();
+        //                     });
+        //                 }
+        //             }
+        //               setTimeout(function () {
+        //                   MakeNegative();
+        //               }, 100);
+        //           });
+
+
+        //       }, 0);
+
+        //       $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+        //       LoadingOverlay.hide();
+        //   }).catch(function (err) {
+        //     LoadingOverlay.hide();
+        //   });
+        // });
 
     };
 
-    templateObject.getHolidayData();
+   
 
     templateObject.getEarningData = function(){
         getVS1Data(erpObject.TEarningData).then(function(dataObject) {
@@ -3020,7 +3216,7 @@ Template.payrollrules.onRendered(function() {
 
                             $('.paginate_button.next:not(.disabled)', this.api().table().container())
                                 .on('click', function () {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    // $('.fullScreenSpin').css('display', 'inline-block');
                                     var splashArrayEarningListDupp = new Array();
                                     let dataLenght = oSettings._iDisplayLength;
                                     let customerSearch = $('#tblEarnings_filter input').val();
@@ -3046,7 +3242,7 @@ Template.payrollrules.onRendered(function() {
                     }).on('column-reorder', function () {
 
                     }).on('length.dt', function (e, settings, len) {
-                      //$('.fullScreenSpin').css('display', 'inline-block');
+                      //// $('.fullScreenSpin').css('display', 'inline-block');
                       let dataLenght = settings._iDisplayLength;
                       splashArrayEarningList = [];
                       if (dataLenght == -1) {
@@ -3187,7 +3383,7 @@ Template.payrollrules.onRendered(function() {
 
                             $('.paginate_button.next:not(.disabled)', this.api().table().container())
                                 .on('click', function () {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    // $('.fullScreenSpin').css('display', 'inline-block');
                                     var splashArrayEarningListDupp = new Array();
                                     let dataLenght = oSettings._iDisplayLength;
                                     let customerSearch = $('#tblEarnings_filter input').val();
@@ -3213,7 +3409,7 @@ Template.payrollrules.onRendered(function() {
                     }).on('column-reorder', function () {
 
                     }).on('length.dt', function (e, settings, len) {
-                      //$('.fullScreenSpin').css('display', 'inline-block');
+                      //// $('.fullScreenSpin').css('display', 'inline-block');
                       let dataLenght = settings._iDisplayLength;
                       splashArrayEarningList = [];
                       if (dataLenght == -1) {
@@ -3247,7 +3443,8 @@ Template.payrollrules.onRendered(function() {
 
 
      };
-    templateObject.getEarningData();
+
+     
 
 
 
@@ -3343,7 +3540,7 @@ Template.payrollrules.onRendered(function() {
 
                             $('.paginate_button.next:not(.disabled)', this.api().table().container())
                                 .on('click', function () {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    // $('.fullScreenSpin').css('display', 'inline-block');
                                     var splashArrayLeaveListDupp = new Array();
                                     let dataLenght = oSettings._iDisplayLength;
                                     let customerSearch = $('#tblLeave_filter input').val();
@@ -3369,7 +3566,7 @@ Template.payrollrules.onRendered(function() {
                     }).on('column-reorder', function () {
 
                     }).on('length.dt', function (e, settings, len) {
-                      //$('.fullScreenSpin').css('display', 'inline-block');
+                      //// $('.fullScreenSpin').css('display', 'inline-block');
                       let dataLenght = settings._iDisplayLength;
                       splashArrayLeaveList = [];
                       if (dataLenght == -1) {
@@ -3490,7 +3687,7 @@ Template.payrollrules.onRendered(function() {
 
                             $('.paginate_button.next:not(.disabled)', this.api().table().container())
                                 .on('click', function () {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    // $('.fullScreenSpin').css('display', 'inline-block');
                                     var splashArrayLeaveListDupp = new Array();
                                     let dataLenght = oSettings._iDisplayLength;
                                     let customerSearch = $('#tblLeave_filter input').val();
@@ -3516,7 +3713,7 @@ Template.payrollrules.onRendered(function() {
                     }).on('column-reorder', function () {
 
                     }).on('length.dt', function (e, settings, len) {
-                      //$('.fullScreenSpin').css('display', 'inline-block');
+                      //// $('.fullScreenSpin').css('display', 'inline-block');
                       let dataLenght = settings._iDisplayLength;
                       splashArrayLeaveList = [];
                       if (dataLenght == -1) {
@@ -3549,7 +3746,7 @@ Template.payrollrules.onRendered(function() {
 
     };
 
-    templateObject.getLeaveTypeData();
+   
 
     templateObject.getunpaidleavedata = function(){
               getVS1Data('TUnpaidLeave').then(function(dataObject) {
@@ -3646,7 +3843,7 @@ Template.payrollrules.onRendered(function() {
 
                               $('.paginate_button.next:not(.disabled)', this.api().table().container())
                                   .on('click', function () {
-                                      $('.fullScreenSpin').css('display', 'inline-block');
+                                      // $('.fullScreenSpin').css('display', 'inline-block');
                                       var splashArrayLeaveListDupp = new Array();
                                       let dataLenght = oSettings._iDisplayLength;
                                       let customerSearch = $('#tblLeave_filter input').val();
@@ -3704,7 +3901,7 @@ Template.payrollrules.onRendered(function() {
                       }).on('column-reorder', function () {
 
                       }).on('length.dt', function (e, settings, len) {
-                        //$('.fullScreenSpin').css('display', 'inline-block');
+                        //// $('.fullScreenSpin').css('display', 'inline-block');
                         let dataLenght = settings._iDisplayLength;
                         splashArrayLeaveList = [];
                         if (dataLenght == -1) {
@@ -3836,7 +4033,7 @@ Template.payrollrules.onRendered(function() {
 
                           $('.paginate_button.next:not(.disabled)', this.api().table().container())
                               .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
+                                  // $('.fullScreenSpin').css('display', 'inline-block');
                                   var splashArrayLeaveListDupp = new Array();
                                   let dataLenght = oSettings._iDisplayLength;
                                   let customerSearch = $('#tblLeave_filter input').val();
@@ -3895,7 +4092,7 @@ Template.payrollrules.onRendered(function() {
                   }).on('column-reorder', function () {
 
                   }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
+                    //// $('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
                     splashArrayLeaveList = [];
                     if (dataLenght == -1) {
@@ -4024,7 +4221,7 @@ Template.payrollrules.onRendered(function() {
 
                           $('.paginate_button.next:not(.disabled)', this.api().table().container())
                               .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
+                                  // $('.fullScreenSpin').css('display', 'inline-block');
                                   var splashArrayLeaveListDupp = new Array();
                                   let dataLenght = oSettings._iDisplayLength;
                                   let customerSearch = $('#tblLeave_filter input').val();
@@ -4083,7 +4280,7 @@ Template.payrollrules.onRendered(function() {
                   }).on('column-reorder', function () {
 
                   }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
+                    //// $('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
                     splashArrayLeaveList = [];
                     if (dataLenght == -1) {
@@ -4123,7 +4320,7 @@ Template.payrollrules.onRendered(function() {
         });
 
     };
-    templateObject.getunpaidleavedata();
+   
 
     templateObject.getReimbursement = function(){
 
@@ -4203,7 +4400,7 @@ Template.payrollrules.onRendered(function() {
 
                               $('.paginate_button.next:not(.disabled)', this.api().table().container())
                                   .on('click', function () {
-                                      $('.fullScreenSpin').css('display', 'inline-block');
+                                      // $('.fullScreenSpin').css('display', 'inline-block');
                                       var splashArrayReisumentDupp = new Array();
                                       let dataLenght = oSettings._iDisplayLength;
                                       let customerSearch = $('#tblReimbursements_filter input').val();
@@ -4257,7 +4454,7 @@ Template.payrollrules.onRendered(function() {
                       }).on('column-reorder', function () {
 
                       }).on('length.dt', function (e, settings, len) {
-                        //$('.fullScreenSpin').css('display', 'inline-block');
+                        //// $('.fullScreenSpin').css('display', 'inline-block');
                         let dataLenght = settings._iDisplayLength;
                         splashArrayReisument = [];
                         if (dataLenght == -1) {
@@ -4370,7 +4567,7 @@ Template.payrollrules.onRendered(function() {
 
                           $('.paginate_button.next:not(.disabled)', this.api().table().container())
                               .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
+                                  // $('.fullScreenSpin').css('display', 'inline-block');
                                   var splashArrayReisumentDuppDupp = new Array();
                                   let dataLenght = oSettings._iDisplayLength;
                                   let customerSearch = $('#tblReimbursements_filter input').val();
@@ -4424,7 +4621,7 @@ Template.payrollrules.onRendered(function() {
                   }).on('column-reorder', function () {
 
                   }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
+                    //// $('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
                     splashArrayCalenderList = [];
                     if (dataLenght == -1) {
@@ -4532,7 +4729,7 @@ Template.payrollrules.onRendered(function() {
 
                           $('.paginate_button.next:not(.disabled)', this.api().table().container())
                               .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
+                                  // $('.fullScreenSpin').css('display', 'inline-block');
                                   var splashArrayReisumentDupp = new Array();
                                   let dataLenght = oSettings._iDisplayLength;
                                   let customerSearch = $('#tblReimbursements_filter input').val();
@@ -4586,7 +4783,7 @@ Template.payrollrules.onRendered(function() {
                   }).on('column-reorder', function () {
 
                   }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
+                    //// $('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
                     splashArrayReisument = [];
                     if (dataLenght == -1) {
@@ -4626,7 +4823,7 @@ Template.payrollrules.onRendered(function() {
         });
 
     };
-    templateObject.getReimbursement();
+   
 
     templateObject.getSuperannuationData = function(){
         getVS1Data('Tsuperannuation').then(function(dataObject) {
@@ -4742,7 +4939,7 @@ Template.payrollrules.onRendered(function() {
 
                               $('.paginate_button.next:not(.disabled)', this.api().table().container())
                                   .on('click', function () {
-                                      $('.fullScreenSpin').css('display', 'inline-block');
+                                      // $('.fullScreenSpin').css('display', 'inline-block');
                                       var splashArraySuperannuationListDupp = new Array();
                                       let dataLenght = oSettings._iDisplayLength;
                                       let customerSearch = $('#tblLeave_filter input').val();
@@ -4803,7 +5000,7 @@ Template.payrollrules.onRendered(function() {
                       }).on('column-reorder', function () {
 
                       }).on('length.dt', function (e, settings, len) {
-                        //$('.fullScreenSpin').css('display', 'inline-block');
+                        //// $('.fullScreenSpin').css('display', 'inline-block');
                         let dataLenght = settings._iDisplayLength;
                         splashArraySuperannuationList = [];
                         if (dataLenght == -1) {
@@ -4949,7 +5146,7 @@ Template.payrollrules.onRendered(function() {
 
                           $('.paginate_button.next:not(.disabled)', this.api().table().container())
                               .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
+                                  // $('.fullScreenSpin').css('display', 'inline-block');
                                   var splashArraySuperannuationListDupp = new Array();
                                   let dataLenght = oSettings._iDisplayLength;
                                   let customerSearch = $('#tblSuperannuation_filter input').val();
@@ -5010,7 +5207,7 @@ Template.payrollrules.onRendered(function() {
                   }).on('column-reorder', function () {
 
                   }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
+                    //// $('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
                     splashArraySuperannuationList = [];
                     if (dataLenght == -1) {
@@ -5157,7 +5354,7 @@ Template.payrollrules.onRendered(function() {
 
                           $('.paginate_button.next:not(.disabled)', this.api().table().container())
                               .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
+                                  // $('.fullScreenSpin').css('display', 'inline-block');
                                   var splashArraySuperannuationListDupp = new Array();
                                   let dataLenght = oSettings._iDisplayLength;
                                   let customerSearch = $('#tblSuperannuation_filter input').val();
@@ -5217,7 +5414,7 @@ Template.payrollrules.onRendered(function() {
                   }).on('column-reorder', function () {
 
                   }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
+                    //// $('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
                     splashArraySuperannuationList = [];
                     if (dataLenght == -1) {
@@ -5258,7 +5455,7 @@ Template.payrollrules.onRendered(function() {
 
     };
 
-    templateObject.getSuperannuationData();
+  
 
 
     templateObject.getOvertimes = async () => {
@@ -5301,7 +5498,7 @@ Template.payrollrules.onRendered(function() {
         }, 100);
     }
 
-    templateObject.getOvertimes();
+    //templateObject.getOvertimes();
 
     /**
      * This will save on the remote server and also on local indexb the object
@@ -5342,6 +5539,11 @@ Template.payrollrules.onRendered(function() {
         }
     }
 
+    templateObject.loadDefaultOvertimes = async () => {
+        let overtimes = PayrollSettingsOvertimes.getDefaults();
+        await templateObject.overtimes.set(overtimes);
+    }
+
     templateObject.addOverTime= async () => {
         if($('#btnAddNewOvertime').attr('overtime-id')) {
             const overtimeIdToupdate = $('#btnAddNewOvertime').attr('overtime-id');
@@ -5359,16 +5561,19 @@ Template.payrollrules.onRendered(function() {
         const hourlyMultiplier = $('#overtimeHourlyMultiplier').val();
         const weekEndDay = $('#OvertimeWeekEndDay').val();
 
-        const object = {
+        const object = new PayrollSettingsOvertimes({
             hours: hours,
             rateTypeId: rateType.ID,
-            rateType: rateType,
+            //rateType: rateType,
             //rateType: rateType.Description,
             hourlyMultiplier: hourlyMultiplier,
             rule: rateType == "Weekend" ? `${rateType.Description} : (${weekEndDay})` : `${rateType.Description}`,
-            ...(rateType == "Weekend" ? {day: weekEndDay} : {day: null}),
+            day: rateType == "Weekend" ? weekEndDay: null
             
-        }
+        });
+        object.setRateType(rateType);
+        console.log("overtime", object);
+        debugger;
    
         // Add to the list of overtimes
         let overtimes = await templateObject.overtimes.get();
@@ -5468,21 +5673,36 @@ Template.payrollrules.onRendered(function() {
     }
 
 
-    templateObject.loadRateTypes = async () => {
-        let rates  = await getRateTypes();
+    templateObject.loadRateTypes = async (refresh = false) => {
+        let rates  = await getRateTypes(refresh);
         rates = rates.tpayratetype.map(rate => rate.fields);
         await templateObject.rateTypes.set(rates);
 
        setTimeout(() => {
-        $("#tblratetypes").DataTable({
-            destroy: true
-        });
+            $("#tblratetypes").DataTable({
+                destroy: true
+            });
        }, 300);
     }
 
-    templateObject.initData  = async () => {
-        await templateObject.loadRateTypes();
-        await templateObject.getOvertimes();
+    templateObject.initData  = async (refresh = false) => {
+        LoadingOverlay.show();
+        await templateObject.loadDefaultOvertimes();
+
+        await templateObject.getPayrollOrgainzations(refresh);
+        await templateObject.getAllAllowance(refresh);
+        await templateObject.getAllDeductions(refresh);
+        await templateObject.getCalenders(refresh);
+        await templateObject.getHolidayData(refresh);
+        await templateObject.getEarningData(refresh);
+        await templateObject.getLeaveTypeData(refresh);
+        await templateObject.getunpaidleavedata(refresh);
+        await templateObject.getReimbursement(refresh);
+        await templateObject.getSuperannuationData(refresh);
+
+        await templateObject.loadRateTypes(refresh);
+        await templateObject.getOvertimes(refresh);
+        LoadingOverlay.hide();
     }
 
     templateObject.initData();
@@ -14782,7 +15002,7 @@ Template.payrollrules.events({
         document.getElementById("leave").style.display = "block";
     },
     'click .btnRefresh': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        // $('.fullScreenSpin').css('display', 'inline-block');
         location.reload(true);
     },
     'change #ruleModifierInitial': function(event) {
@@ -20946,7 +21166,7 @@ Template.payrollrules.events({
         const dataTableList = [];
         var splashArrayInvoiceList = new Array();
         const lineExtaSellItems = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
+        // $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblPayCalendars_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
             sideBarService.getNewCalenderByNameOrPayPeriod(dataSearchName).then(function (data) {
@@ -21052,7 +21272,7 @@ Template.payrollrules.events({
     const dataTableList = [];
     var splashArrayInvoiceList = new Array();
     const lineExtaSellItems = [];
-    $('.fullScreenSpin').css('display', 'inline-block');
+    // $('.fullScreenSpin').css('display', 'inline-block');
     let dataSearchName = $('#tblHolidays_filter input').val();
     if (dataSearchName.replace(/\s/g, '') != '') {
         sideBarService.getNewHolidayByName(dataSearchName).then(function (data) {
@@ -21160,7 +21380,7 @@ Template.payrollrules.events({
         const dataTableList = [];
         var splashArrayInvoiceList = new Array();
         const lineExtaSellItems = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
+        // $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblSuperannuation_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
             sideBarService.getSuperannuationByName(dataSearchName).then(function (data) {
@@ -21264,7 +21484,7 @@ Template.payrollrules.events({
         const dataTableList = [];
         var splashArrayInvoiceList = new Array();
         const lineExtaSellItems = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
+        // $('.fullScreenSpin').css('display', 'inline-block');
         var dataSearchName = $('#holidaygroup2').val();
 
         if (dataSearchName.replace(/\s/g, '') != '') {
@@ -21369,7 +21589,7 @@ Template.payrollrules.events({
     const dataTableList = [];
     var splashArrayInvoiceList = new Array();
     const lineExtaSellItems = [];
-    $('.fullScreenSpin').css('display', 'inline-block');
+    // $('.fullScreenSpin').css('display', 'inline-block');
     let dataSearchName = $('#tblAlowances_filter input').val();
     if (dataSearchName.replace(/\s/g, '') != '') {
         sideBarService.getAllowanceByName(dataSearchName).then(function (data) {
@@ -21491,7 +21711,7 @@ Template.payrollrules.events({
         const dataTableList = [];
         var splashArrayInvoiceList = new Array();
         const lineExtaSellItems = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
+        // $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblDeductions_filter input').val();
 
         if (dataSearchName.replace(/\s/g, '') != '') {
@@ -21618,7 +21838,7 @@ Template.payrollrules.events({
         const dataTableList = [];
         var splashArrayInvoiceList = new Array();
         const lineExtaSellItems = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
+        // $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblEarnings_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
             sideBarService.getEarningByName(dataSearchName).then(function (data) {
@@ -21735,7 +21955,7 @@ Template.payrollrules.events({
         const dataTableList = [];
         var splashArrayInvoiceList = new Array();
         const lineExtaSellItems = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
+        // $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblLeave_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
           sideBarService.getPaidLeaveByName(dataSearchName).then(function (data) {
@@ -21842,7 +22062,7 @@ Template.payrollrules.events({
         const dataTableList = [];
         var splashArrayInvoiceList = new Array();
         const lineExtaSellItems = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
+        // $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblReimbursements_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
             sideBarService.getReimbursementByName(dataSearchName).then(function (data) {
@@ -21961,7 +22181,10 @@ Template.payrollrules.events({
         $('#select-ratetype-modal').modal('hide');
         $(".paste-rate").removeClass('paste-rate');
 
-     }
+     },
+    //  "show.bs.modal #select-ratetype-modal": (e, ui) => {
+    //     console.log(e);
+    // },
 
 });
 
@@ -21996,6 +22219,15 @@ export const getOvertimes = async () => {
     let overtimesData = await getVS1Data(erpObject.TPayrollSettingOvertimes);
     let overtimes = overtimesData.length > 0 ? JSON.parse(overtimesData[0].data) : [];
 
+    // This part is handling the auto add of default values in the list
+    let defaultOvertimes = PayrollSettingsOvertimes.getDefaults();
+    defaultOvertimes.forEach((defaultOvertime) => {
+        // if doesnt exist, just add it
+        if(!overtimes.some(overtime => overtime.rule == defaultOvertime.rule)) {
+            overtimes.push(defaultOvertime);
+        };
+    })
+
     return overtimes;
 
     // if(localStorage.getItem(erpObject.TPayrollSettingOvertimes)) {
@@ -22009,14 +22241,14 @@ export const saveOvertimes = async (overtimes = []) => {
     // return localStorage.setItem(erpObject.TPayrollSettingOvertimes, JSON.stringify(overtimes));
 }
 
-export const getRateTypes = async () => {
+export const getRateTypes = async (refresh = false) => {
     // sideBarService.getRateTypes(initialBaseDataLoad, 0)
     let data = await getVS1Data(erpObject.TRateTypes); 
     let rateTypes = data.length > 0 ? JSON.parse(data[0].data) : [];
     return rateTypes;
 }
 
-export const getEarnings = async () => {
+export const getEarnings = async (refresh = false) => {
     let data = await getVS1Data(erpObject.TEarningData);
     let earnings =  data.length > 0 ? JSON.parse(data[0].data) : [];
     return earnings;

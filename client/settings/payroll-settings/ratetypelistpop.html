@@ -23,7 +23,16 @@
                   <th class="thRateID hiddenColumn">Rate Type ID</th>
                 </tr>
               </thead>
-              <tbody></tbody>
+              <tbody>
+                {{#if rateTypes}}
+                    {{#each rateType in rateTypes}}
+                      <tr rate-type-id="{{ rateType.ID }}">
+                        <td>{{ rateType.Description }}</td>
+                        <td class="id hiddenColumn">{{ rateType.ID }}</td>
+                      </tr>
+                    {{/each}}
+                {{/if}}
+              </tbody>
             </table>
           </div>
         </div>
