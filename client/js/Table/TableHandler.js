@@ -4,25 +4,31 @@ export default class TableHandler {
     this.bindEvents();
   }
 
-  bindEvents() {
+  async bindEvents() {
     // $(".dataTable").on("DOMSubtreeModified",  () => {
     //   this.refreshDatatableResizable();
     // });
     this.refreshDatatableResizable();
 
     $(".dataTable thead tr").on("mousedown",  () => {
-      $('body').on('mouseup', () => {
-        this.refreshDatatableResizable();
-      })
+      this.refreshDatatableResizable();
     });
+
+    $(".dataTable thead tr").on("mouseover",  () => {
+      this.refreshDatatableResizable();
+    });
+
+    $('.dataTable tbody tr').on('mouseup', () => {
+      this.refreshDatatableResizable();
+    })
   }
 
 
   /**
    * this will refresh events related to resizing features
    */
-  refreshDatatableResizable() {
-    this.disableDatatableResizable();
+  async refreshDatatableResizable() {
+    await this.disableDatatableResizable();
     this.enableDatatableResizable();
   }
 
@@ -32,13 +38,12 @@ export default class TableHandler {
      * By doing disabling and re-enabling, start fresh events
      * instead of cummulating multiple listeners which is causing issues
      */
-  enableDatatableResizable() {
+  async enableDatatableResizable() {
     $(".dataTable").colResizable({
       liveDrag: true,
-      gripInnerHtml: "<div class='grip'></div>",
+      gripInnerHtml: "<div class='grip JCLRgrips'></div>",
       draggingClass: "dragging",
       resizeMode: "overflow",
-      minWidth: 100,
       onResize: e => {
         var table = $(e.currentTarget); //reference to the resized table
         let tableName = table.attr('id');
@@ -59,7 +64,7 @@ export default class TableHandler {
      * We first need to disable all previous events listeners related
      */
   disableDatatableResizable() {
-    //$(".dataTable").colResizable({disable: true});
+    $(".dataTable").colResizable({disable: true});
   }
 
   async saveTableColumns( tableName ){

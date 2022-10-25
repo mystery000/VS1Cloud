@@ -23,7 +23,30 @@ Template.contactoverview.onCreated(function () {
 });
 
 Template.contactoverview.onRendered(function () {
-
+  $("#tblcontactoverview tbody").on("click", "tr", function () {
+     var listData = $(this).closest("tr").attr("id");
+     var transactiontype = $(event.target).closest("tr").find(".colType").text()||'';
+     if (listData && transactiontype) {
+       if (transactiontype === "Customer / Employee / Supplier") {
+         FlowRouter.go("/customerscard?id=" + listData);
+       } else if (transactiontype === "Customer / Supplier") {
+         FlowRouter.go("/customerscard?id=" + listData);
+       } else if (transactiontype === "Customer") {
+         FlowRouter.go("/customerscard?id=" + listData);
+       } else if (transactiontype === "Supplier") {
+         FlowRouter.go("/supplierscard?id=" + listData);
+       } else if (transactiontype === "Employee") {
+         FlowRouter.go("/employeescard?id=" + listData);
+       } else if (transactiontype === "Lead") {
+         FlowRouter.go("/leadscard?id=" + listData);
+       } else if (transactiontype === "Job") {
+         FlowRouter.go("/customerscard?jobid=" + listData);
+       }else{
+         FlowRouter.go("/customerscard?id=" + listData);
+       }
+     }
+   });
+   //tableResize();
 });
 
 Template.contactoverview.events({
