@@ -15,13 +15,14 @@ import { SideBarService } from "../../js/sidebar-service";
 import '../../lib/global/indexdbstorage.js';
 import { getRateTypes } from "./payrollrules";
 import LoadingOverlay from "../../LoadingOverlay";
+import TableHandler from "../../js/Table/TableHandler";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let rateTypeService = new RateTypeService();
 var times = 0;
 
-Template.ratetypelistpop.onCreated(() => {
+Template.ratetypelistpop.onCreated(function() {
     this.RateTypeList = new ReactiveVar([]);
     this.rateTypes = new ReactiveVar([]);
 });
@@ -186,40 +187,21 @@ Template.ratetypelistpop.onRendered(function() {
     //tempObj.getAllRateType();
     this.loadRateTypes = async (refresh = false) => {
         let rates = await getRateTypes(refresh);
-        rates = rates.tpayratetype.map(rate => rate.fields);
         await this.rateTypes.set(rates);
+        
+     
 
         setTimeout(() => {
-            if (splashArrayRateTypeList) {
+           
             $("#tblratetypelist").dataTable({
-                // data: splashArrayRateTypeList,
-                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                // columnDefs: [
-                //     { className: "thDescription", "targets": [0] },
-                //     { className: "thRateID hiddenColumn", "targets": [1] }
-                // ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [
-                [
-                    initialDatatableLoad, -1
-                ],
-                [
-                    initialDatatableLoad, "All"
-                ]
-                ],
-                info: true,
-                responsive: true,
+                ...TableHandler.getDefaultTableConfiguration("tblratetypelist"),
                 fnInitComplete: function () {
-                $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
-                $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
+                    $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
+                    $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
                 }
             });
             $("div.dataTables_filter input").addClass("form-control form-control-sm");
-            }
-        }, 300);
+        }, 1000);
     };
 
     this.initData = async (refresh = false) => {
@@ -229,8 +211,7 @@ Template.ratetypelistpop.onRendered(function() {
         LoadingOverlay.hide();
     }
 
-    //this.initData();
-
+    this.initData();
 });
 
 Template.ratetypelistpop.helpers({
@@ -379,7 +360,7 @@ Template.ratetypelistpop.events({
             $('#tblratetypelist_filter .form-control-sm').focus();
         }, 500);
     },
-    'click #rateTypeListModel #refreshpagelist': (e, ui) => {
+    'click #select-rate-type-modal #refreshpagelist': (e, ui) => {
         // $('.fullScreenSpin').css('display', 'inline-block');
         // let templateObject = Template.instance();
         // Meteor._reload.reload();

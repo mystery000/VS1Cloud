@@ -28,6 +28,8 @@ Template.earningRateSettings.onCreated(function() {
   templateObject.currentDrpDownID = new ReactiveVar();
   templateObject.taxraterecords = new ReactiveVar([]);
   // templateObject.Accounts = new ReactiveVar([]);
+
+  templateObject.earningRates = new ReactiveVar([]);
 });
 
 Template.earningRateSettings.onRendered(function() {
@@ -73,6 +75,31 @@ templateObject.saveDataLocalDB = async () => {
         return employeePayrolEndpointJsonResponse
     }  
     return '';      
+}
+
+/**
+ * This will load earning types
+ * Hardcoded for now
+ */
+templateObject.getEarningTypes = async (refresh = false) => {
+
+    const earningTypes = [
+        "Ordinary Time Earnings",
+        "Overtime Earnings",
+        "Employment Termnination Payments",
+        "Lump Sum E",
+        "Bonuses & Commissions",
+        "Lump Sum W",
+        "Directors Fees"
+    ].map(t => {
+        return {
+            value: t,
+            text: t
+        }
+    });
+
+    await templateObject.earningTypes.set(earningTypes);
+
 }
 
 
@@ -474,9 +501,17 @@ templateObject.getAllTaxCodes = function() {
     });
 };
 
-setTimeout(function() {
-    templateObject.getAllTaxCodes();
-}, 500);
+// setTimeout(function() {
+//     templateObject.getAllTaxCodes();
+//     templateObject.getEarningTypes();
+// }, 500);
+
+    templateObject.initData = async (refresh = false) => {
+        await templateObject.getAllTaxCodes(refresh);
+        await templateObject.getEarningTypes(refresh);
+    }
+
+    templateObject.initData();
 
 /**
  * Drop down code start
@@ -998,7 +1033,8 @@ Template.earningRateSettings.events({
 Template.earningRateSettings.helpers({
     datatablerecords: () => {
         return Template.instance().datatablerecords.get();
-    }
+    },
+    earningTypes: () => Template.instance().earningTypes.get()
 });
 
 //

@@ -17,6 +17,7 @@ import erpObject from "../../lib/global/erp-objects";
 import LoadingOverlay from "../../LoadingOverlay";
 import PayrollSettingsOvertimes from "../../js/Api/Model/PayrollSettingsOvertimes";
 import GlobalFunctions from "../../GlobalFunctions";
+import TableHandler from "../../js/Table/TableHandler";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -29,13 +30,14 @@ Template.payrollrules.onCreated(function() {
     templateObject.datatableallowancerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.countryData = new ReactiveVar();
-    templateObject.Ratetypes = new ReactiveVar([]);
+    // templateObject.Ratetypes = new ReactiveVar([]);
     templateObject.imageFileData=new ReactiveVar();
     templateObject.Accounts = new ReactiveVar([]);
 
 
     templateObject.overtimes = new ReactiveVar([]);
     templateObject.rateTypes = new ReactiveVar([]);
+    templateObject.earnings = new ReactiveVar([]);
 });
 
 Template.payrollrules.onRendered(function() {
@@ -3104,6 +3106,101 @@ Template.payrollrules.onRendered(function() {
 
     };
 
+
+    templateObject.loadEarnings = async (refresh  =false) => {
+        let data = await CachedHttp.get(erpObject.TEarningData, async () => {
+            // TODO: This needs to be changed
+            const resp = await getVS1Data(erpObject.TEarningData);
+            return {
+                response: JSON.parse(resp[0].data)
+            };
+        }, {
+            forceOverride: refresh,
+            fallBackToLocal: true,
+            validate: (cachedResponse) => {
+                return true;
+            }
+        });
+
+        const response  = data.response;
+
+        let earnings = response.map(e => e.fields);
+ 
+        await templateObject.earnings.set(earnings);
+
+        setTimeout(function () {
+            $('#tblEarnings').DataTable({
+                ...TableHandler.getDefaultTableConfiguration("tblEarnings"),
+                "order": [[0, "asc"]],
+                action: function () {
+                    $('#tblEarnings').DataTable().ajax.reload();
+                },
+                // "fnDrawCallback": function (oSettings) {
+                //     $('.paginate_button.page-item').removeClass('disabled');
+                //     $('#tblEarnings_ellipsis').addClass('disabled');
+                //     if (oSettings._iDisplayLength == -1) {
+                //         if (oSettings.fnRecordsDisplay() > 150) {
+
+                //         }
+                //     } else {
+
+                //     }
+                //     if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                //         $('.paginate_button.page-item.next').addClass('disabled');
+                //     }
+
+                //     $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                //         .on('click', function () {
+                //             // $('.fullScreenSpin').css('display', 'inline-block');
+                //             var splashArrayEarningListDupp = new Array();
+                //             let dataLenght = oSettings._iDisplayLength;
+                //             let customerSearch = $('#tblEarnings_filter input').val();
+
+
+
+                //         });
+                //     setTimeout(function () {
+                //         MakeNegative();
+                //     }, 100);
+                // },
+                // "fnInitComplete": function () {
+                //   $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#add-tblEarnings_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
+                //   $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
+
+                // }
+
+            }).on('page', function () {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+
+            }).on('column-reorder', function () {
+
+            }).on('length.dt', function (e, settings, len) {
+              //// $('.fullScreenSpin').css('display', 'inline-block');
+              let dataLenght = settings._iDisplayLength;
+              splashArrayEarningList = [];
+              if (dataLenght == -1) {
+                LoadingOverlay.hide();
+
+              } else {
+                  if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                      LoadingOverlay.hide();
+                  } else {
+
+                  }
+              }
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            });
+
+
+        }, 300);
+
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+    }
    
 
     templateObject.getEarningData = function(){
@@ -3134,9 +3231,10 @@ Template.payrollrules.onRendered(function() {
                 }, 100);
                 setTimeout(function () {
                     $('#tblEarnings').DataTable({
+                        ...TableHandler.getDefaultTableConfiguration("tblEarnings"),
 
                         data: splashArrayEarningList,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        //"sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         columnDefs: [
 
                           {
@@ -3189,13 +3287,13 @@ Template.payrollrules.onRendered(function() {
                               "targets": -1
                            }
                         ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        info: true,
-                        responsive: true,
+                        // select: true,
+                        // destroy: true,
+                        // colReorder: true,
+                        // pageLength: initialDatatableLoad,
+                        // lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                        // info: true,
+                        // responsive: true,
                         "order": [[0, "asc"]],
                         action: function () {
                             $('#tblEarnings').DataTable().ajax.reload();
@@ -3228,11 +3326,11 @@ Template.payrollrules.onRendered(function() {
                                 MakeNegative();
                             }, 100);
                         },
-                        "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeEarningsModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
-                          $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
+                        // "fnInitComplete": function () {
+                        //   $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#add-tblEarnings_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
+                        //   $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
 
-                        }
+                        // }
 
                     }).on('page', function () {
                         setTimeout(function () {
@@ -3301,9 +3399,9 @@ Template.payrollrules.onRendered(function() {
                 }, 100);
                 setTimeout(function () {
                     $('#tblEarnings').DataTable({
-
+                        ...TableHandler.getDefaultTableConfiguration("tblEarnings"),
                         data: splashArrayEarningList,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        // "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         columnDefs: [
 
                           {
@@ -3356,13 +3454,13 @@ Template.payrollrules.onRendered(function() {
                               "targets": -1
                            }
                         ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        info: true,
-                        responsive: true,
+                        // select: true,
+                        // destroy: true,
+                        // colReorder: true,
+                        // pageLength: initialDatatableLoad,
+                        // lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                        // info: true,
+                        // responsive: true,
                         "order": [[0, "asc"]],
                         action: function () {
                             $('#tblEarnings').DataTable().ajax.reload();
@@ -3395,11 +3493,11 @@ Template.payrollrules.onRendered(function() {
                                 MakeNegative();
                             }, 100);
                         },
-                        "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeEarningsModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
-                          $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
+                        // "fnInitComplete": function () {
+                        //   $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#add-tblEarnings_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
+                        //   $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
 
-                        }
+                        // }
 
                     }).on('page', function () {
                         setTimeout(function () {
@@ -5572,8 +5670,8 @@ Template.payrollrules.onRendered(function() {
             
         });
         object.setRateType(rateType);
-        console.log("overtime", object);
-        debugger;
+        // console.log("overtime", object);
+        // debugger;
    
         // Add to the list of overtimes
         let overtimes = await templateObject.overtimes.get();
@@ -5675,14 +5773,27 @@ Template.payrollrules.onRendered(function() {
 
     templateObject.loadRateTypes = async (refresh = false) => {
         let rates  = await getRateTypes(refresh);
-        rates = rates.tpayratetype.map(rate => rate.fields);
-        await templateObject.rateTypes.set(rates);
+        if(rates) {
+            // rates = rates.length > 0 ? rates.tpayratetype.map(rate => rate.fields) : [];
+            await templateObject.rateTypes.set(rates);
+        }
 
-       setTimeout(() => {
-            $("#tblratetypes").DataTable({
-                destroy: true
-            });
-       }, 300);
+    //    setTimeout(() => {
+    //         $("#tblratetypes").DataTable({
+    //             destroy: true
+    //         });
+    //    }, 300);
+
+    //   setTimeout(() => {
+    //     $("#tblratetypelist").DataTable({
+    //         ...TableHandler.getDefaultTableConfiguration("tblratetypelist"),
+    //         fnInitComplete: function () {
+    //             $("<button class='btn btn-primary btnAddRateType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblratetypelist_filter");
+    //             $("<button class='btn btn-primary btnRefreshRateType' type='button' id='btnRefreshRateType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblratetypelist_filter");
+    //         }
+    //     });
+    //     $("div.dataTables_filter input").addClass("form-control form-control-sm");
+    //   }, 300)
     }
 
     templateObject.initData  = async (refresh = false) => {
@@ -5694,7 +5805,10 @@ Template.payrollrules.onRendered(function() {
         await templateObject.getAllDeductions(refresh);
         await templateObject.getCalenders(refresh);
         await templateObject.getHolidayData(refresh);
-        await templateObject.getEarningData(refresh);
+
+        //await templateObject.getEarningData(refresh);
+        await templateObject.loadEarnings(refresh);
+
         await templateObject.getLeaveTypeData(refresh);
         await templateObject.getunpaidleavedata(refresh);
         await templateObject.getReimbursement(refresh);
@@ -12398,188 +12512,188 @@ Template.payrollrules.onRendered(function() {
 
       });
 
-    $('#edtRateType').editableSelect().on('click.editable-select', function (e, li) {
+    // $('#edtRateType').editableSelect().on('click.editable-select', function (e, li) {
 
-        var $earch = $(this);
-        var offset = $earch.offset();
-        let ratetypeService = new RateTypeService();
-        const ratetypelist = [];
-         var  Description = e.target.value ||'';
+    //     var $earch = $(this);
+    //     var offset = $earch.offset();
+    //     let ratetypeService = new RateTypeService();
+    //     const ratetypelist = [];
+    //      var  Description = e.target.value ||'';
 
-        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-          $('#selectRateLineID').val('edtRateType');
-          $('#rateTypeListModel').modal();
-          $('#tblratetypelist_filter .form-control-sm').focus();
-          $('#tblratetypelist_filter .form-control-sm').val();
-          $('#tblratetypelist_filter .form-control-sm').trigger("input");
-          setTimeout(function () {
-             var datatable = $('#tblratetypelist').DataTable();
-             datatable.draw();
-             $('#tblratetypelist_filter .form-control-sm').trigger("input");
-          }, 500);
-         }else{
-           if(Description.replace(/\s/g, '') != ''){
-             getVS1Data('TRateTypes').then(function (dataObject) {
-              if (dataObject.length == 0) {
-                     ratetypeService.getOneRateTypeByName(Description).then(function (data) {
-                     let lineItems = [];
-                     let lineItemObj = {};
-                     let fullDescriptionname = '';
-                      $('#add-rateype-title').text('Edit Rate Type Details');
+    //     if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+    //       $('#selectRateLineID').val('edtRateType');
+    //       $('#rateTypeListModel').modal();
+    //       $('#tblratetypelist_filter .form-control-sm').focus();
+    //       $('#tblratetypelist_filter .form-control-sm').val();
+    //       $('#tblratetypelist_filter .form-control-sm').trigger("input");
+    //     //   setTimeout(function () {
+    //     //      var datatable = $('#tblratetypelist').DataTable();
+    //     //      datatable.draw();
+    //     //      $('#tblratetypelist_filter .form-control-sm').trigger("input");
+    //     //   }, 500);
+    //      }else{
+    //        if(Description.replace(/\s/g, '') != ''){
+    //          getVS1Data('TRateTypes').then(function (dataObject) {
+    //           if (dataObject.length == 0) {
+    //                  ratetypeService.getOneRateTypeByName(Description).then(function (data) {
+    //                  let lineItems = [];
+    //                  let lineItemObj = {};
+    //                  let fullDescriptionname = '';
+    //                   $('#add-rateype-title').text('Edit Rate Type Details');
 
-                     if (ratetypelist) {
-                         for (var h = 0; h < ratetypelist.length; h++) {
+    //                  if (ratetypelist) {
+    //                      for (var h = 0; h < ratetypelist.length; h++) {
 
-                             if (data.tpayratetype[0].fields.Description === ratetypelist[h].description) {
+    //                          if (data.tpayratetype[0].fields.Description === ratetypelist[h].description) {
 
-                                fullDescriptionname = ratetypelist[h].description || '';
+    //                             fullDescriptionname = ratetypelist[h].description || '';
 
-                             }
-                         }
+    //                          }
+    //                      }
 
-                     }
+    //                  }
 
-                      var ratetypeid = data.tpayratetype[0].fields.ID || '';
-                      var description = fullDescriptionname || data.tpayratetype[0].fields.Description;
-
-
-                      $('#edtRateID').val(ratetypeid);
-                      $('#edtRateDescription').val(description);
+    //                   var ratetypeid = data.tpayratetype[0].fields.ID || '';
+    //                   var description = fullDescriptionname || data.tpayratetype[0].fields.Description;
 
 
-                      setTimeout(function () {
-                          $('#addRateModel').modal('show');
-                      }, 500);
-
-                   }).catch(function (err) {
-                       LoadingOverlay.hide();
-                   });
-                 } else {
-                     let data = JSON.parse(dataObject[0].data);
-                     let useData = data.tpayratetype;
-                     var added=false;
-                     let lineItems = [];
-                     let lineItemObj = {};
-                     let fullDescriptionname = '';
-
-                     $('#add-rateype-title').text('Edit Rate Type Details');
-                     $('#edtRateID').attr('readonly', true);
-                     $('#edtRateDescription').attr('readonly', true);
-
-                     for (let a = 0; a < data.tpayratetype.length; a++) {
-
-                       if((data.tpayratetype[a].fields.Description) === Description){
-                         added = true;
-                         if (ratetypelist) {
-                             for (var h = 0; h < ratetypelist.length; h++) {
-
-                                 if (data.tpayratetype[a].fields.Description === ratetypelist[h].Description) {
-
-                                    fullDescriptionname = ratetypelist[h].Description || '';
-
-                                 }
-                             }
-
-                         }
+    //                   $('#edtRateID').val(ratetypeid);
+    //                   $('#edtRateDescription').val(description);
 
 
+    //                   setTimeout(function () {
+    //                       $('#addRateModel').modal('show');
+    //                   }, 500);
 
-                  var ratetypeid = data.tpayratetype[a].fields.ID || '';
-                  var ratetypedescription = fullDescriptionname || data.tpayratetype[a].fields.Description;
+    //                }).catch(function (err) {
+    //                    LoadingOverlay.hide();
+    //                });
+    //              } else {
+    //                  let data = JSON.parse(dataObject[0].data);
+    //                  let useData = data.tpayratetype;
+    //                  var added=false;
+    //                  let lineItems = [];
+    //                  let lineItemObj = {};
+    //                  let fullDescriptionname = '';
 
-                  $('#edtRateID').val(ratetypeid);
-                  $('#edtRateDescription').val(ratetypedescription);
+    //                  $('#add-rateype-title').text('Edit Rate Type Details');
+    //                  $('#edtRateID').attr('readonly', true);
+    //                  $('#edtRateDescription').attr('readonly', true);
 
-                  setTimeout(function () {
-                      $('#addRateModel').modal('show');
-                       }, 500); } }
+    //                  for (let a = 0; a < data.tpayratetype.length; a++) {
 
-                     if(!added) {
-                        ratetypeService.getOneRateTypeByName(Description).then(function (data) {
-                         let lineItems = [];
-                         let lineItemObj = {};
-                         let fullAccountTypeName = '';
+    //                    if((data.tpayratetype[a].fields.Description) === Description){
+    //                      added = true;
+    //                      if (ratetypelist) {
+    //                          for (var h = 0; h < ratetypelist.length; h++) {
 
-                         $('#add-rateype-title').text('Edit Rate Type Details');
-                         $('#edtRateID').attr('readonly', true);
-                         $('#edtRateDescription').attr('readonly', true);
-                         if (ratetypelist) {
-                             for (var h = 0; h < ratetypelist.length; h++) {
+    //                              if (data.tpayratetype[a].fields.Description === ratetypelist[h].Description) {
 
-                                 if (data.tpayratetype[0].fields.Description === ratetypelist[h].Description) {
+    //                                 fullDescriptionname = ratetypelist[h].Description || '';
 
-                                     fullAccountTypeName = ratetypelist[h].description || '';
+    //                              }
+    //                          }
 
-                                 }
-                             }
-
-                         }
-
-                          var ratetypeid = data.tpayratetype[0].fields.ID || '';
-                          var ratetypedescription = fullAccountTypeName || data.tpayratetype[0].fields.Description;
-
-                          $('#edtRateID').val(ratetypeid);
-                          $('#edtRateDescription').val(ratetypedescription);
-
-                          setTimeout(function () {
-                              $('#addRateModel').modal('show');
-                          }, 500);
-
-                       }).catch(function (err) {
-                           LoadingOverlay.hide();
-                       });
-                     }
-
-                 }
-             }).catch(function (err) {
-                ratetypeService.getOneRateTypeByName(Description).then(function (data) {
-                 let lineItems = [];
-                 let lineItemObj = {};
-                 let fullAccountTypeName = '';
-
-                 $('#add-rateype-title').text('Edit Rate Type Details');
-                 $('#edtRateID').attr('readonly', true);
-                 $('#edtRateDescription').attr('readonly', true);
-
-                 if (ratetypelist) {
-                    for (var h = 0; h < ratetypelist.length; h++) {
-
-                        if (data.tpayratetype[a].fields.Description === ratetypelist[h].Description) {
-                            fullDescriptionname = ratetypelist[h].Description || '';
-                        }
-                    }
-
-                }
-
-                 var ratetypeid = data.tpayratetype[0].fields.ID || '';
-                 var ratetypedescription = fullAccountTypeName || data.tpayratetype[0].fields.Description;
-
-                          $('#edtRateID').val(ratetypeid);
-                          $('#edtRateDescription').val(ratetypedescription);
-
-                          setTimeout(function () {
-                              $('#addRateModel').modal('show');
-                          }, 500);
+    //                      }
 
 
-               }).catch(function (err) {
-                   LoadingOverlay.hide();
-               });
 
-               });
-               $('#addRateModel').modal('toggle');
-           }else{
-             $('#selectRateLineID').val('edtRateType');
-             $('#rateTypeListModel').modal();
-             setTimeout(function () {
-                  var datatable = $('#tblratetypelist').DataTable();
-                 datatable.draw();
+    //               var ratetypeid = data.tpayratetype[a].fields.ID || '';
+    //               var ratetypedescription = fullDescriptionname || data.tpayratetype[a].fields.Description;
 
-             }, 500);
-           }
-         }
+    //               $('#edtRateID').val(ratetypeid);
+    //               $('#edtRateDescription').val(ratetypedescription);
 
-    });
+    //               setTimeout(function () {
+    //                   $('#addRateModel').modal('show');
+    //                    }, 500); } }
+
+    //                  if(!added) {
+    //                     ratetypeService.getOneRateTypeByName(Description).then(function (data) {
+    //                      let lineItems = [];
+    //                      let lineItemObj = {};
+    //                      let fullAccountTypeName = '';
+
+    //                      $('#add-rateype-title').text('Edit Rate Type Details');
+    //                      $('#edtRateID').attr('readonly', true);
+    //                      $('#edtRateDescription').attr('readonly', true);
+    //                      if (ratetypelist) {
+    //                          for (var h = 0; h < ratetypelist.length; h++) {
+
+    //                              if (data.tpayratetype[0].fields.Description === ratetypelist[h].Description) {
+
+    //                                  fullAccountTypeName = ratetypelist[h].description || '';
+
+    //                              }
+    //                          }
+
+    //                      }
+
+    //                       var ratetypeid = data.tpayratetype[0].fields.ID || '';
+    //                       var ratetypedescription = fullAccountTypeName || data.tpayratetype[0].fields.Description;
+
+    //                       $('#edtRateID').val(ratetypeid);
+    //                       $('#edtRateDescription').val(ratetypedescription);
+
+    //                       setTimeout(function () {
+    //                           $('#addRateModel').modal('show');
+    //                       }, 500);
+
+    //                    }).catch(function (err) {
+    //                        LoadingOverlay.hide();
+    //                    });
+    //                  }
+
+    //              }
+    //          }).catch(function (err) {
+    //             ratetypeService.getOneRateTypeByName(Description).then(function (data) {
+    //              let lineItems = [];
+    //              let lineItemObj = {};
+    //              let fullAccountTypeName = '';
+
+    //              $('#add-rateype-title').text('Edit Rate Type Details');
+    //              $('#edtRateID').attr('readonly', true);
+    //              $('#edtRateDescription').attr('readonly', true);
+
+    //              if (ratetypelist) {
+    //                 for (var h = 0; h < ratetypelist.length; h++) {
+
+    //                     if (data.tpayratetype[a].fields.Description === ratetypelist[h].Description) {
+    //                         fullDescriptionname = ratetypelist[h].Description || '';
+    //                     }
+    //                 }
+
+    //             }
+
+    //              var ratetypeid = data.tpayratetype[0].fields.ID || '';
+    //              var ratetypedescription = fullAccountTypeName || data.tpayratetype[0].fields.Description;
+
+    //                       $('#edtRateID').val(ratetypeid);
+    //                       $('#edtRateDescription').val(ratetypedescription);
+
+    //                       setTimeout(function () {
+    //                           $('#addRateModel').modal('show');
+    //                       }, 500);
+
+
+    //            }).catch(function (err) {
+    //                LoadingOverlay.hide();
+    //            });
+
+    //            });
+    //            $('#addRateModel').modal('toggle');
+    //        }else{
+    //          $('#selectRateLineID').val('edtRateType');
+    //          $('#rateTypeListModel').modal();
+    //         //  setTimeout(function () {
+    //         //       var datatable = $('#tblratetypelist').DataTable();
+    //         //      datatable.draw();
+
+    //         //  }, 500);
+    //        }
+    //      }
+
+    // });
 
 
     $('#holidaygroup').editableSelect().on('click.editable-select', function (e, li) {
@@ -14596,7 +14710,7 @@ Template.payrollrules.onRendered(function() {
                 $('#formCheck-ExemptReportable').removeAttr('checked');
             }
 
-            $('#ordinaryTimeEarningsModal').modal('toggle');
+            $('#add-tblEarnings_modal').modal('toggle');
 
 
         }
@@ -14633,7 +14747,7 @@ Template.payrollrules.onRendered(function() {
                 $('#formCheck-ExemptReportableOvertime').removeAttr('checked');
             }
 
-            $('#ordinaryTimeEarningsModal').modal('toggle');
+            $('#add-tblEarnings_modal').modal('toggle');
 
         }
         else if(colEarningsType === 'Employee Termnination'){
@@ -15560,11 +15674,9 @@ Template.payrollrules.events({
 
     },
 
-    'click .btnSaveRatePOP': function(){
+    'click .btnSaveRatePOP': (e, templateObject) => {
         playSaveAudio();
-        let templateObject = Template.instance();
         LoadingOverlay.show();
-
         let taxRateService = new TaxRateService();
 
         let rateTypeId = $('#edtRateID').val()|| 0;
@@ -15574,103 +15686,152 @@ Template.payrollrules.events({
             LoadingOverlay.hide();
             swal('Rate type description can not be blank !', '', 'warning');
             e.preventDefault();
-        }
-        else {
-
-
+        } else {
             LoadingOverlay.show();
+            if(rateTypeId == ""){
 
-
-          if(rateTypeId == ""){
-
-            taxRateService.checkRateTypeByName(ratetypedescription).then(function (data) {
-             rateTypeId = data.tpayratetype[0].Id;
-              objDetails = {
-                 type: erpObject.TPayRateType,
-                 fields: {
-                     ID: parseInt(rateTypeId),
-                     Description: ratetypedescription,
-
-                 }
-             };
-
-              taxRateService.saveRateType(objDetails).then(function (objDetails) {
-                LoadingOverlay.hide();
-                swal({
-                    title: 'Success',
-                    text: 'New Rate Type saved Successfully',
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'Done'
-
-                }).then((result) => {
-                    if (result.value) {
-                        sideBarService.getRateTypes(initialBaseDataLoad, 0).then(function (dataReload) {
-                            addVS1Data(erpObject.TPayRateType, JSON.stringify(dataReload)).then(function (datareturn) {
-                                window.open('/payrollrules?active_key=payitem','_self');
-                            }).catch(function (err) {
-                                window.open('/payrollrules?active_key=payitem','_self');
-                            });
-                          }).catch(function (err) {
-                            window.open('/payrollrules?active_key=payitem','_self');
-                          });
-                    }else if (result.dismiss === 'cancel') {
-
-                    }
-                });
-              }).catch(function (err) {
-                LoadingOverlay.hide();
-                swal({
-                title: 'Oooops...',
-                text: err,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'Try Again'
-                }).then((result) => {
-                if (result.value) {
-                } else if (result.dismiss === 'cancel') {
-
-                }
-                });
-
-              });
-            }).catch(function (err) {
+                taxRateService.checkRateTypeByName(ratetypedescription).then(function (data) {
+                rateTypeId = data.tpayratetype[0].Id;
                 objDetails = {
                     type: erpObject.TPayRateType,
                     fields: {
                         ID: parseInt(rateTypeId),
                         Description: ratetypedescription,
-                      }
 
+                    }
                 };
 
-             taxRateService.saveRateType(objDetails).then(function (objDetails) {
+                taxRateService.saveRateType(objDetails).then(function (objDetails) {
+                    LoadingOverlay.hide();
+                    swal({
+                        title: 'Success',
+                        text: 'New Rate Type saved Successfully',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
 
-                LoadingOverlay.hide();
-                swal({
-                    title: 'Success',
-                    text: 'New Rate Type saved Successfully',
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'Done'
-
-                }).then((result) => {
-                    if (result.value) {
-                        sideBarService.getRateTypes(initialBaseDataLoad, 0).then(function (dataReload) {
-                            addVS1Data(erpObject.TPayRateType, JSON.stringify(dataReload)).then(function (datareturn) {
-                                window.open('/payrollrules?active_key=payitem','_self');
+                    }).then((result) => {
+                        if (result.value) {
+                            sideBarService.getRateTypes(initialBaseDataLoad, 0).then(function (dataReload) {
+                                addVS1Data(erpObject.TPayRateType, JSON.stringify(dataReload)).then(function (datareturn) {
+                                    window.open('/payrollrules?active_key=payitem','_self');
+                                }).catch(function (err) {
+                                    window.open('/payrollrules?active_key=payitem','_self');
+                                });
                             }).catch(function (err) {
                                 window.open('/payrollrules?active_key=payitem','_self');
                             });
-                          }).catch(function (err) {
-                            window.open('/payrollrules?active_key=payitem','_self');
-                          });
-                    }else if (result.dismiss === 'cancel') {
+                        }else if (result.dismiss === 'cancel') {
+
+                        }
+                    });
+                }).catch(function (err) {
+                    LoadingOverlay.hide();
+                    swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                    if (result.value) {
+                    } else if (result.dismiss === 'cancel') {
 
                     }
+                    });
+
+                });
+                }).catch(function (err) {
+                    objDetails = {
+                        type: erpObject.TPayRateType,
+                        fields: {
+                            ID: parseInt(rateTypeId),
+                            Description: ratetypedescription,
+                        }
+
+                    };
+
+                taxRateService.saveRateType(objDetails).then(function (objDetails) {
+
+                    LoadingOverlay.hide();
+                    swal({
+                        title: 'Success',
+                        text: 'New Rate Type saved Successfully',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+
+                    }).then((result) => {
+                        if (result.value) {
+                            sideBarService.getRateTypes(initialBaseDataLoad, 0).then(function (dataReload) {
+                                addVS1Data(erpObject.TPayRateType, JSON.stringify(dataReload)).then(function (datareturn) {
+                                    window.open('/payrollrules?active_key=payitem','_self');
+                                }).catch(function (err) {
+                                    window.open('/payrollrules?active_key=payitem','_self');
+                                });
+                            }).catch(function (err) {
+                                window.open('/payrollrules?active_key=payitem','_self');
+                            });
+                        }else if (result.dismiss === 'cancel') {
+
+                        }
+                    });
+
+                }).catch(function (err) {
+                    LoadingOverlay.hide();
+                    swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                    if (result.value) {
+                    } else if (result.dismiss === 'cancel') {
+
+                    }
+                    });
+
+                });
                 });
 
-             }).catch(function (err) {
+            }else{
+                objDetails = {
+                    type: erpObject.TPayRateType,
+                    fields: {
+                        ID: parseInt(rateTypeId),
+                        Description: ratetypedescription,
+                    }
+
+                    };
+
+            taxRateService.saveRateType(objDetails).then(function (objDetails) {
+
+                    LoadingOverlay.hide();
+                    swal({
+                        title: 'Success',
+                        text: 'New Rate Type saved Successfully',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+
+                    }).then((result) => {
+                        if (result.value) {
+                            sideBarService.getRateTypes(initialBaseDataLoad, 0).then(function (dataReload) {
+                                addVS1Data(erpObject.TPayRateType, JSON.stringify(dataReload)).then(function (datareturn) {
+                                    window.open('/payrollrules?active_key=payitem','_self');
+                                }).catch(function (err) {
+                                    window.open('/payrollrules?active_key=payitem','_self');
+                                });
+                            }).catch(function (err) {
+                                window.open('/payrollrules?active_key=payitem','_self');
+                            });
+                        }else if (result.dismiss === 'cancel') {
+
+                        }
+                    });
+
+            }).catch(function (err) {
                 LoadingOverlay.hide();
                 swal({
                 title: 'Oooops...',
@@ -15685,62 +15846,8 @@ Template.payrollrules.events({
                 }
                 });
 
-             });
             });
-
-          }else{
-            objDetails = {
-                type: erpObject.TPayRateType,
-                fields: {
-                    ID: parseInt(rateTypeId),
-                    Description: ratetypedescription,
-                  }
-
-                };
-
-          taxRateService.saveRateType(objDetails).then(function (objDetails) {
-
-                LoadingOverlay.hide();
-                swal({
-                    title: 'Success',
-                    text: 'New Rate Type saved Successfully',
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'Done'
-
-                }).then((result) => {
-                    if (result.value) {
-                        sideBarService.getRateTypes(initialBaseDataLoad, 0).then(function (dataReload) {
-                            addVS1Data(erpObject.TPayRateType, JSON.stringify(dataReload)).then(function (datareturn) {
-                                window.open('/payrollrules?active_key=payitem','_self');
-                            }).catch(function (err) {
-                                window.open('/payrollrules?active_key=payitem','_self');
-                            });
-                          }).catch(function (err) {
-                            window.open('/payrollrules?active_key=payitem','_self');
-                          });
-                    }else if (result.dismiss === 'cancel') {
-
-                    }
-                });
-
-          }).catch(function (err) {
-            LoadingOverlay.hide();
-            swal({
-            title: 'Oooops...',
-            text: err,
-            type: 'error',
-            showCancelButton: false,
-            confirmButtonText: 'Try Again'
-            }).then((result) => {
-            if (result.value) {
-            } else if (result.dismiss === 'cancel') {
-
             }
-            });
-
-          });
-          }
 
 
         }
@@ -21007,7 +21114,7 @@ Template.payrollrules.events({
 
 
     },
-    'click .btnAddordinaryTimeEarnings':function(event){
+    'click .btnAddordinaryTimeEarnings, click .add-tblEarnings': function(event){
 
         $('#ordinaryTimeEarningsLabel').text('Add New Earnings');
         $('#ordinaryTimeEarningsid').val(0);
@@ -21020,7 +21127,7 @@ Template.payrollrules.events({
         $('#formCheck-ExemptReportable').removeAttr('checked');
 
     },
-    'click .btnAddoverTimeEarnings':function(event){
+    'click .add-tblEarnings':function(event){
 
        $('#overtimeEarningsLabel').text('Add New Over Time Earnings');
             $('#edtEarningsNameOvertimeid').val(0);
@@ -21823,15 +21930,15 @@ Template.payrollrules.events({
     },
     'keyup #tblEarnings_filter input': function (event) {
         if($(event.target).val() != ''){
-                  $(".btnRefreshEarnings").addClass('btnSearchAlert');
+                  $(".refresh-tblEarnings").addClass('btnSearchAlert');
         }else{
-                  $(".btnRefreshEarnings").removeClass('btnSearchAlert');
+                  $(".refresh-tblEarnings").removeClass('btnSearchAlert');
         }
         if (event.keyCode == 13) {
-         $(".btnRefreshEarnings").trigger("click");
+         $(".refresh-tblEarnings").trigger("click");
         }
     },
-    'click .btnRefreshEarnings':function(event){
+    'click .refresh-tblEarnings':function(event){
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let tableProductList;
@@ -21842,7 +21949,7 @@ Template.payrollrules.events({
         let dataSearchName = $('#tblEarnings_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
             sideBarService.getEarningByName(dataSearchName).then(function (data) {
-                $(".btnRefreshEarnings").removeClass('btnSearchAlert');
+                $(".refresh-tblEarnings").removeClass('btnSearchAlert');
                 let lineItems = [];
                 let lineItemObj = {};
                 if (data.btnRefreshEarnings.length > 0) {
@@ -21870,27 +21977,27 @@ Template.payrollrules.events({
                     let item = templateObject.datatablerecords.get();
                     LoadingOverlay.hide();
                     if (splashArrayInvoiceList) {
-                        var datatable = $('#tblEarnings').DataTable();
-                        $("#tblEarnings > tbody").empty();
-                        for (let x = 0; x < item.length; x++) {
-                            $("#tblEarnings > tbody").append(
-                                '<tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
-                                '<td contenteditable="false" class="colEarningsID hiddenColumn">' + item[x].id + '</td>' +
-                                '<td contenteditable="false" class="colEarningsNames" ><span >' + item[x].name + '</span></td>' +
-                                '<td contenteditable="false" class="colEarningsType">' + item[x].type + '</td>' +
-                                '<td contenteditable="false" class="colEarningsDisplayName" >' + item[x].displayName + '</td>' +
-                                '<td contenteditable="false" class="colEarningsratetype">' + item[x].ratetype + '</td>' +
-                                '<td contenteditable="false" class="colEarningsAmount" ><span >' + item[x].amount + '</span></td>' +
-                                '<td contenteditable="false" class="colEarningsAccounts">' + item[x].expamount + '</td>' +
-                                '<td contenteditable="false" class="colEarningsAccountsID hiddenColumn" >' + item[x].holdingamount + '</td>' +
-                                '<td contenteditable="false" class="colEarningsPAYG hiddenColumn">' + item[x].expenseAccount + '</td>' +
-                                '<td contenteditable="false" class="colEarningsSuperannuation hiddenColumn" ><span >' + item[x].connt + '</span></td>' +
-                                '<td contenteditable="false" class="colEarningsReportableasW1 hiddenColumn">' + item[x].acvitiy + '</td>' +
-                                item[x].deletedata +
-                                '</tr>');
+                        // var datatable = $('#tblEarnings').DataTable();
+                        // $("#tblEarnings > tbody").empty();
+                        // for (let x = 0; x < item.length; x++) {
+                        //     $("#tblEarnings > tbody").append(
+                        //         '<tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
+                        //         '<td contenteditable="false" class="colEarningsID hiddenColumn">' + item[x].id + '</td>' +
+                        //         '<td contenteditable="false" class="colEarningsNames" ><span >' + item[x].name + '</span></td>' +
+                        //         '<td contenteditable="false" class="colEarningsType">' + item[x].type + '</td>' +
+                        //         '<td contenteditable="false" class="colEarningsDisplayName" >' + item[x].displayName + '</td>' +
+                        //         '<td contenteditable="false" class="colEarningsratetype">' + item[x].ratetype + '</td>' +
+                        //         '<td contenteditable="false" class="colEarningsAmount" ><span >' + item[x].amount + '</span></td>' +
+                        //         '<td contenteditable="false" class="colEarningsAccounts">' + item[x].expamount + '</td>' +
+                        //         '<td contenteditable="false" class="colEarningsAccountsID hiddenColumn" >' + item[x].holdingamount + '</td>' +
+                        //         '<td contenteditable="false" class="colEarningsPAYG hiddenColumn">' + item[x].expenseAccount + '</td>' +
+                        //         '<td contenteditable="false" class="colEarningsSuperannuation hiddenColumn" ><span >' + item[x].connt + '</span></td>' +
+                        //         '<td contenteditable="false" class="colEarningsReportableasW1 hiddenColumn">' + item[x].acvitiy + '</td>' +
+                        //         item[x].deletedata +
+                        //         '</tr>');
 
-                        }
-                        $('.dataTables_info').html('Showing 1 to ' + data.tordinarytimeearnings.length + ' of ' + data.tordinarytimeearnings.length + ' entries');
+                        // }
+                        // $('.dataTables_info').html('Showing 1 to ' + data.tordinarytimeearnings.length + ' of ' + data.tordinarytimeearnings.length + ' entries');
 
                     }
 
@@ -22165,23 +22272,27 @@ Template.payrollrules.events({
         ui.editOverTime(id);
      },
 
-     "click #overtimeRateType": (e, ui) => {
+     "click #overtimeRateType, click #edtRateType": (e, ui) => {
         $(e.currentTarget).addClass('paste-rate');
-        $('#select-ratetype-modal').modal('show');
+        $('#select-rate-type-modal').modal('show');
 
      },
 
-     "click #tblratetypes tbody > tr": (e, ui) => {
+     "click #tblratetypes tbody > tr, click  #tblratetypelist tbody > tr": (e, ui) => {
         const tr = $(e.currentTarget);
         const rateName = $(tr).find('td:first').text();
 
         $('.paste-rate').val(rateName);
         $('.paste-rate').attr('rate-type-id', $(tr).attr('rate-type-id'));
 
-        $('#select-ratetype-modal').modal('hide');
+        $('#select-rate-type-modal').modal('hide');
         $(".paste-rate").removeClass('paste-rate');
 
      },
+    //  "click #edtRateType": (e, ui) => {
+    //     $(e.currentTarget).addClass('paste-rate-type');
+    //     $('#rateTypeListModel').modal("show");
+    //  }
     //  "show.bs.modal #select-ratetype-modal": (e, ui) => {
     //     console.log(e);
     // },
@@ -22205,6 +22316,9 @@ Template.payrollrules.helpers({
     },
     rateTypes: () => {
         return Template.instance().rateTypes.get();
+    },
+    earnings: () => {
+        return Template.instance().earnings.get();
     }
 
     
@@ -22243,18 +22357,20 @@ export const saveOvertimes = async (overtimes = []) => {
 
 export const getRateTypes = async (refresh = false) => {
     // sideBarService.getRateTypes(initialBaseDataLoad, 0)
-   // let data = await getVS1Data(erpObject.TRateTypes); 
+   // let data = await getVS1Data(erpObject.TPayRateType); 
+   // console.log('data',data);
+   // let rateTypes = data.length > 0 ? JSON.parse(data[0].data) : [];
 
-    let data = await CachedHttp.get(erpObject.TRateTypes, async () => {
+    let data = await CachedHttp.get(erpObject.TPayRateType, async () => {
         return await sideBarService.getRateTypes(initialBaseDataLoad, 0);
     }, {
         forceOverride: refresh,
         fallBackToLocal: true,
     });
+    const response = data.response;
 
-    console.log('data',data);
-    let rateTypes = data.length > 0 ? JSON.parse(data[0].data) : [];
-    return rateTypes;
+    return response.tpayratetype ? response.tpayratetype.map(e => e.fields) : null;
+
 }
 
 export const getEarnings = async (refresh = false) => {

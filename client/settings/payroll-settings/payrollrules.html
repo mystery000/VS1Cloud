@@ -338,7 +338,7 @@
                                                                         <label>Start Date</label>
                                                                         <div class="input-group date" style="cursor: pointer;">
                                                                             <input type="text" class="form-control formClassDate edtStartDate" id="edtStartDate" name="edtStartDate" value="">
-                                                                            <div class="input-group-addon" style="">
+                                                                            <div class="input-group-addon" >
                                                                                 <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
                                                                             </div>
                                                                         </div>
@@ -350,7 +350,7 @@
                                                                         <label>First Payment Date</label>
                                                                         <div class="input-group date" style="cursor: pointer;">
                                                                             <input type="text" class="form-control formClassDate edtFirstPaymentDate" id="edtFirstPaymentDate" name="edtFirstPaymentDate" value="">
-                                                                            <div class="input-group-addon" style="">
+                                                                            <div class="input-group-addon" >
                                                                                 <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
                                                                             </div>
                                                                         </div>
@@ -463,8 +463,8 @@
                                                     <thead>
                                                         <tr class="dnd-moved">
                                                             <th class="th colCalenderID hiddenColumn" >ID</th>
-                                                            <th class="th colPayCalendarName" style="">Name</th>
-                                                            <th class="th colPayPeriod" style="">Pay Period</th>
+                                                            <th class="th colPayCalendarName" >Name</th>
+                                                            <th class="th colPayPeriod" >Pay Period</th>
                                                             <th class="th colNextPayPeriod" >Next Pay Period</th>
                                                             <th class="th colNextPaymentDate" >Next Payment Date</th>
                                                             <th class="th colDelete" style="width: 3% !important;"></th>
@@ -520,7 +520,7 @@
                                                                         <label>Date</label>
                                                                         <div class="input-group date" style="cursor: pointer;">
                                                                             <input type="text" class="form-control formClassDate edtHolidayDate" id="edtHolidayDate" name="edtHolidayDate" value="">
-                                                                            <div class="input-group-addon" style="">
+                                                                            <div class="input-group-addon" >
                                                                                 <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
                                                                             </div>
                                                                         </div>
@@ -709,7 +709,7 @@
                                                                         <label>Date</label>
                                                                         <div class="input-group date" style="cursor: pointer;">
                                                                             <input type="text" class="form-control formClassDate edtHolidayDate" id="edtHolidayDate" name="edtHolidayDate" value="">
-                                                                            <div class="input-group-addon" style="">
+                                                                            <div class="input-group-addon" >
                                                                                 <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
                                                                             </div>
                                                                         </div>
@@ -754,7 +754,7 @@
                                             <button class="btn btn-primary btncollapse" type="button" id="btnReiumbursement">Reimbursements</button>
                                         </div>
                                         <div class="col-12 col-md-10">
-                                          <div class="" id="allowances" style="">
+                                          <div class="" id="allowances" >
                                               <div class="row mb-2">
                                                   <div class="col-6">
                                                       <h5 style="font-weight: 600;">Allowance</h5>
@@ -857,13 +857,13 @@
                                                               <th class="th colAllowancesID hiddenColumn" >Allowance ID</th>
                                                               <th class="th colAlowancesNames" style="width: 200px;">Allowance Name</th>
                                                               <th class="th colAllowancesType" style="width: 80px;">Allowance Type</th>
-                                                              <th class="th colAllowancesDisplayName" style="">Display Name</th>
+                                                              <th class="th colAllowancesDisplayName" >Display Name</th>
                                                               <th class="th colAllowancesAmount" style="width: 80px;">Amount</th>
-                                                              <th class="th colAllowancesAccounts" style="">Account</th>
-                                                              <th class="th colAllowancesAccountsID hiddenColumn" style="">Account ID</th>
-                                                              <th class="th colAllowancesPAYG hiddenColumn" style="">PAYG withholding</th>
-                                                              <th class="th colAllowancesSuperannuation hiddenColumn" style="">Superannuation Guarantee Contribution</th>
-                                                              <th class="th colAllowancesReportableasW1 hiddenColumn" style="">Reportable as W1</th>
+                                                              <th class="th colAllowancesAccounts" >Account</th>
+                                                              <th class="th colAllowancesAccountsID hiddenColumn" >Account ID</th>
+                                                              <th class="th colAllowancesPAYG hiddenColumn" >PAYG withholding</th>
+                                                              <th class="th colAllowancesSuperannuation hiddenColumn" >Superannuation Guarantee Contribution</th>
+                                                              <th class="th colAllowancesReportableasW1 hiddenColumn" >Reportable as W1</th>
                                                               <th class="th colDeleteAllowances" style="width: 20px!important;"></th>
                                                           </tr>
                                                       </thead>
@@ -897,7 +897,7 @@
                                                     </div> -->
                                                 </div>
 
-                                                <div class="modal fade" id="ordinaryTimeEarningsModal" tabindex="-1" role="dialog" aria-labelledby="ordinaryTimeEarningsLabel" aria-hidden="true">
+                                                <div class="modal fade" id="add-tblEarnings_modal" tabindex="-1" role="dialog" aria-labelledby="ordinaryTimeEarningsLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -1364,22 +1364,47 @@
                                                     <table id="tblEarnings" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblEarnings">
                                                         <thead>
                                                             <tr class="dnd-moved">
-                                                                <th class="th colEarningsID hiddenColumn" style="">Earning ID</th>
+                                                                <th class="th colEarningsID hiddenColumn" >Earning ID</th>
                                                                 <th class="th colEarningsNames" style="width: 200px;">Earnings Name</th>
                                                                 <th class="th colEarningsType" style="width: 80px;">Earnings Type</th>
-                                                                <th class="th colEarningsDisplayName" style="">Display name</th>
+                                                                <th class="th colEarningsDisplayName" >Display name</th>
                                                                 <th class="th colEarningsratetype" >Rate Type</th>
                                                                 <th class="th colEarningsAmount" style="width: 80px;">Amount</th>
                                                                 <th class="th colEarningsAccounts" >Account</th>
 
-                                                                <th class="th colEarningsAccountsID hiddenColumn" style="">Account ID</th>
-                                                                <th class="th colEarningsPAYG hiddenColumn" style="">PAYG withholding</th>
-                                                                <th class="th colEarningsSuperannuation hiddenColumn" style="">Superannuation Guarantee Contribution</th>
-                                                                <th class="th colEarningsReportableasW1 hiddenColumn" style="">Reportable as W1</th>
+                                                                <th class="th colEarningsAccountsID hiddenColumn" >Account ID</th>
+                                                                <th class="th colEarningsPAYG hiddenColumn" >PAYG withholding</th>
+                                                                <th class="th colEarningsSuperannuation hiddenColumn" >Superannuation Guarantee Contribution</th>
+                                                                <th class="th colEarningsReportableasW1 hiddenColumn" >Reportable as W1</th>
                                                                 <th class="th colDeleteEarnings" style="width: 20px!important;"></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
+                                                            {{#if earnings}}
+                                                                {{#each earning in earnings}}
+                                                                <tr>
+                                                                    <td class="colEarningsID hiddenColumn" >{{ earning.ID }}</td>
+                                                                    <td class="colEarningsNames" style="width: 200px;">{{ earning.EarningName }}</td>
+                                                                    <td class="colEarningsType" style="width: 80px;">{{ earning.EarningType }}</td>
+                                                                    <td class="colEarningsDisplayName" >{{ earning.EarningDisplayName }}</td>
+                                                                    <td class="colEarningsratetype" >{{ earning.EarningRateType }}</td>
+                                                                    <td class="colEarningsAmount" style="width: 80px;">N/A</td>
+                                                                    <td class="colEarningsAccounts" >{{ earning.EarningExpanceAccount }}</td>
+    
+                                                                    <td class="colEarningsAccountsID hiddenColumn">Account ID</td>
+                                                                    <td class="colEarningsPAYG hiddenColumn" >{{ earning.Earningpaygholding }}</td>
+                                                                    <td class="colEarningsSuperannuation hiddenColumn" >{{ earning.Earningsuperannuation }}</td>
+                                                                    <td class="colEarningsReportableasW1 hiddenColumn" >{{ earning.Earningactivitystatement }}</td>
+                                                                    <td contenteditable="false" class="colDeleteEarnings">
+                                                                        <span class="table-remove">
+                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0">
+                                                                                <i class="fa fa-remove"></i>
+                                                                            </button>
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                                {{/each}}
+                                                            {{/if}}
 
                                                         </tbody>
 
@@ -1578,16 +1603,16 @@
                                                     <table id="tblDeductions" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblDeductions">
                                                         <thead>
                                                             <tr class="dnd-moved">
-                                                                <th class="th colDeductionsID hiddenColumn" style="">Deduction ID</th>
+                                                                <th class="th colDeductionsID hiddenColumn" >Deduction ID</th>
                                                                 <th class="th colDeductions" style="width: 200px;">Deduction Name</th>
                                                                 <th class="th colDeductionsType" style="width: 80px;">Deduction Type</th>
-                                                                <th class="th colDeductionsDisplayName" style="">Display Name</th>
+                                                                <th class="th colDeductionsDisplayName" >Display Name</th>
                                                                 <th class="th colDeductionsAmount" style="width: 80px;">Amount</th>
-                                                                <th class="th colDeductionsAccounts" style="">Account</th>
-                                                                <th class="th colDeductionsAccountsID hiddenColumn" style="">Account ID</th>
-                                                                <th class="th colDeductionsPAYG hiddenColumn" style="">Reduces PAYG Withholding</th>
-                                                                <th class="th colDeductionsSuperannuation hiddenColumn" style="">Reduces Superannuation Guarantee Contribution</th>
-                                                                <th class="th colDeductionsReportableasW1 hiddenColumn" style="">Excluded from W1 on Activity Statement</th>
+                                                                <th class="th colDeductionsAccounts" >Account</th>
+                                                                <th class="th colDeductionsAccountsID hiddenColumn" >Account ID</th>
+                                                                <th class="th colDeductionsPAYG hiddenColumn" >Reduces PAYG Withholding</th>
+                                                                <th class="th colDeductionsSuperannuation hiddenColumn" >Reduces Superannuation Guarantee Contribution</th>
+                                                                <th class="th colDeductionsReportableasW1 hiddenColumn" >Excluded from W1 on Activity Statement</th>
                                                                 <th class="th colDeleteDeductions" style="width: 20px!important;"></th>
                                                             </tr>
                                                         </thead>
@@ -1665,15 +1690,15 @@
                                                     <table id="tblReimbursements" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblReimbursements">
                                                         <thead>
                                                             <tr class="dnd-moved">
-                                                                <th class="th colReimbursementID hiddenColumn" style="">Reimbursement Name</th>
-                                                                <th class="th colReimbursementName" style="">Reimbursement Name</th>
-                                                                <th class="th colReimbursementAccount" style="">Account</th>
+                                                                <th class="th colReimbursementID hiddenColumn" >Reimbursement Name</th>
+                                                                <th class="th colReimbursementName" >Reimbursement Name</th>
+                                                                <th class="th colReimbursementAccount" >Account</th>
                                                                 <th class="th colDeleterei" style="width: 3% !important;"></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                <td contenteditable="false" class="th colReimbursementID hiddenColumn" style="">Reimbursement Name</td>
+                                                                <td contenteditable="false" class="th colReimbursementID hiddenColumn" >Reimbursement Name</td>
                                                                 <td contenteditable="false" class="colReimbursementName"></td>
                                                                 <td contenteditable="false" class="colReimbursementAccount"></td>
                                                                 <td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
@@ -2251,7 +2276,7 @@
                                                         <label for="edtRule">Rule</label>
                                                         <div class="input-group mb-3">
                                                             <div class="form-group" id="initialRuleGroup" style="margin-bottom: 0px !important;">
-                                                                <select class="form-control" id="ruleModifierInitial" style="">
+                                                                <select class="form-control" id="ruleModifierInitial" >
                                                                     <option>Select An Starting Option...</option>
                                                                     <option id="ruleGreaterThan" value="greaterthan">Greater Than</option>
                                                                     <option id="ruleLessThan" value="lessthan">Less Than</option>
@@ -2346,8 +2371,8 @@
                                 <table id="tblPayRollRulesList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayRollRulesList">
                                     <thead>
                                         <tr class="dnd-moved">
-                                            <th class="th colRateName" style="">Rate Name</th>
-                                            <th class="th colRule" style="">Rule</th>
+                                            <th class="th colRateName" >Rate Name</th>
+                                            <th class="th colRule" >Rule</th>
                                             <th class="th colMultiplier" style="width: 6% !important;">Multiplier</th>
                                             <th class="th colIsActive" style="width: 7% !important;">Is Active</th>
                                             <th class="th colDelete" style="width: 3% !important;"></th>
@@ -2419,9 +2444,9 @@
         {{> addaccountpop}}
     </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="rateTypeListModel">
+    <div class="modal fade" role="dialog" tabindex="-1" id="select-rate-type-modal">
         {{> ratetypelistpop rateTypes=rateTypes}}
-    </div>
+    </div> 
 
     <div class="modal fade" role="dialog" tabindex="-1" id="groupTypeListModel">
         {{> grouptypelistpop}}
@@ -2668,52 +2693,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="select-ratetype-modal">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4>Rate Type List</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">×</span></button>
-              </div>
-              <div class="modal-body">
-                <input type="hidden" style="width: 100%; display:none;" id="selectRateLineID" name="selectRateLineID" readonly="readonly">
-                <div class="card-body p-1 rounded">
-                  <div class="table-responsive">
-                    <style>
-                      .thDescription {
-                        width: 40% !important;
-                      }
-                    </style>
-        
-                    <table id="tblratetypes" style="width:100%" class="table table-striped table-bordered tblratetypes">
-                      <thead>
-                        <tr class="dnd-moved">
-                          <th class="thDescription">Description</th>
-                          <th class="thRateID hiddenColumn">Rate Type ID</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {{#if rateTypes}}
-                            {{#each rateType in rateTypes}}
-                              <tr rate-type-id="{{ rateType.ID }}">
-                                <td>{{ rateType.Description }}</td>
-                                <td class="id hiddenColumn">{{ rateType.ID }}</td>
-                              </tr>
-                            {{/each}}
-                        {{/if}}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
-              </div>
-            </div>
-          </div>
     </div>
 
     <!-- End Help Video Modal -->

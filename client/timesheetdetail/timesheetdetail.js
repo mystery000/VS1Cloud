@@ -24,6 +24,7 @@ import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import moment from "moment";
 import Datehandler from "../DateHandler";
 import {getEarnings} from "../settings/payroll-settings/payrollrules";
+import TableHandler from "../js/Table/TableHandler";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -218,7 +219,9 @@ Template.timesheetdetail.onRendered(function () {
     await this.earningOptions.set(earnings);
 
     setTimeout(() => {
-      $("#tblEarnigRatesList").DataTable({destroy: true});
+      $("#tblEarnigRatesList").DataTable({
+        ...TableHandler.getDefaultTableConfiguration("tblEarnigRatesList")
+      });
     }, 300);
   };
 
