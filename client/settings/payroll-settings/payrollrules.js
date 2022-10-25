@@ -5716,7 +5716,6 @@ Template.payrollrules.onRendered(function() {
 
             overtimes = overtimes.map(overtime => {
                 if(overtime.id == overtimeId) {
-                    
                     const hours = $('#overtimeHours').val();
                     const rateType = $('#overtimeRateType').val();
                     const rateTypeId =  $('#overtimeRateType').attr('rate-type-id');
@@ -5724,10 +5723,10 @@ Template.payrollrules.onRendered(function() {
                     const weekEndDay = $('#OvertimeWeekEndDay').val();
                     const newOvertime = {
                         ...overtime,
-                        hours: hours,
-                        rateTypeId: rateTypeId,
+                        hours: parseFloat(hours),
+                        rateTypeId: parseInt(rateTypeId),
                         rateType: rateTypes.find(rt => rt.ID == rateTypeId),
-                        hourlyMultiplier: hourlyMultiplier,
+                        hourlyMultiplier: parseFloat(hourlyMultiplier),
                         rule: rateType == "Weekend" ? `${rateType} : (${weekEndDay})` : `${rateType}`,
                         ...(rateType == "Weekend" ? {day: weekEndDay} : {day: null}),
                         
@@ -22345,6 +22344,20 @@ Template.payrollrules.helpers({
     
 });
 
+
+const addDefaultOvertimes = async () => {
+    let overtimes = await getOvertimes();
+
+    // This part is handling the auto add of default values in the list
+    let defaultOvertimes = PayrollSettingsOvertimes.getDefaults();
+    defaultOvertimes.forEach((defaultOvertime) => {
+        // if doesnt exist, just add it
+        if(!overtimes.some(overtime => overtime.rule == defaultOvertime.rule)) {
+            overtimes.push(defaultOvertime);
+        };
+    })
+
+}
 
 /**
  * This will get the overtimes 
