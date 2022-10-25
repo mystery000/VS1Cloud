@@ -5575,20 +5575,21 @@ Template.payrollrules.onRendered(function() {
 
         setTimeout(() => {
             $('#OvertimeTable').DataTable({
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                destroy: true,
-                colReorder: true,
-                // bStateSave: true,
-                // rowId: 0,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                info: true,
-                responsive: true,
+                ...TableHandler.getDefaultTableConfiguration("OvertimeTable"),
+                // "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                // destroy: true,
+                // colReorder: true,
+                // // bStateSave: true,
+                // // rowId: 0,
+                // pageLength: initialDatatableLoad,
+                // lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                // info: true,
+                // responsive: true,
                 "order": [[ 1, "asc" ]],
                 action: function () {
                     $('#OvertimeTable').DataTable().ajax.reload();
                 },
-                language: { search: "",searchPlaceholder: "Search List..." },
+               
                 fnInitComplete: function () {
                     $("<button class='btn btn-primary btnRefreshOvertime ' type='button' id='btnRefreshOvertime' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#OvertimeTable_filter");
                 }
@@ -5712,24 +5713,28 @@ Template.payrollrules.onRendered(function() {
         if(overtimeId != null) {
             // update the overtime
             let overtimes = await templateObject.overtimes.get();
+            let rateTypes = await templateObject.rateTypes.get();
 
             overtimes = overtimes.map(overtime => {
                 if(overtime.id == overtimeId) {
+                    console.log("overtime to update", overtime);
                     const hours = $('#overtimeHours').val();
                     const rateType = $('#overtimeRateType').val();
                     const rateTypeId =  $('#overtimeRateType').attr('rate-type-id');
                     const hourlyMultiplier = $('#overtimeHourlyMultiplier').val();
                     const weekEndDay = $('#OvertimeWeekEndDay').val();
-                    return  {
+                    const newOvertime = {
                         ...overtime,
                         hours: hours,
                         rateTypeId: rateTypeId,
-                        rateType: rateType,
+                        rateType: rateTypes.find(rt => rt.ID == rateTypeId),
                         hourlyMultiplier: hourlyMultiplier,
                         rule: rateType == "Weekend" ? `${rateType} : (${weekEndDay})` : `${rateType}`,
                         ...(rateType == "Weekend" ? {day: weekEndDay} : {day: null}),
                         
                     };
+                    console.log("new overtiem", newOvertime);
+                    return newOvertime;
                 }
                 return overtime;
             });
@@ -5743,22 +5748,39 @@ Template.payrollrules.onRendered(function() {
         
     }
 
-    templateObject.editOverTime = async (overtimeId = null) => {
+    templateObject.openOvertimeEditor = async (overtimeId = null)  => {
         $('#btnAddNewOvertime').modal('show');
         $('#btnAddNewOvertime .modal-title').text('Edit Overtime');
+
 
         $('#btnAddNewOvertime').attr('overtime-id', overtimeId);
 
         let overtimes = await templateObject.overtimes.get();
         let overtime = overtimes.find(overtime => overtime.id == overtimeId);
-   
+
         $('#overtimeHours').val(overtime.hours);
-        $('#overtimeRateType').val(overtime.rateType);
+        $('#overtimeRateType').val(overtime.rateType.Description);
         $('#overtimeRateType').attr('rate-type-id', overtime.rateTypeId);
         $('#overtimeHourlyMultiplier').val(overtime.hourlyMultiplier);
         $('#OvertimeWeekEndDay').val(overtime.day);
+    }
 
-        templateObject.addOverTime(overtime.id);
+    templateObject.editOverTime = async (overtimeId = null) => {
+        // $('#btnAddNewOvertime').modal('show');
+        // $('#btnAddNewOvertime .modal-title').text('Edit Overtime');
+
+        // $('#btnAddNewOvertime').attr('overtime-id', overtimeId);
+
+         let overtimes = await templateObject.overtimes.get();
+         let overtime = overtimes.find(overtime => overtime.id == overtimeId);
+   
+        // $('#overtimeHours').val(overtime.hours);
+        // $('#overtimeRateType').val(overtime.rateType);
+        // $('#overtimeRateType').attr('rate-type-id', overtime.rateTypeId);
+        // $('#overtimeHourlyMultiplier').val(overtime.hourlyMultiplier);
+        // $('#OvertimeWeekEndDay').val(overtime.day);
+
+         templateObject.addOverTime(overtime.id);
      
     }
 
@@ -22269,7 +22291,8 @@ Template.payrollrules.events({
      },
      "click .edit-overtime": (e, ui) => {
         const id = $(e.currentTarget).attr('overtime-id');
-        ui.editOverTime(id);
+        ui.openOvertimeEditor(id);
+        // ui.editOverTime(id);
      },
 
      "click #overtimeRateType, click #edtRateType": (e, ui) => {
