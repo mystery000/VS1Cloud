@@ -5671,8 +5671,7 @@ Template.payrollrules.onRendered(function() {
             
         });
         object.setRateType(rateType);
-        // console.log("overtime", object);
-        // debugger;
+       
    
         // Add to the list of overtimes
         let overtimes = await templateObject.overtimes.get();
@@ -5717,7 +5716,7 @@ Template.payrollrules.onRendered(function() {
 
             overtimes = overtimes.map(overtime => {
                 if(overtime.id == overtimeId) {
-                    console.log("overtime to update", overtime);
+                    
                     const hours = $('#overtimeHours').val();
                     const rateType = $('#overtimeRateType').val();
                     const rateTypeId =  $('#overtimeRateType').attr('rate-type-id');
@@ -5733,7 +5732,7 @@ Template.payrollrules.onRendered(function() {
                         ...(rateType == "Weekend" ? {day: weekEndDay} : {day: null}),
                         
                     };
-                    console.log("new overtiem", newOvertime);
+   
                     return newOvertime;
                 }
                 return overtime;
@@ -22317,7 +22316,6 @@ Template.payrollrules.events({
     //     $('#rateTypeListModel').modal("show");
     //  }
     //  "show.bs.modal #select-ratetype-modal": (e, ui) => {
-    //     console.log(e);
     // },
 
 });
@@ -22381,7 +22379,7 @@ export const saveOvertimes = async (overtimes = []) => {
 export const getRateTypes = async (refresh = false) => {
     // sideBarService.getRateTypes(initialBaseDataLoad, 0)
    // let data = await getVS1Data(erpObject.TPayRateType); 
-   // console.log('data',data);
+
    // let rateTypes = data.length > 0 ? JSON.parse(data[0].data) : [];
 
     let data = await CachedHttp.get(erpObject.TPayRateType, async () => {
