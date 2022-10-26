@@ -63,7 +63,7 @@ Template.alltaskdatatable.onRendered(function () {
     let due_date_display = "No Date";
     if (date) {
       due_date = moment(date).format("YYYY-MM-DD hh:mm:ss");
-      due_date_display = moment(due_date).format("D MMM");
+      due_date_display = moment(due_date).format("dddd, Do MMMM");
     }
     $('#edit_task_modal_due_date').html(due_date_display)
 
@@ -92,7 +92,7 @@ Template.alltaskdatatable.onRendered(function () {
       buttonImageOnly: true,
       buttonImage: "/img/imgCal2.png",
       constrainInput: false,
-      dateFormat: "yy/mm/dd",
+      dateFormat: "dd/mm/yy",
       showOtherMonths: true,
       selectOtherMonths: true,
       changeMonth: true,
@@ -100,8 +100,12 @@ Template.alltaskdatatable.onRendered(function () {
       yearRange: "-90:+10",
       onSelect: function (dateText, inst) {
         let task_id = inst.id;
-        templateObject.updateTaskSchedule(task_id, dateText);
+        templateObject.updateTaskSchedule(task_id, new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
       },
+      onChangeMonthYear: function(year, month, inst){
+        // Set date to picker
+        $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay)); 
+      }
     });
     let currentDate = new Date();
     let begunDate = moment(currentDate).format("DD/MM/YYYY");
@@ -498,9 +502,9 @@ Template.alltaskdatatable.onRendered(function () {
       });
     }
 
-    setTimeout(() => {
-      templateObject.initDatepicker();
-    }, 500);
+    // setTimeout(() => {
+    //   templateObject.initDatepicker();
+    // }, 500);
   };
 
   templateObject.initTodayTasksTable = function (search = null) {
@@ -1186,7 +1190,8 @@ Template.alltaskdatatable.onRendered(function () {
               No Date</a>
             <div class="dropdown-divider no-modal"></div>
             <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
-              title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+              title="Date format: DD/MM/YYYY" style="display:flex; margin: 6px 20px; margin-top: 0px; z-index: 99999;">
+              <label style="margin-top: 6px; margin-right: 16px; width: 146px;">Select Date</label>
               <div class="input-group date no-modal" style="cursor: pointer;">
                 <input type="text" id="${item.fields.ID}" class="form-control crmDatepicker no-modal"
                   autocomplete="off">
@@ -1984,17 +1989,23 @@ Template.alltaskdatatable.onRendered(function () {
       buttonImageOnly: true,
       buttonImage: "/img/imgCal2.png",
       constrainInput: false,
-      dateFormat: "yy/mm/dd",
+      dateFormat: "dd/mm/yy",
       showOtherMonths: true,
       selectOtherMonths: true,
       changeMonth: true,
       changeYear: true,
       yearRange: "-90:+10",
       onSelect: function (dateText, inst) {
-        $(".lblAddTaskSchedule").html(moment(dateText).format("YYYY-MM-DD"));
+        $(".lblAddTaskSchedule").html(moment(new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay)).format("DD/MM/YYYY"));
       },
+      onChangeMonthYear: function(year, month, inst){
+        // Set date to picker
+        $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay)); 
+       }
     });
   }, 1000);
+  $(".crmEditDatepicker").val(moment().format("DD/MM/YYYY"));
+
   tableResize();
 });
 
@@ -2535,7 +2546,7 @@ Template.alltaskdatatable.events({
 
     let currentDate = new Date();
     let due_date = moment(currentDate).format("YYYY-MM-DD hh:mm:ss");
-    let due_date_display = moment(currentDate).format("D MMM");
+    let due_date_display = moment(currentDate).format("dddd, Do MMMM");
     $('#edit_task_modal_due_date').html(due_date_display)
 
     var objDetails = {
@@ -2563,7 +2574,7 @@ Template.alltaskdatatable.events({
   "click .setScheduleTomorrow": function (e) {
     let id = e.target.dataset.id;
     let tomorrow = moment().add(1, "day").format("YYYY-MM-DD hh:mm:ss");
-    let due_date_display = moment(tomorrow).format("D MMM");
+    let due_date_display = moment(tomorrow).format("dddd, Do MMMM");
     $('#edit_task_modal_due_date').html(due_date_display)
 
     var objDetails = {
@@ -2591,7 +2602,7 @@ Template.alltaskdatatable.events({
   "click .setScheduleWeekend": function (e) {
     let id = e.target.dataset.id;
     let weekend = moment().endOf("week").format("YYYY-MM-DD hh:mm:ss");
-    let due_date_display = moment(weekend).format("D MMM");
+    let due_date_display = moment(weekend).format("dddd, Do MMMM");
     $('#edit_task_modal_due_date').html(due_date_display)
 
     var objDetails = {
@@ -2621,7 +2632,7 @@ Template.alltaskdatatable.events({
 
     var startDate = moment();
     let next_monday = moment(startDate).day(1 + 7).format("YYYY-MM-DD hh:mm:ss");
-    let due_date_display = moment(next_monday).format("D MMM");
+    let due_date_display = moment(next_monday).format("dddd, Do MMMM");
     $('#edit_task_modal_due_date').html(due_date_display)
 
     var objDetails = {
@@ -4035,7 +4046,8 @@ function openEditTaskModal(id, type) {
             No Date</a>
           <div class="dropdown-divider no-modal"></div>
           <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
-            title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+            title="Date format: DD/MM/YYYY" style="display:flex; margin: 6px 20px; margin-top: 0px; z-index: 99999;">
+            <label style="margin-top: 6px; margin-right: 16px; width: 146px;">Select Date</label>
             <div class="input-group date no-modal" style="cursor: pointer;">
               <input type="text" id="${selected_record.ID}" class="form-control crmDatepicker no-modal"
                 autocomplete="off">
@@ -4289,7 +4301,7 @@ function openEditTaskModal(id, type) {
         buttonImageOnly: true,
         buttonImage: "/img/imgCal2.png",
         constrainInput: false,
-        dateFormat: "yy/mm/dd",
+        dateFormat: "dd/mm/yy",
         showOtherMonths: true,
         selectOtherMonths: true,
         changeMonth: true,
@@ -4297,10 +4309,16 @@ function openEditTaskModal(id, type) {
         yearRange: "-90:+10",
         onSelect: function (dateText, inst) {
           let task_id = inst.id;
-          templateObject.updateTaskSchedule(task_id, dateText);
+          $(".crmDatepicker").val(dateText);
+
+          templateObject.updateTaskSchedule(task_id, new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
         },
+        onChangeMonthYear: function(year, month, inst){
+          // Set date to picker
+          $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay)); 
+        }
       });
-      let currentDate = new Date();
+      let currentDate = selected_record.due_date ? new Date(selected_record.due_date) : new Date();
       let begunDate = moment(currentDate).format("DD/MM/YYYY");
       $(".crmDatepicker").val(begunDate);
 

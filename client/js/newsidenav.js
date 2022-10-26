@@ -8167,11 +8167,7 @@ Template.newsidenav.events({
     },
     'click #sidenavmailchimp': function(event) {
         event.preventDefault();
-        if (FlowRouter.current().path == "/crmoverview") {
-          $('#crmMailchimpModal').modal();
-        } else {
-            window.open('/crmoverview#btnMailchimp', '_self');
-        }
+        FlowRouter.go('/campaign-list');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },

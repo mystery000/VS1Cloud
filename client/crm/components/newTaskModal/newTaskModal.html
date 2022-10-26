@@ -76,7 +76,8 @@
                   <div class="dropdown-divider no-modal"></div>
 
                   <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
-                    title="Date format: YYYY-MM-DD" style="margin: 6px 20px; margin-top: 14px; z-index: 99999;">
+                    title="Date format: YYYY-MM-DD" style="display:flex; margin: 6px 20px; margin-top: 0px; z-index: 99999;">
+                    <label style="margin-top: 6px; margin-right: 16px; width: 146px;">Select Date</label>
                     <div class="input-group date no-modal" style="cursor: pointer; z-index: 99999;">
                       <input type="text" class="form-control crmEditDatepicker no-modal" autocomplete="off" />
                       <div class="input-group-addon no-modal">
@@ -91,7 +92,7 @@
                 <button class="btn btn-primary dropdown-toggle btnSchedule no-modal"
                   style="background-color: rgba(0, 0, 0, 0)" type="button" id="" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
-                  <span class="dropdownFilter no-modal"><i class="fas fa-inbox text-primary"
+                  <span class="dropdownFilter no-modal" title="Select a project for this task"><i class="fas fa-inbox text-primary"
                       style="margin-right: 5px"></i><span class="addTaskModalProjectName">All Tasks</span></span>
                 </button>
                 <div class="dropdown-menu no-modal" id="goProjectWrapper" aria-labelledby="dropdownMenuButton"
@@ -101,7 +102,7 @@
             <div class="col-6 no-modal" style="display: inline-flex; justify-content: end">
               <div class="dropdown no-modal">
                 <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle no-modal"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Add label(s)..."></i>
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Select the label(s) for this task"></i>
                 <div class="dropdown-menu dropdown-menu-right no-modal" id="addTaskLabelWrapper"
                   aria-labelledby="dropdownMenuButton"></div>
               </div>

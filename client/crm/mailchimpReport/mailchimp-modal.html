@@ -7,26 +7,27 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
               aria-hidden="true">×</span></button>
         </div>
-        <div class="modal-body">
-          <div class="custom-control custom-checkbox chkBox pointer"
-            style="margin: 4px; background: transparent;">
-            <input class="custom-control-input chkBox pointer" type="checkbox" id="chk_customer" value=""
-              style="background: transparent !important;">
-            <label class="custom-control-label chkBox pointer" for="chk_customer" data-id="edit">Customer List</label>
-          </div>
+        <div class="modal-body"> 
 
-          <div class="custom-control custom-checkbox chkBox pointer"
-            style="margin: 4px; background: transparent;">
-            <input class="custom-control-input chkBox pointer" type="checkbox" id="chk_supplier" value=""
-              style="background: transparent !important;">
-            <label class="custom-control-label chkBox pointer" for="chk_supplier" data-id="edit">Supplier List</label>
-          </div>
+          <div class="custom-control custom-switch" style="cursor: pointer;padding-right: 100px; margin-top: 5px;">
+            <input class="custom-control-input chkBox pointer" type="checkbox" 
+              id="chk_customer" name="chk_customer" style="cursor: pointer;" autocomplete="off" data-id="edit">
+            <label class="custom-control-label" for="chk_customer"
+              style="cursor: pointer; max-width: 200px;" data-id="edit">Customer List</label> 
+          </div> 
 
-          <div class="custom-control custom-checkbox chkBox pointer"
-            style="margin: 4px; background: transparent;">
-            <input class="custom-control-input chkBox pointer" type="checkbox" id="chk_employee" value=""
-              style="background: transparent !important;">
-            <label class="custom-control-label chkBox pointer" for="chk_employee" data-id="edit">Employee List</label>
+          <div class="custom-control custom-switch" style="cursor: pointer;padding-right: 100px; margin-top: 5px;">
+            <input class="custom-control-input chkBox pointer" type="checkbox" 
+              id="chk_supplier" name="chk_supplier" style="cursor: pointer;" autocomplete="off" data-id="edit">
+            <label class="custom-control-label" for="chk_supplier"
+              style="cursor: pointer; max-width: 200px;" data-id="edit">Supplier List</label> 
+          </div> 
+
+          <div class="custom-control custom-switch" style="cursor: pointer;padding-right: 100px; margin-top: 5px;">
+            <input class="custom-control-input chkBox pointer" type="checkbox" 
+              id="chk_employee" name="chk_employee" style="cursor: pointer;" autocomplete="off" data-id="edit">
+            <label class="custom-control-label" for="chk_employee"
+              style="cursor: pointer; max-width: 200px;" data-id="edit">Employee List</label> 
           </div>
         </div>
         <div class="modal-footer" style="padding: 6px;">
