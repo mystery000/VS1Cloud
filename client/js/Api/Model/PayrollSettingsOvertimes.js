@@ -101,6 +101,14 @@ export class PayrollSettingOvertime {
     this.overtime = overtime;
   }
 
+  /**
+   * This will find the matched overtime by RateType
+   * @param {string} rateType 
+   */
+  static async findOneByEarningRateType(rateTypeId, overtimes = []) {
+    return overtimes.find(o => o.rateTypeId == rateTypeId);
+  }
+
   calculateDailyExtraHours(hours = 8) {
     const normalHours =  hours > this.overtime.hours ? this.overtime.hours * this.overtime.hourlyMultiplier: hours;
     const extraHours = hours > this.overtime.hours ? (hours - this.overtime.hours) : 0;

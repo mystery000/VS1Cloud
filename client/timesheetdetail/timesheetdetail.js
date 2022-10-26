@@ -659,3 +659,5 @@ Template.timesheetdetail.helpers({
     return dayFound.hours;
   }
 });
+
+
