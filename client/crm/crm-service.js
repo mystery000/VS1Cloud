@@ -31,6 +31,20 @@ export class CRMService extends BaseService {
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
 
+  getAllTasksByContactName(ContactName = '') {
+    let options = {
+      ListType: "Detail",
+      select: "[Active]=true"
+    };
+    if (ContactName) {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true and [ContactName]='" + ContactName + "'"
+      };
+    }
+    return this.getList(this.ERPObjects.Tprojecttasks, options);
+  }
+
   getAllAppointments(ClientName = '') {
     let options = {
       ListType: 'Detail',

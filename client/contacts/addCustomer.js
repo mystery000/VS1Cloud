@@ -749,10 +749,9 @@ Template.customerscard.onRendered(function () {
         let dataTableList = [];
 
         // async function getTask() {
-        crmService.getAllTasksByTaskName(customerName).then(async function (data) {
+        crmService.getAllTasksByContactName(customerName).then(async function (data) {
             if(data.tprojecttasks.length > 0) {
                 for (let i = 0; i < data.tprojecttasks.length; i++) {
-                    if (data.tprojecttasks[i].fields.TaskName === customerName) {
                         let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
                         let taskLabelArray = [];
                         if (taskLabel !== null) {
@@ -778,7 +777,6 @@ Template.customerscard.onRendered(function () {
                             category: 'task'
                         };
                         dataTableList.push(dataList);
-                    }
                 }
             }
             await getAppointments();

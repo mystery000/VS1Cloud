@@ -473,10 +473,9 @@ Template.leadscard.onRendered(function () {
         let dataTableList = [];
 
         // async function getTask() {
-        crmService.getAllTasksByTaskName(leadName).then(async function (data) {
+        crmService.getAllTasksByContactName(leadName).then(async function (data) {
             if(data.tprojecttasks.length > 0) {
                 for (let i = 0; i < data.tprojecttasks.length; i++) {
-                    if (data.tprojecttasks[i].fields.TaskName === leadName) {
                         let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
                         let taskLabelArray = [];
                         if (taskLabel !== null) {
@@ -504,7 +503,6 @@ Template.leadscard.onRendered(function () {
                         // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
                         dataTableList.push(dataList);
                         // }
-                    }
                 }
             }
             await getAppointments();
