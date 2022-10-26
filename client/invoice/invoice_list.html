@@ -348,7 +348,7 @@
                             <tbody>
                                 {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
-                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                <tr class="dnd-moved" id="{{item.id}}" apptid="{{item.apptid}}" style="cursor: pointer;">
                                   <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
                                   <td contenteditable="false" class="colSaleDate {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" ><span style="display:none;">{{item.sortdate}}</span>{{item.saledate}}</td>
                                   <td contenteditable="false" class="colSalesNo {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.id}}</td>

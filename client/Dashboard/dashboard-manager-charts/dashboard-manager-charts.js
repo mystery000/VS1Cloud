@@ -415,49 +415,49 @@ Template.dashboardManagerCharts.events({
     },
     "click #spd-gauge-area1": () => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('DD-MM-YYYY');
+        fromDate = moment(fromDate).format('YYYY-MM-DD');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('DD-MM-YYYY');
+        toDate = moment().format('YYYY-MM-DD');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
         window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #spd-gauge-area2": () => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('DD-MM-YYYY');
+        fromDate = moment(fromDate).format('YYYY-MM-DD');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('DD-MM-YYYY');
+        toDate = moment().format('YYYY-MM-DD');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
         window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #spd-gauge-area3": () => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('DD-MM-YYYY');
+        fromDate = moment(fromDate).format('YYYY-MM-DD');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('DD-MM-YYYY');
+        toDate = moment().format('YYYY-MM-DD');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
         window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #spd-gauge-area4": () => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('DD-MM-YYYY');
+        fromDate = moment(fromDate).format('YYYY-MM-DD');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('DD-MM-YYYY');
+        toDate = moment().format('YYYY-MM-DD');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
         window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #spd-gauge-area5": () => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('DD-MM-YYYY');
+        fromDate = moment(fromDate).format('YYYY-MM-DD');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('DD-MM-YYYY');
+        toDate = moment().format('YYYY-MM-DD');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
         window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #spd-gauge-area6": () => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('DD-MM-YYYY');
+        fromDate = moment(fromDate).format('YYYY-MM-DD');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('DD-MM-YYYY');
+        toDate = moment().format('YYYY-MM-DD');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
         window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     }

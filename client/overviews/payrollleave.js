@@ -116,12 +116,11 @@ Template.payrollleave.onRendered(function () {
     }
   };
 
-  this.loadDefaultScreen = async (refresh = false) => {
-    await this.loadLeavesToReview(refresh);
+  this.loadDefaultScreen = async () => {
+    await this.loadLeavesToReview();
   };
 
   this.loadEmployees = async (refresh = false) => {
-    await this.employees.set([]);
     let data = await CachedHttp.get(erpObject.TEmployee, async () => {
       return await contactService.getAllEmployees();
     }, {
@@ -452,7 +451,7 @@ Template.payrollleave.onRendered(function () {
         type: "TLeavRequest",
         fields: new LeaveRequestFields({
           ID: parseInt(ID),
-          EmployeeID: parseInt(selectedLeave.Employee.ID != undefined ? selectedLeave.Employee.ID : selectedLeave.Employee.Id),
+          EmployeeID: parseInt(selectedLeave.Employee.ID),
           TypeOfRequest: parseInt(TypeofRequest),
           LeaveMethod: Leave,
           Description: Description,
@@ -477,13 +476,11 @@ Template.payrollleave.onRendered(function () {
           $("#newLeaveRequestModal").modal("hide");
           $("#edtLeaveTypeofRequestID, #edtLeaveTypeofRequest, #edtLeaveDescription, #edtLeavePayPeriod, #edtLeaveHours, #edtLeavePayStatus").val("");
           LoadingOverlay.hide(0);
-          const result = await swal({title: "Leave request added successfully", text: "", type: "success", showCancelButton: false, confirmButtonText: "OK"});
-
-          if(result.value) {
-            await this.initPage(true);
-
-          }
-
+          swal({title: "Leave request added successfully", text: "", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(result => {
+            if (result.value) {
+              if (result.value) {}
+            }
+          });
         } else {
           LoadingOverlay.hide(0);
           swal({title: "Oooops...", text: ApiResponse.headers.get("errormessage"), type: "error", showCancelButton: false, confirmButtonText: "Try Again"}).then(result => {
@@ -510,7 +507,7 @@ Template.payrollleave.onRendered(function () {
       type: "TLeavRequest",
       fields: new LeaveRequestFields({
         ID: parseInt(selectedLeave.ID),
-        EmployeeID:parseInt(selectedLeave.Employee.ID != undefined ? selectedLeave.Employee.ID : selectedLeave.Employee.Id),
+        EmployeeID: parseInt(selectedLeave.Employee.ID),
         TypeOfRequest: parseInt(selectedLeave.TypeofRequest),
         LeaveMethod: selectedLeave.LeaveMethod,
         Description: selectedLeave.Description,
@@ -523,7 +520,7 @@ Template.payrollleave.onRendered(function () {
     });
 
     const payrollApi = new EmployeePayrollApi();
-    const ApiEndpoint = payrollApi.collection.findByName(payrollApi.collectionNames.TLeavRequest);
+    const ApiEndpoint = payrollApi.collection.findByName(erpObject.TLeavRequest);
 
     try {
       const response = await ApiEndpoint.fetch(null, {
@@ -542,7 +539,7 @@ Template.payrollleave.onRendered(function () {
         });
 
         if (result.value) {
-          await this.initPage(true);
+          await this.initPage();
         } else if (result.dismiss === "cancel") {}
       } else {
         throw response.status;
@@ -559,7 +556,7 @@ Template.payrollleave.onRendered(function () {
       });
 
       if (result.value) {
-        await this.approveLeave(leaveId);
+        this.approveLeave(leaveId);
       } else if (result.dismiss === "cancel") {}
     }
 
@@ -577,7 +574,7 @@ Template.payrollleave.onRendered(function () {
       type: "TLeavRequest",
       fields: new LeaveRequestFields({
         ID: parseInt(selectedLeave.ID),
-        EmployeeID: parseInt(selectedLeave.Employee.ID != undefined ? selectedLeave.Employee.ID : selectedLeave.Employee.Id),
+        EmployeeID: parseInt(selectedLeave.Employee.ID),
         TypeOfRequest: parseInt(selectedLeave.TypeofRequest),
         LeaveMethod: selectedLeave.LeaveMethod,
         Description: selectedLeave.Description,
@@ -590,7 +587,7 @@ Template.payrollleave.onRendered(function () {
     });
 
     const payrollApi = new EmployeePayrollApi();
-    const ApiEndpoint = payrollApi.collection.findByName(payrollApi.collectionNames.TLeavRequest);
+    const ApiEndpoint = payrollApi.collection.findByName(erpObject.TLeavRequest);
 
     try {
       const response = await ApiEndpoint.fetch(null, {
@@ -609,7 +606,7 @@ Template.payrollleave.onRendered(function () {
         });
 
         if (result.value) {
-          await this.initPage(true);
+          await this.initPage();
         } else if (result.dismiss === "cancel") {}
       } else {
         throw response.status;
@@ -634,8 +631,6 @@ Template.payrollleave.onRendered(function () {
   };
 
   this.loadLeaveTypes = async (refresh = false) => {
-    await this.leaveTypes.set([]);
-
     let cachedRequest = await CachedHttp.get(erpObject.TAssignLeaveType, async () => {
       const employeePayrolApis = new EmployeePayrollApi();
       // now we have to make the post request to save the data in database
@@ -660,7 +655,7 @@ Template.payrollleave.onRendered(function () {
     let response = cachedRequest.response;
     let leaveTypes = response.tassignleavetype.map(l => l.fields);
 
-     await this.leaveTypes.set(leaveTypes);
+    this.leaveTypes.set(leaveTypes);
   };
 
   this.initPage = async (refresh = false) => {
@@ -669,11 +664,11 @@ Template.payrollleave.onRendered(function () {
     await this.loadEmployees(refresh);
     await this.loadLeaveTypes(refresh);
     await this.loadLeaves(refresh);
-    await this.loadDefaultScreen(refresh);
+    await this.loadDefaultScreen();
 
-    this.dataTableSetup(refresh);
+    this.dataTableSetup();
 
-    if(!refresh) Datehandler.defaultDatePicker();
+    Datehandler.defaultDatePicker();
     LoadingOverlay.hide();
   };
 

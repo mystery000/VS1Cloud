@@ -479,7 +479,7 @@ Template.appointmentlist.onRendered(async function() {
                         var dataList = {
                             id: data.tappointmentlist[i].AppointID || '',
                             sortdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("YYYY/MM/DD") : data.tappointmentlist[i].CreationDate,
-                            appointmentdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("DD/MM/YYYY") : data.tappointmentlist[i].CreationDate,
+                            appointmentdate: data.tappointmentlist[i].STARTTIME != '' ? moment(data.tappointmentlist[i].STARTTIME).format("DD/MM/YYYY") : data.tappointmentlist[i].STARTTIME,
                             accountname: data.tappointmentlist[i].ClientName || '',
                             statementno: data.tappointmentlist[i].EnteredByEmployeeName || '',
                             employeename: data.tappointmentlist[i].EnteredByEmployeeName || '',
@@ -512,6 +512,8 @@ Template.appointmentlist.onRendered(async function() {
                             color: color,
                             actual_starttime: data.tappointmentlist[i].Actual_Starttime || '',
                             actual_endtime: data.tappointmentlist[i].Actual_Endtime || '',
+                            actual_start_time: data.tappointmentlist[i].Actual_Start_time || '',
+                            actual_end_time: data.tappointmentlist[i].Actual_End_time || '',
                             booked_starttime: data.tappointmentlist[i].STARTTIME || '',
                             booked_endtime: data.tappointmentlist[i].ENDTIME || '',
                             custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
@@ -608,6 +610,8 @@ Template.appointmentlist.onRendered(async function() {
                             dataTableList[p].toDate || '',
                             dataTableList[p].timeStart || '',
                             dataTableList[p].timeEnd || '',
+                            dataTableList[p].actual_start_time || '',
+                            dataTableList[p].actual_end_time || '',
                             dataTableList[p].finished || '',
                             confirmedColumn,
                             dataTableList[p].notes || '',
@@ -679,38 +683,44 @@ Template.appointmentlist.onRendered(async function() {
                                 contenteditable: "false",
                                 targets: 3
                             }, {
-                                className: "colAccountName",
+                                className: "colCompany",
                                 contenteditable: "false",
                                 targets: 4,
                                 createdCell: function(td, cellData, rowData, row, col) {
-                                    $(td).attr("id", 'colAccountName' + rowData[2]);
+                                    $(td).attr("id", 'colCompany' + rowData[2]);
                                 }
                             }, {
-                                className: "colStatementNo",
+                                className: "colReq",
                                 targets: 5
                             }, {
-                                className: "colDepartment",
+                                className: "colFromDate",
                                 targets: 6
                             }, {
-                                className: "colCloseBalance",
+                                className: "colToDate",
                                 targets: 7
                             }, {
-                                className: "colOpenBalance",
+                                className: "colFromTime",
                                 targets: 8
                             }, {
-                                className: "colEmployee",
+                                className: "colToTime",
                                 targets: 9
                             }, {
+                                className: "colFromActualTime",
+                                targets: 10
+                            }, {
+                                className: "colToActualTime",
+                                targets: 11
+                            }, {
                                 className: "colStatus",
-                                targets: 10,
+                                targets: 12,
                                 createdCell: function(td, cellData, rowData, row, col) {
-                                    if (rowData[10] == "Converted" || rowData[10] == "Completed") {
+                                    if (rowData[12] == "Converted" || rowData[12] == "Completed") {
                                         $(td).css('background-color', '#1cc88a');
                                         $(td).css('color', '#fff');
-                                    } else if (rowData[10] == "Not Converted") {
+                                    } else if (rowData[12] == "Not Converted") {
                                         $(td).css('background-color', '#f6c23e');
                                         $(td).css('color', '#fff');
-                                    } else if (rowData[10] == "Deleted") {
+                                    } else if (rowData[12] == "Deleted") {
                                         $(td).css('background-color', '#e74a3b');
                                         $(td).css('color', '#fff');
                                     } else {
@@ -721,10 +731,14 @@ Template.appointmentlist.onRendered(async function() {
                             }, {
                                 "orderable": false,
                                 className: "colConfirm text-center",
-                                targets: 11
+                                targets: 13
                             }, {
                                 className: "colNotes hiddenColumn",
-                                targets: 12
+                                targets: 14
+                            }, {
+                                "orderable": false,
+                                className: "colProduct text-center",
+                                targets: 15
                             }],
                             "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                             buttons: [{
@@ -980,7 +994,7 @@ Template.appointmentlist.onRendered(async function() {
                     var dataList = {
                         id: data.tappointmentlist[i].AppointID || '',
                         sortdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("YYYY/MM/DD") : data.tappointmentlist[i].CreationDate,
-                        appointmentdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("DD/MM/YYYY") : data.tappointmentlist[i].CreationDate,
+                        appointmentdate: data.tappointmentlist[i].STARTTIME != '' ? moment(data.tappointmentlist[i].STARTTIME).format("DD/MM/YYYY") : data.tappointmentlist[i].STARTTIME,
                         accountname: data.tappointmentlist[i].ClientName || '',
                         statementno: data.tappointmentlist[i].EnteredByEmployeeName || '',
                         employeename: data.tappointmentlist[i].EnteredByEmployeeName || '',
@@ -1013,6 +1027,8 @@ Template.appointmentlist.onRendered(async function() {
                         color: color,
                         actual_starttime: data.tappointmentlist[i].Actual_Starttime || '',
                         actual_endtime: data.tappointmentlist[i].Actual_Endtime || '',
+                        actual_start_time: data.tappointmentlist[i].Actual_Start_time || '',
+                        actual_end_time: data.tappointmentlist[i].Actual_End_time || '',
                         booked_starttime: data.tappointmentlist[i].STARTTIME || '',
                         booked_endtime: data.tappointmentlist[i].ENDTIME || '',
                         msRef: data.tappointmentlist[i].MSRef || '',
@@ -1109,6 +1125,8 @@ Template.appointmentlist.onRendered(async function() {
                         dataTableList[p].toDate || '',
                         dataTableList[p].timeStart || '',
                         dataTableList[p].timeEnd || '',
+                        dataTableList[p].actual_start_time || '',
+                        dataTableList[p].actual_end_time || '',
                         dataTableList[p].finished || '',
                         confirmedColumn,
                         dataTableList[p].notes || '',
@@ -1142,13 +1160,10 @@ Template.appointmentlist.onRendered(async function() {
                                         $("." + columnClass + "").removeClass('hiddenColumn');
                                         $("." + columnClass + "").addClass('showColumn');
                                     }
-
                                 }
                             }
-
                         }
                     });
-
 
                     setTimeout(function() {
                         MakeNegative();
@@ -1180,38 +1195,44 @@ Template.appointmentlist.onRendered(async function() {
                             contenteditable: "false",
                             targets: 3
                         }, {
-                            className: "colAccountName",
+                            className: "colCompany",
                             contenteditable: "false",
                             targets: 4,
                             createdCell: function(td, cellData, rowData, row, col) {
-                                $(td).attr("id", 'colAccountName' + rowData[2]);
+                                $(td).attr("id", 'colCompany' + rowData[2]);
                             }
                         }, {
-                            className: "colStatementNo",
+                            className: "colReq",
                             targets: 5
                         }, {
-                            className: "colDepartment",
+                            className: "colFromDate",
                             targets: 6
                         }, {
-                            className: "colCloseBalance",
+                            className: "colToDate",
                             targets: 7
                         }, {
-                            className: "colOpenBalance",
+                            className: "colFromTime",
                             targets: 8
                         }, {
-                            className: "colEmployee",
+                            className: "colToTime",
                             targets: 9
                         }, {
+                            className: "colFromActualTime",
+                            targets: 10
+                        }, {
+                            className: "colToActualTime",
+                            targets: 11
+                        }, {
                             className: "colStatus",
-                            targets: 10,
+                            targets: 12,
                             createdCell: function(td, cellData, rowData, row, col) {
-                                if (rowData[10] == "Converted" || rowData[10] == "Completed") {
+                                if (rowData[12] == "Converted" || rowData[12] == "Completed") {
                                     $(td).css('background-color', '#1cc88a');
                                     $(td).css('color', '#fff');
-                                } else if (rowData[10] == "Not Converted") {
+                                } else if (rowData[12] == "Not Converted") {
                                     $(td).css('background-color', '#f6c23e');
                                     $(td).css('color', '#fff');
-                                } else if (rowData[10] == "Deleted") {
+                                } else if (rowData[12] == "Deleted") {
                                     $(td).css('background-color', '#e74a3b');
                                     $(td).css('color', '#fff');
                                 } else {
@@ -1222,10 +1243,13 @@ Template.appointmentlist.onRendered(async function() {
                         }, {
                             "orderable": false,
                             className: "colConfirm text-center",
-                            targets: 11
+                            targets: 13
                         }, {
                             className: "colNotes hiddenColumn",
-                            targets: 12
+                            targets: 14
+                        }, {
+                            className: "colProduct text-center",
+                            targets: 15
                         }],
                         "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         buttons: [{
@@ -1477,7 +1501,7 @@ Template.appointmentlist.onRendered(async function() {
                     var dataList = {
                         id: data.tappointmentlist[i].AppointID || '',
                         sortdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("YYYY/MM/DD") : data.tappointmentlist[i].CreationDate,
-                        appointmentdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("DD/MM/YYYY") : data.tappointmentlist[i].CreationDate,
+                        appointmentdate: data.tappointmentlist[i].STARTTIME != '' ? moment(data.tappointmentlist[i].STARTTIME).format("DD/MM/YYYY") : data.tappointmentlist[i].STARTTIME,
                         accountname: data.tappointmentlist[i].ClientName || '',
                         statementno: data.tappointmentlist[i].EnteredByEmployeeName || '',
                         employeename: data.tappointmentlist[i].EnteredByEmployeeName || '',
@@ -1510,6 +1534,8 @@ Template.appointmentlist.onRendered(async function() {
                         color: color,
                         actual_starttime: data.tappointmentlist[i].Actual_Starttime || '',
                         actual_endtime: data.tappointmentlist[i].Actual_Endtime || '',
+                        actual_start_time: data.tappointmentlist[i].Actual_Start_time || '',
+                        actual_end_time: data.tappointmentlist[i].Actual_End_time || '',
                         booked_starttime: data.tappointmentlist[i].STARTTIME || '',
                         booked_endtime: data.tappointmentlist[i].ENDTIME || '',
                         msRef: data.tappointmentlist[i].MSRef || ''
@@ -1542,6 +1568,8 @@ Template.appointmentlist.onRendered(async function() {
                         dataTableList[p].toDate || '',
                         dataTableList[p].timeStart || '',
                         dataTableList[p].timeEnd || '',
+                        dataTableList[p].actual_start_time || '',
+                        dataTableList[p].actual_end_time || '',
                         dataTableList[p].finished || '',
                         confirmedColumn,
                         dataTableList[p].notes || '',
@@ -1613,38 +1641,44 @@ Template.appointmentlist.onRendered(async function() {
                             contenteditable: "false",
                             targets: 3
                         }, {
-                            className: "colAccountName",
+                            className: "colCompany",
                             contenteditable: "false",
                             targets: 4,
                             createdCell: function(td, cellData, rowData, row, col) {
-                                $(td).attr("id", 'colAccountName' + rowData[2]);
+                                $(td).attr("id", 'colCompany' + rowData[2]);
                             }
                         }, {
-                            className: "colStatementNo",
+                            className: "colReq",
                             targets: 5
                         }, {
-                            className: "colDepartment",
+                            className: "colFromDate",
                             targets: 6
                         }, {
-                            className: "colCloseBalance",
+                            className: "colToDate",
                             targets: 7
                         }, {
-                            className: "colOpenBalance",
+                            className: "colFromTime",
                             targets: 8
                         }, {
-                            className: "colEmployee",
+                            className: "colToTime",
                             targets: 9
                         }, {
+                            className: "colFromActualTime",
+                            targets: 10
+                        }, {
+                            className: "colToActualTime",
+                            targets: 11
+                        }, {
                             className: "colStatus",
-                            targets: 10,
+                            targets: 12,
                             createdCell: function(td, cellData, rowData, row, col) {
-                                if (rowData[10] == "Converted" || rowData[10] == "Completed") {
+                                if (rowData[12] == "Converted" || rowData[12] == "Completed") {
                                     $(td).css('background-color', '#1cc88a');
                                     $(td).css('color', '#fff');
-                                } else if (rowData[10] == "Not Converted") {
+                                } else if (rowData[12] == "Not Converted") {
                                     $(td).css('background-color', '#f6c23e');
                                     $(td).css('color', '#fff');
-                                } else if (rowData[10] == "Deleted") {
+                                } else if (rowData[12] == "Deleted") {
                                     $(td).css('background-color', '#e74a3b');
                                     $(td).css('color', '#fff');
                                 } else {
@@ -1655,10 +1689,13 @@ Template.appointmentlist.onRendered(async function() {
                         }, {
                             "orderable": false,
                             className: "colConfirm text-center",
-                            targets: 11
+                            targets: 13
                         }, {
                             className: "colNotes hiddenColumn",
-                            targets: 12
+                            targets: 14
+                        }, {
+                            className: "colProduct",
+                            targets: 15
                         }],
                         "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         buttons: [{
@@ -2041,6 +2078,8 @@ Template.appointmentlist.events({
                             useData[i].toDate || '',
                             useData[i].timeStart || '',
                             useData[i].timeEnd || '',
+                            useData[i].actual_start_time || '',
+                            useData[i].actual_end_time || '',
                             useData[i].finished || '',
                             confirmedColumn,
                             useData[i].notes || '',
@@ -2120,6 +2159,8 @@ Template.appointmentlist.events({
                     useData[i].toDate || '',
                     useData[i].timeStart || '',
                     useData[i].timeEnd || '',
+                    useData[i].actual_start_time || '',
+                    useData[i].actual_end_time || '',
                     useData[i].finished || '',
                     confirmedColumn,
                     useData[i].notes || '',
@@ -2530,7 +2571,7 @@ Template.appointmentlist.events({
                         var dataList = {
                             id: data.tappointmentlist[i].AppointID || '',
                             sortdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("YYYY/MM/DD") : data.tappointmentlist[i].CreationDate,
-                            appointmentdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("DD/MM/YYYY") : data.tappointmentlist[i].CreationDate,
+                            appointmentdate: data.tappointmentlist[i].STARTTIME != '' ? moment(data.tappointmentlist[i].STARTTIME).format("DD/MM/YYYY") : data.tappointmentlist[i].STARTTIME,
                             accountname: data.tappointmentlist[i].ClientName || '',
                             statementno: data.tappointmentlist[i].EnteredByEmployeeName || '',
                             employeename: data.tappointmentlist[i].EnteredByEmployeeName || '',
@@ -2718,7 +2759,7 @@ Template.appointmentlist.events({
                     var dataList = {
                         id: data.tappointmentlist[i].AppointID || '',
                         sortdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("YYYY/MM/DD") : data.tappointmentlist[i].CreationDate,
-                        appointmentdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("DD/MM/YYYY") : data.tappointmentlist[i].CreationDate,
+                        appointmentdate: data.tappointmentlist[i].STARTTIME != '' ? moment(data.tappointmentlist[i].STARTTIME).format("DD/MM/YYYY") : data.tappointmentlist[i].STARTTIME,
                         accountname: data.tappointmentlist[i].ClientName || '',
                         statementno: data.tappointmentlist[i].EnteredByEmployeeName || '',
                         employeename: data.tappointmentlist[i].EnteredByEmployeeName || '',
@@ -3362,6 +3403,7 @@ Template.appointmentlist.events({
             // }
         });
         JsonIn = {
+            Name: "VS1_InvoiceAppt",
             Params: {
                 AppointIDs: selectedAppointmentList
             }

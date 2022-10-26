@@ -8425,7 +8425,6 @@ Template.newsidenav.events({
       var url = window.location.pathname;
       if(url == "/bankrecon"){
         let reconHoldState = localStorage.getItem("reconHoldState") || "false";
-        console.log("reconHoldState=", reconHoldState);
         if(reconHoldState == "true"){
           swal({
               title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
