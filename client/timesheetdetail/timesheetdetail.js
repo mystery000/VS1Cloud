@@ -71,7 +71,6 @@ Template.timesheetdetail.onRendered(function () {
         t.Status = "Draft";
       }
     });
-
     let timesheet = timesheets.find(o => o.ID == id);
 
     if (timesheet) {
@@ -465,6 +464,7 @@ Template.timesheetdetail.onRendered(function () {
     if (res) {
       return await this._updateTimeSheetDetails(object);
     }
+    
 
     try {
       LoadingOverlay.show();

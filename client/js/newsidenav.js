@@ -6801,12 +6801,45 @@ Template.newsidenav.events({
 
     },
     'click #sidenavnewaccounts': function(event) {
-
-        if (FlowRouter.current().path == "/accountsoverview") {
-            $('#addNewAccount').modal('show');
-        } else {
-            window.open('/accountsoverview#newaccount', '_self');
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              if (FlowRouter.current().path == "/accountsoverview") {
+                $('#addNewAccount').modal('show');
+              } else {
+                window.open('/accountsoverview#newaccount', '_self');
+              }
+            }
+          });
         }
+        else{
+          if (FlowRouter.current().path == "/accountsoverview") {
+            $('#addNewAccount').modal('show');
+          } else {
+            window.open('/accountsoverview#newaccount', '_self');
+          }
+        }
+      }
+      else{
+        if (FlowRouter.current().path == "/accountsoverview") {
+          $('#addNewAccount').modal('show');
+        } else {
+          window.open('/accountsoverview#newaccount', '_self');
+        }
+      }
     },
     'click #sidenavallocation': function(event) {
 
@@ -7034,82 +7067,142 @@ Template.newsidenav.events({
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavdashbaord': function(event) {
-        $('.accountsLi').addClass('opacityNotActive');
-        $('.appointmentsLi').addClass('opacityNotActive');
-        $('.bankingLi').addClass('opacityNotActive');
-        $('.contactsLi').addClass('opacityNotActive');
-        $('.dashboardLi').removeClass('opacityNotActive');
-        $('.dashboardLiExe').addClass('opacityNotActive');
-        $('.dashboardLiSales').addClass('opacityNotActive');
-        $('.dashboardLiSalesManager').addClass('opacityNotActive');
-        $('.manufacturingLi').addClass('opacityNotActive');
-        $('.gsemployeesLi').addClass('opacityNotActive');
-        $('.inventoryLi').addClass('opacityNotActive');
-        $('.paymentsLi').addClass('opacityNotActive');
-        $('.payrollLi').addClass('opacityNotActive');
-        $('.purchasesLi').addClass('opacityNotActive');
-        $('.reportsLi').addClass('opacityNotActive');
-        $('.reportsLi2').addClass('opacityNotActive');
-        $('.salesLi').addClass('opacityNotActive');
-        $('.seedtosaleLi').addClass('opacityNotActive');
-        $('.settingsLi').addClass('opacityNotActive');
-        $('.logoutLi').addClass('opacityNotActive');
-        $('#accountsSubmenu').collapse('hide');
-        $('#appointmentsSubmenu').collapse('hide');
-        $('#bankingSubmenu').collapse('hide');
-        $('#contactsSubmenu').collapse('hide');
-        $('#inventorySubmenu').collapse('hide');
-        $('#paymentsSubmenu').collapse('hide');
-        $('#payrollSubmenu').collapse('hide');
-        $('#purchasesSubmenu').collapse('hide');
-        $('#reportsSubmenu').collapse('hide');
-        $('#salesSubmenu').collapse('hide');
-        $('#seedToSaleSubmenu').collapse('hide');
-        $('#settingsSubmenu').collapse('hide');
-        $('#manufacturingSubmenu').collapse('hide');
-        event.preventDefault();
+      $('.accountsLi').addClass('opacityNotActive');
+      $('.appointmentsLi').addClass('opacityNotActive');
+      $('.bankingLi').addClass('opacityNotActive');
+      $('.contactsLi').addClass('opacityNotActive');
+      $('.dashboardLi').removeClass('opacityNotActive');
+      $('.dashboardLiExe').addClass('opacityNotActive');
+      $('.dashboardLiSales').addClass('opacityNotActive');
+      $('.dashboardLiSalesManager').addClass('opacityNotActive');
+      $('.manufacturingLi').addClass('opacityNotActive');
+      $('.gsemployeesLi').addClass('opacityNotActive');
+      $('.inventoryLi').addClass('opacityNotActive');
+      $('.paymentsLi').addClass('opacityNotActive');
+      $('.payrollLi').addClass('opacityNotActive');
+      $('.purchasesLi').addClass('opacityNotActive');
+      $('.reportsLi').addClass('opacityNotActive');
+      $('.reportsLi2').addClass('opacityNotActive');
+      $('.salesLi').addClass('opacityNotActive');
+      $('.seedtosaleLi').addClass('opacityNotActive');
+      $('.settingsLi').addClass('opacityNotActive');
+      $('.logoutLi').addClass('opacityNotActive');
+      $('#accountsSubmenu').collapse('hide');
+      $('#appointmentsSubmenu').collapse('hide');
+      $('#bankingSubmenu').collapse('hide');
+      $('#contactsSubmenu').collapse('hide');
+      $('#inventorySubmenu').collapse('hide');
+      $('#paymentsSubmenu').collapse('hide');
+      $('#payrollSubmenu').collapse('hide');
+      $('#purchasesSubmenu').collapse('hide');
+      $('#reportsSubmenu').collapse('hide');
+      $('#salesSubmenu').collapse('hide');
+      $('#seedToSaleSubmenu').collapse('hide');
+      $('#settingsSubmenu').collapse('hide');
+      $('#manufacturingSubmenu').collapse('hide');
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/dashboard');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/dashboard');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/dashboard');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click #sidenavdashbaordexe': function(event) {
-        $('.accountsLi').addClass('opacityNotActive');
-        $('.appointmentsLi').addClass('opacityNotActive');
-        $('.bankingLi').addClass('opacityNotActive');
-        $('.contactsLi').addClass('opacityNotActive');
-        $('.dashboardLi').addClass('opacityNotActive');
-        $('.dashboardLiExe').removeClass('opacityNotActive');
-        $('.dashboardLiSales').addClass('opacityNotActive');
-        $('.dashboardLiSalesManager').addClass('opacityNotActive');
-        $('.manufacturingLi').addClass('opacityNotActive');
-        $('.gsemployeesLi').addClass('opacityNotActive');
-        $('.inventoryLi').addClass('opacityNotActive');
-        $('.paymentsLi').addClass('opacityNotActive');
-        $('.payrollLi').addClass('opacityNotActive');
-        $('.purchasesLi').addClass('opacityNotActive');
-        $('.reportsLi').addClass('opacityNotActive');
-        $('.reportsLi2').addClass('opacityNotActive');
-        $('.salesLi').addClass('opacityNotActive');
-        $('.seedtosaleLi').addClass('opacityNotActive');
-        $('.settingsLi').addClass('opacityNotActive');
-        $('.logoutLi').addClass('opacityNotActive');
-        $('#accountsSubmenu').collapse('hide');
-        $('#appointmentsSubmenu').collapse('hide');
-        $('#bankingSubmenu').collapse('hide');
-        $('#contactsSubmenu').collapse('hide');
-        $('#inventorySubmenu').collapse('hide');
-        $('#paymentsSubmenu').collapse('hide');
-        $('#payrollSubmenu').collapse('hide');
-        $('#purchasesSubmenu').collapse('hide');
-        $('#reportsSubmenu').collapse('hide');
-        $('#salesSubmenu').collapse('hide');
-        $('#seedToSaleSubmenu').collapse('hide');
-        $('#settingsSubmenu').collapse('hide');
-        $('#manufacturingSubmenu').collapse('hide');
-        event.preventDefault();
+      $('.accountsLi').addClass('opacityNotActive');
+      $('.appointmentsLi').addClass('opacityNotActive');
+      $('.bankingLi').addClass('opacityNotActive');
+      $('.contactsLi').addClass('opacityNotActive');
+      $('.dashboardLi').addClass('opacityNotActive');
+      $('.dashboardLiExe').removeClass('opacityNotActive');
+      $('.dashboardLiSales').addClass('opacityNotActive');
+      $('.dashboardLiSalesManager').addClass('opacityNotActive');
+      $('.manufacturingLi').addClass('opacityNotActive');
+      $('.gsemployeesLi').addClass('opacityNotActive');
+      $('.inventoryLi').addClass('opacityNotActive');
+      $('.paymentsLi').addClass('opacityNotActive');
+      $('.payrollLi').addClass('opacityNotActive');
+      $('.purchasesLi').addClass('opacityNotActive');
+      $('.reportsLi').addClass('opacityNotActive');
+      $('.reportsLi2').addClass('opacityNotActive');
+      $('.salesLi').addClass('opacityNotActive');
+      $('.seedtosaleLi').addClass('opacityNotActive');
+      $('.settingsLi').addClass('opacityNotActive');
+      $('.logoutLi').addClass('opacityNotActive');
+      $('#accountsSubmenu').collapse('hide');
+      $('#appointmentsSubmenu').collapse('hide');
+      $('#bankingSubmenu').collapse('hide');
+      $('#contactsSubmenu').collapse('hide');
+      $('#inventorySubmenu').collapse('hide');
+      $('#paymentsSubmenu').collapse('hide');
+      $('#payrollSubmenu').collapse('hide');
+      $('#purchasesSubmenu').collapse('hide');
+      $('#reportsSubmenu').collapse('hide');
+      $('#salesSubmenu').collapse('hide');
+      $('#seedToSaleSubmenu').collapse('hide');
+      $('#settingsSubmenu').collapse('hide');
+      $('#manufacturingSubmenu').collapse('hide');
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/dashboardexe');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/dashboardexe');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/dashboardexe');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click #sidenavdashbaordsalesmanager': function(event) {
       $('.accountsLi').addClass('opacityNotActive');
@@ -7146,49 +7239,109 @@ Template.newsidenav.events({
       $('#settingsSubmenu').collapse('hide');
       $('#manufacturingSubmenu').collapse('hide');
       event.preventDefault();
-      FlowRouter.go('/dashboardsalesmanager');
-      let templateObject = Template.instance();
-      templateObject.getSetSideNavFocus();
-  },
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/dashboardsalesmanager');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/dashboardsalesmanager');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
+        FlowRouter.go('/dashboardsalesmanager');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+      }
+    },
     'click #sidenavdashbaordsales': function(event) {
-    $('.accountsLi').addClass('opacityNotActive');
-    $('.appointmentsLi').addClass('opacityNotActive');
-    $('.bankingLi').addClass('opacityNotActive');
-    $('.contactsLi').addClass('opacityNotActive');
-    $('.dashboardLi').addClass('opacityNotActive');
-    $('.dashboardLiExe').addClass('opacityNotActive');
-    $('.dashboardLiSales').addClass('opacityNotActive');
-    $('.dashboardLiSalesManager').removeClass('opacityNotActive');
-    $('.manufacturingLi').addClass('opacityNotActive');
-    $('.gsemployeesLi').addClass('opacityNotActive');
-    $('.inventoryLi').addClass('opacityNotActive');
-    $('.paymentsLi').addClass('opacityNotActive');
-    $('.payrollLi').addClass('opacityNotActive');
-    $('.purchasesLi').addClass('opacityNotActive');
-    $('.reportsLi').addClass('opacityNotActive');
-    $('.reportsLi2').addClass('opacityNotActive');
-    $('.salesLi').addClass('opacityNotActive');
-    $('.seedtosaleLi').addClass('opacityNotActive');
-    $('.settingsLi').addClass('opacityNotActive');
-    $('.logoutLi').addClass('opacityNotActive');
-    $('#accountsSubmenu').collapse('hide');
-    $('#appointmentsSubmenu').collapse('hide');
-    $('#bankingSubmenu').collapse('hide');
-    $('#contactsSubmenu').collapse('hide');
-    $('#inventorySubmenu').collapse('hide');
-    $('#paymentsSubmenu').collapse('hide');
-    $('#payrollSubmenu').collapse('hide');
-    $('#purchasesSubmenu').collapse('hide');
-    $('#reportsSubmenu').collapse('hide');
-    $('#salesSubmenu').collapse('hide');
-    $('#seedToSaleSubmenu').collapse('hide');
-    $('#settingsSubmenu').collapse('hide');
-    $('#manufacturingSubmenu').collapse('hide');
-    event.preventDefault();
-    FlowRouter.go('/dashboardsales');
-    let templateObject = Template.instance();
-    templateObject.getSetSideNavFocus();
-  },
+      $('.accountsLi').addClass('opacityNotActive');
+      $('.appointmentsLi').addClass('opacityNotActive');
+      $('.bankingLi').addClass('opacityNotActive');
+      $('.contactsLi').addClass('opacityNotActive');
+      $('.dashboardLi').addClass('opacityNotActive');
+      $('.dashboardLiExe').addClass('opacityNotActive');
+      $('.dashboardLiSales').addClass('opacityNotActive');
+      $('.dashboardLiSalesManager').removeClass('opacityNotActive');
+      $('.manufacturingLi').addClass('opacityNotActive');
+      $('.gsemployeesLi').addClass('opacityNotActive');
+      $('.inventoryLi').addClass('opacityNotActive');
+      $('.paymentsLi').addClass('opacityNotActive');
+      $('.payrollLi').addClass('opacityNotActive');
+      $('.purchasesLi').addClass('opacityNotActive');
+      $('.reportsLi').addClass('opacityNotActive');
+      $('.reportsLi2').addClass('opacityNotActive');
+      $('.salesLi').addClass('opacityNotActive');
+      $('.seedtosaleLi').addClass('opacityNotActive');
+      $('.settingsLi').addClass('opacityNotActive');
+      $('.logoutLi').addClass('opacityNotActive');
+      $('#accountsSubmenu').collapse('hide');
+      $('#appointmentsSubmenu').collapse('hide');
+      $('#bankingSubmenu').collapse('hide');
+      $('#contactsSubmenu').collapse('hide');
+      $('#inventorySubmenu').collapse('hide');
+      $('#paymentsSubmenu').collapse('hide');
+      $('#payrollSubmenu').collapse('hide');
+      $('#purchasesSubmenu').collapse('hide');
+      $('#reportsSubmenu').collapse('hide');
+      $('#salesSubmenu').collapse('hide');
+      $('#seedToSaleSubmenu').collapse('hide');
+      $('#settingsSubmenu').collapse('hide');
+      $('#manufacturingSubmenu').collapse('hide');
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/dashboardsales');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/dashboardsales');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
+        FlowRouter.go('/dashboardsales');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+      }
+    },
     'click #sidenavdashbaordmy': function(event) {
         $('.accountsLi').addClass('opacityNotActive');
         $('.appointmentsLi').addClass('opacityNotActive');
@@ -7224,9 +7377,39 @@ Template.newsidenav.events({
         $('#settingsSubmenu').collapse('hide');
         $('#manufacturingSubmenu').collapse('hide');
         event.preventDefault();
-        FlowRouter.go('/dashboardmy');
-        let templateObject = Template.instance();
-        templateObject.getSetSideNavFocus();
+        var url = window.location.pathname;
+        if(url == "/bankrecon"){
+          let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+          if(reconHoldState == "true"){
+            swal({
+                title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+                text: "You must hold reconciliation to save flagged items.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'OK'
+            }).then((result) => {
+              if (result.value) {
+                $(".btnHold").trigger("click");
+                localStorage.setItem("reconHoldState", "false");
+              }
+              else{
+                FlowRouter.go('/dashboardmy');
+                let templateObject = Template.instance();
+                templateObject.getSetSideNavFocus();
+              }
+            });
+          }
+          else{
+            FlowRouter.go('/dashboardmy');
+            let templateObject = Template.instance();
+            templateObject.getSetSideNavFocus();
+          }
+        }
+        else{
+          FlowRouter.go('/dashboardmy');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
     },
     'click #sidenavappointment': function(event) {
         $('.accountsLi').addClass('opacityNotActive');
@@ -7344,38 +7527,126 @@ Template.newsidenav.events({
         window.open('#', '_self');
     },
     'click #sidenavmanufacturing': function(event) {
-      $('.accountsLi').addClass('opacityNotActive');
-      $('.appointmentsLi').addClass('opacityNotActive');
-      $('.bankingLi').addClass('opacityNotActive');
-      $('.contactsLi').addClass('opacityNotActive');
-      $('.dashboardLi').addClass('opacityNotActive');
-      $('.dashboardLiExe').addClass('opacityNotActive');
-      $('.dashboardLiSales').addClass('opacityNotActive');
-      $('.dashboardLiSalesManager').addClass('opacityNotActive');
-      $('.manufacturingLi').removeClass('opacityNotActive');
-      $('.gsemployeesLi').addClass('opacityNotActive');
-      $('.inventoryLi').addClass('opacityNotActive');
-      $('.paymentsLi').addClass('opacityNotActive');
-      $('.payrollLi').addClass('opacityNotActive');
-      $('.purchasesLi').addClass('opacityNotActive');
-      $('.reportsLi').addClass('opacityNotActive');
-      $('.reportsLi2').addClass('opacityNotActive');
-      $('.salesLi').addClass('opacityNotActive');
-      $('.seedtosaleLi').addClass('opacityNotActive');
-      $('.settingsLi').addClass('opacityNotActive');
-      $('.logoutLi').addClass('opacityNotActive');
-      $('#accountsSubmenu').collapse('hide');
-      $('#appointmentsSubmenu').collapse('hide');
-      $('#bankingSubmenu').collapse('hide');
-      $('#contactsSubmenu').collapse('hide');
-      $('#inventorySubmenu').collapse('hide');
-      $('#paymentsSubmenu').collapse('hide');
-      $('#payrollSubmenu').collapse('hide');
-      $('#purchasesSubmenu').collapse('hide');
-      $('#reportsSubmenu').collapse('hide');
-      $('#salesSubmenu').collapse('hide');
-      $('#seedToSaleSubmenu').collapse('hide');
-      $('#settingsSubmenu').collapse('hide');
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              $('.accountsLi').addClass('opacityNotActive');
+              $('.appointmentsLi').addClass('opacityNotActive');
+              $('.bankingLi').addClass('opacityNotActive');
+              $('.contactsLi').addClass('opacityNotActive');
+              $('.dashboardLi').addClass('opacityNotActive');
+              $('.dashboardLiExe').addClass('opacityNotActive');
+              $('.dashboardLiSales').addClass('opacityNotActive');
+              $('.dashboardLiSalesManager').addClass('opacityNotActive');
+              $('.manufacturingLi').removeClass('opacityNotActive');
+              $('.gsemployeesLi').addClass('opacityNotActive');
+              $('.inventoryLi').addClass('opacityNotActive');
+              $('.paymentsLi').addClass('opacityNotActive');
+              $('.payrollLi').addClass('opacityNotActive');
+              $('.purchasesLi').addClass('opacityNotActive');
+              $('.reportsLi').addClass('opacityNotActive');
+              $('.reportsLi2').addClass('opacityNotActive');
+              $('.salesLi').addClass('opacityNotActive');
+              $('.seedtosaleLi').addClass('opacityNotActive');
+              $('.settingsLi').addClass('opacityNotActive');
+              $('.logoutLi').addClass('opacityNotActive');
+              $('#accountsSubmenu').collapse('hide');
+              $('#appointmentsSubmenu').collapse('hide');
+              $('#bankingSubmenu').collapse('hide');
+              $('#contactsSubmenu').collapse('hide');
+              $('#inventorySubmenu').collapse('hide');
+              $('#paymentsSubmenu').collapse('hide');
+              $('#payrollSubmenu').collapse('hide');
+              $('#purchasesSubmenu').collapse('hide');
+              $('#reportsSubmenu').collapse('hide');
+              $('#salesSubmenu').collapse('hide');
+              $('#seedToSaleSubmenu').collapse('hide');
+              $('#settingsSubmenu').collapse('hide');
+            }
+          });
+        }
+        else{
+          $('.accountsLi').addClass('opacityNotActive');
+          $('.appointmentsLi').addClass('opacityNotActive');
+          $('.bankingLi').addClass('opacityNotActive');
+          $('.contactsLi').addClass('opacityNotActive');
+          $('.dashboardLi').addClass('opacityNotActive');
+          $('.dashboardLiExe').addClass('opacityNotActive');
+          $('.dashboardLiSales').addClass('opacityNotActive');
+          $('.dashboardLiSalesManager').addClass('opacityNotActive');
+          $('.manufacturingLi').removeClass('opacityNotActive');
+          $('.gsemployeesLi').addClass('opacityNotActive');
+          $('.inventoryLi').addClass('opacityNotActive');
+          $('.paymentsLi').addClass('opacityNotActive');
+          $('.payrollLi').addClass('opacityNotActive');
+          $('.purchasesLi').addClass('opacityNotActive');
+          $('.reportsLi').addClass('opacityNotActive');
+          $('.reportsLi2').addClass('opacityNotActive');
+          $('.salesLi').addClass('opacityNotActive');
+          $('.seedtosaleLi').addClass('opacityNotActive');
+          $('.settingsLi').addClass('opacityNotActive');
+          $('.logoutLi').addClass('opacityNotActive');
+          $('#accountsSubmenu').collapse('hide');
+          $('#appointmentsSubmenu').collapse('hide');
+          $('#bankingSubmenu').collapse('hide');
+          $('#contactsSubmenu').collapse('hide');
+          $('#inventorySubmenu').collapse('hide');
+          $('#paymentsSubmenu').collapse('hide');
+          $('#payrollSubmenu').collapse('hide');
+          $('#purchasesSubmenu').collapse('hide');
+          $('#reportsSubmenu').collapse('hide');
+          $('#salesSubmenu').collapse('hide');
+          $('#seedToSaleSubmenu').collapse('hide');
+          $('#settingsSubmenu').collapse('hide');
+        }
+      }
+      else{
+        $('.accountsLi').addClass('opacityNotActive');
+        $('.appointmentsLi').addClass('opacityNotActive');
+        $('.bankingLi').addClass('opacityNotActive');
+        $('.contactsLi').addClass('opacityNotActive');
+        $('.dashboardLi').addClass('opacityNotActive');
+        $('.dashboardLiExe').addClass('opacityNotActive');
+        $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
+        $('.manufacturingLi').removeClass('opacityNotActive');
+        $('.gsemployeesLi').addClass('opacityNotActive');
+        $('.inventoryLi').addClass('opacityNotActive');
+        $('.paymentsLi').addClass('opacityNotActive');
+        $('.payrollLi').addClass('opacityNotActive');
+        $('.purchasesLi').addClass('opacityNotActive');
+        $('.reportsLi').addClass('opacityNotActive');
+        $('.reportsLi2').addClass('opacityNotActive');
+        $('.salesLi').addClass('opacityNotActive');
+        $('.seedtosaleLi').addClass('opacityNotActive');
+        $('.settingsLi').addClass('opacityNotActive');
+        $('.logoutLi').addClass('opacityNotActive');
+        $('#accountsSubmenu').collapse('hide');
+        $('#appointmentsSubmenu').collapse('hide');
+        $('#bankingSubmenu').collapse('hide');
+        $('#contactsSubmenu').collapse('hide');
+        $('#inventorySubmenu').collapse('hide');
+        $('#paymentsSubmenu').collapse('hide');
+        $('#payrollSubmenu').collapse('hide');
+        $('#purchasesSubmenu').collapse('hide');
+        $('#reportsSubmenu').collapse('hide');
+        $('#salesSubmenu').collapse('hide');
+        $('#seedToSaleSubmenu').collapse('hide');
+        $('#settingsSubmenu').collapse('hide');
+      }
     },
     'click #sidenavpayments': function(event) {
         $('.accountsLi').addClass('opacityNotActive');
@@ -8074,9 +8345,39 @@ Template.newsidenav.events({
     },
     'click #sidenavshipping': function(event) {
         event.preventDefault();
-        FlowRouter.go('/vs1shipping');
-        let templateObject = Template.instance();
-        templateObject.getSetSideNavFocus();
+        var url = window.location.pathname;
+        if(url == "/bankrecon"){
+          let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+          if(reconHoldState == "true"){
+            swal({
+                title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+                text: "You must hold reconciliation to save flagged items.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'OK'
+            }).then((result) => {
+              if (result.value) {
+                $(".btnHold").trigger("click");
+                localStorage.setItem("reconHoldState", "false");
+              }
+              else{
+                FlowRouter.go('/vs1shipping');
+                let templateObject = Template.instance();
+                templateObject.getSetSideNavFocus();
+              }
+            });
+          }
+          else{
+            FlowRouter.go('/vs1shipping');
+            let templateObject = Template.instance();
+            templateObject.getSetSideNavFocus();
+          }
+        }
+        else{
+          FlowRouter.go('/vs1shipping');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
     },
     'click #closeCloudSidePanelMenu': function(event) {
         let templateObject = Template.instance();
@@ -8120,34 +8421,185 @@ Template.newsidenav.events({
     },
 
     'click .accountsLiHeader': function(event) {
-        event.preventDefault();
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        console.log("reconHoldState=", reconHoldState);
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/accountsoverview');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/accountsoverview');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/accountsoverview');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click .appointmentsLiHeader': function(event) {
-        event.preventDefault();
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/appointments');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/appointments');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/appointments');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click .bankingLiHeader': function(event) {
-        event.preventDefault();
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/bankingoverview');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/bankingoverview');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/bankingoverview');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click .contactsLiHeader': function(event) {
-        event.preventDefault();
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/contactoverview');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/contactoverview');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/contactoverview');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click .crmLiHeader': function(event) {
-        event.preventDefault();
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/crmoverview');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/crmoverview');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/crmoverview');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click .sidenavleads': function(event) {
         event.preventDefault();
@@ -8167,45 +8619,229 @@ Template.newsidenav.events({
     },
     'click #sidenavmailchimp': function(event) {
         event.preventDefault();
-        FlowRouter.go('/campaign-list');
+        if (FlowRouter.current().path == "/crmoverview") {
+          $('#crmMailchimpModal').modal();
+        } else {
+            window.open('/crmoverview#btnMailchimp', '_self');
+        }
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click .inventoryLiHeader': function(event) {
-        event.preventDefault();
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/inventorylist');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/inventorylist');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/inventorylist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click .paymentsLiHeader': function(event) {
-        event.preventDefault();
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/paymentoverview');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/paymentoverview');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/paymentoverview');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click .payrollLiHeader': function(event) {
-        event.preventDefault();
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/payrolloverview');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/payrolloverview');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/payrolloverview');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click .receiptLiHeader': function(event) {
       event.preventDefault();
-      FlowRouter.go('/receiptsoverview');
-      let templateObject = Template.instance();
-      templateObject.getSetSideNavFocus();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/receiptsoverview');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/receiptsoverview');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
+        FlowRouter.go('/receiptsoverview');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+      }
     },
     'click .purchasesLiHeader': function(event) {
-        event.preventDefault();
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/purchasesoverview');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/purchasesoverview');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/purchasesoverview');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click .reportsLiHeader': function(event) {
-        event.preventDefault();
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/allreports');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/allreports');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/allreports');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click .reportsLi2Header': function(event) {
         event.preventDefault();
@@ -8220,29 +8856,149 @@ Template.newsidenav.events({
       templateObject.getSetSideNavFocus();
     },
     'click .salesLiHeader': function(event) {
-        event.preventDefault();
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/salesoverview');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/salesoverview');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/salesoverview');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click .seedtosaleLiHeader': function(event) {
-        event.preventDefault();
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/stsdashboard');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/stsdashboard');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/stsdashboard');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
     'click .settingsLiHeader': function(event) {
-        event.preventDefault();
+      event.preventDefault();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/settings');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/settings');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
         FlowRouter.go('/settings');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+      }
     },
 
     'click .fixedAssetsLiHeader': function(event) {
       event.preventDefault();
-      FlowRouter.go('/fixedassetsoverview');
-      let templateObject = Template.instance();
-      templateObject.getSetSideNavFocus();
+      var url = window.location.pathname;
+      if(url == "/bankrecon"){
+        let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+        if(reconHoldState == "true"){
+          swal({
+              title: 'Cannot save this reconciliation. Please hold the reconciliations first.',
+              text: "You must hold reconciliation to save flagged items.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.value) {
+              $(".btnHold").trigger("click");
+              localStorage.setItem("reconHoldState", "false");
+            }
+            else{
+              FlowRouter.go('/fixedassetsoverview');
+              let templateObject = Template.instance();
+              templateObject.getSetSideNavFocus();
+            }
+          });
+        }
+        else{
+          FlowRouter.go('/fixedassetsoverview');
+          let templateObject = Template.instance();
+          templateObject.getSetSideNavFocus();
+        }
+      }
+      else{
+        FlowRouter.go('/fixedassetsoverview');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+      }
     },
     'click .sidenavfixedassets': function(event) {
         event.preventDefault();

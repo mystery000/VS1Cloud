@@ -204,6 +204,16 @@ Template.allChartLists.onRendered(function () {
                 }
             }
             if (chartList.length > 0) {
+                let my_tasksChart = {
+                    fields: {
+                        Active: true,
+                        ChartGroup: "DSMCharts",
+                        ChartName: "My Tasks",
+                        ID: 902,
+                        _chartSlug: "dsmcharts__my_tasks"
+                    }
+                };
+                chartList.push(my_tasksChart);
                 let salesQuotaChart1 = {
                     fields: {
                         Active: true,
@@ -314,12 +324,32 @@ Template.allChartLists.onRendered(function () {
                     }
                 };
                 chartList.push(dsmLeadListChart);
+                let my_tasksChart1 = {
+                    fields: {
+                        Active: true,
+                        ChartGroup: "DSCharts",
+                        ChartName: "My Tasks",
+                        ID: 914,
+                        _chartSlug: "dscharts__my_tasks"
+                    }
+                };
+                chartList.push(my_tasksChart1);
+                let dsAppointmentListChart = {
+                    fields: {
+                        Active: true,
+                        ChartGroup: "DSCharts",
+                        ChartName: "Appointment List",
+                        ID: 915,
+                        _chartSlug: "dscharts__appointment_list"
+                    }
+                };
+                chartList.push(dsAppointmentListChart);
                 let performanceQuotaChart = {
                     fields: {
                         Active: true,
                         ChartGroup: "DSCharts",
                         ChartName: "Performance Quota",
-                        ID: 914,
+                        ID: 916,
                         _chartSlug: "dscharts__performance_quota"
                     }
                 };
@@ -329,27 +359,17 @@ Template.allChartLists.onRendered(function () {
                         Active: true,
                         ChartGroup: "DSCharts",
                         ChartName: "Opportunities Source",
-                        ID: 915,
+                        ID: 917,
                         _chartSlug: "dscharts__opportunities_source"
                     }
                 };
                 chartList.push(opportunitiesSourceChart);
-                let dsAppointmentListChart = {
-                    fields: {
-                        Active: true,
-                        ChartGroup: "DSCharts",
-                        ChartName: "Appointment List",
-                        ID: 916,
-                        _chartSlug: "dscharts__appointment_list"
-                    }
-                };
-                chartList.push(dsAppointmentListChart);
                 let dsLeadListChart = {
                     fields: {
                         Active: true,
                         ChartGroup: "DSCharts",
                         ChartName: "Lead List",
-                        ID: 917,
+                        ID: 1001,
                         _chartSlug: "dscharts__lead_list"
                     }
                 };
