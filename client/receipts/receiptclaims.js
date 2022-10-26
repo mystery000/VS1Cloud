@@ -1635,7 +1635,6 @@ Template.receiptsoverview.onRendered(function() {
             } else {
                 errText = err;
             }
-            alert();
             swal({
                 title: 'Oooops...',
                 text: errText,

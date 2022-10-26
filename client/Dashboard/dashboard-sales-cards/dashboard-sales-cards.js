@@ -65,11 +65,9 @@ Template.dashboardSalesCards.onRendered(function () {
             getVS1Data('TQuoteList').then(function (dataObject) {
                 if(dataObject.length) {
                     let {tquotelist = []} = JSON.parse(dataObject[0].data);
-                    const fromDate = new Date($("#dateFrom").datepicker("getDate"));
-                    const toDate = new Date($("#dateTo").datepicker("getDate"));
+                    const momentUnix =  moment().subtract(3, 'months').unix();
                     tquotelist.forEach(tquote  =>  {
-                        const saleDate = new Date(tquote.SaleDate);
-                        if(fromDate <= saleDate && toDate >= saleDate){
+                        if(moment(tquote.SaleDate).unix() > momentUnix) {
                             if(!tquote.Converted) {
                                 totalQuoteValueLast3Months += tquote.Balance;
                             }
@@ -93,15 +91,13 @@ Template.dashboardSalesCards.onRendered(function () {
         getVS1Data('TQuoteList').then(function (dataObject) {
             if(dataObject.length) {
                 let {tquotelist = []} = JSON.parse(dataObject[0].data);
-                const fromDate = new Date($("#dateFrom").datepicker("getDate"));
-                const toDate = new Date($("#dateTo").datepicker("getDate"));
+                const momentUnix =  moment().subtract(3, 'months').unix();
                 let [convertedQuotesCount, nonConvertedQuotesCount, convertedQuotesAmount] = [0, 0, 0, 0];
                 let [myConvertedQuotesCount, myNonConvertedQuotesCount, myConvertedQuotesAmount] = [0, 0, 0, 0];
                 let [myPipeLineAmount, teamPipeLineAmount] = [0, 0];
                 let employeeName = Session.get('mySessionEmployee');
                 tquotelist.forEach(tquote  =>  {
-                    const saleDate = new Date(tquote.SaleDate);
-                    if(fromDate <= saleDate && toDate >= saleDate){
+                    if(moment(tquote.SaleDate).unix() > momentUnix) {
                         if(tquote.Converted) {
                             convertedQuotesCount +=1;
                             convertedQuotesAmount += tquote.Balance;
@@ -158,91 +154,91 @@ Template.dashboardSalesCards.onRendered(function () {
 Template.dashboardSalesCards.events({
     "click #new-leads-my-metric": (e) => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('YYYY-MM-DD');
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('YYYY-MM-DD');
+        toDate = moment().format('DD-MM-YYYY');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/leadlist", '_self');
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #new-leads-team-avg": (e) => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('YYYY-MM-DD');
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('YYYY-MM-DD');
+        toDate = moment().format('DD-MM-YYYY');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/leadlist", '_self');
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #new-opportunities-my-metric": (e) => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('YYYY-MM-DD');
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('YYYY-MM-DD');
+        toDate = moment().format('DD-MM-YYYY');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/leadlist", '_self');
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #new-opportunities-team-avg": (e) => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('YYYY-MM-DD');
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('YYYY-MM-DD');
+        toDate = moment().format('DD-MM-YYYY');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/leadlist", '_self');
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #won-opportunities-my-metric": (e) => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('YYYY-MM-DD');
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('YYYY-MM-DD');
+        toDate = moment().format('DD-MM-YYYY');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
         window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #won-opportunities-team-avg": (e) => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('YYYY-MM-DD');
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('YYYY-MM-DD');
+        toDate = moment().format('DD-MM-YYYY');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
         window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #gap-to-quota": (e) => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('YYYY-MM-DD');
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('YYYY-MM-DD');
+        toDate = moment().format('DD-MM-YYYY');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/quoteslist?fromDate="+fromDate+"&toDate="+toDate, '_self');
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #avg-sales-cycle-my-metric": (e) => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('YYYY-MM-DD');
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('YYYY-MM-DD');
+        toDate = moment().format('DD-MM-YYYY');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/quoteslist?fromDate="+fromDate+"&toDate="+toDate, '_self');
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #avg-sales-cycle-team-avg": (e) => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('YYYY-MM-DD');
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('YYYY-MM-DD');
+        toDate = moment().format('DD-MM-YYYY');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/quoteslist?fromDate="+fromDate+"&toDate="+toDate, '_self');
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #pipeline-amount-my-metric": (e) => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('YYYY-MM-DD');
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('YYYY-MM-DD');
+        toDate = moment().format('DD-MM-YYYY');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/quoteslist?fromDate="+fromDate+"&toDate="+toDate, '_self');
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
     "click #pipeline-amount-team-avg": (e) => {
         let fromDate = new Date(formatDateFrom);
-        fromDate = moment(fromDate).format('YYYY-MM-DD');
+        fromDate = moment(fromDate).format('DD-MM-YYYY');
         let toDate = new Date(formatDateTo);
-        toDate = moment().format('YYYY-MM-DD');
+        toDate = moment().format('DD-MM-YYYY');
         // FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
-        window.open("/quoteslist?fromDate="+fromDate+"&toDate="+toDate, '_self');
+        window.open("/invoicelist?fromDate="+fromDate+"&toDate="+toDate, '_self');
     },
 });
 

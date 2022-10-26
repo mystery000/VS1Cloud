@@ -2698,9 +2698,9 @@
                       <tbody>
                         {{#if rateTypes}}
                             {{#each rateType in rateTypes}}
-                              <tr>
+                              <tr rate-type-id="{{ rateType.ID }}">
                                 <td>{{ rateType.Description }}</td>
-                                <td class="hiddenColumn">{{ rateType.ID }}</td>
+                                <td class="id hiddenColumn">{{ rateType.ID }}</td>
                               </tr>
                             {{/each}}
                         {{/if}}

@@ -64,13 +64,12 @@ Template.statuspop.onRendered(function() {
     }
     function setLeadStatus(data) {
         for (let i = 0; i < data.tleadstatustype.length; i++) {
-            
-            let eqpm = Number(data.tleadstatustype[i].EQPM) || 1;
+            let eqpm = Number(data.tleadstatustype[i].KeyValue.replace(/[^0-9.-]+/g, "")) || 1.0;
             const dataList = {
                 id: data.tleadstatustype[i].Id || '',
                 typename: data.tleadstatustype[i].TypeName || '',
                 description: data.tleadstatustype[i].Description || data.tleadstatustype[i].TypeName,
-                eqpm: eqpm
+                eqpm: utilityService.modifynegativeCurrencyFormat(eqpm)
             };
             dataTableList.push(dataList);
         }

@@ -353,9 +353,7 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
-                    // $('#customerListModal').modal();
-                    calendar.gotoDate(info.start);
-                    $('.fc-timeGridDay-button').trigger("click");
+                    $('#customerListModal').modal();
                 }
             },
             eventClick: function (info) {
@@ -813,8 +811,7 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
-                    calendar.gotoDate(info.start);
-                    $('.fc-timeGridDay-button').trigger("click");
+                    $('#customerListModal').modal();
                 }
             },
             eventClick: function (info) {
@@ -952,7 +949,6 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                     } else {
                         $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
                     }
-                    console.log("=======",info);
                     $('#event-modal').modal();
                     // this.$body.addClass('modal-open');
                 }
@@ -1704,11 +1700,11 @@ Template.dsmAppointmentsWidget.onRendered(function () {
             let getAddress = data.tappointmentex[i].fields.ClientName + ',' + street + ',' + state + ',' + surbub + ' ' + zip;
             dataList = {
                 id: data.tappointmentex[i].fields.ID.toString() || '',
-                title: getAddress,
-                // title: data.tappointmentex[i].fields.ClientName,
+                // title: data.tappointmentex[i].fields.TrainerName + '<br>' + data.tappointmentex[i].fields.ClientName + '<br>' + street + '<br>' + surbub + '<br>' + state + ' ' + zip,
+                title: data.tappointmentex[i].fields.ClientName,
                 start: data.tappointmentex[i].fields.StartTime || '',
                 end: data.tappointmentex[i].fields.EndTime || '',
-                description: getAddress,
+                description: data.tappointmentex[i].fields.Notes || '',
                 color: appColor
             };
             if (seeOwnAppointments == true) {
@@ -1722,8 +1718,6 @@ Template.dsmAppointmentsWidget.onRendered(function () {
             }
 
         }
-
-        console.log("eventData=", eventData);
         templateObject.appointmentrecords.set(appointmentList);
         templateObject.eventdata.set(eventData);
 
@@ -2333,9 +2327,7 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
-                    // $('#customerListModal').modal();
-                    calendar.gotoDate(info.start);
-                    $('.fc-timeGridDay-button').trigger("click");
+                    $('#customerListModal').modal();
                 }
             },
             eventDrop: function (info) {
@@ -3290,9 +3282,7 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                         } else if (FlowRouter.current().queryParams.supplierid) {
                             openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                         } else {
-                            // $('#customerListModal').modal();
-                            calendar.gotoDate(info.start);
-                            $('.fc-timeGridDay-button').trigger("click");
+                            $('#customerListModal').modal();
                         }
                     },
                     eventClick: function (info) {
@@ -3573,6 +3563,7 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                             $('#customerListModal').modal();
                         }
                     },
+
                     events: eventData,
                     eventDidMount: function (event) {
                     },

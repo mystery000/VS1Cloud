@@ -25,6 +25,52 @@
                 border: none;
             }
 
+            #bodyContainer.top{
+                display: block !important;
+            }
+            #bodyContainer.top>#colContent{
+                width: 100vw !important;
+            }
+            #sidebar.top{
+                display: block !important;
+                max-width: unset !important;
+                overflow: scroll hidden !important;
+                width: 100vw !important;
+                height: 91px !important;
+            }
+            #sidebar.top .sidebar-header{
+                max-width: 100px !important;
+                margin: 0px 10px !important;
+                float: left !important;
+            }
+            #sidebar.top>ul{
+                display: flex !important;
+            }
+            #sidebar.top>ul>li{
+                white-space: nowrap !important;
+            }
+            #sidebar.top ul li a{
+                height: 100% !important;
+            }
+            #sidebarToggleBtn{
+                cursor: pointer;
+                margin: 12px 10px;
+                text-align: center;
+                font-size: 13px;
+                border: solid 1px;
+                border-radius: 40px;
+                transition: 0.2s;
+                transform: scale(1);
+            }
+            #sidebarToggleBtn:hover{
+                background: white;
+                color: #00a3d3;
+                transform: scale(1.05);
+            }
+            #sidebarToggleBtn:active{
+                transform: scale(0.95);
+            }
+
             .line {
                 width: 100%;
                 height: 1px;
@@ -160,7 +206,7 @@
                     min-width: 15vw;
                 }
                 #sidebar .sidebar-header {
-                    height: 65px;
+                    height: 90px;
                 }
             }
 
@@ -169,7 +215,7 @@
                     min-width: 16vw;
                 }
                 #sidebar .sidebar-header {
-                    height: 65px;
+                    height: 90px;
                 }
             }
 
@@ -191,10 +237,12 @@
         </style>
 
         <div class="sidebar-header">
+          <div></div>
             <img class="vs1brand" src="assets/img/vs1cloudbrand.png" />
+          <div id="sidebarToggleBtn">Top</div>
         </div>
 
-        <ul class="list-unstyled components">
+        <ul class="list-unstyled components" style="margin-top:8px;">
             {{#if includeAccounts}}
                 <li class="accountsLi" id="sidenavaccounts">
                     <a href="#accountsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader accountsLiHeader"><i class="fa fa-users faHeader"></i> Accounts</a>
