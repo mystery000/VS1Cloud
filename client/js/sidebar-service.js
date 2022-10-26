@@ -994,6 +994,43 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAccountVS1, options);
   }
 
+  getAllTAccountVS1List(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+          IgnoreDates:true,
+          orderby: '"AccountName asc"',
+          Search: "Active = true",
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"AccountName asc"',
+          Search: "Active = true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+          orderby: '"AccountName asc"',
+          IgnoreDates:true,
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"AccountName asc"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
+    return this.getList(this.ERPObjects.TAccountVS1List, options);
+  }
+
   getRateListVS1() {
     let options = "";
 
@@ -1057,6 +1094,43 @@ export class SideBarService extends BaseService {
     }
 
     return this.getList(this.ERPObjects.TERPCombinedContactsVS1, options);
+  }
+
+  getAllTEmployeeList(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+          IgnoreDates:true,
+          orderby: '"EmployeeName asc"',
+          Search: "Active = true",
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"EmployeeName asc"',
+          Search: "Active = true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+          orderby: '"EmployeeName asc"',
+          IgnoreDates:true,
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"EmployeeName asc"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
+    return this.getList(this.ERPObjects.TEmployeeList, options);
   }
 
   getClientVS1(limitcount, limitfrom) {
@@ -3652,5 +3726,27 @@ export class SideBarService extends BaseService {
       return false
     }
   }
+  changeDialFormat (mobile, country) {
 
+
+      let countries = require('./Model/phoneCodes.json');
+      let user_country = countries.find (item=>{
+          return item.name == country;
+      })
+      let code = '';
+      if(user_country && user_country != null) {
+          code = user_country.dial_code;
+      }
+      var mobileResult = '';
+      if(mobile && mobile !== '') {
+        if(mobile.charAt(0) == '0') {
+          mobileResult = mobile.replace('0', code)
+        } else if(mobile.charAt(0) == '+') {
+          mobileResult = mobile.replace(code, '0');
+        } else  {
+          mobileResult = code.concat(mobile);
+        }
+      }
+      return mobileResult;
+  }
 }

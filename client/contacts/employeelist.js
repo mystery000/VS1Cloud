@@ -8,7 +8,7 @@ import '../lib/global/indexdbstorage.js';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
-
+Template.employeelist.inheritsHooksFrom('non_transactional_list');
 Template.employeelist.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -30,28 +30,7 @@ Template.employeelist.onRendered(function() {
     if(FlowRouter.current().queryParams.success){
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelist', function(error, result){
-        if(error){
-
-        }else{
-            if(result){
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th."+columnClass+"").html(columData);
-                    $("th."+columnClass+"").css('width',""+columnWidth+"px");
-
-                }
-            }
-
-        }
-    });
-
+    /*
     templateObject.getEmployees = function () {
         getVS1Data('TEmployee').then(function (dataObject) {
             if(dataObject.length == 0){
@@ -106,32 +85,6 @@ Template.employeelist.onRendered(function() {
         }
         templateObject.datatablerecords.set(dataTableList);
 
-        if(templateObject.datatablerecords.get()){
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelist', function(error, result){
-                if (error) {
-
-                } else {
-                    if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                            let customcolumn = result.customFields;
-                            let columData = customcolumn[i].label;
-                            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                            let hiddenColumn = customcolumn[i].hidden;
-                            let columnClass = columHeaderUpdate.split('.')[1];
-                            let columnWidth = customcolumn[i].width;
-                            let columnindex = customcolumn[i].index + 1;
-                            if(hiddenColumn == true){
-                                $("."+columnClass+"").addClass('hiddenColumn');
-                                $("."+columnClass+"").removeClass('showColumn');
-                            }else if(hiddenColumn == false){
-                                $("."+columnClass+"").removeClass('hiddenColumn');
-                                $("."+columnClass+"").addClass('showColumn');
-                            }
-                        }
-                    }
-                }
-            });
-        }
         setTimeout(function () {
             $('#tblEmployeelist').DataTable({
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -230,7 +183,7 @@ Template.employeelist.onRendered(function() {
             }
         });
     }
-    templateObject.getEmployees();
+    // templateObject.getEmployees();
 
     // set initial table rest_data
     function init_reset_data() {
@@ -316,7 +269,7 @@ Template.employeelist.onRendered(function() {
 
       templateObject.initCustomFieldDisplaySettings("", "tblEmployeelist");
       // set initial table rest_data  //
-
+      */
 
     $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
         const listData = $(this).closest('tr').attr('id');

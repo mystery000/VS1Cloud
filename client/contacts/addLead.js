@@ -1579,7 +1579,7 @@ Template.leadscard.events({
         let currentId = FlowRouter.current().queryParams;
         $('.fullScreenSpin').css('display', 'inline-block');
         sideBarService.getTProjectTasks().then(function (data) {
-            addVS1Data('Tprojecttasks', JSON.stringify(data)).then(function (datareturn) {
+            addVS1Data('TProjectTasks', JSON.stringify(data)).then(function (datareturn) {
                 if (!isNaN(currentId.id)) {
                     window.open('/leadscard?id=' + currentId.id +'&crmTab=active', '_self');
                 }

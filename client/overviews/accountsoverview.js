@@ -82,6 +82,7 @@ Template.accountsoverview.onRendered(function() {
 
 
   // custom field displaysettings
+  /*
   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
@@ -135,6 +136,7 @@ Template.accountsoverview.onRendered(function() {
   }
 
   templateObject.initCustomFieldDisplaySettings("", "tblAccountOverview");
+  */
   // set initial table rest_data  //
 
     templateObject.getReceiptCategoryList = function() {
@@ -1000,6 +1002,7 @@ Template.accountsoverview.onRendered(function() {
                 }
             });
             // //$.fn.dataTable.moment('DD/MM/YY');
+            /*
             $("#tblAccountOverview").DataTable({
                     columnDefs: [
                         // { type: 'currency', targets: 4 }
@@ -1087,38 +1090,9 @@ Template.accountsoverview.onRendered(function() {
                         MakeNegative();
                     }, 100);
                 });
+                */
             // $('.fullScreenSpin').css('display','none');
         }, 10);
-
-        const columns = $("#tblAccountOverview th");
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i, v) {
-            if (v.hidden === false) {
-                columVisible = true;
-            }
-            if (v.className.includes("hiddenColumn")) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace("px", "");
-
-            let datatablerecordObj = {
-                sTitle: v.innerText || "",
-                sWidth: sWidth || "",
-                sIndex: v.cellIndex || "",
-                sVisible: columVisible || false,
-                sClass: v.className || "",
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-        $("div.dataTables_filter input").addClass(
-            "form-control form-control-sm"
-        );
     }
 
 

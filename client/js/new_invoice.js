@@ -86,6 +86,9 @@ Template.new_invoice.onCreated(() => {
   templateObject.displayfields = new ReactiveVar([]);
   templateObject.reset_data = new ReactiveVar([]);
   templateObject.subtaxcodes = new ReactiveVar([]);
+
+  templateObject.isbackorderredirect = new ReactiveVar();
+  templateObject.isbackorderredirect.set(false);
 });
 
 Template.new_invoice.onRendered(function() {
@@ -1599,6 +1602,7 @@ Template.new_invoice.onRendered(function() {
                   let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                   if (data.fields.IsBackOrder) {
                     lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                    templateObject.isbackorderredirect.set(true);
                   }
                   let isPartialPaid = false;
                   if (data.fields.TotalPaid > 0) {
@@ -2143,11 +2147,10 @@ Template.new_invoice.onRendered(function() {
                   }
                   company_name = useData[d].fields.CustomerName;
 
-                  let lidData =
-                    "Edit Invoice" + " " + useData[d].fields.ID || "";
+                  let lidData = "Edit Invoice" + " " + useData[d].fields.ID || "";
                   if (useData[d].fields.IsBackOrder) {
-                    lidData =
-                      "Edit Invoice" + " (BO) " + useData[d].fields.ID || "";
+                    lidData = "Edit Invoice" + " (BO) " + useData[d].fields.ID || "";
+                    templateObject.isbackorderredirect.set(true);
                   }
 
                   let isPartialPaid = false;
@@ -2631,8 +2634,8 @@ Template.new_invoice.onRendered(function() {
 
                     let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                     if (data.fields.IsBackOrder) {
-                      lidData =
-                        "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                      lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                      templateObject.isbackorderredirect.set(true);
                     }
 
                     let isPartialPaid = false;
@@ -3188,6 +3191,7 @@ Template.new_invoice.onRendered(function() {
                 let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                 if (data.fields.IsBackOrder) {
                   lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                  templateObject.isbackorderredirect.set(true);
                 }
                 let isPartialPaid = false;
                 if (data.fields.TotalPaid > 0) {
@@ -3779,6 +3783,7 @@ Template.new_invoice.onRendered(function() {
                   let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                   if (data.fields.IsBackOrder) {
                     lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                    templateObject.isbackorderredirect.set(true);
                   }
 
                   let isPartialPaid = false;
@@ -4321,11 +4326,10 @@ Template.new_invoice.onRendered(function() {
                     lineItems.push(lineItemObj);
                   }
 
-                  let lidData =
-                    "Edit Invoice" + " " + useData[d].fields.ID || "";
+                  let lidData = "Edit Invoice" + " " + useData[d].fields.ID || "";
                   if (useData[d].fields.IsBackOrder) {
-                    lidData =
-                      "Edit Invoice" + " (BO) " + useData[d].fields.ID || "";
+                    lidData = "Edit Invoice" + " (BO) " + useData[d].fields.ID || "";
+                    templateObject.isbackorderredirect.set(true);
                   }
                   let isPartialPaid = false;
                   if (useData[d].fields.TotalPaid > 0) {
@@ -4811,8 +4815,8 @@ Template.new_invoice.onRendered(function() {
 
                     let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                     if (data.fields.IsBackOrder) {
-                      lidData =
-                        "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                      lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                      templateObject.isbackorderredirect.set(true);
                     }
 
                     let isPartialPaid = false;
@@ -5244,6 +5248,7 @@ Template.new_invoice.onRendered(function() {
                 let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                 if (data.fields.IsBackOrder) {
                   lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                  templateObject.isbackorderredirect.set(true);
                 }
                 let isPartialPaid = false;
                 if (data.fields.TotalPaid > 0) {
@@ -17155,7 +17160,7 @@ Template.new_invoice.events({
   //     $('#myModal4').modal('toggle');
   // },
   "click .btnSave":  (event, templateObject) => {
-  playSaveAudio();
+    playSaveAudio();
     saveCurrencyHistory();
     // let templateObject = Template.instance();
     let stripe_id = templateObject.accountID.get();

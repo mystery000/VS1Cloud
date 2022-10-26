@@ -40,8 +40,11 @@ openDb = function(dbName) {
             db.createObjectStore("TProductVS1", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TProductList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TCustomerVS1", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TCustomerVS1List", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TSupplierVS1", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TSupplierVS1List", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TAccountVS1", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TAccountVS1List", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TTaxcodeVS1", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TSubTaxVS1", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TTermsVS1", { keyPath: "EmployeeEmail" });
@@ -73,6 +76,7 @@ openDb = function(dbName) {
             db.createObjectStore("TSalesList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TPurchasesList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TEmployee", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TEmployeeList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TQuote", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TProductClassQuantity", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TAppointment", { keyPath: "EmployeeEmail" });
@@ -123,6 +127,7 @@ openDb = function(dbName) {
             db.createObjectStore("TUser", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TExpenseClaim", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TFixedAssets", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TFixedAssetsList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TProductSalesDetailsReport", { keyPath: "EmployeeEmail" });
             db.createObjectStore("BalanceSheetReport", { keyPath: "EmployeeEmail" });
             db.createObjectStore("ProfitLossReport", { keyPath: "EmployeeEmail" });
@@ -162,6 +167,7 @@ openDb = function(dbName) {
             db.createObjectStore("TPaymentList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TOtherContactVS1", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TProspectVS1", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TProspectVS1List", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TcompLogo", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TEmployeePicture", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TContractorPaymentSummary", { keyPath: "EmployeeEmail" });
@@ -217,13 +223,13 @@ openDb = function(dbName) {
             db.createObjectStore("TPurchasesBackOrderReport", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TOverdueAwaitingCustomerPayment", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TOverdueAwaitingSupplierPayment", { keyPath: "EmployeeEmail" });
-            db.createObjectStore(erpObject.TAssignLeaveType, { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TAssignLeaveType", { keyPath: "EmployeeEmail" });
             db.createObjectStore("Tvs1CardPreference", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TQuoteFilterList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TSalesOrderFilterList", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TPayNotes", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TOpeningBalances", { keyPath: "EmployeeEmail" });
-            db.createObjectStore(erpObject.TCurrencyFrequencySettings, { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TCurrencyFrequencySettings", { keyPath: "EmployeeEmail" });
 
             db.createObjectStore('TSerialNumberListCurrentReport', { keyPath: "EmployeeEmail" });
 
@@ -304,14 +310,16 @@ openDb = function(dbName) {
             db.createObjectStore('TBasReturn', { keyPath: "EmployeeEmail" });
             db.createObjectStore('VS1_Customize', { keyPath: "EmployeeEmail" });
             db.createObjectStore('VS1_Dashboard', { keyPath: "EmployeeEmail" });
-            db.createObjectStore(erpObject.TPayrollSettingOvertimes, { keyPath: "EmployeeEmail" });
-            db.createObjectStore(erpObject.TRateTypes, { keyPath: "EmployeeEmail" });
-            db.createObjectStore(erpObject.TEarningData, { keyPath: "EmployeeEmail" });
-            db.createObjectStore(erpObject.TTimeSheetDetails, { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TPayrollSettingOvertimes", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TRateTypes", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TEarningData", { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TTimeSheetDetails", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TServiceLog", { keyPath: "EmployeeEmail" });
             db.createObjectStore("TServiceLogList", { keyPath: "EmployeeEmail" });
-            db.createObjectStore(erpObject.TPayRunHistory, { keyPath: "EmployeeEmail" });
+            db.createObjectStore("TPayRunHistory", { keyPath: "EmployeeEmail" });
             db.createObjectStore('TProcessStep', {keyPath: 'EmployeeEmail'});
+            db.createObjectStore('TProjectTasks', {keyPath: 'EmployeeEmail'});
+            db.createObjectStore('TProjectTasksList', {keyPath: 'EmployeeEmail'});
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });
