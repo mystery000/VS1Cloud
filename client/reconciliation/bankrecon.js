@@ -190,7 +190,7 @@ Template.bankrecon.onRendered(function () {
                                 '" /><label class="custom-control-label" for="formCheck_' + 
                                 data.ttobereconcileddeposit[r].DepositID +                                 
                                 '"></label></div>',
-                            data.ttobereconcileddeposit[r].DepositDate != '' ? moment(data.ttobereconcileddeposit[r].DepositDate).format("YYYY-MM-DD") : data.ttobereconcileddeposit[r].DepositDate,
+                            data.ttobereconcileddeposit[r].DepositDate != '' ? moment(data.ttobereconcileddeposit[r].DepositDate).format("DD/MM/YYYY") : data.ttobereconcileddeposit[r].DepositDate,
                             data.ttobereconcileddeposit[r].ReferenceNo || ' ',
                             data.ttobereconcileddeposit[r].CompanyName || ' ',
                             data.ttobereconcileddeposit[r].Notes || ' ',
@@ -782,7 +782,7 @@ Template.bankrecon.onRendered(function () {
                                             '" /><label class="custom-control-label" for="formCheck_' + 
                                             reconepID +                                             
                                             '"></label></div>',
-                                        data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("YYYY-MM-DD") : data.fields.DepositLines[i].fields.DepositDate,
+                                        data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : data.fields.DepositLines[i].fields.DepositDate,
                                         data.fields.DepositLines[i].fields.Reference || ' ',
                                         data.fields.DepositLines[i].fields.Payee || ' ',
                                         data.fields.DepositLines[i].fields.Notes || ' ',
@@ -1506,6 +1506,7 @@ Template.bankrecon.events({
         });
         templateObject.selectedTransdep.set(selectedtransactionsdep);
         localStorage.setItem("SelectedTransactionsDep", JSON.stringify(selectedtransactionsdep));
+        localStorage.setItem("reconHoldState", "true");
 
         let reconVS1dep = templateObject.reconVS1dep.get();
         let notrecondep = [];
@@ -1577,6 +1578,7 @@ Template.bankrecon.events({
         });
         templateObject.selectedTranswith.set(selectedtransactionswith);
         localStorage.setItem("SelectedTransactionsWith", JSON.stringify(selectedtransactionswith));
+        localStorage.setItem("reconHoldState", "true");
         
         let reconVS1with = templateObject.reconVS1with.get();
         let notreconwith = [];
@@ -1996,6 +1998,7 @@ Template.bankrecon.events({
         }
         reconService.saveReconciliation(objDetails).then(function (data) {
             FlowRouter.go('/reconciliationlist?success=true');
+            localStorage.setItem("reconHoldState", "false");
         }).catch(function (err) {
             swal({
                 title: 'Oooops...',
@@ -2182,6 +2185,7 @@ Template.bankrecon.events({
 
         reconService.saveReconciliation(objDetails).then(function (data) {
             FlowRouter.go('/reconciliationlist?success=true');
+            localStorage.setItem("reconHoldState", "false");
         }).catch(function (err) {
             swal({
                 title: 'Oooops...',

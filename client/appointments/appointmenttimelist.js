@@ -1229,10 +1229,15 @@ Template.appointmenttimelist.onRendered(function() {
     $('#tblappointmenttimelist tbody').on('click', 'tr td:not(:first-child)', function() {
         document.getElementById("frmAppointment").reset();
         var id = $(this).closest('tr').attr('id');
-        window.open('appointments?id=' + id, '_self');
+        var logid = $(this).closest('tr').attr('logid');
+        if(logid != undefined && logid > 0){
+            window.open('appointments?id=' + id + '&logid=' + logid, '_self');
+        }
+        else{
+            window.open('appointments?id=' + id, '_self');
+        }
     });
     tableResize();
-
 });
 
 Template.appointmenttimelist.events({

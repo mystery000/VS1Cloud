@@ -26,7 +26,7 @@ Template.newstatuspop.events({
                 fields: {
                     TypeName: statusName,
                     Description: statusDesc,
-                    KeyValue: statusEQPM,
+                    EQPM: statusEQPM,
                     Active: true
                 }
             };
@@ -37,7 +37,7 @@ Template.newstatuspop.events({
                     ID: parseInt(statusId),
                     TypeName: statusName,
                     Description: statusDesc,
-                    KeyValue: statusEQPM,
+                    EQPM: statusEQPM,
                     Active: true
                 }
             };
