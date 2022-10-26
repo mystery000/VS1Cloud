@@ -526,7 +526,7 @@ Template.crmoverview.onRendered(function () {
       // for add modal
       $('#add_contact_name').val(colClientName);
       // for edit modal
-      $('#crmSelectLeadList').val(colClientName);
+      $('#crmEditSelectLeadList').val(colClientName);
 
       $('#contactID').val(colID)
       $('#contactType').val(colType)
@@ -546,7 +546,7 @@ Template.crmoverview.onRendered(function () {
     // for add modal
     $('#add_assigned_name').val(colEmployeeName);
     // for edit modal
-    $('#crmSelectEmployeeList').val(colEmployeeName);
+    $('#crmEditSelectEmployeeList').val(colEmployeeName);
 
     $('#assignedID').val(colID)
   });
@@ -617,6 +617,10 @@ Template.crmoverview.events({
     $('#add_assigned_name').val(employeeName);
     $('#assignedID').val(employeeID)
 
+    $('#contactID').val('');
+    $('#contactType').val('')
+    $('#add_contact_name').val('')
+    
     $("#newTaskModal").modal("toggle");
   },
 
@@ -1481,11 +1485,11 @@ function getContactData(contactID, contactType) {
 }
 function setContactDataToDetail(data, contactType) {
   if (data.fields == undefined) {
-    $('#crmSelectLeadList').val('');
+    $('#crmEditSelectLeadList').val('');
     $('#contactID').val('')
     $('#contactType').val('')
   } else {
-    $('#crmSelectLeadList').val(data.fields.ClientName);
+    $('#crmEditSelectLeadList').val(data.fields.ClientName);
     $('#contactID').val(data.fields.ID)
     $('#contactType').val(contactType)
   }

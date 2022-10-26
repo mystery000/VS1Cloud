@@ -102,9 +102,9 @@ Template.alltaskdatatable.onRendered(function () {
         let task_id = inst.id;
         templateObject.updateTaskSchedule(task_id, new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
       },
-      onChangeMonthYear: function(year, month, inst){
+      onChangeMonthYear: function (year, month, inst) {
         // Set date to picker
-        $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay)); 
+        $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
       }
     });
     let currentDate = new Date();
@@ -1082,18 +1082,19 @@ Template.alltaskdatatable.onRendered(function () {
       tflag = `<i class="fas fa-flag task_modal_priority_${item.fields.priority}" data-id="${item.fields.ID}" aria-haspopup="true" aria-expanded="false"></i>`;
 
       // tempcode  need to add ContactName, AssignName fields to Tprojecttasks
-      if (item.fields.LeadID) {
-        let cData = getContactDetailById(item.fields.LeadID, 'Lead');
-        tcontact = cData ? cData.fields.ClientName : "";
-      } else if (item.fields.SupplierID) {
-        let cData = getContactDetailById(item.fields.SupplierID, 'Supplier');
-        tcontact = cData ? cData.fields.ClientName : "";
-      } else if (item.fields.JobID) {
-        let cData = getContactDetailById(item.fields.LeadID, 'Job');
-        tcontact = cData ? cData.fields.ClientName : "";
-      } else {
+      tcontact = item.fields.ContactName;
+      // if (item.fields.LeadID) {
+      //   let cData = getContactDetailById(item.fields.LeadID, 'Lead');
+      //   tcontact = cData ? cData.fields.ClientName : "";
+      // } else if (item.fields.SupplierID) {
+      //   let cData = getContactDetailById(item.fields.SupplierID, 'Supplier');
+      //   tcontact = cData ? cData.fields.ClientName : "";
+      // } else if (item.fields.JobID) {
+      //   let cData = getContactDetailById(item.fields.LeadID, 'Job');
+      //   tcontact = cData ? cData.fields.ClientName : "";
+      // } else {
 
-      }
+      // }
 
       if (item.fields.due_date == "" || item.fields.due_date == null) {
         td1 = "";
@@ -1155,6 +1156,7 @@ Template.alltaskdatatable.onRendered(function () {
       }
 
       td5 = `
+      <div style="display:flex; justify-content:center;">
         <div class="dropdown btnTaskTableAction">
           <button type="button" class="btn btn-success" data-toggle="dropdown"><i
               class="far fa-calendar" title="Reschedule Task"></i></button>
@@ -1263,7 +1265,8 @@ Template.alltaskdatatable.onRendered(function () {
                 data-id="${item.fields.ID}"></i>Delete
               Task</a>
           </div>
-        </div>`;
+        </div>
+      </div>`;
 
       taskRows.push([
         td0,
@@ -1998,10 +2001,10 @@ Template.alltaskdatatable.onRendered(function () {
       onSelect: function (dateText, inst) {
         $(".lblAddTaskSchedule").html(moment(new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay)).format("DD/MM/YYYY"));
       },
-      onChangeMonthYear: function(year, month, inst){
+      onChangeMonthYear: function (year, month, inst) {
         // Set date to picker
-        $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay)); 
-       }
+        $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+      }
     });
   }, 1000);
   $(".crmEditDatepicker").val(moment().format("DD/MM/YYYY"));
@@ -2227,15 +2230,15 @@ Template.alltaskdatatable.events({
     );
 
     catg = `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
-          "<span class='text-success'>" +
-          projectName +
-          "</span>";
+      "<span class='text-success'>" +
+      projectName +
+      "</span>";
 
-      $(".taskLocation").html(
-        `<a class="taganchor">
+    $(".taskLocation").html(
+      `<a class="taganchor">
                 ${catg}
               </a>`
-      );
+    );
 
 
     let templateObject = Template.instance();
@@ -2298,7 +2301,11 @@ Template.alltaskdatatable.events({
         return;
       }
 
+      let assignId = $('#assignedID').val();
+      let assignName = $('#crmEditSelectEmployeeList').val();
       let contactID = $('#contactID').val();
+      let contactName = $('#crmEditSelectLeadList').val();
+
       let contactType = $('#contactType').val();
       let customerID = 0;
       let leadID = 0;
@@ -2321,6 +2328,9 @@ Template.alltaskdatatable.events({
           CustomerID: customerID,
           LeadID: leadID,
           SupplierID: supplierID,
+          AssignID: assignId,
+          AssignName: assignName,
+          ContactName: contactName
         },
       };
       $(".fullScreenSpin").css("display", "inline-block");
@@ -2357,7 +2367,7 @@ Template.alltaskdatatable.events({
     let templateObject = Template.instance();
 
     let due_date = $(".crmEditDatepicker").val();
-    due_date = due_date ? moment(due_date).format("YYYY-MM-DD hh:mm:ss") : moment().format("YYYY-MM-DD hh:mm:ss");
+    due_date = due_date ? moment(due_date.split('/')[2] + '-' + due_date.split('/')[1] + '-' + due_date.split('/')[0]).format("YYYY-MM-DD hh:mm:ss") : moment().format("YYYY-MM-DD hh:mm:ss");
 
     let priority = 0;
     priority = $("#chkPriorityAdd1").prop("checked") ? 1 : $("#chkPriorityAdd2").prop("checked") ? 2 : $("#chkPriorityAdd3").prop("checked") ? 3 : 0;
@@ -2378,7 +2388,11 @@ Template.alltaskdatatable.events({
     let employeeID = Session.get("mySessionEmployeeLoggedID");
     let employeeName = Session.get("mySessionEmployee");
 
+    let assignId = $('#assignedID').val();
+    let assignName = $('#add_assigned_name').val();
+
     let contactID = $('#contactID').val();
+    let contactName = $('#add_contact_name').val();
     let contactType = $('#contactType').val();
     let customerID = 0;
     let leadID = 0;
@@ -2391,6 +2405,23 @@ Template.alltaskdatatable.events({
       supplierID = contactID
     }
 
+    let addObject = {
+      TaskName: task_name,
+      TaskDescription: task_description,
+      Completed: false,
+      ProjectID: projectID,
+      due_date: due_date,
+      priority: priority,
+      EnteredByID: parseInt(employeeID),
+      EnteredBy: employeeName,
+      CustomerID: customerID,
+      LeadID: leadID,
+      SupplierID: supplierID,
+      AssignID: assignId,
+      AssignName: assignName,
+      ContactName: contactName
+    }
+
     if (subTaskID) {
       var objDetails = {
         type: "Tprojecttasks",
@@ -2399,19 +2430,7 @@ Template.alltaskdatatable.events({
           subtasks: [
             {
               type: "Tprojecttask_subtasks",
-              fields: {
-                TaskName: task_name,
-                TaskDescription: task_description,
-                Completed: false,
-                ProjectID: projectID,
-                due_date: due_date,
-                priority: priority,
-                EnteredByID: parseInt(employeeID),
-                EnteredBy: employeeName,
-                CustomerID: customerID,
-                LeadID: leadID,
-                SupplierID: supplierID,
-              },
+              fields: addObject,
             }
           ]
         },
@@ -2419,19 +2438,7 @@ Template.alltaskdatatable.events({
     } else {
       var objDetails = {
         type: "Tprojecttasks",
-        fields: {
-          TaskName: task_name,
-          TaskDescription: task_description,
-          Completed: false,
-          ProjectID: projectID,
-          due_date: due_date,
-          priority: priority,
-          EnteredByID: parseInt(employeeID),
-          EnteredBy: employeeName,
-          CustomerID: customerID,
-          LeadID: leadID,
-          SupplierID: supplierID,
-        },
+        fields: addObject,
       };
     }
 
@@ -2499,11 +2506,7 @@ Template.alltaskdatatable.events({
                   // tempcode until api is updated
                 } catch (error) {
                   swal(error, "", "error");
-
-                  templateObject.getAllTaskList();
-                  templateObject.getTProjectList();
                 }
-
               } else {
                 let sutTaskTable = $('#tblSubtaskDatatable').DataTable();
                 sutTaskTable.clear().draw();
@@ -2517,6 +2520,7 @@ Template.alltaskdatatable.events({
             return;
           });
         }
+
       }
 
       templateObject.getAllTaskList();
@@ -2528,6 +2532,13 @@ Template.alltaskdatatable.events({
 
       $("#add_task_name").val("");
       $("#add_task_description").val("");
+
+      $('#assignedID').val("");
+      $('#add_assigned_name').val("");
+
+      $('#contactID').val("");
+      $('#add_contact_name').val("");
+
     }).catch(function (err) {
       swal({
         title: "Oooops...",
@@ -3880,7 +3891,7 @@ function getContactData(contactID, contactType) {
       });
     });
   } else {
-    $('#crmSelectLeadList').val('');
+    $('#crmEditSelectLeadList').val('');
     $('#contactID').val('')
     $('#contactType').val('')
   }
@@ -3888,7 +3899,7 @@ function getContactData(contactID, contactType) {
 }
 
 function setContactDataToDetail(data, contactType) {
-  $('#crmSelectLeadList').val(data.fields.ClientName);
+  $('#crmEditSelectLeadList').val(data.fields.ClientName);
   $('#contactID').val(data.fields.ID)
   $('#contactType').val(contactType)
 }
@@ -3915,8 +3926,23 @@ function openEditTaskModal(id, type) {
       $(".editTaskDetailDescription").val(selected_record.TaskDescription);
 
       // tempcode check if AssignedName is set in selected_record
-      let employeeName = Session.get("mySessionEmployee");
-      $('#crmSelectEmployeeList').val(employeeName);
+      let employeeName = selected_record.AssignName ? selected_record.AssignName : Session.get("mySessionEmployee");
+      let assignId = selected_record.AssignID ? selected_record.AssignID : Session.get("mySessionEmployeeLoggedID");
+      $('#crmEditSelectEmployeeList').val(employeeName);
+      $('#assignedID').val(assignId)
+      
+      let colClientName = selected_record.ContactName;
+      $('#crmEditSelectLeadList').val(colClientName);
+      if (selected_record.CustomerID) {
+        $('#contactID').val(selected_record.CustomerID)
+        $('#contactType').val('Customer')
+      } else if (selected_record.LeadID) {
+        $('#contactID').val(selected_record.LeadID)
+        $('#contactType').val('Lead')
+      } else {
+        $('#contactID').val(selected_record.SupplierID)
+        $('#contactType').val('Supplier')
+      }
 
       let projectName = selected_record.ProjectName == "Default" ? "All Tasks" : selected_record.ProjectName;
 
@@ -4313,33 +4339,14 @@ function openEditTaskModal(id, type) {
 
           templateObject.updateTaskSchedule(task_id, new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
         },
-        onChangeMonthYear: function(year, month, inst){
+        onChangeMonthYear: function (year, month, inst) {
           // Set date to picker
-          $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay)); 
+          $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
         }
       });
       let currentDate = selected_record.due_date ? new Date(selected_record.due_date) : new Date();
       let begunDate = moment(currentDate).format("DD/MM/YYYY");
-      $(".crmDatepicker").val(begunDate);
-
-
-      let contactID = 0;
-      let contactType = '';
-      if (selected_record.CustomerID) {
-        contactID = selected_record.CustomerID;
-        contactType = 'Customer';
-      } else if (selected_record.SupplierID) {
-        contactID = selected_record.SupplierID;
-        contactType = 'Supplier';
-      } else if (selected_record.LeadID) {
-        contactID = selected_record.LeadID;
-        contactType = 'Lead';
-      }
-      getContactData(contactID, contactType);
-
-      // tempcode add code for getting assigned employee name
-
-      // tempcode add code for getting assigned employee name
+      $(".crmDatepicker").val(begunDate); 
 
     } else {
       swal("Cannot edit this task", "", "warning");
