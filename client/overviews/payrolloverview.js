@@ -24,6 +24,7 @@ import GlobalFunctions from "../GlobalFunctions";
 import moment from "moment";
 import Datehandler from "../DateHandler";
 import PayRunHandler from "../js/ObjectManager/PayRunHandler";
+import TableHandler from "../js/Table/TableHandler";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -63,7 +64,7 @@ Template.payrolloverview.onCreated(function () {
 
 Template.payrolloverview.onRendered(function () {
   const refresh = FlowRouter.current().queryParams.refresh ? true : false;
-  LoadingOverlay.show();
+  // LoadingOverlay.show();
   let templateObject = Template.instance();
   let contactService = new ContactService();
   let productService = new ProductService();
@@ -78,14 +79,12 @@ Template.payrolloverview.onRendered(function () {
   const jobsList = [];
   let clockEntry = [];
 
-  templateObject.loadPayRuns = async () => {
+  templateObject.loadPayRuns = async (refresh = false) => {
 
     let data = await CachedHttp.get(erpObject.TPayRunHistory, async () => {
       return await payRunHandler.loadFromLocal();
     }, {
-      useIndexDb: true,
-      useLocalStorage: false,
-      forceOverride: true,
+      forceOverride: refresh,
       validate: (cachedResponse) => {
         return true;
       }
@@ -108,6 +107,7 @@ Template.payrolloverview.onRendered(function () {
 
     setTimeout(() => {
       $("#tblPayRunHistory").DataTable({
+        ...TableHandler.getDefaultTableConfiguration("tblPayRunHistory"),
         columnDefs: [
           {
             orderable: false,
@@ -193,6 +193,7 @@ Template.payrolloverview.onRendered(function () {
     setTimeout(() => {
 
       $("#tblPayRunList").DataTable({
+        ...TableHandler.getDefaultTableConfiguration("tblPayRunList"),
         columnDefs: [
           {
             orderable: false,
@@ -504,12 +505,13 @@ Template.payrolloverview.onRendered(function () {
 
   }
 
-  templateObject.loadPayPeriods = async () => {
+  templateObject.loadPayPeriods = async (refresh = false) => {
     let data = await CachedHttp.get(erpObject.TPayrollCalendars, async () => {
       return await sideBarService.getCalender(initialBaseDataLoad, 0);
     }, {
       useIndexDb: true,
       useLocalStorage: false,
+      forceOverride: refresh,
       validate: cachedResponse => {
         return true;
       }
@@ -771,6 +773,321 @@ Template.payrolloverview.onRendered(function () {
     });
   }
 
+  templateObject.loadPayHistory = async (refresh = false) => {
+    let data = await CachedHttp.get(erpObject.TPayHistory, async () => {
+      return await   sideBarService.getAllPayHistoryDataVS1(initialBaseDataLoad, 0);
+    }, {
+      forceOverride: refresh,
+      validate: (cachedResponse) => {
+        return true;
+      }
+    });
+
+    data = data.response;
+
+    for (let i = 0; i < data.tpayhistory.length; i++) {
+      let earning =
+        utilityService.modifynegativeCurrencyFormat(
+          data.tpayhistory[i].fields.Wages
+        ) || 0.0;
+      let tax =
+        utilityService.modifynegativeCurrencyFormat(
+          data.tpayhistory[i].fields.Tax
+        ) || 0.0;
+      let supernuation =
+        utilityService.modifynegativeCurrencyFormat(
+          data.tpayhistory[i].fields.Superannuation
+        ) || 0.0;
+      let gross =
+        utilityService.modifynegativeCurrencyFormat(
+          data.tpayhistory[i].fields.Gross
+        ) || 0.0;
+      let netpay =
+        utilityService.modifynegativeCurrencyFormat(
+          data.tpayhistory[i].fields.Net
+        ) || 0.0;
+      let commission =
+        utilityService.modifynegativeCurrencyFormat(
+          data.tpayhistory[i].fields.Commission
+        ) || 0.0;
+      let allowance =
+        utilityService.modifynegativeCurrencyFormat(
+          data.tpayhistory[i].fields.Allowances
+        ) || 0.0;
+      let deduction =
+        utilityService.modifynegativeCurrencyFormat(
+          data.tpayhistory[i].fields.Deductions
+        ) || 0.0;
+      var dataList = {
+        id: data.tpayhistory[i].fields.Employeeid || "",
+        employeename: data.tpayhistory[i].fields.Empname || "",
+        calendar: data.tpayhistory[i].fields.Payperiod || "",
+        earning: earning || "0.00",
+        tax: tax || "0.00",
+        super: supernuation || "0.00",
+        commission: commission || "0.00",
+        allowance: allowance || "0.00",
+        deduction: deduction || "0.00",
+        gross: gross || "0.00",
+        netpay: netpay || "0.00",
+        paydate:
+          data.tpayhistory[i].fields.DatePaid != ""
+            ? moment(data.tpayhistory[i].fields.DatePaid).format(
+                "DD/MM/YYYY"
+              )
+            : data.tpayhistory[i].fields.DatePaid,
+        paid: data.tpayhistory[i].fields.Paid || "",
+        notes: data.tpayhistory[i].fields.Paynotes || "",
+        payid: data.tpayhistory[i].fields.PayID || "",
+      };
+
+      dataTableList.push(dataList);
+    }
+
+    templateObject.datatablerecords.set(dataTableList);
+
+    if (templateObject.datatablerecords.get()) {
+      Meteor.call(
+        "readPrefMethod",
+        Session.get("mycloudLogonID"),
+        "tblPayHistorylist",
+        function (error, result) {
+          if (error) {
+          } else {
+            if (result) {
+              for (let i = 0; i < result.customFields.length; i++) {
+                let customcolumn = result.customFields;
+                let columData = customcolumn[i].label;
+                let columHeaderUpdate = customcolumn[
+                  i
+                ].thclass.replace(/ /g, ".");
+                let hiddenColumn = customcolumn[i].hidden;
+                let columnClass = columHeaderUpdate.split(".")[1];
+                let columnWidth = customcolumn[i].width;
+                let columnindex = customcolumn[i].index + 1;
+
+                if (hiddenColumn == true) {
+                  $("." + columnClass + "").addClass("hiddenColumn");
+                  $("." + columnClass + "").removeClass("showColumn");
+                } else if (hiddenColumn == false) {
+                  $("." + columnClass + "").removeClass(
+                    "hiddenColumn"
+                  );
+                  $("." + columnClass + "").addClass("showColumn");
+                }
+              }
+            }
+          }
+        }
+      );
+    }
+
+    setTimeout(function () {
+      $("#tblPayHistorylist")
+        .DataTable({
+          ...TableHandler.getDefaultTableConfiguration("tblPayHistorylist"),
+          columnDefs: [
+            {
+              orderable: false,
+              targets: [10],
+            },
+          ],
+          sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+          buttons: [
+            {
+              extend: "csvHtml5",
+              text: "",
+              download: "open",
+              className: "btntabletocsv hiddenColumn",
+              filename: "Pay History - " + moment().format(),
+              orientation: "portrait",
+              exportOptions: {
+                columns: ":visible",
+              },
+            },
+            {
+              extend: "print",
+              download: "open",
+              className: "btntabletopdf hiddenColumn",
+              text: "",
+              title: "Pay History",
+              filename: "Pay History - " + moment().format(),
+              exportOptions: {
+                columns: ":visible",
+                stripHtml: false,
+              },
+            },
+            {
+              extend: "excelHtml5",
+              title: "",
+              download: "open",
+              className: "btntabletoexcel hiddenColumn",
+              filename: "Pay History - " + moment().format(),
+              orientation: "portrait",
+              exportOptions: {
+                columns: ":visible",
+              },
+            },
+          ],
+          select: true,
+          destroy: true,
+          colReorder: true,
+          // bStateSave: true,
+          // rowId: 0,
+          pageLength: initialDatatableLoad,
+          lengthMenu: [
+            [initialDatatableLoad, -1],
+            [initialDatatableLoad, "All"],
+          ],
+          info: true,
+          responsive: true,
+          order: [[1, "asc"]],
+          action: function () {
+            $("#tblPayHistorylist").DataTable().ajax.reload();
+          },
+          fnDrawCallback: function (oSettings) {
+            $(
+              "#tblPayHistorylist_paginate .paginate_button.page-item"
+            ).removeClass("disabled");
+            $("#tblPayHistorylist_ellipsis").addClass("disabled");
+
+            if (oSettings._iDisplayLength == -1) {
+              if (oSettings.fnRecordsDisplay() > 150) {
+                $(
+                  "#tblPayHistorylist_paginate .paginate_button.page-item.previous"
+                ).addClass("disabled");
+                $(
+                  "#tblPayHistorylist_paginate .paginate_button.page-item.next"
+                ).addClass("disabled");
+              }
+            } else {
+            }
+            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+              $(
+                "#tblPayHistorylist_paginate .paginate_button.page-item.next"
+              ).addClass("disabled");
+            }
+            $(
+              ".paginate_button.next:not(.disabled)",
+              this.api().table().container()
+            ).on("click", function () {
+              LoadingOverlay.show();
+              let dataLenght = oSettings._iDisplayLength;
+
+              sideBarService
+                .getAllPayHistoryDataVS1(
+                  initialDatatableLoad,
+                  oSettings.fnRecordsDisplay()
+                )
+                .then(function (dataObjectnew) {
+                  getVS1Data("TPayHistory")
+                    .then(function (dataObjectold) {
+                      if (dataObjectold.length == 0) {
+                      } else {
+                        let dataOld = JSON.parse(
+                          dataObjectold[0].data
+                        );
+
+                        var thirdaryData = $.merge(
+                          $.merge([], dataObjectnew.tpayhistory),
+                          dataOld.tpayhistory
+                        );
+                        let objCombineData = {
+                          tpayhistory: thirdaryData,
+                        };
+
+                        addVS1Data(
+                          "TPayHistory",
+                          JSON.stringify(objCombineData)
+                        )
+                          .then(function (datareturn) {
+                            templateObject.resetData(objCombineData);
+                            $(".fullScreenSpin").css(
+                              "display",
+                              "none"
+                            );
+                          })
+                          .catch(function (err) {
+                            $(".fullScreenSpin").css(
+                              "display",
+                              "none"
+                            );
+                          });
+                      }
+                    })
+                    .catch(function (err) {});
+                })
+                .catch(function (err) {
+                  $(".fullScreenSpin").css("display", "none");
+                });
+            });
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+          },
+          language: { search: "",searchPlaceholder: "Search List..." },
+          fnInitComplete: function () {
+            let urlParametersPage =
+              FlowRouter.current().queryParams.page;
+            if (urlParametersPage) {
+              this.fnPageChange("last");
+            }
+            $(
+              "<button class='btn btn-primary btnRefreshPayRunList' type='button' id='btnRefreshPayRunList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+            ).insertAfter("#tblPayHistorylist_filter");
+          },
+        })
+        .on("page", function () {
+          let draftRecord = templateObject.datatablerecords.get();
+          templateObject.datatablerecords.set(draftRecord);
+        })
+        .on("column-reorder", function () {});
+
+      // $('#tblPayHistorylist').DataTable().column( 0 ).visible( true );
+      //$('.fullScreenSpin').css('display', 'none');
+    }, 0);
+
+    var columns = $("#tblPayHistorylist th");
+    let sTible = "";
+    let sWidth = "";
+    let sIndex = "";
+    let sVisible = "";
+    let columVisible = false;
+    let sClass = "";
+    $.each(columns, function (i, v) {
+      if (v.hidden == false) {
+        columVisible = true;
+      }
+      if (v.className.includes("hiddenColumn")) {
+        columVisible = false;
+      }
+      sWidth = v.style.width.replace("px", "");
+      let datatablerecordObj = {
+        sTitle: v.innerText || "",
+        sWidth: sWidth || "",
+        sIndex: v.cellIndex || "",
+        sVisible: columVisible || false,
+        sClass: v.className || "",
+      };
+      tableHeaderList.push(datatablerecordObj);
+    });
+    templateObject.tableheaderrecords.set(tableHeaderList);
+    $("div.dataTables_filter input").addClass(
+      "form-control form-control-sm"
+    );
+    $("#tblPayHistorylist tbody").on("click", "tr", function () {
+      var listData = $(this).closest("tr").attr("id");
+      if (listData) {
+        FlowRouter.go("/employeescard?id=" + listData);
+      }
+    });
+
+
+  }
+
+  /**
+   * @deprecated since 26/10/2022
+   */
   templateObject.getPayHistory = function () {
     getVS1Data("TPayHistory").then(function (dataObject) {
         if (dataObject.length == 0) {
@@ -1667,8 +1984,11 @@ Template.payrolloverview.onRendered(function () {
       });
   };
 
-  templateObject.getPayHistory();
+  //templateObject.getPayHistory();
 
+  /**
+   * @deprecated since 26/10/2022
+   */
   templateObject.getEmployees = function () {
     getVS1Data("TEmployee")
       .then(function (dataObject) {
@@ -1798,7 +2118,7 @@ Template.payrolloverview.onRendered(function () {
       });
   };
 
-  templateObject.getEmployees();
+  //templateObject.getEmployees();
   //templateObject.getEmployeeClockOnClockOff();
 
   templateObject.getJobs = function () {
@@ -2719,9 +3039,9 @@ Template.payrolloverview.onRendered(function () {
       });
   };
 
-  setTimeout(function () {
-    templateObject.getAllProductData();
-  }, 500);
+  // setTimeout(function () {
+  //   templateObject.getAllProductData();
+  // }, 500);
 
   $("#scanBarcode").click(function () {
     if (
@@ -3841,10 +4161,13 @@ Template.payrolloverview.onRendered(function () {
     // PayRuns
     await templateObject.loadDraftPayrun(refresh);
     await templateObject.loadPayRunHistory(refresh);
+    await templateObject.loadPayHistory(refresh);
 
     // Add timsheet modal
     await templateObject.loadEmployees(refresh);
     await templateObject.loadPayPeriods(refresh);
+
+    await templateObject.getAllProductData(); // TODO: this needs to be rewritten
 
     Datehandler.defaultDatePicker();
     LoadingOverlay.hide();
@@ -6514,6 +6837,9 @@ Template.payrolloverview.events({
       $('.selector-target').trigger('change');
     }
     $('.selector-target').removeClass('selector-target');
+  },
+  "click .add-tblPayRunHistory, click .add-tblPayRunList": (e, ui) => {
+    $('#newPayRunModal').modal("show");
   },
 
   ...Datehandler.getDateRangeEvents(),

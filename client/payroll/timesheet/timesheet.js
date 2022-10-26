@@ -8,6 +8,7 @@ import 'jquery-editable-select';
 import CachedHttp from '../../lib/global/CachedHttp';
 import erpObject from '../../lib/global/erp-objects';
 import LoadingOverlay from '../../LoadingOverlay';
+import TableHandler from '../../js/Table/TableHandler';
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 Template.timesheet.onCreated(function() {
@@ -216,7 +217,7 @@ Template.timesheet.onRendered(function() {
 
         });
     };
-    templateObject.loadTimeSheet = async (fromDate, toDate, ignoreDate) => {
+    templateObject.loadTimeSheet = async (fromDate, toDate, ignoreDate, refresh = false) => {
         if (ignoreDate == true) {
             $("#dateFrom").attr("readonly", true);
             $("#dateTo").attr("readonly", true);
@@ -237,6 +238,7 @@ Template.timesheet.onRendered(function() {
             useIndexDb: true,
             useLocalStorage: false,
             fallBackToLocal: true,
+            forceOverride: refresh,
             validate: cachedResponse => {
                 return true;
             }
@@ -249,13 +251,14 @@ Template.timesheet.onRendered(function() {
 
 
         
-    templateObject.loadEmployees = async () => {
+    templateObject.loadEmployees = async (refresh = false) => {
         let data = await CachedHttp.get(erpObject.TEmployee, async () => {
         return await contactService.getAllEmployees();
         }, {
         useIndexDb: true,
         fallBackToLocal: true, 
         useLocalStorage: false,
+        forceOverride: refresh,
         validate: (cachedResponse) => {
             return true;
         }
@@ -269,12 +272,13 @@ Template.timesheet.onRendered(function() {
     }
 
 
-  templateObject.loadPayPeriods = async () => {
+  templateObject.loadPayPeriods = async (refresh = false) => {
     let data = await CachedHttp.get(erpObject.TPayrollCalendars, async () => {
       return await sideBarService.getCalender(initialBaseDataLoad, 0);
     }, {
       useIndexDb: true,
       useLocalStorage: false,
+      forceOverride: refresh,
       validate: cachedResponse => {
         return true;
       }
@@ -288,8 +292,379 @@ Template.timesheet.onRendered(function() {
 
 
 
+    templateObject.loadAllTimeSheetData = async (fromDate, toDate, ignoreDate, refresh = false) => {
+        if (ignoreDate == true) {
+            $('#dateFrom').attr('readonly', true);
+            $('#dateTo').attr('readonly', true);
+        } else {
+
+            $("#dateFrom").val(fromDate != '' ? moment(fromDate).format("DD/MM/YYYY") : fromDate);
+            $("#dateTo").val(toDate != '' ? moment(toDate).format("DD/MM/YYYY") : toDate);
+        }
+
+        let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
+            return await sideBarService.getAllTimeSheetList();
+        }, {
+            forceOverride: refresh,
+            validate: (cachedResponse) => {
+                return true;
+            }
+        });
+        data = data.response;
+
+        let sumTotalCharge = 0;
+        let sumSumHour = 0;
+        let sumSumHourlyRate = 0;
+        for (let t = 0; t < data.ttimesheet.length; t++) {
+            let hourlyRate = utilityService.modifynegativeCurrencyFormat(data.ttimesheet[t].fields.HourlyRate) || Currency + 0.00;
+            let labourCost = utilityService.modifynegativeCurrencyFormat(data.ttimesheet[t].fields.LabourCost) || Currency + 0.00;
+            let totalAmount = utilityService.modifynegativeCurrencyFormat(data.ttimesheet[t].fields.Total) || Currency + 0.00;
+            let totalAdjusted = utilityService.modifynegativeCurrencyFormat(data.ttimesheet[t].fields.TotalAdjusted) || Currency + 0.00;
+            let totalAmountInc = utilityService.modifynegativeCurrencyFormat(data.ttimesheet[t].fields.TotalInc) || Currency + 0.00;
+            sumTotalCharge = sumTotalCharge + data.ttimesheet[t].fields.Total;
+            sumSumHour = sumSumHour + data.ttimesheet[t].fields.Hours;
+            sumSumHourlyRate = sumSumHourlyRate + data.ttimesheet[t].fields.LabourCost;
+            let hoursFormatted = templateObject.timeFormat(data.ttimesheet[t].fields.Hours) || '';
+            let lineEmpID = '';
+            let description = '';
+            if ((data.ttimesheet[t].fields.StartTime.replace(/\s/g, '') == '') || (data.ttimesheet[t].fields.EndTime.replace(/\s/g, '') == '')) {
+                hourlyRate = Currency + 0.00;
+            }
+            if ((data.ttimesheet[t].fields.StartTime.replace(/\s/g, '') == '') || (data.ttimesheet[t].fields.EndTime.replace(/\s/g, '') == '')) {
+                hoursFormatted = '00:00';
+            }
+
+            if (data.ttimesheet[t].fields.Logs) {
+                if (Array.isArray(data.ttimesheet[t].fields.Logs)) {
+                    // It is array
+                    lineEmpID = data.ttimesheet[t].fields.Logs[0].fields.EmployeeID || '';
+                    description = data.ttimesheet[t].fields.Logs[data.ttimesheet[t].fields.Logs.length - 1].fields.Description || '';
+                } else {
+                    lineEmpID = data.ttimesheet[t].fields.Logs.fields.EmployeeID || '';
+                    description = data.ttimesheet[t].fields.Logs.fields.Description || '';
+                }
+            }
+            var dataList = {
+                id: data.ttimesheet[t].fields.ID || '',
+                employee: data.ttimesheet[t].fields.EmployeeName || '',
+                employeeID: lineEmpID || '',
+                hourlyrate: hourlyRate,
+                hourlyrateval: data.ttimesheet[t].fields.HourlyRate || '',
+                hours: data.ttimesheet[t].fields.Hours || '',
+                hourFormat: hoursFormatted,
+                job: data.ttimesheet[t].fields.Job || '',
+                product: data.ttimesheet[t].fields.ServiceName || '',
+                labourcost: labourCost,
+                overheadrate: data.ttimesheet[t].fields.OverheadRate || '',
+                sortdate: data.ttimesheet[t].fields.TimeSheetDate != '' ? moment(data.ttimesheet[t].fields.TimeSheetDate).format("YYYY/MM/DD") : data.ttimesheet[t].fields.TimeSheetDate,
+                timesheetdate: data.ttimesheet[t].fields.TimeSheetDate != '' ? moment(data.ttimesheet[t].fields.TimeSheetDate).format("DD/MM/YYYY") : data.ttimesheet[t].fields.TimeSheetDate,
+                // suppliername: data.ttimesheet[t].SupplierName || '',
+                timesheetdate1: data.ttimesheet[t].fields.TimeSheetDate || '',
+                totalamountex: totalAmount || Currency + 0.00,
+                totaladjusted: totalAdjusted || Currency + 0.00,
+                totalamountinc: totalAmountInc || Currency + 0.00,
+                overtime: 0,
+                double: 0,
+                status: data.ttimesheet[t].fields.Status || 'Unprocessed',
+                additional: Currency + '0.00',
+                paychecktips: Currency + '0.00',
+                cashtips: Currency + '0.00',
+                startTime: data.ttimesheet[t].fields.StartTime || '',
+                endTime: data.ttimesheet[t].fields.EndTime || '',
+                // totaloustanding: totalOutstanding || 0.00,
+                // orderstatus: data.ttimesheet[t].OrderStatus || '',
+                // custfield1: '' || '',
+                // custfield2: '' || '',
+                // invoicenotes: data.ttimesheet[t].InvoiceNotes || '',
+                notes: data.ttimesheet[t].fields.Notes || '',
+                description: description || '',
+                finished: 'Not Processed',
+                color: '#f6c23e'
+            };
+            dataTableList.push(dataList);
+
+            let sortdate = data.ttimesheet[t].fields.TimeSheetDate != '' ? moment(data.ttimesheet[t].fields.TimeSheetDate).format("YYYY/MM/DD") : data.ttimesheet[t].fields.TimeSheetDate;
+            let timesheetdate = data.ttimesheet[t].fields.TimeSheetDate != '' ? moment(data.ttimesheet[t].fields.TimeSheetDate).format("DD/MM/YYYY") : data.ttimesheet[t].fields.TimeSheetDate;
+            let checkStatus = data.ttimesheet[t].fields.Status || 'Unprocessed';
 
 
+            var dataListTimeSheet = [
+                '<div class="custom-control custom-checkbox pointer"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + data.ttimesheet[t].fields.ID + '" name="' + data.ttimesheet[t].fields.ID + '"> <label class="custom-control-label" for="f-' + data.ttimesheet[t].fields.ID + '"></label></div>' || '',
+                data.ttimesheet[t].fields.ID || '',
+                data.ttimesheet[t].fields.EmployeeName || '',
+                '<span style="display:none;">' + sortdate + '</span> ' + timesheetdate || '',
+                data.ttimesheet[t].fields.Job || '',
+                data.ttimesheet[t].fields.ServiceName || '',
+                '<input class="colRegHours highlightInput" type="number" value="' + data.ttimesheet[t].fields.Hours + '"><span class="colRegHours" style="display: none;">' + data.ttimesheet[t].fields.Hours + '</span>' || '',
+                '<input class="colRegHoursOne highlightInput" type="text" value="' + hoursFormatted + '" autocomplete="off">' || '',
+                '<input class="colOvertime highlightInput" type="number" value="0"><span class="colOvertime" style="display: none;">0</span>' || '',
+                '<input class="colDouble highlightInput" type="number" value="0"><span class="colDouble" style="display: none;">0</span>' || '',
+                '<input class="colAdditional highlightInput cashamount" type="text" value="' + Currency + '0.00' + '"><span class="colAdditional" style="display: none;">' + Currency + '0.00' + '</span>' || '',
+                '<input class="colPaycheckTips highlightInput cashamount" type="text" value="' + Currency + '0.00' + '"><span class="colPaycheckTips" style="display: none;">' + Currency + '0.00' + '</span>' || '',
+                data.ttimesheet[t].fields.Notes || '',
+                description || '',
+                checkStatus || '',
+                '',
+                data.ttimesheet[t].fields.HourlyRate || '',
+                '<a href="/timesheettimelog?id=' + data.ttimesheet[t].fields.ID + '" class="btn btn-sm btn-success btnTimesheetListOne" style="width: 36px;" id="" autocomplete="off"><i class="far fa-clock"></i></a>' || ''
+            ];
+
+            let dtTimeSheet = new Date(data.ttimesheet[t].fields.TimeSheetDate.split(' ')[0]);
+            if (ignoreDate == true) {
+                sumTotalCharge = sumTotalCharge + data.ttimesheet[t].fields.Total;
+                sumSumHour = sumSumHour + data.ttimesheet[t].fields.Hours;
+                sumSumHourlyRate = sumSumHourlyRate + data.ttimesheet[t].fields.LabourCost;
+                splashArrayTimeSheetList.push(dataListTimeSheet);
+            } else {
+                if ((dtTimeSheet >= new Date(fromDate)) && (dtTimeSheet <= new Date(toDate))) {
+                    sumTotalCharge = sumTotalCharge + data.ttimesheet[t].fields.Total;
+                    sumSumHour = sumSumHour + data.ttimesheet[t].fields.Hours;
+                    sumSumHourlyRate = sumSumHourlyRate + data.ttimesheet[t].fields.LabourCost;
+                    splashArrayTimeSheetList.push(dataListTimeSheet);
+                }
+            }
+
+        }
+        $('.lblSumTotalCharge').text(utilityService.modifynegativeCurrencyFormat(sumTotalCharge));
+        $('.lblSumHourlyRate').text(utilityService.modifynegativeCurrencyFormat(sumSumHourlyRate.toFixed(2)));
+        $('.lblSumHour').text(sumSumHour.toFixed(2));
+        templateObject.datatablerecords.set(dataTableList);
+        templateObject.datatablerecords1.set(dataTableList);
+
+        if (templateObject.datatablerecords.get()) {
+
+            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblTimeSheet', function(error, result) {
+                if (error) {} else {
+                    if (result) {
+                        for (let i = 0; i < result.customFields.length; i++) {
+                            let customcolumn = result.customFields;
+                            let columData = customcolumn[i].label;
+                            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+                            let hiddenColumn = customcolumn[i].hidden;
+                            let columnClass = columHeaderUpdate.split('.')[1];
+                            let columnWidth = customcolumn[i].width;
+                            let columnindex = customcolumn[i].index + 1;
+
+                            if (hiddenColumn == true) {
+
+                                $("." + columnClass + "").addClass('hiddenColumn');
+                                $("." + columnClass + "").removeClass('showColumn');
+                            } else if (hiddenColumn == false) {
+                                $("." + columnClass + "").removeClass('hiddenColumn');
+                                $("." + columnClass + "").addClass('showColumn');
+                            }
+
+                        }
+                    }
+
+                }
+            });
+
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+
+        setTimeout(function() {
+            $('#tblTimeSheet').DataTable({
+                ...TableHandler.getDefaultTableConfiguration("tblTimeSheet"),
+                data: splashArrayTimeSheetList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [{
+                    className: "colFlag",
+                    "orderable": false,
+                    "targets": [0]
+                }, {
+                    className: "colID",
+                    contenteditable: "false",
+                    "targets": [1]
+                }, {
+                    className: "colName",
+                    contenteditable: "false",
+                    "targets": [2]
+                }, {
+                    className: "colDate",
+                    contenteditable: "false",
+                    "targets": [3]
+                }, {
+                    className: "colJob",
+                    contenteditable: "false",
+                    "targets": [4]
+                }, {
+                    className: "colProduct",
+                    "targets": [5]
+                }, {
+                    className: "hiddenColumn text-right",
+                    "targets": [6]
+                }, {
+                    className: "text-right",
+                    "targets": [7]
+                }, {
+                    className: " text-right",
+                    "targets": [8]
+                }, {
+                    className: " text-right",
+                    "targets": [9]
+                }, {
+                    className: " text-right",
+                    "targets": [10]
+                }, {
+                    className: " text-right",
+                    "targets": [11]
+                }, {
+                    className: "colNotes",
+                    "targets": [12]
+                }, {
+                    className: "colStatus",
+                    "targets": [13]
+                }, {
+                    className: "hiddenColumn colInvoiced",
+                    "targets": [14]
+                }, {
+                    className: "hiddenColumn hourlyrate",
+                    "targets": [15]
+                }, {
+                    className: "viewTimeLog",
+                    "targets": [16]
+                }, {
+                    targets: 'sorting_disabled',
+                    orderable: false
+                }],
+                select: true,
+                destroy: true,
+                colReorder: {
+                    fixedColumnsRight: 1,
+                    fixedColumnsLeft: 1
+                },
+                buttons: [{
+                    extend: 'excelHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "Timesheet List - " + moment().format(),
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: "thead tr th:not(.noExport)",
+                        // columns: [':visible :not(:last-child)'],
+                        format: {
+                            body: function(data, row, column) {
+                                if (data.includes("</span>")) {
+                                    var res = data.split("</span>");
+                                    data = res[1];
+                                }
+                                return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+                            }
+                        }
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'Time Sheet',
+                    filename: "Timesheet List - " + moment().format(),
+                    exportOptions: {
+                        columns: "thead tr th:not(.noExport)",
+                        stripHtml: false
+                    }
+                }],
+                // paging: false,
+                pageLength: initialReportDatatableLoad,
+                "bLengthChange": false,
+                lengthMenu: [
+                    [initialReportDatatableLoad, -1],
+                    [initialReportDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "desc"]
+                ],
+                action: function() {
+                    $('#tblTimeSheet').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    setTimeout(function() {
+                        checkStockColor();
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search List..." },
+                "fnInitComplete": function() {
+                    let urlParametersPage = FlowRouter.current().queryParams.page;
+                    if (urlParametersPage) {
+                        this.fnPageChange('last');
+                    }
+                    $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
+
+                    $('.myvarFilterForm').appendTo(".colDateFilter");
+
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+                let draftRecord = templateObject.datatablerecords.get();
+                templateObject.datatablerecords.set(draftRecord);
+            }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+        
+        }, 0);
+
+        var columns = $('#tblTimeSheet th');
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function(i, v) {
+            if (v.hidden == false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+            if (v.className.includes("colRegHoursOne") == false) {
+                let datatablerecordObj = {
+                    sTitle: v.innerText || '',
+                    sWidth: sWidth || '',
+                    sIndex: v.cellIndex || '',
+                    sVisible: columVisible || false,
+                    sClass: v.className || ''
+                };
+                tableHeaderList.push(datatablerecordObj);
+            }
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control');
+        $('#tblTimeSheet tbody').on('click', 'tr .btnEditTimeSheet', function() {
+            var listData = $(this).closest('tr').find(".colID").text() || 0;
+            if (listData) {
+                var employeeName = $(event.target).closest("tr").find(".colName").text() || '';
+                var jobName = $(event.target).closest("tr").find(".colJob").text() || '';
+                var productName = $(event.target).closest("tr").find(".colProduct").text() || '';
+                var regHour = $(event.target).closest("tr").find(".colRegHours").val() || 0;
+                var techNotes = $(event.target).closest("tr").find(".colNotes").text() || '';
+                $('#edtTimesheetID').val(listData);
+                $('#add-timesheet-title').text('Edit TimeSheet');
+                $('.sltEmployee').val(employeeName);
+                $('.sltJob').val(jobName);
+                $('#product-list').val(productName);
+                $('.lineEditHour').val(regHour);
+                $('.lineEditTechNotes').val(techNotes);
+                // window.open('/billcard?id=' + listData,'_self');
+            }
+        });
+
+
+
+    }
 
     templateObject.getAllTimeSheetData = function(fromDate, toDate, ignoreDate) {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -1504,8 +1879,8 @@ Template.timesheet.onRendered(function() {
     var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
     let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-    templateObject.getAllTimeSheetData(prevMonth11Date, toDate, false);
-    templateObject.loadTimeSheet(prevMonth11Date, toDate, false);
+    // templateObject.getAllTimeSheetData(prevMonth11Date, toDate, false);
+    // templateObject.loadTimeSheet(prevMonth11Date, toDate, false);
 
     templateObject.getAllTimeSheetDataClock = function() {
         getVS1Data('TTimeSheet').then(function(dataObject) {
@@ -1909,7 +2284,7 @@ Template.timesheet.onRendered(function() {
         });
     }
 
-    templateObject.getAllTimeSheetDataClock();
+    // templateObject.getAllTimeSheetDataClock();
 
     templateObject.getEmployees = function() {
 
@@ -2041,8 +2416,8 @@ Template.timesheet.onRendered(function() {
         });
 
     }
-
-    templateObject.getEmployees();
+    
+    // templateObject.getEmployees();
     templateObject.getJobs = function() {
         getVS1Data('TJobVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -2117,8 +2492,8 @@ Template.timesheet.onRendered(function() {
         });
 
     }
-
-    templateObject.getJobs();
+  
+    // templateObject.getJobs();
 
     templateObject.getAllProductData = function() {
         productList = [];
@@ -2744,9 +3119,9 @@ Template.timesheet.onRendered(function() {
         });
     }
 
-    setTimeout(function() {
-        templateObject.getAllProductData();
-    }, 500);
+    // setTimeout(function() {
+    //     templateObject.getAllProductData();
+    // }, 500);
 
     $(document).ready(function() {
         $('#sltJobOne').editableSelect();
@@ -4266,11 +4641,24 @@ Template.timesheet.onRendered(function() {
     }
 
 
-    templateObject.initPage = async () => {
+    templateObject.initPage = async (refresh = false) => {
         LoadingOverlay.show();
-        await templateObject.loadEmployees();
-        await templateObject.loadPayPeriods();
-        await templateObject.loadTimeSheet();
+        await templateObject.loadEmployees(refresh);
+        await templateObject.loadPayPeriods(refresh);
+        await templateObject.loadTimeSheet(prevMonth11Date, toDate, false, refresh);
+
+        // This should be used used in the future once the code mirgation is done from getAllTimeSheetData()
+        // await templateObject.loadAllTimeSheetData(prevMonth11Date, toDate, false, refresh);
+        await templateObject.getAllTimeSheetData(prevMonth11Date, toDate, false);
+
+
+        // TODO: Rewrite those functions beloww
+        await templateObject.getAllTimeSheetDataClock();
+        await templateObject.getEmployees();
+        await templateObject.getJobs();
+        await templateObject.getAllProductData(); 
+
+
 
         LoadingOverlay.hide();
     }
