@@ -5,6 +5,9 @@ import {UtilityService} from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import CachedHttp from "../lib/global/CachedHttp";
+import erpObject from "../lib/global/erp-objects";
+import LoadingOverlay from "../LoadingOverlay";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -16,10 +19,13 @@ Template.employeelist.onCreated(function(){
     templateObject.selectedFile = new ReactiveVar();
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+
+
+    templateObject.employees = new ReactiveVar([]); 
 });
 
 Template.employeelist.onRendered(function() {
-    $('.fullScreenSpin').css('display','inline-block');
+   // $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
     let contactService = new ContactService();
     const customerList = [];
@@ -215,20 +221,42 @@ Template.employeelist.onRendered(function() {
 
 
       // custom field displaysettings
-      templateObject.initCustomFieldDisplaySettings = function(data, listType) {
-        let templateObject = Template.instance();
-        let reset_data = templateObject.reset_data.get();
+    //   templateObject.initCustomFieldDisplaySettings = function(data, listType) {
+    //     let templateObject = Template.instance();
+    //     let reset_data = templateObject.reset_data.get();
+    //     showCustomFieldDisplaySettings(reset_data);
+
+    //     try {
+    //       getVS1Data("VS1_Customize").then(function (dataObject) {
+    //         if (dataObject.length == 0) {
+    //           sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
+    //               // reset_data = data.ProcessLog.CustomLayout.Columns;
+    //               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+    //               showCustomFieldDisplaySettings(reset_data);
+    //           }).catch(function (err) {
+    //           });
+    //         } else {
+    //           let data = JSON.parse(dataObject[0].data);
+    //           // handle process here
+    //         }
+    //       });
+    //     } catch (error) {
+    //     }
+    //     return;
+    //   }
+
+      templateObject.initCustomFieldDisplaySettings = async (data, listType) => {
+        let reset_data = await templateObject.reset_data.get();
         showCustomFieldDisplaySettings(reset_data);
 
         try {
-          getVS1Data("VS1_Customize").then(function (dataObject) {
+          let dataObject = await getVS1Data("VS1_Customize");
+
             if (dataObject.length == 0) {
-              sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function (data) {
-                  // reset_data = data.ProcessLog.CustomLayout.Columns;
-                  reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                  showCustomFieldDisplaySettings(reset_data);
-              }).catch(function (err) {
-              });
+              let data = await sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType);
+                // reset_data = data.ProcessLog.CustomLayout.Columns;
+                reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                showCustomFieldDisplaySettings(reset_data);
             } else {
               let data = JSON.parse(dataObject[0].data);
               if(data.ProcessLog.Obj.CustomLayout.length > 0){
@@ -241,11 +269,12 @@ Template.employeelist.onRendered(function() {
              };
               // handle process here
             }
-          });
+          
         } catch (error) {
         }
         return;
-      }
+      };
+
 
       function showCustomFieldDisplaySettings(reset_data) {
 
@@ -267,7 +296,7 @@ Template.employeelist.onRendered(function() {
         templateObject.displayfields.set(custFields);
       }
 
-      templateObject.initCustomFieldDisplaySettings("", "tblEmployeelist");
+    //   templateObject.initCustomFieldDisplaySettings("", "tblEmployeelist");
       // set initial table rest_data  //
       */
 
@@ -280,6 +309,12 @@ Template.employeelist.onRendered(function() {
 });
 
 Template.employeelist.events({
+    "click #tblEmployeelist tbody tr": (e, ui) => {
+        const id = $(e.currentTarget).attr('id');
+        if(id){
+            FlowRouter.go(`/employeescard?id=${id}`);
+        }
+    },
     'click #btnNewEmployee':function(event){
         FlowRouter.go('/employeescard');
     },
@@ -331,100 +366,101 @@ Template.employeelist.events({
           }
       },
 
-    'click .btnRefreshEmployees':function(event){
-         let templateObject = Template.instance();
-        let utilityService = new UtilityService();
-        let contactService = new ContactService();
-        let tableProductList;
-        const dataTableList = [];
-        var splashArrayInvoiceList = new Array();
-        const lineExtaSellItems = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let dataSearchName = $('#tblEmployeelist_filter input').val();
-        if (dataSearchName.replace(/\s/g, '') != '') {
-            sideBarService.getNewEmployeeByNameOrID(dataSearchName).then(function (data) {
-                $(".btnRefreshEmployees").removeClass('btnSearchAlert');
-                let lineItems = [];
-                let lineItemObj = {};
-                if (data.temployee.length > 0) {
-                    for(let i=0; i<data.temployee.length; i++){
-                        let mobile = contactService.changeDialFormat(data.temployee[i].fields.Mobile, data.temployee[i].fields.Country);
-                        var dataList = {
-                            id: data.temployee[i].fields.ID || '',
-                            employeeno: data.temployee[i].fields.EmployeeNo || '',
-                            employeename:data.temployee[i].fields.EmployeeName || '',
-                            firstname: data.temployee[i].fields.FirstName || '',
-                            lastname: data.temployee[i].fields.LastName || '',
-                            phone: data.temployee[i].fields.Phone || '',
-                            mobile: mobile || '',
-                            email: data.temployee[i].fields.Email || '',
-                            address: data.temployee[i].fields.Street || '',
-                            country: data.temployee[i].fields.Country || '',
-                            department: data.temployee[i].fields.DefaultClassName || '',
-                            custFld1: data.temployee[i].fields.CustFld1 || '',
-                            custFld2: data.temployee[i].fields.CustFld2 || '',
-                            custFld3: data.temployee[i].fields.CustFld3 || '',
-                            custFld4: data.temployee[i].fields.CustFld4 || ''
-                        };
+    'click .btnRefreshEmployees': async (event, ui) => {
+        await ui.loadEmployees(true);
+        //  let templateObject = Template.instance();
+        // let utilityService = new UtilityService();
+        // let contactService = new ContactService();
+        // let tableProductList;
+        // const dataTableList = [];
+        // var splashArrayInvoiceList = new Array();
+        // const lineExtaSellItems = [];
+        // $('.fullScreenSpin').css('display', 'inline-block');
+        // let dataSearchName = $('#tblEmployeelist_filter input').val();
+        // if (dataSearchName.replace(/\s/g, '') != '') {
+        //     sideBarService.getNewEmployeeByNameOrID(dataSearchName).then(function (data) {
+        //         $(".btnRefreshEmployees").removeClass('btnSearchAlert');
+        //         let lineItems = [];
+        //         let lineItemObj = {};
+        //         if (data.temployee.length > 0) {
+        //             for(let i=0; i<data.temployee.length; i++){
+        //                 let mobile = contactService.changeDialFormat(data.temployee[i].fields.Mobile, data.temployee[i].fields.Country);
+        //                 var dataList = {
+        //                     id: data.temployee[i].fields.ID || '',
+        //                     employeeno: data.temployee[i].fields.EmployeeNo || '',
+        //                     employeename:data.temployee[i].fields.EmployeeName || '',
+        //                     firstname: data.temployee[i].fields.FirstName || '',
+        //                     lastname: data.temployee[i].fields.LastName || '',
+        //                     phone: data.temployee[i].fields.Phone || '',
+        //                     mobile: mobile || '',
+        //                     email: data.temployee[i].fields.Email || '',
+        //                     address: data.temployee[i].fields.Street || '',
+        //                     country: data.temployee[i].fields.Country || '',
+        //                     department: data.temployee[i].fields.DefaultClassName || '',
+        //                     custFld1: data.temployee[i].fields.CustFld1 || '',
+        //                     custFld2: data.temployee[i].fields.CustFld2 || '',
+        //                     custFld3: data.temployee[i].fields.CustFld3 || '',
+        //                     custFld4: data.temployee[i].fields.CustFld4 || ''
+        //                 };
 
-                        if(data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != ''){
-                            dataTableList.push(dataList);
-                        }
-                    //}
-                    }
+        //                 if(data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != ''){
+        //                     dataTableList.push(dataList);
+        //                 }
+        //             //}
+        //             }
 
-                    templateObject.datatablerecords.set(dataTableList);
+        //             templateObject.datatablerecords.set(dataTableList);
 
-                    let item = templateObject.datatablerecords.get();
-                    $('.fullScreenSpin').css('display', 'none');
-                    if (dataTableList) {
-                        var datatable = $('#tblEmployeelist').DataTable();
-                        $("#tblEmployeelist > tbody").empty();
-                        for (let x = 0; x < item.length; x++) {
-                            $("#tblEmployeelist > tbody").append(
-                                ' <tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
-                                '<td contenteditable="false" class="colEmployeeID">' + item[x].id + '</td>' +
-                                '<td contenteditable="false" class="colEmployeeName" >' + item[x].employeename + '</td>' +
-                                '<td contenteditable="false" class="colFirstName">' + item[x].firstname + '</td>' +
-                                '<td contenteditable="false" class="colLastName" >' + item[x].lastname + '</td>' +
-                                '<td contenteditable="false" class="colPhone">' + item[x].phone + '</td>' +
-                                '<td contenteditable="false" class="colMobile">' + item[x].mobile + '</td>' +
-                                '<td contenteditable="false" class="colEmail">' + item[x].email + '</td>' +
-                                '<td contenteditable="false" class="colDepartment">' + item[x].department + '</td>' +
-                                '<td contenteditable="false" class="colCountry hiddenColumn">' + item[x].country + '</td>' +
-                                '<td contenteditable="false" class="colCustFld1 hiddenColumn">' + item[x].custFld1 + '</td>' +
-                                '<td contenteditable="false" class="colCustFld2 hiddenColumn">' + item[x].custFld2 + '</td>' +
-                                '<td contenteditable="false" class="colAddress">' + item[x].address + '</td>' +
-                                '</tr>');
+        //             let item = templateObject.datatablerecords.get();
+        //             $('.fullScreenSpin').css('display', 'none');
+        //             if (dataTableList) {
+        //                 var datatable = $('#tblEmployeelist').DataTable();
+        //                 $("#tblEmployeelist > tbody").empty();
+        //                 for (let x = 0; x < item.length; x++) {
+        //                     $("#tblEmployeelist > tbody").append(
+        //                         ' <tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
+        //                         '<td contenteditable="false" class="colEmployeeID">' + item[x].id + '</td>' +
+        //                         '<td contenteditable="false" class="colEmployeeName" >' + item[x].employeename + '</td>' +
+        //                         '<td contenteditable="false" class="colFirstName">' + item[x].firstname + '</td>' +
+        //                         '<td contenteditable="false" class="colLastName" >' + item[x].lastname + '</td>' +
+        //                         '<td contenteditable="false" class="colPhone">' + item[x].phone + '</td>' +
+        //                         '<td contenteditable="false" class="colMobile">' + item[x].mobile + '</td>' +
+        //                         '<td contenteditable="false" class="colEmail">' + item[x].email + '</td>' +
+        //                         '<td contenteditable="false" class="colDepartment">' + item[x].department + '</td>' +
+        //                         '<td contenteditable="false" class="colCountry hiddenColumn">' + item[x].country + '</td>' +
+        //                         '<td contenteditable="false" class="colCustFld1 hiddenColumn">' + item[x].custFld1 + '</td>' +
+        //                         '<td contenteditable="false" class="colCustFld2 hiddenColumn">' + item[x].custFld2 + '</td>' +
+        //                         '<td contenteditable="false" class="colAddress">' + item[x].address + '</td>' +
+        //                         '</tr>');
 
-                        }
-                        $('.dataTables_info').html('Showing 1 to ' + data.temployee.length + ' of ' + data.temployee.length + ' entries');
+        //                 }
+        //                 $('.dataTables_info').html('Showing 1 to ' + data.temployee.length + ' of ' + data.temployee.length + ' entries');
 
-                    }
-                } else {
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: 'Question',
-                        text: "Employee does not exist, would you like to create it?",
-                        type: 'question',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'No'
-                    }).then((result) => {
-                        if (result.value) {
-                            FlowRouter.go('/employeescard');
-                        } else if (result.dismiss === 'cancel') {
-                            //$('#productListModal').modal('toggle');
-                        }
-                    });
-                }
+        //             }
+        //         } else {
+        //             $('.fullScreenSpin').css('display', 'none');
+        //             swal({
+        //                 title: 'Question',
+        //                 text: "Employee does not exist, would you like to create it?",
+        //                 type: 'question',
+        //                 showCancelButton: true,
+        //                 confirmButtonText: 'Yes',
+        //                 cancelButtonText: 'No'
+        //             }).then((result) => {
+        //                 if (result.value) {
+        //                     FlowRouter.go('/employeescard');
+        //                 } else if (result.dismiss === 'cancel') {
+        //                     //$('#productListModal').modal('toggle');
+        //                 }
+        //             });
+        //         }
 
-            }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-          $(".btnRefresh").trigger("click");
-        }
+        //     }).catch(function (err) {
+        //         $('.fullScreenSpin').css('display', 'none');
+        //     });
+        // } else {
+        //   $(".btnRefresh").trigger("click");
+        // }
     },
     'click .resetTable' : function(event){
         var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
@@ -574,43 +610,44 @@ Template.employeelist.events({
         jQuery('#tblEmployeelist_wrapper .dt-buttons .btntabletoexcel').click();
         $('.fullScreenSpin').css('display','none');
     },
-    'click .btnRefresh': function () {
+    'click .btnRefresh':  (e, ui) => {
+        ui.initPage(true);
 
-        $('.fullScreenSpin').css('display','inline-block');
-        let templateObject = Template.instance();
-        sideBarService.getAllAppointmentPredList().then(function (dataPred) {
-            addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
-              sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
-                  addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
-                      window.open('/employeelist','_self');
-                  }).catch(function (err) {
-                      window.open('/employeelist','_self');
-                  });
-              }).catch(function(err) {
-                  window.open('/employeelist','_self');
-              });
-            }).catch(function (err) {
-              sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
-                  addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
-                      window.open('/employeelist','_self');
-                  }).catch(function (err) {
-                      window.open('/employeelist','_self');
-                  });
-              }).catch(function(err) {
-                  window.open('/employeelist','_self');
-              });
-            });
-        }).catch(function (err) {
-          sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
-              addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
-                  window.open('/employeelist','_self');
-              }).catch(function (err) {
-                  window.open('/employeelist','_self');
-              });
-          }).catch(function(err) {
-              window.open('/employeelist','_self');
-          });
-        });
+        // $('.fullScreenSpin').css('display','inline-block');
+        // let templateObject = Template.instance();
+        // sideBarService.getAllAppointmentPredList().then(function (dataPred) {
+        //     addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
+        //       sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
+        //           addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
+        //               window.open('/employeelist','_self');
+        //           }).catch(function (err) {
+        //               window.open('/employeelist','_self');
+        //           });
+        //       }).catch(function(err) {
+        //           window.open('/employeelist','_self');
+        //       });
+        //     }).catch(function (err) {
+        //       sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
+        //           addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
+        //               window.open('/employeelist','_self');
+        //           }).catch(function (err) {
+        //               window.open('/employeelist','_self');
+        //           });
+        //       }).catch(function(err) {
+        //           window.open('/employeelist','_self');
+        //       });
+        //     });
+        // }).catch(function (err) {
+        //   sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
+        //       addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
+        //           window.open('/employeelist','_self');
+        //       }).catch(function (err) {
+        //           window.open('/employeelist','_self');
+        //       });
+        //   }).catch(function(err) {
+        //       window.open('/employeelist','_self');
+        //   });
+        // });
 
     },
     'click .printConfirm' : function(event){
@@ -821,4 +858,5 @@ Template.employeelist.helpers({
     displayfields: () => {
     return Template.instance().displayfields.get();
     },
+    employees: () => Template.instance().employees.get()
 });

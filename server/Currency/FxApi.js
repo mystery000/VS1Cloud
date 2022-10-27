@@ -60,13 +60,13 @@ class FxApi {
     });
   }
 
-  async getAllRates(to = "*", from = "AUD", amount = 1, callback = result => {}) {
+  async getAllRates(to = "*", from = "AUD", amount = 1, callback = result => {}, apiKey = "") {
+
     Meteor.http.get(`https://xecdapi.xe.com/v1/convert_from.json/?to=${to}&from=${from}&amount=${amount}&inverse=true`, {
       // data: postData,
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Basic " + (
-        await this.getEmployeeFxCurrencyCredentials())
+        Authorization: "Basic " + apiKey
       }
     }, (error, response) => {
       if (error) {

@@ -16,7 +16,6 @@ export default class PayRun {
     selected = false
   }) {
     this.id = id || ObjectManager.init(erpObject.TPayRunHistory);
-    this.stpFilling = stpFilling;
     this.calendar = calendar;
     this.calendarId = parseInt(calendarId);
     this.netPay = netPay;

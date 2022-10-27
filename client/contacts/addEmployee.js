@@ -2257,6 +2257,31 @@ Template.employeescard.onRendered(function () {
     }
     templateObject.getEmployeesList();
 
+    // TODO: You should use this in the future to load employees list
+    templateObject.loadEmployees = async (refresh = false) => {
+        let data = await CachedHttp.get(
+            erpObject.TEmployee,
+            async () => {
+              return await contactService.getAllEmployeeSideData();
+            },
+            {
+              useIndexDb: true,
+              useLocalStorage: false,
+              fallBackToLocal: true,
+              forceOverride: refresh,
+              validate: (cachedResponse) => {
+                return true; // this will validate and not do eny extra checks
+              },
+            }
+          );
+    
+          data = data.response;
+    
+          let employees = data.temployee.map((e) => e.fields);
+
+          await templateObject.employees.set(employees);
+    }
+
     $(document).ready(function () {
         setTimeout(function () {
             $('#product-list').editableSelect();
@@ -4344,6 +4369,67 @@ Template.employeescard.onRendered(function () {
                     }
                 });
         }, 500);
+    }
+
+    /**
+     * This is used when you delete an employee
+     * It will just deactivate it
+     */
+    templateObject.deactivateEmployee  = async () => {
+        LoadingOverlay.show();
+        let employeeId = FlowRouter.current().queryParams.id;
+
+        if (!isNaN(employeeId)) {
+            const currentEmployee = parseInt(employeeId);
+            const objDetails = {
+                type: "TEmployeeEx",
+                fields: {
+                    ID: currentEmployee,
+                    Active: false
+                }
+            };
+
+            try {
+                const response = await contactService.saveEmployeeEx(objDetails);
+                playDeleteAudio();
+                setTimeout(() => {
+                    LoadingOverlay.hide(0);
+                    FlowRouter.go('/employeelist?success=true');
+                }, 1000);
+            } catch(e) {
+                LoadingOverlay.hide(0);
+                const result =  await swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: true,
+                    confirmButtonText: 'Try Again'
+                });
+
+                if (result.value) {
+                   await templateObject.deactivateEmployee();
+                } else if (result.dismiss === 'cancel') {}
+
+            }
+        
+        } else {
+            LoadingOverlay.hide(0);
+            const result =  await swal({
+                title: 'Cannot delete this employee...',
+                text: "This employee doesn't not exist",
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Ok'
+            });
+
+            if (result.value) {
+                window.open('/', '_self');
+            } else if (result.dismiss === 'cancel') {}
+        }
+
+        
+        $('#deleteEmployeeModal').modal('toggle');
+
     }
 
     //On Click Earnings List
@@ -10045,46 +10131,48 @@ Template.employeescard.events({
             btnHide.style.display = "none";
         }
     },
-    'click .btnDeleteEmployee': function (event) {
-        playDeleteAudio();
-        LoadingOverlay.show();
-        let templateObject = Template.instance();
-        let contactService2 = new ContactService();
+    'click .btnDeleteEmployee': (e, ui) => {
+        
+        ui.deactivateEmployee();
+        // playDeleteAudio();
+        // LoadingOverlay.show();
+        // let templateObject = Template.instance();
+        // let contactService2 = new ContactService();
 
-        const url = FlowRouter.current().path;
-        const getso_id = url.split('?id=');
+        // const url = FlowRouter.current().path;
+        // const getso_id = url.split('?id=');
 
-        let currentId = FlowRouter.current().queryParams;
-        let objDetails = '';
+        // let currentId = FlowRouter.current().queryParams;
+        // let objDetails = '';
 
-        if (!isNaN(currentId.id)) {
-            const currentEmployee = parseInt(currentId.id);
-            objDetails = {
-                type: "TEmployeeEx",
-                fields: {
-                    ID: currentEmployee,
-                    Active: false
-                }
-            };
-            contactService2.saveEmployeeEx(objDetails).then(function (objDetails) {
-                FlowRouter.go('/employeelist?success=true');
-            }).catch(function (err) {
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
-                    else if (result.dismiss === 'cancel') {}
-                });
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-            FlowRouter.go('/employeelist?success=true');
-        }
-        $('#deleteEmployeeModal').modal('toggle');
+        // if (!isNaN(currentId.id)) {
+        //     const currentEmployee = parseInt(currentId.id);
+        //     objDetails = {
+        //         type: "TEmployeeEx",
+        //         fields: {
+        //             ID: currentEmployee,
+        //             Active: false
+        //         }
+        //     };
+        //     contactService2.saveEmployeeEx(objDetails).then(function (objDetails) {
+        //         FlowRouter.go('/employeelist?success=true');
+        //     }).catch(function (err) {
+        //         swal({
+        //             title: 'Oooops...',
+        //             text: err,
+        //             type: 'error',
+        //             showCancelButton: false,
+        //             confirmButtonText: 'Try Again'
+        //         }).then((result) => {
+        //             if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+        //             else if (result.dismiss === 'cancel') {}
+        //         });
+        //         $('.fullScreenSpin').css('display', 'none');
+        //     });
+        // } else {
+        //     FlowRouter.go('/employeelist?success=true');
+        // }
+        // $('#deleteEmployeeModal').modal('toggle');
     },
     'click .scanProdServiceBarcodePOP': function(event) {
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {

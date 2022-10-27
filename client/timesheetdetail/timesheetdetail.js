@@ -24,6 +24,7 @@ import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import moment from "moment";
 import Datehandler from "../DateHandler";
 import {getEarnings} from "../settings/payroll-settings/payrollrules";
+import TableHandler from "../js/Table/TableHandler";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -71,6 +72,8 @@ Template.timesheetdetail.onRendered(function () {
         t.Status = "Draft";
       }
     });
+    await this.timeSheetList.set(timesheets);
+
     let timesheet = timesheets.find(o => o.ID == id);
 
     if (timesheet) {
@@ -134,6 +137,24 @@ Template.timesheetdetail.onRendered(function () {
   };
 
   /**
+   * 
+   * @param {moment.Moment} momentDate 
+   */
+  this.loadHours = async (momentDate) => {
+    const employee = await this.employee.get();
+    let timesheets = await this.timeSheetList.get();
+    timesheets  = timesheets.filter(ts => ts.EmployeeName == employee.EmployeeName);
+    let timesheet = timesheets.find(ts => moment(ts.TimeSheetDate) == momentDate)
+
+    const hours = timesheet != undefined ? timesheet.Hours : 0.0;
+    return hours;
+  }
+
+  // this.loadClockOnOff = async (refresh = false) => {
+  //   const selectedEmployee = await this.employee.get();
+  // }
+
+  /**
      * Here we load earnings of this employee
      *
      * @param {integer} employeeID
@@ -169,6 +190,9 @@ Template.timesheetdetail.onRendered(function () {
     return data;
   };
 
+  /**
+   * This function wil generate a list of days until the last day of the selected week
+   */
   this.calculateThisWeek = async () => {
     const timesheet = await this.timesheet.get();
 
@@ -180,7 +204,11 @@ Template.timesheetdetail.onRendered(function () {
     let i = 0;
     while (date.isBefore(endDate) == true) {
       date = aWeekAgo.add("1", "day");
-      days.push({index: i, dateObject: date.toDate(), date: date.format("ddd DD MMM")});
+      days.push({index: i, 
+        dateObject: date.toDate(), 
+        date: date.format("ddd DD MMM"),
+        defaultValue: await this.loadHours(date.toDate())
+      });
       i++;
     }
 
@@ -217,7 +245,9 @@ Template.timesheetdetail.onRendered(function () {
     await this.earningOptions.set(earnings);
 
     setTimeout(() => {
-      $("#tblEarnigRatesList").DataTable({destroy: true});
+      $("#tblEarnigRatesList").DataTable({
+        ...TableHandler.getDefaultTableConfiguration("tblEarnigRatesList")
+      });
     }, 300);
   };
 
@@ -539,9 +569,10 @@ Template.timesheetdetail.onRendered(function () {
 
   this.initPage = async (refresh = false) => {
     LoadingOverlay.show();
-    await this.loadTimeSheet(true);
-    await this.loadEmployee(refresh);
 
+    await this.loadTimeSheet(true); // first load this
+    await this.loadEmployee(refresh); // second load this
+    
     const employee = await this.employee.get();
     await this.getEarnings(employee.ID);
 
@@ -654,5 +685,8 @@ Template.timesheetdetail.helpers({
       return 0;
     }
     return dayFound.hours;
-  }
+  },
+  
 });
+
+

@@ -17,7 +17,8 @@ export default class CronSetting {
     months = [],
     dayNumberOfMonth = 1,
     cronJob = () => {},
-    parsed
+    parsed,
+    base64XeCredentials = {},
   }) {
     this.type = type;
     this.active = active;
@@ -32,6 +33,8 @@ export default class CronSetting {
 
     this.months = months;
     this.dayNumberOfMonth = this.dayNumberOfMonth;
+
+    this.base64XeCredentials = base64XeCredentials;
 
 
     // this is going to be used only if we use the regular perser

@@ -68,6 +68,11 @@ class CachedHttp {
 
     // Init empty vars
     if(options.date == undefined) options.date = new Date();
+    if(options.useIndexDb == undefined) options.useIndexDb = true;
+    if(options.useLocalStorage == undefined) options.useLocalStorage = false;
+    if(options.validate == undefined) options.validate = (c) => true;
+    if(options.fallBackToLocal == undefined) options.fallBackToLocal = true;
+    if(options.forceOverride == undefined) options.forceOverride = false;
 
 
     const endPointName = this.endpointPrefix + endpoint;

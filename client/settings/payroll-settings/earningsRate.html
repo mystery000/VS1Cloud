@@ -59,13 +59,19 @@
                             <div class="form-group">
                                 <label for="edtEarningsName">Earnings Type</label>
                                 <select type="search" name="edtEarningsType" class="form-control customEditableSelect" id="edtEarningsType">
-                                    <option value="Ordinary Time Earnings">Ordinary Time Earnings</option>
+                                    {{#if earningTypes}}
+                                        {{#each type in earningTypes}}
+                                            <option value="{{type.value}}">{{ type.text }}</option>
+                                        {{/each}}
+                                    {{/if}}
+                                    
+                                    <!-- <option value="Ordinary Time Earnings">Ordinary Time Earnings</option>
                                     <option value="Overtime Earnings">Overtime Earnings</option>
                                     <option value="Employment Termnination Payments">Employment Termnination Payments</option>
                                     <option value="Lump Sum E">Lump Sum E</option>
                                     <option value="Bonuses & Commissions">Bonuses & Commissions</option>
                                     <option value="Lump Sum W">Lump Sum W</option>
-                                    <option value="Directors Fees">Directors Fees</option>
+                                    <option value="Directors Fees">Directors Fees</option> -->
                                 </select>
                             </div>
                         </div>

@@ -79,10 +79,11 @@ export class SideBarService extends BaseService {
   }
   getRateTypes() {
     let options = {
-      PropertyList: "ID,Description",
-      select: "[Active]=true",
+      //PropertyList: "ID,Description",
+      ListType: "Detail",
+      //select: "[Active]=true",
     };
-    return this.getList(this.ERPObjects.TRateTypes, options);
+    return this.getList(this.ERPObjects.TPayRateType, options);
   }
   getPayrollinformation(limitcount, limitfrom) {
     let options = "";

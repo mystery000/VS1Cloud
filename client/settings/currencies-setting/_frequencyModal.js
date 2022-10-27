@@ -16,6 +16,8 @@ import erpObject from "../../lib/global/erp-objects";
 import CachedHttp from "../../lib/global/CachedHttp";
 import CurrencyApi from "../../js/Api/CurrencyApi";
 import ApiService from "../../js/Api/Module/ApiService";
+import { getXeCurrencyKeys } from "../xe-currencies/xe-currencies";
+import FxApi from "./FxApi";
 
 let sideBarService = new SideBarService();
 let taxRateService = new TaxRateService();
@@ -133,7 +135,8 @@ Template._frequencyModal.onRendered(function () {
       cronJob: () => updateAllCurrencies,
       type: fxUpdateObject == undefined
         ? null
-        : fxUpdateObject.type
+        : fxUpdateObject.type,
+      base64XeCredentials: await FxApi.getEmployeeFxCurrencyCredentials()
     });
 
     let _formFequencyModal = new FormFrequencyModel({});

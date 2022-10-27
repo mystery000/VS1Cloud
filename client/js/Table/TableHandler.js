@@ -1,4 +1,4 @@
-import { SideBarService } from "../../js/sidebar-service";
+import {SideBarService} from "../../js/sidebar-service";
 export default class TableHandler {
   constructor() {
     this.bindEvents();
@@ -10,23 +10,22 @@ export default class TableHandler {
     // });
     this.refreshDatatableResizable();
 
-    $(".dataTable thead tr").on("mousedown",  () => {
+    $(".dataTable thead tr").on("mousedown", () => {
       this.refreshDatatableResizable();
     });
 
-    $(".dataTable thead tr").on("mouseover",  () => {
+    $(".dataTable thead tr").on("mouseover", () => {
       this.refreshDatatableResizable();
     });
 
-    $('.dataTable tbody tr').on('mouseup', () => {
+    $(".dataTable tbody tr").on("mouseup", () => {
       this.refreshDatatableResizable();
-    })
+    });
   }
 
-
   /**
-   * this will refresh events related to resizing features
-   */
+     * this will refresh events related to resizing features
+     */
   async refreshDatatableResizable() {
     await this.disableDatatableResizable();
     this.enableDatatableResizable();
@@ -46,9 +45,9 @@ export default class TableHandler {
       resizeMode: "overflow",
       onResize: e => {
         var table = $(e.currentTarget); //reference to the resized table
-        let tableName = table.attr('id');
-        if( tableName != 'tblBasReturnList' ){
-          this.saveTableColumns( tableName );
+        let tableName = table.attr("id");
+        if (tableName != "tblBasReturnList") {
+          this.saveTableColumns(tableName);
         }
         let tableWidth = [];
         // $("#tblcontactoverview th").each(function () {
@@ -67,17 +66,17 @@ export default class TableHandler {
     $(".dataTable").colResizable({disable: true});
   }
 
-  async saveTableColumns( tableName ){
+  async saveTableColumns(tableName) {
     let lineItems = [];
     $(".fullScreenSpin").css("display", "inline-block");
     $(`#${tableName} thead tr th`).each(function (index) {
       var $tblrow = $(this);
       var fieldID = $tblrow.attr("data-col-index") || 0;
-      var colTitle = $tblrow.text().replace(/^\s+|\s+$/g, "")|| "";
+      var colTitle = $tblrow.text().replace(/^\s+|\s+$/g, "") || "";
       var colWidth = $tblrow.width() || 0;
-      var colthClass = $tblrow.attr('data-class') || "";
+      var colthClass = $tblrow.attr("data-class") || "";
       var colHidden = false;
-      if ($tblrow.attr('data-col-active') == 'true') {
+      if ($tblrow.attr("data-col-active") == "true") {
         colHidden = true;
       } else {
         colHidden = false;
@@ -96,26 +95,19 @@ export default class TableHandler {
     // lineItems.sort((a,b) => a.index - b.index);
     try {
       let erpGet = erpDb();
-      let employeeId = parseInt(Session.get('mySessionEmployeeLoggedID'))||0;
+      let employeeId = parseInt(Session.get("mySessionEmployeeLoggedID")) || 0;
       let sideBarService = new SideBarService();
       let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       $(".fullScreenSpin").css("display", "none");
-      if(added) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
-              addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-          }).catch(function (err) {
-          });
-          swal({
-            title: 'SUCCESS',
-            text: "Display settings is updated!",
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonText: 'OK'
-          }).then((result) => {
-              if (result.value) {
-                $(".fullScreenSpin").css("display", "none");
-              }
-          });
+      if (added) {
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get("mySessionEmployeeLoggedID")), "").then(function (dataCustomize) {
+          addVS1Data("VS1_Customize", JSON.stringify(dataCustomize));
+        }).catch(function (err) {});
+        swal({title: "SUCCESS", text: "Display settings is updated!", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(result => {
+          if (result.value) {
+            $(".fullScreenSpin").css("display", "none");
+          }
+        });
       } else {
         swal("Something went wrong!", "", "error");
       }
@@ -125,4 +117,36 @@ export default class TableHandler {
     }
   }
 
+  static getDefaultTableConfiguration(selector = null) {
+    return {
+      sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+      pageLength: initialDatatableLoad,
+      colReorder: {
+        fixedColumnsLeft: 1
+      },
+      bLengthChange: false,
+      lengthMenu: [
+        [
+          initialReportDatatableLoad, -1
+        ],
+        [
+          initialReportDatatableLoad, "All"
+        ]
+      ],
+      info: true,
+      responsive: true,
+      select: true,
+      destroy: true,
+      colReorder: true,
+      language: {
+        search: "",
+        searchPlaceholder: "Search List..."
+      },
+      fnInitComplete: function () {
+        $(`<button class='btn btn-primary refresh-${selector}' type='button' id='refresh-${selector}' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>`).insertAfter(`#${selector}_filter`);
+        $(`<button class='btn btn-primary add-${selector}' data-dismiss='modal' data-toggle='modal' data-target='#add-${selector}_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>`).insertAfter(`#${selector}_filter`);
+     
+      }
+    };
+  }
 }

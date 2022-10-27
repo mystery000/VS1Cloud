@@ -1,12 +1,12 @@
 export default class ObjectManager {
   constructor() {}
 
-  static init(className) {
+  static init(className, underscored = true) {
     if (!localStorage.getItem(`object-manager-id-${className}`)) {
       localStorage.setItem(`object-manager-id-${className}`, 1); // always will start from 1
-      return 1;
+      return underscored ? '_1' : 1;
     } else {
-      return this.increment(className);
+      return underscored ? `_${this.increment(className)}` : this.increment(className);
     }
   }
 
@@ -21,4 +21,8 @@ export default class ObjectManager {
 //     const id = this.init(_class); // the virtual id generated manually
 //     return new _class(obj);
 //   }
+
+  static loadFromRemote(objectName) {
+    
+  }
 }

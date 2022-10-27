@@ -89,12 +89,12 @@ async function _getCurrencies(erpGet, cb = (error, result) => {}) {
   }
 }
 
-async function _updateCurrencies(currencies = [], erpGet, callback = (currencies = []) => {}) {
+async function _updateCurrencies(currencies = [], erpGet, callback = (currencies = []) => {}, apiKey = "") {
   FxApi.getAllRates('*', "AUD", 1, (result) => {
     if(result) {
       Meteor.wrapAsync(_updateRates)(currencies, result.to, erpGet);
     }
-  });
+  }, apiKey);
 }
 
 /**
@@ -210,11 +210,12 @@ Meteor.methods({
    * @param {*} cronSetting
    */
   runCron: async (cronSetting, erpGet) => {
+    
 
     try {
       let response = Meteor.wrapAsync(_getCurrencies)( erpGet );
       if (response.data) {
-        Meteor.wrapAsync(_updateCurrencies)(response.data.tcurrency, erpGet);
+        Meteor.wrapAsync(_updateCurrencies)(response.data.tcurrency, erpGet, cronSetting.base64XeCredentials);
       }
     } catch (error) {
     }
