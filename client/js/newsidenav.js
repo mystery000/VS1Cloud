@@ -6643,24 +6643,23 @@ Template.newsidenav.events({
     } else {
       payload = {
         "type":"TEmployeeFormAccessDetail",
-        "fields":
-        {
-          "AccessLevel":1,
+        "fields":{
+          "AccessLevel":0,
           "AccessLevelName":"Full Access",
           "AccessLevels":false,
-          "Description":"Top Panel Menu",
+          "Des":"Side Panel Menu",
           "EmployeeId":2,
-          "FormId":7257,
-          "FormName":"FnCloudTopPanelMenu",
-          "GlobalRef":"DEF7663",
-          "ID":7663,
+          "FormId":7256,
+          "FormName":"FnCloudSidePanelMenu",
+          "GlobalRef":"DEF7662",
+          "ID":7662,
           "ISEmpty":false,
           "IsForm":false,
           "KeyStringFieldName":"",
           "KeyValue":"",
-          "MsTimeStamp":"2019-11-08 00:02:01",
+          "MsTimeStamp":"2020-03-06 14:18:21",
           "MsUpdateSiteCode":"DEF",
-          "Recno":13,
+          "Recno":12,
           "SkinsGroup":"General",
           "TabGroup":26
         }
