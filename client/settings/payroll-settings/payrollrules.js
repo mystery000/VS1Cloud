@@ -22366,12 +22366,16 @@ const addDefaultOvertimes = async () => {
 export const getOvertimes = async () => {
     let overtimesData = await getVS1Data(erpObject.TPayrollSettingOvertimes);
     let overtimes = overtimesData.length > 0 ? JSON.parse(overtimesData[0].data) : [];
+    const rateTypes = await getRateTypes();
 
     // This part is handling the auto add of default values in the list
     let defaultOvertimes = PayrollSettingsOvertimes.getDefaults();
     defaultOvertimes.forEach((defaultOvertime) => {
         // if doesnt exist, just add it
         if(!overtimes.some(overtime => overtime.rule == defaultOvertime.rule)) {
+            if(defaultOvertime.searchByRuleName == true) {
+                defaultOvertime.setRateTypeByRuleName(rateTypes, "Weekend");
+            }
             overtimes.push(defaultOvertime);
         };
     })

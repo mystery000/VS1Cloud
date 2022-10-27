@@ -1,6 +1,9 @@
 import erpObject from "../../../lib/global/erp-objects";
 import ObjectManager from "../../ObjectManager/ObjectManager";
 
+/**
+ * @param {CallableFunction} findRateTypeByRuleName
+ */
 export default class PayrollSettingsOvertimes {
   constructor({
     id = null,
@@ -11,7 +14,8 @@ export default class PayrollSettingsOvertimes {
     rule,
     day = null,
     rateType = null,
-    isDefault = false
+    isDefault = false,
+    searchByRuleName = false,
   }) {
     this.id = id || ObjectManager.init(erpObject.TPayrollSettingOvertimes);
     this.active = active;
@@ -21,12 +25,17 @@ export default class PayrollSettingsOvertimes {
     this.rule = rule;
     this.day = day;
     this.isDefault = isDefault;
+    this.searchByRuleName = searchByRuleName;
     if (rateType) 
       this.setRateType(rateType);
     }
   
   setRateType(rateType = null) {
     this.rateType = rateType;
+  }
+
+  setRateTypeByRuleName(rateTypes  = [], ruleName  ="Weekend") {
+    this.rateType = rateTypes.find(rate => rate.Description == ruleName);
   }
 
   getRateType(fromRateList = []) {
@@ -80,6 +89,28 @@ export default class PayrollSettingsOvertimes {
         hours: 9.5,
         rateTypeId: 1,
         rule: "Hourly Rate (Double Time)"
+      }),
+      new PayrollSettingsOvertimes({
+        //id: 3,
+        active: true,
+        isDefault: true,
+        hourlyMultiplier: 2,
+        //hours: 9.5,
+        rateTypeId: 1,
+        rule: "Saturday",
+        day: "Saturday",
+        searchByRuleName: true
+      }),
+      new PayrollSettingsOvertimes({
+        //id: 3,
+        active: true,
+        isDefault: true,
+        hourlyMultiplier: 3,
+        //hours: 9.5,
+        rateTypeId: 1,
+        rule: "Sunday",
+        day: "Sunday",
+        searchByRuleName: true,
       })
     ];
   }

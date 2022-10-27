@@ -289,7 +289,7 @@
                                </td>
                                 {{#if earningDays}}
                                     {{#each day in earningDays}}
-                                        <td><input class="hours form-control" date="{{day.index}}" type="text" value="0.00"></td>
+                                        <td><input class="hours form-control" date="{{day.index}}" type="text" value="{{ day.defaultValue }}"></td>
                                     {{/each}}
                                 {{/if}}
                               
