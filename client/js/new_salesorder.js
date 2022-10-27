@@ -10776,7 +10776,7 @@ Template.new_salesorder.events({
     // custom field displaysettings
     'click .btnSaveGridSettings': async function(event) {
         playSaveAudio();
-        setTimeout(function(){
+        setTimeout(async function(){
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 

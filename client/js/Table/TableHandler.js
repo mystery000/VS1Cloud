@@ -10,15 +10,15 @@ export default class TableHandler {
     // });
     this.refreshDatatableResizable();
 
-    $(".dataTable thead tr").on("mousedown", () => {
+    $(".dataTable thead tr th").on("mousedown", () => {
       this.refreshDatatableResizable();
     });
 
-    $(".dataTable thead tr").on("mouseover", () => {
+    $(".dataTable thead tr th").on("mouseover", () => {
       this.refreshDatatableResizable();
     });
 
-    $(".dataTable tbody tr").on("mouseup", () => {
+    $(".dataTable tbody tr td").on("mouseup", () => {
       this.refreshDatatableResizable();
     });
   }
@@ -145,7 +145,7 @@ export default class TableHandler {
       fnInitComplete: function () {
         $(`<button class='btn btn-primary refresh-${selector}' type='button' id='refresh-${selector}' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>`).insertAfter(`#${selector}_filter`);
         $(`<button class='btn btn-primary add-${selector}' data-dismiss='modal' data-toggle='modal' data-target='#add-${selector}_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>`).insertAfter(`#${selector}_filter`);
-     
+
       }
     };
   }

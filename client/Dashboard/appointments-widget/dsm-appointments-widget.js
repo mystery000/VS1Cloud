@@ -6753,7 +6753,7 @@ Template.dsmAppointmentsWidget.events({
     'click #btnSaveAppointmentSubmit': async function(e) {
         playSaveAudio();
         e.preventDefault();
-        setTimeout(function(){
+        setTimeout(async function(){
         const templateObject = Template.instance();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');

@@ -658,3 +658,7 @@ div.dataTables_wrapper .row button{
 overflow-x: auto!important;
 overflow-y: hidden!important;
 }
+
+.loggedCompanyName h2 {
+    padding: 16px 4px 0;
+}

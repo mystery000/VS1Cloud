@@ -15,22 +15,6 @@ Template.xecurrencies.onCreated(() => {
 });
 
 Template.xecurrencies.onRendered(function () {
-//   this.loadCurrencySettings = async () => {
-//     let data = await CachedHttp.get(erpObject.TERPPreference, async () => {
-//       return await settingService.getPreferenceSettings(settingFields);
-//     }, {
-//       validate: cachedResponse => {
-//         return true;
-//       }
-//     });
-
-//     let response = data.response;
-
-//     let prefs = response.terppreference.filter(pref => settingFields.includes(pref.PrefName));
-//     console.log("xe currency", response, prefs);
-//   };
-//   this.loadCurrencySettings();
-
   const templateObject = Template.instance();
 
   templateObject.getSettingsList = async function () {

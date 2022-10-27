@@ -8384,7 +8384,7 @@ Template.billcard.events({
     },
     'click .btnSaveGridSettings': async function(event) {
         playSaveAudio();
-        setTimeout(function(){
+        setTimeout(async function(){
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 

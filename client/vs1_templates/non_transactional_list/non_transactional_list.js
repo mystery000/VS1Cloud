@@ -29,10 +29,6 @@ Template.non_transactional_list.onRendered(function() {
   let salesOrderTable;
   var splashArray = new Array();
   var splashArrayCustomerList = new Array();
-  var splashArrayContactOverview = new Array();
-  var splashArrayEmployeeList = new Array();
-  var splashArrayAccountsOverview = new Array();
-
   const lineCustomerItems = [];
   const dataTableList = [];
   const tableHeaderList = [];
@@ -124,7 +120,7 @@ Template.non_transactional_list.onRendered(function() {
               { index: 6, label: 'Tax Code', class: 'colTaxCode', active: true, display: true, width: "80" },
               { index: 7, label: 'Bank Name', class: 'colBankName', active: false, display: true, width: "120" },
               { index: 8, label: 'Bank Acc Name', class: 'colBankAccountName', active: true, display: true, width: "120" },
-              { index: 9, label: bsbname, class: 'colBSB', active: true, display: true, width: "60" },
+              { index: 9, label: bsbname, class: 'colBSB', active: true, display: true, width: "90" },
               { index: 10, label: 'Bank Acc No', class: 'colBankAccountNo', active: true, display: true, width: "120" },
               { index: 11, label: 'Card Number', class: 'colCardNumber', active: false, display: true, width: "120" },
               { index: 12, label: 'Expiry Date', class: 'colExpiryDate', active: false, display: true, width: "60" },
@@ -234,6 +230,7 @@ Template.non_transactional_list.onRendered(function() {
     });
   }
   templateObject.displayContactOverviewData = async function (data) {
+    var splashArrayContactOverview = new Array();
     let lineItems = [];
     let lineItemObj = {};
     let clienttype = "";
@@ -314,20 +311,18 @@ Template.non_transactional_list.onRendered(function() {
         data.terpcombinedcontactsvs1[i].CUSTFLD1 || "",
         data.terpcombinedcontactsvs1[i].CUSTFLD2 || "",
         data.terpcombinedcontactsvs1[i].street || "",
-        "",
-        "",
-        "",
+        data.terpcombinedcontactsvs1[i].suburb|| "",
+        data.terpcombinedcontactsvs1[i].state|| "",
+        data.terpcombinedcontactsvs1[i].postcode|| "",
         "",
       ];
 
 
 
-      if (data.terpcombinedcontactsvs1[i].name.replace(/\s/g, "") !== "") {
+      //if (data.terpcombinedcontactsvs1[i].name.replace(/\s/g, "") !== "") {
         splashArrayContactOverview.push(dataList);
         templateObject.transactiondatatablerecords.set(splashArrayContactOverview);
-      }
 
-      //}
     }
 
 
@@ -499,7 +494,7 @@ Template.non_transactional_list.onRendered(function() {
 
                 $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
               $('.fullScreenSpin').css('display', 'inline-block');
-              var splashArrayCustomerListDupp = new Array();
+              //var splashArrayCustomerListDupp = new Array();
               let dataLenght = oSettings._iDisplayLength;
               let customerSearch = $('#'+currenttablename+'_filter input').val();
 
@@ -571,9 +566,9 @@ Template.non_transactional_list.onRendered(function() {
                       dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD1 || "",
                       dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD2 || "",
                       dataObjectnew.terpcombinedcontactsvs1[j].street || "",
-                      "",
-                      "",
-                      "",
+                      dataObjectnew.terpcombinedcontactsvs1[j].suburb|| "",
+                      dataObjectnew.terpcombinedcontactsvs1[j].state|| "",
+                      dataObjectnew.terpcombinedcontactsvs1[j].postcode|| "",
                       "",
                     ];
 
@@ -662,7 +657,7 @@ Template.non_transactional_list.onRendered(function() {
         }
     }).catch(function (err) {
       sideBarService.getAllTEmployeeList(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-          //await addVS1Data('TEmployeeList', JSON.stringify(data));
+          await addVS1Data('TEmployeeList', JSON.stringify(data));
           templateObject.displayEmployeeListData(data);
       }).catch(function (err) {
 
@@ -670,6 +665,7 @@ Template.non_transactional_list.onRendered(function() {
     });
   }
   templateObject.displayEmployeeListData = async function (data) {
+    var splashArrayEmployeeList = new Array();
     let lineItems = [];
     let lineItemObj = {};
     let deleteFilter = false;
@@ -684,7 +680,7 @@ Template.non_transactional_list.onRendered(function() {
       //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
       let linestatus = '';
       if (data.temployeelist[i].Active == true) {
-          linestatus = "Active";
+          linestatus = "";
       } else if (data.temployeelist[i].Active == false) {
           linestatus = "In-Active";
       };
@@ -699,7 +695,7 @@ Template.non_transactional_list.onRendered(function() {
         data.temployeelist[i].DefaultClassName || '',
         data.temployeelist[i].CustFld1 || '',
         data.temployeelist[i].CustFld2 || '',
-        linestatus||'In-Active',
+        linestatus,
         data.temployeelist[i].Street || "",
         data.temployeelist[i].Street2 || "",
         data.temployeelist[i].State || "",
@@ -871,7 +867,7 @@ Template.non_transactional_list.onRendered(function() {
 
                 $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
               $('.fullScreenSpin').css('display', 'inline-block');
-              var splashArrayCustomerListDupp = new Array();
+              //var splashArrayCustomerListDupp = new Array();
               let dataLenght = oSettings._iDisplayLength;
               let customerSearch = $('#'+currenttablename+'_filter input').val();
 
@@ -881,7 +877,7 @@ Template.non_transactional_list.onRendered(function() {
                   let mobile = sideBarService.changeDialFormat(dataObjectnew.temployeelist[j].Mobile, dataObjectnew.temployeelist[j].Country);
                   let linestatus = '';
                   if (dataObjectnew.temployeelist[j].Active == true) {
-                      linestatus = "Active";
+                      linestatus = "";
                   } else if (dataObjectnew.temployeelist[j].Active == false) {
                       linestatus = "In-Active";
                   };
@@ -898,7 +894,7 @@ Template.non_transactional_list.onRendered(function() {
                       dataObjectnew.temployeelist[j].DefaultClassName || '',
                       dataObjectnew.temployeelist[j].CustFld1 || '',
                       dataObjectnew.temployeelist[j].CustFld2 || '',
-                      linestatus||'In-Active',
+                      linestatus,
                       dataObjectnew.temployeelist[j].Street || "",
                       dataObjectnew.temployeelist[j].Street2 || "",
                       dataObjectnew.temployeelist[j].State || "",
@@ -991,7 +987,7 @@ Template.non_transactional_list.onRendered(function() {
         }
     }).catch(function (err) {
       sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0,deleteFilter).then(async function (data) {
-          //await addVS1Data('TAccountVS1List', JSON.stringify(data));
+          await addVS1Data('TAccountVS1List', JSON.stringify(data));
           templateObject.displayAccountsOverviewListData(data);
       }).catch(function (err) {
 
@@ -999,6 +995,7 @@ Template.non_transactional_list.onRendered(function() {
     });
   }
   templateObject.displayAccountsOverviewListData = async function (data) {
+    var splashArrayAccountsOverview = new Array();
     let lineItems = [];
     let lineItemObj = {};
     let fullAccountTypeName = "";
@@ -1021,7 +1018,7 @@ Template.non_transactional_list.onRendered(function() {
       }
       let linestatus = '';
       if (data.taccountvs1list[i].Active == true) {
-          linestatus = "Active";
+          linestatus = "";
       } else if (data.taccountvs1list[i].Active == false) {
           linestatus = "In-Active";
       };
@@ -1045,7 +1042,7 @@ Template.non_transactional_list.onRendered(function() {
         data.taccountvs1list[i].IsHeader || false,
         data.taccountvs1list[i].AllowExpenseClaim || false,
         data.taccountvs1list[i].ReceiptCategory || "",
-        linestatus||'In-Active',
+        linestatus,
       ];
 
         splashArrayAccountsOverview.push(dataList);
@@ -1092,7 +1089,7 @@ Template.non_transactional_list.onRendered(function() {
                 },
                 {
                   targets: 5,
-                  className: "colBalance",
+                  className: "colBalance text-right",
                   width: "80px",
                 },
                 {
@@ -1228,7 +1225,7 @@ Template.non_transactional_list.onRendered(function() {
 
                 $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
               $('.fullScreenSpin').css('display', 'inline-block');
-              var splashArrayCustomerListDupp = new Array();
+              //var splashArrayCustomerListDupp = new Array();
               let dataLenght = oSettings._iDisplayLength;
               let customerSearch = $('#'+currenttablename+'_filter input').val();
 
@@ -1245,7 +1242,7 @@ Template.non_transactional_list.onRendered(function() {
                   }
                   let linestatus = '';
                   if (dataObjectnew.taccountvs1list[j].Active == true) {
-                      linestatus = "Active";
+                      linestatus = "";
                   } else if (dataObjectnew.taccountvs1list[j].Active == false) {
                       linestatus = "In-Active";
                   };
@@ -1271,7 +1268,7 @@ Template.non_transactional_list.onRendered(function() {
                       dataObjectnew.taccountvs1list[j].IsHeader || false,
                       dataObjectnew.taccountvs1list[j].AllowExpenseClaim || false,
                       dataObjectnew.taccountvs1list[j].ReceiptCategory || "",
-                      linestatus||'In-Active',
+                      linestatus,
                     ];
 
                     splashArrayAccountsOverview.push(dataListDupp);
@@ -1359,17 +1356,20 @@ Template.non_transactional_list.events({
       e.stopImmediatePropagation();
       const templateObject = Template.instance();
       let currenttablename = await templateObject.tablename.get()||'';
+
+      // var datatable = $(`#${currenttablename}`).DataTable();
+      // datatable.clear();
+      // datatable.draw(false);
       $('.btnViewDeleted').css('display','none');
       $('.btnHideDeleted').css('display','inline-block');
-
       if(currenttablename == "tblcontactoverview"){
-        //await clearData('TEmployeeList');
+        await clearData('TERPCombinedContactsVS1');
         templateObject.getContactOverviewData(true);
       }else if(currenttablename == "tblEmployeelist"){
-        //await clearData('TEmployeeList');
+        await clearData('TEmployeeList');
         templateObject.getEmployeeListData(true);
       }else if(currenttablename == "tblAccountOverview"){
-        //await clearData('TEmployeeList');
+        await clearData('TAccountVS1List');
         templateObject.getAccountsOverviewData(true);
       }
 
@@ -1379,17 +1379,21 @@ Template.non_transactional_list.events({
       e.stopImmediatePropagation();
       let templateObject = Template.instance();
       let currenttablename = await templateObject.tablename.get()||'';
+
+      // var datatable = $(`#${currenttablename}`).DataTable();
+      // datatable.clear();
+      // datatable.draw(false);
       $('.btnHideDeleted').css('display','none');
       $('.btnViewDeleted').css('display','inline-block');
 
       if(currenttablename == "tblcontactoverview"){
-        //await clearData('TERPCombinedContactsVS1');
+        await clearData('TERPCombinedContactsVS1');
         templateObject.getContactOverviewData(false);
       }else if(currenttablename == "tblEmployeelist"){
-        //await clearData('TEmployeeList');
+        await clearData('TEmployeeList');
         templateObject.getEmployeeListData(false);
       }else if(currenttablename == "tblAccountOverview"){
-        //await clearData('TEmployeeList');
+        await clearData('TAccountVS1List');
         templateObject.getAccountsOverviewData(false);
       };
     },
@@ -1505,37 +1509,6 @@ Template.non_transactional_list.events({
       }
 
     },
-  "click .btnOpenSettings": async function (event) {
-    let templateObject = Template.instance();
-    let tableName = await templateObject.tablename.get()||'';
-    var columns = $('#'+tableName+' th');
-    const tableHeaderList = [];
-    let sTible = "";
-    let sWidth = "";
-    let sIndex = "";
-    let sVisible = "";
-    let columVisible = false;
-    let sClass = "";
-    $.each(columns, function (i, v) {
-      if (v.hidden == false) {
-        columVisible = true;
-      }
-      if (v.className.includes("hiddenColumn")) {
-        columVisible = false;
-      }
-      sWidth = v.style.width.replace("px", "");
-
-      let datatablerecordObj = {
-        sTitle: v.innerText || "",
-        sWidth: sWidth || "",
-        sIndex: v.cellIndex || 0,
-        sVisible: columVisible || false,
-        sClass: v.className || "",
-      };
-      tableHeaderList.push(datatablerecordObj);
-    });
-    templateObject.tableheaderrecords.set(tableHeaderList);
-  },
 });
 
 Template.non_transactional_list.helpers({

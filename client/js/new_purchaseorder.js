@@ -7624,7 +7624,7 @@ Template.purchaseordercard.events({
     },
     'click .btnSave': async (event, templateObject) => {
         playSaveAudio();
-        setTimeout(function(){
+        setTimeout(async function(){
         saveCurrencyHistory();
         let tempObject = Template.instance();
         let isBORedirect = await tempObject.isbackorderredirect.get() || false;

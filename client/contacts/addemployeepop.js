@@ -1972,7 +1972,7 @@ Template.addemployeepop.events({
     },
     'click .addemployeepop .btnSaveEmpPop': async function (event) {
         playSaveAudio();
-        setTimeout(function(){
+        setTimeout(async function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
         let appointmentService = new AppointmentService();

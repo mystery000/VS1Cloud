@@ -62,15 +62,21 @@
                 <button class="btn btn-primary btnBatchUpdate float-right" id="btnBatchUpdate" type="button"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button>
             </div>
             </header> -->
-
+            <style>
+              .divLogged .loggedCompanyName{
+                width:100%!important;
+              }
+            </style>
             <div class="row">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-4">
                     <header class="pt-2 pb-3 d-flex">
                         <h2 class="mr-1">Accounts Dashboard {{> helpbutton}}</h2>
-
                     </header>
                 </div>
-                <div class="col-12 col-md-6 justify-content-end">
+                <div class="col-12 col-md-4 divLogged">
+                    {{> loggedcompanyoverview}}
+                </div>
+                <div class="col-12 col-md-4 justify-content-end">
                     <!-- <button class="btn btn-primary btnBatchUpdate float-right" id="btnBatchUpdate" type="button"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button> -->
                     <div class="form-group">
                       <button class="btn btn-primary btnBatchUpdate float-right" id="btnBatchUpdate" type="button"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button>

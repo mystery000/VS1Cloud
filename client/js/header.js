@@ -1491,6 +1491,8 @@ Template.header.onRendered(function() {
             let routingNo = data.tcompanyinfo[0].SiteCode || '';
             let companyReg = data.tcompanyinfo[0].CompanyNumber || '';
 
+            let companyTradingName = data.tcompanyinfo[0].TradingName || '';
+
             let companyAccountant = data.tcompanyinfo[0].Contact || '';
 
             let bankDetails = "Bank Name: " + bankName + "\n" + "Account Name: " + accountName + "\n Bank Account: " + accNo + "\nBSB: " + bsb + "\n Swift Code: " + swiftCode + "\n" + "Routing No: " + routingNo;
@@ -1518,6 +1520,8 @@ Template.header.onRendered(function() {
 
             localStorage.setItem('VS1Accountant', companyAccountant);
             // localStorage.setItem('VS1YearEnd', routingNo);
+
+            localStorage.setItem('vs1TradingName', companyTradingName);
 
             if (data.tcompanyinfo[0].TrackEmails) {
                 localStorage.setItem('VS1OrgEmail', data.tcompanyinfo[0].Email || localStorage.getItem('VS1AdminUserName'));

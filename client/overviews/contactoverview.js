@@ -199,9 +199,9 @@ Template.contactoverview.events({
                               data.terpcombinedcontactsvs1[i].CUSTFLD1 || "",
                               data.terpcombinedcontactsvs1[i].CUSTFLD2 || "",
                               data.terpcombinedcontactsvs1[i].street || "",
-                              "",
-                              "",
-                              "",
+                              data.terpcombinedcontactsvs1[i].suburb|| "",
+                              data.terpcombinedcontactsvs1[i].state|| "",
+                              data.terpcombinedcontactsvs1[i].postcode|| "",
                               "",
                             ];
 
