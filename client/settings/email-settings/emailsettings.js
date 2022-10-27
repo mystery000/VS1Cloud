@@ -18,6 +18,7 @@ import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import { jsPDF } from "jspdf";
 import 'jQuery.print/jQuery.print.js';
+import ldb from 'localdata';
 let sideBarService = new SideBarService();
 
 Template.emailsettings.onCreated(function () {
@@ -437,95 +438,115 @@ Template.emailsettings.onRendered(function () {
 
     }
     templateObject.getScheduleInfo = function () {
-        getVS1Data('TReportSchedules').then(function(dataObject){
+        getVS1Data('TReportSchedules').then(async function(dataObject){
             if(dataObject.length > 0) {
                 let data = JSON.parse(dataObject[0].data);
                 let empData = data.treportschedules;
                 templateObject.originScheduleData.set(data.treportschedules);
                 var empDataCurr = '';
-                $.grep(templateObject.formsData.get(), function (n) {
-                    let recipients = [];
-                    let recipientIds = [];
-                    let formIds = [];
-                    empData = empData.filter(emp => emp.fields.Active);
-                    for (let i = 0; i < empData.length; i++) {
-                        if ((n.id == '1' && empData[i].fields.BeginFromOption === "S") || (n.id == empData[i].fields.FormID && empData[i].fields.BeginFromOption !== "S")) {
-                            if (!recipients.includes(empData[i].fields.EmployeeEmailID)) {
-                                recipients.push(empData[i].fields.EmployeeEmailID);
-                                recipientIds.push(empData[i].fields.EmployeeId);
+                const getFormData = async () => {
+                    return new Promise((resolve, reject)=>{
+                        let count = 0
+                        let doneCount = 0
+                        $.grep(templateObject.formsData.get(), async(n) => {
+                            count += 1
+                            let recipients = [];
+                            let recipientIds = [];
+                            let formIds = [];
+                            empData = empData.filter(emp => emp.fields.Active);
+                            for (let i = 0; i < empData.length; i++) {
+                                if ((n.id == '1' && empData[i].fields.BeginFromOption === "S") || (n.id == empData[i].fields.FormID && empData[i].fields.BeginFromOption !== "S")) {
+                                    if (!recipients.includes(empData[i].fields.EmployeeEmailID)) {
+                                        recipients.push(empData[i].fields.EmployeeEmailID);
+                                        recipientIds.push(empData[i].fields.EmployeeId);
+                                    }
+                                    if (n.id == '1' && empData[i].fields.BeginFromOption === "S") formIds.push(empData[i].fields.FormID);
+                                    const startDate = empData[i].fields.StartDate.split(' ')[0];
+                                    const startTime = empData[i].fields.StartDate.split(' ')[1];
+        
+                                    
+            
+                                    //TODO: Getting BasedOnType from localstorage
+                                    let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
+                                    let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
+                                    let basedOnTypeText = '';
+                                    if (basedOnType.split(',').includes('P')) basedOnTypeText += 'On Print, ';
+                                    if (basedOnType.split(',').includes('S')) basedOnTypeText += 'On Save, ';
+                                    if (basedOnType.split(',').includes('T')) basedOnTypeText += 'On Transaction Date, ';
+                                    if (basedOnType.split(',').includes('D')) basedOnTypeText += 'On Due Date, ';
+                                    if (basedOnType.split(',').includes('O')) basedOnTypeText += 'If Outstanding, ';
+                                    async function getBasedOnTypeTextFromLDB() {
+                                        return new Promise(async(resolve, reject)=>{
+                                            ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
+                                                basedOnType = value? JSON.parse(value).BasedOnType: '';
+                                                if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
+                                                    if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
+                                                    if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                                                }
+                                                resolve()
+                                            })
+                                        })
+                                    }
+                                    await getBasedOnTypeTextFromLDB();
+                                    if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
+                                    empDataCurr = {
+                                        employeeid: recipientIds.join('; ') || '',
+                                        every: empData[i].fields.Every || '',
+                                        formID: n.id || '',
+                                        employeeEmailID: recipients.join('; ') || '',
+                                        formname: n.name || '',
+                                        basedOnType: basedOnType,
+                                        basedOnTypeText: basedOnTypeText,
+                                        frequency: empData[i].fields.Frequency || '',
+                                        frequencyType: empData[i].fields.FrequencyType || '',
+                                        id: empData[i].fields.ID || '',
+                                        monthDays: empData[i].fields.MonthDays || '',
+                                        nextDueDate: empData[i].fields.NextDueDate || '',
+                                        startDate: startDate.split('-')[2] + '/' + startDate.split('-')[1] + '/' + startDate.split('-')[0] || '',
+                                        startTime: startTime.split(':')[0] + ':' + startTime.split(':')[1] || '',
+                                        weekDay: empData[i].fields.WeekDay || '',
+                                        satAction: empData[i].fields.SatAction || '',
+                                        sunAction: empData[i].fields.SunAction || '',
+                                        beginFromOption: empData[i].fields.BeginFromOption || '',
+                                        formIDs: formIds.join('; '),
+                                    };
+                                    if (recipients.length === 1 && formIds.length === 1) employeeScheduledRecord.push(empDataCurr);
+                                    else {
+                                        employeeScheduledRecord = [...employeeScheduledRecord.filter(schedule => schedule.formID != n.id), empDataCurr];
+                                    }
+                                    
+                                }
                             }
-                            if (n.id == '1' && empData[i].fields.BeginFromOption === "S") formIds.push(empData[i].fields.FormID);
-                            const startDate = empData[i].fields.StartDate.split(' ')[0];
-                            const startTime = empData[i].fields.StartDate.split(' ')[1];
-    
-                            //TODO: Getting BasedOnType from localstorage
-                            let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
-                            let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
-                            let basedOnTypeText = '';
-                            if (basedOnType.split(',').includes('P')) basedOnTypeText += 'On Print, ';
-                            if (basedOnType.split(',').includes('S')) basedOnTypeText += 'On Save, ';
-                            if (basedOnType.split(',').includes('T')) basedOnTypeText += 'On Transaction Date, ';
-                            if (basedOnType.split(',').includes('D')) basedOnTypeText += 'On Due Date, ';
-                            if (basedOnType.split(',').includes('O')) basedOnTypeText += 'If Outstanding, ';
-                            if (basedOnType.split(',').includes('EN') || basedOnType.split(',').includes('EU')) {
-                                if (basedOnType.split(',').includes('EN')) basedOnTypeText += 'On Event(On Logon), ';
-                                if (basedOnType.split(',').includes('EU')) basedOnTypeText += 'On Event(On Logout), ';
-                            }
-                            if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
-    
                             empDataCurr = {
-                                employeeid: recipientIds.join('; ') || '',
-                                every: empData[i].fields.Every || '',
+                                employeeid: '',
+                                employeeEmailID: '',
+                                every: '',
                                 formID: n.id || '',
-                                employeeEmailID: recipients.join('; ') || '',
                                 formname: n.name || '',
-                                basedOnType: basedOnType,
-                                basedOnTypeText: basedOnTypeText,
-                                frequency: empData[i].fields.Frequency || '',
-                                frequencyType: empData[i].fields.FrequencyType || '',
-                                id: empData[i].fields.ID || '',
-                                monthDays: empData[i].fields.MonthDays || '',
-                                nextDueDate: empData[i].fields.NextDueDate || '',
-                                startDate: startDate.split('-')[2] + '/' + startDate.split('-')[1] + '/' + startDate.split('-')[0] || '',
-                                startTime: startTime.split(':')[0] + ':' + startTime.split(':')[1] || '',
-                                weekDay: empData[i].fields.WeekDay || '',
-                                satAction: empData[i].fields.SatAction || '',
-                                sunAction: empData[i].fields.SunAction || '',
-                                beginFromOption: empData[i].fields.BeginFromOption || '',
-                                formIDs: formIds.join('; '),
-                            };
-                            if (recipients.length === 1 && formIds.length === 1) employeeScheduledRecord.push(empDataCurr);
-                            else {
-                                employeeScheduledRecord = [...employeeScheduledRecord.filter(schedule => schedule.formID != n.id), empDataCurr];
+                                frequency: '',
+                                frequencyType: '',
+                                monthDays: '',
+                                nextDueDate: '',
+                                startDate: '',
+                                startTime: '',
+                                weekDay: '',
+                                satAction: '',
+                                sunAction: '',
+                                beginFromOption: '',
+                                formIDs: '',
+                                basedOnType: '',
+                                basedOnTypeText: '',
                             }
-                        }
-                    }
-                    empDataCurr = {
-                        employeeid: '',
-                        employeeEmailID: '',
-                        every: '',
-                        formID: n.id || '',
-                        formname: n.name || '',
-                        frequency: '',
-                        frequencyType: '',
-                        monthDays: '',
-                        nextDueDate: '',
-                        startDate: '',
-                        startTime: '',
-                        weekDay: '',
-                        satAction: '',
-                        sunAction: '',
-                        beginFromOption: '',
-                        formIDs: '',
-                        basedOnType: '',
-                        basedOnTypeText: '',
-                    }
-    
-                    let found = employeeScheduledRecord.some(checkdata => checkdata.formID == n.id);
-                    if (!found) {
-                        employeeScheduledRecord.push(empDataCurr);
-                    }
-                });
+                            let found = employeeScheduledRecord.some(checkdata => checkdata.formID == n.id);
+                            if (!found) {
+                                employeeScheduledRecord.push(empDataCurr);
+                            }
+                            doneCount += 1
+                            if(count === doneCount) resolve()
+                        });
+                    })
+                }
+                await getFormData();
     
                 // Initialize Grouped Reports Modal
                 const groupedReportData = employeeScheduledRecord.filter(schedule => schedule.formID == '1');
@@ -679,95 +700,116 @@ Template.emailsettings.onRendered(function () {
                     }, 500);
                 }
             }else {
-                taxRateService.getScheduleSettings().then(function (data) {
+                taxRateService.getScheduleSettings().then(async function (data) {
                     let empData = data.treportschedules;
                     templateObject.originScheduleData.set(data.treportschedules);
                     var empDataCurr = '';
-                    $.grep(templateObject.formsData.get(), function (n) {
-                        let recipients = [];
-                        let recipientIds = [];
-                        let formIds = [];
-                        empData = empData.filter(emp => emp.fields.Active);
-                        for (let i = 0; i < empData.length; i++) {
-                            if ((n.id == '1' && empData[i].fields.BeginFromOption === "S") || (n.id == empData[i].fields.FormID && empData[i].fields.BeginFromOption !== "S")) {
-                                if (!recipients.includes(empData[i].fields.EmployeeEmailID)) {
-                                    recipients.push(empData[i].fields.EmployeeEmailID);
-                                    recipientIds.push(empData[i].fields.EmployeeId);
+                    const getFormData = async () => {
+                        return new Promise((resolve, reject)=> {
+                            let count = 0;
+                            let doneCount = 0;
+                            $.grep(templateObject.formsData.get(), async(n)=> {
+                                count += 1;
+                                let recipients = [];
+                                let recipientIds = [];
+                                let formIds = [];
+                                empData = empData.filter(emp => emp.fields.Active);
+                                for (let i = 0; i < empData.length; i++) {
+                                    if ((n.id == '1' && empData[i].fields.BeginFromOption === "S") || (n.id == empData[i].fields.FormID && empData[i].fields.BeginFromOption !== "S")) {
+                                        if (!recipients.includes(empData[i].fields.EmployeeEmailID)) {
+                                            recipients.push(empData[i].fields.EmployeeEmailID);
+                                            recipientIds.push(empData[i].fields.EmployeeId);
+                                        }
+                                        if (n.id == '1' && empData[i].fields.BeginFromOption === "S") formIds.push(empData[i].fields.FormID);
+                                        const startDate = empData[i].fields.StartDate.split(' ')[0];
+                                        const startTime = empData[i].fields.StartDate.split(' ')[1];
+                
+
+
+                                        //TODO: Getting BasedOnType from localstorage
+                                        let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
+                                        let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
+                                        let basedOnTypeText = '';
+                                        if (basedOnType.split(',').includes('P')) basedOnTypeText += 'On Print, ';
+                                        if (basedOnType.split(',').includes('S')) basedOnTypeText += 'On Save, ';
+                                        if (basedOnType.split(',').includes('T')) basedOnTypeText += 'On Transaction Date, ';
+                                        if (basedOnType.split(',').includes('D')) basedOnTypeText += 'On Due Date, ';
+                                        if (basedOnType.split(',').includes('O')) basedOnTypeText += 'If Outstanding, ';
+                                        async function getBasedOnTypeTextFromLDB() {
+                                            return new Promise(async(resolve, reject)=>{
+                                                ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
+                                                    basedOnType = value? JSON.parse(value).BasedOnType: '';
+                                                    if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
+                                                        if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
+                                                        if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                                                    }
+                                                    resolve()
+                                                })
+                                            })
+                                        }
+                                        await getBasedOnTypeTextFromLDB();
+                                        // if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
+                                        if (basedOnTypeText != '') basedOnTypeText = basedOnTypeText.slice(0, -2);
+                
+                                        empDataCurr = {
+                                            employeeid: recipientIds.join('; ') || '',
+                                            every: empData[i].fields.Every || '',
+                                            formID: n.id || '',
+                                            employeeEmailID: recipients.join('; ') || '',
+                                            formname: n.name || '',
+                                            basedOnType: basedOnType,
+                                            basedOnTypeText: basedOnTypeText,
+                                            frequency: empData[i].fields.Frequency || '',
+                                            frequencyType: empData[i].fields.FrequencyType || '',
+                                            id: empData[i].fields.ID || '',
+                                            monthDays: empData[i].fields.MonthDays || '',
+                                            nextDueDate: empData[i].fields.NextDueDate || '',
+                                            startDate: startDate.split('-')[2] + '/' + startDate.split('-')[1] + '/' + startDate.split('-')[0] || '',
+                                            startTime: startTime.split(':')[0] + ':' + startTime.split(':')[1] || '',
+                                            weekDay: empData[i].fields.WeekDay || '',
+                                            satAction: empData[i].fields.SatAction || '',
+                                            sunAction: empData[i].fields.SunAction || '',
+                                            beginFromOption: empData[i].fields.BeginFromOption || '',
+                                            formIDs: formIds.join('; '),
+                                        };
+                                        if (recipients.length === 1 && formIds.length === 1) employeeScheduledRecord.push(empDataCurr);
+                                        else {
+                                            employeeScheduledRecord = [...employeeScheduledRecord.filter(schedule => schedule.formID != n.id), empDataCurr];
+                                        }
+                                    }
                                 }
-                                if (n.id == '1' && empData[i].fields.BeginFromOption === "S") formIds.push(empData[i].fields.FormID);
-                                const startDate = empData[i].fields.StartDate.split(' ')[0];
-                                const startTime = empData[i].fields.StartDate.split(' ')[1];
-        
-                                //TODO: Getting BasedOnType from localstorage
-                                let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
-                                let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
-                                let basedOnTypeText = '';
-                                if (basedOnType.split(',').includes('P')) basedOnTypeText += 'On Print, ';
-                                if (basedOnType.split(',').includes('S')) basedOnTypeText += 'On Save, ';
-                                if (basedOnType.split(',').includes('T')) basedOnTypeText += 'On Transaction Date, ';
-                                if (basedOnType.split(',').includes('D')) basedOnTypeText += 'On Due Date, ';
-                                if (basedOnType.split(',').includes('O')) basedOnTypeText += 'If Outstanding, ';
-                                if (basedOnType.split(',').includes('EN') || basedOnType.split(',').includes('EU')) {
-                                    if (basedOnType.split(',').includes('EN')) basedOnTypeText += 'On Event(On Logon), ';
-                                    if (basedOnType.split(',').includes('EU')) basedOnTypeText += 'On Event(On Logout), ';
-                                }
-                                // if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
-                                if (basedOnTypeText != '') basedOnTypeText = basedOnTypeText.slice(0, -2);
-        
                                 empDataCurr = {
-                                    employeeid: recipientIds.join('; ') || '',
-                                    every: empData[i].fields.Every || '',
+                                    employeeid: '',
+                                    employeeEmailID: '',
+                                    every: '',
                                     formID: n.id || '',
-                                    employeeEmailID: recipients.join('; ') || '',
                                     formname: n.name || '',
-                                    basedOnType: basedOnType,
-                                    basedOnTypeText: basedOnTypeText,
-                                    frequency: empData[i].fields.Frequency || '',
-                                    frequencyType: empData[i].fields.FrequencyType || '',
-                                    id: empData[i].fields.ID || '',
-                                    monthDays: empData[i].fields.MonthDays || '',
-                                    nextDueDate: empData[i].fields.NextDueDate || '',
-                                    startDate: startDate.split('-')[2] + '/' + startDate.split('-')[1] + '/' + startDate.split('-')[0] || '',
-                                    startTime: startTime.split(':')[0] + ':' + startTime.split(':')[1] || '',
-                                    weekDay: empData[i].fields.WeekDay || '',
-                                    satAction: empData[i].fields.SatAction || '',
-                                    sunAction: empData[i].fields.SunAction || '',
-                                    beginFromOption: empData[i].fields.BeginFromOption || '',
-                                    formIDs: formIds.join('; '),
-                                };
-                                if (recipients.length === 1 && formIds.length === 1) employeeScheduledRecord.push(empDataCurr);
-                                else {
-                                    employeeScheduledRecord = [...employeeScheduledRecord.filter(schedule => schedule.formID != n.id), empDataCurr];
+                                    frequency: '',
+                                    frequencyType: '',
+                                    monthDays: '',
+                                    nextDueDate: '',
+                                    startDate: '',
+                                    startTime: '',
+                                    weekDay: '',
+                                    satAction: '',
+                                    sunAction: '',
+                                    beginFromOption: '',
+                                    formIDs: '',
+                                    basedOnType: '',
+                                    basedOnTypeText: '',
                                 }
-                            }
-                        }
-                        empDataCurr = {
-                            employeeid: '',
-                            employeeEmailID: '',
-                            every: '',
-                            formID: n.id || '',
-                            formname: n.name || '',
-                            frequency: '',
-                            frequencyType: '',
-                            monthDays: '',
-                            nextDueDate: '',
-                            startDate: '',
-                            startTime: '',
-                            weekDay: '',
-                            satAction: '',
-                            sunAction: '',
-                            beginFromOption: '',
-                            formIDs: '',
-                            basedOnType: '',
-                            basedOnTypeText: '',
-                        }
-        
-                        let found = employeeScheduledRecord.some(checkdata => checkdata.formID == n.id);
-                        if (!found) {
-                            employeeScheduledRecord.push(empDataCurr);
-                        }
-                    });
-        
+                
+                                let found = employeeScheduledRecord.some(checkdata => checkdata.formID == n.id);
+                                if (!found) {
+                                    employeeScheduledRecord.push(empDataCurr);
+                                }
+
+                                doneCount += 1
+                                if(count === doneCount) resolve()
+                            });
+                        })
+                    }
+                    await getFormData();
                     // Initialize Grouped Reports Modal
                     const groupedReportData = employeeScheduledRecord.filter(schedule => schedule.formID == '1');
                     if (groupedReportData.length === 1) {
@@ -936,95 +978,113 @@ Template.emailsettings.onRendered(function () {
                 });
             }
         }).catch(function(err) {
-            taxRateService.getScheduleSettings().then(function (data) {
+            taxRateService.getScheduleSettings().then(async function (data) {
                 let empData = data.treportschedules;
                 templateObject.originScheduleData.set(data.treportschedules);
                 var empDataCurr = '';
-                $.grep(templateObject.formsData.get(), function (n) {
-                    let recipients = [];
-                    let recipientIds = [];
-                    let formIds = [];
-                    empData = empData.filter(emp => emp.fields.Active);
-                    for (let i = 0; i < empData.length; i++) {
-                        if ((n.id == '1' && empData[i].fields.BeginFromOption === "S") || (n.id == empData[i].fields.FormID && empData[i].fields.BeginFromOption !== "S")) {
-                            if (!recipients.includes(empData[i].fields.EmployeeEmailID)) {
-                                recipients.push(empData[i].fields.EmployeeEmailID);
-                                recipientIds.push(empData[i].fields.EmployeeId);
+                const getFormData = async () => {
+                    return new Promise((resolve, reject)=> {
+                        let count = 0;
+                        let doneCount = 0;
+                        $.grep(templateObject.formsData.get(), async (n)=> {
+                            count += 1;
+                            let recipients = [];
+                            let recipientIds = [];
+                            let formIds = [];
+                            empData = empData.filter(emp => emp.fields.Active);
+                            for (let i = 0; i < empData.length; i++) {
+                                if ((n.id == '1' && empData[i].fields.BeginFromOption === "S") || (n.id == empData[i].fields.FormID && empData[i].fields.BeginFromOption !== "S")) {
+                                    if (!recipients.includes(empData[i].fields.EmployeeEmailID)) {
+                                        recipients.push(empData[i].fields.EmployeeEmailID);
+                                        recipientIds.push(empData[i].fields.EmployeeId);
+                                    }
+                                    if (n.id == '1' && empData[i].fields.BeginFromOption === "S") formIds.push(empData[i].fields.FormID);
+                                    const startDate = empData[i].fields.StartDate.split(' ')[0];
+                                    const startTime = empData[i].fields.StartDate.split(' ')[1];
+            
+                                    //TODO: Getting BasedOnType from localstorage
+                                    let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
+                                    let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
+                                    let basedOnTypeText = '';
+                                    if (basedOnType.split(',').includes('P')) basedOnTypeText += 'On Print, ';
+                                    if (basedOnType.split(',').includes('S')) basedOnTypeText += 'On Save, ';
+                                    if (basedOnType.split(',').includes('T')) basedOnTypeText += 'On Transaction Date, ';
+                                    if (basedOnType.split(',').includes('D')) basedOnTypeText += 'On Due Date, ';
+                                    if (basedOnType.split(',').includes('O')) basedOnTypeText += 'If Outstanding, ';
+                                    async function getBasedOnTypeTextFromLDB() {
+                                        return new Promise(async(resolve, reject)=>{
+                                            ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
+                                                basedOnType = value? JSON.parse(value).BasedOnType: '';
+                                                if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
+                                                    if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
+                                                    if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                                                }
+                                                resolve()
+                                            })
+                                        })
+                                    }
+                                    await getBasedOnTypeTextFromLDB();
+                                    if (basedOnTypeText != '') basedOnTypeText = basedOnTypeText.slice(0, -2);
+                                    // if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
+            
+                                    empDataCurr = {
+                                        employeeid: recipientIds.join('; ') || '',
+                                        every: empData[i].fields.Every || '',
+                                        formID: n.id || '',
+                                        employeeEmailID: recipients.join('; ') || '',
+                                        formname: n.name || '',
+                                        basedOnType: basedOnType,
+                                        basedOnTypeText: basedOnTypeText,
+                                        frequency: empData[i].fields.Frequency || '',
+                                        frequencyType: empData[i].fields.Frequency || '',
+                                        id: empData[i].fields.ID || '',
+                                        monthDays: empData[i].fields.MonthDays || '',
+                                        nextDueDate: empData[i].fields.NextDueDate || '',
+                                        startDate: startDate.split('-')[2] + '/' + startDate.split('-')[1] + '/' + startDate.split('-')[0] || '',
+                                        startTime: startTime.split(':')[0] + ':' + startTime.split(':')[1] || '',
+                                        weekDay: empData[i].fields.WeekDay || '',
+                                        satAction: empData[i].fields.SatAction || '',
+                                        sunAction: empData[i].fields.SunAction || '',
+                                        beginFromOption: empData[i].fields.BeginFromOption || '',
+                                        formIDs: formIds.join('; '),
+                                    };
+                                    if (recipients.length === 1 && formIds.length === 1) employeeScheduledRecord.push(empDataCurr);
+                                    else {
+                                        employeeScheduledRecord = [...employeeScheduledRecord.filter(schedule => schedule.formID != n.id), empDataCurr];
+                                    }
+                                }
                             }
-                            if (n.id == '1' && empData[i].fields.BeginFromOption === "S") formIds.push(empData[i].fields.FormID);
-                            const startDate = empData[i].fields.StartDate.split(' ')[0];
-                            const startTime = empData[i].fields.StartDate.split(' ')[1];
-    
-                            //TODO: Getting BasedOnType from localstorage
-                            let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
-                            let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
-                            let basedOnTypeText = '';
-                            if (basedOnType.split(',').includes('P')) basedOnTypeText += 'On Print, ';
-                            if (basedOnType.split(',').includes('S')) basedOnTypeText += 'On Save, ';
-                            if (basedOnType.split(',').includes('T')) basedOnTypeText += 'On Transaction Date, ';
-                            if (basedOnType.split(',').includes('D')) basedOnTypeText += 'On Due Date, ';
-                            if (basedOnType.split(',').includes('O')) basedOnTypeText += 'If Outstanding, ';
-                            if (basedOnType.split(',').includes('EN') || basedOnType.split(',').includes('EU')) {
-                                if (basedOnType.split(',').includes('EN')) basedOnTypeText += 'On Event(On Logon), ';
-                                if (basedOnType.split(',').includes('EU')) basedOnTypeText += 'On Event(On Logout), ';
-                            }
-                            if (basedOnTypeText != '') basedOnTypeText = basedOnTypeText.slice(0, -2);
-                            // if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
-    
                             empDataCurr = {
-                                employeeid: recipientIds.join('; ') || '',
-                                every: empData[i].fields.Every || '',
+                                employeeid: '',
+                                employeeEmailID: '',
+                                every: '',
                                 formID: n.id || '',
-                                employeeEmailID: recipients.join('; ') || '',
                                 formname: n.name || '',
-                                basedOnType: basedOnType,
-                                basedOnTypeText: basedOnTypeText,
-                                frequency: empData[i].fields.Frequency || '',
-                                frequencyType: empData[i].fields.Frequency || '',
-                                id: empData[i].fields.ID || '',
-                                monthDays: empData[i].fields.MonthDays || '',
-                                nextDueDate: empData[i].fields.NextDueDate || '',
-                                startDate: startDate.split('-')[2] + '/' + startDate.split('-')[1] + '/' + startDate.split('-')[0] || '',
-                                startTime: startTime.split(':')[0] + ':' + startTime.split(':')[1] || '',
-                                weekDay: empData[i].fields.WeekDay || '',
-                                satAction: empData[i].fields.SatAction || '',
-                                sunAction: empData[i].fields.SunAction || '',
-                                beginFromOption: empData[i].fields.BeginFromOption || '',
-                                formIDs: formIds.join('; '),
-                            };
-                            if (recipients.length === 1 && formIds.length === 1) employeeScheduledRecord.push(empDataCurr);
-                            else {
-                                employeeScheduledRecord = [...employeeScheduledRecord.filter(schedule => schedule.formID != n.id), empDataCurr];
+                                frequency: '',
+                                frequencyType: '',
+                                monthDays: '',
+                                nextDueDate: '',
+                                startDate: '',
+                                startTime: '',
+                                weekDay: '',
+                                satAction: '',
+                                sunAction: '',
+                                beginFromOption: '',
+                                formIDs: '',
+                                basedOnType: '',
+                                basedOnTypeText: '',
                             }
-                        }
-                    }
-                    empDataCurr = {
-                        employeeid: '',
-                        employeeEmailID: '',
-                        every: '',
-                        formID: n.id || '',
-                        formname: n.name || '',
-                        frequency: '',
-                        frequencyType: '',
-                        monthDays: '',
-                        nextDueDate: '',
-                        startDate: '',
-                        startTime: '',
-                        weekDay: '',
-                        satAction: '',
-                        sunAction: '',
-                        beginFromOption: '',
-                        formIDs: '',
-                        basedOnType: '',
-                        basedOnTypeText: '',
-                    }
-    
-                    let found = employeeScheduledRecord.some(checkdata => checkdata.formID == n.id);
-                    if (!found) {
-                        employeeScheduledRecord.push(empDataCurr);
-                    }
-                });
-    
+            
+                            let found = employeeScheduledRecord.some(checkdata => checkdata.formID == n.id);
+                            if (!found) {
+                                employeeScheduledRecord.push(empDataCurr);
+                            }
+                            doneCount += 1
+                                if(count === doneCount) resolve()
+                        });
+                    })
+                }
+                await getFormData();
                 // Initialize Grouped Reports Modal
                 const groupedReportData = employeeScheduledRecord.filter(schedule => schedule.formID == '1');
                 if (groupedReportData.length === 1) {
@@ -1300,7 +1360,7 @@ Template.emailsettings.onRendered(function () {
 
             //TODO: Remove all BasedOnType localstorage variables(No need this part in production mode)
             let basedOnTypeStorages = Object.keys(localStorage);
-            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => storage.includes('BasedOnType_'));
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) =>{ return storage.includes('BasedOnType_')});
             basedOnTypeStorages.forEach(storage => {
                 let formId = storage.split('_')[1];
                 let essentialIDs = ['1', '54', '177', '129'];
@@ -1314,6 +1374,23 @@ Template.emailsettings.onRendered(function () {
                     }
                 }
             });
+
+            ldb.getAll(function(data){
+                let filteredData = Object.keys(data).filter(storage => { storage.includes('BasedOnType_')});
+                filteredData.forEach(storage => {
+                    let formId = storage.split('_')[1];
+                    let essentialIDs = ['1', '54', '177', '129'];
+                    if(isEssential) {
+                        if(essentialIDs.includes(formId.toString())) {
+                            ldb.delete(storage, function(){})
+                        }
+                    } else {
+                        if(essentialIDs.includes(formId.toString()) == false) {
+                            ldb.delete(storage, function(){})
+                        }
+                    }
+                });
+            })
 
             const oldSettings = templateObject.originScheduleData.get();
             // Filter old settings according to the types of email setting(Essential one or Automated one)
@@ -1426,6 +1503,7 @@ Template.emailsettings.onRendered(function () {
                             groupedReports.map(async (groupedReport) => {
                                 formIDs.push(parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', '')));
                             });
+
                             let printwrappers = document.getElementsByClassName('print-wrapper');
                             let parenetElements = [];
                             formIDs.map(id => {
@@ -1439,6 +1517,7 @@ Template.emailsettings.onRendered(function () {
                                     targetElement.push(children[j]);
                                 }
                             })
+
 
                         }
 
@@ -1525,10 +1604,10 @@ Template.emailsettings.onRendered(function () {
                         if (typeof recipientIds == 'string') {
                             recipientIds = recipientIds.split('; ');
                         }
-
                         if (typeof recipients == 'string') {
                             recipients = recipients.split('; ');
                         }
+
                         let saveSettingPromises = recipientIds.map(async (recipientId, index) => {
                             const starttime = frequencyEl.attr('data-starttime');
 
@@ -1547,6 +1626,7 @@ Template.emailsettings.onRendered(function () {
                             attachments.map(attachment =>{
                                 documents.push(attachment.pdfObject)
                             })
+
 
                             let objDetail = {
                                 type: "TReportSchedules",
@@ -1706,29 +1786,41 @@ Template.emailsettings.onRendered(function () {
                                     });
                                 });
 
+
                                 // Add synced cron job here
                                 objDetail.fields.FormIDs = formIDs.join(',');
                                 objDetail.fields.FormID = 1;
                                 objDetail.fields.FormName = formName;
                                 objDetail.fields.EmployeeEmail = recipients[index];
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
-                                objDetail.fields.attachments = documents;
+                                objDetail.fields.attachments = [];
+                                
                                 //TODO: Set basedon type here
                                 localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
                                     ...objDetail.fields,
                                     BasedOnType: basedOnType,
                                 }));
+                                
 
                                 objDetail.fields.Offset = new Date().getTimezoneOffset();
                                 const nextDueDate = await new Promise((resolve, reject) => {
                                     Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
-                                        if (error) return reject(error);
+                                        if (error) {return reject(error)};
                                         resolve(result);
                                     });
                                 });
                                 objDetail.fields.NextDueDate = nextDueDate;
+
+                                let cloneObjDetailFields = JSON.parse(JSON.stringify(objDetail.fields))
+                                cloneObjDetailFields.attachments = documents;
+                                if(basedOnType.includes('EN') == true || basedOnType.includes('EU' == true)) {
+                                    ldb.set(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
+                                        ...cloneObjDetailFields.fields,
+                                        BasedOnType: basedOnType,
+                                    }), function(){})
+                                }
                                 // objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                Meteor.call('addTask', objDetail.fields);
+                                Meteor.call('addTask', cloneObjDetailFields);
                             } else {
                                 const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeId == parseInt(recipientId));
                                 oldSettings = oldSettings.filter((setting) => setting.fields.FormID != parseInt(formID) || setting.fields.EmployeeId != recipientId);
@@ -1765,16 +1857,25 @@ Template.emailsettings.onRendered(function () {
                                     BasedOnType: basedOnType,
                                 }));
 
-                                objDetail.fields.attachments = documents;
+                                let cloneObjDetailFields = JSON.parse(JSON.stringify(objDetail.fields))
+                                cloneObjDetailFields.attachments = documents;
+
+                                if(basedOnType.includes('EN') == true || basedOnType.includes('EU' == true)) {
+                                    ldb.set(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
+                                        ...cloneObjDetailFields,
+                                        BasedOnType: basedOnType,
+                                    }), function(){ ldb.get(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, function(data){
+                                        data
+                                    })})
+                                }
                                 // objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                Meteor.call('addTask', objDetail.fields);
+                                Meteor.call('addTask', cloneObjDetailFields);
                             }
                         });
                         await Promise.all(saveSettingPromises);
                     }
                 });
                 await Promise.all(promise);
-
                 let promise1 = oldSettings.map(async setting => {
                     if ((isEssential && (setting.fields.BeginFromOption == "S" || setting.fields.FormID == 1 ||setting.fields.FormID == 54
                         || setting.fields.FormID == 177 || setting.fields.FormID == 129)) || (!isEssential
@@ -1796,6 +1897,7 @@ Template.emailsettings.onRendered(function () {
                         });
                         //TODO: Set basedon type here
                         localStorage.removeItem(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`);
+                        ldb.delete(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`, function(){})
                     }
                 });
                 await Promise.all(promise1);
@@ -2189,7 +2291,6 @@ Template.emailsettings.events({
 
         const saveResult = await templateObject.saveSchedules(essentialSettings, true);
         const saveGroupResult = await templateObject.saveGroupedReports();
-
 
         if (saveResult.success && saveGroupResult.success)
             swal({
@@ -2795,15 +2896,16 @@ Template.emailsettings.events({
 
 Template.emailsettings.helpers({
     datatablerecords: () => {
-        return Template.instance().datatablerecords.get().sort(function (a, b) {
-            if (a.code == 'NA') {
-                return 1;
-            } else if (b.code == 'NA') {
-                return -1;
-            }
-            return (a.code.toUpperCase() > b.code.toUpperCase()) ? 1 : -1;
-            // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
-        });
+        // return Template.instance().datatablerecords.get().sort(function (a, b) {
+        //     if (a.code == 'NA') {
+        //         return 1;
+        //     } else if (b.code == 'NA') {
+        //         return -1;
+        //     }
+        //     return (a.code.toUpperCase() > b.code.toUpperCase()) ? 1 : -1;
+        //     // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
+        // });
+        return Template.instance.datatablerecords.get()
     },
 
     invoicerecords: () => {

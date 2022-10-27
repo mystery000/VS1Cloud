@@ -1233,14 +1233,14 @@ Template.generalledger.helpers({
   deptrecords: () => {
     return Template.instance()
       .deptrecords.get()
-      .sort(function (a, b) {
-        if (a.department == "NA") {
-          return 1;
-        } else if (b.department == "NA") {
-          return -1;
-        }
-        return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
-      });
+      // .sort(function (a, b) {
+      //   if (a.department == "NA") {
+      //     return 1;
+      //   } else if (b.department == "NA") {
+      //     return -1;
+      //   }
+      //   return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
+      // });
   },
 });
 Template.registerHelper("equals", function (a, b) {

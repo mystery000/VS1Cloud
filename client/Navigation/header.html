@@ -338,26 +338,58 @@
 
     {{#if isGreenTrack}}
         <script>
-            function logOutFunc() {
+            async function logOutFunc() {
                 let values = [];
-                let basedOnTypeStorages = Object.keys(localStorage);
-                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                    let employeeId = storage.split('_')[2];
-                    return storage.includes('BasedOnType_')
-                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-                });
-                let i = basedOnTypeStorages.length;
-                if (i > 0) {
-                    while (i--) {
-                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                // let basedOnTypeStorages = Object.keys(localStorage);
+             
+
+                const getLogoutEmails = async() => {
+                    return new Promise (async(resolve, reject)=>{
+                        ldb.getAll(async function(entries){
+
+                            let keys = [];
+                            entries.map(entry => {
+                                keys.push(entry.k)
+                            })
+                            let basedOnTypeStorages = keys;
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_');
+                                });
+                            let i = basedOnTypeStorages.length;
+                            async function getValue ()  {
+                                if (i > 0) {
+                                    return new Promise(async function(resolve, reject) {
+                                        for (let j = 0; j<i; j++ ) {
+                                            await ldb.get(basedOnTypeStorages[j], function(value){
+                                            values.push(value) ;
+                                            if (j == i - 1){
+                                                resolve()
+                                            }
+                                            });
+                                        //   values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    })
+                                }
+                            }
+
+                            await getValue();
+
+                            for(let k = 0; k< values.length; k ++ ) {
+                                let reportData = JSON.parse(values[k]);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                if (reportData.BasedOnType.includes("EU")) {
+                                    Meteor.call('sendNormalEmail', reportData);
+                                }
+
+                                if(k == values.length -1){
+                                    resolve();
+                                }
+                            }
+                        })
+                    })
                     }
-                }
-                values.forEach(value => {
-                    let reportData = JSON.parse(value);
-                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                    if (reportData.BasedOnType.includes("EU"))
-                        Meteor.call('sendNormalEmail', reportData);
-                });
+                await getLogoutEmails();
                 FlowRouter.go('/vs1greentracklogin');
                 CloudUser.update({
                     _id: Session.get('mycloudLogonID')
@@ -366,31 +398,65 @@
                         userMultiLogon: false
                     }
                 });
+
             };
         </script>
     {{else}}
         <script>
-            function logOutFunc() {
+            async function logOutFunc() {
                 let values = [];
-                let basedOnTypeStorages = Object.keys(localStorage);
-                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                    let employeeId = storage.split('_')[2];
-                    return storage.includes('BasedOnType_')
-                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-                });
-                let i = basedOnTypeStorages.length;
-                if (i > 0) {
-                    while (i--) {
-                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                // let basedOnTypeStorages = Object.keys(localStorage);
+
+
+
+                const getLogoutEmails = async() => {
+                    return new Promise (async(resolve, reject)=>{
+                        ldb.getAll(async function(entries){
+
+                            let keys = [];
+                            entries.map(entry => {
+                                keys.push(entry.k)
+                            })
+                            let basedOnTypeStorages = keys;
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_');
+                                });
+                            let i = basedOnTypeStorages.length;
+                            async function getValue ()  {
+                                if (i > 0) {
+                                    return new Promise(async function(resolve, reject) {
+                                        for (let j = 0; j<i; j++ ) {
+                                            await ldb.get(basedOnTypeStorages[j], function(value){
+                                            values.push(value) ;
+                                            if (j == i - 1){
+                                                resolve()
+                                            }
+                                            });
+                                        //   values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    })
+                                }
+                            }
+
+                            await getValue();
+
+                            for(let k = 0; k< values.length; k ++ ) {
+                                let reportData = JSON.parse(values[k]);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                if (reportData.BasedOnType.includes("EU")) {
+                                    Meteor.call('sendNormalEmail', reportData);
+                                }
+
+                                if(k == values.length -1){
+                                    resolve();
+                                }
+                            }
+                        })
+                    })
                     }
-                }
-                values.forEach(value => {
-                    let reportData = JSON.parse(value);
-                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                    if (reportData.BasedOnType.includes("EU"))
-                        Meteor.call('sendNormalEmail', reportData);
-                });
-                // window.open('/', '_self');
+                await getLogoutEmails();
+
                 FlowRouter.go('/');
                 CloudUser.update({
                     _id: Session.get('mycloudLogonID')
@@ -399,7 +465,7 @@
                         userMultiLogon: false
                     }
                 });
-            };
+                };
         </script>
     {{/if}}
 

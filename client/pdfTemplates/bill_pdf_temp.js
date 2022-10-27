@@ -14,6 +14,8 @@ Template.billPrintTemp.onCreated(()=>{
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.billrecords = new ReactiveVar([]);
+    templateObject.attachmentCount = new ReactiveVar(0);
+    templateObject.uploadedFiles = new ReactiveVar([]);
 })
 
 Template.billPrintTemp.onRendered(()=>{

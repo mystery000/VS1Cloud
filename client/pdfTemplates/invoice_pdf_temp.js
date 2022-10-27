@@ -26,11 +26,14 @@ Template.invoicePrintTemp.onRendered(function () {
                 if (dataObject.length != 0) {
                     let data = JSON.parse(dataObject[0].data);
                     let useData = data.tinvoiceex;
+                    console.log('invoice length', useData.length)
                     for (let d = 0; d < useData.length; d++) {
+                        console.log('invoice index', d)
                         let lineItems = [];
                         let lineItemObj = {};
                         let lineItemsTable = [];
                         let currencySymbol = Currency;
+                        console.log('use data - ', d, ':', useData[d].fields)
                         let totalInc = currencySymbol + '' + useData[d].fields.TotalAmountInc.toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         });
@@ -53,7 +56,7 @@ Template.invoicePrintTemp.onRendered(function () {
                             minimumFractionDigits: 2
                         });
 
-                        if (useData[d].fields.Lines.length) {
+                        if (useData[d].fields.Lines&& useData[d].fields.Lines !=null &&useData[d].fields.Lines.length) {
                             for (let i = 0; i < useData[d].fields.Lines.length; i++) {
                                 let AmountGbp = currencySymbol + '' + useData[d].fields.Lines[i].fields.TotalLineAmount.toLocaleString(undefined, {
                                     minimumFractionDigits: 2
@@ -86,6 +89,7 @@ Template.invoicePrintTemp.onRendered(function () {
                         if (useData[d].fields.TotalPaid > 0) {
                             isPartialPaid = true;
                         }
+                        
                         let invoicerecord = {
                             id: useData[d].fields.ID,
                             custPONumber: useData[d].fields.CustPONumber,
@@ -105,7 +109,7 @@ Template.invoicePrintTemp.onRendered(function () {
                             invoicesTemp.push(invoicerecord);
                             templateObject.invoicerecords.set(invoicesTemp);
                             Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblInvoiceLine', function (error, result) {
-                                if (error) { }
+                                if (error) {}
                                 else {
                                     if (result) {
                                         for (let i = 0; i < result.customFields.length; i++) {

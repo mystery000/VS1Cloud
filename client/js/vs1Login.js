@@ -8,6 +8,7 @@ import '../lib/global/indexdbstorage.js';
 import { SMSService } from '../js/sms-settings-service';
 import { handleSetupRedirection } from '../setup/setup';
 import erpObject from '../lib/global/erp-objects';
+import ldb from 'localdata';
 
 let smsService = new SMSService();
 
@@ -590,7 +591,8 @@ Template.vs1login.onRendered(function () {
                 $('.myVS1Video').css('display', 'none');
                 $('.myVS1VideoLogin').css('display', 'none');
 
-                window.open('/dashboard', '_self');
+                // window.open('/dashboard', '_self');
+                FlowRouter.go('/dashboard');
 
                 //handleSetupRedirection();
 
@@ -1581,13 +1583,18 @@ Template.vs1login.onRendered(function () {
               if (isAppointmentScheduling == true) {
                   if (isAllocationLaunch == true) {
                       window.open('/appointments#allocationModal', '_self');
+                    //   FlowRouter.go('/appointments#allocationModal');
+                    //   FlowRouter.go('/appointments');
                   } else if (isAppointmentLaunch == true) {
-                      window.open('/appointments', '_self');
+                      FlowRouter.go('/appointments');
+                    //   window.open('/appointments', '_self');☻
                   } else {
-                      window.open('/dashboard', '_self');
+                      FlowRouter.go('/dashboard');
+                    //   window.open('/dashboard', '_self');
                   }
               } else {
-                  window.open('/dashboard', '_self');
+                  FlowRouter.go('/dashboard');
+                //   window.open('/dashboard', '_self');
               }
             }else{
               handleSetupRedirection();
@@ -2076,7 +2083,7 @@ Template.vs1login.onRendered(function () {
                           oReqCheckActive.setRequestHeader("username", 'VS1_Cloud_Admin');
                           oReqCheckActive.setRequestHeader("password", 'DptfGw83mFl1j&9');
                           oReqCheckActive.send();
-                          oReqCheckActive.onreadystatechange = function () {
+                          oReqCheckActive.onreadystatechange = async function () {
                               if (oReqCheckActive.readyState == 4 && oReqCheckActive.status == 200) {
                                   var dataDBActive = JSON.parse(oReqCheckActive.responseText);
 
@@ -2235,12 +2242,12 @@ Template.vs1login.onRendered(function () {
                                       var ERPuserName = userLoginEmail;
                                       var ERPLoggeduserName = userLoginEmail;
                                       var ERPpassword = userLoginPassword.replace('%20', " ").replace('%21', '!').replace('%22', '"')
-                                  .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
-                                  .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
-                                  .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/") || '';
-                                  if(dataReturnRes.ProcessLog.LicenseLevel != "Simple Start"){
-                                    isExpenseClaimsLicence = true;
-                                  };
+                                        .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
+                                        .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
+                                        .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/") || '';
+                                        if(dataReturnRes.ProcessLog.LicenseLevel != "Simple Start"){
+                                            isExpenseClaimsLicence = true;
+                                        };
                                       let erpdbname = ERPIPAdderess + ',' + ERPdbName + ',' + ERPuserName + ',' + ERPpassword + ',' + ERPport;
                                       let licenceOptions = dataReturnRes.ProcessLog.Modules.Modules;
                                       $.each(licenceOptions, function (item, option) {
@@ -2353,26 +2360,61 @@ Template.vs1login.onRendered(function () {
                                       Session.setPersistent('CloudWMSLicence', isWMSLicence);
                                       Session.setPersistent('CloudAppointmentSchedulingLicence', isAppointmentSchedulingLicence);
                                       /* End Remove licence */
-
                                       //TODO: Email scheduling for reports when login
                                       let values = [];
-                                      let basedOnTypeStorages = Object.keys(localStorage);
-                                      basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                                          let employeeId = storage.split('_')[2];
-                                          return storage.includes('BasedOnType_');
-                                      });
-                                      let i = basedOnTypeStorages.length;
-                                      if (i > 0) {
-                                          while (i--) {
-                                              values.push(localStorage.getItem(basedOnTypeStorages[i]));
-                                          }
+                                    //   let basedOnTypeStorages = Object.keys(localStorage);
+                                      const getLogonEmails = async() => {
+                                        return new Promise (async(resolve, reject)=>{
+                                            ldb.getAll(async function(entries){
+                                                if(entries.length > 0) {
+
+                                                    let keys = [];
+                                                    entries.map(entry => {
+                                                      keys.push(entry.k)
+                                                    })
+                                                    let basedOnTypeStorages = keys;
+                                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                                        let employeeId = storage.split('_')[2];
+                                                        return storage.includes('BasedOnType_');
+                                                      });
+                                                    let i = basedOnTypeStorages.length;
+                                                    async function getValue ()  {
+                                                        if (i > 0) {
+                                                          return new Promise(async function(resolve, reject) {
+                                                              for (let j = 0; j<i; j++ ) {
+                                                                  await ldb.get(basedOnTypeStorages[j], function(value){
+                                                                    values.push(value) ;
+                                                                    if (j == i - 1){
+                                                                      resolve()
+                                                                    }
+                                                                  });
+                                                                //   values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                                              }
+                                                          })
+                                                        }
+                                                    }
+          
+                                                    await getValue();
+                                                } else {
+                                                    return resolve()
+                                                }
+
+                                                for(let k = 0; k< values.length; k ++ ) {
+                                                    let reportData = JSON.parse(values[k]);
+                                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                                    if (reportData.BasedOnType.includes("EN")) {
+                                                      Meteor.call('sendNormalEmail', reportData);
+                                                    }
+
+                                                    if(k == values.length -1){
+                                                        resolve();
+                                                    }
+                                                }
+                                            })
+                                        })
                                       }
-                                      values.forEach(value => {
-                                          let reportData = JSON.parse(value);
-                                          reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                          if (reportData.BasedOnType.includes("EN"))
-                                              Meteor.call('sendNormalEmail', reportData);
-                                      });
+                                      await getLogonEmails();
+
 
                                       dataReturnRes.ProcessLog.VS1AdminPassword = hashUserLoginPassword;
                                       dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;

@@ -486,6 +486,11 @@
                                                                         {{> salesreport}}
                                                                     </div>
                                                                 {{/if}}
+                                                                {{#if equals item.formID 17544}}
+                                                                    <div class="d-none print-wrapper print-wrapper-17544" id="statementPDFTemp">
+                                                                        {{> statementPrintTemp}}
+                                                                    </div>
+                                                                {{/if}}
                                                                 {{#if equals item.formID 94}}
                                                                     <div class="d-none print-wrapper print-wrapper-94" id="supplierpaymentPDFTemp">
                                                                         {{> supplierpaymentPrintTemp}}

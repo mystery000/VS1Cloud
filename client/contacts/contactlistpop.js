@@ -281,108 +281,108 @@ Template.contactlistpop.onRendered(function () {
                                     $('.paginate_button.page-item.next').addClass('disabled');
                                 }
 
-                                // $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                //     .on('click', function () {
-                                //         $('.fullScreenSpin').css('display', 'inline-block');
-                                //         var splashArrayContactListDupp = new Array();
-                                //         let dataLenght = oSettings._iDisplayLength;
-                                //         let customerSearch = $('#tblContactlist_filter input').val();
+                                $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                    .on('click', function () {
+                                        $('.fullScreenSpin').css('display', 'inline-block');
+                                        var splashArrayContactListDupp = new Array();
+                                        let dataLenght = oSettings._iDisplayLength;
+                                        let customerSearch = $('#tblContactlist_filter input').val();
 
-                                //         sideBarService.getAllContactCombineVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                        sideBarService.getAllContactCombineVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
 
-                                //                     for (let j = 0; j < dataObjectnew.terpcombinedcontactsvs1.length; j++) {
+                                                    for (let j = 0; j < dataObjectnew.terpcombinedcontactsvs1.length; j++) {
 
-                                //                       isprospect = dataObjectnew.terpcombinedcontactsvs1[j].isprospect;
-                                //                       iscustomer = dataObjectnew.terpcombinedcontactsvs1[j].iscustomer;
-                                //                       isEmployee = dataObjectnew.terpcombinedcontactsvs1[j].isEmployee;
-                                //                       issupplier = dataObjectnew.terpcombinedcontactsvs1[j].issupplier;
+                                                      isprospect = dataObjectnew.terpcombinedcontactsvs1[j].isprospect;
+                                                      iscustomer = dataObjectnew.terpcombinedcontactsvs1[j].iscustomer;
+                                                      isEmployee = dataObjectnew.terpcombinedcontactsvs1[j].isEmployee;
+                                                      issupplier = dataObjectnew.terpcombinedcontactsvs1[j].issupplier;
 
-                                //                       if((isprospect == true) && (iscustomer == true) && (isEmployee == true) && (issupplier == true)){
-                                //                           clienttype = "Customer / Employee / Prospect / Supplier";
-                                //                       }else if((isprospect == true) && (iscustomer ==true) && (issupplier ==true)){
-                                //                           clienttype = "Customer / Prospect / Supplier";
-                                //                       }else if((iscustomer ==true) && (issupplier ==true)){
-                                //                           clienttype = "Customer / Supplier";
-                                //                       }else if((iscustomer ==true)){
+                                                      if((isprospect == true) && (iscustomer == true) && (isEmployee == true) && (issupplier == true)){
+                                                          clienttype = "Customer / Employee / Prospect / Supplier";
+                                                      }else if((isprospect == true) && (iscustomer ==true) && (issupplier ==true)){
+                                                          clienttype = "Customer / Prospect / Supplier";
+                                                      }else if((iscustomer ==true) && (issupplier ==true)){
+                                                          clienttype = "Customer / Supplier";
+                                                      }else if((iscustomer ==true)){
 
-                                //                           if (dataObjectnew.terpcombinedcontactsvs1[j].name.toLowerCase().indexOf("^") >= 0){
-                                //                               clienttype = "Job";
-                                //                           }else{
-                                //                               clienttype = "Customer";
-                                //                           }
-                                //                       }else if((isEmployee ==true)){
-                                //                           clienttype = "Employee";
-                                //                       }else if((issupplier ==true)){
-                                //                           clienttype = "Supplier";
-                                //                       }else if((isprospect ==true)){
-                                //                           clienttype = "Prospect";
-                                //                       }else{
-                                //                           clienttype = " ";
-                                //                       }
+                                                          if (dataObjectnew.terpcombinedcontactsvs1[j].name.toLowerCase().indexOf("^") >= 0){
+                                                              clienttype = "Job";
+                                                          }else{
+                                                              clienttype = "Customer";
+                                                          }
+                                                      }else if((isEmployee ==true)){
+                                                          clienttype = "Employee";
+                                                      }else if((issupplier ==true)){
+                                                          clienttype = "Supplier";
+                                                      }else if((isprospect ==true)){
+                                                          clienttype = "Prospect";
+                                                      }else{
+                                                          clienttype = " ";
+                                                      }
 
-                                //                           let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)|| 0.00;
-                                //                           let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance) || 0.00;
-                                //                           let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].Balance)|| 0.00;
-                                //                           let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)|| 0.00;
-                                //                           let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)|| 0.00;
-                                //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)) {
-                                //                               arBalance = Currency + "0.00";
-                                //                           }
+                                                          let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)|| 0.00;
+                                                          let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance) || 0.00;
+                                                          let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].Balance)|| 0.00;
+                                                          let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)|| 0.00;
+                                                          let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)|| 0.00;
+                                                          if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)) {
+                                                              arBalance = Currency + "0.00";
+                                                          }
 
-                                //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance)) {
-                                //                               creditBalance = Currency + "0.00";
-                                //                           }
-                                //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].Balance)) {
-                                //                               balance = Currency + "0.00";
-                                //                           }
-                                //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)) {
-                                //                               creditLimit = Currency + "0.00";
-                                //                           }
+                                                          if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance)) {
+                                                              creditBalance = Currency + "0.00";
+                                                          }
+                                                          if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].Balance)) {
+                                                              balance = Currency + "0.00";
+                                                          }
+                                                          if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)) {
+                                                              creditLimit = Currency + "0.00";
+                                                          }
 
-                                //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)) {
-                                //                               salesOrderBalance = Currency + "0.00";
-                                //                           }
-
-
-                                //                         var dataListContactDupp = [
-                                //                           '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"><label class="custom-control-label chkBox pointer" for="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"></label></div>',
-                                //                           dataObjectnew.terpcombinedcontactsvs1[j].name || '-',
-                                //                           clienttype || '',
-                                //                           dataObjectnew.terpcombinedcontactsvs1[j].Phone || '',
-                                //                           dataObjectnew.terpcombinedcontactsvs1[j].mobile || '',
-                                //                           arBalance || 0.00,
-                                //                           creditBalance || 0.00,
-                                //                           balance || 0.00,
-                                //                           creditLimit || 0.00,
-                                //                           salesOrderBalance || 0.00,
-                                //                           dataObjectnew.terpcombinedcontactsvs1[j].email || '',
-                                //                           dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD1 || '',
-                                //                           dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD2 || '',
-                                //                           dataObjectnew.terpcombinedcontactsvs1[j].street || '',
-                                //                           dataObjectnew.terpcombinedcontactsvs1[j].ID || ''
-                                //                         ];
-
-                                //                         splashArrayContactList.push(dataListContactDupp);
-                                //                         //}
-                                //                     }
-
-                                //                     let uniqueChars = [...new Set(splashArrayContactList)];
-                                //                     var datatable = $('#tblContactlist').DataTable();
-                                //                     datatable.clear();
-                                //                     datatable.rows.add(uniqueChars);
-                                //                     datatable.draw(false);
-                                //                     setTimeout(function () {
-                                //                       $("#tblContactlist").dataTable().fnPageChange('last');
-                                //                     }, 400);
-
-                                //                     $('.fullScreenSpin').css('display', 'none');
+                                                          if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)) {
+                                                              salesOrderBalance = Currency + "0.00";
+                                                          }
 
 
-                                //         }).catch(function (err) {
-                                //             $('.fullScreenSpin').css('display', 'none');
-                                //         });
+                                                        var dataListContactDupp = [
+                                                          '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"><label class="custom-control-label chkBox pointer" for="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"></label></div>',
+                                                          dataObjectnew.terpcombinedcontactsvs1[j].name || '-',
+                                                          clienttype || '',
+                                                          dataObjectnew.terpcombinedcontactsvs1[j].Phone || '',
+                                                          dataObjectnew.terpcombinedcontactsvs1[j].mobile || '',
+                                                          arBalance || 0.00,
+                                                          creditBalance || 0.00,
+                                                          balance || 0.00,
+                                                          creditLimit || 0.00,
+                                                          salesOrderBalance || 0.00,
+                                                          dataObjectnew.terpcombinedcontactsvs1[j].email || '',
+                                                          dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD1 || '',
+                                                          dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD2 || '',
+                                                          dataObjectnew.terpcombinedcontactsvs1[j].street || '',
+                                                          dataObjectnew.terpcombinedcontactsvs1[j].ID || ''
+                                                        ];
 
-                                //     });
+                                                        splashArrayContactList.push(dataListContactDupp);
+                                                        //}
+                                                    }
+
+                                                    let uniqueChars = [...new Set(splashArrayContactList)];
+                                                    var datatable = $('#tblContactlist').DataTable();
+                                                    datatable.clear();
+                                                    datatable.rows.add(uniqueChars);
+                                                    datatable.draw(false);
+                                                    setTimeout(function () {
+                                                      $("#tblContactlist").dataTable().fnPageChange('last');
+                                                    }, 400);
+
+                                                    $('.fullScreenSpin').css('display', 'none');
+
+
+                                        }).catch(function (err) {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        });
+
+                                    });
                                 setTimeout(function () {
                                     MakeNegative();
                                 }, 100);
@@ -667,108 +667,108 @@ Template.contactlistpop.onRendered(function () {
                                 $('.paginate_button.page-item.next').addClass('disabled');
                             }
 
-                            // $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                            //     .on('click', function () {
-                            //         $('.fullScreenSpin').css('display', 'inline-block');
-                            //         var splashArrayContactListDupp = new Array();
-                            //         let dataLenght = oSettings._iDisplayLength;
-                            //         let customerSearch = $('#tblContactlist_filter input').val();
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                .on('click', function () {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    var splashArrayContactListDupp = new Array();
+                                    let dataLenght = oSettings._iDisplayLength;
+                                    let customerSearch = $('#tblContactlist_filter input').val();
 
-                            //         sideBarService.getAllContactCombineVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                    sideBarService.getAllContactCombineVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
 
-                            //                     for (let j = 0; j < dataObjectnew.terpcombinedcontactsvs1.length; j++) {
+                                                for (let j = 0; j < dataObjectnew.terpcombinedcontactsvs1.length; j++) {
 
-                            //                       isprospect = dataObjectnew.terpcombinedcontactsvs1[j].isprospect;
-                            //                       iscustomer = dataObjectnew.terpcombinedcontactsvs1[j].iscustomer;
-                            //                       isEmployee = dataObjectnew.terpcombinedcontactsvs1[j].isEmployee;
-                            //                       issupplier = dataObjectnew.terpcombinedcontactsvs1[j].issupplier;
+                                                  isprospect = dataObjectnew.terpcombinedcontactsvs1[j].isprospect;
+                                                  iscustomer = dataObjectnew.terpcombinedcontactsvs1[j].iscustomer;
+                                                  isEmployee = dataObjectnew.terpcombinedcontactsvs1[j].isEmployee;
+                                                  issupplier = dataObjectnew.terpcombinedcontactsvs1[j].issupplier;
 
-                            //                       if((isprospect == true) && (iscustomer == true) && (isEmployee == true) && (issupplier == true)){
-                            //                           clienttype = "Customer / Employee / Prospect / Supplier";
-                            //                       }else if((isprospect == true) && (iscustomer ==true) && (issupplier ==true)){
-                            //                           clienttype = "Customer / Prospect / Supplier";
-                            //                       }else if((iscustomer ==true) && (issupplier ==true)){
-                            //                           clienttype = "Customer / Supplier";
-                            //                       }else if((iscustomer ==true)){
+                                                  if((isprospect == true) && (iscustomer == true) && (isEmployee == true) && (issupplier == true)){
+                                                      clienttype = "Customer / Employee / Prospect / Supplier";
+                                                  }else if((isprospect == true) && (iscustomer ==true) && (issupplier ==true)){
+                                                      clienttype = "Customer / Prospect / Supplier";
+                                                  }else if((iscustomer ==true) && (issupplier ==true)){
+                                                      clienttype = "Customer / Supplier";
+                                                  }else if((iscustomer ==true)){
 
-                            //                           if (dataObjectnew.terpcombinedcontactsvs1[j].name.toLowerCase().indexOf("^") >= 0){
-                            //                               clienttype = "Job";
-                            //                           }else{
-                            //                               clienttype = "Customer";
-                            //                           }
-                            //                       }else if((isEmployee ==true)){
-                            //                           clienttype = "Employee";
-                            //                       }else if((issupplier ==true)){
-                            //                           clienttype = "Supplier";
-                            //                       }else if((isprospect ==true)){
-                            //                           clienttype = "Prospect";
-                            //                       }else{
-                            //                           clienttype = " ";
-                            //                       }
+                                                      if (dataObjectnew.terpcombinedcontactsvs1[j].name.toLowerCase().indexOf("^") >= 0){
+                                                          clienttype = "Job";
+                                                      }else{
+                                                          clienttype = "Customer";
+                                                      }
+                                                  }else if((isEmployee ==true)){
+                                                      clienttype = "Employee";
+                                                  }else if((issupplier ==true)){
+                                                      clienttype = "Supplier";
+                                                  }else if((isprospect ==true)){
+                                                      clienttype = "Prospect";
+                                                  }else{
+                                                      clienttype = " ";
+                                                  }
 
-                            //                           let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)|| 0.00;
-                            //                           let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance) || 0.00;
-                            //                           let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].Balance)|| 0.00;
-                            //                           let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)|| 0.00;
-                            //                           let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)|| 0.00;
-                            //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)) {
-                            //                               arBalance = Currency + "0.00";
-                            //                           }
+                                                      let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)|| 0.00;
+                                                      let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance) || 0.00;
+                                                      let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].Balance)|| 0.00;
+                                                      let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)|| 0.00;
+                                                      let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)|| 0.00;
+                                                      if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)) {
+                                                          arBalance = Currency + "0.00";
+                                                      }
 
-                            //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance)) {
-                            //                               creditBalance = Currency + "0.00";
-                            //                           }
-                            //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].Balance)) {
-                            //                               balance = Currency + "0.00";
-                            //                           }
-                            //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)) {
-                            //                               creditLimit = Currency + "0.00";
-                            //                           }
+                                                      if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance)) {
+                                                          creditBalance = Currency + "0.00";
+                                                      }
+                                                      if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].Balance)) {
+                                                          balance = Currency + "0.00";
+                                                      }
+                                                      if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)) {
+                                                          creditLimit = Currency + "0.00";
+                                                      }
 
-                            //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)) {
-                            //                               salesOrderBalance = Currency + "0.00";
-                            //                           }
-
-
-                            //                         var dataListContactDupp = [
-                            //                           '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"><label class="custom-control-label chkBox pointer" for="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"></label></div>',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].name || '-',
-                            //                           clienttype || '',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].Phone || '',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].mobile || '',
-                            //                           arBalance || 0.00,
-                            //                           creditBalance || 0.00,
-                            //                           balance || 0.00,
-                            //                           creditLimit || 0.00,
-                            //                           salesOrderBalance || 0.00,
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].email || '',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD1 || '',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD2 || '',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].street || '',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].ID || ''
-                            //                         ];
-
-                            //                         splashArrayContactList.push(dataListContactDupp);
-                            //                         //}
-                            //                     }
-
-                            //                     let uniqueChars = [...new Set(splashArrayContactList)];
-                            //                     var datatable = $('#tblContactlist').DataTable();
-                            //                     datatable.clear();
-                            //                     datatable.rows.add(uniqueChars);
-                            //                     datatable.draw(false);
-                            //                     setTimeout(function () {
-                            //                       $("#tblContactlist").dataTable().fnPageChange('last');
-                            //                     }, 400);
-
-                            //                     $('.fullScreenSpin').css('display', 'none');
+                                                      if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)) {
+                                                          salesOrderBalance = Currency + "0.00";
+                                                      }
 
 
-                            //         }).catch(function (err) {
-                            //             $('.fullScreenSpin').css('display', 'none');
-                            //         });
+                                                    var dataListContactDupp = [
+                                                      '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"><label class="custom-control-label chkBox pointer" for="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"></label></div>',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].name || '-',
+                                                      clienttype || '',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].Phone || '',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].mobile || '',
+                                                      arBalance || 0.00,
+                                                      creditBalance || 0.00,
+                                                      balance || 0.00,
+                                                      creditLimit || 0.00,
+                                                      salesOrderBalance || 0.00,
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].email || '',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD1 || '',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD2 || '',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].street || '',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].ID || ''
+                                                    ];
 
-                            //     });
+                                                    splashArrayContactList.push(dataListContactDupp);
+                                                    //}
+                                                }
+
+                                                let uniqueChars = [...new Set(splashArrayContactList)];
+                                                var datatable = $('#tblContactlist').DataTable();
+                                                datatable.clear();
+                                                datatable.rows.add(uniqueChars);
+                                                datatable.draw(false);
+                                                setTimeout(function () {
+                                                  $("#tblContactlist").dataTable().fnPageChange('last');
+                                                }, 400);
+
+                                                $('.fullScreenSpin').css('display', 'none');
+
+
+                                    }).catch(function (err) {
+                                        $('.fullScreenSpin').css('display', 'none');
+                                    });
+
+                                });
                             setTimeout(function () {
                                 MakeNegative();
                             }, 100);
@@ -1052,108 +1052,108 @@ Template.contactlistpop.onRendered(function () {
                                 $('.paginate_button.page-item.next').addClass('disabled');
                             }
 
-                            // $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                            //     .on('click', function () {
-                            //         $('.fullScreenSpin').css('display', 'inline-block');
-                            //         var splashArrayContactListDupp = new Array();
-                            //         let dataLenght = oSettings._iDisplayLength;
-                            //         let customerSearch = $('#tblContactlist_filter input').val();
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                .on('click', function () {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    var splashArrayContactListDupp = new Array();
+                                    let dataLenght = oSettings._iDisplayLength;
+                                    let customerSearch = $('#tblContactlist_filter input').val();
 
-                            //         sideBarService.getAllContactCombineVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                    sideBarService.getAllContactCombineVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
 
-                            //                     for (let j = 0; j < dataObjectnew.terpcombinedcontactsvs1.length; j++) {
+                                                for (let j = 0; j < dataObjectnew.terpcombinedcontactsvs1.length; j++) {
 
-                            //                       isprospect = dataObjectnew.terpcombinedcontactsvs1[j].isprospect;
-                            //                       iscustomer = dataObjectnew.terpcombinedcontactsvs1[j].iscustomer;
-                            //                       isEmployee = dataObjectnew.terpcombinedcontactsvs1[j].isEmployee;
-                            //                       issupplier = dataObjectnew.terpcombinedcontactsvs1[j].issupplier;
+                                                  isprospect = dataObjectnew.terpcombinedcontactsvs1[j].isprospect;
+                                                  iscustomer = dataObjectnew.terpcombinedcontactsvs1[j].iscustomer;
+                                                  isEmployee = dataObjectnew.terpcombinedcontactsvs1[j].isEmployee;
+                                                  issupplier = dataObjectnew.terpcombinedcontactsvs1[j].issupplier;
 
-                            //                       if((isprospect == true) && (iscustomer == true) && (isEmployee == true) && (issupplier == true)){
-                            //                           clienttype = "Customer / Employee / Prospect / Supplier";
-                            //                       }else if((isprospect == true) && (iscustomer ==true) && (issupplier ==true)){
-                            //                           clienttype = "Customer / Prospect / Supplier";
-                            //                       }else if((iscustomer ==true) && (issupplier ==true)){
-                            //                           clienttype = "Customer / Supplier";
-                            //                       }else if((iscustomer ==true)){
+                                                  if((isprospect == true) && (iscustomer == true) && (isEmployee == true) && (issupplier == true)){
+                                                      clienttype = "Customer / Employee / Prospect / Supplier";
+                                                  }else if((isprospect == true) && (iscustomer ==true) && (issupplier ==true)){
+                                                      clienttype = "Customer / Prospect / Supplier";
+                                                  }else if((iscustomer ==true) && (issupplier ==true)){
+                                                      clienttype = "Customer / Supplier";
+                                                  }else if((iscustomer ==true)){
 
-                            //                           if (dataObjectnew.terpcombinedcontactsvs1[j].name.toLowerCase().indexOf("^") >= 0){
-                            //                               clienttype = "Job";
-                            //                           }else{
-                            //                               clienttype = "Customer";
-                            //                           }
-                            //                       }else if((isEmployee ==true)){
-                            //                           clienttype = "Employee";
-                            //                       }else if((issupplier ==true)){
-                            //                           clienttype = "Supplier";
-                            //                       }else if((isprospect ==true)){
-                            //                           clienttype = "Prospect";
-                            //                       }else{
-                            //                           clienttype = " ";
-                            //                       }
+                                                      if (dataObjectnew.terpcombinedcontactsvs1[j].name.toLowerCase().indexOf("^") >= 0){
+                                                          clienttype = "Job";
+                                                      }else{
+                                                          clienttype = "Customer";
+                                                      }
+                                                  }else if((isEmployee ==true)){
+                                                      clienttype = "Employee";
+                                                  }else if((issupplier ==true)){
+                                                      clienttype = "Supplier";
+                                                  }else if((isprospect ==true)){
+                                                      clienttype = "Prospect";
+                                                  }else{
+                                                      clienttype = " ";
+                                                  }
 
-                            //                           let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)|| 0.00;
-                            //                           let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance) || 0.00;
-                            //                           let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].Balance)|| 0.00;
-                            //                           let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)|| 0.00;
-                            //                           let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)|| 0.00;
-                            //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)) {
-                            //                               arBalance = Currency + "0.00";
-                            //                           }
+                                                      let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)|| 0.00;
+                                                      let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance) || 0.00;
+                                                      let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].Balance)|| 0.00;
+                                                      let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)|| 0.00;
+                                                      let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)|| 0.00;
+                                                      if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)) {
+                                                          arBalance = Currency + "0.00";
+                                                      }
 
-                            //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance)) {
-                            //                               creditBalance = Currency + "0.00";
-                            //                           }
-                            //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].Balance)) {
-                            //                               balance = Currency + "0.00";
-                            //                           }
-                            //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)) {
-                            //                               creditLimit = Currency + "0.00";
-                            //                           }
+                                                      if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance)) {
+                                                          creditBalance = Currency + "0.00";
+                                                      }
+                                                      if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].Balance)) {
+                                                          balance = Currency + "0.00";
+                                                      }
+                                                      if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)) {
+                                                          creditLimit = Currency + "0.00";
+                                                      }
 
-                            //                           if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)) {
-                            //                               salesOrderBalance = Currency + "0.00";
-                            //                           }
-
-
-                            //                         var dataListContactDupp = [
-                            //                           '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"><label class="custom-control-label chkBox pointer" for="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"></label></div>',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].name || '-',
-                            //                           clienttype || '',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].Phone || '',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].mobile || '',
-                            //                           arBalance || 0.00,
-                            //                           creditBalance || 0.00,
-                            //                           balance || 0.00,
-                            //                           creditLimit || 0.00,
-                            //                           salesOrderBalance || 0.00,
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].email || '',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD1 || '',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD2 || '',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].street || '',
-                            //                           dataObjectnew.terpcombinedcontactsvs1[j].ID || ''
-                            //                         ];
-
-                            //                         splashArrayContactList.push(dataListContactDupp);
-                            //                         //}
-                            //                     }
-
-                            //                     let uniqueChars = [...new Set(splashArrayContactList)];
-                            //                     var datatable = $('#tblContactlist').DataTable();
-                            //                     datatable.clear();
-                            //                     datatable.rows.add(uniqueChars);
-                            //                     datatable.draw(false);
-                            //                     setTimeout(function () {
-                            //                       $("#tblContactlist").dataTable().fnPageChange('last');
-                            //                     }, 400);
-
-                            //                     $('.fullScreenSpin').css('display', 'none');
+                                                      if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)) {
+                                                          salesOrderBalance = Currency + "0.00";
+                                                      }
 
 
-                            //         }).catch(function (err) {
-                            //             $('.fullScreenSpin').css('display', 'none');
-                            //         });
+                                                    var dataListContactDupp = [
+                                                      '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"><label class="custom-control-label chkBox pointer" for="formCheck-'+dataObjectnew.terpcombinedcontactsvs1[j].ID+'-'+ clienttype +'"></label></div>',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].name || '-',
+                                                      clienttype || '',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].Phone || '',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].mobile || '',
+                                                      arBalance || 0.00,
+                                                      creditBalance || 0.00,
+                                                      balance || 0.00,
+                                                      creditLimit || 0.00,
+                                                      salesOrderBalance || 0.00,
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].email || '',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD1 || '',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD2 || '',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].street || '',
+                                                      dataObjectnew.terpcombinedcontactsvs1[j].ID || ''
+                                                    ];
 
-                            //     });
+                                                    splashArrayContactList.push(dataListContactDupp);
+                                                    //}
+                                                }
+
+                                                let uniqueChars = [...new Set(splashArrayContactList)];
+                                                var datatable = $('#tblContactlist').DataTable();
+                                                datatable.clear();
+                                                datatable.rows.add(uniqueChars);
+                                                datatable.draw(false);
+                                                setTimeout(function () {
+                                                  $("#tblContactlist").dataTable().fnPageChange('last');
+                                                }, 400);
+
+                                                $('.fullScreenSpin').css('display', 'none');
+
+
+                                    }).catch(function (err) {
+                                        $('.fullScreenSpin').css('display', 'none');
+                                    });
+
+                                });
                             setTimeout(function () {
                                 MakeNegative();
                             }, 100);
