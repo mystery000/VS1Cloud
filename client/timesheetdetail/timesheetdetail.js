@@ -146,7 +146,8 @@ Template.timesheetdetail.onRendered(function () {
     timesheets  = timesheets.filter(ts => ts.EmployeeName == employee.EmployeeName);
     let timesheet = timesheets.find(ts => moment(ts.TimeSheetDate) == momentDate)
 
-    return timesheet != undefined ? timesheet.Hours : 0.0;
+    const hours = timesheet != undefined ? timesheet.Hours : 0.0;
+    return hours;
   }
 
   // this.loadClockOnOff = async (refresh = false) => {
@@ -206,7 +207,7 @@ Template.timesheetdetail.onRendered(function () {
       days.push({index: i, 
         dateObject: date.toDate(), 
         date: date.format("ddd DD MMM"),
-        defaultValue: this.loadHours(date.toDate())
+        defaultValue: await this.loadHours(date.toDate())
       });
       i++;
     }
