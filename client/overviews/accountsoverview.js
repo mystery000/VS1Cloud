@@ -12,6 +12,7 @@ import { ReceiptService } from "../receipts/receipt-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let receiptService = new ReceiptService();
+Template.accountsoverview.inheritsHooksFrom('non_transactional_list');
 Template.accountsoverview.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -46,6 +47,7 @@ Template.accountsoverview.onRendered(function() {
 
 
   // set initial table rest_data
+  /*
   function init_reset_data() {
     let bsbname = "Branch Code";
     if (Session.get("ERPLoggedCountry") === "Australia") {
@@ -78,6 +80,7 @@ Template.accountsoverview.onRendered(function() {
     templateObject.reset_data.set(reset_data);
   }
   init_reset_data();
+  */
   // set initial table rest_data
 
 
@@ -1665,15 +1668,15 @@ Template.accountsoverview.events({
     },
     "keyup #tblAccountOverview_filter input": function (event) {
       if ($(event.target).val() != "") {
-        $(".btnRefreshAccount").addClass("btnSearchAlert");
+        $(".btnRefreshList").addClass("btnSearchAlert");
       } else {
-        $(".btnRefreshAccount").removeClass("btnSearchAlert");
+        $(".btnRefreshList").removeClass("btnSearchAlert");
       }
       if (event.keyCode == 13) {
-        $(".btnRefresh").trigger("click");
+        $(".btnRefreshList").trigger("click");
       }
     },
-    "click .btnRefreshAccount": function () {
+    "click .btnRefreshList": function () {
         $(".btnRefresh").trigger("click");
     },
     "click .btnRefresh": function() {
@@ -1912,7 +1915,7 @@ Template.accountsoverview.events({
                 window.open("/accountsoverview", "_self");
             }, 100);
         }
-    }, delayTimeAfterSound);
+       }, delayTimeAfterSound);
     },
     "click .btnAddNewAccounts": function() {
         $("#add-account-title").text("Add New Account");
@@ -2646,7 +2649,7 @@ Template.accountsoverview.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
-    }, delayTimeAfterSound);
+      }, delayTimeAfterSound);
     },
 });
 
