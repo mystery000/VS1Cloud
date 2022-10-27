@@ -250,13 +250,13 @@ Template.timesheet.onRendered(function() {
     };
 
 
-        
+
     templateObject.loadEmployees = async (refresh = false) => {
         let data = await CachedHttp.get(erpObject.TEmployee, async () => {
         return await contactService.getAllEmployees();
         }, {
         useIndexDb: true,
-        fallBackToLocal: true, 
+        fallBackToLocal: true,
         useLocalStorage: false,
         forceOverride: refresh,
         validate: (cachedResponse) => {
@@ -612,7 +612,7 @@ Template.timesheet.onRendered(function() {
                     MakeNegative();
                 }, 100);
             });
-        
+
         }, 0);
 
         var columns = $('#tblTimeSheet th');
@@ -2247,6 +2247,8 @@ Template.timesheet.onRendered(function() {
                             let startTime = clockList[clockList.length - 1].timelog.fields.StartDatetime.split(' ')[1];
                             let endTime = clockList[clockList.length - 1].timelog.fields.EndDatetime.split(' ')[1] || '';
                             let date = clockList[clockList.length - 1].timesheetdate;
+                            startTime = clockList[clockList.length - 1].startTime.split(' ')[1] || '';
+                            endTime = clockList[clockList.length - 1].endTime.split(' ')[1] || '';
                             if (startTime != "") {
                                 $('#startTime').val(startTime);
                                 $('#dtSODate').val(date);
@@ -2416,7 +2418,7 @@ Template.timesheet.onRendered(function() {
         });
 
     }
-    
+
     // templateObject.getEmployees();
     templateObject.getJobs = function() {
         getVS1Data('TJobVS1').then(function(dataObject) {
@@ -2492,7 +2494,7 @@ Template.timesheet.onRendered(function() {
         });
 
     }
-  
+
     // templateObject.getJobs();
 
     templateObject.getAllProductData = function() {
@@ -3160,7 +3162,7 @@ Template.timesheet.onRendered(function() {
                 $('#timesheetID').text($(event.target).closest("tr").find('.colID').text());
                 $('#txtBookedHoursSpent').val($(event.target).closest("tr").find('.colRegHoursOne').val())
                 $('#txtBookedHoursSpent1').val($(event.target).closest("tr").find('.colRegHours ').text());
-                $('#endTime').val("");;
+                $('#endTime').val("");
                 $('#startTime').prop('disabled', false);
                 $('#endTime').prop('disabled', false);
                 $('#btnClockOn').prop('disabled', false);
@@ -3200,6 +3202,8 @@ Template.timesheet.onRendered(function() {
                     if (Array.isArray(clockList[clockList.length - 1].timelog)) {
                         let startTime = clockList[clockList.length - 1].timelog[0].fields.StartDatetime.split(' ')[1] || '';
                         let endTime = clockList[clockList.length - 1].timelog[clockList[clockList.length - 1].timelog.length - 1].fields.EndDatetime.split(' ')[1] || '';
+                        startTime = clockList[clockList.length - 1].startTime.split(' ')[1] || '';
+                        endTime = clockList[clockList.length - 1].endTime.split(' ')[1] || '';
                         let date = clockList[clockList.length - 1].timesheetdate;
                         if (startTime != "") {
                             $('#startTime').val(startTime);
@@ -3228,6 +3232,8 @@ Template.timesheet.onRendered(function() {
                     } else {
                         let startTime = clockList[clockList.length - 1].timelog.fields.StartDatetime.split(' ')[1] || '';
                         let endTime = clockList[clockList.length - 1].timelog.fields.EndDatetime.split(' ')[1] || '';
+                        startTime = clockList[clockList.length - 1].startTime.split(' ')[1] || '';
+                        endTime = clockList[clockList.length - 1].endTime.split(' ')[1] || '';
                         let date = clockList[clockList.length - 1].timesheetdate;
                         $('#startTime').val(startTime);
                         $('#dtSODate').val(date);
@@ -3241,7 +3247,7 @@ Template.timesheet.onRendered(function() {
                             $('#startTime').prop('disabled', true);
                         }
                         if (clockList[clockList.length - 1].isPaused == "completed") {
-                            $('#endTime').val(startTime);
+                            $('#endTime').val(endTime);
                             if (templateObject.isAccessLevels.get() == false) {
                                 $('#endTime').prop('disabled', true);
                             }
@@ -4656,7 +4662,7 @@ Template.timesheet.onRendered(function() {
         await templateObject.getAllTimeSheetDataClock();
         await templateObject.getEmployees();
         await templateObject.getJobs();
-        await templateObject.getAllProductData(); 
+        await templateObject.getAllProductData();
 
 
 
@@ -7623,7 +7629,7 @@ Template.timesheet.events({
     'click .btnRefreshTimeSheet': function(event) {
         $(".btnRefreshOne").trigger("click");
     },
-    
+
 });
 
 Template.timesheet.helpers({

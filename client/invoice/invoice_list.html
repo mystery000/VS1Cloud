@@ -75,7 +75,7 @@
                                                     margin-right: 0 !important;
                                                     height: 38px;
                                                 }
-                                            </style> 
+                                            </style>
                                             {{#each displayfield in displayfields}}
                                             {{#if displayfield.display}}
                                             <div class="columnSettings customDisplaySettings" custid="{{displayfield.id}}">
@@ -293,9 +293,9 @@
                             .dataTables_paginate.paging_simple_numbers {
                                 margin-top: 12px !important;
                             }
-                            
+
                             .btn.btn-primary {
-                                font-size: 14px !important; 
+                                font-size: 14px !important;
                             }
                         </style>
                         <div class="row no-gutters d-xl-flex align-items-xl-end">
@@ -339,7 +339,7 @@
                                     {{#each displayfield in displayfields}}
                                       {{#if displayfield.display}}
                                       <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
-                                          {{displayfield.custfieldlabel}} 
+                                          {{displayfield.custfieldlabel}}
                                         </th>
                                       {{/if}}
                                     {{/each}}
@@ -348,7 +348,7 @@
                             <tbody>
                                 {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
-                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                <tr class="dnd-moved" id="{{item.id}}" apptid="{{item.apptid}}" style="cursor: pointer;">
                                   <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
                                   <td contenteditable="false" class="colSaleDate {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" ><span style="display:none;">{{item.sortdate}}</span>{{item.saledate}}</td>
                                   <td contenteditable="false" class="colSalesNo {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.id}}</td>
