@@ -56,11 +56,11 @@ Template.supplierproductreport.onRendered(() => {
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getSupplierProductReportData();
 
-    await templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
-      ignoreDate
-    );
+    // await templateObject.loadReport(
+    //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+    //   GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
+    //   ignoreDate
+    // );
   };
 
 

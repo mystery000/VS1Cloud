@@ -144,7 +144,7 @@
                                     .tableExportDetailDiv th,
                                     .tableExportDetailDiv td {
                                         white-space: nowrap;
-                                        padding: 5px 15px;
+                                        padding: 5px 10px;
                                     }
                                     /* .tableExportDetailDiv th {
                                         text-align: center;
@@ -180,7 +180,7 @@
                                         border-right: none !important;
                                     }
                                     table.tableExportDetailDiv th {
-                                        /* min-width: 100px !important;  */
+                                        max-width: 190px !important; 
                                     }
                                     .swal2-popup.swal2-modal {
                                         padding-bottom: 25px !important;
@@ -190,12 +190,12 @@
                                     <table class="table tableExportDetailDiv table-sm" id="tableExport" name="tableExport">
                                         <thead>
                                             <tr class="table-active customDoubleTableHeading">
-                                                <th>Account Name</th>
-                                                <th>Account Number</th>
+                                                <th style="max-width: 190px;">Account Name</th>
+                                                <th>Account No</th>
                                                 <!-- <th>Memo</th> -->
                                                 <th>Date</th>
                                                 <th>Client Name</th>
-                                                <th style="width: 130px;">Type</th>
+                                                <th style="max-width: 130px;">Type</th>
                                                 <!-- <th>Department</th> -->
                                                 <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Debits</th>
                                                 <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Credit</th>
