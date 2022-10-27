@@ -30,18 +30,28 @@
                 </h5>
                 <input type="text" class="editTaskNameDescription editTaskDetailName" />
               </div>
-              <div style="display: inline-flex; width: 120px;">
+
+              <!-- <div style="display: inline-flex; width: 120px;">
                 <div class="custom-control custom-checkbox chkBox pointer"
-                  style="width: 15px; margin: 4px; background: transparent;" id="chkComplete_taskEditLabel">
+                  style="width: 15px; margin: 4px; background: transparent;" id="chkComplete_taskEditLabel_">
                   <label id="lblComplete_taskEditLabel" class="custom-control-label chkBox pointer chk_complete"
                     for="chkComplete_taskEdit" data-dismiss="modal" data-id="edit">Completed</label>
                   <input class="custom-control-input chkBox chkComplete pointer chk_complete" type="checkbox"
                     id="chkComplete_taskEdit" value="" style="background: transparent !important;" data-dismiss="modal">
                 </div>
+              </div> -->
+
+              <div class="custom-control custom-switch" style="cursor: pointer;padding-right: 100px; margin-top: 5px;">
+                <input class="custom-control-input additionalModule chkComplete pointer chk_complete" type="checkbox" 
+                  id="chkComplete_taskEdit" name="Additional" style="cursor: pointer;" additionalqty="1"
+                  autocomplete="off" data-id="edit">
+                <label class="custom-control-label" for="chkComplete_taskEdit"
+                  style="cursor: pointer; max-width: 200px;" data-id="edit">Completed</label> 
               </div>
             </div>
 
             <div class="form-group">
+              <label class="detail-label">Task Description</label>
               <div id="taskmodalDescription" class="displayTaskNameDescription"></div>
               <textarea class="editTaskNameDescription editTaskDetailDescription"></textarea>
             </div>
@@ -49,15 +59,15 @@
             <div style="display: inline-flex;">
               <div class="form-group flex" style="margin-right: 16px;">
                 <label class="detail-label" style="width: 290px;">Who is the Task is for:</label>
-                <select id="crmSelectLeadList" class="form-control crmSelectLeadList">
+                <select id="crmEditSelectLeadList" class="form-control crmSelectLeadList">
                 </select>
               </div>
               <div class="form-group flex">
                 <label class="detail-label" style="width: 145px;">Assigned to:</label>
-                <select id="crmSelectEmployeeList" class="form-control crmSelectEmployeeList">
+                <select id="crmEditSelectEmployeeList" class="form-control crmSelectEmployeeList">
                 </select>
               </div>
-            </div>
+            </div> 
 
             <div style="display: inline-flex; justify-content: space-between;">
               <div class=" flex">
@@ -74,8 +84,9 @@
 
               <div class=" flex taskDetailProjectName">
                 <label class="detail-label">For Project:</label>
-                <span class="taskLocation" style="margin-right: 0;"><a class="taganchor" href="" id="taskDetailModalCategoryLabel"><i
-                      class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>All Tasks</a></span>
+                <span class="taskLocation" style="margin-right: 0;"><a class="taganchor" href=""
+                    id="taskDetailModalCategoryLabel"><i class="fas fa-inbox text-primary"
+                      style="margin-right: 5px;"></i>All Tasks</a></span>
               </div>
             </div>
 
@@ -88,7 +99,7 @@
         </div>
 
         <div class="modal-body">
-          <div class="row"> 
+          <div class="row">
 
             <div class="col-12" style="display: inline-flex; justify-content: end;">
               <div class="dropdown">
@@ -101,7 +112,7 @@
               <!-- <i class="fas fa-tag taskModalAction" data-toggle="tooltip" data-placement="bottom" title="Add label(s)..."></i> -->
               <div class="dropdown">
                 <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false" title="Add label(s)..."></i>
+                  aria-haspopup="true" aria-expanded="false" title="Select the label(s) for this task"></i>
                 <div class="dropdown-menu dropdown-menu-right detailTaskLabelWrapper" id="detailTaskLabelWrapper"
                   aria-labelledby="dropdownMenuButton">
                 </div>
@@ -289,7 +300,7 @@
                           <div class="dropdown">
                             <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle"
                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                              title="Add label(s)..."></i>
+                              title="Select the label(s) for this task"></i>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
                               style="width: 200px;">
                             </div>

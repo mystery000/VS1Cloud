@@ -749,10 +749,9 @@ Template.customerscard.onRendered(function () {
         let dataTableList = [];
 
         // async function getTask() {
-        crmService.getAllTasksByTaskName(customerName).then(async function (data) {
+        crmService.getAllTasksByContactName(customerName).then(async function (data) {
             if(data.tprojecttasks.length > 0) {
                 for (let i = 0; i < data.tprojecttasks.length; i++) {
-                    if (data.tprojecttasks[i].fields.TaskName === customerName) {
                         let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
                         let taskLabelArray = [];
                         if (taskLabel !== null) {
@@ -778,7 +777,6 @@ Template.customerscard.onRendered(function () {
                             category: 'task'
                         };
                         dataTableList.push(dataList);
-                    }
                 }
             }
             await getAppointments();
@@ -3381,7 +3379,7 @@ Template.customerscard.events({
         let currentId = FlowRouter.current().queryParams;
         $('.fullScreenSpin').css('display', 'inline-block');
         sideBarService.getTProjectTasks().then(function (data) {
-            addVS1Data('Tprojecttasks', JSON.stringify(data)).then(function (datareturn) {
+            addVS1Data('TProjectTasks', JSON.stringify(data)).then(function (datareturn) {
                 if (!isNaN(currentId.jobid)) {
                     window.open('/customerscard?jobid=' + currentId.jobid +'&transTab=crm', '_self');
                 }

@@ -86,6 +86,9 @@ Template.new_invoice.onCreated(() => {
   templateObject.displayfields = new ReactiveVar([]);
   templateObject.reset_data = new ReactiveVar([]);
   templateObject.subtaxcodes = new ReactiveVar([]);
+
+  templateObject.isbackorderredirect = new ReactiveVar();
+  templateObject.isbackorderredirect.set(false);
 });
 
 Template.new_invoice.onRendered(function() {
@@ -1599,6 +1602,7 @@ Template.new_invoice.onRendered(function() {
                   let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                   if (data.fields.IsBackOrder) {
                     lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                    templateObject.isbackorderredirect.set(true);
                   }
                   let isPartialPaid = false;
                   if (data.fields.TotalPaid > 0) {
@@ -2143,11 +2147,10 @@ Template.new_invoice.onRendered(function() {
                   }
                   company_name = useData[d].fields.CustomerName;
 
-                  let lidData =
-                    "Edit Invoice" + " " + useData[d].fields.ID || "";
+                  let lidData = "Edit Invoice" + " " + useData[d].fields.ID || "";
                   if (useData[d].fields.IsBackOrder) {
-                    lidData =
-                      "Edit Invoice" + " (BO) " + useData[d].fields.ID || "";
+                    lidData = "Edit Invoice" + " (BO) " + useData[d].fields.ID || "";
+                    templateObject.isbackorderredirect.set(true);
                   }
 
                   let isPartialPaid = false;
@@ -2631,8 +2634,8 @@ Template.new_invoice.onRendered(function() {
 
                     let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                     if (data.fields.IsBackOrder) {
-                      lidData =
-                        "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                      lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                      templateObject.isbackorderredirect.set(true);
                     }
 
                     let isPartialPaid = false;
@@ -3188,6 +3191,7 @@ Template.new_invoice.onRendered(function() {
                 let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                 if (data.fields.IsBackOrder) {
                   lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                  templateObject.isbackorderredirect.set(true);
                 }
                 let isPartialPaid = false;
                 if (data.fields.TotalPaid > 0) {
@@ -3779,6 +3783,7 @@ Template.new_invoice.onRendered(function() {
                   let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                   if (data.fields.IsBackOrder) {
                     lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                    templateObject.isbackorderredirect.set(true);
                   }
 
                   let isPartialPaid = false;
@@ -4321,11 +4326,10 @@ Template.new_invoice.onRendered(function() {
                     lineItems.push(lineItemObj);
                   }
 
-                  let lidData =
-                    "Edit Invoice" + " " + useData[d].fields.ID || "";
+                  let lidData = "Edit Invoice" + " " + useData[d].fields.ID || "";
                   if (useData[d].fields.IsBackOrder) {
-                    lidData =
-                      "Edit Invoice" + " (BO) " + useData[d].fields.ID || "";
+                    lidData = "Edit Invoice" + " (BO) " + useData[d].fields.ID || "";
+                    templateObject.isbackorderredirect.set(true);
                   }
                   let isPartialPaid = false;
                   if (useData[d].fields.TotalPaid > 0) {
@@ -4811,8 +4815,8 @@ Template.new_invoice.onRendered(function() {
 
                     let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                     if (data.fields.IsBackOrder) {
-                      lidData =
-                        "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                      lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                      templateObject.isbackorderredirect.set(true);
                     }
 
                     let isPartialPaid = false;
@@ -5244,6 +5248,7 @@ Template.new_invoice.onRendered(function() {
                 let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                 if (data.fields.IsBackOrder) {
                   lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                  templateObject.isbackorderredirect.set(true);
                 }
                 let isPartialPaid = false;
                 if (data.fields.TotalPaid > 0) {
@@ -16883,6 +16888,60 @@ Template.new_invoice.events({
       }
     }
   },
+  "click .btnDeleteFollowingInvoices": async function (event) {
+    playDeleteAudio();
+    var currentDate = new Date();
+    let templateObject = Template.instance();
+    let salesService = new SalesBoardService();
+    var url = FlowRouter.current().path;
+    var getso_id = url.split("?id=");
+    var currentInvoice = getso_id[getso_id.length - 1];
+    var objDetails = "";
+    if (getso_id[1]) {
+      $(".fullScreenSpin").css("display", "inline-block");
+      currentInvoice = parseInt(currentInvoice);
+      var invData = await salesService.getOneInvoicedataEx(currentInvoice);
+      var saleDate = invData.fields.SaleDate;
+      var fromDate = saleDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingInvoices = await sideBarService.getAllTInvoiceListData(
+          fromDate,
+          toDate,
+          false,
+          initialReportLoad,
+          0
+        );
+      var invList = followingInvoices.tinvoicelist;
+      for (var i=0; i < invList.length; i++) {
+        var objDetails = {
+          type: "TInvoiceEx",
+          fields: {
+            ID: invList[i].SaleID,
+            Deleted: true,
+          },
+        };
+        var result = await salesService.saveInvoiceEx(objDetails);
+        // salesService
+        // .saveInvoiceEx(objDetails)
+        // .then(function (objDetails) {
+        // }).catch(function (err) {
+        // }).then((result) => {
+        // });
+      }
+    }
+    if (FlowRouter.current().queryParams.trans) {
+      FlowRouter.go(
+        "/customerscard?id=" +
+          FlowRouter.current().queryParams.trans +
+          "&transTab=active"
+      );
+    } else {
+      FlowRouter.go("/invoicelist?success=true");
+    }
+    $('.modal-backdrop').css('display','none');
+    $("#deleteLineModal").modal("toggle");
+    // Meteor._reload.reload();
+  },
   "click .btnDeleteInvoice": function (event) {
     playDeleteAudio();
     $(".fullScreenSpin").css("display", "inline-block");
@@ -17155,7 +17214,11 @@ Template.new_invoice.events({
   //     $('#myModal4').modal('toggle');
   // },
   "click .btnSave":  (event, templateObject) => {
-  playSaveAudio();
+    playSaveAudio();
+<<<<<<< HEAD
+=======
+    setTimeout(function(){
+>>>>>>> kevin_dev
     saveCurrencyHistory();
     // let templateObject = Template.instance();
     let stripe_id = templateObject.accountID.get();
@@ -18251,7 +18314,7 @@ Template.new_invoice.events({
           });
           $(".fullScreenSpin").css("display", "none");
         });
-    }
+    }}, 1000);
   },
   // display settings
   'click .chkProductName': function(event) {

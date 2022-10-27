@@ -6603,6 +6603,50 @@ Template.creditcard.events({
             }
         }
     },
+    'click .btnDeleteFollowingCredits': async function(event) {
+        playDeleteAudio();
+        var currentDate = new Date();
+        let templateObject = Template.instance();
+        let purchaseService = new PurchaseBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        if (getso_id[1]) {
+            $('.fullScreenSpin').css('display', 'inline-block');
+            currentInvoice = parseInt(currentInvoice);
+            var creditData = await purchaseService.getOneCreditData(currentInvoice);
+            var orderDate = creditData.fields.OrderDate;
+            var fromDate = orderDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingCredits = await sideBarService.getTCreditListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var creditList = followingCredits.tcreditlist;
+            for (var i=0; i < creditList.length; i++) {
+                var objDetails = {
+                    type: "TCredit",
+                    fields: {
+                        ID: creditList[i].PurchaseOrderID,
+                        Deleted: true,
+                        OrderStatus: "Deleted"
+                    }
+                };
+                var result = await purchaseService.saveCredit(objDetails);
+            }
+        }
+        if(FlowRouter.current().queryParams.trans){
+            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+        }else{
+            FlowRouter.go('/creditlist?success=true');
+        };
+        $('.modal-backdrop').css('display','none');
+        $("#deleteLineModal").modal("toggle");
+    },
     'click .btnDeleteCredit': function(event) {
         playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');

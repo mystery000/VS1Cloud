@@ -10,6 +10,7 @@ import {
 import {
     AccountService
 } from "../accounts/account-service";
+import { SalesBoardService } from "../js/sales-service";
 import {
     UtilityService
 } from "../utility-service";
@@ -2094,6 +2095,55 @@ Template.shippingdocket.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    },
+    'click .btnDeleteFollowingInvoices': async function(event) {
+        playDeleteAudio();
+        var currentDate = new Date();
+        let templateObject = Template.instance();
+        let stockTransferService = new StockTransferService();
+        let salesService = new SalesBoardService();
+        swal({
+            title: 'Delete Shipping Docket',
+            text: "Are you sure you want to Delete Shipping Docket and following shipping dockets?",
+            type: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then(async (result) => {
+            if (result.value) {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                var url = FlowRouter.current().path;
+                var getso_id = url.split('?id=');
+                var currentInvoice = getso_id[getso_id.length - 1];
+                var objDetails = '';
+                if (getso_id[1]) {
+                    currentInvoice = parseInt(currentInvoice);
+                    var invData = await salesService.getOneInvoicedataEx(currentInvoice);
+                    var saleDate = invData.fields.SaleDate;
+                    var fromDate = saleDate.substring(0, 10);
+                    var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+                    var followingInvoices = await sideBarService.getAllTInvoiceListData(
+                        fromDate,
+                        toDate,
+                        false,
+                        initialReportLoad,
+                        0
+                      );
+                    var invList = followingInvoices.tinvoicelist;
+                    for (var i=0; i < invList.length; i++) {
+                        var objDetails = {
+                            type: "TInvoice",
+                            fields: {
+                                ID: invList[i].SaleID,
+                                Deleted: true
+                            }
+                        };
+                        var result = await stockTransferService.saveShippingDocket(objDetails);   
+                    }
+                }
+            }
+        });
+        FlowRouter.go('/vs1shipping?success=true');
+        $('.modal-backdrop').css('display', 'none');
     },
     'click .btnDeleteInvoice': function(event) {
         playDeleteAudio();

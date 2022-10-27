@@ -7316,6 +7316,45 @@ Template.refundcard.events({
             }
         }
     },
+    'click .btnDeleteFollowingRefunds': async function(event) {
+        playDeleteAudio();
+        var currentDate = new Date();
+        let templateObject = Template.instance();
+        let salesService = new SalesBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        LoadingOverlay.show();
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var refundData = await salesService.getRefundSales(currentInvoice);
+            var saleDate = refundData.fields.SaleDate;
+            var fromDate = saleDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingRefunds = await sideBarService.getAllTRefundSaleListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var refundList = followingRefunds.trefundsalelist;
+            for (var i=0; i < refundList.length; i++) {
+                var objDetails = {
+                    type: "TRefundSale",
+                    fields: {
+                        ID: refundList[i].SaleID,
+                        Deleted: true
+                    }
+                };
+                var result = await salesService.saveRefundSale(objDetails);
+            }
+        }
+        window.open('/refundlist', '_self');
+        LoadingOverlay.hide();
+        $('#deleteLineModal').modal('toggle');
+    },
     'click .btnDeleteRefund': function(event) {
         playDeleteAudio();
         LoadingOverlay.show();
@@ -7350,7 +7389,7 @@ Template.refundcard.events({
 
                     }
                 });
-                LoadingOverlay.hide();
+                
             });
         } else {
             window.open('/refundlist', '_self');

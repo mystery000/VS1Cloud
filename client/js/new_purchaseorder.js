@@ -76,6 +76,9 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.subtaxcodes = new ReactiveVar([]);
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+
+    templateObject.isbackorderredirect = new ReactiveVar();
+    templateObject.isbackorderredirect.set(false);
 });
 Template.purchaseordercard.onRendered(() => {
 
@@ -1974,6 +1977,7 @@ templateObject.getLastPOData = async function() {
                           let lidData = 'Edit Purchase Order' + ' ' + data.fields.ID||'';
                           if(data.fields.IsBackOrder){
                              lidData = 'Edit Purchase Order' + ' (BO) ' + data.fields.ID||'';
+                             templateObject.isbackorderredirect.set(true);
                           }
 
                           let isPartialPaid = false;
@@ -2213,6 +2217,7 @@ templateObject.getLastPOData = async function() {
                                 let lidData = 'Edit Purchase Order' + ' ' + useData[d].fields.ID||'';
                                 if(useData[d].fields.IsBackOrder){
                                    lidData = 'Edit Purchase Order' + ' (BO) ' + useData[d].fields.ID||'';
+                                   templateObject.isbackorderredirect.set(true);
                                 }
 
                                 let isPartialPaid = false;
@@ -2433,6 +2438,7 @@ templateObject.getLastPOData = async function() {
                               let lidData = 'Edit Purchase Order' + ' ' + data.fields.ID||'';
                               if(data.fields.IsBackOrder){
                                  lidData = 'Edit Purchase Order' + ' (BO) ' + data.fields.ID||'';
+                                 templateObject.isbackorderredirect.set(true);
                               }
 
                               let isPartialPaid = false;
@@ -2649,6 +2655,7 @@ templateObject.getLastPOData = async function() {
                         let lidData = 'Edit Purchase Order' + ' ' + data.fields.ID||'';
                         if(data.fields.IsBackOrder){
                            lidData = 'Edit Purchase Order' + ' (BO) ' + data.fields.ID||'';
+                           templateObject.isbackorderredirect.set(true);
                         }
 
                         let isPartialPaid = false;
@@ -7351,10 +7358,58 @@ Template.purchaseordercard.events({
             }
         }
     },
+<<<<<<< HEAD
+    'click .btnDeletePO': async function(event) {
+=======
+    'click .btnDeleteFollowingPOs': async function(event) {
+        playDeleteAudio();
+        var currentDate = new Date();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let templateObject = Template.instance();
+        let purchaseService = new PurchaseBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
+            var orderDate = poData.fields.OrderDate;
+            var fromDate = orderDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingPOs = await sideBarService.getAllTPurchaseOrderListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var poList = followingPOs.tpurchaseorderlist;
+            for (var i=0; i < poList.length; i++) {
+                var objDetails = {
+                    type: "TPurchaseOrderEx",
+                    fields: {
+                        ID: poList[i].PurchaseOrderID,
+                        Deleted: true
+                    }
+                };
+                var result = await purchaseService.savePurchaseOrderEx(objDetails);
+            }
+        }
+        if(FlowRouter.current().queryParams.trans){
+            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+        }else{
+            FlowRouter.go('/purchaseorderlist?success=true');
+        };
+        $('.modal-backdrop').css('display','none');
+        $("#deleteLineModal").modal("toggle");
+    },
     'click .btnDeletePO': function(event) {
+>>>>>>> kevin_dev
         playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
+        let isBORedirect = await templateObject.isbackorderredirect.get() || false;
         let purchaseService = new PurchaseBoardService();
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
@@ -7375,7 +7430,11 @@ Template.purchaseordercard.events({
                 if(FlowRouter.current().queryParams.trans){
                   FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                 }else{
-                  FlowRouter.go('/purchaseorderlist?success=true');
+                  if(isBORedirect == true){
+                    FlowRouter.go('/purchaseorderlistBO?success=true');
+                  }else{
+                    FlowRouter.go('/purchaseorderlist?success=true');
+                  };
                 };
             }).catch(function(err) {
                 swal({
@@ -7396,7 +7455,11 @@ Template.purchaseordercard.events({
           if(FlowRouter.current().queryParams.trans){
             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
           }else{
-            FlowRouter.go('/purchaseorderlist?success=true');
+            if(isBORedirect == true){
+              FlowRouter.go('/purchaseorderlistBO?success=true');
+            }else{
+              FlowRouter.go('/purchaseorderlist?success=true');
+            };
           };
         }
         $('#deleteLineModal').modal('toggle');
@@ -7561,10 +7624,11 @@ Template.purchaseordercard.events({
         playSaveAudio();
         $('#myModal4').modal('toggle');
     },
-    'click .btnSave': (event, templateObject) => {
+    'click .btnSave': async (event, templateObject) => {
         playSaveAudio();
         saveCurrencyHistory();
-
+        let tempObject = Template.instance();
+        let isBORedirect = await tempObject.isbackorderredirect.get() || false;
         let suppliername = $('#edtSupplierName');
         let purchaseService = new PurchaseBoardService();
         let termname = $('#sltTerms').val() || '';
@@ -7869,7 +7933,6 @@ Template.purchaseordercard.events({
                 $('.po').text(ponumber);
                 async function addAttachment() {
                     let attachment = [];
-                    let templateObject = Template.instance();
 
                     let invoiceId = objDetails.fields.ID;
                     let encodedPdf = await generatePdfForMail(invoiceId);
@@ -7962,7 +8025,16 @@ Template.purchaseordercard.events({
                                 attachments: attachment
                             }, function(error, result) {
                                 if (error && error.error === "error") {
-                                    FlowRouter.go('/purchaseorderlist?success=true');
+                                  if(isBORedirect == true){
+                                    FlowRouter.go('/purchaseorderlistBO?success=true');
+                                  }else{
+                                    if(isBORedirect == true){
+                                      FlowRouter.go('/purchaseorderlistBO?success=true');
+                                    }else{
+                                      FlowRouter.go('/purchaseorderlist?success=true');
+                                    };
+                                  };
+
 
                                 } else {
 
@@ -7978,7 +8050,11 @@ Template.purchaseordercard.events({
                                 attachments: attachment
                             }, function(error, result) {
                                 if (error && error.error === "error") {
+                                  if(isBORedirect == true){
+                                    FlowRouter.go('/purchaseorderlistBO?success=true');
+                                  }else{
                                     FlowRouter.go('/purchaseorderlist?success=true');
+                                  };
                                 } else {
                                     $('#html-2-pdfwrapper').css('display', 'none');
                                     swal({
@@ -7992,7 +8068,11 @@ Template.purchaseordercard.events({
                                           if(FlowRouter.current().queryParams.trans){
                                             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                                           }else{
-                                            FlowRouter.go('/purchaseorderlist?success=true');
+                                            if(isBORedirect == true){
+                                              FlowRouter.go('/purchaseorderlistBO?success=true');
+                                            }else{
+                                              FlowRouter.go('/purchaseorderlist?success=true');
+                                            };
                                           };
                                         } else if (result.dismiss === 'cancel') {
 
@@ -8044,7 +8124,11 @@ Template.purchaseordercard.events({
                                 attachments: attachment
                             }, function(error, result) {
                                 if (error && error.error === "error") {
+                                  if(isBORedirect == true){
+                                    FlowRouter.go('/purchaseorderlistBO?success=true');
+                                  }else{
                                     FlowRouter.go('/purchaseorderlist?success=true');
+                                  };
 
                                 } else {
                                     $('#html-2-pdfwrapper').css('display', 'none');
@@ -8059,7 +8143,11 @@ Template.purchaseordercard.events({
                                           if(FlowRouter.current().queryParams.trans){
                                             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                                           }else{
-                                            FlowRouter.go('/purchaseorderlist?success=true');
+                                            if(isBORedirect == true){
+                                              FlowRouter.go('/purchaseorderlistBO?success=true');
+                                            }else{
+                                              FlowRouter.go('/purchaseorderlist?success=true');
+                                            };
                                           };
                                         } else if (result.dismiss === 'cancel') {
 
@@ -8111,7 +8199,11 @@ Template.purchaseordercard.events({
                                 attachments: attachment
                             }, function(error, result) {
                                 if (error && error.error === "error") {
+                                  if(isBORedirect == true){
+                                    FlowRouter.go('/purchaseorderlistBO?success=true');
+                                  }else{
                                     FlowRouter.go('/purchaseorderlist?success=true');
+                                  };
                                 } else {
                                     $('#html-2-pdfwrapper').css('display', 'none');
                                     swal({
@@ -8125,7 +8217,11 @@ Template.purchaseordercard.events({
                                           if(FlowRouter.current().queryParams.trans){
                                             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                                           }else{
-                                            FlowRouter.go('/purchaseorderlist?success=true');
+                                            if(isBORedirect == true){
+                                              FlowRouter.go('/purchaseorderlistBO?success=true');
+                                            }else{
+                                              FlowRouter.go('/purchaseorderlist?success=true');
+                                            };
                                           };
                                         } else if (result.dismiss === 'cancel') {
 
@@ -8204,7 +8300,11 @@ Template.purchaseordercard.events({
                           if(FlowRouter.current().queryParams.trans){
                             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                           }else{
-                            FlowRouter.go('/purchaseorderlist?success=true');
+                            if(isBORedirect == true){
+                              FlowRouter.go('/purchaseorderlistBO?success=true');
+                            }else{
+                              FlowRouter.go('/purchaseorderlist?success=true');
+                            };
                           };
                         };
                     };
@@ -8213,7 +8313,6 @@ Template.purchaseordercard.events({
 
                 function generatePdfForMail(invoiceId) {
                     return new Promise((resolve, reject) => {
-                        let templateObject = Template.instance();
 
                         let completeTabRecord;
                         let doc = new jsPDF('p', 'pt', 'a4');

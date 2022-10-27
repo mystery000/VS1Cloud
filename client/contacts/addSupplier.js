@@ -703,10 +703,9 @@ Template.supplierscard.onRendered(function () {
             employeeID = url.searchParams.get("id");
         }
         let dataTableList = [];
-        crmService.getAllTasksByTaskName(supplierName).then(async function (data) {
+        crmService.getAllTasksByContactName(supplierName).then(async function (data) {
             if(data.tprojecttasks.length > 0) {
                 for (let i = 0; i < data.tprojecttasks.length; i++) {
-                    if (data.tprojecttasks[i].fields.TaskName === supplierName) {
                         let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
                         let taskLabelArray = [];
                         if (taskLabel !== null) {
@@ -732,7 +731,6 @@ Template.supplierscard.onRendered(function () {
                             category: 'task'
                         };
                         dataTableList.push(dataList);
-                    }
                 }
             }
             await getAppointments();
@@ -2256,7 +2254,7 @@ Template.supplierscard.events({
         let currentId = FlowRouter.current().queryParams;
         $('.fullScreenSpin').css('display', 'inline-block');
         sideBarService.getTProjectTasks().then(function (data) {
-            addVS1Data('Tprojecttasks', JSON.stringify(data)).then(function (datareturn) {
+            addVS1Data('TProjectTasks', JSON.stringify(data)).then(function (datareturn) {
                 if (!isNaN(currentId.id)) {
                     window.open('/supplierscard?id=' + currentId.id +'&crmTab=active', '_self');
                 }

@@ -70,13 +70,13 @@ Template.invoicelist.onRendered(function () {
         } else {
           let data = JSON.parse(dataObject[0].data);
           if(data.ProcessLog.Obj.CustomLayout.length > 0){
-           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-               templateObject.showCustomFieldDisplaySettings(reset_data);
-             }
-           }
-         };
+            for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+              if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                templateObject.showCustomFieldDisplaySettings(reset_data);
+              }
+            }
+          }
           // handle process here
         }
       });
@@ -115,10 +115,6 @@ Template.invoicelist.onRendered(function () {
   var splashArray = new Array();
   const dataTableList = [];
   const tableHeaderList = [];
-
-  if (localStorage.getItem("invoiceAppointmentIDs") == undefined || localStorage.getItem("invoiceAppointmentIDs") == "null") {
-    localStorage.setItem("invoiceAppointmentIDs", "");
-  }
 
   if (FlowRouter.current().queryParams.success) {
     $(".btnRefresh").addClass("btnRefreshAlert");
@@ -229,8 +225,7 @@ Template.invoicelist.onRendered(function () {
     let prevMonth11Date = moment()
       .subtract(reportsloadMonths, "months")
       .format("YYYY-MM-DD");
-      let invoiceAppointmentIDs = localStorage.getItem("invoiceAppointmentIDs");
-
+   
     getVS1Data("TInvoiceList")
       .then(function (dataObject) {
         if (dataObject.length == 0) {
@@ -294,16 +289,9 @@ Template.invoicelist.onRendered(function () {
                   salestatus = "Deleted";
                 }
 
-                if (FlowRouter.current().queryParams.success == undefined && i == 0) {
-                    if (localStorage.getItem("convertAppointmentID") != undefined && localStorage.getItem("convertAppointmentID") != "null") {
-                        invoiceAppointmentIDs += data.tinvoicelist[i].SaleID + "-" + localStorage.getItem("convertAppointmentID") + ",";
-                        localStorage.setItem("convertAppointmentID", null);
-                        localStorage.setItem("invoiceAppointmentIDs", invoiceAppointmentIDs);
-                    }
-                }
-
                 var dataList = {
                   id: data.tinvoicelist[i].SaleID || "",
+                  apptid: data.tinvoicelist[i].AppointID || 0,
                   employee: data.tinvoicelist[i].EmployeeName || "",
                   sortdate:
                     data.tinvoicelist[i].SaleDate != ""
@@ -711,6 +699,7 @@ Template.invoicelist.onRendered(function () {
 
               $("#tblInvoicelist tbody").on("click", "tr", function () {
                 var listData = $(this).closest("tr").attr("id");
+                var apptId = $(this).closest("tr").attr("apptid");
                 var checkDeleted =
                   $(this).closest("tr").find(".colStatus").text() || "";
                 if (listData) {
@@ -722,14 +711,16 @@ Template.invoicelist.onRendered(function () {
                     );
                   } else {
                     // let apptId = FlowRouter.current().queryParams.apptId;
-                    let apptId = 689;
-                    invoiceAppointmentIDs = invoiceAppointmentIDs.split(",");
-                    invoiceAppointmentIDs.forEach((item, j) => {
-                        if (item.split("-")[0] == listData) {
-                            apptId = item.split("-")[1];
-                        }
-                    });
-                    FlowRouter.go("/invoicecard?id=" + listData + "&apptId=" + apptId);
+                    if(parseInt(apptId) > 0){
+                      FlowRouter.go(
+                          "/invoicecard?id=" + listData + "&apptId=" + apptId
+                      );
+                    }
+                    else{
+                      FlowRouter.go(
+                          "/invoicecard?id=" + listData
+                      );
+                    }
                   }
                 }
               });
@@ -791,16 +782,9 @@ Template.invoicelist.onRendered(function () {
               salestatus = "Deleted";
             }
 
-            if (FlowRouter.current().queryParams.success == undefined && i == 0) {
-                if (localStorage.getItem("convertAppointmentID") != undefined && localStorage.getItem("convertAppointmentID") != "null") {
-                    invoiceAppointmentIDs += data.tinvoicelist[i].SaleID + "-" + localStorage.getItem("convertAppointmentID") + ",";
-                    localStorage.setItem("convertAppointmentID", null);
-                    localStorage.setItem("invoiceAppointmentIDs", invoiceAppointmentIDs);
-                }
-            }
-
             var dataList = {
               id: data.tinvoicelist[i].SaleID || "",
+              apptid: data.tinvoicelist[i].AppointID || 0,
               employee: data.tinvoicelist[i].EmployeeName || "",
               sortdate:
                 data.tinvoicelist[i].SaleDate != ""
@@ -1174,6 +1158,7 @@ Template.invoicelist.onRendered(function () {
           // );
           $("#tblInvoicelist tbody").on("click", "tr", function () {
             var listData = $(this).closest("tr").attr("id");
+            let apptId = $(this).closest("tr").attr("apptid");
             var checkDeleted =
               $(this).closest("tr").find(".colStatus").text() || "";
             if (listData) {
@@ -1184,17 +1169,16 @@ Template.invoicelist.onRendered(function () {
                   "info"
                 );
               } else {
-                let apptId = 689;
-                invoiceAppointmentIDs = invoiceAppointmentIDs.split(",");
-                invoiceAppointmentIDs.forEach((item, j) => {
-                    if (item.split("-")[0] == listData) {
-                        apptId = item.split("-")[1];
-                    }
-                });
-
-                FlowRouter.go(
-                    "/invoicecard?id=" + listData + "&apptId=" + apptId
-                );
+                if(parseInt(apptId) > 0){
+                  FlowRouter.go(
+                      "/invoicecard?id=" + listData + "&apptId=" + apptId
+                  );
+                }
+                else{
+                  FlowRouter.go(
+                      "/invoicecard?id=" + listData
+                  );
+                }
               }
             }
           });
@@ -1262,16 +1246,9 @@ Template.invoicelist.onRendered(function () {
                 salestatus = "Deleted";
               }
 
-              if (FlowRouter.current().queryParams.success == undefined && i == 0) {
-                  if (localStorage.getItem("convertAppointmentID") != undefined && localStorage.getItem("convertAppointmentID") != "null") {
-                      invoiceAppointmentIDs += data.tinvoicelist[i].SaleID + "-" + localStorage.getItem("convertAppointmentID") + ",";
-                      localStorage.setItem("convertAppointmentID", null);
-                      localStorage.setItem("invoiceAppointmentIDs", invoiceAppointmentIDs);
-                  }
-              }
-
               var dataList = {
                 id: data.tinvoicelist[i].SaleID || "",
+                apptid: data.tinvoicelist[i].AppointID || 0,
                 employee: data.tinvoicelist[i].EmployeeName || "",
                 sortdate:
                   data.tinvoicelist[i].SaleDate != ""
@@ -1629,6 +1606,7 @@ Template.invoicelist.onRendered(function () {
             // );
             $("#tblInvoicelist tbody").on("click", "tr", function () {
               var listData = $(this).closest("tr").attr("id");
+              var apptId = $(this).closest("tr").attr("apptid");
               var checkDeleted =
                 $(this).closest("tr").find(".colStatus").text() || "";
               if (listData) {
@@ -1639,16 +1617,16 @@ Template.invoicelist.onRendered(function () {
                     "info"
                   );
                 } else {
-                  let apptId = 689;
-                  invoiceAppointmentIDs = invoiceAppointmentIDs.split(",");
-                  invoiceAppointmentIDs.forEach((item, j) => {
-                      if (item.split("-")[0] == listData) {
-                          apptId = item.split("-")[1];
-                      }
-                  });
-                  FlowRouter.go(
-                      "/invoicecard?id=" + listData + "&apptId=" + apptId
-                  );
+                  if(parseInt(apptId) > 0){
+                    FlowRouter.go(
+                        "/invoicecard?id=" + listData + "&apptId=" + apptId
+                    );
+                  }
+                  else{
+                    FlowRouter.go(
+                        "/invoicecard?id=" + listData
+                    );
+                  }
                 }
               }
             });
@@ -1811,16 +1789,9 @@ Template.invoicelist.events({
                 salestatus = "Deleted";
               }
 
-              if (FlowRouter.current().queryParams.success == undefined && i == 0) {
-                  if (localStorage.getItem("convertAppointmentID") != undefined && localStorage.getItem("convertAppointmentID") != "null") {
-                      invoiceAppointmentIDs += data.tinvoiceex[i].fields.ID + "-" + localStorage.getItem("convertAppointmentID") + ",";
-                      localStorage.setItem("convertAppointmentID", null);
-                      localStorage.setItem("invoiceAppointmentIDs", invoiceAppointmentIDs);
-                  }
-              }
-
               var dataList = {
                 id: data.tinvoiceex[i].fields.ID || "",
+                apptid: data.tinvoicelist[i].fields.AppointID || 0,
                 employee: data.tinvoiceex[i].fields.EmployeeName || "",
                 sortdate:
                   data.tinvoiceex[i].fields.SaleDate != ""

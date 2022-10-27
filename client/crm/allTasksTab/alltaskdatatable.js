@@ -63,7 +63,7 @@ Template.alltaskdatatable.onRendered(function () {
     let due_date_display = "No Date";
     if (date) {
       due_date = moment(date).format("YYYY-MM-DD hh:mm:ss");
-      due_date_display = moment(due_date).format("D MMM");
+      due_date_display = moment(due_date).format("dddd, Do MMMM");
     }
     $('#edit_task_modal_due_date').html(due_date_display)
 
@@ -92,7 +92,7 @@ Template.alltaskdatatable.onRendered(function () {
       buttonImageOnly: true,
       buttonImage: "/img/imgCal2.png",
       constrainInput: false,
-      dateFormat: "yy/mm/dd",
+      dateFormat: "dd/mm/yy",
       showOtherMonths: true,
       selectOtherMonths: true,
       changeMonth: true,
@@ -100,8 +100,12 @@ Template.alltaskdatatable.onRendered(function () {
       yearRange: "-90:+10",
       onSelect: function (dateText, inst) {
         let task_id = inst.id;
-        templateObject.updateTaskSchedule(task_id, dateText);
+        templateObject.updateTaskSchedule(task_id, new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
       },
+      onChangeMonthYear: function (year, month, inst) {
+        // Set date to picker
+        $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+      }
     });
     let currentDate = new Date();
     let begunDate = moment(currentDate).format("DD/MM/YYYY");
@@ -249,11 +253,12 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colPriority openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
-            if (rowData[13] != 'transparent') {
-              $(td).css('background-color', rowData[13]);
-              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
-              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
-            }
+            $(td).css('background-color', rowData[13]);
+            // if (rowData[13] != 'transparent') {
+            //   $(td).css('background-color', rowData[13]);
+            //   $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+            //   $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            // }
           },
           width: "100px",
         },
@@ -263,11 +268,12 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colContact openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
-            if (rowData[13] != 'transparent') {
-              $(td).css('background-color', rowData[13]);
-              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
-              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
-            }
+            $(td).css('background-color', rowData[13]);
+            // if (rowData[13] != 'transparent') {
+            //   $(td).css('background-color', rowData[13]);
+            //   $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+            //   $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            // }
           },
           width: "100px",
         },
@@ -276,11 +282,12 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colDate openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
-            if (rowData[13] != 'transparent') {
-              $(td).css('background-color', rowData[13]);
-              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
-              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
-            }
+            $(td).css('background-color', rowData[13]);
+            // if (rowData[13] != 'transparent') {
+            //   $(td).css('background-color', rowData[13]);
+            //   $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+            //   $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            // }
           },
           width: "120px",
         },
@@ -289,11 +296,12 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colTaskName openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
-            if (rowData[13] != 'transparent') {
-              $(td).css('background-color', rowData[13]);
-              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
-              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
-            }
+            $(td).css('background-color', rowData[13]);
+            // if (rowData[13] != 'transparent') {
+            //   $(td).css('background-color', rowData[13]);
+            //   $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+            //   $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            // }
           },
         },
         {
@@ -301,11 +309,12 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colTaskDesc openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
-            if (rowData[13] != 'transparent') {
-              $(td).css('background-color', rowData[13]);
-              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
-              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
-            }
+            $(td).css('background-color', rowData[13]);
+            // if (rowData[13] != 'transparent') {
+            //   $(td).css('background-color', rowData[13]);
+            //   $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+            //   $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            // }
           },
         },
         {
@@ -313,11 +322,12 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colTaskLabels openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
-            if (rowData[13] != 'transparent') {
-              $(td).css('background-color', rowData[13]);
-              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
-              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
-            }
+            $(td).css('background-color', rowData[13]);
+            // if (rowData[13] != 'transparent') {
+            //   $(td).css('background-color', rowData[13]);
+            //   $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+            //   $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            // }
           },
         },
         {
@@ -325,13 +335,13 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colTaskProjects openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
-            // $(td).css('background', rowData[13]);
+            $(td).css('background', rowData[13]);
             // $(td).css('color', '#ffffff');
-            if (rowData[13] != 'transparent') {
-              $(td).css('background-color', rowData[13]);
-              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
-              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
-            }
+            // if (rowData[13] != 'transparent') {
+            //   $(td).css('background-color', rowData[13]);
+            //   $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+            //   $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            // }
           },
         },
         {
@@ -340,11 +350,12 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colTaskActions",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[9]);
-            if (rowData[13] != 'transparent') {
-              $(td).css('background-color', rowData[13]);
-              $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
-              $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
-            }
+            $(td).css('background-color', rowData[13]);
+            // if (rowData[13] != 'transparent') {
+            //   $(td).css('background-color', rowData[13]);
+            //   $(td).css('background', `radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, ${rowData[13]} 20%, ${rowData[13]} 80%, transparent 80%, transparent) 8px 10px, linear-gradient(#8f93f7 0.8px, transparent 0.8px) 0 -0.4px, linear-gradient(116deg, #8f93f7 0.8px, ${rowData[13]} 0.8px) -0.4px 0`);
+            //   $(td).css('background-size', '20px 20px, 20px 20px, 10px 10px, 10px 10px');
+            // }
           },
           width: "150px",
         },
@@ -491,9 +502,9 @@ Template.alltaskdatatable.onRendered(function () {
       });
     }
 
-    setTimeout(() => {
-      templateObject.initDatepicker();
-    }, 500);
+    // setTimeout(() => {
+    //   templateObject.initDatepicker();
+    // }, 500);
   };
 
   templateObject.initTodayTasksTable = function (search = null) {
@@ -1071,18 +1082,19 @@ Template.alltaskdatatable.onRendered(function () {
       tflag = `<i class="fas fa-flag task_modal_priority_${item.fields.priority}" data-id="${item.fields.ID}" aria-haspopup="true" aria-expanded="false"></i>`;
 
       // tempcode  need to add ContactName, AssignName fields to Tprojecttasks
-      if (item.fields.LeadID) {
-        let cData = getContactDetailById(item.fields.LeadID, 'Lead');
-        tcontact = cData ? cData.fields.ClientName : "";
-      } else if (item.fields.SupplierID) {
-        let cData = getContactDetailById(item.fields.SupplierID, 'Supplier');
-        tcontact = cData ? cData.fields.ClientName : "";
-      } else if (item.fields.JobID) {
-        let cData = getContactDetailById(item.fields.LeadID, 'Job');
-        tcontact = cData ? cData.fields.ClientName : "";
-      } else {
+      tcontact = item.fields.ContactName;
+      // if (item.fields.LeadID) {
+      //   let cData = getContactDetailById(item.fields.LeadID, 'Lead');
+      //   tcontact = cData ? cData.fields.ClientName : "";
+      // } else if (item.fields.SupplierID) {
+      //   let cData = getContactDetailById(item.fields.SupplierID, 'Supplier');
+      //   tcontact = cData ? cData.fields.ClientName : "";
+      // } else if (item.fields.JobID) {
+      //   let cData = getContactDetailById(item.fields.LeadID, 'Job');
+      //   tcontact = cData ? cData.fields.ClientName : "";
+      // } else {
 
-      }
+      // }
 
       if (item.fields.due_date == "" || item.fields.due_date == null) {
         td1 = "";
@@ -1144,6 +1156,7 @@ Template.alltaskdatatable.onRendered(function () {
       }
 
       td5 = `
+      <div style="display:flex; justify-content:center;">
         <div class="dropdown btnTaskTableAction">
           <button type="button" class="btn btn-success" data-toggle="dropdown"><i
               class="far fa-calendar" title="Reschedule Task"></i></button>
@@ -1179,7 +1192,8 @@ Template.alltaskdatatable.onRendered(function () {
               No Date</a>
             <div class="dropdown-divider no-modal"></div>
             <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
-              title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+              title="Date format: DD/MM/YYYY" style="display:flex; margin: 6px 20px; margin-top: 0px; z-index: 99999;">
+              <label style="margin-top: 6px; margin-right: 16px; width: 146px;">Select Date</label>
               <div class="input-group date no-modal" style="cursor: pointer;">
                 <input type="text" id="${item.fields.ID}" class="form-control crmDatepicker no-modal"
                   autocomplete="off">
@@ -1251,7 +1265,8 @@ Template.alltaskdatatable.onRendered(function () {
                 data-id="${item.fields.ID}"></i>Delete
               Task</a>
           </div>
-        </div>`;
+        </div>
+      </div>`;
 
       taskRows.push([
         td0,
@@ -1977,17 +1992,23 @@ Template.alltaskdatatable.onRendered(function () {
       buttonImageOnly: true,
       buttonImage: "/img/imgCal2.png",
       constrainInput: false,
-      dateFormat: "yy/mm/dd",
+      dateFormat: "dd/mm/yy",
       showOtherMonths: true,
       selectOtherMonths: true,
       changeMonth: true,
       changeYear: true,
       yearRange: "-90:+10",
       onSelect: function (dateText, inst) {
-        $(".lblAddTaskSchedule").html(moment(dateText).format("YYYY-MM-DD"));
+        $(".lblAddTaskSchedule").html(moment(new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay)).format("DD/MM/YYYY"));
       },
+      onChangeMonthYear: function (year, month, inst) {
+        // Set date to picker
+        $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+      }
     });
   }, 1000);
+  $(".crmEditDatepicker").val(moment().format("DD/MM/YYYY"));
+
   tableResize();
 });
 
@@ -2064,6 +2085,8 @@ Template.alltaskdatatable.events({
 
         $(".fullScreenSpin").css("display", "none");
         $(".btnRefresh").addClass('btnSearchAlert');
+
+        $('#taskDetailModal').modal('toggle');
 
       });
     }
@@ -2206,6 +2229,18 @@ Template.alltaskdatatable.events({
       `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>${projectName}`
     );
 
+    catg = `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
+      "<span class='text-success'>" +
+      projectName +
+      "</span>";
+
+    $(".taskLocation").html(
+      `<a class="taganchor">
+                ${catg}
+              </a>`
+    );
+
+
     let templateObject = Template.instance();
     let taskid = $("#txtCrmTaskID").val();
 
@@ -2266,7 +2301,11 @@ Template.alltaskdatatable.events({
         return;
       }
 
+      let assignId = $('#assignedID').val();
+      let assignName = $('#crmEditSelectEmployeeList').val();
       let contactID = $('#contactID').val();
+      let contactName = $('#crmEditSelectLeadList').val();
+
       let contactType = $('#contactType').val();
       let customerID = 0;
       let leadID = 0;
@@ -2289,6 +2328,9 @@ Template.alltaskdatatable.events({
           CustomerID: customerID,
           LeadID: leadID,
           SupplierID: supplierID,
+          AssignID: assignId,
+          AssignName: assignName,
+          ContactName: contactName
         },
       };
       $(".fullScreenSpin").css("display", "inline-block");
@@ -2325,7 +2367,7 @@ Template.alltaskdatatable.events({
     let templateObject = Template.instance();
 
     let due_date = $(".crmEditDatepicker").val();
-    due_date = due_date ? moment(due_date).format("YYYY-MM-DD hh:mm:ss") : moment().format("YYYY-MM-DD hh:mm:ss");
+    due_date = due_date ? moment(due_date.split('/')[2] + '-' + due_date.split('/')[1] + '-' + due_date.split('/')[0]).format("YYYY-MM-DD hh:mm:ss") : moment().format("YYYY-MM-DD hh:mm:ss");
 
     let priority = 0;
     priority = $("#chkPriorityAdd1").prop("checked") ? 1 : $("#chkPriorityAdd2").prop("checked") ? 2 : $("#chkPriorityAdd3").prop("checked") ? 3 : 0;
@@ -2346,7 +2388,11 @@ Template.alltaskdatatable.events({
     let employeeID = Session.get("mySessionEmployeeLoggedID");
     let employeeName = Session.get("mySessionEmployee");
 
+    let assignId = $('#assignedID').val();
+    let assignName = $('#add_assigned_name').val();
+
     let contactID = $('#contactID').val();
+    let contactName = $('#add_contact_name').val();
     let contactType = $('#contactType').val();
     let customerID = 0;
     let leadID = 0;
@@ -2359,6 +2405,23 @@ Template.alltaskdatatable.events({
       supplierID = contactID
     }
 
+    let addObject = {
+      TaskName: task_name,
+      TaskDescription: task_description,
+      Completed: false,
+      ProjectID: projectID,
+      due_date: due_date,
+      priority: priority,
+      EnteredByID: parseInt(employeeID),
+      EnteredBy: employeeName,
+      CustomerID: customerID,
+      LeadID: leadID,
+      SupplierID: supplierID,
+      AssignID: assignId,
+      AssignName: assignName,
+      ContactName: contactName
+    }
+
     if (subTaskID) {
       var objDetails = {
         type: "Tprojecttasks",
@@ -2367,19 +2430,7 @@ Template.alltaskdatatable.events({
           subtasks: [
             {
               type: "Tprojecttask_subtasks",
-              fields: {
-                TaskName: task_name,
-                TaskDescription: task_description,
-                Completed: false,
-                ProjectID: projectID,
-                due_date: due_date,
-                priority: priority,
-                EnteredByID: parseInt(employeeID),
-                EnteredBy: employeeName,
-                CustomerID: customerID,
-                LeadID: leadID,
-                SupplierID: supplierID,
-              },
+              fields: addObject,
             }
           ]
         },
@@ -2387,19 +2438,7 @@ Template.alltaskdatatable.events({
     } else {
       var objDetails = {
         type: "Tprojecttasks",
-        fields: {
-          TaskName: task_name,
-          TaskDescription: task_description,
-          Completed: false,
-          ProjectID: projectID,
-          due_date: due_date,
-          priority: priority,
-          EnteredByID: parseInt(employeeID),
-          EnteredBy: employeeName,
-          CustomerID: customerID,
-          LeadID: leadID,
-          SupplierID: supplierID,
-        },
+        fields: addObject,
       };
     }
 
@@ -2467,11 +2506,7 @@ Template.alltaskdatatable.events({
                   // tempcode until api is updated
                 } catch (error) {
                   swal(error, "", "error");
-
-                  templateObject.getAllTaskList();
-                  templateObject.getTProjectList();
                 }
-
               } else {
                 let sutTaskTable = $('#tblSubtaskDatatable').DataTable();
                 sutTaskTable.clear().draw();
@@ -2485,6 +2520,7 @@ Template.alltaskdatatable.events({
             return;
           });
         }
+
       }
 
       templateObject.getAllTaskList();
@@ -2496,6 +2532,13 @@ Template.alltaskdatatable.events({
 
       $("#add_task_name").val("");
       $("#add_task_description").val("");
+
+      $('#assignedID').val("");
+      $('#add_assigned_name').val("");
+
+      $('#contactID').val("");
+      $('#add_contact_name').val("");
+
     }).catch(function (err) {
       swal({
         title: "Oooops...",
@@ -2514,7 +2557,7 @@ Template.alltaskdatatable.events({
 
     let currentDate = new Date();
     let due_date = moment(currentDate).format("YYYY-MM-DD hh:mm:ss");
-    let due_date_display = moment(currentDate).format("D MMM");
+    let due_date_display = moment(currentDate).format("dddd, Do MMMM");
     $('#edit_task_modal_due_date').html(due_date_display)
 
     var objDetails = {
@@ -2542,7 +2585,7 @@ Template.alltaskdatatable.events({
   "click .setScheduleTomorrow": function (e) {
     let id = e.target.dataset.id;
     let tomorrow = moment().add(1, "day").format("YYYY-MM-DD hh:mm:ss");
-    let due_date_display = moment(tomorrow).format("D MMM");
+    let due_date_display = moment(tomorrow).format("dddd, Do MMMM");
     $('#edit_task_modal_due_date').html(due_date_display)
 
     var objDetails = {
@@ -2570,7 +2613,7 @@ Template.alltaskdatatable.events({
   "click .setScheduleWeekend": function (e) {
     let id = e.target.dataset.id;
     let weekend = moment().endOf("week").format("YYYY-MM-DD hh:mm:ss");
-    let due_date_display = moment(weekend).format("D MMM");
+    let due_date_display = moment(weekend).format("dddd, Do MMMM");
     $('#edit_task_modal_due_date').html(due_date_display)
 
     var objDetails = {
@@ -2600,7 +2643,7 @@ Template.alltaskdatatable.events({
 
     var startDate = moment();
     let next_monday = moment(startDate).day(1 + 7).format("YYYY-MM-DD hh:mm:ss");
-    let due_date_display = moment(next_monday).format("D MMM");
+    let due_date_display = moment(next_monday).format("dddd, Do MMMM");
     $('#edit_task_modal_due_date').html(due_date_display)
 
     var objDetails = {
@@ -3848,7 +3891,7 @@ function getContactData(contactID, contactType) {
       });
     });
   } else {
-    $('#crmSelectLeadList').val('');
+    $('#crmEditSelectLeadList').val('');
     $('#contactID').val('')
     $('#contactType').val('')
   }
@@ -3856,7 +3899,7 @@ function getContactData(contactID, contactType) {
 }
 
 function setContactDataToDetail(data, contactType) {
-  $('#crmSelectLeadList').val(data.fields.ClientName);
+  $('#crmEditSelectLeadList').val(data.fields.ClientName);
   $('#contactID').val(data.fields.ID)
   $('#contactType').val(contactType)
 }
@@ -3883,8 +3926,23 @@ function openEditTaskModal(id, type) {
       $(".editTaskDetailDescription").val(selected_record.TaskDescription);
 
       // tempcode check if AssignedName is set in selected_record
-      let employeeName = Session.get("mySessionEmployee");
-      $('#crmSelectEmployeeList').val(employeeName);
+      let employeeName = selected_record.AssignName ? selected_record.AssignName : Session.get("mySessionEmployee");
+      let assignId = selected_record.AssignID ? selected_record.AssignID : Session.get("mySessionEmployeeLoggedID");
+      $('#crmEditSelectEmployeeList').val(employeeName);
+      $('#assignedID').val(assignId)
+      
+      let colClientName = selected_record.ContactName;
+      $('#crmEditSelectLeadList').val(colClientName);
+      if (selected_record.CustomerID) {
+        $('#contactID').val(selected_record.CustomerID)
+        $('#contactType').val('Customer')
+      } else if (selected_record.LeadID) {
+        $('#contactID').val(selected_record.LeadID)
+        $('#contactType').val('Lead')
+      } else {
+        $('#contactID').val(selected_record.SupplierID)
+        $('#contactType').val('Supplier')
+      }
 
       let projectName = selected_record.ProjectName == "Default" ? "All Tasks" : selected_record.ProjectName;
 
@@ -4014,7 +4072,8 @@ function openEditTaskModal(id, type) {
             No Date</a>
           <div class="dropdown-divider no-modal"></div>
           <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
-            title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+            title="Date format: DD/MM/YYYY" style="display:flex; margin: 6px 20px; margin-top: 0px; z-index: 99999;">
+            <label style="margin-top: 6px; margin-right: 16px; width: 146px;">Select Date</label>
             <div class="input-group date no-modal" style="cursor: pointer;">
               <input type="text" id="${selected_record.ID}" class="form-control crmDatepicker no-modal"
                 autocomplete="off">
@@ -4268,7 +4327,7 @@ function openEditTaskModal(id, type) {
         buttonImageOnly: true,
         buttonImage: "/img/imgCal2.png",
         constrainInput: false,
-        dateFormat: "yy/mm/dd",
+        dateFormat: "dd/mm/yy",
         showOtherMonths: true,
         selectOtherMonths: true,
         changeMonth: true,
@@ -4276,31 +4335,18 @@ function openEditTaskModal(id, type) {
         yearRange: "-90:+10",
         onSelect: function (dateText, inst) {
           let task_id = inst.id;
-          templateObject.updateTaskSchedule(task_id, dateText);
+          $(".crmDatepicker").val(dateText);
+
+          templateObject.updateTaskSchedule(task_id, new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
         },
+        onChangeMonthYear: function (year, month, inst) {
+          // Set date to picker
+          $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+        }
       });
-      let currentDate = new Date();
+      let currentDate = selected_record.due_date ? new Date(selected_record.due_date) : new Date();
       let begunDate = moment(currentDate).format("DD/MM/YYYY");
-      $(".crmDatepicker").val(begunDate);
-
-
-      let contactID = 0;
-      let contactType = '';
-      if (selected_record.CustomerID) {
-        contactID = selected_record.CustomerID;
-        contactType = 'Customer';
-      } else if (selected_record.SupplierID) {
-        contactID = selected_record.SupplierID;
-        contactType = 'Supplier';
-      } else if (selected_record.LeadID) {
-        contactID = selected_record.LeadID;
-        contactType = 'Lead';
-      }
-      getContactData(contactID, contactType);
-
-      // tempcode add code for getting assigned employee name
-
-      // tempcode add code for getting assigned employee name
+      $(".crmDatepicker").val(begunDate); 
 
     } else {
       swal("Cannot edit this task", "", "warning");
