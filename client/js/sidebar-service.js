@@ -3663,6 +3663,10 @@ export class SideBarService extends BaseService {
       return this.getList(this.ERPObjects.TReportSchedules,options);
   }
 
+  updateEmployeeFormAccessDetail(data){
+    return this.POST(this.ERPObjects.TEmployeeFormAccessDetail, data);
+  }
+
   saveCorrespondence(data)
   {
       return this.POST(this.ERPObjects.TCorrespondence,data);
