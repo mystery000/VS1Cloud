@@ -144,7 +144,7 @@ Template.timesheetdetail.onRendered(function () {
     const employee = await this.employee.get();
     let timesheets = await this.timeSheetList.get();
     timesheets  = timesheets.filter(ts => ts.EmployeeName == employee.EmployeeName);
-    let timesheet = timesheets.find(ts => moment(ts.TimeSheetDate) == momentDate)
+    let timesheet = timesheets.find(ts => moment(ts.TimeSheetDate).isSame(momentDate))
 
     const hours = timesheet != undefined ? timesheet.Hours : 0.0;
     return hours;
