@@ -143,15 +143,10 @@ Template.timesheetdetail.onRendered(function () {
   this.loadHours = async (momentDate) => {
     const employee = await this.employee.get();
     let timesheets = await this.timeSheetList.get();
-
-    console.log('filter timesheet', timesheets);
     timesheets  = timesheets.filter(ts => ts.EmployeeName == employee.EmployeeName);
-    console.log('filtered timsheet', timesheets);
-
     let timesheet = timesheets.find(ts => moment(ts.TimeSheetDate) == momentDate)
 
-    console.log('timsheet found', timesheet, momentDate);
-    return timesheet || 0.0;
+    return timesheet != undefined ? timesheet.Hours : 0.0;
   }
 
   // this.loadClockOnOff = async (refresh = false) => {
