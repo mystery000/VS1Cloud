@@ -15,6 +15,8 @@ let sideBarService = new SideBarService();
 Template.newsidenav.onCreated(function() {
 
     const templateObject = Template.instance();
+    templateObject.sideBarPositionClass = new ReactiveVar();
+    templateObject.sideBarPositionClass.set('top');
     templateObject.includeDashboard = new ReactiveVar();
     templateObject.includeDashboard.set(false);
     templateObject.includeMain = new ReactiveVar();
@@ -131,17 +133,28 @@ Template.newsidenav.onCreated(function() {
 
     templateObject.isSerialNumberList = new ReactiveVar();
     templateObject.isSerialNumberList.set(false);
+    getVS1Data('VS1_Dashboard').then(function(dataObject) {
+      if(dataObject[0] && dataObject[0].data && dataObject[0].data.processLog && dataObject[0].data.processLog.TUser && dataObject[0].data.processLog.TUser.updateEmployeeFormAccessDetail && dataObject[0].data.processLog.TUser.updateEmployeeFormAccessDetail.items){
+        let userAccessData = dataObject[0].data.processLog.TUser.updateEmployeeFormAccessDetail.items;
+        userAccessData.map(item=>{
+          if(item.fields.formName == "FnCloudSidePanelMenu" && item.fields.AccessLevel == 1){
+            templateObject.sideBarPositionClass.set('side');
+            $('#sidebar').removeClass('top');
+            $('#bodyContainer').removeClass('top');
+            $('#sidebarToggleBtn').text('Top');
+          }
+        })
+      }
+    });
 
     $(document).ready(function() {
         var erpGet = erpDb();
         var LoggedDB = erpGet.ERPDatabase;
         var loc = FlowRouter.current().path;
-
     });
-
 });
 Template.newsidenav.onRendered(function() {
-
+    let userData = localStorage.getItem('vs1cloudLoginInfo');
     var countObjectTimes = 0;
     let allDataToLoad = 74;
     let progressPercentage = 0;
@@ -204,6 +217,8 @@ Template.newsidenav.onRendered(function() {
     var LoggedDB = erpGet.ERPDatabase;
     var LoggedUser = localStorage.getItem('mySession');
     let cloudPackage = localStorage.getItem('vs1cloudlicenselevel');
+    // here get menu bar preference from local storage and set menubarPositionClass
+    // let isMenuBarSide = localStorage.getItem('menubarpreference')
     if(cloudPackage=="PLUS"){
       templateObject.isSNTrackChecked.set(true);
     }else{
@@ -1005,7 +1020,6 @@ Template.newsidenav.onRendered(function() {
         });
       }
     });
-
     getVS1Data('TAppUser').then(function(dataObject) {
         if (dataObject.length == 0) {
           $('#headerprogressLabelFirst').css('display','block');
@@ -2991,7 +3005,7 @@ Template.newsidenav.onRendered(function() {
 
             }, 1000);
           }
-            //localStorage.setItem('VS1TAppUserList', JSON.stringify(data) || '');
+            //localStorage.setItem('VS1TAppUserList', JSON.stringify(data) || '');            
             addVS1Data('TAppUser', JSON.stringify(data));
             $("<span class='process'>App User Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
         }).catch(function(err) {
@@ -6575,15 +6589,87 @@ Template.newsidenav.onRendered(function() {
 });
 Template.newsidenav.events({
   'click #sidebarToggleBtn': function(event) {
-      if ($('#sidebar').hasClass("top")) {
-          $('#sidebar').removeClass('top');
-          $('#bodyContainer').removeClass('top');
-          $('#sidebarToggleBtn').text('Top');
-      } else {
-          $('#sidebar').addClass('top');
-          $('#bodyContainer').addClass('top');
-          $('#sidebarToggleBtn').text('Side');
+    let payload = {
+      "type":"TEmployeeFormAccessDetail",
+      "fields":{
+        "AccessLevel":1,
+        "AccessLevelName":"Full Access",
+        "AccessLevels":false,
+        "Description":"Side Panel Menu",
+        "EmployeeId":2,
+        "FormId":7256,
+        "FormName":"FnCloudSidePanelMenu",
+        "GlobalRef":"DEF7662",
+        "ID":7662,
+        "ISEmpty":false,
+        "IsForm":false,
+        "KeyStringFieldName":"",
+        "KeyValue":"",
+        "MsTimeStamp":"2020-03-06 14:18:21",
+        "MsUpdateSiteCode":"DEF",
+        "Recno":12,
+        "SkinsGroup":"General",
+        "TabGroup":26
       }
+    };      
+    if ($('#sidebar').hasClass("top")) {
+        payload = {
+          "type":"TEmployeeFormAccessDetail",
+          "fields":{
+            "AccessLevel":1,
+            "AccessLevelName":"Full Access",
+            "AccessLevels":false,
+            "Des":"Side Panel Menu",
+            "EmployeeId":2,
+            "FormId":7256,
+            "FormName":"FnCloudSidePanelMenu",
+            "GlobalRef":"DEF7662",
+            "ID":7662,
+            "ISEmpty":false,
+            "IsForm":false,
+            "KeyStringFieldName":"",
+            "KeyValue":"",
+            "MsTimeStamp":"2020-03-06 14:18:21",
+            "MsUpdateSiteCode":"DEF",
+            "Recno":12,
+            "SkinsGroup":"General",
+            "TabGroup":26
+          }
+        };
+        sideBarService.updateEmployeeFormAccessDetail(payload);
+        $('#sidebar').removeClass('top');
+        $('#bodyContainer').removeClass('top');
+        $('#sidebarToggleBtn').text('Top');
+    } else {
+      payload = {
+        "type":"TEmployeeFormAccessDetail",
+        "fields":
+        {
+          "AccessLevel":1,
+          "AccessLevelName":"Full Access",
+          "AccessLevels":false,
+          "Description":"Top Panel Menu",
+          "EmployeeId":2,
+          "FormId":7257,
+          "FormName":"FnCloudTopPanelMenu",
+          "GlobalRef":"DEF7663",
+          "ID":7663,
+          "ISEmpty":false,
+          "IsForm":false,
+          "KeyStringFieldName":"",
+          "KeyValue":"",
+          "MsTimeStamp":"2019-11-08 00:02:01",
+          "MsUpdateSiteCode":"DEF",
+          "Recno":13,
+          "SkinsGroup":"General",
+          "TabGroup":26
+        }
+      };
+      sideBarService.updateEmployeeFormAccessDetail(payload);
+      $('#sidebar').addClass('top');
+      $('#bodyContainer').addClass('top');
+      $('#sidebarToggleBtn').text('Side');
+    }
   },
     'click #sidenavaccessLevel': function(event) {
         window.open('#', '_self');
@@ -8263,6 +8349,9 @@ Template.newsidenav.events({
 
 });
 Template.newsidenav.helpers({
+    sideBarPositionClass: () => {
+      return Template.instance().sideBarPositionClass.get() || 'top';
+    },
     includeDashboard: () => {
         return Template.instance().includeDashboard.get();
     },
