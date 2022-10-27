@@ -36,6 +36,7 @@ export default class PayrollSettingsOvertimes {
 
   setRateTypeByRuleName(rateTypes  = [], ruleName  ="Weekend") {
     this.rateType = rateTypes.find(rate => rate.Description == ruleName);
+    this.rateTypeId = this.rateType.ID;
   }
 
   getRateType(fromRateList = []) {
