@@ -7191,6 +7191,49 @@ Template.new_quote.events({
             }
         }
     },
+    'click .btnDeleteFollowingQuotes': async function(event) {
+        playDeleteAudio();
+        var currentDate = new Date();
+        LoadingOverlay.show();
+        let templateObject = Template.instance();
+        let salesService = new SalesBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
+            var saleDate = quoteData.fields.SaleDate;
+            var fromDate = saleDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingQuotes = await sideBarService.getAllTQuoteListData(
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
+            );
+            var quoteList = followingQuotes.tquotelist;
+            for (var i=0; i < quoteList.length; i++) {
+                var objDetails = {
+                    type: "TQuoteEx",
+                    fields: {
+                        ID: quoteList[i].SaleID,
+                        Deleted: true
+                    }
+                };
+                var result = await salesService.saveQuoteEx(objDetails);
+            }
+        }
+        if(FlowRouter.current().queryParams.trans){
+            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+        }else{
+            FlowRouter.go('/quoteslist?success=true');
+        }
+        $('.modal-backdrop').css('display','none');
+        $('#deleteLineModal').modal('toggle');
+    },
     'click .btnDeleteQuote': function(event) {
         playDeleteAudio();
         LoadingOverlay.show();

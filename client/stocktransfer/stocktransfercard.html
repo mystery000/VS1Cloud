@@ -294,8 +294,8 @@
                             vertical-align: top;
                         }
                     </style>
-
-                    <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
+                    {{> deletepop itemName1="Transfer" itemName2="stock transfer" button1="btnDeleteStock" button2="btnDeleteFollowingStocks"}}
+                    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
@@ -316,7 +316,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <table id="tblStocktransfer" style="width:100%" class="table table-bordered tblStocktransfer">
                         <thead>
@@ -371,7 +371,7 @@
                                         <td class="th colSerialFrom" data-serialnumbers="{{item.transferserialnumbers}}" data-lotnumbers="{{item.transferlotnumbers}}" data-expirydates="{{item.transferexpirydates}}"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
                                         <td class="th colSerialTo" data-serialnumbers="{{item.serialnumbers}}" data-lotnumbers="{{item.lotnumbers}}" data-expirydates="{{item.expirydates}}"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
                                     {{/if}}
-                                    <td style="width: 1%;"><span class="removebutton"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
+                                    <td style="width: 1%;"><span class=""><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 removebutton"><i class="fa fa-remove"></i></button></span></td>
                                 </tr>
                             {{/each}}
                         </tbody>
