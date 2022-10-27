@@ -488,8 +488,8 @@
                                             vertical-align: top;
                                         }
                                     </style>
-
-                                    <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
+                                    {{> deletepop itemName1="Stock Adj" itemName2="stock adjustment" button1="btnDeleteStock" button2="btnDeleteFollowingStocks"}}
+                                    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
@@ -510,7 +510,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <table id="tblStockAdjustmentLine" style="width:100%" class="table table-striped table-bordered tblStockAdjustmentLine">
                                         <thead>
@@ -558,7 +558,7 @@
                                                     {{#if isBatchSerialNoTracking 'true'}}
                                                         <td class="th colSerialNo"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
                                                     {{/if}}
-                                                    <td><span class="table-remove btnRemove"><button type="button" class="btn btnDeleteProduct btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
+                                                    <td><span class="table-remove"><button type="button" class="btn btnDeleteProduct btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span></td>
                                                 </tr>
                                             {{/each}}
                                         </tbody>

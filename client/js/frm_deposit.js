@@ -2811,6 +2811,54 @@ Template.depositcard.events({
             }
         }
     },
+    'click .btnDeleteFollowingDepositEntries': async function(event){
+        playDeleteAudio();
+        var currentDate = new Date();
+        let templateObject = Template.instance();
+        let purchaseService = new PurchaseBoardService();
+        swal({
+            title: 'Delete Deposit',
+            text: "Are you sure you want to delete Deposit and following deposits?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then(async (result) => {
+            if (result.value) {
+                $('.fullScreenSpin').css('display','inline-block');
+                var url = FlowRouter.current().path;
+                var getso_id = url.split('?id=');
+                var currentInvoice = getso_id[getso_id.length-1];
+                var objDetails = '';
+                if(getso_id[1]){
+                    currentInvoice = parseInt(currentInvoice);
+                    var depositEntryData = await purchaseService.getOneDepositEnrtyData(currentInvoice);
+                    var depositDate = depositEntryData.fields.DepositDate;
+                    var fromDate = depositDate.substring(0, 10);
+                    var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+                    var followingDeposits = await sideBarService.getAllTBankDepositListData(
+                        fromDate,
+                        toDate,
+                        false,
+                        initialReportLoad,
+                        0
+                    );
+                    var depositList = followingDeposits.tbankdepositlist;
+                    for (var i=0; i < depositList.length; i++) {
+                        var objDetails = {
+                            type: "TVS1BankDeposit",
+                            fields: {
+                                ID: depositList[i].DepositID,
+                                Deleted: true
+                            }
+                        };
+                        var result = await purchaseService.saveBankDeposit(objDetails);
+                    }
+                }
+            }
+        });
+        FlowRouter.go('/depositlist?success=true');
+        $('.modal-backdrop').css('display','none');
+    },
     'click .btnDelete': function(event){
         playDeleteAudio();
         let templateObject = Template.instance();

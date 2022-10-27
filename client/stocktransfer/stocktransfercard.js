@@ -527,6 +527,7 @@ Template.stocktransfercard.onRendered(function() {
                                 $("#form :input").prop("disabled", true);
                                 $(".btnDeleteStock").prop("disabled", false);
                                 $(".btnDeleteStockTransfer").prop("disabled", false);
+                                $(".btnDeleteFollowingStocks").prop("disabled", false);
                                 $(".printConfirm").prop("disabled", false);
                                 $(".btnBack").prop("disabled", false);
                                 $(".btnDeleteProduct").prop("disabled", false);
@@ -798,6 +799,7 @@ Template.stocktransfercard.onRendered(function() {
                                     $("#form :input").prop("disabled", true);
                                     $(".btnDeleteStock").prop("disabled", false);
                                     $(".btnDeleteStockTransfer").prop("disabled", false);
+                                    $(".btnDeleteFollowingStocks").prop("disabled", false);
                                     $(".printConfirm").prop("disabled", false);
                                     $(".btnBack").prop("disabled", false);
                                     $(".btnDeleteProduct").prop("disabled", false);
@@ -960,6 +962,7 @@ Template.stocktransfercard.onRendered(function() {
                                     $("#form :input").prop("disabled", true);
                                     $(".btnDeleteStock").prop("disabled", false);
                                     $(".btnDeleteStockTransfer").prop("disabled", false);
+                                    $(".btnDeleteFollowingStocks").prop("disabled", false);
                                     $(".printConfirm").prop("disabled", false);
                                     $(".btnBack").prop("disabled", false);
                                     $(".btnDeleteProduct").prop("disabled", false);
@@ -1133,6 +1136,7 @@ Template.stocktransfercard.onRendered(function() {
                             $("#form :input").prop("disabled", true);
                             $(".btnDeleteStock").prop("disabled", false);
                             $(".btnDeleteStockTransfer").prop("disabled", false);
+                            $(".btnDeleteFollowingStocks").prop("disabled", false);
                             $(".printConfirm").prop("disabled", false);
                             $(".btnBack").prop("disabled", false);
                             $(".btnDeleteProduct").prop("disabled", false);
@@ -4256,6 +4260,39 @@ Template.stocktransfercard.events({
         $('.fullScreenSpin').css('display', 'none');
       }
 
+    },
+    'click .btnDeleteFollowingStocks': async function(event) {
+        playDeleteAudio();
+        var currentDate = new Date();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let templateObject = Template.instance();
+        let stockTransferService = new StockTransferService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var stockData = await stockTransferService.getOneStockTransferData(currentInvoice);
+            var transferDate = stockData.fields.DateTransferred;
+            var fromDate = transferDate.substring(0, 10);
+            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+            var followingStocks = await sideBarService.getAllStockTransferEntry("All", stockData.fields.Recno);//initialDataLoad
+            var stockList = followingStocks.tstocktransferentry;
+            for (var i=0; i < stockList.length; i++) {
+                var objDetails = {
+                    type: "TStockTransferEntry",
+                    fields: {
+                        ID: stockList[i].fields.ID,
+                        Deleted: true
+                    }
+                };
+                var result = await stockTransferService.saveStockTransfer(objDetails);
+            }
+        }
+        FlowRouter.go('/stocktransferlist?success=true');
+        $('.modal-backdrop').css('display', 'none');
+        $('#deleteLineModal').modal('toggle');
     },
     'click .btnDeleteStock': function(event) {
         playDeleteAudio();

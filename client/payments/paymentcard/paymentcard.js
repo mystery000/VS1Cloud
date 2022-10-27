@@ -9683,6 +9683,54 @@ Template.paymentcard.events({
 
         }
     },
+    'click .btnDeleteFollowingPayments': async function (event) {
+        playDeleteAudio();
+        var currentDate = new Date();
+        let templateObject = Template.instance();
+        let paymentService = new PaymentsService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        swal({
+            title: 'Delete Payment',
+            text: "Are you sure you want to Delete this Payment and following payments?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then(async (result) => {
+            if (result.value) {
+                $('.fullScreenSpin').css('display','inline-block');
+                if (getso_id[1]) {
+                    currentInvoice = parseInt(currentInvoice);
+                    var paymentData = await paymentService.getOneCustomerPayment(currentInvoice);
+                    var paymentDate = paymentData.fields.PaymentDate;
+                    var fromDate = paymentDate.substring(0, 10);
+                    var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+                    var followingPayments = await sideBarService.getAllTCustomerPaymentListData(
+                        fromDate,
+                        toDate,
+                        false,
+                        initialReportLoad,
+                        0
+                    );
+                    var paymentList = followingPayments.tcustomerpaymentlist;
+                    for (var i=0; i < paymentList.length; i++) {
+                        var objDetails = {
+                            type: "TCustPayments",
+                            fields: {
+                                ID: paymentList[i].PaymentID,
+                                Deleted: true
+                            }
+                        };
+                        var result = await paymentService.deleteDepositData(objDetails);
+                    }
+                }
+            }    
+        });
+        $('.modal-backdrop').css('display', 'none');
+        FlowRouter.go('/paymentoverview?success=true');
+    },
     'click .btnDeletePayment': async function (event) {
         playDeleteAudio();
         let templateObject = Template.instance();

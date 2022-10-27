@@ -1073,28 +1073,7 @@
                                 }
                             </style>
 
-                            <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
-                                        <div class="modal-header">
-                                            <h4>Delete</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">×</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Please select "Delete Line" to remove row or "Delete Invoice" to delete the entire invoice</p>
-                                            <button class="btn btn-danger float-left btnDeleteLine" type="button">
-                                                <i class="fa fa-close" style="margin-right: 5px;"></i>Delete Line
-                                            </button>
-                                            <button class="btn btn-danger float-right btnDeleteInvoice" type="button">
-                                                <i class="fa fa-close" style="margin-right: 5px;"></i>Delete Invoice
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            {{> deletepop itemName1="Invoice" itemName2="invoice" button1="btnDeleteInvoice" button2="btnDeleteFollowingInvoices"}}
 
                             <style>
                                 th.colAmountEx {
@@ -1408,7 +1387,6 @@
                             </div>
                             <div class="col-12 col-md-12">
                                 <div class="row justify-content-center desktopButtons">
-
                                     <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 14px;margin-top: 0px;width: 100px;">
                                         <i class="fa fa-save" style="padding-right: 8px;"></i>Save
                                     </button>
@@ -1425,7 +1403,6 @@
                                         <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
                                     </button>
                                 </div>
-
                             </div>
                         </div>
                     </div>
