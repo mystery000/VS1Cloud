@@ -5629,10 +5629,13 @@ Template.chequecard.events({
   },
   "click .btnSaveSettings": function (event) {
     playSaveAudio();
+    setTimeout(function(){
     $("#myModal4").modal("toggle");
+    }, delayTimeAfterSound);
   },
   "click .btnSave": function (event) {
     playSaveAudio();
+    setTimeout(function(){
     let templateObject = Template.instance();
     let suppliername = $("#edtSupplierName");
     let purchaseService = new PurchaseBoardService();
@@ -6323,6 +6326,7 @@ Template.chequecard.events({
           $(".fullScreenSpin").css("display", "none");
         });
     }
+  }, delayTimeAfterSound);
   },
   "click .chkAccountName": function (event) {
     if ($(event.target).is(":checked")) {
@@ -6456,6 +6460,7 @@ Template.chequecard.events({
   },
   "click .btnSaveGridSettings": function (event) {
     playSaveAudio();
+    setTimeout(function(){
     let lineItems = [];
 
     $(".columnSettings").each(function (index) {
@@ -6540,6 +6545,7 @@ Template.chequecard.events({
       }
     }
     $("#myModal2").modal("toggle");
+    }, delayTimeAfterSound);
   },
   "click .btnResetGridSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
@@ -6756,12 +6762,13 @@ Template.chequecard.events({
   "click .btnBack": function (event) {
     playCancelAudio();
     event.preventDefault();
-    if(FlowRouter.current().queryParams.trans){
-      FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-    }else{
-      history.back(1);
-    }
-
+    setTimeout(function(){
+      if(FlowRouter.current().queryParams.trans){
+        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+      }else{
+        history.back(1);
+      }
+    }, delayTimeAfterSound);
   },
   "click #btnViewPayment": function () {
     var url = FlowRouter.current().path;

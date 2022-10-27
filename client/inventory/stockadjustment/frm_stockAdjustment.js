@@ -2317,7 +2317,9 @@ Template.stockadjustmentcard.events({
     },
     'click .btnSaveSettings': function (event) {
         playSaveAudio();
+        setTimeout(function(){
         $('#myModal4').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .btnProcess': function (event) {
         //let testDate = $("#dtSODate").datepicker({dateFormat: 'dd-mm-yy' });
@@ -3224,6 +3226,7 @@ Template.stockadjustmentcard.events({
     },
     'click .btnSaveGridSettings': function (event) {
         playSaveAudio();
+        setTimeout(function(){
         let lineItems = [];
         //let lineItemObj = {};
         $('.columnSettings').each(function (index) {
@@ -3313,7 +3316,7 @@ Template.stockadjustmentcard.events({
                 }
             }
         }
-
+        }, delayTimeAfterSound);
     },
     'click .btnResetGridSettings': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({
@@ -3487,7 +3490,9 @@ Template.stockadjustmentcard.events({
     'click .btnBack': function (event) {
         playCancelAudio();
         event.preventDefault();
-        history.back(1);
+        setTimeout(function(){
+            history.back(1);
+        }, delayTimeAfterSound);
     },
     'keyup .lineAdjustQty': function (event) {
         //if (event.which >= 48 && event.which <= 57) {

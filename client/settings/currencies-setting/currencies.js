@@ -1033,7 +1033,9 @@ Template.currenciessettings.events({
   },
   "click .btnCloseAddNewDept": function () {
     playCancelAudio();
+    setTimeout(function(){
     $("#newTaxRate").css("display", "none");
+    }, delayTimeAfterSound);
   },
 
   "click .synbutton": function () {

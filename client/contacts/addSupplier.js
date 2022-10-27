@@ -1677,7 +1677,9 @@ Template.supplierscard.events({
     'click .btnBack':function(event){
         playCancelAudio();
         event.preventDefault();
-        history.back(1);
+        setTimeout(function(){
+            history.back(1);
+        }, delayTimeAfterSound);
     },
     'click #chkSameAsShipping':function(event){
         if($(event.target).is(':checked')){
@@ -1703,6 +1705,7 @@ Template.supplierscard.events({
     },
     'click .btnSave': async function (event) {
         playSaveAudio();
+        setTimeout(async function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
         if ($('#edtSupplierCompany').val() === ''){
@@ -2040,7 +2043,7 @@ Template.supplierscard.events({
             });
             $('.fullScreenSpin').css('display','none');
         });
-
+        }, delayTimeAfterSound);
     },
     'keyup .search': function (event) {
         var searchTerm = $(".search").val();
@@ -2323,6 +2326,7 @@ Template.supplierscard.events({
     },
     'click .btnSaveSettings': function(event){
         playSaveAudio();
+        setTimeout(function(){
         $('.lblCustomField1').html('');
         $('.lblCustomField2').html('');
         $('.lblCustomField3').html('');
@@ -2348,6 +2352,7 @@ Template.supplierscard.events({
             getchkcustomField4 = false;
         }
         $('#customfieldModal').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .btnResetSettings': function(event){
         let checkPrefDetails = getCheckPrefDetails('supplierscard');

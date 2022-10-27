@@ -766,8 +766,9 @@ Template.clienttypesettings.events({
     },
     'click .btnCloseAddNewDept': function () {
         playCancelAudio();
+        setTimeout(function(){
         $('#newTaxRate').css('display', 'none');
-
+        }, delayTimeAfterSound);
     },
     'click .btnDeleteDepartment': function () {
         playDeleteAudio();
@@ -883,7 +884,9 @@ Template.clienttypesettings.events({
     'click .btnBack': function (event) {
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         history.back(1);
+        }, delayTimeAfterSound);
     },
     'keydown #edtSiteCode, keyup #edtSiteCode': function (event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||

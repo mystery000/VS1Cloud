@@ -334,6 +334,7 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
      },
      'click .btnGlobalSaveNOT': function () {
       playSaveAudio();
+      setTimeout(function(){
        let templateObject = Template.instance();
        let accesslevelService = new AccessLevelService();
         var erpGet = erpDb();
@@ -849,9 +850,11 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
        }, 5000);
 
      }
-   },
+    }, delayTimeAfterSound);
+    },
    'click .btnTopGlobalSave': function () {
     playSaveAudio();
+    setTimeout(function(){
      swal({
        title: 'Do you want to save both VS1 and Employee Modules?',
        text: 'Yes to Save Both and No to Save only the VS1 Modules.',
@@ -865,10 +868,12 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
        } else if (result.dismiss === 'cancel') {
 
         }
-     })
+     });
+    }, delayTimeAfterSound);
  },
      'click .btnSaveAccess': function () {
       playSaveAudio();
+      setTimeout(function(){
        let templateObject = Template.instance();
        let accesslevelService = new AccessLevelService();
        
@@ -1377,14 +1382,17 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
            Meteor._reload.reload();
            $('.fullScreenSpin').css('display','none');
        }, 5000);
-     },
+      }, delayTimeAfterSound);
+      },
      'click .inactiveLicence .chkSettings': function (event) {
         return false;
      },
      'click .btnBack':function(event){
        playCancelAudio(); 
        event.preventDefault();
-       history.back(1);
+       setTimeout(function(){
+        history.back(1);
+       }, delayTimeAfterSound);
      },
      'click .btnAddVS1User':function(event){
       

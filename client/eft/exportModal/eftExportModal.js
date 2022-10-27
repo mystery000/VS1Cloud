@@ -288,7 +288,9 @@ Template.eftExportModal.events({
 
   "click .btnCancelEftExport": (e) => {
     playCancelAudio();
-    $('#eftExportModal').modal('hide');
+    setTimeout(function(){
+      $('#eftExportModal').modal('hide');
+    }, delayTimeAfterSound);
   },
 
   "click .addNewEftRow": (e) => {
@@ -372,6 +374,7 @@ Template.eftExportModal.events({
 
   "click .btnDoEftExport": (e) => {
     playSaveAudio();
+    setTimeout(function(){
     let sltAccountType = $('#sltAccountType').val();
     let sltBankName = $('#sltBankName').val();
     let eftProcessingDate = $('#eftProcessingDate').val();
@@ -391,6 +394,7 @@ Template.eftExportModal.events({
     }
 
     return true;
+  }, delayTimeAfterSound);
   },
 
 });

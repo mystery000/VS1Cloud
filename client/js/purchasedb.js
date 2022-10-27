@@ -284,6 +284,7 @@ if (result.value) {
 
 'click .btnSaveAccess': function () {
   playSaveAudio();
+  setTimeout(function(){
   let objDetails =
     {
       Name: "VS1_NewRego",
@@ -384,6 +385,7 @@ Bert.alert('<strong>'+ oPost.getResponseHeader('errormessage')+'</strong>. Pleas
 
 
 }
+}, delayTimeAfterSound);
 },
 
 'click .btnGetAccess': function () {

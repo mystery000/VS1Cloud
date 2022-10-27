@@ -76,6 +76,7 @@ Template.new_processpop.helpers({
 Template.new_processpop.events({
     'click #btnSaveProcess': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentID = FlowRouter.current().queryParams.id;
         let tempArray = localStorage.getItem('TProcesses');
@@ -186,13 +187,16 @@ Template.new_processpop.events({
             
             $('#newProcessModal').modal('toggle');
             $('#processListModal').modal('toggle');
-        })
+        });
+    }, delayTimeAfterSound);
     },
 
     'click #btnCancel': function(event) {
         playCancelAudio();
-        $('#newProcessModal').modal('toggle');
-        $('#processListModal').modal('toggle')
+        setTimeout(function(){
+            $('#newProcessModal').modal('toggle');
+            $('#processListModal').modal('toggle');
+        }, delayTimeAfterSound);
     },
 
     // 'click #edtCOGS': function (event) {

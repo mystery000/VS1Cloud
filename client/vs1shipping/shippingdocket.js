@@ -2037,9 +2037,9 @@ Template.shippingdocket.events({
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         history.back(1);
-
-
+        }, delayTimeAfterSound);
     },
     'click .removebutton': function(event) {
         let templateObject = Template.instance();

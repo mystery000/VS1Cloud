@@ -1249,18 +1249,21 @@ Template.dashboardexe.events({
   },
   "click #btnCancel2": async () => {
     playCancelAudio();
-    $(".fullScreenSpin").css("display", "block");
-    chartsEditor.disable();
-    const templateObject = Template.instance();
-    await templateObject.hideChartElements();
-    await templateObject.checkChartToDisplay();
-    $('.sortable-chart-widget-js').removeClass("editCharts");
-    $(".fullScreenSpin").css("display", "none");
-    //templateObject.deactivateDraggable();
+    setTimeout(async function(){
+      $(".fullScreenSpin").css("display", "block");
+      chartsEditor.disable();
+      const templateObject = Template.instance();
+      await templateObject.hideChartElements();
+      await templateObject.checkChartToDisplay();
+      $('.sortable-chart-widget-js').removeClass("editCharts");
+      $(".fullScreenSpin").css("display", "none");
+      //templateObject.deactivateDraggable();
+    }, delayTimeAfterSound);
   },
 
   "click #btnDone2": async () => {
     playSaveAudio();
+    setTimeout(async function(){
     const templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "block");
     await saveCharts();
@@ -1273,6 +1276,7 @@ Template.dashboardexe.events({
 
     localStorage.setItem("arrChartActive", JSON.stringify(curChartActive));
     // templateObject.checkChartToDisplay();
+    }, delayTimeAfterSound);
   },
 });
 

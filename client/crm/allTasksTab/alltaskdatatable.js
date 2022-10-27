@@ -2020,9 +2020,11 @@ Template.alltaskdatatable.events({
 
   "click .btnCancelAddTask": function (event) {
     playCancelAudio();
-    $(".btnAddSubTask").css("display", "block");
-    $(".newTaskRow").css("display", "none");
-    $(".addTaskModal").css("display", "none");
+    setTimeout(function(){
+      $(".btnAddSubTask").css("display", "block");
+      $(".newTaskRow").css("display", "none");
+      $(".addTaskModal").css("display", "none");
+    }, delayTimeAfterSound);
   },
 
   // open task detail modal
@@ -2283,6 +2285,7 @@ Template.alltaskdatatable.events({
   // update task rename task
   "click .btnSaveEditTask": function (e) {
     playSaveAudio();
+    setTimeout(function(){
     let taskID = $("#txtCrmTaskID").val();
     if (taskID) {
       let selected_lbls = [];
@@ -2356,10 +2359,12 @@ Template.alltaskdatatable.events({
           .then(function (data) { });
       });
     }
+    }, delayTimeAfterSound);
   },
   // submit save new task add task
   "click .btnSaveAddTask": function (e) {
     playSaveAudio();
+    setTimeout(function(){
     let task_name = $("#add_task_name").val();
     let task_description = $("#add_task_description").val();
     let subTaskID = $("#txtCrmSubTaskID").val();
@@ -2549,6 +2554,7 @@ Template.alltaskdatatable.events({
       }).then((result) => { });
       $(".fullScreenSpin").css("display", "none");
     });
+  }, delayTimeAfterSound);
   },
 
   // submit set schedule as today
@@ -2862,6 +2868,7 @@ Template.alltaskdatatable.events({
   // submit save new project
   "click .btnSaveNewCrmProject": function (e) {
     playSaveAudio();
+    setTimeout(function(){
     let projectName = $("#crmProjectName").val();
     let projectColor = $("#crmProjectColor").val();
     let projectDescription = $("#crmProjectDescription").val();
@@ -2912,6 +2919,7 @@ Template.alltaskdatatable.events({
       }).then((result) => { });
       $(".fullScreenSpin").css("display", "none");
     });
+  }, delayTimeAfterSound);
   },
 
   "click .movetoproject": function (e) {
@@ -3457,6 +3465,7 @@ Template.alltaskdatatable.events({
 
   "click .btnSaveEditLabel": function (e) {
     playSaveAudio();
+    setTimeout(function(){
     let id = $("#editLabelID").val();
     let labelName = $("#editLabelName").val();
     let labelColor = $("#editLabelColor").val();
@@ -3484,6 +3493,7 @@ Template.alltaskdatatable.events({
         $(".fullScreenSpin").css("display", "none");
       });
     }
+    }, delayTimeAfterSound);
   },
 
   "click .btnDeleteLabel": function (e) {

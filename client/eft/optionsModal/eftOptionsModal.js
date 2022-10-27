@@ -61,6 +61,7 @@ Template.eftOptionsModal.events({
 
   "click .btnSaveEftOptions": (e) => {
     playSaveAudio();
+    setTimeout(function(){
     const templateObject = Template.instance();
     let eftOptions = templateObject.eftOptionsList.get();
 
@@ -88,12 +89,14 @@ Template.eftOptionsModal.events({
     }).catch(function (err) {
       $('#eftOptionsModal').modal('hide');
     });
-
+  }, delayTimeAfterSound);
   },
 
   "click .btnCancelEftOptions": (e) => {
     playCancelAudio();
-    $('#eftOptionsModal').modal('hide');
+    setTimeout(function(){
+      $('#eftOptionsModal').modal('hide');
+    }, delayTimeAfterSound);
   },
 
   "click .chkEftOption": (e) => {

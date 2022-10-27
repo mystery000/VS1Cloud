@@ -893,7 +893,9 @@ Template.shipviapop.events({
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         history.back(1);
+        }, delayTimeAfterSound);
     },
     'click .chkTerms': function(event) {
         var $box = $(event.target);

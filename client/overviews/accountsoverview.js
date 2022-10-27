@@ -1716,6 +1716,7 @@ Template.accountsoverview.events({
     },
     "click .btnSaveAccount": function() {
         playSaveAudio();
+        setTimeout(function(){
         $(".fullScreenSpin").css("display", "inline-block");
         let templateObject = Template.instance();
         let accountService = new AccountService();
@@ -1911,7 +1912,7 @@ Template.accountsoverview.events({
                 window.open("/accountsoverview", "_self");
             }, 100);
         }
-
+    }, delayTimeAfterSound);
     },
     "click .btnAddNewAccounts": function() {
         $("#add-account-title").text("Add New Account");
@@ -2563,6 +2564,7 @@ Template.accountsoverview.events({
     },
     'click #addReceiptCategoryModal .btnSave': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let receiptService = new ReceiptService();
         let receiptCategoryID = $('#edtReceiptCategoryID').val();
@@ -2644,6 +2646,7 @@ Template.accountsoverview.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
+    }, delayTimeAfterSound);
     },
 });
 

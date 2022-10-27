@@ -703,6 +703,7 @@ Template.employeetimeclock.events({
   },
   'click .btnSaveTimeSheet': function () {
     playSaveAudio();
+    setTimeout(function(){
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let contactService = new ContactService();
@@ -783,7 +784,7 @@ Template.employeetimeclock.events({
         });
         $('.fullScreenSpin').css('display', 'none');
       });
-
+    }, delayTimeAfterSound);
   },
   'click .btnAddNewAccounts': function () {
 

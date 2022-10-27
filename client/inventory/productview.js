@@ -4422,6 +4422,7 @@ Template.productview.events({
     },
     'click #btnSave': async function() {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let productCode = $("#edtproductcode").val();
         let productName = $("#edtproductname").val();
@@ -4986,12 +4987,14 @@ Template.productview.events({
             });
 
         }
-
+    }, delayTimeAfterSound);
     },
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
-        history.back(1);
+        setTimeout(function(){
+            history.back(1);
+        }, delayTimeAfterSound);
     },
     'click #chkTrack': function(event) {
         const templateObject = Template.instance();
@@ -5112,7 +5115,9 @@ Template.productview.events({
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         $('#myModal2').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .btnResetSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
@@ -5447,6 +5452,7 @@ Template.productview.events({
     },
     'click .btnSaveDept': function() {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ProductService();
 
@@ -5492,7 +5498,7 @@ Template.productview.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
-
+    }, delayTimeAfterSound);
     },
     'click .addRowLine': function() {
 
@@ -6056,6 +6062,7 @@ Template.productview.events({
 
     'click .btn-save-bom': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'none')
         let tempObject = Template.instance();
         let mainProductName = $('#edtMainProductName').val();
@@ -6164,6 +6171,7 @@ Template.productview.events({
         $('#BOMSetupModal').modal('toggle');
         // tempObject.getProductData();
         // tempObject.isManufactured.set(true);
+        }, delayTimeAfterSound);
     },
 
 

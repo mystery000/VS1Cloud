@@ -668,7 +668,9 @@ Template.clienttypepopup.events({
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         history.back(1);
+        }, delayTimeAfterSound);
     },
     'keydown #edtDays': function(event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||

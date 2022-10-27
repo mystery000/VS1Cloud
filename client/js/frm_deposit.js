@@ -3007,10 +3007,13 @@ Template.depositcard.events({
     },
     'click .btnSaveSettings': function(event){
         playSaveAudio();
+        setTimeout(function(){
         $('#myModal4').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .btnSave': function(event){
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let account = $('#sltAccountName').val();
         let depositTotal = $('#depositTotal').val();
@@ -3325,7 +3328,7 @@ Template.depositcard.events({
 
 
         }
-
+    }, delayTimeAfterSound);
     },
     'click .chkcolAccountName': function(event){
         if($(event.target).is(':checked')){
@@ -3415,6 +3418,7 @@ Template.depositcard.events({
     },
     'click .btnSaveGridSettings' : function(event){
         playSaveAudio();
+        setTimeout(function(){
         let lineItems = [];
 
         $('.columnSettings').each(function (index) {
@@ -3484,6 +3488,7 @@ Template.depositcard.events({
             }
         }
         $('#myModal2').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .btnResetGridSettings': function(event){
         var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
@@ -3648,9 +3653,9 @@ Template.depositcard.events({
     'click .btnBack':function(event){
         playCancelAudio();
         event.preventDefault();
-        history.back(1);
-
-
+        setTimeout(function(){
+            history.back(1);
+        }, delayTimeAfterSound);
     },
     'click .lineCompany': function(event) {
         $('#tblDepositEntryLine tbody tr .lineCompany').attr("data-toggle", "modal");

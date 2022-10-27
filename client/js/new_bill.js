@@ -7498,7 +7498,9 @@ Template.billcard.events({
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         $('#myModal4').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .btnSave': (event, templateObject) => {
         saveCurrencyHistory();
@@ -8382,6 +8384,7 @@ Template.billcard.events({
     },
     'click .btnSaveGridSettings': async function(event) {
         playSaveAudio();
+        setTimeout(function(){
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -8443,6 +8446,7 @@ Template.billcard.events({
         $(".fullScreenSpin").css("display", "none");
         swal("Something went wrong!", "", "error");
       }
+    }, delayTimeAfterSound);
     },
     'click .btnResetGridSettings': function(event) {
       let templateObject = Template.instance();
@@ -8912,11 +8916,13 @@ Template.billcard.events({
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
-        if(FlowRouter.current().queryParams.trans){
-          FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-        }else{
-          history.back(1);
-        };
+        setTimeout(function(){
+            if(FlowRouter.current().queryParams.trans){
+            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+            }else{
+            history.back(1);
+            };
+        }, delayTimeAfterSound);
     },
     'click #btnViewPayment': async function() {
         let templateObject = Template.instance();

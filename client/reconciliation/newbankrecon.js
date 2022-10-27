@@ -1837,7 +1837,9 @@ Template.newbankrecon.events({
     },
     'click #btnCancel': function() {
         playCancelAudio();
+        setTimeout(function(){
         closeTransactionDetail();
+        }, delayTimeAfterSound);
     },
     'click #addLine': function() {
         if (selectedYodleeID) {
@@ -2557,7 +2559,9 @@ Template.newbankrecon.events({
     },
     'click #btnMatchCancel': function() {
         playCancelAudio();
+        setTimeout(function(){
         closeTransactionDetail();
+        }, delayTimeAfterSound);
     },
     'click #btnGoSearch': function(event) {
         if (selectedYodleeID) {

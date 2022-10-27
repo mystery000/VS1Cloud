@@ -1247,6 +1247,7 @@ Template.customfieldpop.onRendered(() => {
 Template.customfieldpop.events({
   "click .btnSaveCustomFieldDropdown": function (e) {
     playSaveAudio();
+    setTimeout(function(){
     const templateObject = Template.instance();
     let organisationService = new OrganisationService();
     let customFieldDropdownId = $("#customFieldDropdownId").val() ? parseInt($("#customFieldDropdownId").val()) : 0;
@@ -1318,10 +1319,12 @@ Template.customfieldpop.events({
       $("#newCustomFieldDropdownModal").modal("hide");
       $(".fullScreenSpin").css("display", "none");
     });
+  }, delayTimeAfterSound);
   },
 
   "click .btnSaveCustomField": function () {
     playSaveAudio();
+    setTimeout(function(){
     const templateObject = Template.instance();
 
     let data_id = $("#currentCustomField").val();
@@ -1556,6 +1559,7 @@ Template.customfieldpop.events({
         $(".fullScreenSpin").css("display", "none");
       });
     }
+  }, delayTimeAfterSound);
   },
 
   "click .btnCustomFieldToggleText": function (e) {

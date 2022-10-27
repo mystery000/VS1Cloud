@@ -3080,10 +3080,13 @@ Template.journalentrycard.events({
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();
-        $('#myModal4').modal('toggle');
+        setTimeout(function(){
+            $('#myModal4').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .btnSave': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let department = $('#sltDepartment').val();
         let headMemo = $('#txaMemo').val();
@@ -3263,7 +3266,7 @@ Template.journalentrycard.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
-
+        }, delayTimeAfterSound);
     },
     'click .chkcolAccountName': function(event) {
         if ($(event.target).is(':checked')) {
@@ -3353,6 +3356,7 @@ Template.journalentrycard.events({
     },
     'click .btnSaveGridSettings': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         let lineItems = [];
 
         $('.columnSettings').each(function(index) {
@@ -3444,6 +3448,7 @@ Template.journalentrycard.events({
             }
         }
         $('#myModal2').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .btnResetGridSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
@@ -3621,9 +3626,9 @@ Template.journalentrycard.events({
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
-        history.back(1);
-
-
+        setTimeout(function(){
+            history.back(1);
+        }, delayTimeAfterSound);
     },
 
     'change #sltCurrency': (e, ui) => {

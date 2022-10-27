@@ -4998,6 +4998,7 @@ Template.paymentcard.events({
     // },
     'click .btnSave': (e, templateObject) => {
         playSaveAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
 
         /**
@@ -9061,6 +9062,7 @@ Template.paymentcard.events({
         // else {
         //     PayMethod = 'Cash';
         // }
+    }, delayTimeAfterSound);
     },
     'click #tblPaymentcard tr .colTransNoDONT': function (event) {
         let custname = $('#edtCustomerName').val() || '';
@@ -9377,11 +9379,13 @@ Template.paymentcard.events({
     'click .btnBack': function (event) {
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         if (FlowRouter.current().queryParams.trans) {
             FlowRouter.go('/customerscard?id=' + FlowRouter.current().queryParams.trans + '&transTab=active');
         } else {
             history.back(1);
         }
+        }, delayTimeAfterSound);
     },
     'click .printConfirm': async function (event) {
     playPrintAudio();
@@ -10017,6 +10021,7 @@ Template.paymentcard.events({
     },
     'click .btnSaveGridSettings': function (event) {
         playSaveAudio();
+        setTimeout(function(){
         let lineItems = [];
         //let lineItemObj = {};
         $('.columnSettings').each(function (index) {
@@ -10107,6 +10112,7 @@ Template.paymentcard.events({
             }
         }
         $('#myModal2').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'blur .divcolumn': function (event) {
         let columData = $(event.target).html();

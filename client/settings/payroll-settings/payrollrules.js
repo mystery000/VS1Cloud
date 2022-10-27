@@ -20922,10 +20922,11 @@ Template.payrollrules.events({
 
     },
     'click .btnBack':function(event){
-    playCancelAudio();
+      playCancelAudio();
       event.preventDefault();
+      setTimeout(function(){
       history.back(1);
-
+      }, delayTimeAfterSound);
     },
 
     'keyup #tblPayCalendars_filter input': function (event) {

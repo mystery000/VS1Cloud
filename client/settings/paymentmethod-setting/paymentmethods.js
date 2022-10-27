@@ -1186,7 +1186,9 @@ Template.paymentmethodSettings.events({
   'click .btnBack':function(event){
     playCancelAudio();
     event.preventDefault();
+    setTimeout(function(){
     history.back(1);
+    }, delayTimeAfterSound);
   }
 
 

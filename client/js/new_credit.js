@@ -6827,10 +6827,13 @@ Template.creditcard.events({
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         $('#myModal4').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .btnSave': (event, templateObject) => {
         playSaveAudio();
+        setTimeout(function(){
         saveCurrencyHistory();
         //let templateObject = Template.instance();
         let suppliername = $('#edtSupplierName');
@@ -7466,7 +7469,7 @@ Template.creditcard.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
-
+        }, delayTimeAfterSound);
     },
     'click .chkAccountName': function(event) {
       if ($(event.target).is(':checked')) {
@@ -7684,6 +7687,7 @@ Template.creditcard.events({
     },
     'click .btnSaveGridSettings': async function(event) {
         playSaveAudio();
+        setTimeout(async function(){
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -7745,6 +7749,7 @@ Template.creditcard.events({
         $(".fullScreenSpin").css("display", "none");
         swal("Something went wrong!", "", "error");
       }
+    }, delayTimeAfterSound);
     },
     'click .btnResetGridSettings': function(event) {
       let templateObject = Template.instance();
@@ -8191,11 +8196,13 @@ Template.creditcard.events({
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
-        if(FlowRouter.current().queryParams.trans){
-          FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-        }else{
-          history.back(1);
-        };
+        setTimeout(function(){
+            if(FlowRouter.current().queryParams.trans){
+            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+            }else{
+            history.back(1);
+            };
+        }, delayTimeAfterSound);
     },
     'click .chkEmailCopy': function(event) {
         $('#edtSupplierEmail').val($('#edtSupplierEmail').val().replace(/\s/g, ''));

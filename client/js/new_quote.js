@@ -7435,6 +7435,7 @@ Template.new_quote.events({
     // },
     'click .btnSave': (e, templateObject) => {
         playSaveAudio();
+        setTimeout(function(){
         let contactService = new ContactService();
         saveCurrencyHistory();
         //let templateObject = Template.instance();
@@ -8317,6 +8318,7 @@ Template.new_quote.events({
                 LoadingOverlay.hide();
             });
         }
+    }, delayTimeAfterSound);
     },
     'click .chkProductName': function(event) {
       if ($(event.target).is(':checked')) {
@@ -8557,6 +8559,7 @@ Template.new_quote.events({
     // custom field displaysettings
     'click .btnSaveGridSettings': async function(event) {
         playSaveAudio();
+        setTimeout(async function(){
         let lineItems = [];
         $(".fullScreenSpin").css("display", "inline-block");
         $(".displaySettings").each(function (index) {
@@ -8611,6 +8614,7 @@ Template.new_quote.events({
             $(".fullScreenSpin").css("display", "none");
             swal("Something went wrong!", "", "error");
         }
+    }, delayTimeAfterSound);
     },
     // custom field displaysettings
     'click .btnResetGridSettings': function(event) {
@@ -9733,11 +9737,13 @@ Template.new_quote.events({
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         if(FlowRouter.current().queryParams.trans){
             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
         }else{
             history.back(1);
         }
+        }, delayTimeAfterSound);
     },
     'click #btnCopyToOrder': function(e) {
         playCopyAudio();

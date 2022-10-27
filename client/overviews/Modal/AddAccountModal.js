@@ -975,6 +975,7 @@ Template.addAccountModal.events({
 
   "click .btnSaveAccount": function () {
     playSaveAudio();
+    setTimeout(function(){
     LoadingOverlay.show();
     let templateObject = Template.instance();
     let accountService = new AccountService();
@@ -1382,6 +1383,7 @@ Template.addAccountModal.events({
           $(".fullScreenSpin").css("display", "none");
         });
     }
+  }, delayTimeAfterSound);
   },
   "change #sltAccountType": function (e) {
     let templateObject = Template.instance();

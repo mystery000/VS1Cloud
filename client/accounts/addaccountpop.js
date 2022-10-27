@@ -366,6 +366,7 @@ Template.addaccountpop.events({
 
     'click .btnSaveAccountPOP': function () {
         playSaveAudio();
+        setTimeout(function(){
         var url = FlowRouter.current().path;
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
@@ -851,10 +852,8 @@ Template.addaccountpop.events({
                     $('.fullScreenSpin').css('display', 'none');
                 });
             });
-
-
-
-    },
+        }, delayTimeAfterSound);
+        },
     'click .btnAddNewAccounts': function () {
 
         $('#add-account-title').text('Add New Account');

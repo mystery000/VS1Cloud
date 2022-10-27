@@ -448,7 +448,9 @@ Template.companyappsettingsdup.events({
     'click .btnBack': function (event) {
         playCancelAudio();
         event.preventDefault();
-        history.back(1);
+        setTimeout(function(){
+            history.back(1);
+        }, delayTimeAfterSound);
     },
     'click .btnAddVS1User': function (event) {
         //FlowRouter.go('/employeescard');
@@ -501,6 +503,7 @@ Template.companyappsettingsdup.events({
     },
     'click .btnTopGlobalSave': function () {
         playSaveAudio();
+        setTimeout(function(){
         // $('.fullScreenSpin').css('display', 'inline-block');
         const templateObject = Template.instance();
         let checkLinkTrueERP = false;
@@ -956,6 +959,7 @@ Template.companyappsettingsdup.events({
                 swal('Connection Failed', oPost.getResponseHeader('errormessage') + ' Please try again!', 'error');
             }
         }
+        }, delayTimeAfterSound);
     },
     'click .additionalModule': function (event) {
         //  var totalAdditions = 0;
@@ -1366,6 +1370,7 @@ Template.companyappsettingsdup.events({
 
         }
     }
+
 
 });
 

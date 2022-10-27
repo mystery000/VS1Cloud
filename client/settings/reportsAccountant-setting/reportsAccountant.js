@@ -176,7 +176,9 @@ Template.reportsAccountantSettings.events({
   "click .btnBack": function (event) {
     playCancelAudio();
     event.preventDefault();
+    setTimeout(function(){
     history.back(1);
+    }, delayTimeAfterSound);
     //FlowRouter.go('/settings');
     //window.open('/invoicelist','_self');
   },
