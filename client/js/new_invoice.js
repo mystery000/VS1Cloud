@@ -17215,10 +17215,7 @@ Template.new_invoice.events({
   // },
   "click .btnSave":  (event, templateObject) => {
     playSaveAudio();
-<<<<<<< HEAD
-=======
     setTimeout(function(){
->>>>>>> kevin_dev
     saveCurrencyHistory();
     // let templateObject = Template.instance();
     let stripe_id = templateObject.accountID.get();
@@ -18314,7 +18311,7 @@ Template.new_invoice.events({
           });
           $(".fullScreenSpin").css("display", "none");
         });
-    }}, 1000);
+    }}, delayTimeAfterSound);
   },
   // display settings
   'click .chkProductName': function(event) {
@@ -19697,6 +19694,7 @@ Template.new_invoice.events({
   "click .btnBack": function (event) {
     playCancelAudio();
     event.preventDefault();
+    setTimeout(function(){
     if (FlowRouter.current().queryParams.trans) {
       FlowRouter.go(
         "/customerscard?id=" +
@@ -19705,7 +19703,7 @@ Template.new_invoice.events({
       );
     } else {
       history.back(1);
-    }
+    }}, delayTimeAfterSound);
   },
   "click #btnCopyInvoice": function () {
     playCopyAudio();
