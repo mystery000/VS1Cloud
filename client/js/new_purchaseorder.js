@@ -7358,9 +7358,6 @@ Template.purchaseordercard.events({
             }
         }
     },
-<<<<<<< HEAD
-    'click .btnDeletePO': async function(event) {
-=======
     'click .btnDeleteFollowingPOs': async function(event) {
         playDeleteAudio();
         var currentDate = new Date();
@@ -7404,8 +7401,7 @@ Template.purchaseordercard.events({
         $('.modal-backdrop').css('display','none');
         $("#deleteLineModal").modal("toggle");
     },
-    'click .btnDeletePO': function(event) {
->>>>>>> kevin_dev
+    'click .btnDeletePO': async function(event) {
         playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();

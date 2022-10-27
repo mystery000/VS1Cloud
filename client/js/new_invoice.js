@@ -17215,10 +17215,7 @@ Template.new_invoice.events({
   // },
   "click .btnSave":  (event, templateObject) => {
     playSaveAudio();
-<<<<<<< HEAD
-=======
     setTimeout(function(){
->>>>>>> kevin_dev
     saveCurrencyHistory();
     // let templateObject = Template.instance();
     let stripe_id = templateObject.accountID.get();
