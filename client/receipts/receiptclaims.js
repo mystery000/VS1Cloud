@@ -637,72 +637,79 @@ Template.receiptsoverview.onRendered(function() {
     }
     function showEditSupplierView(data) {
         $('.fullScreenSpin').css('display', 'none');
-        $('#add-supplier-title').text('Edit Supplier');
+        // $('#add-supplier-title').text('Edit Supplier');
         let popSupplierID = data.ID || '';
-        let popSupplierName = data.ClientName || '';
-        let popSupplierEmail = data.Email || '';
-        let popSupplierTitle = data.Title || '';
-        let popSupplierFirstName = data.FirstName || '';
-        let popSupplierMiddleName = data.CUSTFLD10 || '';
-        let popSupplierLastName = data.LastName || '';
-        let popSuppliertfn = '' || '';
-        let popSupplierPhone = data.Phone || '';
-        let popSupplierMobile = data.Mobile || '';
-        let popSupplierFaxnumber = data.Faxnumber || '';
-        let popSupplierSkypeName = data.SkypeName || '';
-        let popSupplierURL = data.URL || '';
-        let popSupplierStreet = data.Street || '';
-        let popSupplierStreet2 = data.Street2 || '';
-        let popSupplierState = data.State || '';
-        let popSupplierPostcode = data.Postcode || '';
-        let popSupplierCountry = data.Country || LoggedCountry;
-        let popSupplierbillingaddress = data.BillStreet || '';
-        let popSupplierbcity = data.BillStreet2 || '';
-        let popSupplierbstate = data.BillState || '';
-        let popSupplierbpostalcode = data.BillPostcode || '';
-        let popSupplierbcountry = data.Billcountry || LoggedCountry;
-        let popSuppliercustfield1 = data.CUSTFLD1 || '';
-        let popSuppliercustfield2 = data.CUSTFLD2 || '';
-        let popSuppliercustfield3 = data.CUSTFLD3 || '';
-        let popSuppliercustfield4 = data.CUSTFLD4 || '';
-        let popSuppliernotes = data.Notes || '';
-        let popSupplierpreferedpayment = data.PaymentMethodName || '';
-        let popSupplierterms = data.TermsName || '';
-        let popSupplierdeliverymethod = data.ShippingMethodName || '';
-        let popSupplieraccountnumber = data.ClientNo || '';
-        let popSupplierisContractor = data.Contractor || false;
-        let popSupplierissupplier = data.IsSupplier || false;
-        let popSupplieriscustomer = data.IsCustomer || false;
+        // let popSupplierName = data.ClientName || '';
+        // let popSupplierEmail = data.Email || '';
+        // let popSupplierTitle = data.Title || '';
+        // let popSupplierFirstName = data.FirstName || '';
+        // let popSupplierMiddleName = data.CUSTFLD10 || '';
+        // let popSupplierLastName = data.LastName || '';
+        // let popSuppliertfn = '' || '';
+        // let popSupplierPhone = data.Phone || '';
+        // let popSupplierMobile = data.Mobile || '';
+        // let popSupplierFaxnumber = data.Faxnumber || '';
+        // let popSupplierSkypeName = data.SkypeName || '';
+        // let popSupplierURL = data.URL || '';
+        // let popSupplierStreet = data.Street || '';
+        // let popSupplierStreet2 = data.Street2 || '';
+        // let popSupplierState = data.State || '';
+        // let popSupplierPostcode = data.Postcode || '';
+        // let popSupplierCountry = data.Country || LoggedCountry;
+        // let popSupplierbillingaddress = data.BillStreet || '';
+        // let popSupplierbcity = data.BillStreet2 || '';
+        // let popSupplierbstate = data.BillState || '';
+        // let popSupplierbpostalcode = data.BillPostcode || '';
+        // let popSupplierbcountry = data.Billcountry || LoggedCountry;
+        // let popSuppliercustfield1 = data.CUSTFLD1 || '';
+        // let popSuppliercustfield2 = data.CUSTFLD2 || '';
+        // let popSuppliercustfield3 = data.CUSTFLD3 || '';
+        // let popSuppliercustfield4 = data.CUSTFLD4 || '';
+        // let popSuppliernotes = data.Notes || '';
+        // let popSupplierpreferedpayment = data.PaymentMethodName || '';
+        // let popSupplierterms = data.TermsName || '';
+        // let popSupplierdeliverymethod = data.ShippingMethodName || '';
+        // let popSupplieraccountnumber = data.ClientNo || '';
+        // let popSupplierisContractor = data.Contractor || false;
+        // let popSupplierissupplier = data.IsSupplier || false;
+        // let popSupplieriscustomer = data.IsCustomer || false;
 
-        $('#edtSupplierCompany').val(popSupplierName);
-        $('#edtSupplierPOPID').val(popSupplierID);
-        $('#edtSupplierCompanyEmail').val(popSupplierEmail);
-        $('#edtSupplierTitle').val(popSupplierTitle);
-        $('#edtSupplierFirstName').val(popSupplierFirstName);
-        $('#edtSupplierMiddleName').val(popSupplierMiddleName);
-        $('#edtSupplierLastName').val(popSupplierLastName);
-        $('#edtSupplierPhone').val(popSupplierPhone);
-        $('#edtSupplierMobile').val(popSupplierMobile);
-        $('#edtSupplierFax').val(popSupplierFaxnumber);
-        $('#edtSupplierSkypeID').val(popSupplierSkypeName);
-        $('#edtSupplierWebsite').val(popSupplierURL);
-        $('#edtSupplierShippingAddress').val(popSupplierStreet);
-        $('#edtSupplierShippingCity').val(popSupplierStreet2);
-        $('#edtSupplierShippingState').val(popSupplierState);
-        $('#edtSupplierShippingZIP').val(popSupplierPostcode);
-        $('#sedtCountry').val(popSupplierCountry);
-        $('#txaNotes').val(popSuppliernotes);
-        $('#sltPreferedPayment').val(popSupplierpreferedpayment);
-        $('#sltTerms').val(popSupplierterms);
-        $('#suppAccountNo').val(popSupplieraccountnumber);
-        $('#edtCustomeField1').val(popSuppliercustfield1);
-        $('#edtCustomeField2').val(popSuppliercustfield2);
-        $('#edtCustomeField3').val(popSuppliercustfield3);
-        $('#edtCustomeField4').val(popSuppliercustfield4);
+        // $('#edtSupplierCompany').val(popSupplierName);
+        // $('#edtSupplierPOPID').val(popSupplierID);
+        // $('#edtSupplierCompanyEmail').val(popSupplierEmail);
+        // $('#edtSupplierTitle').val(popSupplierTitle);
+        // $('#edtSupplierFirstName').val(popSupplierFirstName);
+        // $('#edtSupplierMiddleName').val(popSupplierMiddleName);
+        // $('#edtSupplierLastName').val(popSupplierLastName);
+        // $('#edtSupplierPhone').val(popSupplierPhone);
+        // $('#edtSupplierMobile').val(popSupplierMobile);
+        // $('#edtSupplierFax').val(popSupplierFaxnumber);
+        // $('#edtSupplierSkypeID').val(popSupplierSkypeName);
+        // $('#edtSupplierWebsite').val(popSupplierURL);
+        // $('#edtSupplierShippingAddress').val(popSupplierStreet);
+        // $('#edtSupplierShippingCity').val(popSupplierStreet2);
+        // $('#edtSupplierShippingState').val(popSupplierState);
+        // $('#edtSupplierShippingZIP').val(popSupplierPostcode);
+        // $('#sedtCountry').val(popSupplierCountry);
+        // $('#txaNotes').val(popSuppliernotes);
+        // $('#sltPreferedPayment').val(popSupplierpreferedpayment);
+        // $('#sltTerms').val(popSupplierterms);
+        // $('#suppAccountNo').val(popSupplieraccountnumber);
+        // $('#edtCustomeField1').val(popSuppliercustfield1);
+        // $('#edtCustomeField2').val(popSuppliercustfield2);
+        // $('#edtCustomeField3').val(popSuppliercustfield3);
+        // $('#edtCustomeField4').val(popSuppliercustfield4);
 
-        setTimeout(function() {
-            $('#addSupplierModal').modal('show');
-        }, 200);
+        // setTimeout(function() {
+        //     $('#addSupplierModal').modal('show');
+        // }, 200);
+
+        if(popSupplierID == ""){
+            window.open('/supplierscard', '_self');
+        }
+        else{
+            window.open('/supplierscard?id='+popSupplierID, '_self');
+        }
     }
 
     function setCurrencySelect(e) {

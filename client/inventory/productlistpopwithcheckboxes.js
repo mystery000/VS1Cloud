@@ -136,14 +136,10 @@ Template.productlistpopwithcheckboxes.onRendered(function () {
                   ];
                 } else {
                   dataList = [
-                    '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
+                    '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
                       data.tproductvs1[i].fields.ID +
-                      "x" +
-                      data.tproductvs1[i].fields.ProductName +
-                      '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
+                      '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
                       data.tproductvs1[i].fields.ID +
-                      "x" +
-                      data.tproductvs1[i].fields.ProductName +
                       '"></label></div>',
                     data.tproductvs1[i].fields.ProductName || "-",
                     data.tproductvs1[i].fields.SalesDescription || "",
@@ -311,14 +307,10 @@ Template.productlistpopwithcheckboxes.onRendered(function () {
               ];
             } else {
               dataList = [
-                '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
+                '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
                   data.tproductvs1[i].fields.ID +
-                  "x" +
-                  data.tproductvs1[i].fields.ProductName +
-                  '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
+                  '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
                   data.tproductvs1[i].fields.ID +
-                  "x" +
-                  data.tproductvs1[i].fields.ProductName +
                   '"></label></div>',
                 data.tproductvs1[i].fields.ProductName || "-",
                 data.tproductvs1[i].fields.SalesDescription || "",
@@ -635,14 +627,10 @@ Template.productlistpopwithcheckboxes.onRendered(function () {
                 ];
               } else {
                 dataList = [
-                  '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
+                  '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
                     data.tproductvs1[i].fields.ID +
-                    "x" +
-                    data.tproductvs1[i].fields.ProductName +
-                    '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
+                    '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
                     data.tproductvs1[i].fields.ID +
-                    "x" +
-                    data.tproductvs1[i].fields.ProductName +
                     '"></label></div>',
                   data.tproductvs1[i].fields.ProductName || "-",
                   data.tproductvs1[i].fields.SalesDescription || "",
@@ -946,14 +934,10 @@ Template.productlistpopwithcheckboxes.events({
               ];
             } else {
               dataList = [
-                '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
+                '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
                   data.tproductvs1[i].fields.ID +
-                  "x" +
-                  data.tproductvs1[i].fields.ProductName +
-                  '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
+                  '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
                   data.tproductvs1[i].fields.ID +
-                  "x" +
-                  data.tproductvs1[i].fields.ProductName +
                   '"></label></div>',
                 data.tproductvs1[i].fields.ProductName || "-",
                 data.tproductvs1[i].fields.SalesDescription || "",

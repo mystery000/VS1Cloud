@@ -4641,7 +4641,6 @@ Template.dsAppointmentsWidget.events({
     },
     'click #btnSaveRepeat': function () {
         playSaveAudio();
-        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let repeatDays = templateObject.repeatDays.get();
@@ -4949,7 +4948,7 @@ Template.dsAppointmentsWidget.events({
 
             }
         }
-        }, delayTimeAfterSound);
+
     },
     'click #createInvoice': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -6663,7 +6662,6 @@ Template.dsAppointmentsWidget.events({
     },
     'click #btnSaveAppointment': async function() {
         playSaveAudio();
-        setTimeout(function(){
         const templateObject = Template.instance();
         templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
@@ -6731,15 +6729,12 @@ Template.dsAppointmentsWidget.events({
                 $('#btnSaveAppointmentSubmit').trigger('click');
             }
         }
-    }, delayTimeAfterSound);
     },
     'click .btnSaveIgnoreSMS': function() {
         playSaveAudio();
-        setTimeout(function(){
        $('#chkSMSCustomer').prop('checked', false);
         $('#chkSMSUser').prop('checked', false);
         $('#frmAppointment').trigger('submit');
-    }, delayTimeAfterSound);
     },
     'click #btnCloseStopAppointmentModal': function() {
         $('#stopAppointmentModal').modal('hide');
@@ -6753,7 +6748,6 @@ Template.dsAppointmentsWidget.events({
     'click #btnSaveAppointmentSubmit': async function(e) {
         playSaveAudio();
         e.preventDefault();
-        setTimeout(async function(){
         const templateObject = Template.instance();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
@@ -6814,7 +6808,6 @@ Template.dsAppointmentsWidget.events({
         } else {
             $('#frmAppointment').trigger('submit');
         }
-        }, delayTimeAfterSound);
     },
     'change #chkSMSCustomer': function() {
         if ($('#chkSMSCustomer').is(':checked')) {
