@@ -361,6 +361,7 @@ Template.new_workorder.events({
 
     'click .btnSave': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let record = templateObject.workorderrecord.get();
@@ -390,8 +391,8 @@ Template.new_workorder.events({
             confirmButtonText: 'Continue',
         }).then ((result)=>{
             FlowRouter.go('/workorderlist')
-        })
-
+        });
+    }, delayTimeAfterSound);
     },
 
     'click #tblWorkOrderLine tbody tr': function(event) {
@@ -865,6 +866,7 @@ Template.new_workorder.events({
 
     'click #BOMSetupModal .btn-save-bom': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         let finalStructure = {};
         let templateObject = Template.instance();
         let bomProduct = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')): [];
@@ -886,9 +888,9 @@ Template.new_workorder.events({
         let count = savedworkorders.length;
         let mainOrderId = currentRecord.id.split('_')[1];
         if(mainOrderId <= count) {
-            mainOrderSaved = true
+            mainOrderSaved = true;
         }else {
-            mainOrderSaved = false
+            mainOrderSaved = false;
         }
 
 
@@ -1060,9 +1062,9 @@ Template.new_workorder.events({
                     })
 
                 }
-                saveMainBOMStructure()
+                saveMainBOMStructure();
             } else {
-                saveMainBOMStructure()
+                saveMainBOMStructure();
             }
         }
 
@@ -1074,15 +1076,18 @@ Template.new_workorder.events({
         //     $(productContents[l]).remove()
         // }
         // $('#BOMSetupModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
 
     'click #BOMSetupModal .btn-cancel-bom': function(event) {
         playCancelAudio();
+        setTimeout(function(){
         let productContents = $('#BOMSetupModal').find('.product-content');
         for (let l = 1; l < productContents.length -1; l++) {
             $(productContents[l]).remove();
         }
         $('#BOMSetupModal').modal('toggle');
+        }, delayTimeAfterSound);
     },
 
     'click #btn-save-close': function(event) {

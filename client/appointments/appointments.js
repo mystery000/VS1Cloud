@@ -11056,6 +11056,7 @@ Template.appointments.events({
   // custom field displaysettings
   "click .btnSaveGridSettings": function (event) {
     playSaveAudio();
+    setTimeout(function(){
     let lineItems = [];
     let organisationService = new OrganisationService();
 
@@ -11124,6 +11125,7 @@ Template.appointments.events({
           addVS1Data("TltSaleslines", JSON.stringify(data));
         });
     }, 8000);
+    }, delayTimeAfterSound);
   },
 
   // custom field displaysettings
@@ -12096,6 +12098,7 @@ Template.appointments.events({
   },
   "click #btnSaveRepeat": function () {
     playSaveAudio();
+    setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
     let repeatDays = templateObject.repeatDays.get();
@@ -12469,6 +12472,7 @@ Template.appointments.events({
         }
       };
     }
+    }, delayTimeAfterSound);
   },
   "click #createInvoice": function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -14984,6 +14988,7 @@ Template.appointments.events({
 
   "click #btnSaveAppointment": async function () {
     playSaveAudio();
+    setTimeout(async function(){
     const templateObject = Template.instance();
     const isLeaveBooked = await templateObject.getLeaveRequests();
     if (isLeaveBooked === true) {
@@ -15138,9 +15143,11 @@ Template.appointments.events({
         }
       }
     }
+  }, delayTimeAfterSound);
   },
   "click .btnSaveIgnoreSMS": async function () {
     playSaveAudio();
+    setTimeout(async function(){
     $("#chkSMSCustomer").prop("checked", false);
     $("#chkSMSUser").prop("checked", false);
     let emailCustomer = $("#customerEmail").is(":checked");
@@ -15151,6 +15158,7 @@ Template.appointments.events({
     } else {
       $("#frmAppointment").trigger("submit");
     }
+  }, delayTimeAfterSound);
   },
   "click #btnCloseStopAppointmentModal": function () {
     $("#stopAppointmentModal").modal("hide");

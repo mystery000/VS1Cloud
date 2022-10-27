@@ -1931,6 +1931,7 @@ Template.customerscard.onRendered(function () {
     });
     $(document).on("click", "#referenceLetterModal .btnSaveLetterTemp", function (e) {
         playSaveAudio();
+        setTimeout(function(){
         if($("input[name='refTemp']:checked").attr('value') == undefined || $("input[name='refTemp']:checked").attr('value') == null ) {
             swal({
                 title: 'Oooops...',
@@ -1988,6 +1989,7 @@ Template.customerscard.onRendered(function () {
                 });
             }
         }
+        }, delayTimeAfterSound);
     });
     $(document).on('click', '#referenceLetterModal .btnAddLetter', function (e) {
         $('#addLetterTemplateModal').modal('toggle')
@@ -2395,11 +2397,14 @@ Template.customerscard.events({
     'click .btnBack': function (event) {
         playCancelAudio();
         // event.preventDefault();
-        history.back(1);
+        setTimeout(function(){
+            history.back(1);
+        }, delayTimeAfterSound);
       //  FlowRouter.go('/customerlist');
     },
     'click .btnSaveDept': function () {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ContactService();
 
@@ -2549,6 +2554,7 @@ Template.customerscard.events({
         //         $('.fullScreenSpin').css('display','none');
         //     });
         // }
+        }, delayTimeAfterSound);
     },
     'click #chkSameAsShipping': function (event) {
         /*if($(event.target).is(':checked')){
@@ -2574,6 +2580,7 @@ Template.customerscard.events({
     },
     'click .btnSave': async function (e) {
         playSaveAudio();
+        setTimeout(async function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -2833,9 +2840,11 @@ Template.customerscard.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
+    }, delayTimeAfterSound);
     },
     'click .btnSaveJob': function (event) {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -3062,6 +3071,7 @@ Template.customerscard.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
+    }, delayTimeAfterSound);
     },
     'keyup .search': function (event) {
         const searchTerm = $(".search").val();
@@ -3516,6 +3526,7 @@ Template.customerscard.events({
     },
     'click .btnSaveSettings': function (event) {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         $('.lblCustomField1').html('');
         $('.lblCustomField2').html('');
@@ -3542,6 +3553,7 @@ Template.customerscard.events({
             getchkcustomField4 = false;
         }
         $('#customfieldModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnResetSettings': function (event) {
         let checkPrefDetails = getCheckPrefDetails();

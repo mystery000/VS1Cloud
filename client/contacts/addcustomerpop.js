@@ -547,11 +547,14 @@ Template.addcustomerpop.events({
     'click .btnBack': function (event) {
         playCancelAudio();
         // event.preventDefault();
-        history.back(1);
+        setTimeout(function(){
+            history.back(1);
+        }, delayTimeAfterSound);
         //FlowRouter.go('/customerlist');
     },
     'click .btnSaveDept': function (e) {
         playSaveAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
         let contactService = new ContactService();
 
@@ -697,10 +700,7 @@ Template.addcustomerpop.events({
         //
         //     });
         // }
-
-
-
-
+    }, delayTimeAfterSound);
     },
     'click .addcustomerpop #chkCustomerSameAsShipping': function (event) {
         if($(event.target).is(':checked')){
@@ -729,6 +729,7 @@ Template.addcustomerpop.events({
     },
     'click .addcustomerpop .btnSaveCustPOP': async function (event) {
         playSaveAudio();
+        setTimeout(async function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
         LoadingOverlay.show();
@@ -1017,10 +1018,11 @@ Template.addcustomerpop.events({
             });
             LoadingOverlay.hide();
         });
-
+    }, delayTimeAfterSound);
     },
     'click .addcustomerpop .btnSaveJob': function (event) {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
         LoadingOverlay.show();
@@ -1261,6 +1263,7 @@ Template.addcustomerpop.events({
             });
 
         });
+    }, delayTimeAfterSound);
 
     },
     'keyup .addcustomerpop .search': function (event) {
@@ -1664,6 +1667,7 @@ Template.addcustomerpop.events({
     },
     'click .addcustomerpop .btnSaveSettings': function (event) {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         $('.addcustomerpop .lblCustomField1').html('');
         $('.addcustomerpop .lblCustomField2').html('');
@@ -1690,7 +1694,7 @@ Template.addcustomerpop.events({
             getchkcustomField4 = false;
         }
         $('.addcustomerpop #customfieldModal').modal('toggle');
-
+    }, delayTimeAfterSound);
     },
     'click .addcustomerpop .btnResetSettings': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });

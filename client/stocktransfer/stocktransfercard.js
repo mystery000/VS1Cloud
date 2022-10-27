@@ -1362,6 +1362,7 @@ Template.stocktransfercard.onRendered(function() {
     StockTransferRow();
     $("#btnsaveallocline").click(function() {
         playSaveAudio();
+        setTimeout(function(){
         $('#tblStocktransfer tr:eq(' + rowIndex + ')').find("[id=pqa]").text("");
         var splashLineArrayAlloc = new Array();
         let lineItemObjFormAlloc = {};
@@ -1401,6 +1402,7 @@ Template.stocktransfercard.onRendered(function() {
         $('#' + rowIndex + " #lineID").text(AllocLineObjDetails);
         // $('#' + rowIndex + " #UOMQtyShipped").val(qtyShipped);
         $('#' + rowIndex + " #UOMQtyBackOrder").text(qtyBackOrder);
+    }, delayTimeAfterSound);
     });
 
     exportSalesToPdf = function() {
@@ -3164,7 +3166,9 @@ Template.stocktransfercard.events({
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         history.back(1);
+        }, delayTimeAfterSound);
     },
     'click .printConfirm': function(event) {
         playPrintAudio();
@@ -3915,6 +3919,7 @@ Template.stocktransfercard.events({
     },
     'click .btnSave': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         if ($('.chkEmailCopy').is(':checked')) {
         $('#html-2-pdfwrapper').css('display', 'block');
         }
@@ -4259,7 +4264,8 @@ Template.stocktransfercard.events({
       }else{
         $('.fullScreenSpin').css('display', 'none');
       }
-
+    }, delayTimeAfterSound);
+    
     },
     'click .btnDeleteFollowingStocks': async function(event) {
         playDeleteAudio();

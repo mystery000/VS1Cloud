@@ -5177,6 +5177,7 @@ Template.employeescard.events({
     },
     'click .btnSave': async (e, templateObject) => {
         playSaveAudio();
+        setTimeout(async function(){
         await templateObject.saveSelectedProduct();
         let contactService = new ContactService();
         let appointmentService = new AppointmentService();
@@ -5815,6 +5816,7 @@ Template.employeescard.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
+        }, delayTimeAfterSound);
     },
     'click .btnDownloadPayslip': async function(event){
         // $('.fullScreenSpin').css('display', 'block');
@@ -6252,6 +6254,7 @@ Template.employeescard.events({
     // Save LeaveRequest Popup
     'click #btnSaveLeaveRequest': async function(event) {
         playSaveAudio();
+        setTimeout(async function(){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -6368,10 +6371,12 @@ Template.employeescard.events({
                 });
             }
         }
+    }, delayTimeAfterSound);
     },
     // Save AssignLeaveType Popup
     'click #btnSaveAssignLeaveType': async function(event) {
         playSaveAudio();
+        setTimeout(async function(){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -6516,6 +6521,7 @@ Template.employeescard.events({
                 if (result.value) {}
             });
         }
+    }, delayTimeAfterSound);
     },
     'click #savePayRollNotes': async function(){
         let templateObject = Template.instance();
@@ -7891,6 +7897,7 @@ Template.employeescard.events({
     // Save active tab data
     'click #btnSaveEmployeePayroll': async (event) => {
         playSaveAudio();
+        setTimeout(async function(){
         let activeTab = "";
         if($('div#taxes').attr("class").indexOf("active") >= 0) activeTab = "taxes";
         if($('div#leave').attr("class").indexOf("active") >= 0) activeTab = "leave";
@@ -8726,6 +8733,7 @@ Template.employeescard.events({
         } else {
             return;
         }
+        }, delayTimeAfterSound);
     },
     'change .colServiceCostPrice': function (event) {
         let utilityService = new UtilityService();
@@ -9374,7 +9382,9 @@ Template.employeescard.events({
     'click .btnBack': function (event) {
         playCancelAudio();
         event.preventDefault();
-        history.back(1);
+        setTimeout(function(){
+            history.back(1);
+        }, delayTimeAfterSound);
     },
     'click #chkSameAsShipping': function (event) {
         // if($(event.target).is(':checked')){
@@ -9776,6 +9786,7 @@ Template.employeescard.events({
     },
     'click .btnSaveSettings': function (event) {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
 
         $('.lblCustomField1').html('');
@@ -9804,7 +9815,7 @@ Template.employeescard.events({
         }
 
         $('#customfieldModal').modal('toggle');
-
+        }, delayTimeAfterSound);
     },
     'click .btnResetSettings': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({

@@ -60,7 +60,9 @@ Template.subscriptionSettings.events({
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         history.back();
+        }, delayTimeAfterSound);
     },
     'click .btnAddVS1User': function(event) {
         swal({
@@ -82,6 +84,7 @@ Template.subscriptionSettings.events({
     },
     'click .btnCancelSub': function(event) {
         playCancelAudio();
+        setTimeout(function(){
         let loggeduserEmail = localStorage.getItem('mySession');
         let loggeduserName = Session.get('mySessionEmployee');
         let currentURL = FlowRouter.current().queryParams;
@@ -215,6 +218,7 @@ Template.subscriptionSettings.events({
 
             }
         });
+        }, delayTimeAfterSound);
     },
     // 'click .btnSaveCreditCard': function (event) {
     // let lineID = $('#txtCardID').val();

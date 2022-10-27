@@ -995,7 +995,9 @@ Template.currencypop.events({
   },
   "click .btnCloseAddNewDept": function () {
     playCancelAudio();
+    setTimeout(function(){
     $("#newTaxRate").css("display", "none");
+    }, delayTimeAfterSound);
   },
   "click .btnDeleteCurrency": function () {
     playDeleteAudio();
@@ -1086,6 +1088,7 @@ Template.currencypop.events({
   },
   "click .btnSaveCurrency": function () {
     playSaveAudio();
+    setTimeout(function(){
     let taxRateService = new TaxRateService();
     $(".fullScreenSpin").css("display", "inline-block");
     var currencyid = $("#edtCurrencyID").val();
@@ -1153,7 +1156,9 @@ Template.currencypop.events({
       });
       $(".fullScreenSpin").css("display", "none");
     });
+  }, delayTimeAfterSound);
   }
+  
 });
 
 Template.currencypop.helpers({

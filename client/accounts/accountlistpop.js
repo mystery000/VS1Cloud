@@ -617,6 +617,7 @@ Template.accountlistpop.events({
     },
     'click .btnSaveStatus': function () {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let clientService = new SalesBoardService();
         let status = $('#status').val();
@@ -678,6 +679,7 @@ Template.accountlistpop.events({
                 }
             });
         }
+        }, delayTimeAfterSound);
     },
     'blur .lineMemo': function (event) {
         var targetID = $(event.target).closest('tr').attr('id');
@@ -1141,10 +1143,13 @@ Template.accountlistpop.events({
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         $('#myModal4').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .btnSave': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let suppliername = $('#edtSupplierName');
         let purchaseService = new PurchaseBoardService();
@@ -1599,7 +1604,7 @@ Template.accountlistpop.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
-
+        }, delayTimeAfterSound);
     },
     'click .chkAccountName': function(event) {
         if ($(event.target).is(':checked')) {
@@ -1721,6 +1726,7 @@ Template.accountlistpop.events({
     },
     'click .btnSaveGridSettings': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         let lineItems = [];
 
         $('.columnSettings').each(function(index) {
@@ -1800,6 +1806,7 @@ Template.accountlistpop.events({
             }
         }
         $('#myModal2').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .btnResetGridSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
@@ -2191,9 +2198,9 @@ Template.accountlistpop.events({
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
-        history.back(1);
-
-
+        setTimeout(function(){
+            history.back(1);
+        }, delayTimeAfterSound);
     },
     'click .chkEmailCopy': function(event) {
         $('#edtSupplierEmail').val($('#edtSupplierEmail').val().replace(/\s/g, ''));

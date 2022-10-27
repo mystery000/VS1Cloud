@@ -3625,6 +3625,7 @@ Template.accessleveldup.events({
     },
     'click .btnGlobalSave': function () {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let accesslevelService = new AccessLevelService();
 
@@ -3972,9 +3973,11 @@ Template.accessleveldup.events({
           event.preventDefault();
 
         }
+    }, delayTimeAfterSound);
     },
     'click .btnTopGlobalSaveUpdate-Ras': function () {
         playSaveAudio();
+        setTimeout(function(){
         swal({
             title: 'Do you want to save both VS1 and Employee Modules?',
             text: 'Yes to Save Both and No to Save only the VS1 Modules.',
@@ -3988,10 +3991,12 @@ Template.accessleveldup.events({
             } else if (result.dismiss === 'cancel') {
 
             }
-        })
+        });
+    }, delayTimeAfterSound);
     },
     'click .btnSaveAccess': function () {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let accesslevelService = new AccessLevelService();
 
@@ -4455,6 +4460,7 @@ Template.accessleveldup.events({
             Meteor._reload.reload();
             $('.fullScreenSpin').css('display','none');
         }, 5000);
+    }, delayTimeAfterSound);
     },
     'click .inactiveLicence .chkSettings': function (event) {
         return false;
@@ -4462,7 +4468,9 @@ Template.accessleveldup.events({
     'click .btnBack':function(event){
         playCancelAudio();
         event.preventDefault();
-        history.back(1);
+        setTimeout(function(){
+            history.back(1);
+        }, delayTimeAfterSound);
     },
     'click .btnSelectAllEmployee':function(event){
          $('#sltEmployeeName').val('All');

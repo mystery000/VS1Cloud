@@ -18311,7 +18311,8 @@ Template.new_invoice.events({
           });
           $(".fullScreenSpin").css("display", "none");
         });
-    }}, delayTimeAfterSound);
+    }
+    }, delayTimeAfterSound);
   },
   // display settings
   'click .chkProductName': function(event) {
@@ -18618,6 +18619,7 @@ Template.new_invoice.events({
   // custom field displaysettings
   "click .btnSaveGridSettings": async function (event) {
     playSaveAudio();
+    setTimeout(async function(){
     let lineItems = [];
     $(".fullScreenSpin").css("display", "inline-block");
 
@@ -18679,6 +18681,7 @@ Template.new_invoice.events({
       $(".fullScreenSpin").css("display", "none");
       swal("Something went wrong!", "", "error");
     }
+  }, delayTimeAfterSound);
   },
 
   // custom field displaysettings
@@ -19703,7 +19706,8 @@ Template.new_invoice.events({
       );
     } else {
       history.back(1);
-    }}, delayTimeAfterSound);
+    }
+    }, delayTimeAfterSound);
   },
   "click #btnCopyInvoice": function () {
     playCopyAudio();

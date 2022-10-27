@@ -910,6 +910,7 @@ Template.custfieldlist.events({
     },
     'click .btnSaveTerms': function() {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
         let termsID = $('#edtTermsID').val();
@@ -1096,7 +1097,7 @@ Template.custfieldlist.events({
             });
         }
 
-
+    }, delayTimeAfterSound);
 
 
     },
@@ -1118,7 +1119,9 @@ Template.custfieldlist.events({
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         history.back(1);
+        }, delayTimeAfterSound);
     },
     'click .chkTerms': function(event) {
         var $box = $(event.target);

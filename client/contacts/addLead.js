@@ -1138,7 +1138,9 @@ Template.leadscard.events({
     'click .btnBack': function (event) {
         playCancelAudio();
         // event.preventDefault();
-        history.back(1);
+        setTimeout(function(){
+            history.back(1);
+        }, delayTimeAfterSound);
       //  FlowRouter.go('/leadlist');
     },
     'click #chkSameAsShipping': function (event) {
@@ -1165,6 +1167,7 @@ Template.leadscard.events({
     },
     'click .btnSave': async function (event) {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -1369,6 +1372,7 @@ Template.leadscard.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
+        }, delayTimeAfterSound);
     },
     'keyup .search': function (event) {
         const searchTerm = $(".search").val();
@@ -1648,6 +1652,7 @@ Template.leadscard.events({
     },
     'click .btnSaveSettings': function (event) {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         $('.lblCustomField1').html('');
         $('.lblCustomField2').html('');
@@ -1674,6 +1679,7 @@ Template.leadscard.events({
             getchkcustomField4 = false;
         }
         $('#customfieldModal').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .btnResetSettings': function (event) {
         let checkPrefDetails = getCheckPrefDetails();

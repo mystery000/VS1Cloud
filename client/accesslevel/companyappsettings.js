@@ -54,7 +54,9 @@ Template.companyappsettings.events({
    'click .btnBack':function(event){
      playCancelAudio();
      event.preventDefault();
-     history.back(1);
+     setTimeout(function(){
+      history.back(1);
+     }, delayTimeAfterSound);
    },
    'click .btnAddVS1User':function(event){
     //FlowRouter.go('/employeescard');

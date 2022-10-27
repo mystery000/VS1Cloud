@@ -7358,9 +7358,6 @@ Template.purchaseordercard.events({
             }
         }
     },
-<<<<<<< HEAD
-    'click .btnDeletePO': async function(event) {
-=======
     'click .btnDeleteFollowingPOs': async function(event) {
         playDeleteAudio();
         var currentDate = new Date();
@@ -7404,8 +7401,7 @@ Template.purchaseordercard.events({
         $('.modal-backdrop').css('display','none');
         $("#deleteLineModal").modal("toggle");
     },
-    'click .btnDeletePO': function(event) {
->>>>>>> kevin_dev
+    'click .btnDeletePO': async function(event) {
         playDeleteAudio();
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
@@ -7622,10 +7618,13 @@ Template.purchaseordercard.events({
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         $('#myModal4').modal('toggle');
+        }, delayTimeAfterSound);
     },
     'click .btnSave': async (event, templateObject) => {
         playSaveAudio();
+        setTimeout(function(){
         saveCurrencyHistory();
         let tempObject = Template.instance();
         let isBORedirect = await tempObject.isbackorderredirect.get() || false;
@@ -8429,7 +8428,7 @@ Template.purchaseordercard.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
-
+        }, delayTimeAfterSound);
     },
     'click .chkProductName': function(event) {
       if ($(event.target).is(':checked')) {
@@ -8741,6 +8740,7 @@ Template.purchaseordercard.events({
     },
     'click .btnSaveGridSettings': async function(event) {
         playSaveAudio();
+        setTimeout(async function(){
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -8803,6 +8803,7 @@ Template.purchaseordercard.events({
         $(".fullScreenSpin").css("display", "none");
         swal("Something went wrong!", "", "error");
       }
+    }, delayTimeAfterSound);
     },
     'click .btnResetGridSettings': function(event) {
       let templateObject = Template.instance();
@@ -9254,11 +9255,13 @@ Template.purchaseordercard.events({
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         if(FlowRouter.current().queryParams.trans){
           FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
         }else{
           history.back(1);
         };
+        }, delayTimeAfterSound);
     },
     'click #btnCopyToInvoice': function() {
         playCopyAudio();

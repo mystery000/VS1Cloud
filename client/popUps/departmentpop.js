@@ -1029,8 +1029,9 @@ Template.departmentpop.events({
     },
     'click .btnCloseAddNewDept': function () {
         playCancelAudio();
+        setTimeout(function(){
         $('#newTaxRate').css('display','none');
-
+        }, delayTimeAfterSound);
     },
     'click .btnDeleteDepartment': function () {
         playDeleteAudio();
@@ -1077,6 +1078,7 @@ Template.departmentpop.events({
     },
     'click .btnSaveDept': function () {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         let taxRateService = new TaxRateService();
         let deptID = $('#edtDepartmentID').val();
@@ -1243,10 +1245,11 @@ Template.departmentpop.events({
                 $('.fullScreenSpin').css('display','none');
             });
         }
+    }, delayTimeAfterSound);
 
 
 
-
+    
     },
     'click .btnAddDept': function () {
         $('#add-dept-title').text('Add New Department');
@@ -1260,7 +1263,9 @@ Template.departmentpop.events({
     'click .btnBack':function(event){
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         history.back(1);
+        }, delayTimeAfterSound);
     },
     'keydown #edtSiteCode, keyup #edtSiteCode': function(event){
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -1293,6 +1298,7 @@ Template.departmentpop.events({
     },
     'click .btnSaveRoom': function () {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         let taxRateService = new TaxRateService();
 
@@ -1319,6 +1325,7 @@ Template.departmentpop.events({
 
             $('.fullScreenSpin').css('display','none');
         });
+    }, delayTimeAfterSound);
     },
 });
 

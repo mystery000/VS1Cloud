@@ -4677,6 +4677,7 @@ Template.payrolloverview.events({
   },
   "click .btnSaveTimeSheet": async function () {
     playSaveAudio();
+    setTimeout(async function(){
     LoadingOverlay.show();
     let templateObject = Template.instance();
     let showTimesheetStatus = Session.get("CloudShowTimesheet") || true;
@@ -5123,6 +5124,7 @@ Template.payrolloverview.events({
           $(".fullScreenSpin").css("display", "none");
         });
     }
+  }, delayTimeAfterSound);
   },
   "click .processTimesheet": function () {
     LoadingOverlay.show();

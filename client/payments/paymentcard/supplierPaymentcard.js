@@ -8486,6 +8486,7 @@ Template.supplierpaymentcard.events({
   },
   "click .btnSave": (e, ui) => {
   playSaveAudio();
+  setTimeout(function(){
     LoadingOverlay.show();
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
@@ -12046,6 +12047,7 @@ Template.supplierpaymentcard.events({
         });
     }
     LoadingOverlay.hide();
+  }, delayTimeAfterSound);
   },
   "click #tblSupplierPaymentcard tr .colTransNoDONT": function (e) {
     let custname = $("#edtSupplierName").val() || "";
@@ -12506,11 +12508,13 @@ Template.supplierpaymentcard.events({
   "click .btnBack": function (event) {
     playCancelAudio();
     event.preventDefault();
+    setTimeout(function(){
     if (FlowRouter.current().queryParams.trans) {
       FlowRouter.go("/customerscard?id=" +FlowRouter.current().queryParams.trans +"&transTab=active");
     } else {
       history.back(1);
     }
+    }, delayTimeAfterSound);
   },
   "click .btnRemove": function (event) {
     $(".btnDeleteLine").show();

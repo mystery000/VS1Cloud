@@ -4399,6 +4399,7 @@ Template.setup.events({
   },
   "click .btnBack": (event, templateObject) => {
     playCancelAudio();
+    setTimeout(function(){
     LoadingOverlay.show();
     let skippedSteps = templateObject.skippedSteps.get();
     let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
@@ -4430,6 +4431,7 @@ Template.setup.events({
     templateObject.loadSteps();
     window.scrollTo(0, 0);
     LoadingOverlay.hide();
+    }, delayTimeAfterSound);
   },
   "click .gotToStepID": (event, templateObj) => {
     const stepId = parseInt($(event.currentTarget).attr("data-step-id"));
@@ -4936,7 +4938,9 @@ Template.setup.events({
   },
   "click .btnCloseAddNewTax": function () {
     playCancelAudio();
+    setTimeout(function(){
     $("#newTaxRate").css("display", "none");
+    }, delayTimeAfterSound);
   },
   "click #saveStep2": function () {
     $(".fullScreenSpin").css("display", "inline-block");

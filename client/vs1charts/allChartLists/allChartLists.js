@@ -697,6 +697,7 @@ Template.allChartLists.events({
     },
     "click #btnCancel": async () => {
         playCancelAudio();
+        setTimeout(async function(){
         $(".fullScreenSpin").css("display", "block");
         chartsEditor.disable();
         const templateObject = Template.instance();
@@ -705,6 +706,7 @@ Template.allChartLists.events({
         $('.sortable-chart-widget-js').removeClass("editCharts");
         $(".fullScreenSpin").css("display", "none");
         //templateObject.deactivateDraggable();
+        }, delayTimeAfterSound);
     },
     "click #btnDone": async () => {
         playSaveAudio();

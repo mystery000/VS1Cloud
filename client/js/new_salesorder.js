@@ -9603,11 +9603,14 @@ Template.new_salesorder.events({
         templateObject.checkAbleToMakeWorkOrder();
     },
     'click .btnSaveSettings': function(event) {
-    playSaveAudio();
+        playSaveAudio();
+        setTimeout(function(){
         $('#myModal4').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnSave': (event, templateObject) => {
         playSaveAudio();
+        setTimeout(function(){
         saveCurrencyHistory();
        // let templateObject = Template.instance();
         let stripe_id = templateObject.accountID.get();
@@ -10514,7 +10517,7 @@ Template.new_salesorder.events({
                 LoadingOverlay.hide();
             });
         }
-
+    }, delayTimeAfterSound);
     },
 
     // display settings
@@ -10773,6 +10776,7 @@ Template.new_salesorder.events({
     // custom field displaysettings
     'click .btnSaveGridSettings': async function(event) {
         playSaveAudio();
+        setTimeout(function(){
       let lineItems = [];
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -10834,6 +10838,7 @@ Template.new_salesorder.events({
         $(".fullScreenSpin").css("display", "none");
         swal("Something went wrong!", "", "error");
       }
+    }, delayTimeAfterSound);
     },
 
     // custom field displaysettings
@@ -12031,11 +12036,13 @@ Template.new_salesorder.events({
     'click .btnBack': function(event) {
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         if(FlowRouter.current().queryParams.trans){
           FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
         }else{
           history.back(1);
         };
+        }, delayTimeAfterSound);
     },
     'click #btnCopyToInvoice': function() {
         playCopyAudio();

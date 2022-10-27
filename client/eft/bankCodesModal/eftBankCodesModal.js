@@ -90,6 +90,7 @@ Template.eftBankCodesModal.events({
 
   "click .btnSaveEftBankCodes": (e) => {
     playSaveAudio();
+    setTimeout(function(){
     const templateObject = Template.instance();
     let eftBankCodes = templateObject.eftBankCodeList.get();
 
@@ -117,12 +118,14 @@ Template.eftBankCodesModal.events({
     }).catch(function (err) {
       $('#eftBankCodesModal').modal('hide');
     });
-
+  }, delayTimeAfterSound);
   },
 
   "click .btnCancelEftBankCodes": (e) => {
     playCancelAudio();
-    $('#eftBankCodesModal').modal('hide');
+    setTimeout(function(){
+      $('#eftBankCodesModal').modal('hide');
+    }, delayTimeAfterSound);
   },
 
 });

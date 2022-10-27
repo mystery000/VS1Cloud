@@ -1260,7 +1260,9 @@ Template.reportsAccountantSettings123.events({
     'click .btnBack':function(event){
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         history.back(1);
+        }, delayTimeAfterSound);
     },
     'click .btnSaveRoom': function () {
         playSaveAudio();

@@ -598,6 +598,7 @@ Template.myTasksWidget.events({
     // update task rename task
     "click .btnSaveEditTask": function (e) {
         playSaveAudio();
+        setTimeout(function(){
         let taskID = $("#txtCrmTaskID").val();
         if (taskID) {
             let selected_lbls = [];
@@ -661,10 +662,12 @@ Template.myTasksWidget.events({
                     .then(function (data) { });
             });
         }
+        }, delayTimeAfterSound);
     },
     // submit save new task add task
     "click .btnSaveAddTask": function (e) {
         playSaveAudio();
+        setTimeout(function(){
         let objDetails;
         let task_name = $("#add_task_name").val();
         let task_description = $("#add_task_description").val();
@@ -831,6 +834,7 @@ Template.myTasksWidget.events({
             }).then((result) => { });
             $(".fullScreenSpin").css("display", "none");
         });
+    }, delayTimeAfterSound);
     },
 });
 

@@ -1608,6 +1608,7 @@ Template.productlist.helpers({
       },
       'click #btnSave': async function () {
         playSaveAudio();
+        setTimeout(function(){
         let productService = new ProductService();
         let productCode = $("#edtproductvs1code").val();
         let productName = $("#edtproductvs1name").val();
@@ -1683,6 +1684,7 @@ Template.productlist.helpers({
               //$('.loginSpinner').css('display','none');
               $('.fullScreenSpin').css('display','none');
           });
+        }, delayTimeAfterSound);
       },
       'click .chkDepartment' : function(event){
         let templateObject = Template.instance();
@@ -1830,9 +1832,11 @@ Template.productlist.helpers({
       },
       'click .btnSaveSelect': async function () {
         playSaveAudio();
+        setTimeout(function(){
         $('#myModalDepartment').modal('toggle');
         // let templateObject = Template.instance();
         // templateObject.getAllProductData('All');
+      }, delayTimeAfterSound);
       },
       'click .btnNewProduct':function () {
         FlowRouter.go('/productview');

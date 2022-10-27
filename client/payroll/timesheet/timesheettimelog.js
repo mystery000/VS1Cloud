@@ -1278,6 +1278,7 @@ Template.timesheettimelog.onRendered(function () {
         },
         'click .btnSaveTimeSheet': function () {
             playSaveAudio();
+            setTimeout(function(){
             $('.fullScreenSpin').css('display', 'inline-block');
             let templateObject = Template.instance();
             let contactService = new ContactService();
@@ -1379,7 +1380,7 @@ Template.timesheettimelog.onRendered(function () {
                 });
 
             }
-
+        }, delayTimeAfterSound);
         },
         'change #dateTo': function () {
             let templateObject = Template.instance();

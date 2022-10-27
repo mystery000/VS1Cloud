@@ -1290,8 +1290,9 @@ Template.organisationsettings.events({
     "click .btnBack": function(event) {
         playCancelAudio();
         event.preventDefault();
+        setTimeout(function(){
         history.back(1);
-
+        }, delayTimeAfterSound);
         //FlowRouter.go('/settings');
         //window.open('/invoicelist','_self');
     },
@@ -1321,6 +1322,7 @@ Template.organisationsettings.events({
     },
     "click .btnCancelSub": function(event) {
         playCancelAudio();
+        setTimeout(function(){
         let loggeduserEmail = localStorage.getItem("mySession");
         let currentURL = FlowRouter.current().queryParams;
         swal({
@@ -1399,6 +1401,7 @@ Template.organisationsettings.events({
                 });
             }
         });
+        }, delayTimeAfterSound);
     },
     "change #edtCountry": function(event) {
         if (event.target.value == "United States") {

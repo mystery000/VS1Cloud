@@ -1972,6 +1972,7 @@ Template.addemployeepop.events({
     },
     'click .addemployeepop .btnSaveEmpPop': async function (event) {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let contactService = new ContactService();
         let appointmentService = new AppointmentService();
@@ -2529,7 +2530,7 @@ Template.addemployeepop.events({
             });
             LoadingOverlay.hide();
         });
-
+    }, delayTimeAfterSound);
     },
     'click .addemployeepop .btnClosePayment': function (event) {
         if (FlowRouter.current().queryParams.id) {
@@ -3059,7 +3060,9 @@ Template.addemployeepop.events({
     'click .addemployeepop .btnBack': function (event) {
         playCancelAudio();
         event.preventDefault();
-        history.back(1);
+        setTimeout(function(){
+            history.back(1);
+        }, delayTimeAfterSound);
     },
     'click .addemployeepop #chkSameAsShipping':  (event) => {
         if($(event.target).is(':checked')){
@@ -3462,6 +3465,7 @@ Template.addemployeepop.events({
     },
     'click .addemployeepop .btnSaveSettings': function (event) {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
 
         $('.addemployeepop .lblCustomField1').html('');
@@ -3490,7 +3494,7 @@ Template.addemployeepop.events({
         }
 
         $('.addemployeepop #customfieldModal').modal('toggle');
-
+        }, delayTimeAfterSound);
     },
     'click .addemployeepop .btnResetSettings': function (event) {
         $('.addemployeepop #customfieldModal').modal('toggle');

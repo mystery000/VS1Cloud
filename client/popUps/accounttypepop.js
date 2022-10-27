@@ -1933,6 +1933,7 @@ Template.accounttypepop.events({
     },
     'click .btnSaveAccount': function () {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let accountService = new AccountService();
@@ -2272,7 +2273,7 @@ Template.accounttypepop.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
-
+    }, delayTimeAfterSound);
     },
     'click .btnAddNewAccounts': function () {
 

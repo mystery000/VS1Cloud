@@ -499,7 +499,9 @@ Template.addsupplierpop.events({
   "click .addsupplierpop .btnBack": function (event) {
     playCancelAudio();
     event.preventDefault();
-    history.back(1);
+    setTimeout(function(){
+      history.back(1);
+    }, delayTimeAfterSound);
   },
   "click .addsupplierpop #chkSupplierSameAsShipping": function (event) {
     if ($(event.target).is(":checked")) {
@@ -526,6 +528,7 @@ Template.addsupplierpop.events({
   },
   "click .addsupplierpop .btnSaveSuppPOP": async function (event) {
     playSaveAudio();
+    setTimeout(async function(){
     let templateObject = Template.instance();
     let contactService = new ContactService();
     if ($("#edtSupplierCompany").val() === "") {
@@ -860,6 +863,7 @@ Template.addsupplierpop.events({
         });
         $(".fullScreenSpin").css("display", "none");
       });
+    }, delayTimeAfterSound);
   },
 
   "keyup .addsupplierpop .search": function (event) {
@@ -1180,6 +1184,7 @@ Template.addsupplierpop.events({
   },
   "click .addsupplierpop .btnSaveSettings": function (event) {
     playSaveAudio();
+    setTimeout(function(){
     let templateObject = Template.instance();
 
     $(".lblCustomField1").html("");
@@ -1208,6 +1213,7 @@ Template.addsupplierpop.events({
     }
 
     $("#customfieldModal").modal("toggle");
+  }, delayTimeAfterSound);
   },
   "click .addsupplierpop .btnResetSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({

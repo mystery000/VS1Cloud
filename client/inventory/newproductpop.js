@@ -1642,6 +1642,7 @@ Template.newproductpop.events({
   },
   "click #btnSaveProdPOP": async function (e) {
     playSaveAudio();
+    setTimeout(function(){
     let productService = new ProductService();
     let productCode = $("#edtproductcode").val();
     let productName = $("#edtproductname").val();
@@ -2807,11 +2808,14 @@ Template.newproductpop.events({
     // LoadingOverlay.hide();
 
     // if ($(".setup-wizard")) $(".setup-wizard .setup-step-9 .btnRefresh").click();
+    }, delayTimeAfterSound);
   },
   "click .btnBack": function (event) {
     playCancelAudio();
     event.preventDefault();
-    history.back(1);
+    setTimeout(function(){
+      history.back(1);
+    }, delayTimeAfterSound);
   },
   "click #chkTrack": function (event) {
     const templateObject = Template.instance();
@@ -2892,7 +2896,9 @@ Template.newproductpop.events({
   },
   "click .btnSaveSettings": function (event) {
     playSaveAudio();
+    setTimeout(function(){
     $("#myModal2").modal("toggle");
+    }, delayTimeAfterSound);
   },
   "click .btnResetSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({

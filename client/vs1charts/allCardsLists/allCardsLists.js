@@ -328,6 +328,7 @@ Template.allCardsLists.events({
     "click .cancelCards": async function(e){
         playCancelAudio();
         e.preventDefault();
+        setTimeout(async function(){
         let templateObject = Template.instance();
         $(".fullScreenSpin").css("display", "block");
         $('.cardShowBtn').addClass('hideelement');
@@ -338,5 +339,6 @@ Template.allCardsLists.events({
         $('.card-visibility').removeClass('dimmedChart');
         $('.cardShowBtn').removeClass('hideelement');
         $(".fullScreenSpin").css("display", "none");
+        }, delayTimeAfterSound);
     }
 });

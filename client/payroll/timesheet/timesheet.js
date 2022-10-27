@@ -5547,6 +5547,7 @@ Template.timesheet.events({
     },
     'click .btnSaveTimeSheetForm': function() {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let contactService = new ContactService();
@@ -5659,7 +5660,7 @@ Template.timesheet.events({
             });
 
         }
-
+    }, delayTimeAfterSound);
     },
     'click #btnSaveTimeSheetOne': async function() {
         $('.fullScreenSpin').css('display', 'inline-block');

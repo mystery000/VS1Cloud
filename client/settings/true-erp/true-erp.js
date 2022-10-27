@@ -182,7 +182,9 @@ Template.trueerp.events({
 'click .btnBack':function(event){
   playCancelAudio();
   event.preventDefault();
+  setTimeout(function(){
   history.back();
+  }, delayTimeAfterSound);
 },
 'keydown .edtPortNo': function(event) {
     if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||

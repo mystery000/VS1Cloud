@@ -94,6 +94,7 @@ Template.new_process.helpers({
 Template.new_process.events({
     'click #btnSaveProcess': function(event) {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentID = FlowRouter.current().queryParams.id;
         let tempArray = localStorage.getItem('TProcesses');
@@ -203,12 +204,15 @@ Template.new_process.events({
             confirmButtonText: 'Continue',
         }).then ((result)=>{
             FlowRouter.go('/processlist')
-        })
+        });
+    }, delayTimeAfterSound);
     },
 
     'click #btnCancel': function(event) {
         playCancelAudio();
-        FlowRouter.go('/processlist')
+        setTimeout(function(){
+            FlowRouter.go('/processlist')
+        }, delayTimeAfterSound);
     },
 
     'click #edtCOGS': function (event) {

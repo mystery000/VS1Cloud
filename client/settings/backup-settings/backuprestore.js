@@ -371,7 +371,9 @@ Template.backuprestore.events({
 'click .btnBack':function(event){
   playCancelAudio();
   event.preventDefault();
-  history.back();
+  setTimeout(function(){
+  history.back(1);
+  }, delayTimeAfterSound);
 },
 'keydown .edtPortNo': function(event) {
     if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
