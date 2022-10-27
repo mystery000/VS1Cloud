@@ -8,7 +8,7 @@ import '../lib/global/indexdbstorage.js';
 import { SMSService } from '../js/sms-settings-service';
 import { handleSetupRedirection } from '../setup/setup';
 import erpObject from '../lib/global/erp-objects';
-import ldb from 'localdata';
+// import ldb from 'localdata';
 
 let smsService = new SMSService();
 
@@ -591,8 +591,8 @@ Template.vs1login.onRendered(function () {
                 $('.myVS1Video').css('display', 'none');
                 $('.myVS1VideoLogin').css('display', 'none');
 
-                // window.open('/dashboard', '_self');
-                FlowRouter.go('/dashboard');
+                window.open('/dashboard', '_self');
+                // FlowRouter.go('/dashboard');
 
                 //handleSetupRedirection();
 
@@ -1586,15 +1586,15 @@ Template.vs1login.onRendered(function () {
                     //   FlowRouter.go('/appointments#allocationModal');
                     //   FlowRouter.go('/appointments');
                   } else if (isAppointmentLaunch == true) {
-                      FlowRouter.go('/appointments');
-                    //   window.open('/appointments', '_self');☻
+                    //   FlowRouter.go('/appointments');
+                      window.open('/appointments', '_self');
                   } else {
-                      FlowRouter.go('/dashboard');
-                    //   window.open('/dashboard', '_self');
+                    //   FlowRouter.go('/dashboard');
+                      window.open('/dashboard', '_self');
                   }
               } else {
-                  FlowRouter.go('/dashboard');
-                //   window.open('/dashboard', '_self');
+                //   FlowRouter.go('/dashboard');
+                  window.open('/dashboard', '_self');
               }
             }else{
               handleSetupRedirection();
@@ -2364,52 +2364,75 @@ Template.vs1login.onRendered(function () {
                                       let values = [];
                                     //   let basedOnTypeStorages = Object.keys(localStorage);
                                       const getLogonEmails = async() => {
-                                        return new Promise (async(resolve, reject)=>{
-                                            ldb.getAll(async function(entries){
-                                                if(entries.length > 0) {
+                                        return new Promise ((resolve, reject)=>{
+                                            // ldb.getAll(async function(entries){
+                                            //     if(entries.length > 0) {
 
-                                                    let keys = [];
-                                                    entries.map(entry => {
-                                                      keys.push(entry.k)
-                                                    })
-                                                    let basedOnTypeStorages = keys;
-                                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                                                        let employeeId = storage.split('_')[2];
-                                                        return storage.includes('BasedOnType_');
-                                                      });
-                                                    let i = basedOnTypeStorages.length;
-                                                    async function getValue ()  {
-                                                        if (i > 0) {
-                                                          return new Promise(async function(resolve, reject) {
-                                                              for (let j = 0; j<i; j++ ) {
-                                                                  await ldb.get(basedOnTypeStorages[j], function(value){
-                                                                    values.push(value) ;
-                                                                    if (j == i - 1){
-                                                                      resolve()
-                                                                    }
-                                                                  });
-                                                                //   values.push(localStorage.getItem(basedOnTypeStorages[i]));
-                                                              }
-                                                          })
+                                            //         let keys = [];
+                                            //         entries.map(entry => {
+                                            //           keys.push(entry.k)
+                                            //         })
+                                            //         let basedOnTypeStorages = keys;
+                                            //         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                            //             let employeeId = storage.split('_')[2];
+                                            //             return storage.includes('BasedOnType_');
+                                            //           });
+                                            //         let i = basedOnTypeStorages.length;
+                                            //         async function getValue ()  {
+                                            //             if (i > 0) {
+                                            //               return new Promise(async function(resolve, reject) {
+                                            //                   for (let j = 0; j<i; j++ ) {
+                                            //                       await ldb.get(basedOnTypeStorages[j], function(value){
+                                            //                         values.push(value) ;
+                                            //                         if (j == i - 1){
+                                            //                           resolve()
+                                            //                         }
+                                            //                       });
+                                            //                     //   values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                            //                   }
+                                            //               })
+                                            //             }
+                                            //         }
+          
+                                            //         await getValue();
+                                            //     } else {
+                                            //         return resolve()
+                                            //     }
+
+                                            //     for(let k = 0; k< values.length; k ++ ) {
+                                            //         let reportData = JSON.parse(values[k]);
+                                            //         reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                            //         if (reportData.BasedOnType.includes("EN")) {
+                                            //           Meteor.call('sendNormalEmail', reportData);
+                                            //         }
+
+                                            //         if(k == values.length -1){
+                                            //             resolve();
+                                            //         }
+                                            //     }
+                                            // })
+                                            getVS1Data('TBasedOnType').then((dataObject)=> {
+                                                if(dataObject.length == 0) {
+                                                     resolve()
+                                                }else {
+                                                    let temp = JSON.parse(dataObject[0].data) || [];
+                                                    if(temp.length == 0) {
+                                                        resolve()
+                                                    }
+                                                    for(let i = 0 ; i< temp.length; i++) {
+                                                        let reportData = temp[i].value || {};
+                                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                                        if (reportData.BasedOnType && reportData.BasedOnType.includes("EN")) {
+                                                          Meteor.call('sendNormalEmail', reportData);
+                                                        }
+    
+                                                        if(i == temp.length -1){
+                                                            resolve();
                                                         }
                                                     }
-          
-                                                    await getValue();
-                                                } else {
-                                                    return resolve()
                                                 }
-
-                                                for(let k = 0; k< values.length; k ++ ) {
-                                                    let reportData = JSON.parse(values[k]);
-                                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                                    if (reportData.BasedOnType.includes("EN")) {
-                                                      Meteor.call('sendNormalEmail', reportData);
-                                                    }
-
-                                                    if(k == values.length -1){
-                                                        resolve();
-                                                    }
-                                                }
+                                            }).catch(function(){
+                                                resolve()
                                             })
                                         })
                                       }

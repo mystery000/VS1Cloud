@@ -26,14 +26,11 @@ Template.invoicePrintTemp.onRendered(function () {
                 if (dataObject.length != 0) {
                     let data = JSON.parse(dataObject[0].data);
                     let useData = data.tinvoiceex;
-                    console.log('invoice length', useData.length)
                     for (let d = 0; d < useData.length; d++) {
-                        console.log('invoice index', d)
                         let lineItems = [];
                         let lineItemObj = {};
                         let lineItemsTable = [];
                         let currencySymbol = Currency;
-                        console.log('use data - ', d, ':', useData[d].fields)
                         let totalInc = currencySymbol + '' + useData[d].fields.TotalAmountInc.toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         });

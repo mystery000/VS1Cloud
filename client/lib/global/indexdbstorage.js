@@ -320,6 +320,7 @@ openDb = function(dbName) {
             db.createObjectStore('TProcessStep', {keyPath: 'EmployeeEmail'});
             db.createObjectStore('TProjectTasks', {keyPath: 'EmployeeEmail'});
             db.createObjectStore('TProjectTasksList', {keyPath: 'EmployeeEmail'});
+            db.createObjectStore('TBasedOnType', {keyPath:'EmployeeEmail'});
         };
         dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
     });

@@ -18,7 +18,7 @@ import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import { jsPDF } from "jspdf";
 import 'jQuery.print/jQuery.print.js';
-import ldb from 'localdata';
+// import ldb from 'localdata';
 let sideBarService = new SideBarService();
 
 Template.emailsettings.onCreated(function () {
@@ -475,19 +475,39 @@ Template.emailsettings.onRendered(function () {
                                     if (basedOnType.split(',').includes('T')) basedOnTypeText += 'On Transaction Date, ';
                                     if (basedOnType.split(',').includes('D')) basedOnTypeText += 'On Due Date, ';
                                     if (basedOnType.split(',').includes('O')) basedOnTypeText += 'If Outstanding, ';
-                                    async function getBasedOnTypeTextFromLDB() {
+                                    async function getBasedOnTypeTextFromIndexDB() {
                                         return new Promise(async(resolve, reject)=>{
-                                            ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
-                                                basedOnType = value? JSON.parse(value).BasedOnType: '';
-                                                if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
-                                                    if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
-                                                    if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                                            // ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
+                                            //     basedOnType = value? JSON.parse(value).BasedOnType: '';
+                                            //     if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
+                                            //         if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
+                                            //         if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                                            //     }
+                                            //     resolve()
+                                            // })
+                                            getVS1Data('TBasedOnType').then(function(dataObject){
+                                                if(dataObject.length !=  0)  {
+                                                    let temp = JSON.parse(dataObject[0].data)
+                                                    let tempIndex = temp.findIndex(item => {
+                                                        return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`
+                                                    })
+                                                    if (tempIndex > -1) {
+                                                        basedOnType = temp[tempIndex].value.BasedOnType || ''
+                                                    } else {
+                                                        basedOnType = ''
+                                                    }
+                                                    if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
+                                                        if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
+                                                        if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                                                    }
+                                                    resolve()
+                                                }else {
+                                                    resolve()
                                                 }
-                                                resolve()
-                                            })
+                                            }).catch(function(){resolve()})
                                         })
                                     }
-                                    await getBasedOnTypeTextFromLDB();
+                                    await getBasedOnTypeTextFromIndexDB();
                                     if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
                                     empDataCurr = {
                                         employeeid: recipientIds.join('; ') || '',
@@ -735,19 +755,40 @@ Template.emailsettings.onRendered(function () {
                                         if (basedOnType.split(',').includes('T')) basedOnTypeText += 'On Transaction Date, ';
                                         if (basedOnType.split(',').includes('D')) basedOnTypeText += 'On Due Date, ';
                                         if (basedOnType.split(',').includes('O')) basedOnTypeText += 'If Outstanding, ';
-                                        async function getBasedOnTypeTextFromLDB() {
+                                        async function getBasedOnTypeTextFromIndexDB() {
                                             return new Promise(async(resolve, reject)=>{
-                                                ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
-                                                    basedOnType = value? JSON.parse(value).BasedOnType: '';
-                                                    if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
-                                                        if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
-                                                        if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                                                // ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
+                                                //     basedOnType = value? JSON.parse(value).BasedOnType: '';
+                                                //     if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
+                                                //         if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
+                                                //         if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                                                //     }
+                                                //     resolve()
+                                                // })
+
+                                                getVS1Data('TBasedOnType').then(function(dataObject){
+                                                    if(dataObject.length !=  0)  {
+                                                        let temp = JSON.parse(dataObject[0].data)
+                                                        let tempIndex = temp.findIndex(item => {
+                                                            return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`
+                                                        })
+                                                        if (tempIndex > -1) {
+                                                            basedOnType = temp[tempIndex].value.BasedOnType || ''
+                                                        } else {
+                                                            basedOnType = ''
+                                                        }
+                                                        if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
+                                                            if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
+                                                            if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                                                        }
+                                                        resolve()
+                                                    }else {
+                                                        resolve()
                                                     }
-                                                    resolve()
-                                                })
+                                                }).catch(function(){resolve()})
                                             })
                                         }
-                                        await getBasedOnTypeTextFromLDB();
+                                        await getBasedOnTypeTextFromIndexDB();
                                         // if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
                                         if (basedOnTypeText != '') basedOnTypeText = basedOnTypeText.slice(0, -2);
                 
@@ -1011,19 +1052,41 @@ Template.emailsettings.onRendered(function () {
                                     if (basedOnType.split(',').includes('T')) basedOnTypeText += 'On Transaction Date, ';
                                     if (basedOnType.split(',').includes('D')) basedOnTypeText += 'On Due Date, ';
                                     if (basedOnType.split(',').includes('O')) basedOnTypeText += 'If Outstanding, ';
-                                    async function getBasedOnTypeTextFromLDB() {
+                                    async function getBasedOnTypeTextFromIndexDB() {
                                         return new Promise(async(resolve, reject)=>{
-                                            ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
-                                                basedOnType = value? JSON.parse(value).BasedOnType: '';
-                                                if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
-                                                    if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
-                                                    if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                                            // ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
+                                            //     basedOnType = value? JSON.parse(value).BasedOnType: '';
+                                            //     if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
+                                            //         if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
+                                            //         if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                                            //     }
+                                            //     resolve()
+                                            // })
+
+                                            getVS1Data('TBasedOnType').then(function(dataObject){
+                                                if(dataObject.length !=  0)  {
+                                                    let temp = JSON.parse(dataObject[0].data)
+                                                    let tempIndex = temp.findIndex(item => {
+                                                        return item.key == `BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`
+                                                    })
+                                                    if (tempIndex > -1) {
+                                                        basedOnType = temp[tempIndex].value.BasedOnType || ''
+                                                    } else {
+                                                        basedOnType = ''
+                                                    }
+
+                                                    if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
+                                                        if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
+                                                        if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                                                    }
+                                                    resolve()
+                                                }else {
+                                                    resolve()
                                                 }
-                                                resolve()
-                                            })
+                                            }).catch(function(){resolve()})
                                         })
                                     }
-                                    await getBasedOnTypeTextFromLDB();
+                                    await getBasedOnTypeTextFromIndexDB();
                                     if (basedOnTypeText != '') basedOnTypeText = basedOnTypeText.slice(0, -2);
                                     // if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
             
@@ -1375,21 +1438,45 @@ Template.emailsettings.onRendered(function () {
                 }
             });
 
-            ldb.getAll(function(data){
-                let filteredData = Object.keys(data).filter(storage => { storage.includes('BasedOnType_')});
-                filteredData.forEach(storage => {
-                    let formId = storage.split('_')[1];
+            // ldb.getAll(function(data){
+            //     let filteredData = Object.keys(data).filter(storage => { storage.includes('BasedOnType_')});
+            //     filteredData.forEach(storage => {
+            //         let formId = storage.split('_')[1];
+            //         let essentialIDs = ['1', '54', '177', '129'];
+            //         if(isEssential) {
+            //             if(essentialIDs.includes(formId.toString())) {
+            //                 ldb.delete(storage, function(){})
+            //             }
+            //         } else {
+            //             if(essentialIDs.includes(formId.toString()) == false) {
+            //                 ldb.delete(storage, function(){})
+            //             }
+            //         }
+            //     });
+            // })
+
+            getVS1Data('TBasedOnType').then(async function(dataObject) {
+                if(dataObject.length != 0) {
                     let essentialIDs = ['1', '54', '177', '129'];
-                    if(isEssential) {
-                        if(essentialIDs.includes(formId.toString())) {
-                            ldb.delete(storage, function(){})
+                    let temp = JSON.parse(dataObject[0].data);
+                    let filteredData = [];
+                    await temp.forEach((item, index) => {
+                        let formId = item.key.split('_')[1];
+                        if(isEssential) {
+                            if(essentialIDs.includes(formId.toString())) {
+                                temp.splice(index, 1)
+                            }
+                        }else {
+                            if(essentialIDs.includes(formId.toString()) == false) {
+                                temp.splice(index, 1)
+                            }
                         }
-                    } else {
-                        if(essentialIDs.includes(formId.toString()) == false) {
-                            ldb.delete(storage, function(){})
-                        }
-                    }
-                });
+                    })
+
+                    setTimeout(function(){
+                        addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){})
+                    }, 300)
+                } 
             })
 
             const oldSettings = templateObject.originScheduleData.get();
@@ -1814,10 +1901,28 @@ Template.emailsettings.onRendered(function () {
                                 let cloneObjDetailFields = JSON.parse(JSON.stringify(objDetail.fields))
                                 cloneObjDetailFields.attachments = documents;
                                 if(basedOnType.includes('EN') == true || basedOnType.includes('EU' == true)) {
-                                    ldb.set(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
-                                        ...cloneObjDetailFields.fields,
-                                        BasedOnType: basedOnType,
-                                    }), function(){})
+                                    getVS1Data('TBasedOnType').then(function(dataObject) {
+                                        let temp = dataObject.length > 0 ? JSON.parse(dataObject) : [];
+                                        let objectDetail = {key: `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, value: {
+                                            ...cloneObjDetailFields.fields,
+                                            BasedOnType: basedOnType,
+                                        } }
+                                        let tempIndex = temp.findIndex(item => {
+                                            return item.key == `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`
+                                        })
+                                        if (tempIndex > -1) {
+                                            temp.splice(tempIndex, 1, objectDetail)
+                                        } else {
+                                            temp.push (objectDetail)
+                                        }
+                                        addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){
+                                            
+                                        })
+                                    })
+                                    // ldb.set(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
+                                    //     ...cloneObjDetailFields.fields,
+                                    //     BasedOnType: basedOnType,
+                                    // }), function(){})
                                 }
                                 // objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                                 Meteor.call('addTask', cloneObjDetailFields);
@@ -1861,12 +1966,32 @@ Template.emailsettings.onRendered(function () {
                                 cloneObjDetailFields.attachments = documents;
 
                                 if(basedOnType.includes('EN') == true || basedOnType.includes('EU' == true)) {
-                                    ldb.set(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
-                                        ...cloneObjDetailFields,
-                                        BasedOnType: basedOnType,
-                                    }), function(){ ldb.get(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, function(data){
-                                        data
-                                    })})
+                                    // ldb.set(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
+                                    //     ...cloneObjDetailFields,
+                                    //     BasedOnType: basedOnType,
+                                    // }), function(){ ldb.get(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, function(data){
+                                    //     data
+                                    // })})
+
+                                    getVS1Data('TBasedOnType').then(function(dataObject) {
+                                        let temp = dataObject.length > 0 ? JSON.parse(dataObject[0].data) : [];
+                                        let objectDetail = {key: `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, value: {
+                                            ...cloneObjDetailFields.fields,
+                                            BasedOnType: basedOnType,
+                                        } }
+                                        let tempIndex = temp.findIndex(item => {
+                                            return item.key == `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`
+                                        })
+                                        if (tempIndex > -1) {
+                                            temp.splice(tempIndex, 1, objectDetail)
+                                        } else {
+                                            temp.push (objectDetail)
+                                        }
+                                        addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){
+                                            getVS1Data('TBasedOnType').then(function(data) {
+                                            })
+                                        })
+                                    })
                                 }
                                 // objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                                 Meteor.call('addTask', cloneObjDetailFields);
@@ -1896,8 +2021,21 @@ Template.emailsettings.onRendered(function () {
                             })
                         });
                         //TODO: Set basedon type here
+                        
                         localStorage.removeItem(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`);
-                        ldb.delete(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`, function(){})
+                        // ldb.delete(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`, function(){})
+                        getVS1Data('TBasedOnType').then(function(dataObject){
+                            if(dataObject.length != 0) {
+                                let temp = JSON.parse(dataObject[0].data);
+                                let tempIndex = temp.findIndex(item => {
+                                   return  item.key == `BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`;
+                                })
+                                if(tempIndex > -1) {
+                                    temp.splice(tempIndex , 1)
+                                }
+                                addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){})
+                            }
+                        })
                     }
                 });
                 await Promise.all(promise1);
