@@ -141,7 +141,7 @@ Template.newsidenav.onCreated(function() {
             templateObject.sideBarPositionClass.set('side');
             $('#sidebar').removeClass('top');
             $('#bodyContainer').removeClass('top');
-            $('#sidebarToggleBtn').text('Top');
+            $('#sidebarToggleBtn .text').text('Top');
           }
         })
       }
@@ -6639,7 +6639,7 @@ Template.newsidenav.events({
         sideBarService.updateEmployeeFormAccessDetail(payload);
         $('#sidebar').removeClass('top');
         $('#bodyContainer').removeClass('top');
-        $('#sidebarToggleBtn').text('Top');
+        $('#sidebarToggleBtn .text').text('Top');
     } else {
       payload = {
         "type":"TEmployeeFormAccessDetail",
@@ -6667,7 +6667,7 @@ Template.newsidenav.events({
       sideBarService.updateEmployeeFormAccessDetail(payload);
       $('#sidebar').addClass('top');
       $('#bodyContainer').addClass('top');
-      $('#sidebarToggleBtn').text('Side');
+      $('#sidebarToggleBtn .text').text('Side');
     }
   },
     'click #sidenavaccessLevel': function(event) {
