@@ -353,7 +353,9 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
-                    $('#customerListModal').modal();
+                    // $('#customerListModal').modal();
+                    calendar.gotoDate(info.start);
+                    $('.fc-timeGridDay-button').trigger("click");
                 }
             },
             eventClick: function (info) {
@@ -811,7 +813,8 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
-                    $('#customerListModal').modal();
+                    calendar.gotoDate(info.start);
+                    $('.fc-timeGridDay-button').trigger("click");
                 }
             },
             eventClick: function (info) {
@@ -1700,11 +1703,11 @@ Template.dsmAppointmentsWidget.onRendered(function () {
             let getAddress = data.tappointmentex[i].fields.ClientName + ',' + street + ',' + state + ',' + surbub + ' ' + zip;
             dataList = {
                 id: data.tappointmentex[i].fields.ID.toString() || '',
-                // title: data.tappointmentex[i].fields.TrainerName + '<br>' + data.tappointmentex[i].fields.ClientName + '<br>' + street + '<br>' + surbub + '<br>' + state + ' ' + zip,
-                title: data.tappointmentex[i].fields.ClientName,
+                title: getAddress,
+                // title: data.tappointmentex[i].fields.ClientName,
                 start: data.tappointmentex[i].fields.StartTime || '',
                 end: data.tappointmentex[i].fields.EndTime || '',
-                description: data.tappointmentex[i].fields.Notes || '',
+                description: getAddress,
                 color: appColor
             };
             if (seeOwnAppointments == true) {
@@ -1718,6 +1721,7 @@ Template.dsmAppointmentsWidget.onRendered(function () {
             }
 
         }
+
         templateObject.appointmentrecords.set(appointmentList);
         templateObject.eventdata.set(eventData);
 
@@ -2327,7 +2331,9 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
-                    $('#customerListModal').modal();
+                    // $('#customerListModal').modal();
+                    calendar.gotoDate(info.start);
+                    $('.fc-timeGridDay-button').trigger("click");
                 }
             },
             eventDrop: function (info) {
@@ -3282,7 +3288,9 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                         } else if (FlowRouter.current().queryParams.supplierid) {
                             openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                         } else {
-                            $('#customerListModal').modal();
+                            // $('#customerListModal').modal();
+                            calendar.gotoDate(info.start);
+                            $('.fc-timeGridDay-button').trigger("click");
                         }
                     },
                     eventClick: function (info) {
@@ -3563,7 +3571,6 @@ Template.dsmAppointmentsWidget.onRendered(function () {
                             $('#customerListModal').modal();
                         }
                     },
-
                     events: eventData,
                     eventDidMount: function (event) {
                     },
@@ -4641,7 +4648,6 @@ Template.dsmAppointmentsWidget.events({
     },
     'click #btnSaveRepeat': function () {
         playSaveAudio();
-        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let repeatDays = templateObject.repeatDays.get();
@@ -4949,7 +4955,7 @@ Template.dsmAppointmentsWidget.events({
 
             }
         }
-        }, delayTimeAfterSound);
+
     },
     'click #createInvoice': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -6663,7 +6669,6 @@ Template.dsmAppointmentsWidget.events({
     },
     'click #btnSaveAppointment': async function() {
         playSaveAudio();
-        setTimeout(function(){
         const templateObject = Template.instance();
         templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
@@ -6731,15 +6736,12 @@ Template.dsmAppointmentsWidget.events({
                 $('#btnSaveAppointmentSubmit').trigger('click');
             }
         }
-    }, delayTimeAfterSound);
     },
     'click .btnSaveIgnoreSMS': function() {
         playSaveAudio();
-        setTimeout(function(){
        $('#chkSMSCustomer').prop('checked', false);
         $('#chkSMSUser').prop('checked', false);
         $('#frmAppointment').trigger('submit');
-    }, delayTimeAfterSound);
     },
     'click #btnCloseStopAppointmentModal': function() {
         $('#stopAppointmentModal').modal('hide');
@@ -6753,7 +6755,6 @@ Template.dsmAppointmentsWidget.events({
     'click #btnSaveAppointmentSubmit': async function(e) {
         playSaveAudio();
         e.preventDefault();
-        setTimeout(async function(){
         const templateObject = Template.instance();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
@@ -6814,7 +6815,6 @@ Template.dsmAppointmentsWidget.events({
         } else {
             $('#frmAppointment').trigger('submit');
         }
-    }, delayTimeAfterSound);
     },
     'change #chkSMSCustomer': function() {
         if ($('#chkSMSCustomer').is(':checked')) {

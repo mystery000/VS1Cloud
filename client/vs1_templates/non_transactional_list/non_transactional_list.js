@@ -9,7 +9,7 @@ import TableHandler from '../../js/Table/TableHandler';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
-Template.non_transactional_list.inheritsHooksFrom('display_settings_list');
+Template.non_transactional_list.inheritsHooksFrom('display_settings_button');
 
 Template.non_transactional_list.onCreated(function(){
     const templateObject = Template.instance();

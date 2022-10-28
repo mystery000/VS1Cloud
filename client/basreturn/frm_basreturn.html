@@ -2171,25 +2171,15 @@
                                                     <td contenteditable="false" class="colCodeId">
                                                         <div class="custom-control custom-switch">
                                                             {{#if equals pan 1}}
-                                                                {{#if equals item.CodeName 'CAG'}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else if equals item.CodeName "E"}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else if equals item.CodeName "EXP"}}
+                                                                {{#if equals item.CodeName "EXP"}}
                                                                     <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
                                                                 {{else if equals item.CodeName "FRE"}}
                                                                     <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
                                                                 {{else if equals item.CodeName "GST"}}
                                                                     <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else if equals item.CodeName "GSTIM"}}
+                                                                {{else if equals item.CodeName "INP"}}
                                                                     <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else if equals item.CodeName "NCF"}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else if equals item.CodeName "NCG"}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else if equals item.CodeName "NT"}}
-                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
-                                                                {{else if equals item.CodeName "PRI"}}
+                                                                {{else if equals item.CodeName "WC"}}
                                                                     <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
                                                                 {{else}}
                                                                     <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
@@ -2206,6 +2196,12 @@
                                                                 {{else}}
                                                                     <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
                                                                 {{/if}}
+                                                            {{else if equals pan 4}}
+                                                                {{#if equals item.CodeName 'INP'}}
+                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
+                                                                {{else}}
+                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
+                                                                {{/if}}
                                                             {{else if equals pan 7}}
                                                                 {{#if equals item.CodeName 'ADJ'}}
                                                                     <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
@@ -2216,6 +2212,8 @@
                                                                 {{#if equals item.CodeName 'CAF'}}
                                                                     <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
                                                                 {{else if equals item.CodeName "CAG"}}
+                                                                    <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
+                                                                {{else if equals item.CodeName "CAI"}}
                                                                     <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}" checked="checked">
                                                                 {{else}}
                                                                     <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
@@ -2327,9 +2325,7 @@
                                             <td contenteditable="false" class="colAccountId">
                                                 <div class="custom-control custom-switch">
                                                     {{#if equals pan 1}}
-                                                        {{#if equals item.accountname 'Leave Paid'}}
-                                                            <input class="custom-control-input" type="checkbox" id="f-{{pan}}-{{item.id}}" name="f-{{pan}}-{{item.id}}" value="{{item.id}}" checked="checked">
-                                                        {{else if equals item.accountname 'Net Wages'}}
+                                                        {{#if equals item.accountname 'Net Wages'}}
                                                             <input class="custom-control-input" type="checkbox" id="f-{{pan}}-{{item.id}}" name="f-{{pan}}-{{item.id}}" value="{{item.id}}" checked="checked">
                                                         {{else if equals item.accountname 'PAYG Tax Paid'}}
                                                             <input class="custom-control-input" type="checkbox" id="f-{{pan}}-{{item.id}}" name="f-{{pan}}-{{item.id}}" value="{{item.id}}" checked="checked">
@@ -2337,12 +2333,6 @@
                                                             <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
                                                         {{/if}}
                                                     {{else if equals pan 2}}
-                                                        {{#if equals item.accountname 'PAYG Tax Paid'}}
-                                                            <input class="custom-control-input" type="checkbox" id="f-{{pan}}-{{item.id}}" name="f-{{pan}}-{{item.id}}" value="{{item.id}}" checked="checked">
-                                                        {{else}}
-                                                            <input class="custom-control-input" type="checkbox" id="t-{{pan}}-{{item.Id}}" name="t-{{pan}}-{{item.Id}}" value="{{item.Id}}">
-                                                        {{/if}}
-                                                    {{else if equals pan 5}}
                                                         {{#if equals item.accountname 'PAYG Tax Paid'}}
                                                             <input class="custom-control-input" type="checkbox" id="f-{{pan}}-{{item.id}}" name="f-{{pan}}-{{item.id}}" value="{{item.id}}" checked="checked">
                                                         {{else}}

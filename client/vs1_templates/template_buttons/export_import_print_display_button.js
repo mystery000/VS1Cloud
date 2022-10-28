@@ -1,12 +1,10 @@
 import { ReactiveVar } from 'meteor/reactive-var';
-Template.display_settings_list.inheritsHelpersFrom('non_transactional_list');
-// Template.display_settings_list.inheritsEventsFrom('non_transactional_list');
-// Template.display_settings_list.inheritsHooksFrom('non_transactional_list');
-Template.display_settings_list.onCreated(function(){
+Template.export_import_print_display_button.inheritsHelpersFrom('non_transactional_list');
+Template.export_import_print_display_button.onCreated(function(){
 
 });
 
-Template.display_settings_list.events({
+Template.export_import_print_display_button.events({
     'click .btnOpenSettings': async function (event, template) {
 
         var url = FlowRouter.current().path;
@@ -28,9 +26,12 @@ Template.display_settings_list.events({
           $('.rngRange' + colthClass).val(colWidth);
         });
        $('.'+getTableName+'_Modal').modal('toggle');
+    },
+    'click .btnImportModal': async function (event, template) {
+       $('.importTemplateModal').modal('toggle');
     }
 });
 
-Template.display_settings_list.helpers({
+Template.export_import_print_display_button.helpers({
 
 });
