@@ -3109,7 +3109,7 @@ Template.payrollrules.onRendered(function() {
 
     templateObject.loadEarnings = async (refresh = false) => {
         const resp = await getVS1Data(erpObject.TEarningData);
-        let data = JSON.parse(resp[0].data);
+        let data = resp.length > 0 ? JSON.parse(resp[0].data) : [];
         const response  = data;
 
         // let data = await CachedHttp.get(erpObject.TEarningData, async () => {

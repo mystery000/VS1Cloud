@@ -265,14 +265,11 @@ Template.timesheetdetail.onRendered(function () {
       }
       return o;
     });
-    console.log("overtimes", overtimes);
-
     await this.overtimes.set(overtimes);
   };
 
   this.loadRateTypes = async (refresh = false) => {
     const rates = await getRateTypes(refresh);
-    console.log("reate type", rates);
     await this.rateTypes.set(rates);
   };
 
@@ -285,10 +282,48 @@ Template.timesheetdetail.onRendered(function () {
       return earningsDays.find(earningDay => earningDay.index == index);
     };
 
-    const buildHourObject = input => {
+    const matchedDay = dayName => {
+      const days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thuesday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ];
+
+      return days.indexOf(dayName);
+    };
+
+    const buildHourObject = (input, earningsRateName) => {
+      const date = matchDateIndex($(input).attr("date")).dateObject;
+      const hours = parseFloat($(input).val());
+
+      const overtimes = this.overtimes.get();
+      const matchedOvertime = overtimes.find(o => {
+        if (o.day) {
+          const dayIndex = matchedDay(o.day);
+          if (dayIndex == null) {
+            return false;
+          }
+          return dayIndex == moment(date).day();
+        }
+
+        return false;
+        // return o.rateType.Description == earningsRateName;
+      });
+
+
       return {
-        date: matchDateIndex($(input).attr("date")).dateObject,
-        hours: parseFloat($(input).val())
+        date: date,
+        hours: hours,
+        ...(
+          matchedOvertime != undefined
+          ? {
+            rateTypeId: matchedOvertime.rateTypeId
+          }
+          : {})
       };
     };
 
@@ -303,15 +338,11 @@ Template.timesheetdetail.onRendered(function () {
     const buildEarningLineObject = tr => {
       const hoursInput = $(tr).find("input.hours");
       const earningsRateName = $(tr).find("input.select-rate-js").val(); // EarningName in the input field, we should use ID
-      const overtimes = this.overtimes.get();
-      const macthedOvertimes = this.overtimes.find(o => o.rateType.Description == earningsRateName);
-
-      console.log('macth', macthedOvertimes);
 
       let dailyHours = [];
 
       $(hoursInput).each((index, input) => {
-        dailyHours.push(buildHourObject(input));
+        dailyHours.push(buildHourObject(input, earningsRateName));
       });
 
       return {earningRateName: earningsRateName, dailyHours: dailyHours};
@@ -560,6 +591,7 @@ Template.timesheetdetail.onRendered(function () {
      */
   this._getTimeSheetDetails = async (timesheetId = null, list = false) => {
     let response = await getVS1Data(erpObject.TTimeSheetDetails);
+
     if (response.length > 0) {
       let timesheetsDetails = JSON.parse(response[0].data);
 
@@ -568,10 +600,9 @@ Template.timesheetdetail.onRendered(function () {
           ? timesheetsDetails.filter(time => time.timeSheetId == timesheetId)
           : timesheetsDetails.find(time => time.timeSheetId == timesheetId);
       }
-
       return timesheetsDetails;
     }
-    return null;
+    return [];
   };
 
   this._deleteTimSheetDetails = async timesheetId => {
