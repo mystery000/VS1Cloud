@@ -3107,24 +3107,29 @@ Template.payrollrules.onRendered(function() {
     };
 
 
-    templateObject.loadEarnings = async (refresh  =false) => {
-        let data = await CachedHttp.get(erpObject.TEarningData, async () => {
-            // TODO: This needs to be changed
-            const resp = await getVS1Data(erpObject.TEarningData);
-            return {
-                response: JSON.parse(resp[0].data)
-            };
-        }, {
-            forceOverride: refresh,
-            fallBackToLocal: true,
-            validate: (cachedResponse) => {
-                return true;
-            }
-        });
+    templateObject.loadEarnings = async (refresh = false) => {
+        const resp = await getVS1Data(erpObject.TEarningData);
+        let data = JSON.parse(resp[0].data);
+        const response  = data;
 
-        const response  = data.response;
+        // let data = await CachedHttp.get(erpObject.TEarningData, async () => {
+        //     // TODO: This needs to be changed
+        //     // const resp = await getVS1Data(erpObject.TEarningData);
+         
+        //     // const data = resp.length > 0 ? JSON.parse(resp[0].data).response : [];
+        //     // return  data;
+        // }, {
+        //     forceOverride: true ,// refresh,
+        //     //fallBackToLocal: true,
+        //     validate: (cachedResponse) => {
+        //         return true;
+        //     }
+        // });
+        // const response  = data.response;
 
-        let earnings = response.map(e => e.fields);
+        console.log("resdponse", response);
+
+        let earnings = response.map(e => e.fields != undefined ? e.fields : e);
  
         await templateObject.earnings.set(earnings);
 
@@ -22362,7 +22367,7 @@ const addDefaultOvertimes = async () => {
 
 /**
  * This will get the overtimes 
- * @returns 
+ * @returns {Promise<PayrollSettingsOvertimes[]>}
  */
 export const getOvertimes = async () => {
     let overtimesData = await getVS1Data(erpObject.TPayrollSettingOvertimes);
