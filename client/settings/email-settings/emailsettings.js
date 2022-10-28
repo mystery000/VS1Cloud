@@ -1904,7 +1904,7 @@ Template.emailsettings.onRendered(function () {
                                     getVS1Data('TBasedOnType').then(function(dataObject) {
                                         let temp = dataObject.length > 0 ? JSON.parse(dataObject) : [];
                                         let objectDetail = {key: `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, value: {
-                                            ...cloneObjDetailFields.fields,
+                                            ...cloneObjDetailFields,
                                             BasedOnType: basedOnType,
                                         } }
                                         let tempIndex = temp.findIndex(item => {
@@ -1976,7 +1976,7 @@ Template.emailsettings.onRendered(function () {
                                     getVS1Data('TBasedOnType').then(function(dataObject) {
                                         let temp = dataObject.length > 0 ? JSON.parse(dataObject[0].data) : [];
                                         let objectDetail = {key: `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, value: {
-                                            ...cloneObjDetailFields.fields,
+                                            ...cloneObjDetailFields,
                                             BasedOnType: basedOnType,
                                         } }
                                         let tempIndex = temp.findIndex(item => {
@@ -1988,8 +1988,6 @@ Template.emailsettings.onRendered(function () {
                                             temp.push (objectDetail)
                                         }
                                         addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){
-                                            getVS1Data('TBasedOnType').then(function(data) {
-                                            })
                                         })
                                     })
                                 }

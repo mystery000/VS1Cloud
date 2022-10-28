@@ -2365,53 +2365,8 @@ Template.vs1login.onRendered(function () {
                                     //   let basedOnTypeStorages = Object.keys(localStorage);
                                       const getLogonEmails = async() => {
                                         return new Promise ((resolve, reject)=>{
-                                            // ldb.getAll(async function(entries){
-                                            //     if(entries.length > 0) {
-
-                                            //         let keys = [];
-                                            //         entries.map(entry => {
-                                            //           keys.push(entry.k)
-                                            //         })
-                                            //         let basedOnTypeStorages = keys;
-                                            //         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                                            //             let employeeId = storage.split('_')[2];
-                                            //             return storage.includes('BasedOnType_');
-                                            //           });
-                                            //         let i = basedOnTypeStorages.length;
-                                            //         async function getValue ()  {
-                                            //             if (i > 0) {
-                                            //               return new Promise(async function(resolve, reject) {
-                                            //                   for (let j = 0; j<i; j++ ) {
-                                            //                       await ldb.get(basedOnTypeStorages[j], function(value){
-                                            //                         values.push(value) ;
-                                            //                         if (j == i - 1){
-                                            //                           resolve()
-                                            //                         }
-                                            //                       });
-                                            //                     //   values.push(localStorage.getItem(basedOnTypeStorages[i]));
-                                            //                   }
-                                            //               })
-                                            //             }
-                                            //         }
-          
-                                            //         await getValue();
-                                            //     } else {
-                                            //         return resolve()
-                                            //     }
-
-                                            //     for(let k = 0; k< values.length; k ++ ) {
-                                            //         let reportData = JSON.parse(values[k]);
-                                            //         reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                            //         if (reportData.BasedOnType.includes("EN")) {
-                                            //           Meteor.call('sendNormalEmail', reportData);
-                                            //         }
-
-                                            //         if(k == values.length -1){
-                                            //             resolve();
-                                            //         }
-                                            //     }
-                                            // })
-                                            getVS1Data('TBasedOnType').then((dataObject)=> {
+                                          
+                                            getVS1Data('TBasedOnType').then(async (dataObject)=> {
                                                 if(dataObject.length == 0) {
                                                      resolve()
                                                 }else {
@@ -2423,7 +2378,14 @@ Template.vs1login.onRendered(function () {
                                                         let reportData = temp[i].value || {};
                                                         reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                                                         if (reportData.BasedOnType && reportData.BasedOnType.includes("EN")) {
-                                                          Meteor.call('sendNormalEmail', reportData);
+                                                            async function sendEmail() {
+                                                                return new Promise(async (resolve, reject)=>{
+                                                                    await Meteor.call('sendNormalEmail', reportData, async(error, result)=>{
+                                                                        resolve()
+                                                                    });
+                                                                })
+                                                            }
+                                                            await sendEmail();
                                                         }
     
                                                         if(i == temp.length -1){
@@ -2437,7 +2399,7 @@ Template.vs1login.onRendered(function () {
                                         })
                                       }
                                       await getLogonEmails();
-
+                                      
 
                                       dataReturnRes.ProcessLog.VS1AdminPassword = hashUserLoginPassword;
                                       dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
