@@ -3,15 +3,6 @@
 import { HTTP } from "meteor/http";
 FutureTasks = new Meteor.Collection('email_settings');
 
-// var ipAddress = localStorage.getItem('EIPAddress');
-var ipAddress = "login.vs1cloud.com";
-var database = "VS1_Cloud_DB_cacb_bb_da_WyhNB2";
-// var username= localStorage.getItem('EUserName');
-var username= "dev@vs1cloud.com";
-// var password = localStorage.getItem('EPassword');
-var password = "devTeam@123";
-var port = "4434";
-// var port = localStorage.getItem('EPort');
 Meteor.startup(function(){
     if (Meteor.isServer) {
       process.env.MAIL_URL='smtps://noreply%40vs1cloud.com:Jp9CvV2M5g@mail.vs1cloud.com:465/';
