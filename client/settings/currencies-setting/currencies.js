@@ -1012,6 +1012,11 @@ Template.currenciessettings.events({
     jQuery("#currencyLists_wrapper .dt-buttons .btntabletocsv").click();
     LoadingOverlay.hide();
   },
+  'click .printConfirm': function(event) {
+    LoadingOverlay.show();
+    jQuery('#currencyLists_wrapper .dt-buttons .btntabletopdf').click();
+    LoadingOverlay.hide();
+  },
   "click .btnRefresh":  (e, ui) => {
     // LoadingOverlay.show();
     // sideBarService.getCurrencies().then(function (dataReload) {
