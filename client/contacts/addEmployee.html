@@ -154,7 +154,7 @@
 
                                         <div class="col-12" style="display: inline-flex;">
                                             <input type="text" class="search form-control txtSearchCustomer" placeholder="Search..." style="width: 80%;">
-                                            <button class="btn btn-primary btnRefreshEmployees" type="button" id="btnRefreshEmployees" style="padding: 4px 10px; font-size: 16px; margin-left: 12px !important;" autocomplete="off"><i
+                                            <button class="btn btn-primary btnRefreshEmployees" type="button" id="btnRefreshEmployees" style="padding: 4px 10px; font-size: 16px; margin-left: 14px !important;" autocomplete="off"><i
                                                     class="fas fa-search-plus"></i></button>
                                         </div>
                                         <span class="counter pull-right"></span>
@@ -379,7 +379,7 @@
                                                 <div class="col">
                                                     <div class="row">
                                                         <div class="col-12 col-md-3" style="padding: 0px;">
-                                                            <div class="form-group" style="margin: 4px;">
+                                                            <div class="form-group" style="margin: 4px; padding-right :4px;">
                                                                 <label>Employee Name</label><input type="text" class="form-control" id="edtCustomerCompany" name="edtCustomerCompany" value="{{record.company}}" readonly>
                                                             </div>
                                                         </div>
@@ -389,7 +389,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-md-3" style="padding: 0px;">
-                                                            <div class="form-group" style="margin: 4px;">
+                                                            <div class="form-group" style="margin: 4px; padding-left:4px;">
                                                                 <label>Dashboard Options</label>
                                                                 <select type="search" class="form-control" id="edtDashboardOptions" name="edtDashboardOptions" defaultlogin="All" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                 </select>
@@ -405,7 +405,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-md-2" style="padding: 0px;">
-                                                            <div class="form-group" style="margin: 4px;" data-toggle="tooltip" title="Displays as Rev Counter on Sales Manager Dashboard">
+                                                            <div class="form-group" style="margin: 4px;padding-left :4px;" data-toggle="tooltip" title="Displays as Rev Counter on Sales Manager Dashboard">
                                                                 <label>Sales Quota</label>
                                                                 <input type="text" class="form-control" id="edtSalesQuota" name="edtSalesQuota" value="{{formatPrice record.salesQuota}}">
                                                             </div>
@@ -414,7 +414,7 @@
 
                                                     <div class="row">
                                                         <div class="col-6 col-md-1" style="padding: 0px;">
-                                                            <div class="form-group" style="margin: 4px;">
+                                                            <div class="form-group" style="margin: 4px;padding-right :4px;">
                                                                 <label class="text-nowrap">Title</label><input type="text" class="form-control" id="edtTitle" name="edtTitle" value="{{record.title}}">
                                                             </div>
                                                         </div>
@@ -424,24 +424,24 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-md-3" style="padding: 0px;">
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;">
+                                                            <div class="form-group flex-grow-1" style="margin: 4px;padding-left :4px;">
                                                                 <label class="text-nowrap">Middle Name</label><input type="text" class="form-control" id="edtMiddleName" name="edtMiddleName" value="{{record.middlename}}">
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-md-3" style="padding: 0px;">
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;">
+                                                            <div class="form-group flex-grow-1" style="margin: 4px;padding-left :4px;">
                                                                 <label class="text-nowrap">Last Name</label><input type="text" class="form-control" id="edtLastName" name="edtLastName" value="{{record.lastname}}">
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-md-2" style="padding: 0px;">
-                                                            <div class="form-group" style="margin: 4px;">
+                                                            <div class="form-group" style="margin: 4px; padding-left :4px;">
                                                                 <label class="text-nowrap">Suffix</label><input type="text" class="form-control" id="edtSuffix" name="edtSuffix" value="{{record.tfn}}">
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-6 col-md-4" style="padding: 0px;">
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Phone</label><input type="text" class="form-control" id="edtPhone" name="edtPhone"
+                                                            <div class="form-group flex-grow-1" style="margin: 4px;padding-right :4px;"><label class="text-nowrap">Phone</label><input type="text" class="form-control" id="edtPhone" name="edtPhone"
                                                                     value="{{record.phone}}"></div>
                                                         </div>
                                                         <div class="col-6 col-md-4" style="padding: 0px;">
@@ -449,12 +449,12 @@
                                                                     value="{{record.mobile}}"></div>
                                                         </div>
                                                         <div class="col-6 col-md-4" style="padding: 0px;">
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Fax</label><input type="text" class="form-control" id="edtFax" name="edtFax" value="{{record.fax}}"></div>
+                                                            <div class="form-group flex-grow-1" style="margin: 4px;padding-left:4px;"><label class="text-nowrap">Fax</label><input type="text" class="form-control" id="edtFax" name="edtFax" value="{{record.fax}}"></div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-6 col-md-3" style="padding: 0px;">
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;">
+                                                            <div class="form-group flex-grow-1" style="margin: 4px;padding-right:4px;">
                                                                 <label class="text-nowrap">Skype ID</label>
                                                                 <input type="text" class="form-control" id="edtSkype" name="edtSkype" value="{{record.skype}}">
                                                             </div>
@@ -471,7 +471,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-md-2" style="padding: 0px;">
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;">
+                                                            <div class="form-group flex-grow-1" style="margin: 4px;padding-left:4px;">
                                                                 <label>Date of Birth</label>
                                                                 <div class="input-group date">
                                                                     <input type="text" class="form-control" id="dtDOB" name="dtDOB" value="{{record.dob}}">
@@ -482,7 +482,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-md-2" style="padding: 0px;">
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;">
+                                                            <div class="form-group flex-grow-1" style="margin: 4px;padding-left:4px;">
                                                                 <label>Starting Date</label>
                                                                 <div class="input-group date">
                                                                     <input type="text" class="form-control" id="dtStartingDate" name="dtStartingDate" value="{{record.startdate}}">
@@ -493,7 +493,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-md-3" style="padding: 0px;">
-                                                            <div class="form-group flex-grow-0" style="margin: 4px;">
+                                                            <div class="form-group flex-grow-0" style="margin: 4px;padding-left:4px;">
                                                                 <label class="text-nowrap">Employee ID</label>
                                                                 <input type="text" class="form-control" id="edtEmployeeID" name="edtEmployeeID" value="emp_{{record.id}}" readonly>
                                                             </div>
@@ -565,18 +565,18 @@
                                                                     <div class="col-12 col-md-6">
                                                                         <div class="row">
                                                                             <div class="col-6" style="padding: 0px;">
-                                                                                <div class="form-group" style="margin: 4px;"><label>City / Town</label><input type="text" class="form-control" id="edtCity" name="edtCity" value="{{record.city}}"></div>
+                                                                                <div class="form-group" style="margin: 4px;padding-left:4px;"><label>City / Town</label><input type="text" class="form-control" id="edtCity" name="edtCity" value="{{record.city}}"></div>
                                                                             </div>
                                                                             <div class="col-6" style="padding: 0px;">
-                                                                                <div class="form-group" style="margin: 4px;"><label>State / Region</label><input type="text" class="form-control" id="edtState" name="edtState" value="{{record.state}}">
+                                                                                <div class="form-group" style="margin: 4px;padding-left:4px;"><label>State / Region</label><input type="text" class="form-control" id="edtState" name="edtState" value="{{record.state}}">
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-6" style="padding: 0px;">
-                                                                                <div class="form-group" style="margin: 4px;"><label>ZIP Code</label><input type="text" class="form-control" id="edtPostalCode" name="edtPostalCode"
+                                                                                <div class="form-group" style="margin: 4px;padding-left:4px;"><label>ZIP Code</label><input type="text" class="form-control" id="edtPostalCode" name="edtPostalCode"
                                                                                         value="{{record.postalcode}}"></div>
                                                                             </div>
                                                                             <div class="col-6" style="padding: 0px;">
-                                                                                <div class="form-group" style="margin: 4px;"><label>Country</label>
+                                                                                <div class="form-group" style="margin: 4px;padding-left:4px;"><label>Country</label>
                                                                                     <select class="form-control" id="edtCountry" name="edtCountry" style=" cursor: pointer;">
                                                                                         <option value="{{record.country}}" selected="">{{record.country}}</option>
                                                                                         {{#each item in countryList}}
@@ -629,19 +629,19 @@
                                                                             <div class="col-12 col-md-6">
                                                                                 <div class="row">
                                                                                     <div class="col-6" style="padding: 0px;">
-                                                                                        <div class="form-group" style="margin: 4px;"><label>City / Town</label><input type="text" class="form-control" id="bedtCity" name="bedtCity"
+                                                                                        <div class="form-group" style="margin: 4px; padding-left :4px;"><label>City / Town</label><input type="text" class="form-control" id="bedtCity" name="bedtCity"
                                                                                                 value="{{record.city}}"></div>
                                                                                     </div>
                                                                                     <div class="col-6" style="padding: 0px;">
-                                                                                        <div class="form-group" style="margin: 4px;"><label>State / Region</label><input type="text" class="form-control" id="bedtState" name="bedtState"
+                                                                                        <div class="form-group" style="margin: 4px;padding-left:4px;"><label>State / Region</label><input type="text" class="form-control" id="bedtState" name="bedtState"
                                                                                                 value="{{record.state}}"></div>
                                                                                     </div>
                                                                                     <div class="col-6" style="padding: 0px;">
-                                                                                        <div class="form-group" style="margin: 4px;"><label>ZIP Code</label><input type="text" class="form-control" id="bedtPostalCode" name="bedtPostalCode"
+                                                                                        <div class="form-group" style="margin: 4px;padding-left:4px;"><label>ZIP Code</label><input type="text" class="form-control" id="bedtPostalCode" name="bedtPostalCode"
                                                                                                 value="{{record.postalcode}}"></div>
                                                                                     </div>
                                                                                     <div class="col-6" style="padding: 0px;">
-                                                                                        <div class="form-group" style="margin: 4px;"><label>Country</label><select class="form-control" id="bedtCountry" name="bedtCountry" style=" cursor: pointer;">
+                                                                                        <div class="form-group" style="margin: 4px;padding-left:4px;"><label>Country</label><select class="form-control" id="bedtCountry" name="bedtCountry" style=" cursor: pointer;">
                                                                                                 {{#each item in countryList}}
                                                                                                     {{#if equals item record.country }}
                                                                                                         <option value="{{record.country}}" selected="">{{record.country}}</option>
@@ -670,7 +670,7 @@
                                                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-6" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important; ">
                                                                 <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start" style="margin: 12px;">
                                                                     <div class="col d-xl-flex align-items-xl-end">
-                                                                        <div class="form-group d-xl-flex flex-column align-items-xl-start" style="margin: 4px;"><label class="text-nowrap">Preferred Payment Method</label>
+                                                                        <div class="form-group d-xl-flex flex-column align-items-xl-start" style="margin: 4px; padding-right:4px;"><label class="text-nowrap">Preferred Payment Method</label>
                                                                             <select class="form-control" style="width: 260px;" id="sltPreferedPayment" name="sltPreferedPayment">
                                                                                 {{#each item in preferedPaymentList}}
                                                                                     {{#if equals item record.preferedpayment }}
@@ -694,7 +694,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="col d-xl-flex align-items-xl-end">
-                                                                        <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label class="text-nowrap">Preferred Delivery Method</label>
+                                                                        <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;padding-right:4px;"><label class="text-nowrap">Preferred Delivery Method</label>
                                                                             <select class="form-control" style="width: 260px;" id="sltDeliveryMethod" name="sltDeliveryMethod">
                                                                                 {{#each item in deliveryMethodList}}
                                                                                     {{#if equals item record.deliverymethod }}
@@ -707,7 +707,7 @@
                                                                         </div>
                                                                         <div class="form-group" style="margin: 4px;"><label class="text-nowrap d-xl-flex flex-column justify-content-xl-start align-items-xl-start">Opening Balance</label><input
                                                                                 type="text" class="form-control" id="custOpeningBalance" name="custOpeningBalance" style="width: 260px;" value="{{record.openingbalance}}"></div>
-                                                                        <div class="form-group" style="margin: 4px;width: 260px;"><label class="text-nowrap d-xl-flex flex-column justify-content-xl-start align-items-xl-start">As Of</label>
+                                                                        <div class="form-group" style="margin: 4px;width: 260px;padding-left:4px;"><label class="text-nowrap d-xl-flex flex-column justify-content-xl-start align-items-xl-start">As Of</label>
                                                                             <!-- <input type="text" class="form-control" id="asOfDate" name="asOfDate">\ -->
                                                                             <div class="input-group date" style="width: 160px;">
                                                                                 <input type="text" class="form-control" id="dtAsOf" name="dtAsOf" value="{{record.openingbalancedate}}">
@@ -963,7 +963,7 @@
                                                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-9" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important; ">
                                                                 <div class="row no-gutters" style="margin: 12px;">
                                                                     <div class="col d-xl-flex align-items-xl-center">
-                                                                        <div class="form-group flex-grow-1 checkbox1div" style="margin: 4px;">
+                                                                        <div class="form-group flex-grow-1 checkbox1div" style="margin: 4px;padding-right:4px;">
                                                                             <label class="lblCustomField1">{{#if contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[0].label}}{{else}}Custom Field 1{{/if}}</label>
                                                                             <input type="text" class="form-control" id="edtCustomeField1" name="edtCustomeField1" value="{{record.custfield1}}">
                                                                         </div>
@@ -971,11 +971,11 @@
                                                                             <label class="lblCustomField2">{{#if contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[1].label}}{{else}}Custom Field 2{{/if}}</label>
                                                                             <input type="text" class="form-control" id="edtCustomeField2" name="edtCustomeField2" value="{{record.custfield2}}">
                                                                         </div>
-                                                                        <div class="form-group flex-grow-1 checkbox3div" style="margin: 4px;">
+                                                                        <div class="form-group flex-grow-1 checkbox3div" style="margin: 4px;padding-left:4px;">
                                                                             <label class="lblCustomField3">{{#if contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[2].label}}{{else}}Custom Field 3{{/if}}</label>
                                                                             <input type="text" class="form-control" id="edtCustomeField3" name="edtCustomeField3" value="{{record.custfield3}}">
                                                                         </div>
-                                                                        <div class="form-group flex-grow-1 checkbox4div" style="margin: 4px;">
+                                                                        <div class="form-group flex-grow-1 checkbox4div" style="margin: 4px;padding-left:4px;">
                                                                             <label class="lblCustomField4">{{#if contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[3].label}}{{else}}Custom Field 4{{/if}}</label>
                                                                             <input type="text" class="form-control" id="edtCustomeField4" name="edtCustomeField4" value="{{record.custfield4}}">
                                                                         </div>
@@ -1022,7 +1022,7 @@
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col d-xl-flex align-items-xl-start" style="width: 50%;">
-                                                                                <div class="form-group flex-grow-1" style="margin: 4px;"><label>Username or Email</label>
+                                                                                <div class="form-group flex-grow-1" style="margin: 4px;padding-right:4px;"><label>Username or Email</label>
                                                                                     <!-- <input type="text" class="form-control" id="cloudEmpEmailAddress" name="cloudEmpEmailAddress"> -->
                                                                                     <input type="text" class="form-control" name="cloudCheckEmpEmailAddress" id="cloudCheckEmpEmailAddress" value="{{itemrecord.LogonName}}"
                                                                                         style="display:none!important;">
@@ -1301,7 +1301,7 @@
                                                 <div class="d-xl-flex justify-content-between align-items-xl-center" style="margin: 16px 0px 0px 0px;">
                                                     <button class="btn btn-success btnSave" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button>
                                                     <div>
-                                                        <a class="btn btn-danger" role="button" data-toggle="modal" href="#deleteEmployeeModal"><i class="fas fa-trash-alt" style="margin: 4px;"></i> Delete</a>
+                                                        <a class="btn btn-danger" style="" role="button" data-toggle="modal" href="#deleteEmployeeModal"><i class="fas fa-trash-alt" style="margin: 4px;padding-right:4px;"></i> Delete</a>
                                                         <button class="btn btn-secondary btnBack" type="button" style="min-width: 90px;"><i class="fa fa-close" style="margin: 4px;"></i>Cancel</button>
                                                     </div>
 
@@ -1538,7 +1538,7 @@
                                                                     }
                                                                 </style>
                                                                 <div class="row">
-                                                                    <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 16px;">
+                                                                    <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
                                                                             {{#if equals employeePaySetting.TaxFreeThreshold true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesTaxFreeThresholdClaimed" id="taxesTaxFreeThresholdClaimed" checked>
@@ -1557,8 +1557,8 @@
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesOtherTaxOffsetClaimed">Other Tax Offset Claimed</label>
                                                                         </div> -->
                                                                     </div>
-                                                                    <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 16px;">
-                                                                        <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
+                                                                    <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
+                                                                        <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;padding-left:12px;">
                                                                             {{#if equals employeePaySetting.StudyTrainingSupportLoan true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesStudyTrainingSupportLoans" id="taxesStudyTrainingSupportLoans" checked>
                                                                             {{else}}
@@ -1576,7 +1576,7 @@
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesUpwardVariationRequested">Upward Variation Requested</label>
                                                                         </div> -->
                                                                     </div>
-                                                                    <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 16px;">
+                                                                    <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
                                                                             {{#if equals employeePaySetting.EligibleToReceiveLeaveLoading true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesEligibleReceiveLeaveLoading" id="taxesEligibleReceiveLeaveLoading" checked>
@@ -3462,15 +3462,15 @@
                                         <div class="tab-pane  border rounded-0 tab-1" role="tabpanel" id="tab-1" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                             <div class="row d-xl-flex flex-row justify-content-xl-center">
                                                 <div class="col float-left flex-grow-1 mb-4" style="margin-bottom: 0px!important;">
-                                                    <div class="btn-group float-left" style="margin: 16px;margin-bottom: 0px;">
+                                                    <div class="btn-group float-left" style="margin: 14px;margin-bottom: 0px;">
                                                         <button class="btn btn-primary btnRefresh" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"><i class="la la-lightbulb-o"
                                                                 style="background-color: #00A3D3; border-color: #00A3D3;"></i>Refresh</button>
                                                     </div>
                                                 </div>
                                                 <div class="col">
-                                                    <button class="btn btn-primary float-right printConfirm" type="button" style="margin:12px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"
+                                                    <button class="btn btn-primary float-right printConfirm" type="button" style="margin:14px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"
                                                             style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
-                                                    <button class="btn btn-primary export float-right" type="button" style="margin: 12px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export"
+                                                    <button class="btn btn-primary export float-right" type="button" style="margin: 14px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export"
                                                             style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
                                                 </div>
                                             </div>
