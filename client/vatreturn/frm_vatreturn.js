@@ -744,6 +744,7 @@ Template.vatreturn.onRendered(function() {
                 } else {
                     let data = JSON.parse(dataObject[0].data);
                     let useData = data.ttaxcodevs1;
+                    console.log("useData=", useData);
                     for (let i = 0; i < useData.length; i++) {
                         if(useData[i].RegionName == "Australia"){
                             let taxRate = (useData[i].Rate * 100).toFixed(2);
@@ -1859,9 +1860,9 @@ Template.vatreturn.helpers({
     taxRateList: () => {
         return Template.instance().taxRateList.get();
     },
-    gstPanList: () => {
-        let gstArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
-        return gstArray;
+    taxCodePanList: () => {
+        let taxCodePanArray = ["1", "1a", "2", "2a", "3", "5", "7", "10", "12", "14", "14a", "15", "15a", "16", "17", "21", "22", "26", "27", "30", "31", "34", "35"];
+        return taxCodePanArray;
     },
     accountsPanList: () => {
         let accountsArray = [1, 2, 3, 4, 5];
