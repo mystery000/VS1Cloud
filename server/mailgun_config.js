@@ -1,5 +1,17 @@
+// import {EmailService} from '../imports/email-service';
+// let emailService = new EmailService();
+import { HTTP } from "meteor/http";
 FutureTasks = new Meteor.Collection('email_settings');
 
+// var ipAddress = localStorage.getItem('EIPAddress');
+var ipAddress = "login.vs1cloud.com";
+var database = "VS1_Cloud_DB_cacb_bb_da_WyhNB2";
+// var username= localStorage.getItem('EUserName');
+var username= "dev@vs1cloud.com";
+// var password = localStorage.getItem('EPassword');
+var password = "devTeam@123";
+var port = "4434";
+// var port = localStorage.getItem('EPort');
 Meteor.startup(function(){
     if (Meteor.isServer) {
       process.env.MAIL_URL='smtps://noreply%40vs1cloud.com:Jp9CvV2M5g@mail.vs1cloud.com:465/';
@@ -9,7 +21,7 @@ Meteor.startup(function(){
       var minutesToAdd=2;
       var currentDate = new Date();
       var futureDate = new Date(currentDate.getTime() + minutesToAdd*60000);
-
+      
       FutureTasks.find().forEach(function(mail) {
         if (mail.date < new Date()) {
           Meteor.call('sendEmail', mail);
@@ -56,6 +68,20 @@ Meteor.methods({
         html: details.html,
         attachments: details.attachments
       });
+
+      Meteor.call('post', 'TEmailHistory',  {type: "TEmailHistory",
+      fields: {
+        Active: true,
+        DateSent: details.StartDate,
+        Memo: details.NextDueDate,
+        Subject: details.FormName,
+        RecipientEmail:  details.EmployeeEmail
+      }}, details.connectionInfo,  (error, result) => {
+        if(!error) {
+          // Meteor.call('get', 'TEmailHistory', (err, res) => {
+          // })
+        }
+      })
     } catch(e) {
         if (e) {
             throw new Meteor.Error("error", e.response);
@@ -90,6 +116,21 @@ Meteor.methods({
         html: html,
         attachments: details.attachments
       });
+      Meteor.call('post', 'TEmailHistory',  {type: "TEmailHistory",
+      fields: {
+        Active: true,
+        DateSent: details.StartDate,
+        Memo: details.NextDueDate,
+        Subject: details.FormName,
+        RecipientEmail:  details.EmployeeEmail
+      }}, details.connectionInfo,  (error, result) => {
+        if(!error) {
+          // Meteor.call('get', 'TEmailHistory', (err, res) => {
+          // })
+        }
+      })
+      // Meteor.call('post', )
+      // this.taxRateService.saveEmailHistory(details)
     } catch(e) {
         if (e) {
             throw new Meteor.Error("error", e.response);
@@ -103,6 +144,9 @@ Meteor.methods({
         name: details.EmployeeId + "_" + details.FormID,
         schedule: function(parser) {
           return parser.recur().on(new Date(details.NextDueDate)).fullDate();
+          // let current = new Date();
+          // let newtime = new Date(current.getTime() + 5*60000)
+          // return parser.recur().on(new Date(newtime)).fullDate();
         },
         job: function() {
           Meteor.call('sendNormalEmail', details);
@@ -370,3 +414,79 @@ Meteor.methods({
     });
   }
 });
+
+Meteor.methods({
+  // get: function(url){
+  //     var that = this;
+  //     var promise = new Promise(function(resolve, reject) {
+  //         HTTP.get("https://" + ipAddress + ':' + port + '/erpapi/' + url + "?ListType=Detail", 
+  //         { headers : {
+  //           database: database,
+  //           username: username,
+  //           password: password||'',
+  //         }}, function(err, response){
+  //           Meteor.call('responseHandler', url, response, function(error, result) { 
+  //             if(error) {
+  //               reject(error);
+  //             }else if(result) {
+  //               resolve(result);
+  //             }
+  //           })
+  //             // var data = that.responseHandler(url, response);
+  //             // if(err || !data){
+  //             //     reject(err);
+  //             // }
+  //             // if(data){
+  //             //     resolve(data);
+  //             // }
+  //         });
+  //     });
+  //     return promise;
+  // },
+
+  post: function(url, data, connectionInfo) {
+    let promise = new Promise(function (resolve, reject) {
+        HTTP.post("https://" + connectionInfo.ipAddress + ':' + connectionInfo.port + '/erpapi/' + url, 
+        { headers : {
+          database: connectionInfo.database,
+          username: connectionInfo.username,
+          password: connectionInfo.password||'',
+        }, data: data}, function (err, response) {
+
+          Meteor.call('responseHandler', url, response, function(error, result) { 
+            if(error) {
+              reject(error);
+            }else if(result) {
+              resolve(result)
+            }
+          })  
+            // let data = that.responseHandler(url, response);
+            // if(err){
+            //     reject(data);
+            // } else{
+            //     resolve(data);
+            // }
+        });
+    });
+    return promise;
+  },
+
+  responseHandler: function(url, response) {
+    if (response === undefined) {
+      let getResponse = "You have lost internet connection, please log out and log back in.";
+      return getResponse;
+    } else {
+      if (response.statusCode === 200) {
+        try {
+          var content = JSON.parse(response.content);
+
+          return content;
+        } catch (e) {}
+      }else if (response.statusCode === 401) {
+
+      } else {
+        return response.headers.errormessage;
+      }
+    }
+  }
+})
