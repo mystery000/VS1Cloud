@@ -11,7 +11,7 @@ Template.linktrueerp.onRendered(function(){
       Name: "VS1_DbConnectTest",
       Params: {
         ServerName: erpGet.ERPIPAddress,
-        Databasename:erpGet.ERPDatabase,
+        DatabaseName:erpGet.ERPDatabase,
         VS1UserName: erpGet.ERPUsername,
         VS1Password: erpGet.ERPPassword,
         APIPort:erpGet.ERPPort,
@@ -76,8 +76,8 @@ Template.linktrueerp.events({
       Name: "VS1_ChangeDatabase",
       Params: {
         ServerName: serverName,
-        Databasename:databaseName,
-        DatabasenameToChange: erpGet.ERPDatabase,
+        DatabaseName:databaseName,
+        DatabaseNameToChange: erpGet.ERPDatabase,
         VS1UserName: "VS1_Temp_User", //erpGet.ERPUsername
         VS1Password: "Dpjhge8rnvl1j&9",
         APIPort:parseFloat(portNo)||0,

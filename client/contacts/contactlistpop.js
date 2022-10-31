@@ -281,7 +281,7 @@ Template.contactlistpop.onRendered(function () {
                                     $('.paginate_button.page-item.next').addClass('disabled');
                                 }
 
-                                $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                $('#tblContactlist_wrapper .paginate_button.next:not(.disabled)', this.api().table().container())
                                     .on('click', function () {
                                         $('.fullScreenSpin').css('display', 'inline-block');
                                         var splashArrayContactListDupp = new Array();

@@ -1,29 +1,18 @@
 import {ContactService} from "../contacts/contact-service";
 import {ReactiveVar} from "meteor/reactive-var";
-import {CoreService} from "../js/core-service";
 import {UtilityService} from "../utility-service";
-import {ProductService} from "../product/product-service";
-import XLSX from "xlsx";
 import {SideBarService} from "../js/sidebar-service";
 import "jquery-editable-select";
-import draggableCharts from "../js/Charts/draggableCharts";
-import resizableCharts from "../js/Charts/resizableCharts";
-import Tvs1ChartDashboardPreference from "../js/Api/Model/Tvs1ChartDashboardPreference";
-import ChartsApi from "../js/Api/ChartsApi";
-import Tvs1chart from "../js/Api/Model/Tvs1Chart";
-import ChartsEditor from "../js/Charts/ChartsEditor";
-import Tvs1ChartDashboardPreferenceField from "../js/Api/Model/Tvs1ChartDashboardPreferenceField";
-import ApiService from "../js/Api/Module/ApiService";
+
 import LoadingOverlay from "../LoadingOverlay";
-import PayRun from "../js/Api/Model/PayRun";
+
 import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
-import {EmployeeFields} from "../js/Api/Model/Employee";
-import {ReportService} from "../reports/report-service";
+
 import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import moment from "moment";
 import Datehandler from "../DateHandler";
-import {getEarnings} from "../settings/payroll-settings/payrollrules";
+import {getEarnings, getOvertimes, getRateTypes} from "../settings/payroll-settings/payrollrules";
 import TableHandler from "../js/Table/TableHandler";
 
 let sideBarService = new SideBarService();
@@ -47,6 +36,8 @@ Template.timesheetdetail.onCreated(function () {
 
   this.weeklyTotal = new ReactiveVar(0.0);
   this.timeSheetDetails = new ReactiveVar();
+  this.overtimes = new ReactiveVar([]);
+  this.rateTypes = new ReactiveVar([]);
 });
 
 Template.timesheetdetail.onRendered(function () {
@@ -137,18 +128,20 @@ Template.timesheetdetail.onRendered(function () {
   };
 
   /**
-   * 
-   * @param {moment.Moment} momentDate 
-   */
-  this.loadHours = async (momentDate) => {
+     *
+     * @param {moment.Moment} momentDate
+     */
+  this.loadHours = async momentDate => {
     const employee = await this.employee.get();
     let timesheets = await this.timeSheetList.get();
-    timesheets  = timesheets.filter(ts => ts.EmployeeName == employee.EmployeeName);
-    let timesheet = timesheets.find(ts => moment(ts.TimeSheetDate).isSame(momentDate))
+    timesheets = timesheets.filter(ts => ts.EmployeeName == employee.EmployeeName);
+    let timesheet = timesheets.find(ts => moment(ts.TimeSheetDate).isSame(momentDate));
 
-    const hours = timesheet != undefined ? timesheet.Hours : 0.0;
+    const hours = timesheet != undefined
+      ? timesheet.Hours
+      : 0.0;
     return hours;
-  }
+  };
 
   // this.loadClockOnOff = async (refresh = false) => {
   //   const selectedEmployee = await this.employee.get();
@@ -191,8 +184,8 @@ Template.timesheetdetail.onRendered(function () {
   };
 
   /**
-   * This function wil generate a list of days until the last day of the selected week
-   */
+     * This function wil generate a list of days until the last day of the selected week
+     */
   this.calculateThisWeek = async () => {
     const timesheet = await this.timesheet.get();
 
@@ -204,8 +197,9 @@ Template.timesheetdetail.onRendered(function () {
     let i = 0;
     while (date.isBefore(endDate) == true) {
       date = aWeekAgo.add("1", "day");
-      days.push({index: i, 
-        dateObject: date.toDate(), 
+      days.push({
+        index: i,
+        dateObject: date.toDate(),
         date: date.format("ddd DD MMM"),
         defaultValue: await this.loadHours(date.toDate())
       });
@@ -261,6 +255,24 @@ Template.timesheetdetail.onRendered(function () {
     return await this.weeklyTotal.set(total);
   };
 
+  this.loadOvertimes = async (refresh = false) => {
+    let overtimes = await getOvertimes(refresh);
+    const rateTypes = await this.rateTypes.get();
+
+    overtimes = overtimes.map(o => {
+      if (o.searchByRuleName == false) {
+        o.rateType = rateTypes.find(r => r.ID == o.rateTypeId);
+      }
+      return o;
+    });
+    await this.overtimes.set(overtimes);
+  };
+
+  this.loadRateTypes = async (refresh = false) => {
+    const rates = await getRateTypes(refresh);
+    await this.rateTypes.set(rates);
+  };
+
   this.buildNewObject = () => {
     // Here we will build the object to save
     const trs = $("#tblTimeSheetInner tbody").find("tr:not(.template)");
@@ -270,10 +282,48 @@ Template.timesheetdetail.onRendered(function () {
       return earningsDays.find(earningDay => earningDay.index == index);
     };
 
-    const buildHourObject = input => {
+    const matchedDay = dayName => {
+      const days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thuesday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ];
+
+      return days.indexOf(dayName);
+    };
+
+    const buildHourObject = (input, earningsRateName) => {
+      const date = matchDateIndex($(input).attr("date")).dateObject;
+      const hours = parseFloat($(input).val());
+
+      const overtimes = this.overtimes.get();
+      const matchedOvertime = overtimes.find(o => {
+        if (o.day) {
+          const dayIndex = matchedDay(o.day);
+          if (dayIndex == null) {
+            return false;
+          }
+          return dayIndex == moment(date).day();
+        }
+
+        return false;
+        // return o.rateType.Description == earningsRateName;
+      });
+
+
       return {
-        date: matchDateIndex($(input).attr("date")).dateObject,
-        hours: parseFloat($(input).val())
+        date: date,
+        hours: hours,
+        ...(
+          matchedOvertime != undefined
+          ? {
+            rateTypeId: matchedOvertime.rateTypeId
+          }
+          : {})
       };
     };
 
@@ -287,12 +337,12 @@ Template.timesheetdetail.onRendered(function () {
 
     const buildEarningLineObject = tr => {
       const hoursInput = $(tr).find("input.hours");
-      const earningsRateName = $(tr).find("input.select-rate-js").val();
+      const earningsRateName = $(tr).find("input.select-rate-js").val(); // EarningName in the input field, we should use ID
 
       let dailyHours = [];
 
       $(hoursInput).each((index, input) => {
-        dailyHours.push(buildHourObject(input));
+        dailyHours.push(buildHourObject(input, earningsRateName));
       });
 
       return {earningRateName: earningsRateName, dailyHours: dailyHours};
@@ -494,7 +544,6 @@ Template.timesheetdetail.onRendered(function () {
     if (res) {
       return await this._updateTimeSheetDetails(object);
     }
-    
 
     try {
       LoadingOverlay.show();
@@ -542,6 +591,7 @@ Template.timesheetdetail.onRendered(function () {
      */
   this._getTimeSheetDetails = async (timesheetId = null, list = false) => {
     let response = await getVS1Data(erpObject.TTimeSheetDetails);
+
     if (response.length > 0) {
       let timesheetsDetails = JSON.parse(response[0].data);
 
@@ -550,10 +600,9 @@ Template.timesheetdetail.onRendered(function () {
           ? timesheetsDetails.filter(time => time.timeSheetId == timesheetId)
           : timesheetsDetails.find(time => time.timeSheetId == timesheetId);
       }
-
       return timesheetsDetails;
     }
-    return null;
+    return [];
   };
 
   this._deleteTimSheetDetails = async timesheetId => {
@@ -572,7 +621,10 @@ Template.timesheetdetail.onRendered(function () {
 
     await this.loadTimeSheet(true); // first load this
     await this.loadEmployee(refresh); // second load this
-    
+
+    await this.loadRateTypes(refresh);
+    await this.loadOvertimes(refresh);
+
     const employee = await this.employee.get();
     await this.getEarnings(employee.ID);
 
@@ -685,8 +737,5 @@ Template.timesheetdetail.helpers({
       return 0;
     }
     return dayFound.hours;
-  },
-  
+  }
 });
-
-

@@ -144,7 +144,7 @@ Template.newsidenav.onCreated(function() {
             templateObject.sideBarPositionClass.set('side');
             $('#sidebar').removeClass('top');
             $('#bodyContainer').removeClass('top');
-            $('#sidebarToggleBtn').text('Top');
+            $('#sidebarToggleBtn .text').text('Top');
           }
         })
       //}
@@ -6613,7 +6613,7 @@ Template.newsidenav.events({
         //sideBarService.updateEmployeeFormAccessDetail(payload);
         $('#sidebar').removeClass('top');
         $('#bodyContainer').removeClass('top');
-        $('#sidebarToggleBtn').text('Top');
+        $('#sidebarToggleBtn .text').text('Top');
     } else {
       payload = {
         Name: "VS1_EmployeeAccess",
@@ -6631,7 +6631,7 @@ Template.newsidenav.events({
       //sideBarService.updateEmployeeFormAccessDetail(payload);
       $('#sidebar').addClass('top');
       $('#bodyContainer').addClass('top');
-      $('#sidebarToggleBtn').text('Side');
+      $('#sidebarToggleBtn .text').text('Side');
     }
     var erpGet = erpDb();
     var oPost = new XMLHttpRequest();
@@ -6973,6 +6973,18 @@ Template.newsidenav.events({
     'click #sidenavbasreturn': function(event) {
         event.preventDefault();
         FlowRouter.go('/basreturn');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
+    'click #sidenavvatreturnlist': function(event) {
+      event.preventDefault();
+      FlowRouter.go('/vatreturnlist');
+      let templateObject = Template.instance();
+      templateObject.getSetSideNavFocus();
+    },
+    'click #sidenavvatreturn': function(event) {
+        event.preventDefault();
+        FlowRouter.go('/vatreturn');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },

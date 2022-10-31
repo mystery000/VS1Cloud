@@ -1151,7 +1151,7 @@ $("#erplogin-button").click(function(e){
                     localStorage.setItem('vs1cloudlicenselevel', dataReturnRes.ProcessLog.LicenseLevel);
                     Session.setPersistent('isGreenTrack', true);
                     if(!localStorage.getItem('VS1loggedDatabase')){
-                      localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+                      localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                       localStorage.setItem('VS11099Contractor_Report', '');
                       localStorage.setItem('VS1AgedPayables_Report', '');
                       localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -1207,10 +1207,10 @@ $("#erplogin-button").click(function(e){
                       localStorage.setItem('VS1TpurchaseOrderBackOrderList', '');
                       localStorage.setItem('VS1TSalesList', '');
                     }else{
-                      if((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.Databasename)) {
+                      if((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.DatabaseName)) {
                         isSameUserLogin = true;
                       }else{
-                        localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+                        localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                         localStorage.setItem('VS11099Contractor_Report', '');
                         localStorage.setItem('VS1AgedPayables_Report', '');
                         localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -1283,7 +1283,7 @@ $("#erplogin-button").click(function(e){
                     }else{
                       ERPIPAdderess= dataReturnRes.ProcessLog.ServerName;
                     }
-               var ERPdbName = dataReturnRes.ProcessLog.Databasename;
+               var ERPdbName = dataReturnRes.ProcessLog.DatabaseName;
 
                var ERPport = dataReturnRes.ProcessLog.APIPort;
 
@@ -1699,7 +1699,7 @@ $("#erplogin-button").click(function(e){
          localStorage.setItem('vs1cloudlicenselevel', dataReturnRes.ProcessLog.LicenseLevel);
          Session.setPersistent('isGreenTrack', true);
          if(!localStorage.getItem('VS1loggedDatabase')){
-           localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+           localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
            localStorage.setItem('VS11099Contractor_Report', '');
            localStorage.setItem('VS1AgedPayables_Report', '');
            localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -1755,10 +1755,10 @@ $("#erplogin-button").click(function(e){
            localStorage.setItem('VS1TpurchaseOrderBackOrderList', '');
            localStorage.setItem('VS1TSalesList', '');
          }else{
-           if((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.Databasename)) {
+           if((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.DatabaseName)) {
              isSameUserLogin = true;
            }else{
-             localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+             localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
              localStorage.setItem('VS11099Contractor_Report', '');
              localStorage.setItem('VS1AgedPayables_Report', '');
              localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -1831,7 +1831,7 @@ $("#erplogin-button").click(function(e){
          }else{
            ERPIPAdderess= dataReturnRes.ProcessLog.ServerName;
          }
-    var ERPdbName = dataReturnRes.ProcessLog.Databasename;
+    var ERPdbName = dataReturnRes.ProcessLog.DatabaseName;
 
     var ERPport = dataReturnRes.ProcessLog.APIPort;
 
@@ -2160,7 +2160,7 @@ $("#erplogin-button").click(function(e){
                   localStorage.setItem('vs1cloudlicenselevel', dataReturnRes.ProcessLog.LicenseLevel);
                   Session.setPersistent('isGreenTrack', true);
                   if(!localStorage.getItem('VS1loggedDatabase')){
-                    localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+                    localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                     localStorage.setItem('VS11099Contractor_Report', '');
                     localStorage.setItem('VS1AgedPayables_Report', '');
                     localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -2216,10 +2216,10 @@ $("#erplogin-button").click(function(e){
                     localStorage.setItem('VS1TpurchaseOrderBackOrderList', '');
                     localStorage.setItem('VS1TSalesList', '');
                   }else{
-                    if((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.Databasename)) {
+                    if((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.DatabaseName)) {
                       isSameUserLogin = true;
                     }else{
-                      localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+                      localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                       localStorage.setItem('VS11099Contractor_Report', '');
                       localStorage.setItem('VS1AgedPayables_Report', '');
                       localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -2292,7 +2292,7 @@ $("#erplogin-button").click(function(e){
                   }
 
 
-             var ERPdbName = dataReturnRes.ProcessLog.Databasename;
+             var ERPdbName = dataReturnRes.ProcessLog.DatabaseName;
 
              var ERPport = dataReturnRes.ProcessLog.APIPort;
 
@@ -2714,7 +2714,7 @@ $("#erplogin-button").click(function(e){
               localStorage.setItem('vs1cloudlicenselevel', dataReturnRes.ProcessLog.LicenseLevel);
               Session.setPersistent('isGreenTrack', true);
               if(!localStorage.getItem('VS1loggedDatabase')){
-                localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+                localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                 localStorage.setItem('VS11099Contractor_Report', '');
                 localStorage.setItem('VS1AgedPayables_Report', '');
                 localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -2770,10 +2770,10 @@ $("#erplogin-button").click(function(e){
                 localStorage.setItem('VS1TpurchaseOrderBackOrderList', '');
                 localStorage.setItem('VS1TSalesList', '');
               }else{
-                if((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.Databasename)) {
+                if((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.DatabaseName)) {
                   isSameUserLogin = true;
                 }else{
-                  localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+                  localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                   localStorage.setItem('VS11099Contractor_Report', '');
                   localStorage.setItem('VS1AgedPayables_Report', '');
                   localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -2846,7 +2846,7 @@ $("#erplogin-button").click(function(e){
               }else{
                 ERPIPAdderess= dataReturnRes.ProcessLog.ServerName;
               }
-         var ERPdbName = dataReturnRes.ProcessLog.Databasename;
+         var ERPdbName = dataReturnRes.ProcessLog.DatabaseName;
 
          var ERPport = dataReturnRes.ProcessLog.APIPort;
 
@@ -3282,7 +3282,7 @@ $("#erplogin-button").click(function(e){
                   localStorage.setItem('vs1cloudlicenselevel', dataReturnRes.ProcessLog.LicenseLevel);
                   Session.setPersistent('isGreenTrack', true);
                   if(!localStorage.getItem('VS1loggedDatabase')){
-                    localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+                    localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                     localStorage.setItem('VS11099Contractor_Report', '');
                     localStorage.setItem('VS1AgedPayables_Report', '');
                     localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -3338,10 +3338,10 @@ $("#erplogin-button").click(function(e){
                     localStorage.setItem('VS1TpurchaseOrderBackOrderList', '');
                     localStorage.setItem('VS1TSalesList', '');
                   }else{
-                    if((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.Databasename)) {
+                    if((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.DatabaseName)) {
                       isSameUserLogin = true;
                     }else{
-                      localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+                      localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                       localStorage.setItem('VS11099Contractor_Report', '');
                       localStorage.setItem('VS1AgedPayables_Report', '');
                       localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -3414,7 +3414,7 @@ $("#erplogin-button").click(function(e){
                   }else{
                     ERPIPAdderess= dataReturnRes.ProcessLog.ServerName;
                   }
-             var ERPdbName = dataReturnRes.ProcessLog.Databasename;
+             var ERPdbName = dataReturnRes.ProcessLog.DatabaseName;
 
              var ERPport = dataReturnRes.ProcessLog.APIPort;
 

@@ -365,7 +365,7 @@ Template.registerdb.events({
 
     $('.fullScreenSpin').css('display','none');
   }else{
-    var databaseName = myArrResponse.ProcessLog.Databasename;
+    var databaseName = myArrResponse.ProcessLog.DatabaseName;
 
       $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1check/vs1checklogin.php?login=sandbox');
       $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1check/vs1check.php?from=sandbox&checktoken='+databaseName+'');

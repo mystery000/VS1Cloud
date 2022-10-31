@@ -123,7 +123,7 @@ Template.simonpurchasedb.events({
     swal('Database Error', myArrResponse.ProcessLog.Error, 'error');
     $('.fullScreenSpin').css('display','none');
   }else{
-    var databaseName = myArrResponse.ProcessLog.Databasename;
+    var databaseName = myArrResponse.ProcessLog.DatabaseName;
 
 
 

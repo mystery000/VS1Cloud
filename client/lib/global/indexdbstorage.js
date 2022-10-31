@@ -350,11 +350,11 @@ storeExists = function(objectStore, Email) {
 };
 
 addLoginData = async function(loginData) {
-    const db = await openDb(loginData.ProcessLog.Databasename);
+    const db = await openDb(loginData.ProcessLog.DatabaseName);
     const db1 = await openDb2();
     let transaction1 = await db1.transaction(["TDatabases"], "readwrite");
     let transaction = await db.transaction(["vscloudlogininfo"], "readwrite");
-    localStorage.setItem("vs1Db", loginData.ProcessLog.Databasename);
+    localStorage.setItem("vs1Db", loginData.ProcessLog.DatabaseName);
 
     transaction.oncomplete = function(event) {
 
@@ -371,7 +371,7 @@ addLoginData = async function(loginData) {
 
     let dbInfo = {
         EmployeeEmail: loginData.ProcessLog.VS1UserName || loginData.ProcessLog.VS1AdminUserName,
-        data: loginData.ProcessLog.Databasename
+        data: loginData.ProcessLog.DatabaseName
     };
 
     let dbObjectStore = transaction1.objectStore("TDatabases");

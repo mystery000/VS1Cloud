@@ -2020,7 +2020,7 @@ Template.alltaskdatatable.events({
 
   "click .btnCancelAddTask": function (event) {
     playCancelAudio();
-    setTimeout(function(){
+    setTimeout(function () {
       $(".btnAddSubTask").css("display", "block");
       $(".newTaskRow").css("display", "none");
       $(".addTaskModal").css("display", "none");
@@ -2285,30 +2285,118 @@ Template.alltaskdatatable.events({
   // update task rename task
   "click .btnSaveEditTask": function (e) {
     playSaveAudio();
-    setTimeout(function(){
-    let taskID = $("#txtCrmTaskID").val();
-    if (taskID) {
-      let selected_lbls = [];
-      let unselected_lbls = [];
-      $("#detailTaskLabelWrapper input:checked").each(function () {
-        selected_lbls.push($(this).attr("name"));
-      });
-      $("#detailTaskLabelWrapper input:unchecked").each(function () {
-        unselected_lbls.push($(this).attr("name"));
-      });
+    setTimeout(function () {
+      let taskID = $("#txtCrmTaskID").val();
+      if (taskID) {
+        let selected_lbls = [];
+        let unselected_lbls = [];
+        $("#detailTaskLabelWrapper input:checked").each(function () {
+          selected_lbls.push($(this).attr("name"));
+        });
+        $("#detailTaskLabelWrapper input:unchecked").each(function () {
+          unselected_lbls.push($(this).attr("name"));
+        });
 
-      let editTaskDetailName = $(".editTaskDetailName").val();
-      let editTaskDetailDescription = $(".editTaskDetailDescription").val();
-      if (editTaskDetailName == "") {
-        swal("Please endter the task name", "", "warning");
+        let editTaskDetailName = $(".editTaskDetailName").val();
+        let editTaskDetailDescription = $(".editTaskDetailDescription").val();
+        if (editTaskDetailName == "") {
+          swal("Please endter the task name", "", "warning");
+          return;
+        }
+
+        let assignId = $('#assignedID').val();
+        let assignName = $('#crmEditSelectEmployeeList').val();
+        let contactID = $('#contactID').val();
+        let contactName = $('#crmEditSelectLeadList').val();
+
+        let contactType = $('#contactType').val();
+        let customerID = 0;
+        let leadID = 0;
+        let supplierID = 0;
+        if (contactType == 'Customer') {
+          customerID = contactID
+        } else if (contactType == 'Lead') {
+          leadID = contactID
+        } else if (contactType == 'Supplier') {
+          supplierID = contactID
+        }
+
+        let templateObject = Template.instance();
+        var objDetails = {
+          type: "Tprojecttasks",
+          fields: {
+            ID: taskID,
+            TaskName: editTaskDetailName,
+            TaskDescription: editTaskDetailDescription,
+            CustomerID: customerID,
+            LeadID: leadID,
+            SupplierID: supplierID,
+            AssignID: assignId,
+            AssignName: assignName,
+            ContactName: contactName
+          },
+        };
+        $(".fullScreenSpin").css("display", "inline-block");
+
+        crmService.saveNewTask(objDetails).then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          $(".btnRefresh").addClass('btnSearchAlert');
+
+          setTimeout(() => {
+            templateObject.getAllTaskList();
+          }, 400);
+        });
+
+        selected_lbls.forEach((lbl) => {
+          crmService
+            .updateLabel({
+              type: "Tprojecttask_TaskLabel",
+              fields: {
+                ID: lbl,
+                TaskID: taskID,
+              },
+            })
+            .then(function (data) { });
+        });
+      }
+    }, delayTimeAfterSound);
+  },
+  // submit save new task add task
+  "click .btnSaveAddTask": function (e) {
+    playSaveAudio();
+    let templateObject = Template.instance();
+    setTimeout(function () {
+      let task_name = $("#add_task_name").val();
+      let task_description = $("#add_task_description").val();
+      let subTaskID = $("#txtCrmSubTaskID").val();
+
+      let due_date = $(".crmEditDatepicker").val();
+      due_date = due_date ? moment(due_date.split('/')[2] + '-' + due_date.split('/')[1] + '-' + due_date.split('/')[0]).format("YYYY-MM-DD hh:mm:ss") : moment().format("YYYY-MM-DD hh:mm:ss");
+
+      let priority = 0;
+      priority = $("#chkPriorityAdd1").prop("checked") ? 1 : $("#chkPriorityAdd2").prop("checked") ? 2 : $("#chkPriorityAdd3").prop("checked") ? 3 : 0;
+
+      if (task_name === "") {
+        swal("Task name is not entered!", "", "warning");
         return;
       }
+      $(".fullScreenSpin").css("display", "inline-block");
+      let projectID = $("#addProjectID").val() ? $("#addProjectID").val() : 11;
+      projectID = $("#editProjectID").val() ? $("#editProjectID").val() : projectID;
+
+      let selected_lbls = [];
+      $("#addTaskLabelWrapper input:checked").each(function () {
+        selected_lbls.push($(this).attr("name"));
+      });
+
+      let employeeID = Session.get("mySessionEmployeeLoggedID");
+      let employeeName = Session.get("mySessionEmployee");
 
       let assignId = $('#assignedID').val();
-      let assignName = $('#crmEditSelectEmployeeList').val();
-      let contactID = $('#contactID').val();
-      let contactName = $('#crmEditSelectLeadList').val();
+      let assignName = $('#add_assigned_name').val();
 
+      let contactID = $('#contactID').val();
+      let contactName = $('#add_contact_name').val();
       let contactType = $('#contactType').val();
       let customerID = 0;
       let leadID = 0;
@@ -2321,240 +2409,152 @@ Template.alltaskdatatable.events({
         supplierID = contactID
       }
 
-      let templateObject = Template.instance();
-      var objDetails = {
-        type: "Tprojecttasks",
-        fields: {
-          ID: taskID,
-          TaskName: editTaskDetailName,
-          TaskDescription: editTaskDetailDescription,
-          CustomerID: customerID,
-          LeadID: leadID,
-          SupplierID: supplierID,
-          AssignID: assignId,
-          AssignName: assignName,
-          ContactName: contactName
-        },
-      };
-      $(".fullScreenSpin").css("display", "inline-block");
-
-      crmService.saveNewTask(objDetails).then(function (data) {
-        $(".fullScreenSpin").css("display", "none");
-        $(".btnRefresh").addClass('btnSearchAlert');
-
-        setTimeout(() => {
-          templateObject.getAllTaskList();
-        }, 400);
-      });
-
-      selected_lbls.forEach((lbl) => {
-        crmService
-          .updateLabel({
-            type: "Tprojecttask_TaskLabel",
-            fields: {
-              ID: lbl,
-              TaskID: taskID,
-            },
-          })
-          .then(function (data) { });
-      });
-    }
-    }, delayTimeAfterSound);
-  },
-  // submit save new task add task
-  "click .btnSaveAddTask": function (e) {
-    playSaveAudio();
-    setTimeout(function(){
-    let task_name = $("#add_task_name").val();
-    let task_description = $("#add_task_description").val();
-    let subTaskID = $("#txtCrmSubTaskID").val();
-
-    let templateObject = Template.instance();
-
-    let due_date = $(".crmEditDatepicker").val();
-    due_date = due_date ? moment(due_date.split('/')[2] + '-' + due_date.split('/')[1] + '-' + due_date.split('/')[0]).format("YYYY-MM-DD hh:mm:ss") : moment().format("YYYY-MM-DD hh:mm:ss");
-
-    let priority = 0;
-    priority = $("#chkPriorityAdd1").prop("checked") ? 1 : $("#chkPriorityAdd2").prop("checked") ? 2 : $("#chkPriorityAdd3").prop("checked") ? 3 : 0;
-
-    if (task_name === "") {
-      swal("Task name is not entered!", "", "warning");
-      return;
-    }
-    $(".fullScreenSpin").css("display", "inline-block");
-    let projectID = $("#addProjectID").val() ? $("#addProjectID").val() : 11;
-    projectID = $("#editProjectID").val() ? $("#editProjectID").val() : projectID;
-
-    let selected_lbls = [];
-    $("#addTaskLabelWrapper input:checked").each(function () {
-      selected_lbls.push($(this).attr("name"));
-    });
-
-    let employeeID = Session.get("mySessionEmployeeLoggedID");
-    let employeeName = Session.get("mySessionEmployee");
-
-    let assignId = $('#assignedID').val();
-    let assignName = $('#add_assigned_name').val();
-
-    let contactID = $('#contactID').val();
-    let contactName = $('#add_contact_name').val();
-    let contactType = $('#contactType').val();
-    let customerID = 0;
-    let leadID = 0;
-    let supplierID = 0;
-    if (contactType == 'Customer') {
-      customerID = contactID
-    } else if (contactType == 'Lead') {
-      leadID = contactID
-    } else if (contactType == 'Supplier') {
-      supplierID = contactID
-    }
-
-    let addObject = {
-      TaskName: task_name,
-      TaskDescription: task_description,
-      Completed: false,
-      ProjectID: projectID,
-      due_date: due_date,
-      priority: priority,
-      EnteredByID: parseInt(employeeID),
-      EnteredBy: employeeName,
-      CustomerID: customerID,
-      LeadID: leadID,
-      SupplierID: supplierID,
-      AssignID: assignId,
-      AssignName: assignName,
-      ContactName: contactName
-    }
-
-    if (subTaskID) {
-      var objDetails = {
-        type: "Tprojecttasks",
-        fields: {
-          ID: subTaskID,
-          subtasks: [
-            {
-              type: "Tprojecttask_subtasks",
-              fields: addObject,
-            }
-          ]
-        },
-      };
-    } else {
-      var objDetails = {
-        type: "Tprojecttasks",
-        fields: addObject,
-      };
-    }
-
-    crmService.saveNewTask(objDetails).then(function (res) {
-      if (res.fields.ID) {
-        if (moment(due_date).format("YYYY-MM-DD") == moment().format("YYYY-MM-DD")) {
-        }
-
-        $(".btnAddSubTask").css("display", "block");
-        $(".newTaskRow").css("display", "none");
-        $(".addTaskModal").css("display", "none");
-
-        $("#chkPriorityAdd0").prop("checked", false);
-        $("#chkPriorityAdd1").prop("checked", false);
-        $("#chkPriorityAdd2").prop("checked", false);
-        $("#chkPriorityAdd3").prop("checked", false);
-
-
-        //////////////////////////////
-        // setTimeout(() => {
-        //   templateObject.getAllTaskList();
-        //   templateObject.getTProjectList();
-        // }, 500);
-        $("#newTaskModal").modal("hide");
-        // $("#newProjectTasksModal").modal("hide");
-        if (subTaskID) {
-          crmService.getTaskDetail(subTaskID).then(function (data) {
-            $(".fullScreenSpin").css("display", "none");
-            if (data.fields.ID == subTaskID) {
-              let selected_record = data.fields;
-
-              if (selected_record.subtasks) {
-                let newSubTaskID = 0;
-                if (Array.isArray(selected_record.subtasks)) {
-                  templateObject.subTasks.set(selected_record.subtasks)
-                  templateObject.initSubtaskDatatable();
-                  newSubTaskID = selected_record.subtasks[selected_record.subtasks.length - 1].fields.ID
-                }
-
-                if (typeof selected_record.subtasks == 'object') {
-                  let arr = [];
-                  arr.push(selected_record.subtasks)
-                  templateObject.subTasks.set(arr)
-                  templateObject.initSubtaskDatatable();
-                  newSubTaskID = selected_record.subtasks.fields.ID
-
-                }
-
-                try {
-                  // add labels to New task
-                  // tempcode until api is updated
-                  // current label and task is 1:1 relationship
-                  selected_lbls.forEach((lbl) => {
-                    crmService.updateLabel({
-                      type: "Tprojecttask_TaskLabel",
-                      fields: {
-                        ID: lbl,
-                        TaskID: newSubTaskID,
-                      },
-                    }).then(function (data) {
-                      templateObject.getAllTaskList();
-                      templateObject.getTProjectList();
-                    });
-                  });
-                  // tempcode until api is updated
-                } catch (error) {
-                  swal(error, "", "error");
-                }
-              } else {
-                let sutTaskTable = $('#tblSubtaskDatatable').DataTable();
-                sutTaskTable.clear().draw();
-              }
-
-            }
-
-          }).catch(function (err) {
-            $(".fullScreenSpin").css("display", "none");
-            swal(err, "", "error");
-            return;
-          });
-        }
-
+      let addObject = {
+        TaskName: task_name,
+        TaskDescription: task_description,
+        Completed: false,
+        ProjectID: projectID,
+        due_date: due_date,
+        priority: priority,
+        EnteredByID: parseInt(employeeID),
+        EnteredBy: employeeName,
+        CustomerID: customerID,
+        LeadID: leadID,
+        SupplierID: supplierID,
+        AssignID: assignId,
+        AssignName: assignName,
+        ContactName: contactName
       }
 
-      templateObject.getAllTaskList();
-      templateObject.getTProjectList();
+      if (subTaskID) {
+        var objDetails = {
+          type: "Tprojecttasks",
+          fields: {
+            ID: subTaskID,
+            subtasks: [
+              {
+                type: "Tprojecttask_subtasks",
+                fields: addObject,
+              }
+            ]
+          },
+        };
+      } else {
+        var objDetails = {
+          type: "Tprojecttasks",
+          fields: addObject,
+        };
+      }
 
-      $(".btnRefresh").addClass('btnSearchAlert');
+      crmService.saveNewTask(objDetails).then(function (res) {
+        if (res.fields.ID) {
+          if (moment(due_date).format("YYYY-MM-DD") == moment().format("YYYY-MM-DD")) {
+          }
 
-      $(".fullScreenSpin").css("display", "none");
+          $(".btnAddSubTask").css("display", "block");
+          $(".newTaskRow").css("display", "none");
+          $(".addTaskModal").css("display", "none");
 
-      $("#add_task_name").val("");
-      $("#add_task_description").val("");
+          $("#chkPriorityAdd0").prop("checked", false);
+          $("#chkPriorityAdd1").prop("checked", false);
+          $("#chkPriorityAdd2").prop("checked", false);
+          $("#chkPriorityAdd3").prop("checked", false);
 
-      $('#assignedID').val("");
-      $('#add_assigned_name').val("");
 
-      $('#contactID').val("");
-      $('#add_contact_name').val("");
+          //////////////////////////////
+          // setTimeout(() => {
+          //   templateObject.getAllTaskList();
+          //   templateObject.getTProjectList();
+          // }, 500);
+          $("#newTaskModal").modal("hide");
+          // $("#newProjectTasksModal").modal("hide");
+          if (subTaskID) {
+            crmService.getTaskDetail(subTaskID).then(function (data) {
+              $(".fullScreenSpin").css("display", "none");
+              if (data.fields.ID == subTaskID) {
+                let selected_record = data.fields;
 
-    }).catch(function (err) {
-      swal({
-        title: "Oooops...",
-        text: err,
-        type: "error",
-        showCancelButton: false,
-        confirmButtonText: "Try Again",
-      }).then((result) => { });
-      $(".fullScreenSpin").css("display", "none");
-    });
-  }, delayTimeAfterSound);
+                if (selected_record.subtasks) {
+
+                  let newSubTaskID = 0;
+                  if (Array.isArray(selected_record.subtasks)) {
+                    templateObject.subTasks.set(selected_record.subtasks)
+                    templateObject.initSubtaskDatatable();
+                    newSubTaskID = selected_record.subtasks[selected_record.subtasks.length - 1].fields.ID
+                  }
+
+                  if (typeof selected_record.subtasks == 'object') {
+                    let arr = [];
+                    arr.push(selected_record.subtasks)
+                    templateObject.subTasks.set(arr)
+                    templateObject.initSubtaskDatatable();
+                    newSubTaskID = selected_record.subtasks.fields.ID
+
+                  }
+
+                  try {
+                    // add labels to New task
+                    // tempcode until api is updated
+                    // current label and task is 1:1 relationship
+                    selected_lbls.forEach((lbl) => {
+                      crmService.updateLabel({
+                        type: "Tprojecttask_TaskLabel",
+                        fields: {
+                          ID: lbl,
+                          TaskID: newSubTaskID,
+                        },
+                      }).then(function (data) {
+                        templateObject.getAllTaskList();
+                        templateObject.getTProjectList();
+                      });
+                    });
+                    // tempcode until api is updated
+                  } catch (error) {
+                    swal(error, "", "error");
+                  }
+                } else {
+                  let sutTaskTable = $('#tblSubtaskDatatable').DataTable();
+                  sutTaskTable.clear().draw();
+                }
+
+              }
+
+            }).catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+              swal(err, "", "error");
+              return;
+            });
+          }
+
+        }
+
+        templateObject.getAllTaskList();
+        templateObject.getTProjectList();
+
+        $(".btnRefresh").addClass('btnSearchAlert');
+
+        $(".fullScreenSpin").css("display", "none");
+
+        $("#add_task_name").val("");
+        $("#add_task_description").val("");
+
+        $('#assignedID').val("");
+        $('#add_assigned_name').val("");
+
+        $('#contactID').val("");
+        $('#add_contact_name').val("");
+
+      }).catch(function (err) {
+        swal({
+          title: "Oooops...",
+          text: err,
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Try Again",
+        }).then((result) => { });
+        $(".fullScreenSpin").css("display", "none");
+      });
+    }, delayTimeAfterSound);
   },
 
   // submit set schedule as today
@@ -2868,58 +2868,58 @@ Template.alltaskdatatable.events({
   // submit save new project
   "click .btnSaveNewCrmProject": function (e) {
     playSaveAudio();
-    setTimeout(function(){
-    let projectName = $("#crmProjectName").val();
-    let projectColor = $("#crmProjectColor").val();
-    let projectDescription = $("#crmProjectDescription").val();
+    setTimeout(function () {
+      let projectName = $("#crmProjectName").val();
+      let projectColor = $("#crmProjectColor").val();
+      let projectDescription = $("#crmProjectDescription").val();
 
-    // let swtNewCrmProjectFavorite = $("#swtNewCrmProjectFavorite").prop(
-    //   "checked"
-    // );
+      // let swtNewCrmProjectFavorite = $("#swtNewCrmProjectFavorite").prop(
+      //   "checked"
+      // );
 
-    if (projectName === "" || projectName === null) {
-      swal("Project name is not entered!", "", "warning");
-      return;
-    }
+      if (projectName === "" || projectName === null) {
+        swal("Project name is not entered!", "", "warning");
+        return;
+      }
 
-    $(".fullScreenSpin").css("display", "inline-block");
+      $(".fullScreenSpin").css("display", "inline-block");
 
-    var objDetails = {
-      type: "Tprojectlist",
-      fields: {
-        Active: true,
-        ProjectName: projectName,
-        ProjectColour: projectColor,
-        Description: projectDescription,
-        // AddToFavourite: swtNewCrmProjectFavorite,
-      },
-    };
-    let templateObject = Template.instance();
+      var objDetails = {
+        type: "Tprojectlist",
+        fields: {
+          Active: true,
+          ProjectName: projectName,
+          ProjectColour: projectColor,
+          Description: projectDescription,
+          // AddToFavourite: swtNewCrmProjectFavorite,
+        },
+      };
+      let templateObject = Template.instance();
 
-    crmService.updateProject(objDetails).then(function (data) {
-      templateObject.getTProjectList();
+      crmService.updateProject(objDetails).then(function (data) {
+        templateObject.getTProjectList();
 
-      $("#crmProjectName").val("");
-      $("#crmProjectDescription").val("");
-      $("#crmProjectColor").val("#000000");
-      $("#swtNewCrmProjectFavorite").prop("checked", false);
+        $("#crmProjectName").val("");
+        $("#crmProjectDescription").val("");
+        $("#crmProjectColor").val("#000000");
+        $("#swtNewCrmProjectFavorite").prop("checked", false);
 
-      $("#newCrmProject").modal("hide");
-      $(".fullScreenSpin").css("display", "none");
+        $("#newCrmProject").modal("hide");
+        $(".fullScreenSpin").css("display", "none");
 
-      $("#projectsTab-tab").click();
-      // Meteor._reload.reload();
-    }).catch(function (err) {
-      swal({
-        title: "Oooops...",
-        text: err,
-        type: "error",
-        showCancelButton: false,
-        confirmButtonText: "Try Again",
-      }).then((result) => { });
-      $(".fullScreenSpin").css("display", "none");
-    });
-  }, delayTimeAfterSound);
+        $("#projectsTab-tab").click();
+        // Meteor._reload.reload();
+      }).catch(function (err) {
+        swal({
+          title: "Oooops...",
+          text: err,
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Try Again",
+        }).then((result) => { });
+        $(".fullScreenSpin").css("display", "none");
+      });
+    }, delayTimeAfterSound);
   },
 
   "click .movetoproject": function (e) {
@@ -3465,34 +3465,34 @@ Template.alltaskdatatable.events({
 
   "click .btnSaveEditLabel": function (e) {
     playSaveAudio();
-    setTimeout(function(){
-    let id = $("#editLabelID").val();
-    let labelName = $("#editLabelName").val();
-    let labelColor = $("#editLabelColor").val();
+    setTimeout(function () {
+      let id = $("#editLabelID").val();
+      let labelName = $("#editLabelName").val();
+      let labelColor = $("#editLabelColor").val();
 
-    if (labelName == "") {
-      swal("Please put the Label Name", "", "warning");
-      return;
-    }
+      if (labelName == "") {
+        swal("Please put the Label Name", "", "warning");
+        return;
+      }
 
-    if (id) {
-      var objDetails = {
-        type: "Tprojecttask_TaskLabel",
-        fields: {
-          ID: id,
-          TaskLabelName: labelName,
-          Color: labelColor
-        },
-      };
+      if (id) {
+        var objDetails = {
+          type: "Tprojecttask_TaskLabel",
+          fields: {
+            ID: id,
+            TaskLabelName: labelName,
+            Color: labelColor
+          },
+        };
 
-      $(".fullScreenSpin").css("display", "inline-block");
-      let templateObject = Template.instance();
-      crmService.updateLabel(objDetails).then(function (objDetails) {
-        templateObject.getAllLabels();
-        $("#editLabelModal").modal("hide");
-        $(".fullScreenSpin").css("display", "none");
-      });
-    }
+        $(".fullScreenSpin").css("display", "inline-block");
+        let templateObject = Template.instance();
+        crmService.updateLabel(objDetails).then(function (objDetails) {
+          templateObject.getAllLabels();
+          $("#editLabelModal").modal("hide");
+          $(".fullScreenSpin").css("display", "none");
+        });
+      }
     }, delayTimeAfterSound);
   },
 
@@ -3940,7 +3940,7 @@ function openEditTaskModal(id, type) {
       let assignId = selected_record.AssignID ? selected_record.AssignID : Session.get("mySessionEmployeeLoggedID");
       $('#crmEditSelectEmployeeList').val(employeeName);
       $('#assignedID').val(assignId)
-      
+
       let colClientName = selected_record.ContactName;
       $('#crmEditSelectLeadList').val(colClientName);
       if (selected_record.CustomerID) {
@@ -4356,7 +4356,7 @@ function openEditTaskModal(id, type) {
       });
       let currentDate = selected_record.due_date ? new Date(selected_record.due_date) : new Date();
       let begunDate = moment(currentDate).format("DD/MM/YYYY");
-      $(".crmDatepicker").val(begunDate); 
+      $(".crmDatepicker").val(begunDate);
 
     } else {
       swal("Cannot edit this task", "", "warning");

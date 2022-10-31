@@ -290,7 +290,8 @@ const erpObject = {
     TPayRunHistory: "TPayRunHistory",
     TProcessStep: "TProcessStep",
     TEmployeeList: "TEmployeeList",
-    TAccountVS1List:"TAccountVS1List"
+    TAccountVS1List:"TAccountVS1List",
+    TEmailHistory: "TEmailHistory",
 };
 
 export default erpObject;
