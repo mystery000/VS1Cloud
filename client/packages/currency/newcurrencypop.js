@@ -965,6 +965,7 @@ Template.newcurrencypop.events({
   },
   "click .btnDeleteCurrency": function () {
     playDeleteAudio();
+    setTimeout(function(){
     let taxRateService = new TaxRateService();
     let currencyId = $("#selectDeleteLineID").val();
 
@@ -1009,6 +1010,7 @@ Template.newcurrencypop.events({
         });
         $(".fullScreenSpin").css("display", "none");
       });
+    }, delayTimeAfterSound);
   },
   "click .btnAddCurrency": function () {
     $("#add-currency-title").text("Add New Currency");

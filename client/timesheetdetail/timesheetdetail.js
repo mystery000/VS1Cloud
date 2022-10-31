@@ -676,7 +676,9 @@ Template.timesheetdetail.events({
   },
   "click .btnDeleteRow": function (e) {
     playDeleteAudio();
+    setTimeout(function(){
     $(e.target).parents("tr").remove();
+  }, delayTimeAfterSound);
   },
 
   "click #tblTimeSheetInner tbody .select-rate-js": (e, ui) => {

@@ -8173,6 +8173,7 @@ Template.supplierpaymentcard.events({
   },
   "click .printConfirm": async function (event) {
     playPrintAudio();
+    setTimeout(async function(){
     var printTemplate = [];
     LoadingOverlay.show();
 
@@ -8395,10 +8396,12 @@ Template.supplierpaymentcard.events({
         }
       });
     }
+  }, delayTimeAfterSound);
   },
 
   "click  #open_print_confirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     if ($("#choosetemplate").is(":checked")) {
         $('#templateselection').modal('show');
     } else {
@@ -8433,6 +8436,7 @@ Template.supplierpaymentcard.events({
 
       $("#confirmprint").modal("hide");
     }
+  }, delayTimeAfterSound);
   },
 
   "click #choosetemplate": function (event) {
@@ -12633,6 +12637,7 @@ Template.supplierpaymentcard.events({
   },
   "click .btnDeleteFollowingPayments": async function (event) {
     playDeleteAudio();
+    setTimeout(async function(){
     var currentDate = new Date();
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
@@ -12678,9 +12683,11 @@ Template.supplierpaymentcard.events({
     });
     $('.modal-backdrop').css('display', 'none');
     FlowRouter.go('/paymentoverview?success=true');
+  }, delayTimeAfterSound);
   },
   "click .btnDeletePayment": async function (event) {
     playDeleteAudio();
+    setTimeout(async function(){
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     var url = FlowRouter.current().path;
@@ -12730,6 +12737,7 @@ Template.supplierpaymentcard.events({
     } else {}
   });
     // $('#deleteLineModal').modal('toggle');
+  }, delayTimeAfterSound);
   },
   "click .btnConfirmPayment": function (event) {
     $(".btnDeleteLine").hide();
@@ -12737,6 +12745,7 @@ Template.supplierpaymentcard.events({
   },
   "click .btnDeleteLine": function (event) {
     playDeleteAudio();
+    setTimeout(function(){
     let templateObject = Template.instance();
     let utilityService = new UtilityService();
     let selectLineID = $("#selectDeleteLineID").val() || 0;
@@ -12765,6 +12774,7 @@ Template.supplierpaymentcard.events({
       this.click;
     }
     $("#deleteLineModal").modal("toggle");
+  }, delayTimeAfterSound);
   },
   // 'click .printConfirm': function(event) {
   //     $('#html-2-pdfwrapper').css('display', 'block');
@@ -12916,6 +12926,7 @@ Template.supplierpaymentcard.events({
   },
   "click .btnSaveGridSettings": function (event) {
     playSaveAudio();
+    setTimeout(function(){
     let lineItems = [];
     //let lineItemObj = {};
     $(".columnSettings").each(function (index) {
@@ -13008,6 +13019,7 @@ Template.supplierpaymentcard.events({
       }
     }
     $("#myModal2").modal("toggle");
+  }, delayTimeAfterSound);
   },
   "blur .divcolumn": function (event) {
     let columData = $(event.target).html();

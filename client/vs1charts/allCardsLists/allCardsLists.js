@@ -243,6 +243,7 @@ Template.allCardsLists.events({
     "click .editCardBtn": async function (e) {
         playSaveAudio();
         e.preventDefault();
+        setTimeout(function(){
         let templateObject = Template.instance();
         $(".card-visibility").removeClass('hideelement');
         if( $('.editCardBtn').find('i').hasClass('fa-cog') ){
@@ -267,6 +268,7 @@ Template.allCardsLists.events({
         }else{
             $('.card-visibility').addClass('dimmedChart');
         }
+    }, delayTimeAfterSound);
     },
     "click .cardShowBtn": function(e){
         e.preventDefault();

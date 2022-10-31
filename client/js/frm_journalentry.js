@@ -2793,11 +2793,10 @@ Template.journalentrycard.events({
     },
     'click .printConfirm': function(event) {
         playPrintAudio();
+        setTimeout(function(){
         $('#html-2-pdfwrapper').css('display', 'block');
-
-
         exportSalesToPdf();
-
+    }, delayTimeAfterSound);
     },
     'keydown .lineCreditEx, keydown .lineDebitEx, keydown .lineAmount': function(event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -2855,6 +2854,7 @@ Template.journalentrycard.events({
     },
     'click .btnDeleteFollowingJournals': async function(event) {
         playDeleteAudio();
+        setTimeout(async function(){
         var currentDate = new Date();
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
@@ -2891,9 +2891,11 @@ Template.journalentrycard.events({
         FlowRouter.go('/journalentrylist?success=true');
         $('.modal-backdrop').css('display', 'none');
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteJournal': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -2950,9 +2952,11 @@ Template.journalentrycard.events({
             window.open('/billlist', '_self');
         }
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDelete': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         swal({
@@ -3019,11 +3023,11 @@ Template.journalentrycard.events({
             } else {}
 
         });
-
-
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -3077,6 +3081,7 @@ Template.journalentrycard.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();

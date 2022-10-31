@@ -2090,11 +2090,13 @@ Template.stockadjustmentcard.events({
     },
     'click .printConfirm': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         $('#html-2-pdfwrapper').css('display', 'block');
         $('.pdfCustomerName').html($('#sltAccountName').val());
         $('.pdfCustomerAddress').html($('#txabillingAddress').val());
         $('#printcomment').html($('#txaNotes').val().replace(/[\r\n]/g, "<br />"));
         exportSalesToPdf();
+    }, delayTimeAfterSound);
     },
     'keydown .lineQty, keydown .lineUnitPrice': function (event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -2150,6 +2152,7 @@ Template.stockadjustmentcard.events({
     },
     'click .btnDeleteFollowingStocks': async function (event) {
         playDeleteAudio();
+        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
@@ -2180,9 +2183,11 @@ Template.stockadjustmentcard.events({
         FlowRouter.go('/stockadjustmentoverview?success=true');
         $('.modal-backdrop').css('display', 'none');
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteStock': function (event) {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
@@ -2222,9 +2227,11 @@ Template.stockadjustmentcard.events({
             $('.modal-backdrop').css('display', 'none');
         }
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteStockAdjust': function (event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
         swal({
@@ -2275,10 +2282,11 @@ Template.stockadjustmentcard.events({
                 //$('#deleteLineModal').modal('toggle');
             } else {}
         });
-
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function (event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let selectLineID = $('#selectDeleteLineID').val();
@@ -2314,6 +2322,7 @@ Template.stockadjustmentcard.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnSaveSettings': function (event) {
         playSaveAudio();

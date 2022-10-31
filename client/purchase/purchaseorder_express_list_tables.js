@@ -2051,6 +2051,7 @@ Template.purchaseorderlist.events({
   },
   "click .printConfirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -2082,6 +2083,7 @@ Template.purchaseorderlist.events({
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblpurchaseorderlist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
+  }, delayTimeAfterSound);
   },
   "click .btnRefresh":async function () {
     $(".fullScreenSpin").css("display", "inline-block");

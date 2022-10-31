@@ -804,12 +804,15 @@ Template.employeetimeclock.events({
   },
   'click .printConfirm': function (event) {
     playPrintAudio();
+    setTimeout(function(){
     $('.fullScreenSpin').css('display', 'inline-block');
     jQuery('#tblTimeSheet_wrapper .dt-buttons .btntabletopdf').click();
     $('.fullScreenSpin').css('display', 'none');
+  }, delayTimeAfterSound);
   },
   'click .btnDeleteTimeSheet': function () {
     playDeleteAudio();
+    setTimeout(function(){
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let contactService = new ContactService();
@@ -845,8 +848,7 @@ Template.employeetimeclock.events({
         $('.fullScreenSpin').css('display', 'none');
       });
     }
-
-
+  }, delayTimeAfterSound);
   },
   'blur .cashamount': function (event) {
     let inputUnitPrice = parseFloat($(event.target).val()) || 0;

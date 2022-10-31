@@ -227,6 +227,7 @@ Template.stockmovementreport.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -266,6 +267,7 @@ Template.stockmovementreport.events({
       title: "Stock Movement Report | " + loggedCompany,
       noPrintSelector: ".addSummaryEditor",
     });
+  }, delayTimeAfterSound);
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();

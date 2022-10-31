@@ -963,6 +963,7 @@ Template.taxRatesSettings.events({
   },
   "click .btnSaveDefaultTax": function () {
     playSaveAudio();
+    setTimeout(function(){
     let purchasetaxcode = $("input[name=optradioP]:checked").val() || "";
     let salestaxcode = $("input[name=optradioS]:checked").val() || "";
 
@@ -1053,7 +1054,8 @@ Template.taxRatesSettings.events({
           }
         });
       });
-  },
+    }, delayTimeAfterSound);
+    },
   "keydown #edtTaxRate": numberInputValidate,
   "keydown #subTaxPercent": numberInputValidate,
   "keydown #subTaxCapAmt": numberInputValidate,
@@ -1069,6 +1071,7 @@ Template.taxRatesSettings.events({
   },
   "click .btnSaveSubTax": function () {
     playSaveAudio();
+    setTimeout(function(){
     let templateObject = Template.instance();
     let edtSubTaxLineId = $("#edtSubTaxLineId").val();
     let subTaxId = $('#subTaxCode').val();
@@ -1117,9 +1120,11 @@ Template.taxRatesSettings.events({
     $('#edtTaxRate').val(Math.min(taxPercent, 100));
 
     $('#addSubTaxModal').modal('hide');
+  }, delayTimeAfterSound);
   },
   'click .btnSaveTaxRate': function () {
     playSaveAudio();
+    setTimeout(function(){
     let templateObject = Template.instance();
     $('.fullScreenSpin').css('display', 'inline-block');
     let taxRateService = new TaxRateService();
@@ -1302,6 +1307,7 @@ Template.taxRatesSettings.events({
       $('.fullScreenSpin').css('display', 'none');
 
     }
+  }, delayTimeAfterSound);
   },
   'click .btnAddTaxRate': function () {
     $('#add-tax-title').text('Add New Tax Rate');
@@ -1369,6 +1375,7 @@ Template.taxRatesSettings.events({
   },
   'click .btnDeleteTaxRate': function () {
     playDeleteAudio();
+    setTimeout(function(){
     let taxRateService = new TaxRateService();
     let taxCodeId = $('#selectDeleteLineID').val();
 
@@ -1413,6 +1420,7 @@ Template.taxRatesSettings.events({
         });
         $(".fullScreenSpin").css("display", "none");
       });
+    }, delayTimeAfterSound);
   },
   "click .btnBack": function (event) {
     playCancelAudio();

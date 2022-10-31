@@ -3401,9 +3401,11 @@ Template.addemployeepop.events({
     },
     'click .addemployeepop .printConfirm': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
         LoadingOverlay.hide();
+    }, delayTimeAfterSound);
     },
     'click .addemployeepop .btnRefresh': function () {
         Meteor._reload.reload();
@@ -3707,6 +3709,7 @@ Template.addemployeepop.events({
     },
     'click .addemployeepop .btnDeleteEmployee': function (event) {
         playDeleteAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
 
         let templateObject = Template.instance();
@@ -3747,6 +3750,7 @@ Template.addemployeepop.events({
             $('.setup-wizard') ? $('.btnRefreshEmployee').click() : FlowRouter.go('/employeelist?success=true');
         }
         $('#deleteEmployeeModal').modal('toggle');
+    }, delayTimeAfterSound);
     }
 
 });

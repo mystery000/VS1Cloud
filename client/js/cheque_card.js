@@ -5114,6 +5114,7 @@ Template.chequecard.events({
   },
   "click .printConfirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     $("#html-2-pdfwrapper").css("display", "block");
     $(".pdfCustomerName").html($("#edtSupplierName").val());
     $(".pdfCustomerAddress").html(
@@ -5126,8 +5127,6 @@ Template.chequecard.events({
         .val()
         .replace(/[\r\n]/g, "<br />")
     );
-
-
 
     exportSalesToPdf =  () =>{
       let margins = {
@@ -5228,6 +5227,7 @@ Template.chequecard.events({
       // });
     };
     exportSalesToPdf();
+  }, delayTimeAfterSound);
   },
   "keydown .lineQty, keydown .lineUnitPrice, keydown .lineAmount": function (
     event
@@ -5386,6 +5386,7 @@ Template.chequecard.events({
   },
   "click .btnDeleteFollowingCheques": async function (event) {
     playDeleteAudio();
+    setTimeout(async function(){
     var currentDate = new Date();
     let templateObject = Template.instance();
     let purchaseService = new PurchaseBoardService();
@@ -5426,9 +5427,11 @@ Template.chequecard.events({
     };
     $('.modal-backdrop').css('display','none');
     $("#deleteLineModal").modal("toggle");
+  }, delayTimeAfterSound);
   },
   "click .btnDeleteCheque": function (event) {
     playDeleteAudio();
+    setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
     let purchaseService = new PurchaseBoardService();
@@ -5477,9 +5480,11 @@ Template.chequecard.events({
       };
     }
     $("#deleteLineModal").modal("toggle");
+  }, delayTimeAfterSound);
   },
   "click .btnDeleteLine": function (event) {
     playDeleteAudio();
+    setTimeout(function(){
     let templateObject = Template.instance();
     let taxcodeList = templateObject.taxraterecords.get();
     let utilityService = new UtilityService();
@@ -5626,6 +5631,7 @@ Template.chequecard.events({
     }
 
     $("#deleteLineModal").modal("toggle");
+  }, delayTimeAfterSound);
   },
   "click .btnSaveSettings": function (event) {
     playSaveAudio();

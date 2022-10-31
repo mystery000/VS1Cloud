@@ -6402,6 +6402,7 @@ Template.payrolloverview.events({
   },
   "click .btnDeleteTimeSheet": function () {
     playDeleteAudio();
+    setTimeout(function(){
     let templateObject = Template.instance();
     let contactService = new ContactService();
 
@@ -6457,6 +6458,7 @@ Template.payrolloverview.events({
         $(".fullScreenSpin").css("display", "none");
       }
     });
+  }, delayTimeAfterSound);
   },
   "click .exportbtn": function () {
     LoadingOverlay.show();
@@ -6532,9 +6534,11 @@ Template.payrolloverview.events({
   },
   "click .printConfirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     LoadingOverlay.show();
     jQuery("#tblPayHistorylist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
+  }, delayTimeAfterSound);
   },
   "click .templateDownload": function () {
     let utilityService = new UtilityService();

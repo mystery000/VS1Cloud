@@ -5931,6 +5931,7 @@ Template.refundcard.events({
     'click  #open_print_confirm':function(event)
     {
         playPrintAudio();
+        setTimeout(function(){
         if($('#choosetemplate').is(':checked'))
         {
             $('#templateselection').modal('show');
@@ -5952,7 +5953,7 @@ Template.refundcard.events({
 
             $('#confirmprint').modal('hide');
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click #choosetemplate':function(event)
@@ -6958,6 +6959,7 @@ Template.refundcard.events({
     },
     'click .printConfirm':async function (event) {
         playPrintAudio();
+        setTimeout(async function(){
         var printTemplate = [];
         LoadingOverlay.show();
 
@@ -7186,6 +7188,7 @@ Template.refundcard.events({
                 else if (result.dismiss === 'cancel') {}
             });
         }
+    }, delayTimeAfterSound);
     },
     // 'click .printConfirm': function(event) {
     //     $('#html-2-pdfwrapper').css('display', 'block');
@@ -7318,6 +7321,7 @@ Template.refundcard.events({
     },
     'click .btnDeleteFollowingRefunds': async function(event) {
         playDeleteAudio();
+        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
@@ -7354,9 +7358,11 @@ Template.refundcard.events({
         window.open('/refundlist', '_self');
         LoadingOverlay.hide();
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteRefund': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
@@ -7395,9 +7401,11 @@ Template.refundcard.events({
             window.open('/refundlist', '_self');
         }
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -7505,12 +7513,10 @@ Template.refundcard.events({
             document.getElementById("grandTotal").innerHTML = Currency + '0.00';
             document.getElementById("balanceDue").innerHTML = Currency + '0.00';
             document.getElementById("totalBalanceDue").innerHTML = Currency + '0.00';
-
-
-
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();
@@ -7519,6 +7525,8 @@ Template.refundcard.events({
     }, delayTimeAfterSound);
     },
     'click .btnSave':(event, templateObject) => {
+        playSaveAudio();
+        setTimeout(function(){
         saveCurrencyHistory();
         //let templateObject = Template.instance();
         let customername = $('#edtCustomerName');
@@ -8216,7 +8224,7 @@ Template.refundcard.events({
                 LoadingOverlay.hide();
             });
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click .chkProductName': function(event) {

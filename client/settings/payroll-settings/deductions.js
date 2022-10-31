@@ -433,6 +433,7 @@ Template.deductionSettings.events({
     },
     'click .btnSaveDeduction': async function (event) {
         playSaveAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         
@@ -550,7 +551,7 @@ Template.deductionSettings.events({
                 if (result.value) {}
             });  
         }
-        
+    }, delayTimeAfterSound);
     },
 });
 

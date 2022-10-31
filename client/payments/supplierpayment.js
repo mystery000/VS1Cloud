@@ -1775,9 +1775,11 @@ Template.supplierpayment.events({
     },
     'click .printConfirm' : function(event){
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblSupplierPayment_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
+    }, delayTimeAfterSound);
     },
 
     'change #sltCurrency': (e, ui) => {

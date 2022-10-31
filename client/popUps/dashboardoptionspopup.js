@@ -432,6 +432,7 @@ Template.dashboardoptionspopup.events({
     },
     'click .btnDeleteTerms': function() {
         playDeleteAudio();
+        setTimeout(function(){
         let taxRateService = new TaxRateService();
         let termsId = $('#selectDeleteLineID').val();
 
@@ -470,7 +471,7 @@ Template.dashboardoptionspopup.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
-
+    }, delayTimeAfterSound);
     },
     'click .btnSaveTerms': function() {
         playSaveAudio();

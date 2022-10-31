@@ -95,6 +95,7 @@ Template.edismssettings.events({
   },
   'click #saveTwilioSettings': async function() {
     playSaveAudio();
+    setTimeout(async function(){
     $('.fullScreenSpin').css('display','inline-block');
 
     const templateObject = Template.instance();
@@ -132,5 +133,6 @@ Template.edismssettings.events({
         window.open('/settings','_self');
       } else if (result.dismiss === 'cancel') {}
     });
+  }, delayTimeAfterSound);
   }
 });

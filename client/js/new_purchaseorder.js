@@ -6938,6 +6938,7 @@ Template.purchaseordercard.events({
     'click  #open_print_confirm':function(event)
     {
         playPrintAudio();
+        setTimeout(function(){
         if($('#choosetemplate').is(':checked'))
         {
             $('#templateselection').modal('show');
@@ -6961,7 +6962,7 @@ Template.purchaseordercard.events({
 
             $('#confirmprint').modal('hide');
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click #choosetemplate':function(event)
@@ -6978,6 +6979,7 @@ Template.purchaseordercard.events({
     },
     'click .printConfirm':async function (event) {
         playPrintAudio();
+        setTimeout(async function(){
         var printTemplate = [];
         $('.fullScreenSpin').css('display', 'inline-block');
         var purchase_order = $('input[name="Purchase Orders"]:checked').val();
@@ -7203,6 +7205,7 @@ Template.purchaseordercard.events({
                 else if (result.dismiss === 'cancel') {}
             });
         }
+    }, delayTimeAfterSound);
     },
     // 'click .printConfirm': function(event) {
     //     $('.fullScreenSpin').css('display', 'inline-block');
@@ -7360,6 +7363,7 @@ Template.purchaseordercard.events({
     },
     'click .btnDeleteFollowingPOs': async function(event) {
         playDeleteAudio();
+        setTimeout(async function(){
         var currentDate = new Date();
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
@@ -7400,9 +7404,11 @@ Template.purchaseordercard.events({
         };
         $('.modal-backdrop').css('display','none');
         $("#deleteLineModal").modal("toggle");
+    }, delayTimeAfterSound);
     },
     'click .btnDeletePO': async function(event) {
         playDeleteAudio();
+        setTimeout(async function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let isBORedirect = await templateObject.isbackorderredirect.get() || false;
@@ -7459,9 +7465,11 @@ Template.purchaseordercard.events({
           };
         }
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -7615,6 +7623,7 @@ Template.purchaseordercard.events({
             document.getElementById("totalBalanceDue").innerHTML = Currency + '0.00';
         }
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();
@@ -9265,7 +9274,7 @@ Template.purchaseordercard.events({
     },
     'click #btnCopyToInvoice': function() {
         playCopyAudio();
-
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         var url = FlowRouter.current().path;
         if ((url.indexOf('?id=') > 0) || (url.indexOf('?copyquid=') > 0)) {
@@ -9535,10 +9544,11 @@ Template.purchaseordercard.events({
         } else {
             FlowRouter.go('/invoicecard');
         }
+    }, delayTimeAfterSound);
     },
     'click #btnCopyPO': function() {
         playCopyAudio();
-
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         var url = FlowRouter.current().path;
 
@@ -9846,9 +9856,7 @@ Template.purchaseordercard.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
-
-
-
+    }, delayTimeAfterSound);
     },
     'click .chkCreatePOCredit': function(event) {
         let templateObject = Template.instance();

@@ -1242,6 +1242,7 @@ Template.balancesheetreport.events({
     },
     "click .btnPrintReport": function(event) {
         playPrintAudio();
+        setTimeout(function(){
         $("a").attr("href", "/");
         document.title = "Balance Sheet Report";
         $(".printReport").print({
@@ -1253,6 +1254,7 @@ Template.balancesheetreport.events({
         setTimeout(function() {
             $("a").attr("href", "#");
         }, 100);
+    }, delayTimeAfterSound);
     },
     "click .btnExportReport": function() {
         LoadingOverlay.show();

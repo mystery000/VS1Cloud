@@ -5215,6 +5215,7 @@ Template.creditcard.events({
     'click  #open_print_confirm':function(event)
     {
         playPrintAudio();
+        setTimeout(function(){
         if($('#choosetemplate').is(':checked'))
         {
             $('#templateselection').modal('show');
@@ -5252,7 +5253,7 @@ Template.creditcard.events({
 
             $('#confirmprint').modal('hide');
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click #choosetemplate':function(event)
@@ -6166,6 +6167,7 @@ Template.creditcard.events({
     },
     'click .printConfirm':  async function(event) {
         playPrintAudio();
+        setTimeout(async function(){
         var printTemplate = [];
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#html-2-pdfwrapper').css('display', 'block');
@@ -6469,9 +6471,7 @@ Template.creditcard.events({
                 }
             }
         });
-
-
-
+    }, delayTimeAfterSound);
     },
     'keydown .lineQty, keydown .lineUnitPrice, keydown .lineAmount': function(event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -6605,6 +6605,7 @@ Template.creditcard.events({
     },
     'click .btnDeleteFollowingCredits': async function(event) {
         playDeleteAudio();
+        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -6646,9 +6647,11 @@ Template.creditcard.events({
         };
         $('.modal-backdrop').css('display','none');
         $("#deleteLineModal").modal("toggle");
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteCredit': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -6697,9 +6700,11 @@ Template.creditcard.events({
           };
         }
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -6824,6 +6829,7 @@ Template.creditcard.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();

@@ -1849,6 +1849,7 @@ Template.journalentrylist.events({
   },
   "click .printConfirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblJournalList_wrapper .dt-buttons .btntabletopdf").click();
     LoadingOverlay.hide();
@@ -1861,6 +1862,7 @@ Template.journalentrylist.events({
     //      pdf.save('journalentrylist.pdf');
     //      $('#html-2-pdfwrapper').css('display','none');
     //  });
+  }, delayTimeAfterSound);
   },
    // CURRENCY MODULE //
    ...FxGlobalFunctions.getEvents(),

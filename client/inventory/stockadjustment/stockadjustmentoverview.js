@@ -943,6 +943,7 @@ Template.stockadjustmentoverview.events({
     },
     'click .printConfirm' : function(event){
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblStockAdjustOverview_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
@@ -955,6 +956,7 @@ Template.stockadjustmentoverview.events({
         //      pdf.save('stockadjustmentoverview.pdf');
         //      $('#html-2-pdfwrapper').css('display','none');
         //  });
+    }, delayTimeAfterSound);
     }
 
 

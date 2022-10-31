@@ -521,6 +521,7 @@ Template.salesreport.events({
     // },
     'click .btnPrintReport': function(event) {
         playPrintAudio();
+        setTimeout(function(){
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -554,7 +555,8 @@ Template.salesreport.events({
         $(".printReport").print({
             title: document.title + " | Sales Report | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
-        })
+        });
+    }, delayTimeAfterSound);
     },
     'click .btnExportReport': function() {
         LoadingOverlay.show();

@@ -11,6 +11,7 @@ Template.newstatuspop.helpers({});
 Template.newstatuspop.events({
     'click .btnSaveStatus': function() {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let clientService = new SalesBoardService()
         let statusName = $('#newStatus').val();
@@ -83,6 +84,7 @@ Template.newstatuspop.events({
                 else if (result.dismiss === 'cancel') {}
             });
         }
+    }, delayTimeAfterSound);
     },
     'keydown #quantity': function (event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) != -1 ||

@@ -59,6 +59,7 @@ Template.receiptclaims.events({
   },
   'click #saveReceiptClaimsSettings': async function(){
     playSaveAudio();
+    setTimeout(async function(){
     $('.fullScreenSpin').css('display','block');
     let settingObject = [];
     const templateObject = Template.instance();
@@ -146,5 +147,6 @@ Template.receiptclaims.events({
         }
         
     }
+}, delayTimeAfterSound);
   }
 });

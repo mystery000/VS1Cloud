@@ -64,6 +64,7 @@ Template.mailchimp.events({
     },
     'click #saveMailChimpSetting': async function(){
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','block');
         let settingObject = [];
         const templateObject = Template.instance();
@@ -151,5 +152,6 @@ Template.mailchimp.events({
             }
             
         }
+    }, delayTimeAfterSound);
     }
 });

@@ -868,6 +868,7 @@ Template.custfieldlist.events({
     },
     'click .btnDeleteTerms': function() {
         playDeleteAudio();
+        setTimeout(function(){
         let taxRateService = new TaxRateService();
         let termsId = $('#selectDeleteLineID').val();
 
@@ -906,7 +907,7 @@ Template.custfieldlist.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
-
+    }, delayTimeAfterSound);
     },
     'click .btnSaveTerms': function() {
         playSaveAudio();

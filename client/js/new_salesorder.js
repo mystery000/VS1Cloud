@@ -7705,6 +7705,7 @@ Template.new_salesorder.events({
         'click  #open_print_confirm':function(event)
         {
             playPrintAudio();
+            setTimeout(function(){
             if($('#choosetemplate').is(':checked'))
             {
                 $('#templateselection').modal('show');
@@ -7728,7 +7729,7 @@ Template.new_salesorder.events({
 
                 $('#confirmprint').modal('hide');
             }
-
+        }, delayTimeAfterSound);
         },
 
         'click #choosetemplate':function(event)
@@ -8778,6 +8779,7 @@ Template.new_salesorder.events({
     },
     'click .printConfirm':async function (event) {
         playPrintAudio();
+        setTimeout(async function(){
           var printTemplate = [];
           LoadingOverlay.show();
           var sales_orders = $('input[name="Sales Order"]:checked').val();
@@ -9193,6 +9195,7 @@ Template.new_salesorder.events({
                 else if (result.dismiss === 'cancel') {}
             });
         }
+    }, delayTimeAfterSound);
     },
     // 'click .printConfirm': function(event) {
     //     LoadingOverlay.show();
@@ -9370,6 +9373,7 @@ Template.new_salesorder.events({
     },
     'click .btnDeleteFollowingSOs': async function(event) {
         playDeleteAudio();
+        setTimeout(async function(){
         var currentDate = new Date();
         LoadingOverlay.show();
         let templateObject = Template.instance();
@@ -9406,9 +9410,11 @@ Template.new_salesorder.events({
         FlowRouter.go('/salesorderslist?success=true');
         $('.modal-backdrop').css('display','none');
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteSO': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
@@ -9447,9 +9453,11 @@ Template.new_salesorder.events({
             FlowRouter.go('/salesorderslist?success=true');
         }
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -9601,6 +9609,7 @@ Template.new_salesorder.events({
 
         $('#deleteLineModal').modal('toggle');
         templateObject.checkAbleToMakeWorkOrder();
+    }, delayTimeAfterSound);
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();
@@ -12046,6 +12055,7 @@ Template.new_salesorder.events({
     },
     'click #btnCopyToInvoice': function() {
         playCopyAudio();
+        setTimeout(function(){
         //FlowRouter.go('/salesorderslist');
         //window.open('/invoicelist','_self');
         LoadingOverlay.show();
@@ -12241,6 +12251,7 @@ Template.new_salesorder.events({
         // } else {
         //     FlowRouter.go('/invoicecard');
         // }
+    }, delayTimeAfterSound);
     },
     'click .chkEmailCopy': function(event) {
         $('#edtCustomerEmail').val($('#edtCustomerEmail').val().replace(/\s/g, ''));

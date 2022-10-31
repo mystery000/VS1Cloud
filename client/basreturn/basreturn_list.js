@@ -1014,6 +1014,7 @@ Template.basreturnlist.events({
     },
     "click .printConfirm": function(event) {
         playPrintAudio();
+        setTimeout(function(){
         $(".fullScreenSpin").css("display", "inline-block");
         jQuery("#tblBasReturnList_wrapper .dt-buttons .btntabletopdf").click();
         $(".fullScreenSpin").css("display", "none");
@@ -1026,6 +1027,7 @@ Template.basreturnlist.events({
         //      pdf.save('journalentrylist.pdf');
         //      $('#html-2-pdfwrapper').css('display','none');
         //  });
+    }, delayTimeAfterSound);
     },
     // CURRENCY MODULE //
     ...FxGlobalFunctions.getEvents(),

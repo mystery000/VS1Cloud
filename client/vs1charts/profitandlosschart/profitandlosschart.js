@@ -244,10 +244,12 @@ Template.profitandlosschart.onRendered(()=>{
    // },
     'click .btnPrintReport':function (event) {
       playPrintAudio();
+      setTimeout(function(){
       $(".printReport").print({
           title   :  document.title +" | Aged Receivables | "+loggedCompany,
           noPrintSelector : ".addSummaryEditor",
-      })
+      });
+    }, delayTimeAfterSound);
     },
     'click .btnExportReport':function() {
       $('.fullScreenSpin').css('display','inline-block');

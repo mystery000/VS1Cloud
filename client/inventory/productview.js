@@ -5393,6 +5393,7 @@ Template.productview.events({
     },
     'click .btnDeleteInv': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         swal({
             title: 'Delete Product',
@@ -5442,7 +5443,7 @@ Template.productview.events({
                 window.open('/inventorylist', "_self");
             } else {}
         });
-
+    }, delayTimeAfterSound);
     },
     'click .btnUpgradeToEssentials': function(event) {
         window.open('/companyappsettings', '_self');
@@ -6177,6 +6178,7 @@ Template.productview.events({
 
     'click .btn-print-bom': function(event) {
         playPrintAudio();
+        setTimeout(function(){
         document.title = 'Product BOM Setup';
         $("#BOMSetupModal .modal-body").print({
             // title   :  document.title +" | Product Sales Report | "+loggedCompany,
@@ -6184,7 +6186,8 @@ Template.productview.events({
             noPrintSelector : ".btnAddSubProduct",
             noPrintSelector : ".btn-remove-raw",
             noPrintSelector : ".btnAddAttachment",
-        })
+        });
+    }, delayTimeAfterSound);
     },
 
     'click .btn-cancel-bom': function(event) {

@@ -1570,9 +1570,11 @@ Template.leadscard.events({
     },
     'click .printConfirm': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblCrmList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .btnRefresh': function () {
         Meteor._reload.reload();
@@ -1801,6 +1803,7 @@ Template.leadscard.events({
     },
     'click .btnDeleteLead': function (event) {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let contactService = new ContactService();
         let currentId = FlowRouter.current().queryParams;
@@ -1835,6 +1838,7 @@ Template.leadscard.events({
             FlowRouter.go('/leadlist?success=true');
         }
         $('#deleteLeadModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnTask': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -1848,6 +1852,7 @@ Template.leadscard.events({
     },
     'click .btnEmail': function (event) {
         playEmailAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
@@ -1858,6 +1863,7 @@ Template.leadscard.events({
         } else {
             $('.fullScreenSpin').css('display', 'none');
         }
+    }, delayTimeAfterSound);
     },
     'click .btnAppointment': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');

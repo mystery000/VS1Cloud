@@ -6776,6 +6776,7 @@ Template.billcard.events({
 
     'click .printConfirm':async function (event) {
         playPrintAudio();
+        setTimeout(async function(){
                 var printTemplate = [];
                 $('.fullScreenSpin').css('display', 'inline-block');
                 $('#html-2-pdfwrapper').css('display', 'block');
@@ -7062,13 +7063,13 @@ Template.billcard.events({
                 }
             }
         });
-
-
+    }, delayTimeAfterSound);
     },
 
     'click  #open_print_confirm':function(event)
     {
         playPrintAudio();
+        setTimeout(function(){
         if($('#choosetemplate').is(':checked'))
         {
 
@@ -7107,7 +7108,7 @@ Template.billcard.events({
 
             $('#confirmprint').modal('hide');
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click #choosetemplate':function(event)
@@ -7269,6 +7270,7 @@ Template.billcard.events({
     },
     'click .btnDeleteFollowingBills': async function(event) {
         playDeleteAudio();
+        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -7314,9 +7316,11 @@ Template.billcard.events({
         };
         $('.modal-backdrop').css('display','none');
         $("#deleteLineModal").modal("toggle");
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteBill': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -7370,9 +7374,11 @@ Template.billcard.events({
           };
         }
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -7495,6 +7501,7 @@ Template.billcard.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnSaveSettings': function(event) {
         playSaveAudio();
@@ -7503,6 +7510,8 @@ Template.billcard.events({
         }, delayTimeAfterSound);
     },
     'click .btnSave': (event, templateObject) => {
+        playSaveAudio();
+        setTimeout(function(){
         saveCurrencyHistory();
         //let templateObject = Template.instance();
         let suppliername = $('#edtSupplierName');
@@ -8180,7 +8189,7 @@ Template.billcard.events({
                 LoadingOverlay.hide();
             });
         }
-
+    }, delayTimeAfterSound);
     },
     'click .chkAccountName': function(event) {
       if ($(event.target).is(':checked')) {

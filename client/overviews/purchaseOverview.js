@@ -2440,9 +2440,11 @@ Template.purchasesoverview.events({
   },
   "click .printConfirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblPurchaseOverview_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
+  }, delayTimeAfterSound);
   },
 });
 Template.purchasesoverview.helpers({

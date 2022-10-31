@@ -1319,6 +1319,7 @@ Template.taxsummaryreport.events({
   },
   'click .btnPrintReport': function (event) {
     playPrintAudio();
+    setTimeout(function(){
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -1352,7 +1353,8 @@ Template.taxsummaryreport.events({
     $(".printReport").print({
       title: document.title + " | Tax Summary | " + loggedCompany,
       noPrintSelector: ".addSummaryEditor",
-    })
+    });
+  }, delayTimeAfterSound);
   },
   'click .btnExportReport': function () {
     LoadingOverlay.show();

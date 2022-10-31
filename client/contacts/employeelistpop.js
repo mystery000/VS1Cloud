@@ -1804,9 +1804,11 @@ Template.employeelistpop.events({
     },
     'click .printConfirm': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         //$('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblEmployeelist_wrapper .dt-buttons .btntabletopdf').click();
         //$('.fullScreenSpin').css('display','none');
+    }, delayTimeAfterSound);
     },
     'click .refreshpagelist': function () {
         //$('.fullScreenSpin').css('display','inline-block');

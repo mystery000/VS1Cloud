@@ -803,6 +803,7 @@ Template.crmoverview.events({
 
   "click .printConfirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     let currentTabID = Template.instance().currentTabID.get();
 
     $(".fullScreenSpin").css("display", "inline-block");
@@ -825,6 +826,7 @@ Template.crmoverview.events({
     }
 
     $(".fullScreenSpin").css("display", "none");
+  }, delayTimeAfterSound);
   },
 
   "click #myAllTablesTab": function (e) {

@@ -1056,6 +1056,7 @@ Template.shippingdocket.onRendered(function() {
     ShippingRow();
     $("#btnsaveallocline").click(function() {
         playSaveAudio();
+        setTimeout(function(){
         $('#tblShippingDocket tr:eq(' + rowIndex + ')').find("[id=pqa]").text("");
         //   var allocLinesTable = $('#serailscanlist tbody tr').map(function (idxRow, ele) {
         //   var typeName = "TPQASN";
@@ -1130,6 +1131,7 @@ Template.shippingdocket.onRendered(function() {
         $('#tblShippingDocket tr:eq(' + rowIndex + ')').find("[id=lineID]").text(JSON.stringify(AllocLineObjDetails));
         $('#tblShippingDocket tr:eq(' + rowIndex + ')').find("[id=UOMQtyShipped]").text(qtyShipped);
         $('#tblShippingDocket tr:eq(' + rowIndex + ')').find("[id=UOMQtyBackOrder]").text(qtyBackOrder);
+    }, delayTimeAfterSound);
     });
 
     //Send back to ERP
@@ -1994,6 +1996,7 @@ Template.shippingdocket.events({
     },
     'click .btnprintDockets': function(e) {
         playPrintAudio();
+        setTimeout(function(){
         let shipID = parseInt($("#SalesId").val()) || '';
         let templateObject = Template.instance();
         let isInvoice = templateObject.includeInvoiceAttachment.get();
@@ -2017,19 +2020,23 @@ Template.shippingdocket.events({
                 templateObject.SendShippingDetails(printType);
             }
         }
-
+    }, delayTimeAfterSound);
     },
     'click .btnprintInvoice': function(e) {
         playPrintAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let printType = "InvoiceOnly";
         templateObject.SendShippingDetails(printType);
+    }, delayTimeAfterSound);
     },
     'click .btnprintDelDocket': function(e) {
         playPrintAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let printType = "DeliveryDocketsOnly";
         templateObject.SendShippingDetails(printType);
+    }, delayTimeAfterSound);
     },
     'click #printDockets': function(e) {
         const templateObject = Template.instance();
@@ -2065,6 +2072,7 @@ Template.shippingdocket.events({
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let selectLineID = $('#selectDeleteLineID').val();
@@ -2095,9 +2103,11 @@ Template.shippingdocket.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteFollowingInvoices': async function(event) {
         playDeleteAudio();
+        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
@@ -2144,9 +2154,11 @@ Template.shippingdocket.events({
         });
         FlowRouter.go('/vs1shipping?success=true');
         $('.modal-backdrop').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteInvoice': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
         swal({
@@ -2196,7 +2208,7 @@ Template.shippingdocket.events({
                 }
             } else {}
         });
-
+    }, delayTimeAfterSound);
     }
 });
 

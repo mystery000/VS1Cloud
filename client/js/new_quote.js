@@ -5707,6 +5707,7 @@ Template.new_quote.events({
     },
     'click  #open_print_confirm': function(event) {
         playPrintAudio();
+        setTimeout(function(){
         if($('#choosetemplate').is(':checked')) {
             $('#templateselection').modal('show');
         } else {
@@ -5723,6 +5724,7 @@ Template.new_quote.events({
             }
             $('#confirmprint').modal('hide');
         }
+    }, delayTimeAfterSound);
     },
     'click #choosetemplate':function(event) {
         if($('#choosetemplate').is(':checked'))
@@ -6838,6 +6840,7 @@ Template.new_quote.events({
     },
     'click .printConfirm':async function (event) {
         playPrintAudio();
+        setTimeout(async function(){
         const printTemplate = [];
         LoadingOverlay.show();
         const quotes = $('input[name="Quotes"]:checked').val();
@@ -7016,6 +7019,7 @@ Template.new_quote.events({
                 else if (result.dismiss === 'cancel') {}
             });
         }
+    }, delayTimeAfterSound);
     },
     // 'click .printConfirm': function(event) {
     //    LoadingOverlay.show();
@@ -7193,6 +7197,7 @@ Template.new_quote.events({
     },
     'click .btnDeleteFollowingQuotes': async function(event) {
         playDeleteAudio();
+        setTimeout(async function(){
         var currentDate = new Date();
         LoadingOverlay.show();
         let templateObject = Template.instance();
@@ -7233,9 +7238,11 @@ Template.new_quote.events({
         }
         $('.modal-backdrop').css('display','none');
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteQuote': function(event) {
         playDeleteAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
         let templateObject = Template.instance();
         let salesService = new SalesBoardService();
@@ -7282,9 +7289,11 @@ Template.new_quote.events({
           }
         }
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event) {
         playDeleteAudio();
+        setTimeout(async function(){
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -7429,6 +7438,7 @@ Template.new_quote.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     // 'click .btnSaveSettings': function(event) {
     //     $('#myModal4').modal('toggle');
@@ -9747,6 +9757,7 @@ Template.new_quote.events({
     },
     'click #btnCopyToOrder': function(e) {
         playCopyAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
         let url = FlowRouter.current().path;
         if (url.indexOf('?id=') > 0) {
@@ -10014,9 +10025,11 @@ Template.new_quote.events({
         } else {
             FlowRouter.go('/salesordercard');
         }
+    }, delayTimeAfterSound);
     },
     'click #btnCopyToInvoice': function(e) {
         playCopyAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
         let url = FlowRouter.current().path;
         if (url.indexOf('?id=') > 0) {
@@ -10293,6 +10306,7 @@ Template.new_quote.events({
         } else {
             FlowRouter.go('/invoicecard');
         }
+    }, delayTimeAfterSound);
     },
     'click .chkEmailCopy': function(event) {
         $('#edtCustomerEmail').val($('#edtCustomerEmail').val().replace(/\s/g, ''));

@@ -2039,9 +2039,11 @@ Template.creditlist.events({
     },
     'click .printConfirm' : function(event){
         playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblcreditlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
+      }, delayTimeAfterSound);
     }
 
 });

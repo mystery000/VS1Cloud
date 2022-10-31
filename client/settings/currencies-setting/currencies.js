@@ -1226,6 +1226,7 @@ Template.currenciessettings.events({
   },
   "click .btnDeleteCurrency": function () {
     playDeleteAudio();
+    setTimeout(function(){
     let taxRateService = new TaxRateService();
     let currencyId = $("#selectDeleteLineID").val();
 
@@ -1255,6 +1256,7 @@ Template.currenciessettings.events({
       });
       LoadingOverlay.hide();
     });
+  }, delayTimeAfterSound);
   },
   "click .btnAddCurrency": function () {
     $("#add-currency-title").text("Add New Currency");
@@ -1326,6 +1328,7 @@ Template.currenciessettings.events({
   // },
   "click .btnSaveCurrency": e => {
     playSaveAudio();
+    setTimeout(function(){
     let taxRateService = new TaxRateService();
     LoadingOverlay.show();
     var currencyid = $("#edtCurrencyID").val();
@@ -1393,6 +1396,7 @@ Template.currenciessettings.events({
       });
       LoadingOverlay.hide();
     });
+  }, delayTimeAfterSound);
   },
   // "click .btnSaveFrequency": (e) => {
   //   updateAllCurrencies();

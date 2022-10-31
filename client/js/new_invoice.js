@@ -13269,6 +13269,7 @@ Template.new_invoice.events({
   },
   "click  #open_print_confirm": function (event) {
     playPrintAudio();
+    setTimeout(function(){
     if ($("#choosetemplate").is(":checked")) {
       let invoice_type = FlowRouter.current().queryParams.type;
 
@@ -13320,6 +13321,7 @@ Template.new_invoice.events({
 
       $("#confirmprint").modal("hide");
     }
+  }, delayTimeAfterSound);
   },
 
   "click #choosetemplate": function (event) {
@@ -16014,6 +16016,7 @@ Template.new_invoice.events({
   },
   "click .printConfirm": async function (event) {
   playPrintAudio();
+  setTimeout(async function(){
     var printTemplate = [];
     $(".fullScreenSpin").css("display", "inline-block");
     $("#html-2-pdfwrapper").css("display", "block");
@@ -16668,6 +16671,7 @@ Template.new_invoice.events({
         }
       }
     });
+  }, delayTimeAfterSound);
   },
   "keydown .lineQty, keydown .lineUnitPrice, keydown .lineOrdered": function (
     event
@@ -16890,6 +16894,7 @@ Template.new_invoice.events({
   },
   "click .btnDeleteFollowingInvoices": async function (event) {
     playDeleteAudio();
+    setTimeout(async function(){
     var currentDate = new Date();
     let templateObject = Template.instance();
     let salesService = new SalesBoardService();
@@ -16941,9 +16946,11 @@ Template.new_invoice.events({
     $('.modal-backdrop').css('display','none');
     $("#deleteLineModal").modal("toggle");
     // Meteor._reload.reload();
+  }, delayTimeAfterSound);
   },
   "click .btnDeleteInvoice": function (event) {
     playDeleteAudio();
+    setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
     let salesService = new SalesBoardService();
@@ -17003,9 +17010,11 @@ Template.new_invoice.events({
       }
     }
     $("#deleteLineModal").modal("toggle");
+  }, delayTimeAfterSound);
   },
   "click .btnDeleteLine": function (event) {
     playDeleteAudio();
+    setTimeout(function(){
     let templateObject = Template.instance();
     let taxcodeList = templateObject.taxraterecords.get();
     let utilityService = new UtilityService();
@@ -17202,6 +17211,7 @@ Template.new_invoice.events({
     }
 
     // $('#deleteLineModal').modal('toggle');
+  }, delayTimeAfterSound);
   },
   // 'click .btnSaveSettings': function (event) {
   //     let custfield1 = $('.customField1').val() || 'Custom Field 1';
@@ -19711,6 +19721,7 @@ Template.new_invoice.events({
   },
   "click #btnCopyInvoice": function () {
     playCopyAudio();
+    setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
     var url = FlowRouter.current().path;
     if (
@@ -20062,6 +20073,7 @@ Template.new_invoice.events({
     } else {
       window.open("/invoicecard", "_self");
     }
+  }, delayTimeAfterSound);
   },
   "click .chkEmailCopy": function (event) {
     $("#edtCustomerEmail").val($("#edtCustomerEmail").val().replace(/\s/g, ""));

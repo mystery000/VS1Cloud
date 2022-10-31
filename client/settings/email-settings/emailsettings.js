@@ -2296,6 +2296,7 @@ Template.emailsettings.events({
     },
     'click .btnSaveFrequency': function () {
         playSaveAudio();
+        setTimeout(function(){
         // let taxRateService = new TaxRateService();
         let templateObject = Template.instance();
         // let startTime = "";
@@ -2416,6 +2417,7 @@ Template.emailsettings.events({
             else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text('')
             $('#frequencyModal').modal('toggle');
         }
+    }, delayTimeAfterSound);
     },
     'click .dnd-moved': (e) => {
         localStorage.setItem('transactiontype', e.currentTarget.getAttribute('id'));
@@ -2757,6 +2759,7 @@ Template.emailsettings.events({
     },
     'click .btnSaveBasedOn': function () {
         playSaveAudio();
+        setTimeout(function(){
         event.preventDefault();
         let radioBasedOn = $('input[type=radio][name=basedOnRadio]:checked').attr('id');
         const selectedBasedOnId = localStorage.getItem('selected_editBasedOn_id');
@@ -2814,6 +2817,7 @@ Template.emailsettings.events({
         }
 
         localStorage.setItem('emailsetting-send', radioBasedOn);
+    }, delayTimeAfterSound);
     },
 
 

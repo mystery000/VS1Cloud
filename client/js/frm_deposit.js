@@ -2716,11 +2716,10 @@ Template.depositcard.events({
     },
     'click .printConfirm' : function(event){
         playPrintAudio();
+        setTimeout(function(){
         $('#html-2-pdfwrapper').css('display','block');
-
-
         exportSalesToPdf();
-
+    }, delayTimeAfterSound);
     },
     'keydown .lineCreditEx, keydown .lineDebitEx, keydown .lineAmount' : function(event){
       if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -2813,6 +2812,7 @@ Template.depositcard.events({
     },
     'click .btnDeleteFollowingDepositEntries': async function(event){
         playDeleteAudio();
+        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -2858,9 +2858,11 @@ Template.depositcard.events({
         });
         FlowRouter.go('/depositlist?success=true');
         $('.modal-backdrop').css('display','none');
+    }, delayTimeAfterSound);
     },
     'click .btnDelete': function(event){
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         swal({
@@ -2915,10 +2917,11 @@ Template.depositcard.events({
 
             }
         });
-
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteNothing': function(event){
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -2957,10 +2960,11 @@ Template.depositcard.events({
             FlowRouter.go('/depositlist?success=true');
             $('.modal-backdrop').css('display','none');
         }
-
+    }, delayTimeAfterSound);
     },
     'click .btnDeleteLine': function(event){
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
@@ -3004,6 +3008,7 @@ Template.depositcard.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnSaveSettings': function(event){
         playSaveAudio();

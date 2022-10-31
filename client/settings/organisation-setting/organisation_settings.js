@@ -988,6 +988,7 @@ Template.organisationsettings.events({
     },
     "click #saveCompanyInfo": function(event) {
         playSaveAudio();
+        setTimeout(function(){
         $(".fullScreenSpin").css("display", "inline-block");
         const templateObject = Template.instance();
         let companyID = 1;
@@ -1121,7 +1122,8 @@ Template.organisationsettings.events({
                     } else if (result.dismiss === "cancel") {}
                 });
             });
-    },
+        }, delayTimeAfterSound);
+        },
     "click .mob-img": function(event) {
         let templateObject = Template.instance();
         let allCountries = templateObject.countryData.get();

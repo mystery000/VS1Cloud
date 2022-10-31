@@ -437,6 +437,7 @@ Template.exeperformancereport.events({
     },
     "click .btnPrintReport": function (event) {
         playPrintAudio();
+        setTimeout(function(){
         $("a").attr("href", "/");
         document.title = "Performance (Executive) Report";
         $(".printReport").print({
@@ -448,6 +449,7 @@ Template.exeperformancereport.events({
         setTimeout(function () {
             $("a").attr("href", "#");
         }, 100);
+    }, delayTimeAfterSound);
     },
     "click .btnExportReport": function () {
         LoadingOverlay.show();

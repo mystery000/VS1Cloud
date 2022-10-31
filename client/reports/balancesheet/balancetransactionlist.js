@@ -1344,9 +1344,11 @@ Template.balancetransactionlist.events({
   },
   'click .printConfirm' : function(event){
     playPrintAudio();
+    setTimeout(function(){
     $('.fullScreenSpin').css('display','inline-block');
     jQuery('#tblBalanceTransactionList_wrapper .dt-buttons .btntabletopdf').click();
      $('.fullScreenSpin').css('display','none');
+    }, delayTimeAfterSound);
    },
   'click .btnRefresh': async function () {
     $('.fullScreenSpin').css('display','inline-block');

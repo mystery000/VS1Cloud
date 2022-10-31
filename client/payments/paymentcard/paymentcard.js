@@ -9389,6 +9389,7 @@ Template.paymentcard.events({
     },
     'click .printConfirm': async function (event) {
     playPrintAudio();
+    setTimeout(function(){
         var printTemplate = [];
         LoadingOverlay.show();
         var customer_payment = $('input[name="Customer Payments"]:checked').val();
@@ -9597,10 +9598,12 @@ Template.paymentcard.events({
                 }
             });
         }
+    }, delayTimeAfterSound);
     },
 
     'click  #open_print_confirm': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         if ($('#choosetemplate').is(':checked')) {
             $('#templateselection').modal('show');
         } else {
@@ -9635,7 +9638,7 @@ Template.paymentcard.events({
 
             $('#confirmprint').modal('hide');
         }
-
+    }, delayTimeAfterSound);
     },
 
     'click #choosetemplate': function (event) {
@@ -9689,6 +9692,7 @@ Template.paymentcard.events({
     },
     'click .btnDeleteFollowingPayments': async function (event) {
         playDeleteAudio();
+        setTimeout(async function(){
         var currentDate = new Date();
         let templateObject = Template.instance();
         let paymentService = new PaymentsService();
@@ -9734,9 +9738,11 @@ Template.paymentcard.events({
         });
         $('.modal-backdrop').css('display', 'none');
         FlowRouter.go('/paymentoverview?success=true');
+    }, delayTimeAfterSound);
     },
     'click .btnDeletePayment': async function (event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let paymentService = new PaymentsService();
         var url = FlowRouter.current().path;
@@ -9788,6 +9794,7 @@ Template.paymentcard.events({
             }
         });
         // $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .btnRecoverPayment': function (event) {
         LoadingOverlay.show();
@@ -9850,6 +9857,7 @@ Template.paymentcard.events({
     },
     'click .btnDeleteLine': function (event) {
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let selectLineID = $('#selectDeleteLineID').val() || 0;
@@ -9878,6 +9886,7 @@ Template.paymentcard.events({
         }
 
         $('#deleteLineModal').modal('toggle');
+    }, delayTimeAfterSound);
     },
     'click .chkcolTransDate': function (event) {
         if ($(event.target).is(':checked')) {

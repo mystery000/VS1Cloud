@@ -754,6 +754,7 @@ let grandtotalqty = 0;
     },
     'click .btnPrintReport':function (event) {
       playPrintAudio();
+      setTimeout(function(){
       let values = [];
       let basedOnTypeStorages = Object.keys(localStorage);
       basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -788,7 +789,8 @@ let grandtotalqty = 0;
       $(".printReport").print({
           title   :  document.title +" | Product Sales Report | "+loggedCompany,
           noPrintSelector : ".addSummaryEditor",
-      })
+      });
+    }, delayTimeAfterSound);
     },'click .btnExportReport':function() {
       LoadingOverlay.show();
         let utilityService = new UtilityService();

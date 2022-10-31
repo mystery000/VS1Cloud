@@ -4376,6 +4376,8 @@ Template.employeescard.onRendered(function () {
      * It will just deactivate it
      */
     templateObject.deactivateEmployee  = async () => {
+        playDeleteAudio();
+        setTimeout(async function(){
         LoadingOverlay.show();
         let employeeId = FlowRouter.current().queryParams.id;
 
@@ -4391,11 +4393,10 @@ Template.employeescard.onRendered(function () {
 
             try {
                 const response = await contactService.saveEmployeeEx(objDetails);
-                playDeleteAudio();
-                setTimeout(() => {
-                    LoadingOverlay.hide(0);
-                    FlowRouter.go('/employeelist?success=true');
-                }, 1000);
+                
+                LoadingOverlay.hide(0);
+                FlowRouter.go('/employeelist?success=true');
+                
             } catch(e) {
                 LoadingOverlay.hide(0);
                 const result =  await swal({
@@ -4426,10 +4427,9 @@ Template.employeescard.onRendered(function () {
                 window.open('/', '_self');
             } else if (result.dismiss === 'cancel') {}
         }
-
         
         $('#deleteEmployeeModal').modal('toggle');
-
+    }, delayTimeAfterSound);
     }
 
     //On Click Earnings List
@@ -9783,10 +9783,12 @@ Template.employeescard.events({
     },
     'click .printConfirm': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
 
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click .btnRefresh': function () {
         Meteor._reload.reload();
@@ -10132,9 +10134,10 @@ Template.employeescard.events({
         }
     },
     'click .btnDeleteEmployee': (e, ui) => {
-        
+        playDeleteAudio();
+        setTimeout(function(){
         ui.deactivateEmployee();
-        // playDeleteAudio();
+    }, delayTimeAfterSound);
         // LoadingOverlay.show();
         // let templateObject = Template.instance();
         // let contactService2 = new ContactService();
@@ -10326,6 +10329,7 @@ Template.employeescard.events({
     },
     "click .btnDeleteAssignLeaveType": function (e){
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id') || '';
         swal({
@@ -10414,6 +10418,7 @@ Template.employeescard.events({
                 }
             }
         });
+    }, delayTimeAfterSound);
     },
     "click .removeLeaveRequest": function(e){
         let templateObject = Template.instance();
@@ -10501,6 +10506,7 @@ Template.employeescard.events({
     },
     "click .btnDeletePayNote": function (e){
         playDeleteAudio();
+        setTimeout(function(){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id') || '';
         swal({
@@ -10588,6 +10594,7 @@ Template.employeescard.events({
                 }
             }
         });
+    }, delayTimeAfterSound);
     },
     "click #btnEditAssignLeaveType": function (e){
         setTimeout(()=>{

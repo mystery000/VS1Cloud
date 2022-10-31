@@ -2998,6 +2998,7 @@ Template.newproductpop.events({
   },
   "click .btnDeleteInv": function (event) {
     playDeleteAudio();
+    setTimeout(function(){
     let templateObject = Template.instance();
     let productService = new ProductService();
     swal({
@@ -3051,6 +3052,7 @@ Template.newproductpop.events({
       } else {
       }
     });
+  }, delayTimeAfterSound);
   },
   "click .btnUpgradeToEssentials": function (event) {
     window.open("/companyappsettings", "_self");

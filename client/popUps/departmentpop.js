@@ -1035,6 +1035,7 @@ Template.departmentpop.events({
     },
     'click .btnDeleteDepartment': function () {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         let taxRateService = new TaxRateService();
         let deptId = $('#selectDeleteLineID').val();
@@ -1074,7 +1075,7 @@ Template.departmentpop.events({
             });
             $('.fullScreenSpin').css('display','none');
         });
-
+    }, delayTimeAfterSound);
     },
     'click .btnSaveDept': function () {
         playSaveAudio();

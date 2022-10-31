@@ -924,6 +924,7 @@ Template.reportsAccountantSettings123.events({
     },
     'click .btnDeleteAccountant': function () {
         playDeleteAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         let taxRateService = new TaxRateService();
         let accountantId = $('#selectDeleteLineID').val();
@@ -962,9 +963,11 @@ Template.reportsAccountantSettings123.events({
             });
             $('.fullScreenSpin').css('display','none');
         });
+    }, delayTimeAfterSound);
     },
     'click .btnSaveAccountant': function () {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         let taxRateService = new TaxRateService();
         let accountantID = $('#edtAccountantID').val();
@@ -1241,6 +1244,7 @@ Template.reportsAccountantSettings123.events({
             //     $('.fullScreenSpin').css('display','none');
             // });
         }
+    }, delayTimeAfterSound);
     },
     'click .btnAddAccountant': function () {
         $('#add-accountant-title').text('Add New Accountant');
@@ -1266,6 +1270,7 @@ Template.reportsAccountantSettings123.events({
     },
     'click .btnSaveRoom': function () {
         playSaveAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display','inline-block');
         let taxRateService = new TaxRateService();
 
@@ -1291,6 +1296,7 @@ Template.reportsAccountantSettings123.events({
 
             $('.fullScreenSpin').css('display','none');
         });
+    }, delayTimeAfterSound);
     },
 });
 

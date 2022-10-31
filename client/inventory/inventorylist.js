@@ -2346,9 +2346,11 @@ Template.inventorylist.events({
     },
     "click .printConfirm": function(event) {
         playPrintAudio();
+        setTimeout(function(){
         $(".fullScreenSpin").css("display", "inline-block");
         jQuery("#tblInventoryOverview_wrapper .dt-buttons .btntabletopdf").click();
         $(".fullScreenSpin").css("display", "none");
+    }, delayTimeAfterSound);
     },
     "click .btnStockAdjustment": function(event) {
         FlowRouter.go("/stockadjustmentoverview");

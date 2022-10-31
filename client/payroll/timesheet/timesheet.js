@@ -6831,9 +6831,11 @@ Template.timesheet.events({
     },
     'click .printConfirm': function(event) {
     playPrintAudio();
+        setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblTimeSheet_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
     },
     'click #btnHoldOne': function(event) {
         $('#frmOnHoldModal').modal('show');
@@ -7040,6 +7042,7 @@ Template.timesheet.events({
     },
     'click .btnDeleteTimeSheetOne': function() {
         playDeleteAudio();
+        setTimeout(function(){
         // $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let contactService = new ContactService();
@@ -7092,8 +7095,7 @@ Template.timesheet.events({
                 $('.fullScreenSpin').css('display', 'none');
             }
         });
-
-
+    }, delayTimeAfterSound);
     },
     'blur .cashamount': function(event) {
         let inputUnitPrice = parseFloat($(event.target).val()) || 0;

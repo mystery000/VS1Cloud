@@ -1490,8 +1490,10 @@ Template.addcustomerpop.events({
     },
     'click .addcustomerpop .printConfirm': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
+    }, delayTimeAfterSound);
     },
     'click .addcustomerpop #exportbtnJob': function () {
         LoadingOverlay.show();
@@ -1499,8 +1501,10 @@ Template.addcustomerpop.events({
     },
     'click .addcustomerpop .printConfirmJob': function (event) {
         playPrintAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletopdf').click();
+    }, delayTimeAfterSound);
     },
     'click .addcustomerpop .btnRefresh': function () {
         Meteor._reload.reload();
@@ -2079,6 +2083,7 @@ Template.addcustomerpop.events({
     },
     'click .addcustomerpop .btnDeleteCustomer': function (event) {
         playDeleteAudio();
+        setTimeout(function(){
         LoadingOverlay.show();
 
         let templateObject = Template.instance();
@@ -2116,6 +2121,7 @@ Template.addcustomerpop.events({
             FlowRouter.go('/customerlist?success=true');
         }
         $('.addcustomerpop #deleteCustomerModal').modal('toggle');
+    }, delayTimeAfterSound);
     }
 });
 
