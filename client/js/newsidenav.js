@@ -6976,6 +6976,18 @@ Template.newsidenav.events({
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
+    'click #sidenavvatreturnlist': function(event) {
+      event.preventDefault();
+      FlowRouter.go('/vatreturnlist');
+      let templateObject = Template.instance();
+      templateObject.getSetSideNavFocus();
+    },
+    'click #sidenavvatreturn': function(event) {
+        event.preventDefault();
+        FlowRouter.go('/vatreturn');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
     'click #sidenavjournalentry': function(event) {
 
         event.preventDefault();

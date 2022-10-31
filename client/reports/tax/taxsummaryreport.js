@@ -205,6 +205,8 @@ Template.taxsummaryreport.onRendered(() => {
 
       reportService.getTaxCodesDetailVS1().then(function (data) {
         const taxCodesDetail = data.ttaxcodevs1;
+        console.log("taxSummaryReport=", taxSummaryReport);
+        console.log("taxCodesDetail=", taxCodesDetail);
       
         localStorage.setItem('VS1TaxSummary_Report', JSON.stringify(data)||'');
         let records = [];
@@ -260,7 +262,7 @@ Template.taxsummaryreport.onRendered(() => {
 
           mainReportRecords.push(mainReportData);
 
-          const taxDetail = taxCodesDetail.find((v) => v.CodeName === account.TaxCode);
+          const taxDetail = taxCodesDetail.find((v) => v.CodeName === account.TaxCode);          
         
           if (taxDetail && taxDetail.Lines) {
             netsubtotal = netsubtotal + parseFloat(totalnet);
