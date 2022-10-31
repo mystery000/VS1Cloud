@@ -1255,7 +1255,7 @@ $("#erplogin-button").click(function(e){
           localStorage.setItem('vs1cloudLoginInfo', dataReturnRes);
           localStorage.setItem('vs1cloudlicenselevel', dataReturnRes.ProcessLog.LicenseLevel);
           if(!localStorage.getItem('VS1loggedDatabase')){
-            localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+            localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
             localStorage.setItem('VS11099Contractor_Report', '');
             localStorage.setItem('VS1AgedPayables_Report', '');
             localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -1311,10 +1311,10 @@ $("#erplogin-button").click(function(e){
             localStorage.setItem('VS1TpurchaseOrderBackOrderList', '');
             localStorage.setItem('VS1TSalesList', '');
           }else{
-            if((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.Databasename)) {
+            if((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.DatabaseName)) {
               isSameUserLogin = true;
             }else{
-              localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+              localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
               localStorage.setItem('VS11099Contractor_Report', '');
               localStorage.setItem('VS1AgedPayables_Report', '');
               localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -1378,7 +1378,7 @@ $("#erplogin-button").click(function(e){
           Session.setPersistent('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
 
      var ERPIPAdderess= dataReturnRes.ProcessLog.ServerName;
-     var ERPdbName = dataReturnRes.ProcessLog.Databasename;
+     var ERPdbName = dataReturnRes.ProcessLog.DatabaseName;
 
      var ERPport = dataReturnRes.ProcessLog.APIPort;
 
@@ -1809,7 +1809,7 @@ $("#erplogin-buttonSimon").click(function(e){
           Session.setPersistent('ERPDefaultUOM', '');
 
      var ERPIPAdderess= dataReturnRes.ProcessLog.ServerName;
-     var ERPdbName = dataReturnRes.ProcessLog.Databasename;
+     var ERPdbName = dataReturnRes.ProcessLog.DatabaseName;
 
      var ERPport = dataReturnRes.ProcessLog.APIPort;
 

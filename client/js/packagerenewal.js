@@ -98,7 +98,7 @@ Template.packagerenewal.onRendered(function() {
 
 
                   } else {
-                    var databaseName = myArrResponse.ProcessLog.Databasename;
+                    var databaseName = myArrResponse.ProcessLog.DatabaseName;
 
                   }
 
@@ -182,7 +182,7 @@ Template.packagerenewal.onRendered(function() {
           swal('Database Error', myArrResponse.ProcessLog.Error, 'error');
 
         } else {
-          var databaseName = myArrResponse.ProcessLog.Databasename;
+          var databaseName = myArrResponse.ProcessLog.DatabaseName;
 
           localStorage.usremail = userEmail;
           localStorage.usrpassword = cloudpassword;

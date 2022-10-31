@@ -2078,7 +2078,7 @@ Template.vs1login.onRendered(function () {
                           //Code Here
 
                           var oReqCheckActive = new XMLHttpRequest();
-                          oReqCheckActive.open("GET", URLRequest + licenceIPAddress + ':' + checkSSLPorts + '/' + 'erpapi/TVS1_Clients_Simple?PropertyList="ID,EmailVarified"&select=[Databasename]="' + dataReturnRes.ProcessLog.Databasename + '"', true);
+                          oReqCheckActive.open("GET", URLRequest + licenceIPAddress + ':' + checkSSLPorts + '/' + 'erpapi/TVS1_Clients_Simple?PropertyList="ID,EmailVarified"&select=[DatabaseName]="' + dataReturnRes.ProcessLog.DatabaseName + '"', true);
                           oReqCheckActive.setRequestHeader("database", vs1loggedDatatbase);
                           oReqCheckActive.setRequestHeader("username", 'VS1_Cloud_Admin');
                           oReqCheckActive.setRequestHeader("password", 'DptfGw83mFl1j&9');
@@ -2093,7 +2093,7 @@ Template.vs1login.onRendered(function () {
                                       localStorage.setItem('vs1cloudLoginInfo', dataReturnRes);
                                       localStorage.setItem('vs1cloudlicenselevel', dataReturnRes.ProcessLog.LicenseLevel);
                                       if (!localStorage.getItem('VS1loggedDatabase')) {
-                                          localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+                                          localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                                           localStorage.setItem('VS11099Contractor_Report', '');
                                           localStorage.setItem('VS1AgedPayables_Report', '');
                                           localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -2149,10 +2149,10 @@ Template.vs1login.onRendered(function () {
                                           localStorage.setItem('VS1TpurchaseOrderBackOrderList', '');
                                           localStorage.setItem('VS1TSalesList', '');
                                       } else {
-                                          if ((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.Databasename)) {
+                                          if ((localStorage.getItem('VS1loggedDatabase')) == (dataReturnRes.ProcessLog.DatabaseName)) {
                                               isSameUserLogin = true;
                                           } else {
-                                              localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.Databasename);
+                                              localStorage.setItem('VS1loggedDatabase', dataReturnRes.ProcessLog.DatabaseName);
                                               localStorage.setItem('VS11099Contractor_Report', '');
                                               localStorage.setItem('VS1AgedPayables_Report', '');
                                               localStorage.setItem('VS1AgedPayablesSummary_Report', '');
@@ -2233,7 +2233,7 @@ Template.vs1login.onRendered(function () {
                                       }else {
                                           ERPIPAdderess = dataReturnRes.ProcessLog.ServerName;
                                       }
-                                      var ERPdbName = dataReturnRes.ProcessLog.Databasename;
+                                      var ERPdbName = dataReturnRes.ProcessLog.DatabaseName;
 
                                       var ERPport = dataReturnRes.ProcessLog.APIPort;
 
@@ -2365,7 +2365,7 @@ Template.vs1login.onRendered(function () {
                                     //   let basedOnTypeStorages = Object.keys(localStorage);
                                       const getLogonEmails = async() => {
                                         return new Promise ((resolve, reject)=>{
-                                          
+
                                             getVS1Data('TBasedOnType').then(async (dataObject)=> {
                                                 if(dataObject.length == 0) {
                                                      resolve()
@@ -2387,7 +2387,7 @@ Template.vs1login.onRendered(function () {
                                                             }
                                                             await sendEmail();
                                                         }
-    
+
                                                         if(i == temp.length -1){
                                                             resolve();
                                                         }
@@ -2399,7 +2399,7 @@ Template.vs1login.onRendered(function () {
                                         })
                                       }
                                       await getLogonEmails();
-                                      
+
 
                                       dataReturnRes.ProcessLog.VS1AdminPassword = hashUserLoginPassword;
                                       dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
