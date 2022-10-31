@@ -353,7 +353,9 @@ Template.dsAppointmentsWidget.onRendered(function () {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
-                    $('#customerListModal').modal();
+                    $("#appointmentDate-my").val(moment(info.start).format("DD/MM/YYYY"));
+                    calendar.gotoDate(info.start);
+                    $('.fc-timeGridDay-button').trigger("click");
                 }
             },
             eventClick: function (info) {
@@ -742,7 +744,7 @@ Template.dsAppointmentsWidget.onRendered(function () {
             headerToolbar: {
                 // left: 'prev,next appointments refresh',
                 left: 'prev,next',
-                center: 'title',
+                center: '',
                 // right: '',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
@@ -811,7 +813,9 @@ Template.dsAppointmentsWidget.onRendered(function () {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
-                    $('#customerListModal').modal();
+                    $("#appointmentDate-my").val(moment(info.start).format("DD/MM/YYYY"));
+                    calendar.gotoDate(info.start);
+                    $('.fc-timeGridDay-button').trigger("click");
                 }
             },
             eventClick: function (info) {
@@ -1181,6 +1185,7 @@ Template.dsAppointmentsWidget.onRendered(function () {
             }
         });
         calendar.render();
+        $("#DSCalendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 160px;"><input type="text" class="form-control" id="appointmentDate-my" name="appointmentDate-my" value=""><div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div></div>');
         let draggableEl = document.getElementById('external-events-list');
         new Draggable(draggableEl, {
             itemSelector: '.fc-event',
@@ -1196,6 +1201,33 @@ Template.dsAppointmentsWidget.onRendered(function () {
                 };
             }
         });
+
+        $("#appointmentDate-my").datepicker({
+            showOn: "button",
+            buttonText: "Show Date",
+            buttonImageOnly: true,
+            buttonImage: "/img/imgCal2.png",
+            dateFormat: "dd/mm/yy",
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-90:+10",
+            onSelect: function(formated, dates) {
+                let gotoDate = new Date(formated.split("/")[2] + "-"+formated.split("/")[1] + "-" + formated.split("/")[0]);
+                calendar.gotoDate(gotoDate);
+            },
+            onChangeMonthYear: function(year, month, inst){
+                // Set date to picker
+                $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+                // Hide (close) the picker
+                // $(this).datepicker('hide');
+                // // Change ttrigger the on change function
+                // $(this).trigger('change');
+            }
+        });
+
+        $("#appointmentDate-my").val(moment(new Date()).format('DD/MM/YYYY'));
     };
 
     const getWeeksInMonth = function (year, month) {
@@ -2327,7 +2359,9 @@ Template.dsAppointmentsWidget.onRendered(function () {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
-                    $('#customerListModal').modal();
+                    $("#appointmentDate-my").val(moment(info.start).format("DD/MM/YYYY"));
+                    calendar.gotoDate(info.start);
+                    $('.fc-timeGridDay-button').trigger("click");
                 }
             },
             eventDrop: function (info) {
@@ -3282,7 +3316,9 @@ Template.dsAppointmentsWidget.onRendered(function () {
                         } else if (FlowRouter.current().queryParams.supplierid) {
                             openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                         } else {
-                            $('#customerListModal').modal();
+                            $("#appointmentDate-my").val(moment(info.start).format("DD/MM/YYYY"));
+                            calendar.gotoDate(info.start);
+                            $('.fc-timeGridDay-button').trigger("click");
                         }
                     },
                     eventClick: function (info) {

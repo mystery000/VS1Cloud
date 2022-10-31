@@ -169,11 +169,11 @@ Template.taxsummaryreport.onRendered(() => {
     await templateObject.reportOptions.set(defaultOptions);
    // await templateObject.getTaxSummaryReports(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
     await templateObject.loadReport(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
-  
-    
+
+
   };
 
-  
+
 
   templateObject.loadReport = async (dateFrom, dateTo, ignoreDate = false) => {
     LoadingOverlay.show();
@@ -189,8 +189,8 @@ Template.taxsummaryreport.onRendered(() => {
       useIndexDb: true,
       useLocalStorage: false,
       validate: cachedResponse => {
-        if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom) 
-        && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo) 
+        if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom)
+        && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo)
         && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
           return true;
         }
@@ -199,13 +199,13 @@ Template.taxsummaryreport.onRendered(() => {
     });
 
     let data = _data.response;
-    
+
     if (data.ttaxsummaryreport) {
       const taxSummaryReport = data.ttaxsummaryreport;
 
       reportService.getTaxCodesDetailVS1().then(function (data) {
         const taxCodesDetail = data.ttaxcodevs1;
-      
+
         localStorage.setItem('VS1TaxSummary_Report', JSON.stringify(data)||'');
         let records = [];
         let mainReportRecords = [];
@@ -261,7 +261,7 @@ Template.taxsummaryreport.onRendered(() => {
           mainReportRecords.push(mainReportData);
 
           const taxDetail = taxCodesDetail.find((v) => v.CodeName === account.TaxCode);
-        
+
           if (taxDetail && taxDetail.Lines) {
             netsubtotal = netsubtotal + parseFloat(totalnet);
             taxsubtotal = taxsubtotal + parseFloat(totaltax);
@@ -307,7 +307,7 @@ Template.taxsummaryreport.onRendered(() => {
             //   subReportRecords.push(subReportData);
             // }
           }
-        
+
         });
 
         // for (let i = 0; i < taxSummaryReport.length; i++) {
@@ -319,7 +319,7 @@ Template.taxsummaryreport.onRendered(() => {
         //   let totalnet = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalNet) || 0;
         //   let totaltax = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax) || 0;
         //   let totaltax1 = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax1) || 0;
-          
+
         //   const mainReportData = {
         //     id: taxSummaryReport[i].ID || '',
         //     taxcode: taxSummaryReport[i].TaxCode || '',
@@ -426,7 +426,7 @@ Template.taxsummaryreport.onRendered(() => {
 
           current.push(val);
 
-          
+
 
         });
 
@@ -685,7 +685,7 @@ Template.taxsummaryreport.onRendered(() => {
                 //   subReportRecords.push(subReportData);
                 // }
               }
-            
+
             });
 
             // for (let i = 0; i < taxSummaryReport.length; i++) {
@@ -697,7 +697,7 @@ Template.taxsummaryreport.onRendered(() => {
             //   let totalnet = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalNet) || 0;
             //   let totaltax = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax) || 0;
             //   let totaltax1 = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax1) || 0;
-              
+
             //   const mainReportData = {
             //     id: taxSummaryReport[i].ID || '',
             //     taxcode: taxSummaryReport[i].TaxCode || '',
@@ -803,7 +803,7 @@ Template.taxsummaryreport.onRendered(() => {
 
               current.push(val);
 
-              
+
 
             });
 
@@ -1175,8 +1175,8 @@ Template.taxsummaryreport.onRendered(() => {
   // var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
   // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + currentDate2.getDate();
   // // templateObject.getTaxSummaryReports(getDateFrom, getLoadDate, false);
-  templateObject.loadReport( 
-    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
+  templateObject.loadReport(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false);
 
@@ -1202,7 +1202,7 @@ Template.taxsummaryreport.onRendered(() => {
 
 
 
- 
+
 });
 
 Template.taxsummaryreport.events({

@@ -3767,7 +3767,9 @@ Template.employeescard.onRendered(function () {
                 if( ePaySettings ){
                     objEmployeePaySettings = {
                         ID: 0,
+                        Payperiod: "",
                         EmployeeName: ePaySettings.fields.EmployeeName,
+                        StartingDate: "",
                         BankAccountName: "",
                         BankAccountBSB: "",
                         BankAccountNo: "",
@@ -3795,6 +3797,8 @@ Template.employeescard.onRendered(function () {
                 employeePaySettings = useData[0]
                 objEmployeePaySettings = {
                     ID: employeePaySettings.fields.ID,
+                    Payperiod: employeePaySettings.fields.Payperiod,
+                    StartingDate: moment(employeePaySettings.fields.StartingDate).format("DD/MM/YYYY"),
                     EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
                     BankAccountName: employeePaySettings.fields.BankAccountName,
                     BankAccountBSB: employeePaySettings.fields.BankAccountBSB,
@@ -3808,14 +3812,14 @@ Template.employeescard.onRendered(function () {
                     Country: employeePaySettings.fields.Employee.fields.Country,
                     TaxFreeThreshold: employeePaySettings.fields.Employee.fields.TaxFreeThreshold ? employeePaySettings.fields.Employee.fields.TaxFreeThreshold : false,
 
-                    TFNExemption: employeePaySettings.fields.Employee.fields.TFNExemption ? employeePaySettings.fields.Employee.fields.TFNExemption : "",
-                    EmploymentBasis: employeePaySettings.fields.Employee.fields.EmploymentBasis ? employeePaySettings.fields.Employee.fields.EmploymentBasis : "",
-                    ResidencyStatus: employeePaySettings.fields.Employee.fields.ResidencyStatus ? employeePaySettings.fields.Employee.fields.ResidencyStatus : "",
-                    StudyTrainingSupportLoan: employeePaySettings.fields.Employee.fields.StudyTrainingSupportLoan ? employeePaySettings.fields.Employee.fields.StudyTrainingSupportLoan : false,
-                    EligibleToReceiveLeaveLoading: employeePaySettings.fields.Employee.fields.EligibleToReceiveLeaveLoading ? employeePaySettings.fields.Employee.fields.EligibleToReceiveLeaveLoading : false,
+                    TFNExemption: employeePaySettings.fields.Employee.fields.CgtExempt ? employeePaySettings.fields.Employee.fields.CgtExempt : "",
+                    EmploymentBasis: employeePaySettings.fields.Employee.fields.BasisOfPayment ? employeePaySettings.fields.Employee.fields.BasisOfPayment : "",
+                    ResidencyStatus: employeePaySettings.fields.Employee.fields.Resident,
+                    StudyTrainingSupportLoan: employeePaySettings.fields.Employee.fields.StudentLoanIndicator ? employeePaySettings.fields.Employee.fields.StudentLoanIndicator : false,
+                    EligibleToReceiveLeaveLoading: employeePaySettings.fields.Employee.fields.PaySuperonLeaveLoading ? employeePaySettings.fields.Employee.fields.PaySuperonLeaveLoading : false,
                     OtherTaxOffsetClaimed: employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed ? employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed : false,
                     UpwardvariationRequested: employeePaySettings.fields.Employee.fields.UpwardvariationRequested ? employeePaySettings.fields.Employee.fields.UpwardvariationRequested : false,
-                    SeniorandPensionersTaxOffsetClaimed: employeePaySettings.fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed ? employeePaySettings.fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed : false,
+                    SeniorandPensionersTaxOffsetClaimed: employeePaySettings.fields.Employee.fields.Pensioner ? employeePaySettings.fields.Employee.fields.Pensioner : false,
                     HasApprovedWithholdingVariation: employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation ? employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation : false,
                 }
 
@@ -3838,6 +3842,8 @@ Template.employeescard.onRendered(function () {
 
                     let payInfo = {
                         ID: data.temployeepaysettings[i].fields.ID,
+                        Payperiod: "",
+                        StartingDate: "",
                         EmployeeID: data.temployeepaysettings[i].fields.Employeeid,
                         EmployeeName: data.temployeepaysettings[i].fields.Employee.fields.EmployeeName,
                         AnnSalary: data.temployeepaysettings[i].fields.Employee.fields.Wages * 12,
@@ -7983,7 +7989,7 @@ Template.employeescard.events({
     // Save active tab data
     'click #btnSaveEmployeePayroll': async (event) => {
         playSaveAudio();
-        setTimeout(async function(){
+        // setTimeout(async function(){
         let activeTab = "";
         if($('div#taxes').attr("class").indexOf("active") >= 0) activeTab = "taxes";
         if($('div#leave').attr("class").indexOf("active") >= 0) activeTab = "leave";
@@ -8037,6 +8043,22 @@ Template.employeescard.events({
             let currentId = FlowRouter.current().queryParams;
             let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
             let templateObject = Template.instance();
+            let Exemption = 0;
+            switch (TFNExemption) {
+                case "No TFN Quoted":
+                    Exemption = 0;
+                break;
+                case "TFN Pending":
+                    Exemption = 1;
+                break;
+                case "TFN Exempt - Under 18":
+                    Exemption = 2;
+                break;
+                case "TFN Exempt - Pensioner":
+                    Exemption = 3;
+                break;
+            }
+
             /**
              * Load EmployeePayrollApi API
              */
@@ -8062,7 +8084,7 @@ Template.employeescard.events({
                             ID: parseInt(employeeID),
                             TFN: TaxFileNumber,
                             TaxFreeThreshold: TaxFreeThreshold,
-                            CgtExempt: ( TFNExemption )? parseInt(TFNExemption): 0,
+                            CgtExempt: ( Exemption )? parseInt(Exemption): 0,
                             BasisOfPayment: EmploymentBasis,
                             Resident: ( ResidencyStatus == 'true' )? true: false,
                             StudentLoanIndicator: StudyTrainingSupportLoan,
@@ -8819,7 +8841,7 @@ Template.employeescard.events({
         } else {
             return;
         }
-        }, delayTimeAfterSound);
+        // }, delayTimeAfterSound);
     },
     'change .colServiceCostPrice': function (event) {
         let utilityService = new UtilityService();

@@ -353,82 +353,101 @@ Template.inventorylist.onRendered(function() {
 
                             $(".fullScreenSpin").css("display", "none");
                             setTimeout(function() {
-                              $("#tblInventoryOverview").dataTable({
+                                let displayfields = templateObject.displayfields.get(); 
+                                $("#tblInventoryOverview").dataTable({
                                       data: splashArrayProductList,
                                       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                                       columnDefs: [{
-                                        className: "colProductID hiddenColumn",
-                                        targets: [0],
-                                    },
-                                    {
-                                        className: "colProductName",
-                                        targets: [1],
-                                    },
-                                    {
-                                        className: "colSalesDescription",
-                                        targets: [2],
-                                    },
-                                    {
-                                        className: "colAvailable text-right",
-                                        targets: [3],
-                                    },
-                                    {
-                                        className: "colOnSO text-right",
-                                        targets: [4],
-                                    },
-                                    {
-                                        className: "colOnBO text-right",
-                                        targets: [5],
-                                    },
-                                    {
-                                        className: "colInStock text-right",
-                                        targets: [6],
-                                    },
-                                    {
-                                        className: "colOnOrder text-right",
-                                        targets: [7],
-                                    },
-                                    {
-                                        className: "colCostPrice hiddenColumn text-right",
-                                        targets: [8],
-                                    },
-                                    {
-                                        className: "colCostPriceInc  text-right",
-                                        targets: [9],
-                                    },
-                                    {
-                                        className: "colSalePrice hiddenColumn text-right",
-                                        targets: [10],
-                                    },
-                                    {
-                                        className: "colSalePriceInc  text-right",
-                                        targets: [11],
-                                    },
-                                    {
-                                        className: "colSerialNo  text-center hiddenColumn",
-                                        targets: [12],
-                                    },
-                                    {
-                                        className: "colBarcode hiddenColumn",
-                                        targets: [13],
-                                    },
-                                    {
-                                        className: "colDepartment hiddenColumn",
-                                        targets: [14],
-                                    },
-                                    {
-                                        className: "colPurchaseDescription hiddenColumn",
-                                        targets: [15],
-                                    },
-                                    {
-                                        className: "colProdCustField1 hiddenColumn",
-                                        targets: [16],
-                                    },
-                                    {
-                                        className: "colProdCustField2 hiddenColumn",
-                                        targets: [17],
-                                    },
-                                ],
+                                            className: "colProductID",
+                                            targets: [0],
+                                            visible: displayfields[0].active,
+                                        },
+                                        {
+                                            className: "colProductName",
+                                            targets: [1],
+                                            visible: displayfields[1].active,
+                                        },
+                                        {
+                                            className: "colSalesDescription",
+                                            targets: [2],
+                                            visible: displayfields[2].active,
+                                        },
+                                        {
+                                            className: "colAvailable text-right",
+                                            targets: [3],
+                                            visible: displayfields[3].active,
+                                        },
+                                        {
+                                            className: "colOnSO text-right",
+                                            targets: [4],
+                                            visible: displayfields[4].active,
+                                        },
+                                        {
+                                            className: "colOnBO text-right",
+                                            targets: [5],
+                                            visible: displayfields[5].active,
+                                        },
+                                        {
+                                            className: "colInStock text-right",
+                                            targets: [6],
+                                            visible: displayfields[6].active,
+                                        },
+                                        {
+                                            className: "colOnOrder text-right",
+                                            targets: [7],
+                                            visible: displayfields[7].active,
+                                        },
+                                        {
+                                            className: "colCostPrice text-right",
+                                            targets: [8],
+                                            visible: displayfields[8].active,
+                                        },
+                                        {
+                                            className: "colCostPriceInc  text-right",
+                                            targets: [9],
+                                            visible: displayfields[9].active,
+                                        },
+                                        {
+                                            className: "colSalePrice text-right",
+                                            targets: [10],
+                                            visible: displayfields[10].active,
+                                        },
+                                        {
+                                            className: "colSalePriceInc  text-right",
+                                            targets: [11],
+                                            visible: displayfields[11].active,
+                                        },
+                                        {
+                                            className: "colSerialNo  text-center",
+                                            targets: [12],
+                                            visible: displayfields[12].active,
+                                        },
+                                        {
+                                            className: "colBarcode",
+                                            targets: [13],
+                                            visible: displayfields[13].active,
+                                        },
+                                        {
+                                            className: "colDepartment",
+                                            targets: [14],
+                                            visible: displayfields[14].active,
+                                        },
+                                        {
+                                            className: "colPurchaseDescription",
+                                            targets: [15],
+                                            visible: displayfields[15].active,
+                                        },
+                                        {
+                                            className: "colProdCustField1",
+                                            targets: [16],
+                                            visible: displayfields[16].active,
+                                        },
+                                        {
+                                            className: "colProdCustField2",
+                                            targets: [17],
+                                            visible: displayfields[17].active,
+                                        },
+                                    ],
                                       select: true,
                                       destroy: true,
                                       colReorder: true,
@@ -633,74 +652,92 @@ Template.inventorylist.onRendered(function() {
                                 columnDefs: [{
                                         className: "colProductID hiddenColumn",
                                         targets: [0],
+                                        visible: displayfields[0].active,
                                     },
                                     {
                                         className: "colProductName",
                                         targets: [1],
+                                        visible: displayfields[1].active,
                                     },
                                     {
                                         className: "colSalesDescription",
                                         targets: [2],
+                                        visible: displayfields[2].active,
                                     },
                                     {
                                         className: "colAvailable text-right",
                                         targets: [3],
+                                        visible: displayfields[3].active,
                                     },
                                     {
                                         className: "colOnSO text-right",
                                         targets: [4],
+                                        visible: displayfields[4].active,
                                     },
                                     {
                                         className: "colOnBO text-right",
                                         targets: [5],
+                                        visible: displayfields[5].active,
                                     },
                                     {
                                         className: "colInStock text-right",
                                         targets: [6],
+                                        visible: displayfields[6].active,
                                     },
                                     {
                                         className: "colOnOrder text-right",
                                         targets: [7],
+                                        visible: displayfields[7].active,
                                     },
                                     {
-                                        className: "colCostPrice hiddenColumn text-right",
+                                        className: "colCostPrice text-right",
                                         targets: [8],
+                                        visible: displayfields[8].active,
                                     },
                                     {
                                         className: "colCostPriceInc  text-right",
                                         targets: [9],
+                                        visible: displayfields[9].active,
                                     },
                                     {
-                                        className: "colSalePrice hiddenColumn text-right",
+                                        className: "colSalePrice text-right",
                                         targets: [10],
+                                        visible: displayfields[10].active,
                                     },
                                     {
                                         className: "colSalePriceInc  text-right",
                                         targets: [11],
+                                        visible: displayfields[11].active,
                                     },
                                     {
-                                        className: "colSerialNo  text-center hiddenColumn",
+                                        className: "colSerialNo  text-center",
                                         targets: [12],
+                                        visible: displayfields[12].active,
                                     },
                                     {
-                                        className: "colBarcode hiddenColumn",
+                                        className: "colBarcode",
                                         targets: [13],
+                                        visible: displayfields[13].active,
                                     },
                                     {
-                                        className: "colDepartment hiddenColumn",
+                                        className: "colDepartment",
                                         targets: [14],
+                                        visible: displayfields[14].active,
                                     },
                                     {
-                                        className: "colPurchaseDescription hiddenColumn",
+                                        className: "colPurchaseDescription",
                                         targets: [15],
+                                        visible: displayfields[15].active,
                                     },
                                     {
-                                        className: "colProdCustField1 hiddenColumn",
+                                        className: "colProdCustField1",
                                         targets: [16],
+                                        visible: displayfields[16].active,
                                     },
                                     {
-                                        className: "colProdCustField2 hiddenColumn",
+                                        className: "colProdCustField2",
                                         targets: [17],
+                                        visible: displayfields[17].active,
                                     },
                                 ],
                                 select: true,
@@ -896,80 +933,99 @@ Template.inventorylist.onRendered(function() {
 
                         $(".fullScreenSpin").css("display", "none");
                         setTimeout(function() {
-                          $("#tblInventoryOverview").dataTable({
+                            let displayfields = templateObject.displayfields.get();
+                            $("#tblInventoryOverview").dataTable({
                                   data: splashArrayProductList,
                                   sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                  columnDefs: [{
+                                    columnDefs: [{
                                         className: "colProductID hiddenColumn",
                                         targets: [0],
+                                        visible: displayfields[0].active,
                                     },
                                     {
                                         className: "colProductName",
                                         targets: [1],
+                                        visible: displayfields[1].active,
                                     },
                                     {
                                         className: "colSalesDescription",
                                         targets: [2],
+                                        visible: displayfields[2].active,
                                     },
                                     {
                                         className: "colAvailable text-right",
                                         targets: [3],
+                                        visible: displayfields[3].active,
                                     },
                                     {
                                         className: "colOnSO text-right",
                                         targets: [4],
+                                        visible: displayfields[4].active,
                                     },
                                     {
                                         className: "colOnBO text-right",
                                         targets: [5],
+                                        visible: displayfields[5].active,
                                     },
                                     {
                                         className: "colInStock text-right",
                                         targets: [6],
+                                        visible: displayfields[6].active,
                                     },
                                     {
                                         className: "colOnOrder text-right",
                                         targets: [7],
+                                        visible: displayfields[7].active,
                                     },
                                     {
-                                        className: "colCostPrice hiddenColumn text-right",
+                                        className: "colCostPrice text-right",
                                         targets: [8],
+                                        visible: displayfields[8].active,
                                     },
                                     {
                                         className: "colCostPriceInc  text-right",
                                         targets: [9],
+                                        visible: displayfields[9].active,
                                     },
                                     {
-                                        className: "colSalePrice hiddenColumn text-right",
+                                        className: "colSalePrice text-right",
                                         targets: [10],
+                                        visible: displayfields[10].active,
                                     },
                                     {
                                         className: "colSalePriceInc  text-right",
                                         targets: [11],
+                                        visible: displayfields[11].active,
                                     },
                                     {
-                                        className: "colSerialNo  text-center hiddenColumn",
+                                        className: "colSerialNo  text-center",
                                         targets: [12],
+                                        visible: displayfields[12].active,
                                     },
                                     {
-                                        className: "colBarcode hiddenColumn",
+                                        className: "colBarcode",
                                         targets: [13],
+                                        visible: displayfields[13].active,
                                     },
                                     {
-                                        className: "colDepartment hiddenColumn",
+                                        className: "colDepartment",
                                         targets: [14],
+                                        visible: displayfields[14].active,
                                     },
                                     {
-                                        className: "colPurchaseDescription hiddenColumn",
+                                        className: "colPurchaseDescription",
                                         targets: [15],
+                                        visible: displayfields[15].active,
                                     },
                                     {
-                                        className: "colProdCustField1 hiddenColumn",
+                                        className: "colProdCustField1",
                                         targets: [16],
+                                        visible: displayfields[16].active,
                                     },
                                     {
-                                        className: "colProdCustField2 hiddenColumn",
+                                        className: "colProdCustField2",
                                         targets: [17],
+                                        visible: displayfields[17].active,
                                     },
                                 ],
                                   select: true,

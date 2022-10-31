@@ -192,7 +192,7 @@ Template.binnypurchasedb.events({
     swal('Database Error', myArrResponse.ProcessLog.Error, 'error');
     $('.fullScreenSpin').css('display','none');
   }else{
-    var databaseName = myArrResponse.ProcessLog.Databasename;
+    var databaseName = myArrResponse.ProcessLog.DatabaseName;
 
        CloudDatabase.insert({ server: serverIP,database:databaseName,username:userEmail.toLowerCase(),useremail:userEmail.toLowerCase(),password:cloudpassword,port:port,description:company,createdAt: new Date() }, function(err, idTag) {
          if (err) {

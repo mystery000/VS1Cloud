@@ -519,7 +519,12 @@
                                             </table>
                                             <div class="modal fade" id="historyUpcomingModal" tabindex="-1" role="dialog"
                                                 aria-labelledby="historyUpcomingModal" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <style>
+                                                    #historyUpcomingModal .table tr th, #historyUpcomingModal .table tr th {
+                                                        min-width: 0px;
+                                                    } 
+                                                </style>
+                                                <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="historyUpcomingLabel">History and Upcoming</h5>
@@ -538,10 +543,10 @@
                                                                 <tbody>
                                                                     {{#each item in essentialReportSchedules}}
                                                                     <tr class="dnd-moved" id="history{{item.formID}}" data-id="{{item.formID}}">
-                                                                        <td contenteditable="false" class="arrow">{{item.transactionType}}</td>
-                                                                        <td contenteditable="false" class="arrow">{{item.fields.LastEmaileddate}}</td>
-                                                                        <td contenteditable="false" class="arrow">{{item.fields.NextDueDate}}</td>
-                                                                        <td contenteditable="false" class="arrow">{{item.fields.Recipients}}</td>
+                                                                        <td contenteditable="false" class="arrow">{{item.fields.Subject}}</td>
+                                                                        <td contenteditable="false" class="arrow">{{item.fields.DateSent}}</td>
+                                                                        <td contenteditable="false" class="arrow">{{item.fields.Memo}}</td>
+                                                                        <td contenteditable="false" class="arrow">{{item.fields.RecipientEmail}}</td>
                                                                     </tr>
                                                                     {{/each}}
                                                                 </tbody>
@@ -1461,8 +1466,9 @@
                                                                             style="cursor: pointer;">All Suppliers</label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-12 contactlistcol">
+                                                                <div class="mt-3 px-5 py-3 col-12 contactlistcol">
                                                                     {{> contactlistpop}}
+                                                                        <!-- {{> non_transactional_list}} -->
                                                                 </div>
                                                             </div>
                                                         </div>

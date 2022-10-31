@@ -787,6 +787,15 @@ authenticatedRoutes.route('/basreturntransactionlist', {
     }
 });
 
+authenticatedRoutes.route('/vatreturntransactionlist', {
+    name: 'vatreturntransactionlist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'vatreturntransactionlist'
+        });
+    }
+});
+
 authenticatedRoutes.route('/allreports', {
     name: 'allreports',
     action() {
@@ -1357,6 +1366,23 @@ authenticatedRoutes.route('/basreturnlist', {
           yield: 'basreturnlist'
       });
   }
+});
+
+authenticatedRoutes.route('/vatreturn', {
+    name: 'vatreturn',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'vatreturn'
+        });
+    }
+});
+authenticatedRoutes.route('/vatreturnlist', {
+    name: 'vatreturnlist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'vatreturnlist'
+        });
+    }
 });
 
 authenticatedRoutes.route('/timesheet', {

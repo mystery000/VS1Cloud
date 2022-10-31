@@ -693,7 +693,7 @@ Template.registersts.events({
 
     $('.fullScreenSpin').css('display','none');
   }else{
-    var databaseName = myArrResponse.ProcessLog.Databasename;
+    var databaseName = myArrResponse.ProcessLog.DatabaseName;
     $(".addloginkey").attr("href", 'https://sandbox.vs1cloud.com/vs1greentracklogin?emailakey='+userEmail+'&passkey='+cloudpassword+'&secret='+currentURLQuoteID+'');
     localStorage.usremail = userEmail;
     localStorage.usrpassword = cloudpassword;

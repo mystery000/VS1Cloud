@@ -16992,7 +16992,7 @@ Template.appointments.events({
             TrainerName: employeeName,
             Notes: notes,
             ProductDesc: selectedProduct,
-            ExtraProducts: selectedExtraProduct,
+            // ExtraProducts: selectedExtraProduct,
             Attachments: uploadedItems,
             Status: status,
             CUSTFLD12: messageSid || "",
