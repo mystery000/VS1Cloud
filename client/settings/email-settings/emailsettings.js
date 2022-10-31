@@ -35,6 +35,7 @@ Template.emailsettings.onCreated(function () {
     templateObject.correspondences = new ReactiveVar([]);
     templateObject.isAdd = new ReactiveVar(true);
     templateObject.selectedRowID = new ReactiveVar();
+    templateObject.historyUpcomingRecords = new ReactiveVar([]);
     templateObject.formsData.set(
         [
             {
@@ -1419,6 +1420,21 @@ Template.emailsettings.onRendered(function () {
 
     templateObject.saveSchedules = async (settings, isEssential) => {
         let utilityService = new UtilityService();
+
+
+        let ipAddress = localStorage.getItem('EIPAddress');
+        let database = localStorage.getItem('EDatabase');
+        let username= localStorage.getItem('EUserName');
+        let password = localStorage.getItem('EPassword');
+        let port = localStorage.getItem('EPort');
+
+        let connectionDetails = {
+            ipAddress: ipAddress,
+            database: database,
+            username: username,
+            password: password,
+            port: port
+        }
         return new Promise(async (resolve, reject) => {
 
             //TODO: Remove all BasedOnType localstorage variables(No need this part in production mode)
@@ -1437,24 +1453,6 @@ Template.emailsettings.onRendered(function () {
                     }
                 }
             });
-
-            // ldb.getAll(function(data){
-            //     let filteredData = Object.keys(data).filter(storage => { storage.includes('BasedOnType_')});
-            //     filteredData.forEach(storage => {
-            //         let formId = storage.split('_')[1];
-            //         let essentialIDs = ['1', '54', '177', '129'];
-            //         if(isEssential) {
-            //             if(essentialIDs.includes(formId.toString())) {
-            //                 ldb.delete(storage, function(){})
-            //             }
-            //         } else {
-            //             if(essentialIDs.includes(formId.toString()) == false) {
-            //                 ldb.delete(storage, function(){})
-            //             }
-            //         }
-            //     });
-            // })
-
             getVS1Data('TBasedOnType').then(async function(dataObject) {
                 if(dataObject.length != 0) {
                     let essentialIDs = ['1', '54', '177', '129'];
@@ -1781,8 +1779,10 @@ Template.emailsettings.onRendered(function () {
                                             });
                                         });
                                         object.fields.NextDueDate = nextDueDate;
-                                        object.fields.EmployeeId = object.fields.EmployeeId + '_T'
-                                        Meteor.call('addTask', object.fields);
+                                        object.fields.EmployeeId = object.fields.EmployeeId + '_T';
+                                        let temp = JSON.parse(JSON.stringify(object.fields));
+                                        temp = {...temp, connectionInfo: connectionDetails}
+                                        Meteor.call('addTask', temp);
                                     }
 
                                     if(basedOnType.includes('D') == true && attachment.dDate != '') {
@@ -1798,12 +1798,18 @@ Template.emailsettings.onRendered(function () {
                                         });
                                         object.fields.NextDueDate = nextDueDate;
                                         object.fields.EmployeeId = object.fields.EmployeeId.replace('_T', '') + '_D'
-                                        Meteor.call('addTask', object.fields);
+                                        let temp = JSON.parse(JSON.stringify(object.fields))
+                                        temp = {...temp, connectionInfo: connectionDetails}
+                                        Meteor.call('addTask', temp);
                                     }
 
                                     if(basedOnType.includes('O') && attachment.dDate != '' && currentTime.getTime() > dueTime.getTime()) {
                                         object.fields.StartDate = moment(transTime).format("YYYY-MM-DD HH:mm");
-                                        Meteor.call('sendNormalEmail', object.fields);
+                                        let temp = JSON.parse(JSON.stringify(object.fields))
+                                        temp = {...temp, connectionInfo: connectionDetails};
+                                        Meteor.call('sendNormalEmail', temp, async(error, result)=>{
+
+                                        });
                                     }
                                     }
 
@@ -1886,6 +1892,7 @@ Template.emailsettings.onRendered(function () {
                                 localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
                                     ...objDetail.fields,
                                     BasedOnType: basedOnType,
+                                    connectionInfo: connectionDetails
                                 }));
                                 
 
@@ -1906,6 +1913,7 @@ Template.emailsettings.onRendered(function () {
                                         let objectDetail = {key: `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, value: {
                                             ...cloneObjDetailFields,
                                             BasedOnType: basedOnType,
+                                            connectionInfo: connectionDetails
                                         } }
                                         let tempIndex = temp.findIndex(item => {
                                             return item.key == `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`
@@ -1924,6 +1932,8 @@ Template.emailsettings.onRendered(function () {
                                     //     BasedOnType: basedOnType,
                                     // }), function(){})
                                 }
+
+                                cloneObjDetailFields = {...cloneObjDetailFields, connectionInfo: connectionDetails}
                                 // objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                                 Meteor.call('addTask', cloneObjDetailFields);
                             } else {
@@ -1960,6 +1970,7 @@ Template.emailsettings.onRendered(function () {
                                 localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
                                     ...objDetail.fields,
                                     BasedOnType: basedOnType,
+                                    connectionInfo: connectionDetails
                                 }));
 
                                 let cloneObjDetailFields = JSON.parse(JSON.stringify(objDetail.fields))
@@ -1978,6 +1989,7 @@ Template.emailsettings.onRendered(function () {
                                         let objectDetail = {key: `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, value: {
                                             ...cloneObjDetailFields,
                                             BasedOnType: basedOnType,
+                                            connectionInfo: connectionDetails
                                         } }
                                         let tempIndex = temp.findIndex(item => {
                                             return item.key == `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`
@@ -1992,6 +2004,8 @@ Template.emailsettings.onRendered(function () {
                                     })
                                 }
                                 // objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+
+                                cloneObjDetailFields = {...cloneObjDetailFields, connectionInfo :connectionDetails}
                                 Meteor.call('addTask', cloneObjDetailFields);
                             }
                         });
@@ -2006,7 +2020,9 @@ Template.emailsettings.onRendered(function () {
                             && setting.fields.FormID != 177 && setting.fields.FormID != 129)) {
                         // Remove all
                         setting.fields.Active = false;
-                        Meteor.call('addTask', setting.fields);
+                        let temp = JSON.parse(JSON.stringify(setting.fields));
+                        temp = {...temp, connectionInfo: connectionDetails}
+                        Meteor.call('addTask', temp);
                         const saveResult = await taxRateService.saveScheduleSettings({
                             type: "TReportSchedules",
                             fields: {
@@ -2039,6 +2055,7 @@ Template.emailsettings.onRendered(function () {
                 await Promise.all(promise1);
                 resolve({ success: true, message: '' });
             } catch (error) {
+                console.log('error', error)
                 resolve({ success: false, message: 'Something went wrong. Please try again later.' });
                 if (typeof error !== 'string') error = error.message;
 
@@ -2643,22 +2660,124 @@ Template.emailsettings.events({
     },
 
     'click .btn-show-history': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block')
         const templateObject = Template.instance();
         var items = [];
         var _rowElement = $(event.target).closest('tr')
         var _id = _rowElement.attr('data-id');
         var _transType = _rowElement.find('>td:first-child').html();
         var taxRateService = new TaxRateService();
-        let tempArray  = templateObject.originScheduleData.get();
+        let splashArrayEmailList = [];
+        // let tempArray  = templateObject.originScheduleData.get();
 
-        items = tempArray.filter((item) => {
-            return item.fields.FormID.toString() === _id
-        });
-        items.map((item) => {
-            item.transactionType = _transType
-        })
-        templateObject.essentialReportSchedules.set(items);
-        $("#historyUpcomingModal").modal('toggle');
+        taxRateService.getEmailHistoryByTransName(_transType).then(function(dataObject) {
+            let items = dataObject.temailhistory;
+            // items = data.filter(item=>{
+            //     return item.fields.Subject == _transType
+            // })
+            // templateObject.essentialReportSchedules.set(items);
+            for(let i = 0; i< items.length; i++) {
+                var dataListEmailHistory = [
+                    items[i].fields.Subject || '-',
+                    items[i].fields.DateSent || '',
+                    items[i].fields.Memo || '',
+                    items[i].fields.RecipientEmail || '',
+                ];
+                splashArrayEmailList.push(dataListEmailHistory);
+            }
+
+            setTimeout(function () {
+                $('#tblHistoryUpcoming').DataTable({
+                    data: splashArrayEmailList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [
+                        {
+                            className: "colTransType",
+                            "targets": [0]
+                        },
+                        {
+                            className: "colDateSent",
+                            "targets": [1]
+                        }, {
+                            className: "colNextDate",
+                            "targets": [2]
+                        }, {
+                            className: "colRecipient",
+                            "targets": [3]
+                        }
+                        // , {
+                        //     className: "colID hiddenColumn",
+                        //     "targets": [4]
+                        // }
+                    ],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[1, "asc"]],
+                    action: function () {
+                        $('#tblHistoryUpcoming').DataTable().ajax.reload();
+                    },
+                    language: { search: "",searchPlaceholder: "Search List..." },
+                    "fnDrawCallback": function (oSettings) {
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#tblHistoryUpcoming_ellipsis').addClass('disabled');
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
+                            }
+                        } else {
+                        }
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
+                    },
+                    "fnInitComplete": function (oSettings) {
+                        $("<button class='btn btn-primary btnRefreshContact' type='button' id='btnSearhEmail' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHistoryUpcoming_filter");
+
+                        let urlParametersPage = FlowRouter.current().queryParams.page;
+                        if (urlParametersPage) {
+                            this.fnPageChange('last');
+                        }
+
+                    }
+
+                }).on('page', function () {
+                    // let draftRecord = templateObject.custdatatablerecords.get();
+                    // templateObject.custdatatablerecords.set(draftRecord);
+                }).on('column-reorder', function () {
+
+                }).on('length.dt', function (e, settings, len) {
+                //   $('.fullScreenSpin').css('display', 'inline-block');
+                  let dataLenght = settings._iDisplayLength;
+                  if (dataLenght == -1) {
+                    // $('.fullScreenSpin').css('display', 'none');
+                  }else{
+                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                        // $('.fullScreenSpin').css('display', 'none');
+                    } else {
+
+                        // $('.fullScreenSpin').css('display', 'none');
+                    }
+
+                  }
+
+                });
+            }, 0);
+            $('.fullScreenSpin').css('display', 'none');
+            $("#historyUpcomingModal").modal('toggle');
+        }).catch(function(err){
+            $('.fullScreenSpin').css('display', 'none');
+            $("#historyUpcomingModal").modal('toggle');
+        }) 
+        // items = tempArray.filter((item) => {
+        //     return item.fields.FormID.toString() === _id
+        // });
+        // items.map((item) => {
+        //     item.transactionType = _transType
+        // })
     },
     'click input[name="frequencyRadio"]': function () {
         if (event.target.id == "frequencyMonthly") {
@@ -3026,7 +3145,204 @@ Template.emailsettings.events({
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         location.reload(true);
-    }
+    },
+
+    "keyup #tblcontactoverview_filter input": function (event) {
+        if ($(event.target).val() != "") {
+          $(".btnRefreshContactOverview").addClass("btnSearchAlert");
+        } else {
+          $(".btnRefreshContactOverview").removeClass("btnSearchAlert");
+        }
+        if (event.keyCode == 13) {
+          $(".btnRefreshContactOverview").trigger("click");
+        }
+      },
+      "click .btnRefreshContactOverview": function (event) {
+        let utilityService = new UtilityService();
+        let templateObject = Template.instance();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        const contactList = [];
+        const clientList = [];
+        let salesOrderTable;
+        var splashArray = new Array();
+        var splashArrayContactOverviewSearch = new Array();
+        var splashArrayContactOverview = new Array();
+        const dataTableList = [];
+        const tableHeaderList = [];
+        let dataSearchName = $('#tblcontactoverview_filter input').val()||'';
+        if (dataSearchName.replace(/\s/g, '') != '') {
+            sideBarService.getAllContactOverviewVS1ByName(dataSearchName.toLowerCase()).then(function (data) {
+                let lineItems = [];
+                let lineItemObj = {};
+                let clienttype = '';
+                let isprospect = false;
+                let iscustomer = false;
+                let isEmployee = false;
+                let issupplier = false;
+                $(".btnRefreshContactOverview").removeClass('btnSearchAlert');
+                if (data.terpcombinedcontactsvs1.length > 0) {
+                  $("#tblcontactoverview > tbody").empty();
+    
+                    for (let i = 0; i < data.terpcombinedcontactsvs1.length; i++) {
+    
+                            isprospect = data.terpcombinedcontactsvs1[i].isprospect;
+                            iscustomer = data.terpcombinedcontactsvs1[i].iscustomer;
+                            isEmployee = data.terpcombinedcontactsvs1[i].isEmployee;
+                            issupplier = data.terpcombinedcontactsvs1[i].issupplier;
+    
+                            if((isprospect == true) && (iscustomer == true) && (isEmployee == true) && (issupplier == true)){
+                                clienttype = "Customer / Employee / Supplier";
+                            }else if((isprospect == true) && (iscustomer ==true) && (issupplier ==true)){
+                                clienttype = "Customer / Supplier";
+                            }else if((iscustomer ==true) && (issupplier ==true)){
+                                clienttype = "Customer / Supplier";
+                            }else if((iscustomer ==true)){
+    
+                                if (data.terpcombinedcontactsvs1[i].name.toLowerCase().indexOf("^") >= 0){
+                                    clienttype = "Job";
+                                }else{
+                                    clienttype = "Customer";
+                                }
+                                // clienttype = "Customer";
+                            }else if((isEmployee ==true)){
+                                clienttype = "Employee";
+                            }else if((issupplier ==true)){
+                                clienttype = "Supplier";
+                            }else if((isprospect ==true)){
+                                clienttype = "Lead";
+                            }else{
+                                clienttype = " ";
+                            }
+    
+                                let arBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].ARBalance)|| 0.00;
+                                let creditBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].CreditBalance) || 0.00;
+                                let balance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].Balance)|| 0.00;
+                                let creditLimit = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].CreditLimit)|| 0.00;
+                                let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].SalesOrderBalance)|| 0.00;
+                                if (isNaN(data.terpcombinedcontactsvs1[i].ARBalance)) {
+                                    arBalance = Currency + "0.00";
+                                }
+    
+                                if (isNaN(data.terpcombinedcontactsvs1[i].CreditBalance)) {
+                                    creditBalance = Currency + "0.00";
+                                }
+                                if (isNaN(data.terpcombinedcontactsvs1[i].Balance)) {
+                                    balance = Currency + "0.00";
+                                }
+                                if (isNaN(data.terpcombinedcontactsvs1[i].CreditLimit)) {
+                                    creditLimit = Currency + "0.00";
+                                }
+    
+                                if (isNaN(data.terpcombinedcontactsvs1[i].SalesOrderBalance)) {
+                                    salesOrderBalance = Currency + "0.00";
+                                }
+    
+    
+                                var dataList = [
+                                  data.terpcombinedcontactsvs1[i].ID || "",
+                                  data.terpcombinedcontactsvs1[i].name || "",
+                                  clienttype || "",
+                                  data.terpcombinedcontactsvs1[i].phone || "",
+                                  data.terpcombinedcontactsvs1[i].mobile || "",
+                                  arBalance || 0.0,
+                                  creditBalance || 0.0,
+                                  balance || 0.0,
+                                  creditLimit || 0.0,
+                                  salesOrderBalance || 0.0,
+                                  data.terpcombinedcontactsvs1[i].email || "",
+                                  data.terpcombinedcontactsvs1[i].CUSTFLD1 || "",
+                                  data.terpcombinedcontactsvs1[i].CUSTFLD2 || "",
+                                  data.terpcombinedcontactsvs1[i].street || "",
+                                  data.terpcombinedcontactsvs1[i].suburb|| "",
+                                  data.terpcombinedcontactsvs1[i].state|| "",
+                                  data.terpcombinedcontactsvs1[i].postcode|| "",
+                                  "",
+                                ];
+    
+    
+                                if (data.terpcombinedcontactsvs1[i].name.replace(/\s/g, "") !== "") {
+                                  splashArrayContactOverviewSearch.push(dataList);
+                                }
+
+                    }
+                    var datatable = $('#tblcontactoverview').DataTable();
+                    datatable.clear();
+                    datatable.rows.add(splashArrayContactOverviewSearch);
+                    datatable.draw(false);
+                    $('#tblcontactoverview_wrapper .dataTables_info').html('Showing 1 to ' + data.terpcombinedcontactsvs1.length + ' of ' + data.terpcombinedcontactsvs1.length + ' entries');
+                    let reset_data = templateObject.reset_data.get();
+                    let customFieldCount = reset_data.length;
+    
+                    for (let r = 0; r < customFieldCount; r++) {
+                      if(reset_data[r].active == true){
+                        $('#tblcontactoverview_wrapper .'+reset_data[r].class).removeClass('hiddenColumn');
+                      }else if(reset_data[r].active == false){
+                        $('#tblcontactoverview_wrapper .'+reset_data[r].class).addClass('hiddenColumn');
+                      };
+                    };
+                    $('.fullScreenSpin').css('display', 'none');
+                } else {
+    
+                    $('.fullScreenSpin').css('display', 'none');
+                    $('#contactListModal').modal('toggle');
+                    swal({
+                        title: 'Question',
+                        text: "Contact does not exist, would you like to create it?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.value) {
+    
+                        } else if (result.dismiss === 'cancel') {
+                            $('#contactListModal').modal('toggle');
+                        }
+                    });
+    
+                }
+    
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+          $('.fullScreenSpin').css('display', 'none');
+            getVS1Data("TERPCombinedContactsVS1").then(function (dataObjectold) {
+              if (dataObjectold.length == 0) {
+              } else {
+                let dataOld = JSON.parse(dataObjectold[0].data);
+                let dataNew = templateObject.transactiondatatablerecords.get()||'';
+    
+                var datatable = $('#tblcontactoverview').DataTable();
+                datatable.clear();
+                datatable.rows.add(dataNew);
+                datatable.draw(false);
+                if(dataNew.length < 25){
+                  $('#tblcontactoverview_wrapper .dataTables_info').html('Showing 1 to ' + dataNew.length + ' of ' + dataOld.Params.Count + ' entries');
+                }else{
+                  $('#tblcontactoverview_wrapper .dataTables_info').html('Showing 1 to ' + '25' + ' of ' + dataOld.Params.Count + ' entries');
+                }
+    
+                let reset_data = templateObject.reset_data.get();
+                let customFieldCount = reset_data.length;
+    
+                for (let r = 0; r < customFieldCount; r++) {
+                  if(reset_data[r].active == true){
+                    $('#tblcontactoverview_wrapper .'+reset_data[r].class).removeClass('hiddenColumn');
+                  }else if(reset_data[r].active == false){
+                    $('#tblcontactoverview_wrapper .'+reset_data[r].class).addClass('hiddenColumn');
+                  };
+                };
+    
+    
+              }
+            }).catch(function (err) {
+    
+            });
+        }
+      },
+
+
 });
 
 
