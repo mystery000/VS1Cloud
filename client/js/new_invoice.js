@@ -19,6 +19,7 @@ import { saveCurrencyHistory } from "../packages/currency/CurrencyWidget";
 import { getCurrentCurrencySymbol } from "../popUps/currnecypopup";
 import { convertToForeignAmount } from "../payments/paymentcard/supplierPaymentcard";
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
+import LoadingOverlay from "../LoadingOverlay";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -32,6 +33,11 @@ const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Unit Price (I
 
 let defaultCurrencyCode = CountryAbbr;
 
+// Refactoring is needed
+// Al logics shoud be encapuslated in template.function to avoid miscontrol on the API calls, and loading process
+// Also please avoid duplicate codes, it is so hard to refactor when duplicates more than 2 times...
+// Check the second onRendered, it contains the ready to add functions
+// Dont use bug logics and code in events, because we dont want to duplicate code for same logics
 Template.new_invoice.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.isForeignEnabled = new ReactiveVar(false);
@@ -4038,6 +4044,7 @@ Template.new_invoice.onRendered(function() {
                     templateObject.inputSelectedCurrency.set(
                       invoicerecord.currency
                     );
+
                   })
                   .catch(function (err) {
                     swal({
@@ -4078,7 +4085,7 @@ Template.new_invoice.onRendered(function() {
                       let allAppointments = appointments.tappointmentex;
                       let apptId = FlowRouter.current().queryParams.apptId;
                       let appointmentAttachments = (appointmentAttachments =
-                        allAppointments.find((x) => x.fields.ID === parseInt(apptId)).fields.Attachments);
+                        allAppointments.find((x) => x.fields.ID === parseInt(apptId)).fields.Attachments); // TODO: To be fixed
                       if (appointmentAttachments.length > 0) {
                         templateObject.attachmentCount.set(
                           appointmentAttachments.length
@@ -6419,6 +6426,8 @@ Template.new_invoice.onRendered(function() {
   
       templateObject.invoicerecord.set(invoicerecord);
     }
+
+    calculateAllTableForeign();
   }
 
   templateObject.getInvoiceData();
@@ -12174,6 +12183,8 @@ Template.new_invoice.onRendered(function() {
   function saveTemplateFields(key, value) {
     localStorage.setItem(key, value);
   }
+
+  calculateAllTableForeign();
 });
 
 Template.new_invoice.onRendered(function () {
@@ -12979,6 +12990,8 @@ Template.new_invoice.onRendered(function () {
    */
   templateObject.loadInvoiceLines = async () => {
     
+
+    calculateAllTableForeign();
   }
 
   /**
@@ -13009,6 +13022,13 @@ Template.new_invoice.onRendered(function () {
 
   }
 
+  templateObject.initPage = async (refresh = false) => {
+    LoadingOverlay.show();
+    await templateObject.loadInvoiceLines(refresh);
+
+    LoadingOverlay.hide();
+  }
+  templateObject.initPage();
 });
 
 Template.new_invoice.helpers({

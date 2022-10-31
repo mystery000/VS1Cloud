@@ -33,6 +33,10 @@ export default class FxGlobalFunctions {
         $("#sltCurrency").attr("currency-symbol", currencySymbol);
         $("#exchange_rate").val(currencyRate);      
         $(".exchange-rate-js").val(currencyRate);
+       
+       setTimeout(() => {
+        $(".exchange-rate-js").trigger('change');
+       }, 500); 
       }
     }
     $("#sltCurrency").attr("disabled", false);
