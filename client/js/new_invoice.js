@@ -89,6 +89,8 @@ Template.new_invoice.onCreated(() => {
 
   templateObject.isbackorderredirect = new ReactiveVar();
   templateObject.isbackorderredirect.set(false);
+
+  templateObject.invoiceLines = new ReactiveVar([]); // This is going to be used to handle the table lines
 });
 
 Template.new_invoice.onRendered(function() {
@@ -942,74 +944,156 @@ Template.new_invoice.onRendered(function() {
     setCustomerInfo(selectedTaxCodeName);
   }
 
-  let url2 = FlowRouter.current().path;
   let url = FlowRouter.current().path;
   let bankDetails = Session.get("vs1companyBankDetails") || "";
   // $('.bankDetails').html(bankDetails.replace(/[\r\n]/g, "<br />"));
-  if (url.indexOf("?copyquid=") > 0) {
-    getso_id = url.split("?copyquid=");
-    currentInvoice = getso_id[getso_id.length - 1];
-    $(".printID").attr("id", currentInvoice);
-    if (getso_id[1]) {
-      currentInvoice = parseInt(currentInvoice);
-      templateObject.getInvoiceData = function () {
-        let customerData = templateObject.clientrecords.get();
-        accountService
-          .getOneQuotedataEx(currentInvoice)
-          .then(function (data) {
-            templateObject.singleInvoiceData.set(data);
-            let cust_result = customerData.filter((cust_data) => {
-              return cust_data.customername == data.fields.CustomerName;
-            });
-            $(".fullScreenSpin").css("display", "none");
-            let lineItems = [];
-            let lineItemObj = {};
-            let lineItemsTable = [];
-            let lineItemTableObj = {};
-            let exchangeCode = data.fields.ForeignExchangeCode;
-            let currencySymbol = Currency;
-            let total = utilityService
-              .modifynegativeCurrencyFormat(data.fields.TotalAmount)
-              .toLocaleString(undefined, {
-                minimumFractionDigits: 2,
+ 
+  templateObject.getInvoiceData = () => {
+    if (url.indexOf("?copyquid=") > 0) {
+      getso_id = url.split("?copyquid=");
+      currentInvoice = getso_id[getso_id.length - 1];
+      $(".printID").attr("id", currentInvoice);
+      if (getso_id[1]) {
+        currentInvoice = parseInt(currentInvoice);
+        templateObject.getInvoiceData = function () {
+          let customerData = templateObject.clientrecords.get();
+          accountService
+            .getOneQuotedataEx(currentInvoice)
+            .then(function (data) {
+              templateObject.singleInvoiceData.set(data);
+              let cust_result = customerData.filter((cust_data) => {
+                return cust_data.customername == data.fields.CustomerName;
               });
-            let totalInc = utilityService
-              .modifynegativeCurrencyFormat(data.fields.TotalAmountInc)
-              .toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalDiscount = utilityService
-              .modifynegativeCurrencyFormat(data.fields.TotalDiscount)
-              .toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let subTotal = utilityService
-              .modifynegativeCurrencyFormat(data.fields.TotalAmount)
-              .toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalTax = utilityService
-              .modifynegativeCurrencyFormat(data.fields.TotalTax)
-              .toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalBalance = utilityService
-              .modifynegativeCurrencyFormat(data.fields.TotalBalance)
-              .toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalPaidAmount = utilityService
-              .modifynegativeCurrencyFormat(data.fields.TotalPaid)
-              .toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            if (data.fields.Lines != null) {
-              if (data.fields.Lines.length) {
-                for (let i = 0; i < data.fields.Lines.length; i++) {
+              $(".fullScreenSpin").css("display", "none");
+              let lineItems = [];
+              let lineItemObj = {};
+              let lineItemsTable = [];
+              let lineItemTableObj = {};
+              let exchangeCode = data.fields.ForeignExchangeCode;
+              let currencySymbol = Currency;
+              let total = utilityService
+                .modifynegativeCurrencyFormat(data.fields.TotalAmount)
+                .toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalInc = utilityService
+                .modifynegativeCurrencyFormat(data.fields.TotalAmountInc)
+                .toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalDiscount = utilityService
+                .modifynegativeCurrencyFormat(data.fields.TotalDiscount)
+                .toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let subTotal = utilityService
+                .modifynegativeCurrencyFormat(data.fields.TotalAmount)
+                .toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalTax = utilityService
+                .modifynegativeCurrencyFormat(data.fields.TotalTax)
+                .toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalBalance = utilityService
+                .modifynegativeCurrencyFormat(data.fields.TotalBalance)
+                .toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalPaidAmount = utilityService
+                .modifynegativeCurrencyFormat(data.fields.TotalPaid)
+                .toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              if (data.fields.Lines != null) {
+                if (data.fields.Lines.length) {
+                  for (let i = 0; i < data.fields.Lines.length; i++) {
+                    let AmountGbp =
+                      currencySymbol +
+                      "" +
+                      data.fields.Lines[i].fields.TotalLineAmount.toLocaleString(
+                        undefined,
+                        {
+                          minimumFractionDigits: 2,
+                        }
+                      );
+                    let currencyAmountGbp =
+                      currencySymbol +
+                      "" +
+                      data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
+                    let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(
+                      data.fields.Lines[i].fields.LineTaxTotal
+                    );
+                    let TaxRateGbp = (
+                      data.fields.Lines[i].fields.LineTaxRate * 100
+                    ).toFixed(2);
+                    lineItemObj = {
+                      lineID: Random.id(),
+                      id: data.fields.Lines[i].fields.ID || "",
+                      item: data.fields.Lines[i].fields.ProductName || "",
+                      description:
+                        data.fields.Lines[i].fields.ProductDescription || "",
+                      quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
+                      qtyordered: data.fields.Lines[i].fields.UOMOrderQty || 0,
+                      qtyshipped: data.fields.Lines[i].fields.UOMQtyShipped || 0,
+                      qtybo: data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
+                      unitPrice:
+                        currencySymbol +
+                          "" +
+                          data.fields.Lines[
+                            i
+                          ].fields.OriginalLinePrice.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                          }) || 0,
+                      lineCost:
+                        currencySymbol +
+                          "" +
+                          data.fields.Lines[i].fields.LineCost.toLocaleString(
+                            undefined,
+                            {
+                              minimumFractionDigits: 2,
+                            }
+                          ) || 0,
+                      taxRate:
+                        (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(
+                          2
+                        ) || 0,
+                      taxCode: data.fields.Lines[i].fields.LineTaxCode || "",
+                      TotalAmt: AmountGbp || 0,
+                      curTotalAmt: currencyAmountGbp || currencySymbol + "0",
+                      TaxTotal: TaxTotalGbp || 0,
+                      TaxRate: TaxRateGbp || 0,
+                      DiscountPercent:
+                        data.fields.Lines[i].fields.DiscountPercent || 0,
+                      UnitOfMeasure:
+                        data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
+                    };
+                    var dataListTable = [
+                      data.fields.Lines[i].fields.ProductName || "",
+                      data.fields.Lines[i].fields.ProductDescription || "",
+                      "<div contenteditable='true' class='qty'>" +
+                        "" +
+                        data.fields.Lines[i].fields.UOMOrderQty +
+                        "" +
+                        "</div>" || "<div>" + "" + 0 + "" + "</div>",
+                      "<div>" +
+                        "" +
+                        currencySymbol +
+                        "" +
+                        data.fields.Lines[i].fields.LinePrice.toFixed(2) +
+                        "" +
+                        "</div>" || currencySymbol + "" + 0.0,
+                      data.fields.Lines[i].fields.LineTaxCode || "",
+                      AmountGbp || currencySymbol + "" + 0.0,
+                      '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
+                    ];
+                    lineItemsTable.push(dataListTable);
+                    lineItems.push(lineItemObj);
+                  }
+                } else {
                   let AmountGbp =
-                    currencySymbol +
-                    "" +
-                    data.fields.Lines[i].fields.TotalLineAmount.toLocaleString(
+                    data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
                       undefined,
                       {
                         minimumFractionDigits: 2,
@@ -1018,1397 +1102,288 @@ Template.new_invoice.onRendered(function() {
                   let currencyAmountGbp =
                     currencySymbol +
                     "" +
-                    data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
+                    data.fields.Lines.fields.TotalLineAmount.toFixed(2);
                   let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(
-                    data.fields.Lines[i].fields.LineTaxTotal
+                    data.fields.Lines.fields.LineTaxTotal
                   );
                   let TaxRateGbp = (
-                    data.fields.Lines[i].fields.LineTaxRate * 100
+                    data.fields.Lines.fields.LineTaxRate * 100
                   ).toFixed(2);
                   lineItemObj = {
                     lineID: Random.id(),
-                    id: data.fields.Lines[i].fields.ID || "",
-                    item: data.fields.Lines[i].fields.ProductName || "",
+                    id: data.fields.Lines.fields.ID || "",
                     description:
-                      data.fields.Lines[i].fields.ProductDescription || "",
-                    quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
-                    qtyordered: data.fields.Lines[i].fields.UOMOrderQty || 0,
-                    qtyshipped: data.fields.Lines[i].fields.UOMQtyShipped || 0,
-                    qtybo: data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
+                      data.fields.Lines.fields.ProductDescription || "",
+                    quantity: data.fields.Lines.fields.UOMOrderQty || 0,
                     unitPrice:
-                      currencySymbol +
-                        "" +
-                        data.fields.Lines[
-                          i
-                        ].fields.OriginalLinePrice.toLocaleString(undefined, {
+                      data.fields.Lines.fields.OriginalLinePrice.toLocaleString(
+                        undefined,
+                        {
                           minimumFractionDigits: 2,
-                        }) || 0,
-                    lineCost:
-                      currencySymbol +
-                        "" +
-                        data.fields.Lines[i].fields.LineCost.toLocaleString(
-                          undefined,
-                          {
-                            minimumFractionDigits: 2,
-                          }
-                        ) || 0,
-                    taxRate:
-                      (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(
-                        2
+                        }
                       ) || 0,
-                    taxCode: data.fields.Lines[i].fields.LineTaxCode || "",
+                    lineCost:
+                      data.fields.Lines.fields.LineCost.toLocaleString(
+                        undefined,
+                        {
+                          minimumFractionDigits: 2,
+                        }
+                      ) || 0,
+                    taxRate:
+                      (data.fields.Lines.fields.LineTaxRate * 100).toFixed(2) ||
+                      0,
+                    taxCode: data.fields.Lines.fields.LineTaxCode || "",
                     TotalAmt: AmountGbp || 0,
                     curTotalAmt: currencyAmountGbp || currencySymbol + "0",
                     TaxTotal: TaxTotalGbp || 0,
                     TaxRate: TaxRateGbp || 0,
-                    DiscountPercent:
-                      data.fields.Lines[i].fields.DiscountPercent || 0,
-                    UnitOfMeasure:
-                      data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
                   };
-                  var dataListTable = [
-                    data.fields.Lines[i].fields.ProductName || "",
-                    data.fields.Lines[i].fields.ProductDescription || "",
-                    "<div contenteditable='true' class='qty'>" +
-                      "" +
-                      data.fields.Lines[i].fields.UOMOrderQty +
-                      "" +
-                      "</div>" || "<div>" + "" + 0 + "" + "</div>",
-                    "<div>" +
-                      "" +
-                      currencySymbol +
-                      "" +
-                      data.fields.Lines[i].fields.LinePrice.toFixed(2) +
-                      "" +
-                      "</div>" || currencySymbol + "" + 0.0,
-                    data.fields.Lines[i].fields.LineTaxCode || "",
-                    AmountGbp || currencySymbol + "" + 0.0,
-                    '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
-                  ];
-                  lineItemsTable.push(dataListTable);
                   lineItems.push(lineItemObj);
                 }
-              } else {
-                let AmountGbp =
-                  data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
-                    undefined,
-                    {
-                      minimumFractionDigits: 2,
-                    }
+              }
+              let invoicerecord = {
+                id: data.fields.ID,
+                lid: "New Invoice",
+                socustomer: data.fields.CustomerName,
+                salesOrderto: data.fields.InvoiceToDesc,
+                shipto: data.fields.ShipToDesc,
+                department: data.fields.SaleClassName,
+                docnumber: data.fields.DocNumber,
+                custPONumber: data.fields.CustPONumber,
+                saledate: data.fields.SaleDate
+                  ? moment(data.fields.SaleDate).format("DD/MM/YYYY")
+                  : "",
+                duedate: data.fields.DueDate
+                  ? moment(data.fields.DueDate).format("DD/MM/YYYY")
+                  : "",
+                employeename: data.fields.EmployeeName,
+                status: data.fields.SalesStatus,
+                category: data.fields.SalesCategory,
+                comments: data.fields.Comments,
+                pickmemo: data.fields.PickMemo,
+                ponumber: data.fields.CustPONumber,
+                via: data.fields.Shipping,
+                connote: data.fields.ConNote,
+                reference: data.fields.ReferenceNo,
+                currency: data.fields.ForeignExchangeCode,
+                branding: data.fields.MedType,
+                invoiceToDesc: data.fields.InvoiceToDesc,
+                shipToDesc: data.fields.ShipToDesc,
+                termsName: data.fields.TermsName,
+                Total: totalInc,
+                TotalDiscount: totalDiscount,
+                LineItems: lineItems,
+                TotalTax: totalTax,
+                SubTotal: subTotal,
+                balanceDue: totalBalance,
+                saleCustField1: data.fields.SaleCustField1,
+                saleCustField2: data.fields.SaleCustField2,
+                totalPaid: totalPaidAmount,
+                ispaid: false,
+                isPartialPaid: false,
+              };
+  
+              $("#edtCustomerName").val(data.fields.CustomerName);
+              $("#sltTerms").val(data.fields.TermsName);
+              $("#sltDept").val(data.fields.SaleClassName);
+              $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+              FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+              $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+              $("#sltStatus").val(data.fields.SalesStatus);
+              templateObject.CleintName.set(data.fields.CustomerName);
+  
+              /* START attachment */
+              templateObject.attachmentCount.set(0);
+              if (data.fields.Attachments) {
+                if (data.fields.Attachments.length) {
+                  templateObject.attachmentCount.set(
+                    data.fields.Attachments.length
                   );
-                let currencyAmountGbp =
-                  currencySymbol +
-                  "" +
-                  data.fields.Lines.fields.TotalLineAmount.toFixed(2);
-                let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(
-                  data.fields.Lines.fields.LineTaxTotal
-                );
-                let TaxRateGbp = (
-                  data.fields.Lines.fields.LineTaxRate * 100
-                ).toFixed(2);
-                lineItemObj = {
-                  lineID: Random.id(),
-                  id: data.fields.Lines.fields.ID || "",
-                  description:
-                    data.fields.Lines.fields.ProductDescription || "",
-                  quantity: data.fields.Lines.fields.UOMOrderQty || 0,
-                  unitPrice:
-                    data.fields.Lines.fields.OriginalLinePrice.toLocaleString(
-                      undefined,
-                      {
-                        minimumFractionDigits: 2,
-                      }
-                    ) || 0,
-                  lineCost:
-                    data.fields.Lines.fields.LineCost.toLocaleString(
-                      undefined,
-                      {
-                        minimumFractionDigits: 2,
-                      }
-                    ) || 0,
-                  taxRate:
-                    (data.fields.Lines.fields.LineTaxRate * 100).toFixed(2) ||
-                    0,
-                  taxCode: data.fields.Lines.fields.LineTaxCode || "",
-                  TotalAmt: AmountGbp || 0,
-                  curTotalAmt: currencyAmountGbp || currencySymbol + "0",
-                  TaxTotal: TaxTotalGbp || 0,
-                  TaxRate: TaxRateGbp || 0,
-                };
-                lineItems.push(lineItemObj);
-              }
-            }
-            let invoicerecord = {
-              id: data.fields.ID,
-              lid: "New Invoice",
-              socustomer: data.fields.CustomerName,
-              salesOrderto: data.fields.InvoiceToDesc,
-              shipto: data.fields.ShipToDesc,
-              department: data.fields.SaleClassName,
-              docnumber: data.fields.DocNumber,
-              custPONumber: data.fields.CustPONumber,
-              saledate: data.fields.SaleDate
-                ? moment(data.fields.SaleDate).format("DD/MM/YYYY")
-                : "",
-              duedate: data.fields.DueDate
-                ? moment(data.fields.DueDate).format("DD/MM/YYYY")
-                : "",
-              employeename: data.fields.EmployeeName,
-              status: data.fields.SalesStatus,
-              category: data.fields.SalesCategory,
-              comments: data.fields.Comments,
-              pickmemo: data.fields.PickMemo,
-              ponumber: data.fields.CustPONumber,
-              via: data.fields.Shipping,
-              connote: data.fields.ConNote,
-              reference: data.fields.ReferenceNo,
-              currency: data.fields.ForeignExchangeCode,
-              branding: data.fields.MedType,
-              invoiceToDesc: data.fields.InvoiceToDesc,
-              shipToDesc: data.fields.ShipToDesc,
-              termsName: data.fields.TermsName,
-              Total: totalInc,
-              TotalDiscount: totalDiscount,
-              LineItems: lineItems,
-              TotalTax: totalTax,
-              SubTotal: subTotal,
-              balanceDue: totalBalance,
-              saleCustField1: data.fields.SaleCustField1,
-              saleCustField2: data.fields.SaleCustField2,
-              totalPaid: totalPaidAmount,
-              ispaid: false,
-              isPartialPaid: false,
-            };
-
-            $("#edtCustomerName").val(data.fields.CustomerName);
-            $("#sltTerms").val(data.fields.TermsName);
-            $("#sltDept").val(data.fields.SaleClassName);
-            $("#sltCurrency").val(data.fields.ForeignExchangeCode);
-            FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
-            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
-            $("#sltStatus").val(data.fields.SalesStatus);
-            templateObject.CleintName.set(data.fields.CustomerName);
-
-            /* START attachment */
-            templateObject.attachmentCount.set(0);
-            if (data.fields.Attachments) {
-              if (data.fields.Attachments.length) {
-                templateObject.attachmentCount.set(
-                  data.fields.Attachments.length
-                );
-                templateObject.uploadedFiles.set(data.fields.Attachments);
-              }
-            }
-            /* END  attachment */
-
-            var checkISCustLoad = false;
-            setTimeout(function () {
-              if (clientList) {
-                for (var i = 0; i < clientList.length; i++) {
-                  if (clientList[i].customername == data.fields.CustomerName) {
-                    checkISCustLoad = true;
-                    invoicerecord.firstname = clientList[i].firstname || "";
-                    invoicerecord.lastname = clientList[i].lastname || "";
-                    templateObject.invoicerecord.set(invoicerecord);
-                    $("#edtCustomerEmail").val(clientList[i].customeremail);
-                    $("#edtCustomerName").attr(
-                      "custid",
-                      clientList[i].customerid
-                    );
-                    $("#edtCustomerEmail").attr(
-                      "customerid",
-                      clientList[i].customerid
-                    );
-                    $("#edtCustomerEmail").attr(
-                      "customerfirstname",
-                      clientList[i].firstname
-                    );
-                    $("#edtCustomerEmail").attr(
-                      "customerlastname",
-                      clientList[i].lastname
-                    );
-                    $("#customerType").text(
-                      clientList[i].clienttypename || "Default"
-                    );
-                    $("#customerDiscount").text(
-                      clientList[i].discount + "%" || 0 + "%"
-                    );
-                    $("#edtCustomerUseType").val(
-                      clientList[i].clienttypename || "Default"
-                    );
-                    $("#edtCustomerUseDiscount").val(
-                      clientList[i].discount || 0
-                    );
-                  }
+                  templateObject.uploadedFiles.set(data.fields.Attachments);
                 }
               }
-
-              if (!checkISCustLoad) {
-                sideBarService
-                  .getCustomersDataByName(useData[d].fields.CustomerName)
-                  .then(function (dataClient) {
-                    for (var c = 0; c < dataClient.tcustomervs1.length; c++) {
-                      var customerrecordObj = {
-                        customerid: dataClient.tcustomervs1[c].Id || " ",
-                        firstname: dataClient.tcustomervs1[c].FirstName || " ",
-                        lastname: dataClient.tcustomervs1[c].LastName || " ",
-                        customername:
-                          dataClient.tcustomervs1[c].ClientName || " ",
-                        customeremail: dataClient.tcustomervs1[c].Email || " ",
-                        street: dataClient.tcustomervs1[c].Street || " ",
-                        street2: dataClient.tcustomervs1[c].Street2 || " ",
-                        street3: dataClient.tcustomervs1[c].Street3 || " ",
-                        suburb: dataClient.tcustomervs1[c].Suburb || " ",
-                        statecode:
-                          dataClient.tcustomervs1[c].State +
-                            " " +
-                            dataClient.tcustomervs1[c].Postcode || " ",
-                        country: dataClient.tcustomervs1[c].Country || " ",
-                        termsName: dataClient.tcustomervs1[c].TermsName || "",
-                        taxCode: dataClient.tcustomervs1[c].TaxCodeName || "E",
-                        clienttypename:
-                          dataClient.tcustomervs1[c].ClientTypeName ||
-                          "Default",
-                        discount: dataClient.tcustomervs1[c].Discount || 0,
-                      };
-                      clientList.push(customerrecordObj);
-
-                      invoicerecord.firstname =
-                        dataClient.tcustomervs1[c].FirstName || "";
-                      invoicerecord.lastname =
-                        dataClient.tcustomervs1[c].LastName || "";
-                      $("#edtCustomerEmail").val(
-                        dataClient.tcustomervs1[c].Email
+              /* END  attachment */
+  
+              var checkISCustLoad = false;
+              setTimeout(function () {
+                if (clientList) {
+                  for (var i = 0; i < clientList.length; i++) {
+                    if (clientList[i].customername == data.fields.CustomerName) {
+                      checkISCustLoad = true;
+                      invoicerecord.firstname = clientList[i].firstname || "";
+                      invoicerecord.lastname = clientList[i].lastname || "";
+                      templateObject.invoicerecord.set(invoicerecord);
+                      $("#edtCustomerEmail").val(clientList[i].customeremail);
+                      $("#edtCustomerName").attr(
+                        "custid",
+                        clientList[i].customerid
                       );
                       $("#edtCustomerEmail").attr(
                         "customerid",
-                        clientList[c].customerid
-                      );
-                      $("#edtCustomerName").attr(
-                        "custid",
-                        dataClient.tcustomervs1[c].Id
+                        clientList[i].customerid
                       );
                       $("#edtCustomerEmail").attr(
                         "customerfirstname",
-                        dataClient.tcustomervs1[c].FirstName
+                        clientList[i].firstname
                       );
                       $("#edtCustomerEmail").attr(
                         "customerlastname",
-                        dataClient.tcustomervs1[c].LastName
+                        clientList[i].lastname
                       );
                       $("#customerType").text(
-                        dataClient.tcustomervs1[c].ClientTypeName || "Default"
+                        clientList[i].clienttypename || "Default"
                       );
                       $("#customerDiscount").text(
-                        dataClient.tcustomervs1[c].Discount + "%" || 0 + "%"
+                        clientList[i].discount + "%" || 0 + "%"
                       );
                       $("#edtCustomerUseType").val(
-                        dataClient.tcustomervs1[c].ClientTypeName || "Default"
+                        clientList[i].clienttypename || "Default"
                       );
                       $("#edtCustomerUseDiscount").val(
-                        dataClient.tcustomervs1[c].Discount || 0
-                      );
-                    }
-
-                    templateObject.clientrecords.set(
-                      clientList.sort(function (a, b) {
-                        if (a.customername == "NA") {
-                          return 1;
-                        } else if (b.customername == "NA") {
-                          return -1;
-                        }
-                        return a.customername.toUpperCase() >
-                          b.customername.toUpperCase()
-                          ? 1
-                          : -1;
-                      })
-                    );
-                  });
-              }
-            }, 100);
-
-            templateObject.invoicerecord.set(invoicerecord);
-            templateObject.selectedCurrency.set(invoicerecord.currency);
-            templateObject.inputSelectedCurrency.set(invoicerecord.currency);
-
-          })
-          .catch(function (err) {
-            swal({
-              title: "Oooops...",
-              text: err,
-              type: "error",
-              showCancelButton: false,
-              confirmButtonText: "Try Again",
-            }).then((result) => {
-              if (result.value) {
-                Meteor._reload.reload();
-              } else if (result.dismiss === "cancel") {
-              }
-            });
-            $(".fullScreenSpin").css("display", "none");
-          });
-      };
-      templateObject.getInvoiceData();
-    }
-  } else if (url.includes("id") && url.includes("total")) {
-    $(".fullScreenSpin").css("display", "inline-block");
-    url = new URL(window.location.href);
-    let dateStart = new Date();
-    let transDate =
-      ("0" + dateStart.getDate()).toString().slice(-2) +
-      "/" +
-      ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) +
-      "/" +
-      dateStart.getFullYear();
-    getso_id = url.searchParams.get("id");
-    const paymentID = url.searchParams.get("paymentID");
-    const paidAmount = url.searchParams.get("total");
-    const currency_symbol = url.searchParams.get("currency");
-    if (getso_id) {
-      currentInvoice = parseInt(getso_id);
-      $(".printID").attr("id", currentInvoice);
-      templateObject.getInvoiceData = function () {
-        getVS1Data("TInvoiceEx")
-          .then(function (dataObject) {
-            if (dataObject.length == 0) {
-              let customerData = templateObject.clientrecords.get();
-              accountService
-                .getOneInvoicedataEx(currentInvoice)
-                .then(function (data) {
-                  templateObject.singleInvoiceData.set(data);
-                  let cust_result = customerData.filter((cust_data) => {
-                    return (
-                      cust_data.customername == useData[d].fields.ClientName
-                    );
-                  });
-                  let lineItems = [];
-                  let lineItemObj = {};
-                  let lineItemsTable = [];
-                  let lineItemTableObj = {};
-                  let exchangeCode = data.fields.ForeignExchangeCode;
-                  let currencySymbol = Currency;
-                  let total =
-                    currencySymbol +
-                      "" +
-                      data.fields.TotalAmount.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      }) || 0;
-                  let totalInc =
-                    currencySymbol +
-                      "" +
-                      data.fields.TotalAmountInc.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      }) || 0;
-                  let totalDiscount = utilityService
-                    .modifynegativeCurrencyFormat(data.fields.TotalDiscount)
-                    .toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-                  let subTotal =
-                    currencySymbol +
-                      "" +
-                      data.fields.TotalAmount.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      }) || 0;
-                  let totalTax =
-                    currencySymbol +
-                      "" +
-                      data.fields.TotalTax.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      }) || 0;
-                  let totalBalance =
-                    utilityService
-                      .modifynegativeCurrencyFormat(data.fields.TotalBalance)
-                      .toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      }) || 0;
-                  let totalPaidAmount =
-                    currencySymbol +
-                      "" +
-                      data.fields.TotalPaid.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      }) || 0;
-                  if (data.fields.Lines != null) {
-                    if (data.fields.Lines.length) {
-                      for (let i = 0; i < data.fields.Lines.length; i++) {
-                        let AmountGbp =
-                          currencySymbol +
-                            "" +
-                            data.fields.Lines[
-                              i
-                            ].fields.TotalLineAmount.toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0;
-                        let currencyAmountGbp =
-                          currencySymbol +
-                            "" +
-                            data.fields.Lines[i].fields.TotalLineAmount.toFixed(
-                              2
-                            ) || 0;
-                        let TaxTotalGbp =
-                          utilityService.modifynegativeCurrencyFormat(
-                            data.fields.Lines[i].fields.LineTaxTotal
-                          ) || 0;
-                        let TaxRateGbp =
-                          (
-                            data.fields.Lines[i].fields.LineTaxRate * 100
-                          ).toFixed(2) || 0;
-                        lineItemObj = {
-                          lineID: Random.id(),
-                          id: data.fields.Lines[i].fields.ID || "",
-                          item: data.fields.Lines[i].fields.ProductName || "",
-                          description:
-                            data.fields.Lines[i].fields.ProductDescription ||
-                            "",
-                          quantity:
-                            data.fields.Lines[i].fields.UOMOrderQty || 0,
-                          qtyordered:
-                            data.fields.Lines[i].fields.UOMOrderQty || 0,
-                          qtyshipped:
-                            data.fields.Lines[i].fields.UOMQtyShipped || 0,
-                          qtybo:
-                            data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
-                          unitPrice:
-                            utilityService
-                              .modifynegativeCurrencyFormat(
-                                data.fields.Lines[i].fields.OriginalLinePrice
-                              )
-                              .toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                              }) || 0,
-                          unitPriceInc:
-                            utilityService
-                              .modifynegativeCurrencyFormat(
-                                data.fields.Lines[i].fields.OriginalLinePriceInc
-                              )
-                              .toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                              }) || 0,
-                          TotalAmt:
-                            utilityService
-                              .modifynegativeCurrencyFormat(
-                                data.fields.Lines[i].fields.TotalLineAmount
-                              )
-                              .toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                              }) || 0,
-                          TotalAmtInc:
-                            utilityService
-                              .modifynegativeCurrencyFormat(
-                                data.fields.Lines[i].fields.TotalLineAmountInc
-                              )
-                              .toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                              }) || 0,
-                          lineCost:
-                            utilityService
-                              .modifynegativeCurrencyFormat(
-                                data.fields.Lines[i].fields.LineCost
-                              )
-                              .toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                              }) || 0,
-                          taxRate:
-                            (
-                              data.fields.Lines[i].fields.LineTaxRate * 100
-                            ).toFixed(2) || 0,
-                          taxCode:
-                            data.fields.Lines[i].fields.LineTaxCode || "",
-                          //TotalAmt: AmountGbp || 0,
-                          curTotalAmt:
-                            currencyAmountGbp || currencySymbol + "0",
-                          TaxTotal: TaxTotalGbp || 0,
-                          TaxRate: TaxRateGbp || 0,
-                          DiscountPercent:
-                            data.fields.Lines[i].fields.DiscountPercent || 0,
-                          UnitOfMeasure:
-                            data.fields.Lines[i].fields.UnitOfMeasure ||
-                            defaultUOM,
-                        };
-                        var dataListTable = [
-                          data.fields.Lines[i].fields.ProductName || "",
-                          data.fields.Lines[i].fields.ProductDescription || "",
-                          "<div contenteditable='true' class='qty'>" +
-                            "" +
-                            data.fields.Lines[i].fields.UOMOrderQty +
-                            "" +
-                            "</div>" || "<div>" + "" + 0 + "" + "</div>",
-                          "<div>" +
-                            "" +
-                            currencySymbol +
-                            "" +
-                            data.fields.Lines[i].fields.LinePrice.toFixed(2) +
-                            "" +
-                            "</div>" || currencySymbol + "" + 0.0,
-                          data.fields.Lines[i].fields.LineTaxCode || "",
-                          AmountGbp || currencySymbol + "" + 0.0,
-                          '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
-                        ];
-                        lineItemsTable.push(dataListTable);
-                        lineItems.push(lineItemObj);
-                      }
-                    } else {
-                      let AmountGbp =
-                        data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
-                          undefined,
-                          {
-                            minimumFractionDigits: 2,
-                          }
-                        ) || 0;
-                      let currencyAmountGbp =
-                        currencySymbol +
-                        "" +
-                        data.fields.Lines.fields.TotalLineAmount.toFixed(2);
-                      let TaxTotalGbp =
-                        utilityService.modifynegativeCurrencyFormat(
-                          data.fields.Lines.fields.LineTaxTotal
-                        );
-                      let TaxRateGbp = (
-                        data.fields.Lines.fields.LineTaxRate * 100
-                      ).toFixed(2);
-                      lineItemObj = {
-                        lineID: Random.id(),
-                        id: data.fields.Lines.fields.ID || "",
-                        description:
-                          data.fields.Lines.fields.ProductDescription || "",
-                        quantity: data.fields.Lines.fields.UOMOrderQty || 0,
-                        unitPrice:
-                          data.fields.Lines[
-                            i
-                          ].fields.OriginalLinePrice.toLocaleString(undefined, {
-                            minimumFractionDigits: 2,
-                          }) || 0,
-                        lineCost:
-                          data.fields.Lines[i].fields.LineCost.toLocaleString(
-                            undefined,
-                            {
-                              minimumFractionDigits: 2,
-                            }
-                          ) || 0,
-                        taxRate:
-                          (data.fields.Lines.fields.LineTaxRate * 100).toFixed(
-                            2
-                          ) || 0,
-                        taxCode: data.fields.Lines.fields.LineTaxCode || "",
-                        TotalAmt: AmountGbp || 0,
-                        curTotalAmt: currencyAmountGbp || currencySymbol + "0",
-                        TaxTotal: TaxTotalGbp || 0,
-                        TaxRate: TaxRateGbp || 0,
-                      };
-                      lineItems.push(lineItemObj);
-                    }
-                  }
-
-                  let lidData = "Edit Invoice" + " " + data.fields.ID || "";
-                  if (data.fields.IsBackOrder) {
-                    lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
-                    templateObject.isbackorderredirect.set(true);
-                  }
-                  let isPartialPaid = false;
-                  if (data.fields.TotalPaid > 0) {
-                    isPartialPaid = true;
-                  }
-                  let invoicerecord = {
-                    id: data.fields.ID,
-                    lid: lidData,
-                    socustomer: data.fields.CustomerName,
-                    salesOrderto: data.fields.InvoiceToDesc,
-                    shipto: data.fields.ShipToDesc,
-                    department: data.fields.SaleClassName,
-                    docnumber: data.fields.DocNumber,
-                    custPONumber: data.fields.CustPONumber,
-                    saledate: data.fields.SaleDate
-                      ? moment(data.fields.SaleDate).format("DD/MM/YYYY")
-                      : "",
-                    duedate: data.fields.DueDate
-                      ? moment(data.fields.DueDate).format("DD/MM/YYYY")
-                      : "",
-                    employeename: data.fields.EmployeeName,
-                    status: data.fields.SalesStatus,
-                    category: data.fields.SalesCategory,
-                    comments: data.fields.Comments,
-                    pickmemo: data.fields.PickMemo,
-                    ponumber: data.fields.CustPONumber,
-                    via: data.fields.Shipping,
-                    connote: data.fields.ConNote,
-                    reference: data.fields.ReferenceNo,
-                    currency: data.fields.ForeignExchangeCode,
-                    branding: data.fields.MedType,
-                    invoiceToDesc: data.fields.InvoiceToDesc,
-                    shipToDesc: data.fields.ShipToDesc,
-                    termsName: data.fields.TermsName,
-                    Total: totalInc || 0,
-                    TotalDiscount: totalDiscount,
-                    LineItems: lineItems,
-                    TotalTax: totalTax || 0,
-                    SubTotal: subTotal || 0,
-                    balanceDue: totalBalance || 0,
-                    saleCustField1: data.fields.SaleCustField1 || "",
-                    saleCustField2: data.fields.SaleCustField2 || "",
-                    totalPaid: totalPaidAmount || 0,
-                    ispaid: data.fields.IsPaid,
-                    isPartialPaid: isPartialPaid,
-                  };
-
-                  $("#edtCustomerName").val(data.fields.CustomerName);
-                  $("#sltTerms").val(data.fields.TermsName);
-                  $("#sltDept").val(data.fields.SaleClassName);
-                  $("#sltCurrency").val(data.fields.ForeignExchangeCode);
-                  FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
-
-                  $('#exchange_rate').val(data.fields.ForeignExchangeRate);
-                  $("#sltStatus").val(data.fields.SalesStatus);
-                  templateObject.CleintName.set(data.fields.CustomerName);
-
-                  templateObject.attachmentCount.set(0);
-                  if (data.fields.Attachments) {
-                    if (data.fields.Attachments.length) {
-                      templateObject.attachmentCount.set(
-                        data.fields.Attachments.length
-                      );
-                      templateObject.uploadedFiles.set(data.fields.Attachments);
-                    }
-                  }
-                  var checkISCustLoad = false;
-                  setTimeout(function () {
-                    if (clientList) {
-                      for (var i = 0; i < clientList.length; i++) {
-                        if (
-                          clientList[i].customername == data.fields.CustomerName
-                        ) {
-                          checkISCustLoad = true;
-                          invoicerecord.firstname =
-                            clientList[i].firstname || "";
-                          invoicerecord.lastname = clientList[i].lastname || "";
-                          templateObject.invoicerecord.set(invoicerecord);
-                          $("#edtCustomerEmail").val(
-                            clientList[i].customeremail
-                          );
-                          $("#edtCustomerName").attr(
-                            "custid",
-                            clientList[i].customerid
-                          );
-                          $("#edtCustomerEmail").attr(
-                            "customerid",
-                            clientList[i].customerid
-                          );
-                          $("#edtCustomerEmail").attr(
-                            "customerfirstname",
-                            clientList[i].firstname
-                          );
-                          $("#edtCustomerEmail").attr(
-                            "customerlastname",
-                            clientList[i].lastname
-                          );
-                          $("#customerType").text(
-                            clientList[i].clienttypename || "Default"
-                          );
-                          $("#customerDiscount").text(
-                            clientList[i].discount + "%" || 0 + "%"
-                          );
-                          $("#edtCustomerUseType").val(
-                            clientList[i].clienttypename || "Default"
-                          );
-                          $("#edtCustomerUseDiscount").val(
-                            clientList[i].discount || 0
-                          );
-                        }
-                      }
-                    }
-
-                    if (data.fields.IsPaid === true) {
-                      $("#edtCustomerName").attr("readonly", true);
-
-                      $(".btn-primary").attr("disabled", "disabled");
-
-                      $("#btnCopyInvoice").attr("disabled", "disabled");
-                      $("#edtCustomerName").css("background-color", "#eaecf4");
-
-                      $("#btnViewPayment").removeAttr("disabled", "disabled");
-                      $(".btnSave").attr("disabled", "disabled");
-                      $("#btnBack").removeAttr("disabled", "disabled");
-                      $(".printConfirm").removeAttr("disabled", "disabled");
-                      $(".tblInvoiceLine tbody tr").each(function () {
-                        var $tblrow = $(this);
-                        $tblrow.find("td").attr("contenteditable", false);
-                        //$tblrow.find("td").removeClass("lineProductName");
-                        $tblrow.find("td").removeClass("lineTaxRate");
-                        $tblrow.find("td").removeClass("lineTaxCode");
-
-                        $tblrow.find("td").attr("readonly", true);
-                        $tblrow.find("td").attr("disabled", "disabled");
-                        $tblrow.find("td").css("background-color", "#eaecf4");
-                        $tblrow
-                          .find("td .table-remove")
-                          .removeClass("btnRemove");
-                      });
-                    }
-
-                    if (!checkISCustLoad) {
-                      sideBarService
-                        .getCustomersDataByName(useData[d].fields.CustomerName)
-                        .then(function (dataClient) {
-                          for (
-                            var c = 0;
-                            c < dataClient.tcustomervs1.length;
-                            c++
-                          ) {
-                            var customerrecordObj = {
-                              customerid: dataClient.tcustomervs1[c].Id || " ",
-                              firstname:
-                                dataClient.tcustomervs1[c].FirstName || " ",
-                              lastname:
-                                dataClient.tcustomervs1[c].LastName || " ",
-                              customername:
-                                dataClient.tcustomervs1[c].ClientName || " ",
-                              customeremail:
-                                dataClient.tcustomervs1[c].Email || " ",
-                              street: dataClient.tcustomervs1[c].Street || " ",
-                              street2:
-                                dataClient.tcustomervs1[c].Street2 || " ",
-                              street3:
-                                dataClient.tcustomervs1[c].Street3 || " ",
-                              suburb: dataClient.tcustomervs1[c].Suburb || " ",
-                              statecode:
-                                dataClient.tcustomervs1[c].State +
-                                  " " +
-                                  dataClient.tcustomervs1[c].Postcode || " ",
-                              country:
-                                dataClient.tcustomervs1[c].Country || " ",
-                              termsName:
-                                dataClient.tcustomervs1[c].TermsName || "",
-                              taxCode:
-                                dataClient.tcustomervs1[c].TaxCodeName || "E",
-                              clienttypename:
-                                dataClient.tcustomervs1[c].ClientTypeName ||
-                                "Default",
-                              discount:
-                                dataClient.tcustomervs1[c].Discount || 0,
-                            };
-                            clientList.push(customerrecordObj);
-
-                            invoicerecord.firstname =
-                              dataClient.tcustomervs1[c].FirstName || "";
-                            invoicerecord.lastname =
-                              dataClient.tcustomervs1[c].LastName || "";
-                            $("#edtCustomerEmail").val(
-                              dataClient.tcustomervs1[c].Email
-                            );
-                            $("#edtCustomerEmail").attr(
-                              "customerid",
-                              clientList[c].customerid
-                            );
-                            $("#edtCustomerName").attr(
-                              "custid",
-                              dataClient.tcustomervs1[c].Id
-                            );
-                            $("#edtCustomerEmail").attr(
-                              "customerfirstname",
-                              dataClient.tcustomervs1[c].FirstName
-                            );
-                            $("#edtCustomerEmail").attr(
-                              "customerlastname",
-                              dataClient.tcustomervs1[c].LastName
-                            );
-                            $("#customerType").text(
-                              dataClient.tcustomervs1[c].ClientTypeName ||
-                                "Default"
-                            );
-                            $("#customerDiscount").text(
-                              dataClient.tcustomervs1[c].Discount + "%" ||
-                                0 + "%"
-                            );
-                            $("#edtCustomerUseType").val(
-                              dataClient.tcustomervs1[c].ClientTypeName ||
-                                "Default"
-                            );
-                            $("#edtCustomerUseDiscount").val(
-                              dataClient.tcustomervs1[c].Discount || 0
-                            );
-                          }
-
-                          templateObject.clientrecords.set(
-                            clientList.sort(function (a, b) {
-                              if (a.customername == "NA") {
-                                return 1;
-                              } else if (b.customername == "NA") {
-                                return -1;
-                              }
-                              return a.customername.toUpperCase() >
-                                b.customername.toUpperCase()
-                                ? 1
-                                : -1;
-                            })
-                          );
-                        });
-                    }
-                  }, 100);
-
-                  templateObject.invoicerecord.set(invoicerecord);
-                  let getTotal = $("#totalBalanceDue").text();
-                  let invoice_total = getTotal.replace(currency_symbol, "");
-                  let paymentItems = [];
-                  let paymentLineItems = {};
-                  let dueAmount =
-                    utilityService
-                      .modifynegativeCurrencyFormat(
-                        parseFloat(invoice_total) - parseFloat(paidAmount)
-                      )
-                      .toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      }) || 0;
-
-                  paymentLineItems = {
-                    id: "",
-                    invoiceid: getso_id || "",
-                    transid: getso_id || "",
-                    invoicedate: transDate,
-                    transtype: "Invoice",
-                    amountdue: dueAmount,
-                    paymentamount: paidAmount || 0,
-                    ouststandingamount: dueAmount,
-                    orginalamount: getTotal,
-                  };
-                  paymentItems.push(paymentLineItems);
-
-                  let record = {
-                    customerName: data.fields.CompanyName || "",
-                    paymentDate: transDate,
-                    reference: "",
-                    paymentAmount: paidAmount || 0,
-                    notes: data.fields.Notes,
-                    LineItems: paymentItems,
-                    department: "Default",
-                    applied: currency_symbol + "" + paidAmount,
-                  };
-
-                  templateObject.record.set(record);
-                  templateObject.selectedCurrency.set(invoicerecord.currency);
-                  templateObject.inputSelectedCurrency.set(
-                    invoicerecord.currency
-                  );
-
-                })
-                .catch(function (err) {
-                  swal({
-                    title: "Oooops...",
-                    text: err,
-                    type: "error",
-                    showCancelButton: false,
-                    confirmButtonText: "Try Again",
-                  }).then((result) => {
-                    if (result.value) {
-                      if (err === checkResponseError) {
-                        window.open("/", "_self");
-                      }
-                    } else if (result.dismiss === "cancel") {
-                    }
-                  });
-                  $(".fullScreenSpin").css("display", "none");
-                });
-            } else {
-              let data = JSON.parse(dataObject[0].data);
-
-              let useData = data.tinvoiceex;
-              let customerData = templateObject.clientrecords.get();
-              var added = false;
-              let company_name = "";
-              for (let d = 0; d < useData.length; d++) {
-                if (parseInt(useData[d].fields.ID) === currentInvoice) {
-                  added = true;
-                  let cust_result = customerData.filter((cust_data) => {
-                    return (
-                      cust_data.customername == useData[d].fields.ClientName
-                    );
-                  });
-                  templateObject.singleInvoiceData.set(useData[d]);
-                  let lineItems = [];
-                  let lineItemObj = {};
-                  let lineItemsTable = [];
-                  let lineItemTableObj = {};
-                  let exchangeCode = useData[d].fields.ForeignExchangeCode;
-                  let currencySymbol = Currency;
-                  let total =
-                    currencySymbol +
-                    "" +
-                    useData[d].fields.TotalAmount.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-                  let totalInc =
-                    currencySymbol +
-                    "" +
-                    useData[d].fields.TotalAmountInc.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-                  let totalDiscount =
-                    currencySymbol +
-                    "" +
-                    useData[d].fields.TotalDiscount.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-
-                  let subTotal =
-                    currencySymbol +
-                    "" +
-                    useData[d].fields.TotalAmount.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-                  let totalTax =
-                    currencySymbol +
-                    "" +
-                    useData[d].fields.TotalTax.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-                  let totalBalance = utilityService
-                    .modifynegativeCurrencyFormat(
-                      useData[d].fields.TotalBalance
-                    )
-                    .toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-                  let totalPaidAmount =
-                    currencySymbol +
-                    "" +
-                    useData[d].fields.TotalPaid.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-                  if (useData[d].fields.Lines.length) {
-                    for (let i = 0; i < useData[d].fields.Lines.length; i++) {
-                      let AmountGbp =
-                        currencySymbol +
-                        "" +
-                        useData[d].fields.Lines[
-                          i
-                        ].fields.TotalLineAmount.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                        });
-                      let currencyAmountGbp =
-                        currencySymbol +
-                        "" +
-                        useData[d].fields.Lines[
-                          i
-                        ].fields.TotalLineAmount.toFixed(2);
-                      let TaxTotalGbp =
-                        utilityService.modifynegativeCurrencyFormat(
-                          useData[d].fields.Lines[i].fields.LineTaxTotal
-                        );
-                      let TaxRateGbp = (
-                        useData[d].fields.Lines[i].fields.LineTaxRate * 100
-                      ).toFixed(2);
-                      lineItemObj = {
-                        lineID: Random.id(),
-                        id: useData[d].fields.Lines[i].fields.ID || "",
-                        item:
-                          useData[d].fields.Lines[i].fields.ProductName || "",
-                        description:
-                          useData[d].fields.Lines[i].fields
-                            .ProductDescription || "",
-                        quantity:
-                          useData[d].fields.Lines[i].fields.UOMOrderQty || 0,
-                        qtyordered:
-                          useData[d].fields.Lines[i].fields.UOMOrderQty || 0,
-                        qtyshipped:
-                          useData[d].fields.Lines[i].fields.UOMQtyShipped || 0,
-                        qtybo:
-                          useData[d].fields.Lines[i].fields.UOMQtyBackOrder ||
-                          0,
-                        unitPrice:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.OriginalLinePrice
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        unitPriceInc:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.OriginalLinePriceInc
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        TotalAmt:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.TotalLineAmount
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        TotalAmtInc:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.TotalLineAmountInc
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        lineCost:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              useData[d].fields.Lines[i].fields.LineCost
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        taxRate:
-                          (
-                            useData[d].fields.Lines[i].fields.LineTaxRate * 100
-                          ).toFixed(2) || 0,
-                        taxCode:
-                          useData[d].fields.Lines[i].fields.LineTaxCode || "",
-                        //TotalAmt: AmountGbp || 0,
-                        curTotalAmt: currencyAmountGbp || currencySymbol + "0",
-                        TaxTotal: TaxTotalGbp || 0,
-                        TaxRate: TaxRateGbp || 0,
-                        DiscountPercent:
-                          useData[d].fields.Lines[i].fields.DiscountPercent ||
-                          0,
-                        UnitOfMeasure:
-                          useData[d].fields.Lines[i].fields.UnitOfMeasure ||
-                          defaultUOM,
-                      };
-                      var dataListTable = [
-                        useData[d].fields.Lines[i].fields.ProductName || "",
-                        useData[d].fields.Lines[i].fields.ProductDescription ||
-                          "",
-                        "<div contenteditable='true' class='qty'>" +
-                          "" +
-                          useData[d].fields.Lines[i].fields.UOMOrderQty +
-                          "" +
-                          "</div>" || "<div>" + "" + 0 + "" + "</div>",
-                        "<div>" +
-                          "" +
-                          currencySymbol +
-                          "" +
-                          useData[d].fields.Lines[i].fields.LinePrice.toFixed(
-                            2
-                          ) +
-                          "" +
-                          "</div>" || currencySymbol + "" + 0.0,
-                        useData[d].fields.Lines[i].fields.LineTaxCode || "",
-                        AmountGbp || currencySymbol + "" + 0.0,
-                        '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
-                      ];
-                      lineItemsTable.push(dataListTable);
-                    }
-                  } else {
-                    let AmountGbp = useData[
-                      d
-                    ].fields.Lines.fields.TotalLineAmountInc.toLocaleString(
-                      undefined,
-                      {
-                        minimumFractionDigits: 2,
-                      }
-                    );
-                    let currencyAmountGbp =
-                      currencySymbol +
-                      "" +
-                      useData[d].fields.Lines.fields.TotalLineAmount.toFixed(2);
-                    let TaxTotalGbp =
-                      utilityService.modifynegativeCurrencyFormat(
-                        useData[d].fields.Lines.fields.LineTaxTotal
-                      );
-                    let TaxRateGbp =
-                      currencySymbol +
-                      "" +
-                      useData[d].fields.Lines.fields.LineTaxRate;
-                    lineItemObj = {
-                      lineID: Random.id(),
-                      id: useData[d].fields.Lines.fields.ID || "",
-                      description:
-                        useData[d].fields.Lines.fields.ProductDescription || "",
-                      quantity: useData[d].fields.Lines.fields.UOMOrderQty || 0,
-                      unitPrice:
-                        useData[
-                          d
-                        ].fields.Lines.fields.OriginalLinePrice.toLocaleString(
-                          undefined,
-                          {
-                            minimumFractionDigits: 2,
-                          }
-                        ) || 0,
-                      lineCost:
-                        useData[d].fields.Lines.fields.LineCost.toLocaleString(
-                          undefined,
-                          {
-                            minimumFractionDigits: 2,
-                          }
-                        ) || 0,
-                      taxRate: useData[d].fields.Lines.fields.LineTaxRate || 0,
-                      taxCode: useData[d].fields.Lines.fields.LineTaxCode || "",
-                      TotalAmt: AmountGbp || 0,
-                      curTotalAmt: currencyAmountGbp || currencySymbol + "0",
-                      TaxTotal: TaxTotalGbp || 0,
-                      TaxRate: TaxRateGbp || 0,
-                    };
-                    lineItems.push(lineItemObj);
-                  }
-                  company_name = useData[d].fields.CustomerName;
-
-                  let lidData = "Edit Invoice" + " " + useData[d].fields.ID || "";
-                  if (useData[d].fields.IsBackOrder) {
-                    lidData = "Edit Invoice" + " (BO) " + useData[d].fields.ID || "";
-                    templateObject.isbackorderredirect.set(true);
-                  }
-
-                  let isPartialPaid = false;
-                  if (useData[d].fields.TotalPaid > 0) {
-                    isPartialPaid = true;
-                  }
-
-                  let invoicerecord = {
-                    id: useData[d].fields.ID,
-                    lid: lidData,
-                    socustomer: useData[d].fields.CustomerName,
-                    salesOrderto: useData[d].fields.InvoiceToDesc,
-                    shipto: useData[d].fields.ShipToDesc,
-                    department: useData[d].fields.SaleClassName,
-                    docnumber: useData[d].fields.DocNumber,
-                    custPONumber: useData[d].fields.CustPONumber,
-                    saledate: useData[d].fields.SaleDate
-                      ? moment(useData[d].fields.SaleDate).format("DD/MM/YYYY")
-                      : "",
-                    duedate: useData[d].fields.DueDate
-                      ? moment(useData[d].fields.DueDate).format("DD/MM/YYYY")
-                      : "",
-                    employeename: useData[d].fields.EmployeeName,
-                    status: useData[d].fields.SalesStatus,
-                    category: useData[d].fields.SalesCategory,
-                    comments: useData[d].fields.Comments,
-                    pickmemo: useData[d].fields.PickMemo,
-                    ponumber: useData[d].fields.CustPONumber,
-                    via: useData[d].fields.Shipping,
-                    connote: useData[d].fields.ConNote,
-                    reference: useData[d].fields.ReferenceNo,
-                    currency: useData[d].fields.ForeignExchangeCode,
-                    branding: useData[d].fields.MedType,
-                    invoiceToDesc: useData[d].fields.InvoiceToDesc,
-                    shipToDesc: useData[d].fields.ShipToDesc,
-                    termsName: useData[d].fields.TermsName,
-                    Total: totalInc,
-                    TotalDiscount: totalDiscount,
-                    LineItems: lineItems,
-                    TotalTax: totalTax,
-                    SubTotal: subTotal,
-                    balanceDue: totalBalance,
-                    saleCustField1: useData[d].fields.SaleCustField1,
-                    saleCustField2: useData[d].fields.SaleCustField2,
-                    totalPaid: totalPaidAmount,
-                    ispaid: useData[d].fields.IsPaid,
-                    isPartialPaid: isPartialPaid,
-                  };
-
-                  $("#edtCustomerName").val(useData[d].fields.CustomerName);
-                  $("#sltTerms").val(useData[d].fields.TermsName);
-                  $("#sltDept").val(useData[d].fields.SaleClassName);
-                  $("#sltCurrency").val(useData[d].fields.ForeignExchangeCode);
-                  FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
-
-                  $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
-                  $("#sltStatus").val(useData[d].fields.SalesStatus);
-                  templateObject.CleintName.set(useData[d].fields.CustomerName);
-
-                  /* START attachment */
-                  templateObject.attachmentCount.set(0);
-                  if (useData[d].fields.Attachments) {
-                    if (useData[d].fields.Attachments.length) {
-                      templateObject.attachmentCount.set(
-                        useData[d].fields.Attachments.length
-                      );
-                      templateObject.uploadedFiles.set(
-                        useData[d].fields.Attachments
+                        clientList[i].discount || 0
                       );
                     }
                   }
-                  /* END  attachment */
-                  var checkISCustLoad = false;
-                  setTimeout(function () {
-                    if (clientList) {
-                      for (var i = 0; i < clientList.length; i++) {
-                        if (
-                          clientList[i].customername ==
-                          useData[d].fields.CustomerName
-                        ) {
-                          checkISCustLoad = true;
-                          invoicerecord.firstname =
-                            clientList[i].firstname || "";
-                          invoicerecord.lastname = clientList[i].lastname || "";
-                          $("#edtCustomerEmail").val(
-                            clientList[i].customeremail
-                          );
-                          $("#edtCustomerName").attr(
-                            "custid",
-                            clientList[i].customerid
-                          );
-                          $("#edtCustomerEmail").attr(
-                            "customerid",
-                            clientList[i].customerid
-                          );
-                          $("#edtCustomerEmail").attr(
-                            "customerfirstname",
-                            clientList[i].firstname
-                          );
-                          $("#edtCustomerEmail").attr(
-                            "customerlastname",
-                            clientList[i].lastname
-                          );
-                          $("#customerType").text(
-                            clientList[i].clienttypename || "Default"
-                          );
-                          $("#customerDiscount").text(
-                            clientList[i].discount + "%" || 0 + "%"
-                          );
-                          $("#edtCustomerUseType").val(
-                            clientList[i].clienttypename || "Default"
-                          );
-                          $("#edtCustomerUseDiscount").val(
-                            clientList[i].discount || 0
-                          );
-                        }
-                      }
-                    }
-
-                    if (useData[d].fields.IsPaid === true) {
-                      $("#edtCustomerName").attr("readonly", true);
-
-                      $(".btn-primary").attr("disabled", "disabled");
-                      $("#edtCustomerName").css("background-color", "#eaecf4");
-                      $("#btnViewPayment").removeAttr("disabled", "disabled");
-                      $(".btnSave").attr("disabled", "disabled");
-                      $("#btnBack").removeAttr("disabled", "disabled");
-                      $(".printConfirm").removeAttr("disabled", "disabled");
-                      $(".tblInvoiceLine tbody tr").each(function () {
-                        var $tblrow = $(this);
-                        $tblrow.find("td").attr("contenteditable", false);
-                        //$tblrow.find("td").removeClass("lineProductName");
-                        $tblrow.find("td").removeClass("lineTaxRate");
-                        $tblrow.find("td").removeClass("lineTaxCode");
-
-                        $tblrow.find("td").attr("readonly", true);
-                        $tblrow.find("td").attr("disabled", "disabled");
-                        $tblrow.find("td").css("background-color", "#eaecf4");
-                        $tblrow
-                          .find("td .table-remove")
-                          .removeClass("btnRemove");
-                      });
-                    }
-
-                    if (!checkISCustLoad) {
-                      sideBarService
-                        .getCustomersDataByName(useData[d].fields.CustomerName)
-                        .then(function (dataClient) {
-                          for (
-                            var c = 0;
-                            c < dataClient.tcustomervs1.length;
-                            c++
-                          ) {
-                            var customerrecordObj = {
-                              customerid: dataClient.tcustomervs1[c].Id || " ",
-                              firstname:
-                                dataClient.tcustomervs1[c].FirstName || " ",
-                              lastname:
-                                dataClient.tcustomervs1[c].LastName || " ",
-                              customername:
-                                dataClient.tcustomervs1[c].ClientName || " ",
-                              customeremail:
-                                dataClient.tcustomervs1[c].Email || " ",
-                              street: dataClient.tcustomervs1[c].Street || " ",
-                              street2:
-                                dataClient.tcustomervs1[c].Street2 || " ",
-                              street3:
-                                dataClient.tcustomervs1[c].Street3 || " ",
-                              suburb: dataClient.tcustomervs1[c].Suburb || " ",
-                              statecode:
-                                dataClient.tcustomervs1[c].State +
-                                  " " +
-                                  dataClient.tcustomervs1[c].Postcode || " ",
-                              country:
-                                dataClient.tcustomervs1[c].Country || " ",
-                              termsName:
-                                dataClient.tcustomervs1[c].TermsName || "",
-                              taxCode:
-                                dataClient.tcustomervs1[c].TaxCodeName || "E",
-                              clienttypename:
-                                dataClient.tcustomervs1[c].ClientTypeName ||
-                                "Default",
-                              discount:
-                                dataClient.tcustomervs1[c].Discount || 0,
-                            };
-                            clientList.push(customerrecordObj);
-
-                            invoicerecord.firstname =
-                              dataClient.tcustomervs1[c].FirstName || "";
-                            invoicerecord.lastname =
-                              dataClient.tcustomervs1[c].LastName || "";
-                            $("#edtCustomerEmail").val(
-                              dataClient.tcustomervs1[c].Email
-                            );
-                            $("#edtCustomerEmail").attr(
-                              "customerid",
-                              clientList[c].customerid
-                            );
-                            $("#edtCustomerName").attr(
-                              "custid",
-                              dataClient.tcustomervs1[c].Id
-                            );
-                            $("#edtCustomerEmail").attr(
-                              "customerfirstname",
-                              dataClient.tcustomervs1[c].FirstName
-                            );
-                            $("#edtCustomerEmail").attr(
-                              "customerlastname",
-                              dataClient.tcustomervs1[c].LastName
-                            );
-                            $("#customerType").text(
-                              dataClient.tcustomervs1[c].ClientTypeName ||
-                                "Default"
-                            );
-                            $("#customerDiscount").text(
-                              dataClient.tcustomervs1[c].Discount + "%" ||
-                                0 + "%"
-                            );
-                            $("#edtCustomerUseType").val(
-                              dataClient.tcustomervs1[c].ClientTypeName ||
-                                "Default"
-                            );
-                            $("#edtCustomerUseDiscount").val(
-                              dataClient.tcustomervs1[c].Discount || 0
-                            );
-                          }
-
-                          templateObject.clientrecords.set(
-                            clientList.sort(function (a, b) {
-                              if (a.customername == "NA") {
-                                return 1;
-                              } else if (b.customername == "NA") {
-                                return -1;
-                              }
-                              return a.customername.toUpperCase() >
-                                b.customername.toUpperCase()
-                                ? 1
-                                : -1;
-                            })
-                          );
-                        });
-                    }
-                  }, 100);
-
-                  templateObject.invoicerecord.set(invoicerecord);
-                  templateObject.selectedCurrency.set(invoicerecord.currency);
-                  templateObject.inputSelectedCurrency.set(
-                    invoicerecord.currency
-                  );
-
                 }
-              }
-              if (!added) {
+  
+                if (!checkISCustLoad) {
+                  sideBarService
+                    .getCustomersDataByName(useData[d].fields.CustomerName)
+                    .then(function (dataClient) {
+                      for (var c = 0; c < dataClient.tcustomervs1.length; c++) {
+                        var customerrecordObj = {
+                          customerid: dataClient.tcustomervs1[c].Id || " ",
+                          firstname: dataClient.tcustomervs1[c].FirstName || " ",
+                          lastname: dataClient.tcustomervs1[c].LastName || " ",
+                          customername:
+                            dataClient.tcustomervs1[c].ClientName || " ",
+                          customeremail: dataClient.tcustomervs1[c].Email || " ",
+                          street: dataClient.tcustomervs1[c].Street || " ",
+                          street2: dataClient.tcustomervs1[c].Street2 || " ",
+                          street3: dataClient.tcustomervs1[c].Street3 || " ",
+                          suburb: dataClient.tcustomervs1[c].Suburb || " ",
+                          statecode:
+                            dataClient.tcustomervs1[c].State +
+                              " " +
+                              dataClient.tcustomervs1[c].Postcode || " ",
+                          country: dataClient.tcustomervs1[c].Country || " ",
+                          termsName: dataClient.tcustomervs1[c].TermsName || "",
+                          taxCode: dataClient.tcustomervs1[c].TaxCodeName || "E",
+                          clienttypename:
+                            dataClient.tcustomervs1[c].ClientTypeName ||
+                            "Default",
+                          discount: dataClient.tcustomervs1[c].Discount || 0,
+                        };
+                        clientList.push(customerrecordObj);
+  
+                        invoicerecord.firstname =
+                          dataClient.tcustomervs1[c].FirstName || "";
+                        invoicerecord.lastname =
+                          dataClient.tcustomervs1[c].LastName || "";
+                        $("#edtCustomerEmail").val(
+                          dataClient.tcustomervs1[c].Email
+                        );
+                        $("#edtCustomerEmail").attr(
+                          "customerid",
+                          clientList[c].customerid
+                        );
+                        $("#edtCustomerName").attr(
+                          "custid",
+                          dataClient.tcustomervs1[c].Id
+                        );
+                        $("#edtCustomerEmail").attr(
+                          "customerfirstname",
+                          dataClient.tcustomervs1[c].FirstName
+                        );
+                        $("#edtCustomerEmail").attr(
+                          "customerlastname",
+                          dataClient.tcustomervs1[c].LastName
+                        );
+                        $("#customerType").text(
+                          dataClient.tcustomervs1[c].ClientTypeName || "Default"
+                        );
+                        $("#customerDiscount").text(
+                          dataClient.tcustomervs1[c].Discount + "%" || 0 + "%"
+                        );
+                        $("#edtCustomerUseType").val(
+                          dataClient.tcustomervs1[c].ClientTypeName || "Default"
+                        );
+                        $("#edtCustomerUseDiscount").val(
+                          dataClient.tcustomervs1[c].Discount || 0
+                        );
+                      }
+  
+                      templateObject.clientrecords.set(
+                        clientList.sort(function (a, b) {
+                          if (a.customername == "NA") {
+                            return 1;
+                          } else if (b.customername == "NA") {
+                            return -1;
+                          }
+                          return a.customername.toUpperCase() >
+                            b.customername.toUpperCase()
+                            ? 1
+                            : -1;
+                        })
+                      );
+                    });
+                }
+              }, 100);
+  
+              templateObject.invoicerecord.set(invoicerecord);
+              templateObject.selectedCurrency.set(invoicerecord.currency);
+              templateObject.inputSelectedCurrency.set(invoicerecord.currency);
+  
+            })
+            .catch(function (err) {
+              swal({
+                title: "Oooops...",
+                text: err,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Try Again",
+              }).then((result) => {
+                if (result.value) {
+                  Meteor._reload.reload();
+                } else if (result.dismiss === "cancel") {
+                }
+              });
+              $(".fullScreenSpin").css("display", "none");
+            });
+        };
+        templateObject.getInvoiceData();
+      }
+    } else if (url.includes("id") && url.includes("total")) {
+      $(".fullScreenSpin").css("display", "inline-block");
+      url = new URL(window.location.href);
+      let dateStart = new Date();
+      let transDate =
+        ("0" + dateStart.getDate()).toString().slice(-2) +
+        "/" +
+        ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) +
+        "/" +
+        dateStart.getFullYear();
+      getso_id = url.searchParams.get("id");
+      const paymentID = url.searchParams.get("paymentID");
+      const paidAmount = url.searchParams.get("total");
+      const currency_symbol = url.searchParams.get("currency");
+      if (getso_id) {
+        currentInvoice = parseInt(getso_id);
+        $(".printID").attr("id", currentInvoice);
+        templateObject.getInvoiceData = function () {
+          getVS1Data("TInvoiceEx")
+            .then(function (dataObject) {
+              if (dataObject.length == 0) {
+                let customerData = templateObject.clientrecords.get();
                 accountService
                   .getOneInvoicedataEx(currentInvoice)
                   .then(function (data) {
                     templateObject.singleInvoiceData.set(data);
-                    $(".fullScreenSpin").css("display", "none");
+                    let cust_result = customerData.filter((cust_data) => {
+                      return (
+                        cust_data.customername == useData[d].fields.ClientName
+                      );
+                    });
                     let lineItems = [];
                     let lineItemObj = {};
                     let lineItemsTable = [];
@@ -2417,17 +1392,16 @@ Template.new_invoice.onRendered(function() {
                     let currencySymbol = Currency;
                     let total =
                       currencySymbol +
-                      "" +
-                      data.fields.TotalAmount.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      });
+                        "" +
+                        data.fields.TotalAmount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        }) || 0;
                     let totalInc =
                       currencySymbol +
-                      "" +
-                      data.fields.TotalAmountInc.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      });
-
+                        "" +
+                        data.fields.TotalAmountInc.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        }) || 0;
                     let totalDiscount = utilityService
                       .modifynegativeCurrencyFormat(data.fields.TotalDiscount)
                       .toLocaleString(undefined, {
@@ -2435,51 +1409,53 @@ Template.new_invoice.onRendered(function() {
                       });
                     let subTotal =
                       currencySymbol +
-                      "" +
-                      data.fields.TotalAmount.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      });
+                        "" +
+                        data.fields.TotalAmount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        }) || 0;
                     let totalTax =
                       currencySymbol +
-                      "" +
-                      data.fields.TotalTax.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      });
-                    let totalBalance = utilityService
-                      .modifynegativeCurrencyFormat(data.fields.TotalBalance)
-                      .toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      });
+                        "" +
+                        data.fields.TotalTax.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        }) || 0;
+                    let totalBalance =
+                      utilityService
+                        .modifynegativeCurrencyFormat(data.fields.TotalBalance)
+                        .toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        }) || 0;
                     let totalPaidAmount =
                       currencySymbol +
-                      "" +
-                      data.fields.TotalPaid.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                      });
+                        "" +
+                        data.fields.TotalPaid.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        }) || 0;
                     if (data.fields.Lines != null) {
                       if (data.fields.Lines.length) {
                         for (let i = 0; i < data.fields.Lines.length; i++) {
                           let AmountGbp =
                             currencySymbol +
-                            "" +
-                            data.fields.Lines[
-                              i
-                            ].fields.TotalLineAmount.toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            });
+                              "" +
+                              data.fields.Lines[
+                                i
+                              ].fields.TotalLineAmount.toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0;
                           let currencyAmountGbp =
                             currencySymbol +
-                            "" +
-                            data.fields.Lines[i].fields.TotalLineAmount.toFixed(
-                              2
-                            );
+                              "" +
+                              data.fields.Lines[i].fields.TotalLineAmount.toFixed(
+                                2
+                              ) || 0;
                           let TaxTotalGbp =
                             utilityService.modifynegativeCurrencyFormat(
                               data.fields.Lines[i].fields.LineTaxTotal
-                            );
-                          let TaxRateGbp = (
-                            data.fields.Lines[i].fields.LineTaxRate * 100
-                          ).toFixed(2);
+                            ) || 0;
+                          let TaxRateGbp =
+                            (
+                              data.fields.Lines[i].fields.LineTaxRate * 100
+                            ).toFixed(2) || 0;
                           lineItemObj = {
                             lineID: Random.id(),
                             id: data.fields.Lines[i].fields.ID || "",
@@ -2506,8 +1482,7 @@ Template.new_invoice.onRendered(function() {
                             unitPriceInc:
                               utilityService
                                 .modifynegativeCurrencyFormat(
-                                  data.fields.Lines[i].fields
-                                    .OriginalLinePriceInc
+                                  data.fields.Lines[i].fields.OriginalLinePriceInc
                                 )
                                 .toLocaleString(undefined, {
                                   minimumFractionDigits: 2,
@@ -2555,8 +1530,7 @@ Template.new_invoice.onRendered(function() {
                           };
                           var dataListTable = [
                             data.fields.Lines[i].fields.ProductName || "",
-                            data.fields.Lines[i].fields.ProductDescription ||
-                              "",
+                            data.fields.Lines[i].fields.ProductDescription || "",
                             "<div contenteditable='true' class='qty'>" +
                               "" +
                               data.fields.Lines[i].fields.UOMOrderQty +
@@ -2583,7 +1557,7 @@ Template.new_invoice.onRendered(function() {
                             {
                               minimumFractionDigits: 2,
                             }
-                          );
+                          ) || 0;
                         let currencyAmountGbp =
                           currencySymbol +
                           "" +
@@ -2604,12 +1578,9 @@ Template.new_invoice.onRendered(function() {
                           unitPrice:
                             data.fields.Lines[
                               i
-                            ].fields.OriginalLinePrice.toLocaleString(
-                              undefined,
-                              {
-                                minimumFractionDigits: 2,
-                              }
-                            ) || 0,
+                            ].fields.OriginalLinePrice.toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                            }) || 0,
                           lineCost:
                             data.fields.Lines[i].fields.LineCost.toLocaleString(
                               undefined,
@@ -2618,31 +1589,28 @@ Template.new_invoice.onRendered(function() {
                               }
                             ) || 0,
                           taxRate:
-                            (
-                              data.fields.Lines.fields.LineTaxRate * 100
-                            ).toFixed(2) || 0,
+                            (data.fields.Lines.fields.LineTaxRate * 100).toFixed(
+                              2
+                            ) || 0,
                           taxCode: data.fields.Lines.fields.LineTaxCode || "",
                           TotalAmt: AmountGbp || 0,
-                          curTotalAmt:
-                            currencyAmountGbp || currencySymbol + "0",
+                          curTotalAmt: currencyAmountGbp || currencySymbol + "0",
                           TaxTotal: TaxTotalGbp || 0,
                           TaxRate: TaxRateGbp || 0,
                         };
                         lineItems.push(lineItemObj);
                       }
                     }
-
+  
                     let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                     if (data.fields.IsBackOrder) {
                       lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
                       templateObject.isbackorderredirect.set(true);
                     }
-
                     let isPartialPaid = false;
                     if (data.fields.TotalPaid > 0) {
                       isPartialPaid = true;
                     }
-
                     let invoicerecord = {
                       id: data.fields.ID,
                       lid: lidData,
@@ -2672,64 +1640,59 @@ Template.new_invoice.onRendered(function() {
                       invoiceToDesc: data.fields.InvoiceToDesc,
                       shipToDesc: data.fields.ShipToDesc,
                       termsName: data.fields.TermsName,
-                      Total: totalInc,
+                      Total: totalInc || 0,
                       TotalDiscount: totalDiscount,
                       LineItems: lineItems,
-                      TotalTax: totalTax,
-                      SubTotal: subTotal,
-                      balanceDue: totalBalance,
-                      saleCustField1: data.fields.SaleCustField1,
-                      saleCustField2: data.fields.SaleCustField2,
-                      totalPaid: totalPaidAmount,
+                      TotalTax: totalTax || 0,
+                      SubTotal: subTotal || 0,
+                      balanceDue: totalBalance || 0,
+                      saleCustField1: data.fields.SaleCustField1 || "",
+                      saleCustField2: data.fields.SaleCustField2 || "",
+                      totalPaid: totalPaidAmount || 0,
                       ispaid: data.fields.IsPaid,
                       isPartialPaid: isPartialPaid,
                     };
-
+  
                     $("#edtCustomerName").val(data.fields.CustomerName);
-                    $("#sltStatus").val(data.fields.SalesStatus);
+                    $("#sltTerms").val(data.fields.TermsName);
                     $("#sltDept").val(data.fields.SaleClassName);
                     $("#sltCurrency").val(data.fields.ForeignExchangeCode);
                     FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
-
+  
                     $('#exchange_rate').val(data.fields.ForeignExchangeRate);
-                    $("#sltTerms").val(data.fields.TermsName);
+                    $("#sltStatus").val(data.fields.SalesStatus);
                     templateObject.CleintName.set(data.fields.CustomerName);
-                    /* START attachment */
+  
                     templateObject.attachmentCount.set(0);
                     if (data.fields.Attachments) {
                       if (data.fields.Attachments.length) {
                         templateObject.attachmentCount.set(
                           data.fields.Attachments.length
                         );
-                        templateObject.uploadedFiles.set(
-                          data.fields.Attachments
-                        );
+                        templateObject.uploadedFiles.set(data.fields.Attachments);
                       }
                     }
-                    /* END  attachment */
                     var checkISCustLoad = false;
                     setTimeout(function () {
                       if (clientList) {
                         for (var i = 0; i < clientList.length; i++) {
                           if (
-                            clientList[i].customername ==
-                            data.fields.CustomerName
+                            clientList[i].customername == data.fields.CustomerName
                           ) {
                             checkISCustLoad = true;
                             invoicerecord.firstname =
                               clientList[i].firstname || "";
-                            invoicerecord.lastname =
-                              clientList[i].lastname || "";
+                            invoicerecord.lastname = clientList[i].lastname || "";
                             templateObject.invoicerecord.set(invoicerecord);
                             $("#edtCustomerEmail").val(
                               clientList[i].customeremail
                             );
-                            $("#edtCustomerEmail").attr(
-                              "customerid",
-                              clientList[i].customerid
-                            );
                             $("#edtCustomerName").attr(
                               "custid",
+                              clientList[i].customerid
+                            );
+                            $("#edtCustomerEmail").attr(
+                              "customerid",
                               clientList[i].customerid
                             );
                             $("#edtCustomerEmail").attr(
@@ -2755,18 +1718,15 @@ Template.new_invoice.onRendered(function() {
                           }
                         }
                       }
-
+  
                       if (data.fields.IsPaid === true) {
                         $("#edtCustomerName").attr("readonly", true);
-
+  
                         $(".btn-primary").attr("disabled", "disabled");
-
+  
                         $("#btnCopyInvoice").attr("disabled", "disabled");
-                        $("#edtCustomerName").css(
-                          "background-color",
-                          "#eaecf4"
-                        );
-
+                        $("#edtCustomerName").css("background-color", "#eaecf4");
+  
                         $("#btnViewPayment").removeAttr("disabled", "disabled");
                         $(".btnSave").attr("disabled", "disabled");
                         $("#btnBack").removeAttr("disabled", "disabled");
@@ -2777,7 +1737,7 @@ Template.new_invoice.onRendered(function() {
                           //$tblrow.find("td").removeClass("lineProductName");
                           $tblrow.find("td").removeClass("lineTaxRate");
                           $tblrow.find("td").removeClass("lineTaxCode");
-
+  
                           $tblrow.find("td").attr("readonly", true);
                           $tblrow.find("td").attr("disabled", "disabled");
                           $tblrow.find("td").css("background-color", "#eaecf4");
@@ -2786,12 +1746,10 @@ Template.new_invoice.onRendered(function() {
                             .removeClass("btnRemove");
                         });
                       }
-
+  
                       if (!checkISCustLoad) {
                         sideBarService
-                          .getCustomersDataByName(
-                            useData[d].fields.CustomerName
-                          )
+                          .getCustomersDataByName(useData[d].fields.CustomerName)
                           .then(function (dataClient) {
                             for (
                               var c = 0;
@@ -2799,8 +1757,7 @@ Template.new_invoice.onRendered(function() {
                               c++
                             ) {
                               var customerrecordObj = {
-                                customerid:
-                                  dataClient.tcustomervs1[c].Id || " ",
+                                customerid: dataClient.tcustomervs1[c].Id || " ",
                                 firstname:
                                   dataClient.tcustomervs1[c].FirstName || " ",
                                 lastname:
@@ -2809,14 +1766,12 @@ Template.new_invoice.onRendered(function() {
                                   dataClient.tcustomervs1[c].ClientName || " ",
                                 customeremail:
                                   dataClient.tcustomervs1[c].Email || " ",
-                                street:
-                                  dataClient.tcustomervs1[c].Street || " ",
+                                street: dataClient.tcustomervs1[c].Street || " ",
                                 street2:
                                   dataClient.tcustomervs1[c].Street2 || " ",
                                 street3:
                                   dataClient.tcustomervs1[c].Street3 || " ",
-                                suburb:
-                                  dataClient.tcustomervs1[c].Suburb || " ",
+                                suburb: dataClient.tcustomervs1[c].Suburb || " ",
                                 statecode:
                                   dataClient.tcustomervs1[c].State +
                                     " " +
@@ -2834,7 +1789,7 @@ Template.new_invoice.onRendered(function() {
                                   dataClient.tcustomervs1[c].Discount || 0,
                               };
                               clientList.push(customerrecordObj);
-
+  
                               invoicerecord.firstname =
                                 dataClient.tcustomervs1[c].FirstName || "";
                               invoicerecord.lastname =
@@ -2874,7 +1829,7 @@ Template.new_invoice.onRendered(function() {
                                 dataClient.tcustomervs1[c].Discount || 0
                               );
                             }
-
+  
                             templateObject.clientrecords.set(
                               clientList.sort(function (a, b) {
                                 if (a.customername == "NA") {
@@ -2891,14 +1846,51 @@ Template.new_invoice.onRendered(function() {
                           });
                       }
                     }, 100);
-
+  
                     templateObject.invoicerecord.set(invoicerecord);
-
+                    let getTotal = $("#totalBalanceDue").text();
+                    let invoice_total = getTotal.replace(currency_symbol, "");
+                    let paymentItems = [];
+                    let paymentLineItems = {};
+                    let dueAmount =
+                      utilityService
+                        .modifynegativeCurrencyFormat(
+                          parseFloat(invoice_total) - parseFloat(paidAmount)
+                        )
+                        .toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        }) || 0;
+  
+                    paymentLineItems = {
+                      id: "",
+                      invoiceid: getso_id || "",
+                      transid: getso_id || "",
+                      invoicedate: transDate,
+                      transtype: "Invoice",
+                      amountdue: dueAmount,
+                      paymentamount: paidAmount || 0,
+                      ouststandingamount: dueAmount,
+                      orginalamount: getTotal,
+                    };
+                    paymentItems.push(paymentLineItems);
+  
+                    let record = {
+                      customerName: data.fields.CompanyName || "",
+                      paymentDate: transDate,
+                      reference: "",
+                      paymentAmount: paidAmount || 0,
+                      notes: data.fields.Notes,
+                      LineItems: paymentItems,
+                      department: "Default",
+                      applied: currency_symbol + "" + paidAmount,
+                    };
+  
+                    templateObject.record.set(record);
                     templateObject.selectedCurrency.set(invoicerecord.currency);
                     templateObject.inputSelectedCurrency.set(
                       invoicerecord.currency
                     );
-
+  
                   })
                   .catch(function (err) {
                     swal({
@@ -2917,644 +1909,1078 @@ Template.new_invoice.onRendered(function() {
                     });
                     $(".fullScreenSpin").css("display", "none");
                   });
-              }
-
-              setTimeout(function () {
-                let getTotal = $("#totalBalanceDue").text();
-                $(".pdfCustomerAddress").html(
-                  $("#txabillingAddress")
-                    .val()
-                    .replace(/[\r\n]/g, "<br />")
-                );
-                $(".pdfCustomerName").html($("#edtCustomerName").val());
-                let invoice_total = getTotal
-                  .replace(currency_symbol, "")
-                  .replace(",", "");
-                let paymentItems = [];
-                let paymentLineItems = {};
-                let dueAmount =
-                  utilityService
-                    .modifynegativeCurrencyFormat(
-                      parseFloat(invoice_total) - parseFloat(paidAmount)
-                    )
-                    .toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    }) || 0;
-                let amountPaid =
-                  Currency +
-                  "" +
-                  paidAmount.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-                paymentLineItems = {
-                  id: "",
-                  invoiceid: getso_id || "",
-                  transid: getso_id || "",
-                  invoicedate: transDate,
-                  transtype: "Invoice",
-                  amountdue: dueAmount || 0,
-                  paymentamount: amountPaid || 0,
-                  ouststandingamount: dueAmount,
-                  orginalamount: getTotal,
-                };
-                paymentItems.push(paymentLineItems);
-
-                let record = {
-                  customerName: company_name || "",
-                  paymentDate: transDate,
-                  reference: "",
-                  paymentAmount: paidAmount || 0,
-                  notes: $("txaComment").val() || "",
-                  LineItems: paymentItems,
-                  department: "Default",
-                  applied: currency_symbol + "" + paidAmount,
-                };
-                templateObject.record.set(record);
-              }, 1500);
-            }
-          })
-          .catch(function (err) {
-            accountService
-              .getOneInvoicedataEx(currentInvoice)
-              .then(function (data) {
-                templateObject.singleInvoiceData.set(data);
-                $(".fullScreenSpin").css("display", "none");
-                let lineItems = [];
-                let lineItemObj = {};
-                let lineItemsTable = [];
-                let lineItemTableObj = {};
-                let exchangeCode = data.fields.ForeignExchangeCode;
-                let currencySymbol = Currency;
-                let total =
-                  currencySymbol +
-                  "" +
-                  data.fields.TotalAmount.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-                let totalInc =
-                  currencySymbol +
-                  "" +
-                  data.fields.TotalAmountInc.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-
-                let totalDiscount = utilityService
-                  .modifynegativeCurrencyFormat(data.fields.TotalDiscount)
-                  .toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-                let subTotal =
-                  currencySymbol +
-                  "" +
-                  data.fields.TotalAmount.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-                let totalTax =
-                  currencySymbol +
-                  "" +
-                  data.fields.TotalTax.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-                let totalBalance = utilityService
-                  .modifynegativeCurrencyFormat(data.fields.TotalBalance)
-                  .toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-                let totalPaidAmount =
-                  currencySymbol +
-                  "" +
-                  data.fields.TotalPaid.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-                if (data.fields.Lines != null) {
-                  if (data.fields.Lines.length) {
-                    for (let i = 0; i < data.fields.Lines.length; i++) {
-                      let AmountGbp =
-                        currencySymbol +
-                        "" +
-                        data.fields.Lines[
-                          i
-                        ].fields.TotalLineAmount.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                        });
-                      let currencyAmountGbp =
-                        currencySymbol +
-                        "" +
-                        data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
-                      let TaxTotalGbp =
-                        utilityService.modifynegativeCurrencyFormat(
-                          data.fields.Lines[i].fields.LineTaxTotal
-                        );
-                      let TaxRateGbp = (
-                        data.fields.Lines[i].fields.LineTaxRate * 100
-                      ).toFixed(2);
-                      lineItemObj = {
-                        lineID: Random.id(),
-                        id: data.fields.Lines[i].fields.ID || "",
-                        item: data.fields.Lines[i].fields.ProductName || "",
-                        description:
-                          data.fields.Lines[i].fields.ProductDescription || "",
-                        quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
-                        qtyordered:
-                          data.fields.Lines[i].fields.UOMOrderQty || 0,
-                        qtyshipped:
-                          data.fields.Lines[i].fields.UOMQtyShipped || 0,
-                        qtybo: data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
-                        unitPrice:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.OriginalLinePrice
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        unitPriceInc:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.OriginalLinePriceInc
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        TotalAmt:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.TotalLineAmount
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        TotalAmtInc:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.TotalLineAmountInc
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        lineCost:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.LineCost
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        taxRate:
-                          (
-                            data.fields.Lines[i].fields.LineTaxRate * 100
-                          ).toFixed(2) || 0,
-                        taxCode: data.fields.Lines[i].fields.LineTaxCode || "",
-                        //TotalAmt: AmountGbp || 0,
-                        curTotalAmt: currencyAmountGbp || currencySymbol + "0",
-                        TaxTotal: TaxTotalGbp || 0,
-                        TaxRate: TaxRateGbp || 0,
-                        DiscountPercent:
-                          data.fields.Lines[i].fields.DiscountPercent || 0,
-                        UnitOfMeasure:
-                          data.fields.Lines[i].fields.UnitOfMeasure ||
-                          defaultUOM,
-                      };
-                      var dataListTable = [
-                        data.fields.Lines[i].fields.ProductName || "",
-                        data.fields.Lines[i].fields.ProductDescription || "",
-                        "<div contenteditable='true' class='qty'>" +
-                          "" +
-                          data.fields.Lines[i].fields.UOMOrderQty +
-                          "" +
-                          "</div>" || "<div>" + "" + 0 + "" + "</div>",
-                        "<div>" +
-                          "" +
+              } else {
+                let data = JSON.parse(dataObject[0].data);
+  
+                let useData = data.tinvoiceex;
+                let customerData = templateObject.clientrecords.get();
+                var added = false;
+                let company_name = "";
+                for (let d = 0; d < useData.length; d++) {
+                  if (parseInt(useData[d].fields.ID) === currentInvoice) {
+                    added = true;
+                    let cust_result = customerData.filter((cust_data) => {
+                      return (
+                        cust_data.customername == useData[d].fields.ClientName
+                      );
+                    });
+                    templateObject.singleInvoiceData.set(useData[d]);
+                    let lineItems = [];
+                    let lineItemObj = {};
+                    let lineItemsTable = [];
+                    let lineItemTableObj = {};
+                    let exchangeCode = useData[d].fields.ForeignExchangeCode;
+                    let currencySymbol = Currency;
+                    let total =
+                      currencySymbol +
+                      "" +
+                      useData[d].fields.TotalAmount.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+                    let totalInc =
+                      currencySymbol +
+                      "" +
+                      useData[d].fields.TotalAmountInc.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+                    let totalDiscount =
+                      currencySymbol +
+                      "" +
+                      useData[d].fields.TotalDiscount.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+  
+                    let subTotal =
+                      currencySymbol +
+                      "" +
+                      useData[d].fields.TotalAmount.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+                    let totalTax =
+                      currencySymbol +
+                      "" +
+                      useData[d].fields.TotalTax.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+                    let totalBalance = utilityService
+                      .modifynegativeCurrencyFormat(
+                        useData[d].fields.TotalBalance
+                      )
+                      .toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+                    let totalPaidAmount =
+                      currencySymbol +
+                      "" +
+                      useData[d].fields.TotalPaid.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+                    if (useData[d].fields.Lines.length) {
+                      for (let i = 0; i < useData[d].fields.Lines.length; i++) {
+                        let AmountGbp =
                           currencySymbol +
                           "" +
-                          data.fields.Lines[i].fields.LinePrice.toFixed(2) +
+                          useData[d].fields.Lines[
+                            i
+                          ].fields.TotalLineAmount.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                          });
+                        let currencyAmountGbp =
+                          currencySymbol +
                           "" +
-                          "</div>" || currencySymbol + "" + 0.0,
-                        data.fields.Lines[i].fields.LineTaxCode || "",
-                        AmountGbp || currencySymbol + "" + 0.0,
-                        '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
-                      ];
-                      lineItemsTable.push(dataListTable);
-                      lineItems.push(lineItemObj);
-                    }
-                  } else {
-                    let AmountGbp =
-                      data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
+                          useData[d].fields.Lines[
+                            i
+                          ].fields.TotalLineAmount.toFixed(2);
+                        let TaxTotalGbp =
+                          utilityService.modifynegativeCurrencyFormat(
+                            useData[d].fields.Lines[i].fields.LineTaxTotal
+                          );
+                        let TaxRateGbp = (
+                          useData[d].fields.Lines[i].fields.LineTaxRate * 100
+                        ).toFixed(2);
+                        lineItemObj = {
+                          lineID: Random.id(),
+                          id: useData[d].fields.Lines[i].fields.ID || "",
+                          item:
+                            useData[d].fields.Lines[i].fields.ProductName || "",
+                          description:
+                            useData[d].fields.Lines[i].fields
+                              .ProductDescription || "",
+                          quantity:
+                            useData[d].fields.Lines[i].fields.UOMOrderQty || 0,
+                          qtyordered:
+                            useData[d].fields.Lines[i].fields.UOMOrderQty || 0,
+                          qtyshipped:
+                            useData[d].fields.Lines[i].fields.UOMQtyShipped || 0,
+                          qtybo:
+                            useData[d].fields.Lines[i].fields.UOMQtyBackOrder ||
+                            0,
+                          unitPrice:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                data.fields.Lines[i].fields.OriginalLinePrice
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          unitPriceInc:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                data.fields.Lines[i].fields.OriginalLinePriceInc
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          TotalAmt:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                data.fields.Lines[i].fields.TotalLineAmount
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          TotalAmtInc:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                data.fields.Lines[i].fields.TotalLineAmountInc
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          lineCost:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                useData[d].fields.Lines[i].fields.LineCost
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          taxRate:
+                            (
+                              useData[d].fields.Lines[i].fields.LineTaxRate * 100
+                            ).toFixed(2) || 0,
+                          taxCode:
+                            useData[d].fields.Lines[i].fields.LineTaxCode || "",
+                          //TotalAmt: AmountGbp || 0,
+                          curTotalAmt: currencyAmountGbp || currencySymbol + "0",
+                          TaxTotal: TaxTotalGbp || 0,
+                          TaxRate: TaxRateGbp || 0,
+                          DiscountPercent:
+                            useData[d].fields.Lines[i].fields.DiscountPercent ||
+                            0,
+                          UnitOfMeasure:
+                            useData[d].fields.Lines[i].fields.UnitOfMeasure ||
+                            defaultUOM,
+                        };
+                        var dataListTable = [
+                          useData[d].fields.Lines[i].fields.ProductName || "",
+                          useData[d].fields.Lines[i].fields.ProductDescription ||
+                            "",
+                          "<div contenteditable='true' class='qty'>" +
+                            "" +
+                            useData[d].fields.Lines[i].fields.UOMOrderQty +
+                            "" +
+                            "</div>" || "<div>" + "" + 0 + "" + "</div>",
+                          "<div>" +
+                            "" +
+                            currencySymbol +
+                            "" +
+                            useData[d].fields.Lines[i].fields.LinePrice.toFixed(
+                              2
+                            ) +
+                            "" +
+                            "</div>" || currencySymbol + "" + 0.0,
+                          useData[d].fields.Lines[i].fields.LineTaxCode || "",
+                          AmountGbp || currencySymbol + "" + 0.0,
+                          '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
+                        ];
+                        lineItemsTable.push(dataListTable);
+                      }
+                    } else {
+                      let AmountGbp = useData[
+                        d
+                      ].fields.Lines.fields.TotalLineAmountInc.toLocaleString(
                         undefined,
                         {
                           minimumFractionDigits: 2,
                         }
                       );
-                    let currencyAmountGbp =
-                      currencySymbol +
-                      "" +
-                      data.fields.Lines.fields.TotalLineAmount.toFixed(2);
-                    let TaxTotalGbp =
-                      utilityService.modifynegativeCurrencyFormat(
-                        data.fields.Lines.fields.LineTaxTotal
-                      );
-                    let TaxRateGbp = (
-                      data.fields.Lines.fields.LineTaxRate * 100
-                    ).toFixed(2);
-                    lineItemObj = {
-                      lineID: Random.id(),
-                      id: data.fields.Lines.fields.ID || "",
-                      description:
-                        data.fields.Lines.fields.ProductDescription || "",
-                      quantity: data.fields.Lines.fields.UOMOrderQty || 0,
-                      unitPrice:
-                        data.fields.Lines[
-                          i
-                        ].fields.OriginalLinePrice.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                        }) || 0,
-                      lineCost:
-                        data.fields.Lines[i].fields.LineCost.toLocaleString(
-                          undefined,
-                          {
-                            minimumFractionDigits: 2,
-                          }
-                        ) || 0,
-                      taxRate:
-                        (data.fields.Lines.fields.LineTaxRate * 100).toFixed(
-                          2
-                        ) || 0,
-                      taxCode: data.fields.Lines.fields.LineTaxCode || "",
-                      TotalAmt: AmountGbp || 0,
-                      curTotalAmt: currencyAmountGbp || currencySymbol + "0",
-                      TaxTotal: TaxTotalGbp || 0,
-                      TaxRate: TaxRateGbp || 0,
+                      let currencyAmountGbp =
+                        currencySymbol +
+                        "" +
+                        useData[d].fields.Lines.fields.TotalLineAmount.toFixed(2);
+                      let TaxTotalGbp =
+                        utilityService.modifynegativeCurrencyFormat(
+                          useData[d].fields.Lines.fields.LineTaxTotal
+                        );
+                      let TaxRateGbp =
+                        currencySymbol +
+                        "" +
+                        useData[d].fields.Lines.fields.LineTaxRate;
+                      lineItemObj = {
+                        lineID: Random.id(),
+                        id: useData[d].fields.Lines.fields.ID || "",
+                        description:
+                          useData[d].fields.Lines.fields.ProductDescription || "",
+                        quantity: useData[d].fields.Lines.fields.UOMOrderQty || 0,
+                        unitPrice:
+                          useData[
+                            d
+                          ].fields.Lines.fields.OriginalLinePrice.toLocaleString(
+                            undefined,
+                            {
+                              minimumFractionDigits: 2,
+                            }
+                          ) || 0,
+                        lineCost:
+                          useData[d].fields.Lines.fields.LineCost.toLocaleString(
+                            undefined,
+                            {
+                              minimumFractionDigits: 2,
+                            }
+                          ) || 0,
+                        taxRate: useData[d].fields.Lines.fields.LineTaxRate || 0,
+                        taxCode: useData[d].fields.Lines.fields.LineTaxCode || "",
+                        TotalAmt: AmountGbp || 0,
+                        curTotalAmt: currencyAmountGbp || currencySymbol + "0",
+                        TaxTotal: TaxTotalGbp || 0,
+                        TaxRate: TaxRateGbp || 0,
+                      };
+                      lineItems.push(lineItemObj);
+                    }
+                    company_name = useData[d].fields.CustomerName;
+  
+                    let lidData = "Edit Invoice" + " " + useData[d].fields.ID || "";
+                    if (useData[d].fields.IsBackOrder) {
+                      lidData = "Edit Invoice" + " (BO) " + useData[d].fields.ID || "";
+                      templateObject.isbackorderredirect.set(true);
+                    }
+  
+                    let isPartialPaid = false;
+                    if (useData[d].fields.TotalPaid > 0) {
+                      isPartialPaid = true;
+                    }
+  
+                    let invoicerecord = {
+                      id: useData[d].fields.ID,
+                      lid: lidData,
+                      socustomer: useData[d].fields.CustomerName,
+                      salesOrderto: useData[d].fields.InvoiceToDesc,
+                      shipto: useData[d].fields.ShipToDesc,
+                      department: useData[d].fields.SaleClassName,
+                      docnumber: useData[d].fields.DocNumber,
+                      custPONumber: useData[d].fields.CustPONumber,
+                      saledate: useData[d].fields.SaleDate
+                        ? moment(useData[d].fields.SaleDate).format("DD/MM/YYYY")
+                        : "",
+                      duedate: useData[d].fields.DueDate
+                        ? moment(useData[d].fields.DueDate).format("DD/MM/YYYY")
+                        : "",
+                      employeename: useData[d].fields.EmployeeName,
+                      status: useData[d].fields.SalesStatus,
+                      category: useData[d].fields.SalesCategory,
+                      comments: useData[d].fields.Comments,
+                      pickmemo: useData[d].fields.PickMemo,
+                      ponumber: useData[d].fields.CustPONumber,
+                      via: useData[d].fields.Shipping,
+                      connote: useData[d].fields.ConNote,
+                      reference: useData[d].fields.ReferenceNo,
+                      currency: useData[d].fields.ForeignExchangeCode,
+                      branding: useData[d].fields.MedType,
+                      invoiceToDesc: useData[d].fields.InvoiceToDesc,
+                      shipToDesc: useData[d].fields.ShipToDesc,
+                      termsName: useData[d].fields.TermsName,
+                      Total: totalInc,
+                      TotalDiscount: totalDiscount,
+                      LineItems: lineItems,
+                      TotalTax: totalTax,
+                      SubTotal: subTotal,
+                      balanceDue: totalBalance,
+                      saleCustField1: useData[d].fields.SaleCustField1,
+                      saleCustField2: useData[d].fields.SaleCustField2,
+                      totalPaid: totalPaidAmount,
+                      ispaid: useData[d].fields.IsPaid,
+                      isPartialPaid: isPartialPaid,
                     };
-                    lineItems.push(lineItemObj);
-                  }
-                }
-                let lidData = "Edit Invoice" + " " + data.fields.ID || "";
-                if (data.fields.IsBackOrder) {
-                  lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
-                  templateObject.isbackorderredirect.set(true);
-                }
-                let isPartialPaid = false;
-                if (data.fields.TotalPaid > 0) {
-                  isPartialPaid = true;
-                }
-
-                let invoicerecord = {
-                  id: data.fields.ID,
-                  lid: lidData,
-                  socustomer: data.fields.CustomerName,
-                  salesOrderto: data.fields.InvoiceToDesc,
-                  shipto: data.fields.ShipToDesc,
-                  department: data.fields.SaleClassName,
-                  docnumber: data.fields.DocNumber,
-                  custPONumber: data.fields.CustPONumber,
-                  saledate: data.fields.SaleDate
-                    ? moment(data.fields.SaleDate).format("DD/MM/YYYY")
-                    : "",
-                  duedate: data.fields.DueDate
-                    ? moment(data.fields.DueDate).format("DD/MM/YYYY")
-                    : "",
-                  employeename: data.fields.EmployeeName,
-                  status: data.fields.SalesStatus,
-                  category: data.fields.SalesCategory,
-                  comments: data.fields.Comments,
-                  pickmemo: data.fields.PickMemo,
-                  ponumber: data.fields.CustPONumber,
-                  via: data.fields.Shipping,
-                  connote: data.fields.ConNote,
-                  reference: data.fields.ReferenceNo,
-                  currency: data.fields.ForeignExchangeCode,
-                  branding: data.fields.MedType,
-                  invoiceToDesc: data.fields.InvoiceToDesc,
-                  shipToDesc: data.fields.ShipToDesc,
-                  termsName: data.fields.TermsName,
-                  Total: totalInc,
-                  TotalDiscount: totalDiscount,
-                  LineItems: lineItems,
-                  TotalTax: totalTax,
-                  SubTotal: subTotal,
-                  balanceDue: totalBalance,
-                  saleCustField1: data.fields.SaleCustField1,
-                  saleCustField2: data.fields.SaleCustField2,
-                  totalPaid: totalPaidAmount,
-                  ispaid: data.fields.IsPaid,
-                  isPartialPaid: isPartialPaid,
-                };
-
-                $("#edtCustomerName").val(data.fields.CustomerName);
-                $("#sltStatus").val(data.fields.SalesStatus);
-                $("#sltDept").val(data.fields.SaleClassName);
-                $("#sltCurrency").val(data.fields.ForeignExchangeCode);
-                FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
-
-                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
-                $("#sltTerms").val(data.fields.TermsName);
-                templateObject.CleintName.set(data.fields.CustomerName);
-
-                /* START attachment */
-                templateObject.attachmentCount.set(0);
-                if (data.fields.Attachments) {
-                  if (data.fields.Attachments.length) {
-                    templateObject.attachmentCount.set(
-                      data.fields.Attachments.length
+  
+                    $("#edtCustomerName").val(useData[d].fields.CustomerName);
+                    $("#sltTerms").val(useData[d].fields.TermsName);
+                    $("#sltDept").val(useData[d].fields.SaleClassName);
+                    $("#sltCurrency").val(useData[d].fields.ForeignExchangeCode);
+                    FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+  
+                    $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
+                    $("#sltStatus").val(useData[d].fields.SalesStatus);
+                    templateObject.CleintName.set(useData[d].fields.CustomerName);
+  
+                    /* START attachment */
+                    templateObject.attachmentCount.set(0);
+                    if (useData[d].fields.Attachments) {
+                      if (useData[d].fields.Attachments.length) {
+                        templateObject.attachmentCount.set(
+                          useData[d].fields.Attachments.length
+                        );
+                        templateObject.uploadedFiles.set(
+                          useData[d].fields.Attachments
+                        );
+                      }
+                    }
+                    /* END  attachment */
+                    var checkISCustLoad = false;
+                    setTimeout(function () {
+                      if (clientList) {
+                        for (var i = 0; i < clientList.length; i++) {
+                          if (
+                            clientList[i].customername ==
+                            useData[d].fields.CustomerName
+                          ) {
+                            checkISCustLoad = true;
+                            invoicerecord.firstname =
+                              clientList[i].firstname || "";
+                            invoicerecord.lastname = clientList[i].lastname || "";
+                            $("#edtCustomerEmail").val(
+                              clientList[i].customeremail
+                            );
+                            $("#edtCustomerName").attr(
+                              "custid",
+                              clientList[i].customerid
+                            );
+                            $("#edtCustomerEmail").attr(
+                              "customerid",
+                              clientList[i].customerid
+                            );
+                            $("#edtCustomerEmail").attr(
+                              "customerfirstname",
+                              clientList[i].firstname
+                            );
+                            $("#edtCustomerEmail").attr(
+                              "customerlastname",
+                              clientList[i].lastname
+                            );
+                            $("#customerType").text(
+                              clientList[i].clienttypename || "Default"
+                            );
+                            $("#customerDiscount").text(
+                              clientList[i].discount + "%" || 0 + "%"
+                            );
+                            $("#edtCustomerUseType").val(
+                              clientList[i].clienttypename || "Default"
+                            );
+                            $("#edtCustomerUseDiscount").val(
+                              clientList[i].discount || 0
+                            );
+                          }
+                        }
+                      }
+  
+                      if (useData[d].fields.IsPaid === true) {
+                        $("#edtCustomerName").attr("readonly", true);
+  
+                        $(".btn-primary").attr("disabled", "disabled");
+                        $("#edtCustomerName").css("background-color", "#eaecf4");
+                        $("#btnViewPayment").removeAttr("disabled", "disabled");
+                        $(".btnSave").attr("disabled", "disabled");
+                        $("#btnBack").removeAttr("disabled", "disabled");
+                        $(".printConfirm").removeAttr("disabled", "disabled");
+                        $(".tblInvoiceLine tbody tr").each(function () {
+                          var $tblrow = $(this);
+                          $tblrow.find("td").attr("contenteditable", false);
+                          //$tblrow.find("td").removeClass("lineProductName");
+                          $tblrow.find("td").removeClass("lineTaxRate");
+                          $tblrow.find("td").removeClass("lineTaxCode");
+  
+                          $tblrow.find("td").attr("readonly", true);
+                          $tblrow.find("td").attr("disabled", "disabled");
+                          $tblrow.find("td").css("background-color", "#eaecf4");
+                          $tblrow
+                            .find("td .table-remove")
+                            .removeClass("btnRemove");
+                        });
+                      }
+  
+                      if (!checkISCustLoad) {
+                        sideBarService
+                          .getCustomersDataByName(useData[d].fields.CustomerName)
+                          .then(function (dataClient) {
+                            for (
+                              var c = 0;
+                              c < dataClient.tcustomervs1.length;
+                              c++
+                            ) {
+                              var customerrecordObj = {
+                                customerid: dataClient.tcustomervs1[c].Id || " ",
+                                firstname:
+                                  dataClient.tcustomervs1[c].FirstName || " ",
+                                lastname:
+                                  dataClient.tcustomervs1[c].LastName || " ",
+                                customername:
+                                  dataClient.tcustomervs1[c].ClientName || " ",
+                                customeremail:
+                                  dataClient.tcustomervs1[c].Email || " ",
+                                street: dataClient.tcustomervs1[c].Street || " ",
+                                street2:
+                                  dataClient.tcustomervs1[c].Street2 || " ",
+                                street3:
+                                  dataClient.tcustomervs1[c].Street3 || " ",
+                                suburb: dataClient.tcustomervs1[c].Suburb || " ",
+                                statecode:
+                                  dataClient.tcustomervs1[c].State +
+                                    " " +
+                                    dataClient.tcustomervs1[c].Postcode || " ",
+                                country:
+                                  dataClient.tcustomervs1[c].Country || " ",
+                                termsName:
+                                  dataClient.tcustomervs1[c].TermsName || "",
+                                taxCode:
+                                  dataClient.tcustomervs1[c].TaxCodeName || "E",
+                                clienttypename:
+                                  dataClient.tcustomervs1[c].ClientTypeName ||
+                                  "Default",
+                                discount:
+                                  dataClient.tcustomervs1[c].Discount || 0,
+                              };
+                              clientList.push(customerrecordObj);
+  
+                              invoicerecord.firstname =
+                                dataClient.tcustomervs1[c].FirstName || "";
+                              invoicerecord.lastname =
+                                dataClient.tcustomervs1[c].LastName || "";
+                              $("#edtCustomerEmail").val(
+                                dataClient.tcustomervs1[c].Email
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerid",
+                                clientList[c].customerid
+                              );
+                              $("#edtCustomerName").attr(
+                                "custid",
+                                dataClient.tcustomervs1[c].Id
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerfirstname",
+                                dataClient.tcustomervs1[c].FirstName
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerlastname",
+                                dataClient.tcustomervs1[c].LastName
+                              );
+                              $("#customerType").text(
+                                dataClient.tcustomervs1[c].ClientTypeName ||
+                                  "Default"
+                              );
+                              $("#customerDiscount").text(
+                                dataClient.tcustomervs1[c].Discount + "%" ||
+                                  0 + "%"
+                              );
+                              $("#edtCustomerUseType").val(
+                                dataClient.tcustomervs1[c].ClientTypeName ||
+                                  "Default"
+                              );
+                              $("#edtCustomerUseDiscount").val(
+                                dataClient.tcustomervs1[c].Discount || 0
+                              );
+                            }
+  
+                            templateObject.clientrecords.set(
+                              clientList.sort(function (a, b) {
+                                if (a.customername == "NA") {
+                                  return 1;
+                                } else if (b.customername == "NA") {
+                                  return -1;
+                                }
+                                return a.customername.toUpperCase() >
+                                  b.customername.toUpperCase()
+                                  ? 1
+                                  : -1;
+                              })
+                            );
+                          });
+                      }
+                    }, 100);
+  
+                    templateObject.invoicerecord.set(invoicerecord);
+                    templateObject.selectedCurrency.set(invoicerecord.currency);
+                    templateObject.inputSelectedCurrency.set(
+                      invoicerecord.currency
                     );
-                    templateObject.uploadedFiles.set(data.fields.Attachments);
+  
                   }
                 }
-                /* END  attachment */
-                setTimeout(function () {
-                  if (clientList) {
-                    for (var i = 0; i < clientList.length; i++) {
-                      if (
-                        clientList[i].customername == data.fields.CustomerName
-                      ) {
-                        invoicerecord.firstname = clientList[i].firstname;
-                        invoicerecord.surname = clientList[i].lastname;
-                        $("#edtCustomerEmail").val(clientList[i].customeremail);
-                        $("#edtCustomerEmail").attr(
-                          "customerid",
-                          clientList[i].customerid
-                        );
-                        $("#edtCustomerName").attr(
-                          "custid",
-                          clientList[i].customerid
-                        );
-                        $("#edtCustomerEmail").attr(
-                          "customerfirstname",
-                          clientList[i].firstname
-                        );
-                        $("#edtCustomerEmail").attr(
-                          "customerlastname",
-                          clientList[i].lastname
-                        );
-                        $("#customerType").text(
-                          clientList[i].clienttypename || "Default"
-                        );
-                        $("#customerDiscount").text(
-                          clientList[i].discount + "%" || 0 + "%"
-                        );
-                        $("#edtCustomerUseType").val(
-                          clientList[i].clienttypename || "Default"
-                        );
-                        $("#edtCustomerUseDiscount").val(
-                          clientList[i].discount || 0
-                        );
+                if (!added) {
+                  accountService
+                    .getOneInvoicedataEx(currentInvoice)
+                    .then(function (data) {
+                      templateObject.singleInvoiceData.set(data);
+                      $(".fullScreenSpin").css("display", "none");
+                      let lineItems = [];
+                      let lineItemObj = {};
+                      let lineItemsTable = [];
+                      let lineItemTableObj = {};
+                      let exchangeCode = data.fields.ForeignExchangeCode;
+                      let currencySymbol = Currency;
+                      let total =
+                        currencySymbol +
+                        "" +
+                        data.fields.TotalAmount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+                      let totalInc =
+                        currencySymbol +
+                        "" +
+                        data.fields.TotalAmountInc.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+  
+                      let totalDiscount = utilityService
+                        .modifynegativeCurrencyFormat(data.fields.TotalDiscount)
+                        .toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+                      let subTotal =
+                        currencySymbol +
+                        "" +
+                        data.fields.TotalAmount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+                      let totalTax =
+                        currencySymbol +
+                        "" +
+                        data.fields.TotalTax.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+                      let totalBalance = utilityService
+                        .modifynegativeCurrencyFormat(data.fields.TotalBalance)
+                        .toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+                      let totalPaidAmount =
+                        currencySymbol +
+                        "" +
+                        data.fields.TotalPaid.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+                      if (data.fields.Lines != null) {
+                        if (data.fields.Lines.length) {
+                          for (let i = 0; i < data.fields.Lines.length; i++) {
+                            let AmountGbp =
+                              currencySymbol +
+                              "" +
+                              data.fields.Lines[
+                                i
+                              ].fields.TotalLineAmount.toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              });
+                            let currencyAmountGbp =
+                              currencySymbol +
+                              "" +
+                              data.fields.Lines[i].fields.TotalLineAmount.toFixed(
+                                2
+                              );
+                            let TaxTotalGbp =
+                              utilityService.modifynegativeCurrencyFormat(
+                                data.fields.Lines[i].fields.LineTaxTotal
+                              );
+                            let TaxRateGbp = (
+                              data.fields.Lines[i].fields.LineTaxRate * 100
+                            ).toFixed(2);
+                            lineItemObj = {
+                              lineID: Random.id(),
+                              id: data.fields.Lines[i].fields.ID || "",
+                              item: data.fields.Lines[i].fields.ProductName || "",
+                              description:
+                                data.fields.Lines[i].fields.ProductDescription ||
+                                "",
+                              quantity:
+                                data.fields.Lines[i].fields.UOMOrderQty || 0,
+                              qtyordered:
+                                data.fields.Lines[i].fields.UOMOrderQty || 0,
+                              qtyshipped:
+                                data.fields.Lines[i].fields.UOMQtyShipped || 0,
+                              qtybo:
+                                data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
+                              unitPrice:
+                                utilityService
+                                  .modifynegativeCurrencyFormat(
+                                    data.fields.Lines[i].fields.OriginalLinePrice
+                                  )
+                                  .toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                  }) || 0,
+                              unitPriceInc:
+                                utilityService
+                                  .modifynegativeCurrencyFormat(
+                                    data.fields.Lines[i].fields
+                                      .OriginalLinePriceInc
+                                  )
+                                  .toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                  }) || 0,
+                              TotalAmt:
+                                utilityService
+                                  .modifynegativeCurrencyFormat(
+                                    data.fields.Lines[i].fields.TotalLineAmount
+                                  )
+                                  .toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                  }) || 0,
+                              TotalAmtInc:
+                                utilityService
+                                  .modifynegativeCurrencyFormat(
+                                    data.fields.Lines[i].fields.TotalLineAmountInc
+                                  )
+                                  .toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                  }) || 0,
+                              lineCost:
+                                utilityService
+                                  .modifynegativeCurrencyFormat(
+                                    data.fields.Lines[i].fields.LineCost
+                                  )
+                                  .toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                  }) || 0,
+                              taxRate:
+                                (
+                                  data.fields.Lines[i].fields.LineTaxRate * 100
+                                ).toFixed(2) || 0,
+                              taxCode:
+                                data.fields.Lines[i].fields.LineTaxCode || "",
+                              //TotalAmt: AmountGbp || 0,
+                              curTotalAmt:
+                                currencyAmountGbp || currencySymbol + "0",
+                              TaxTotal: TaxTotalGbp || 0,
+                              TaxRate: TaxRateGbp || 0,
+                              DiscountPercent:
+                                data.fields.Lines[i].fields.DiscountPercent || 0,
+                              UnitOfMeasure:
+                                data.fields.Lines[i].fields.UnitOfMeasure ||
+                                defaultUOM,
+                            };
+                            var dataListTable = [
+                              data.fields.Lines[i].fields.ProductName || "",
+                              data.fields.Lines[i].fields.ProductDescription ||
+                                "",
+                              "<div contenteditable='true' class='qty'>" +
+                                "" +
+                                data.fields.Lines[i].fields.UOMOrderQty +
+                                "" +
+                                "</div>" || "<div>" + "" + 0 + "" + "</div>",
+                              "<div>" +
+                                "" +
+                                currencySymbol +
+                                "" +
+                                data.fields.Lines[i].fields.LinePrice.toFixed(2) +
+                                "" +
+                                "</div>" || currencySymbol + "" + 0.0,
+                              data.fields.Lines[i].fields.LineTaxCode || "",
+                              AmountGbp || currencySymbol + "" + 0.0,
+                              '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
+                            ];
+                            lineItemsTable.push(dataListTable);
+                            lineItems.push(lineItemObj);
+                          }
+                        } else {
+                          let AmountGbp =
+                            data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
+                              undefined,
+                              {
+                                minimumFractionDigits: 2,
+                              }
+                            );
+                          let currencyAmountGbp =
+                            currencySymbol +
+                            "" +
+                            data.fields.Lines.fields.TotalLineAmount.toFixed(2);
+                          let TaxTotalGbp =
+                            utilityService.modifynegativeCurrencyFormat(
+                              data.fields.Lines.fields.LineTaxTotal
+                            );
+                          let TaxRateGbp = (
+                            data.fields.Lines.fields.LineTaxRate * 100
+                          ).toFixed(2);
+                          lineItemObj = {
+                            lineID: Random.id(),
+                            id: data.fields.Lines.fields.ID || "",
+                            description:
+                              data.fields.Lines.fields.ProductDescription || "",
+                            quantity: data.fields.Lines.fields.UOMOrderQty || 0,
+                            unitPrice:
+                              data.fields.Lines[
+                                i
+                              ].fields.OriginalLinePrice.toLocaleString(
+                                undefined,
+                                {
+                                  minimumFractionDigits: 2,
+                                }
+                              ) || 0,
+                            lineCost:
+                              data.fields.Lines[i].fields.LineCost.toLocaleString(
+                                undefined,
+                                {
+                                  minimumFractionDigits: 2,
+                                }
+                              ) || 0,
+                            taxRate:
+                              (
+                                data.fields.Lines.fields.LineTaxRate * 100
+                              ).toFixed(2) || 0,
+                            taxCode: data.fields.Lines.fields.LineTaxCode || "",
+                            TotalAmt: AmountGbp || 0,
+                            curTotalAmt:
+                              currencyAmountGbp || currencySymbol + "0",
+                            TaxTotal: TaxTotalGbp || 0,
+                            TaxRate: TaxRateGbp || 0,
+                          };
+                          lineItems.push(lineItemObj);
+                        }
                       }
-                    }
-                  }
-
-                  if (data.fields.IsPaid === true) {
-                    $("#edtCustomerName").attr("readonly", true);
-
-                    $(".btn-primary").attr("disabled", "disabled");
-                    $("#btnCopyInvoice").attr("disabled", "disabled");
-                    $("#edtCustomerName").css("background-color", "#eaecf4");
-                    $("#btnViewPayment").removeAttr("disabled", "disabled");
-                    $(".btnSave").attr("disabled", "disabled");
-                    $("#btnBack").removeAttr("disabled", "disabled");
-                    $(".printConfirm").removeAttr("disabled", "disabled");
-                    $(".tblInvoiceLine tbody tr").each(function () {
-                      var $tblrow = $(this);
-                      $tblrow.find("td").attr("contenteditable", false);
-                      //$tblrow.find("td").removeClass("lineProductName");
-                      $tblrow.find("td").removeClass("lineTaxRate");
-                      $tblrow.find("td").removeClass("lineTaxCode");
-
-                      $tblrow.find("td").attr("readonly", true);
-                      $tblrow.find("td").attr("disabled", "disabled");
-                      $tblrow.find("td").css("background-color", "#eaecf4");
-                      $tblrow.find("td .table-remove").removeClass("btnRemove");
+  
+                      let lidData = "Edit Invoice" + " " + data.fields.ID || "";
+                      if (data.fields.IsBackOrder) {
+                        lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                        templateObject.isbackorderredirect.set(true);
+                      }
+  
+                      let isPartialPaid = false;
+                      if (data.fields.TotalPaid > 0) {
+                        isPartialPaid = true;
+                      }
+  
+                      let invoicerecord = {
+                        id: data.fields.ID,
+                        lid: lidData,
+                        socustomer: data.fields.CustomerName,
+                        salesOrderto: data.fields.InvoiceToDesc,
+                        shipto: data.fields.ShipToDesc,
+                        department: data.fields.SaleClassName,
+                        docnumber: data.fields.DocNumber,
+                        custPONumber: data.fields.CustPONumber,
+                        saledate: data.fields.SaleDate
+                          ? moment(data.fields.SaleDate).format("DD/MM/YYYY")
+                          : "",
+                        duedate: data.fields.DueDate
+                          ? moment(data.fields.DueDate).format("DD/MM/YYYY")
+                          : "",
+                        employeename: data.fields.EmployeeName,
+                        status: data.fields.SalesStatus,
+                        category: data.fields.SalesCategory,
+                        comments: data.fields.Comments,
+                        pickmemo: data.fields.PickMemo,
+                        ponumber: data.fields.CustPONumber,
+                        via: data.fields.Shipping,
+                        connote: data.fields.ConNote,
+                        reference: data.fields.ReferenceNo,
+                        currency: data.fields.ForeignExchangeCode,
+                        branding: data.fields.MedType,
+                        invoiceToDesc: data.fields.InvoiceToDesc,
+                        shipToDesc: data.fields.ShipToDesc,
+                        termsName: data.fields.TermsName,
+                        Total: totalInc,
+                        TotalDiscount: totalDiscount,
+                        LineItems: lineItems,
+                        TotalTax: totalTax,
+                        SubTotal: subTotal,
+                        balanceDue: totalBalance,
+                        saleCustField1: data.fields.SaleCustField1,
+                        saleCustField2: data.fields.SaleCustField2,
+                        totalPaid: totalPaidAmount,
+                        ispaid: data.fields.IsPaid,
+                        isPartialPaid: isPartialPaid,
+                      };
+  
+                      $("#edtCustomerName").val(data.fields.CustomerName);
+                      $("#sltStatus").val(data.fields.SalesStatus);
+                      $("#sltDept").val(data.fields.SaleClassName);
+                      $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+                      FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+  
+                      $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                      $("#sltTerms").val(data.fields.TermsName);
+                      templateObject.CleintName.set(data.fields.CustomerName);
+                      /* START attachment */
+                      templateObject.attachmentCount.set(0);
+                      if (data.fields.Attachments) {
+                        if (data.fields.Attachments.length) {
+                          templateObject.attachmentCount.set(
+                            data.fields.Attachments.length
+                          );
+                          templateObject.uploadedFiles.set(
+                            data.fields.Attachments
+                          );
+                        }
+                      }
+                      /* END  attachment */
+                      var checkISCustLoad = false;
+                      setTimeout(function () {
+                        if (clientList) {
+                          for (var i = 0; i < clientList.length; i++) {
+                            if (
+                              clientList[i].customername ==
+                              data.fields.CustomerName
+                            ) {
+                              checkISCustLoad = true;
+                              invoicerecord.firstname =
+                                clientList[i].firstname || "";
+                              invoicerecord.lastname =
+                                clientList[i].lastname || "";
+                              templateObject.invoicerecord.set(invoicerecord);
+                              $("#edtCustomerEmail").val(
+                                clientList[i].customeremail
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerid",
+                                clientList[i].customerid
+                              );
+                              $("#edtCustomerName").attr(
+                                "custid",
+                                clientList[i].customerid
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerfirstname",
+                                clientList[i].firstname
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerlastname",
+                                clientList[i].lastname
+                              );
+                              $("#customerType").text(
+                                clientList[i].clienttypename || "Default"
+                              );
+                              $("#customerDiscount").text(
+                                clientList[i].discount + "%" || 0 + "%"
+                              );
+                              $("#edtCustomerUseType").val(
+                                clientList[i].clienttypename || "Default"
+                              );
+                              $("#edtCustomerUseDiscount").val(
+                                clientList[i].discount || 0
+                              );
+                            }
+                          }
+                        }
+  
+                        if (data.fields.IsPaid === true) {
+                          $("#edtCustomerName").attr("readonly", true);
+  
+                          $(".btn-primary").attr("disabled", "disabled");
+  
+                          $("#btnCopyInvoice").attr("disabled", "disabled");
+                          $("#edtCustomerName").css(
+                            "background-color",
+                            "#eaecf4"
+                          );
+  
+                          $("#btnViewPayment").removeAttr("disabled", "disabled");
+                          $(".btnSave").attr("disabled", "disabled");
+                          $("#btnBack").removeAttr("disabled", "disabled");
+                          $(".printConfirm").removeAttr("disabled", "disabled");
+                          $(".tblInvoiceLine tbody tr").each(function () {
+                            var $tblrow = $(this);
+                            $tblrow.find("td").attr("contenteditable", false);
+                            //$tblrow.find("td").removeClass("lineProductName");
+                            $tblrow.find("td").removeClass("lineTaxRate");
+                            $tblrow.find("td").removeClass("lineTaxCode");
+  
+                            $tblrow.find("td").attr("readonly", true);
+                            $tblrow.find("td").attr("disabled", "disabled");
+                            $tblrow.find("td").css("background-color", "#eaecf4");
+                            $tblrow
+                              .find("td .table-remove")
+                              .removeClass("btnRemove");
+                          });
+                        }
+  
+                        if (!checkISCustLoad) {
+                          sideBarService
+                            .getCustomersDataByName(
+                              useData[d].fields.CustomerName
+                            )
+                            .then(function (dataClient) {
+                              for (
+                                var c = 0;
+                                c < dataClient.tcustomervs1.length;
+                                c++
+                              ) {
+                                var customerrecordObj = {
+                                  customerid:
+                                    dataClient.tcustomervs1[c].Id || " ",
+                                  firstname:
+                                    dataClient.tcustomervs1[c].FirstName || " ",
+                                  lastname:
+                                    dataClient.tcustomervs1[c].LastName || " ",
+                                  customername:
+                                    dataClient.tcustomervs1[c].ClientName || " ",
+                                  customeremail:
+                                    dataClient.tcustomervs1[c].Email || " ",
+                                  street:
+                                    dataClient.tcustomervs1[c].Street || " ",
+                                  street2:
+                                    dataClient.tcustomervs1[c].Street2 || " ",
+                                  street3:
+                                    dataClient.tcustomervs1[c].Street3 || " ",
+                                  suburb:
+                                    dataClient.tcustomervs1[c].Suburb || " ",
+                                  statecode:
+                                    dataClient.tcustomervs1[c].State +
+                                      " " +
+                                      dataClient.tcustomervs1[c].Postcode || " ",
+                                  country:
+                                    dataClient.tcustomervs1[c].Country || " ",
+                                  termsName:
+                                    dataClient.tcustomervs1[c].TermsName || "",
+                                  taxCode:
+                                    dataClient.tcustomervs1[c].TaxCodeName || "E",
+                                  clienttypename:
+                                    dataClient.tcustomervs1[c].ClientTypeName ||
+                                    "Default",
+                                  discount:
+                                    dataClient.tcustomervs1[c].Discount || 0,
+                                };
+                                clientList.push(customerrecordObj);
+  
+                                invoicerecord.firstname =
+                                  dataClient.tcustomervs1[c].FirstName || "";
+                                invoicerecord.lastname =
+                                  dataClient.tcustomervs1[c].LastName || "";
+                                $("#edtCustomerEmail").val(
+                                  dataClient.tcustomervs1[c].Email
+                                );
+                                $("#edtCustomerEmail").attr(
+                                  "customerid",
+                                  clientList[c].customerid
+                                );
+                                $("#edtCustomerName").attr(
+                                  "custid",
+                                  dataClient.tcustomervs1[c].Id
+                                );
+                                $("#edtCustomerEmail").attr(
+                                  "customerfirstname",
+                                  dataClient.tcustomervs1[c].FirstName
+                                );
+                                $("#edtCustomerEmail").attr(
+                                  "customerlastname",
+                                  dataClient.tcustomervs1[c].LastName
+                                );
+                                $("#customerType").text(
+                                  dataClient.tcustomervs1[c].ClientTypeName ||
+                                    "Default"
+                                );
+                                $("#customerDiscount").text(
+                                  dataClient.tcustomervs1[c].Discount + "%" ||
+                                    0 + "%"
+                                );
+                                $("#edtCustomerUseType").val(
+                                  dataClient.tcustomervs1[c].ClientTypeName ||
+                                    "Default"
+                                );
+                                $("#edtCustomerUseDiscount").val(
+                                  dataClient.tcustomervs1[c].Discount || 0
+                                );
+                              }
+  
+                              templateObject.clientrecords.set(
+                                clientList.sort(function (a, b) {
+                                  if (a.customername == "NA") {
+                                    return 1;
+                                  } else if (b.customername == "NA") {
+                                    return -1;
+                                  }
+                                  return a.customername.toUpperCase() >
+                                    b.customername.toUpperCase()
+                                    ? 1
+                                    : -1;
+                                })
+                              );
+                            });
+                        }
+                      }, 100);
+  
+                      templateObject.invoicerecord.set(invoicerecord);
+  
+                      templateObject.selectedCurrency.set(invoicerecord.currency);
+                      templateObject.inputSelectedCurrency.set(
+                        invoicerecord.currency
+                      );
+  
+                    })
+                    .catch(function (err) {
+                      swal({
+                        title: "Oooops...",
+                        text: err,
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "Try Again",
+                      }).then((result) => {
+                        if (result.value) {
+                          if (err === checkResponseError) {
+                            window.open("/", "_self");
+                          }
+                        } else if (result.dismiss === "cancel") {
+                        }
+                      });
+                      $(".fullScreenSpin").css("display", "none");
                     });
-                  }
-                }, 100);
-
-                templateObject.invoicerecord.set(invoicerecord);
-                templateObject.selectedCurrency.set(invoicerecord.currency);
-                templateObject.inputSelectedCurrency.set(
-                  invoicerecord.currency
-                );
-
-              })
-              .catch(function (err) {
-                swal({
-                  title: "Oooops...",
-                  text: err,
-                  type: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "Try Again",
-                }).then((result) => {
-                  if (result.value) {
-                    if (err === checkResponseError) {
-                      window.open("/", "_self");
-                    }
-                  } else if (result.dismiss === "cancel") {
-                  }
-                });
-                $(".fullScreenSpin").css("display", "none");
-              });
-          });
-      };
-      templateObject.getInvoiceData();
-      try {
-        $("#html-2-pdfwrapper1").css("display", "block");
-        async function addAttachment() {
-          let attachment = [];
-          let templateObject = Template.instance();
-
-          let invoiceId = getso_id;
-          let encodedPdf = await generatePdfForMail(invoiceId);
-          let pdfObject = "";
-          var reader = new FileReader();
-          reader.readAsDataURL(encodedPdf);
-          reader.onloadend = function () {
-            var base64data = reader.result;
-            base64data = base64data.split(",")[1];
-            pdfObject = {
-              filename: "Customer Payment-" + paymentID + ".pdf",
-              content: base64data,
-              encoding: "base64",
-            };
-            attachment.push(pdfObject);
-            let erpInvoiceId = getso_id;
-
-            let mailFromName = Session.get("vs1companyName");
-            let mailFrom =
-              localStorage.getItem("VS1OrgEmail") ||
-              localStorage.getItem("VS1AdminUserName");
-            let customerEmailName = $("#edtCustomerName").val();
-            let checkEmailData = url.searchParams.get("email");
-            let grandtotal = $("#grandTotal").html();
-            let amountDueEmail = $("#totalBalanceDue").html();
-            let emailDueDate = $("#dtDueDate").val();
-            let mailSubject =
-              "Payment " +
-              paymentID +
-              " from " +
-              mailFromName +
-              " for " +
-              customerEmailName;
-            let mailBody =
-              "Hi " +
-              customerEmailName +
-              ",\n\n Here's payment " +
-              erpInvoiceId +
-              " for  " +
-              grandtotal +
-              "." +
-              "\n\nIf you have any questions, please let us know : " +
-              mailFrom +
-              ".\n\nThanks,\n" +
-              mailFromName;
-
-            var htmlmailBody =
-              '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
-              "    <tr>" +
-              '        <td align="center" bgcolor="#54c7e2" style="padding: 40px 0 30px 0;">' +
-              '            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" alt="VS1 Cloud" width="250px" style="display: block;" />' +
-              "        </td>" +
-              "    </tr>" +
-              "    <tr>" +
-              '        <td style="padding: 40px 30px 40px 30px;">' +
-              '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
-              "                <tr>" +
-              '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 20px 0;">' +
-              "                        Hello there <span>" +
-              customerEmailName +
-              "</span>," +
-              "                    </td>" +
-              "                </tr>" +
-              "                <tr>" +
-              '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-              "                        Please find payment <span>" +
-              paymentID +
-              "</span> attached below." +
-              "                    </td>" +
-              "                </tr>" +
-              "                <tr>" +
-              '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
-              "                        Kind regards," +
-              "                        <br>" +
-              "                        " +
-              mailFromName +
-              "" +
-              "                    </td>" +
-              "                </tr>" +
-              "            </table>" +
-              "        </td>" +
-              "    </tr>" +
-              "    <tr>" +
-              '        <td bgcolor="#00a3d3" style="padding: 30px 30px 30px 30px;">' +
-              '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
-              "                <tr>" +
-              '                    <td width="50%" style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">' +
-              "                        If you have any question, please do not hesitate to contact us." +
-              "                    </td>" +
-              '                    <td align="right">' +
-              '                        <a style="border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;" href="mailto:' +
-              mailFrom +
-              '">Contact Us</a>' +
-              "                    </td>" +
-              "                </tr>" +
-              "            </table>" +
-              "        </td>" +
-              "    </tr>" +
-              "</table>";
-
-            Meteor.call(
-              "sendEmail",
-              {
-                from: "" + mailFromName + " <" + mailFrom + ">",
-                to: checkEmailData,
-                subject: mailSubject,
-                text: "",
-                html: htmlmailBody,
-                attachments: attachment,
-              },
-              function (error, result) {
-                if (error && error.error === "error") {
-                  FlowRouter.go("/invoicelist?success=true");
-                  $(".fullScreenSpin").css("display", "none");
-                } else {
-                  $(".fullScreenSpin").css("display", "none");
-                  swal({
-                    title: "SUCCESS",
-                    text: "Email Sent To Customer: " + checkEmailData,
-                    type: "success",
-                    showCancelButton: false,
-                    confirmButtonText: "OK",
-                  }).then((result) => {
-                    if (result.value) {
-                      if (FlowRouter.current().queryParams.trans) {
-                        FlowRouter.go(
-                          "/customerscard?id=" +
-                            FlowRouter.current().queryParams.trans +
-                            "&transTab=active"
-                        );
-                      } else {
-                        FlowRouter.go("/invoicelist?success=true");
-                      }
-                    } else if (result.dismiss === "cancel") {
-                      if (FlowRouter.current().queryParams.trans) {
-                        FlowRouter.go(
-                          "/customerscard?id=" +
-                            FlowRouter.current().queryParams.trans +
-                            "&transTab=active"
-                        );
-                      } else {
-                        FlowRouter.go("/invoicelist?success=true");
-                      }
-                    } else {
-                      if (FlowRouter.current().queryParams.trans) {
-                        FlowRouter.go(
-                          "/customerscard?id=" +
-                            FlowRouter.current().queryParams.trans +
-                            "&transTab=active"
-                        );
-                      } else {
-                        FlowRouter.go("/invoicelist?success=true");
-                      }
-                    }
-                  });
                 }
+  
+                setTimeout(function () {
+                  let getTotal = $("#totalBalanceDue").text();
+                  $(".pdfCustomerAddress").html(
+                    $("#txabillingAddress")
+                      .val()
+                      .replace(/[\r\n]/g, "<br />")
+                  );
+                  $(".pdfCustomerName").html($("#edtCustomerName").val());
+                  let invoice_total = getTotal
+                    .replace(currency_symbol, "")
+                    .replace(",", "");
+                  let paymentItems = [];
+                  let paymentLineItems = {};
+                  let dueAmount =
+                    utilityService
+                      .modifynegativeCurrencyFormat(
+                        parseFloat(invoice_total) - parseFloat(paidAmount)
+                      )
+                      .toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      }) || 0;
+                  let amountPaid =
+                    Currency +
+                    "" +
+                    paidAmount.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                    });
+                  paymentLineItems = {
+                    id: "",
+                    invoiceid: getso_id || "",
+                    transid: getso_id || "",
+                    invoicedate: transDate,
+                    transtype: "Invoice",
+                    amountdue: dueAmount || 0,
+                    paymentamount: amountPaid || 0,
+                    ouststandingamount: dueAmount,
+                    orginalamount: getTotal,
+                  };
+                  paymentItems.push(paymentLineItems);
+  
+                  let record = {
+                    customerName: company_name || "",
+                    paymentDate: transDate,
+                    reference: "",
+                    paymentAmount: paidAmount || 0,
+                    notes: $("txaComment").val() || "",
+                    LineItems: paymentItems,
+                    department: "Default",
+                    applied: currency_symbol + "" + paidAmount,
+                  };
+                  templateObject.record.set(record);
+                }, 1500);
               }
-            );
-          };
-        }
-        setTimeout(function () {
-          addAttachment();
-        }, 2500);
-
-        function generatePdfForMail(invoiceId) {
-          return new Promise((resolve, reject) => {
-            let templateObject = Template.instance();
-            let completeTabRecord;
-            let doc = new jsPDF("p", "pt", "a4");
-            doc.setFontSize(18);
-            var source = document.getElementById("html-2-pdfwrapper1");
-            doc.addHTML(source, function () {
-              resolve(doc.output("blob"));
-            });
-          });
-        }
-      } catch (err) {}
-    }
-  } else if (url.indexOf("?id=") > 0) {
-    getso_id = url.split("?id=");
-    currentInvoice = getso_id[getso_id.length - 1];
-    $(".printID").attr("id", currentInvoice);
-    if (getso_id[1]) {
-      currentInvoice = parseInt(currentInvoice);
-      templateObject.getInvoiceData = function () {
-        getVS1Data("TInvoiceEx")
-          .then(function (dataObject) {
-            if (dataObject.length == 0) {
-              let customerData = templateObject.clientrecords.get();
+            })
+            .catch(function (err) {
               accountService
                 .getOneInvoicedataEx(currentInvoice)
                 .then(function (data) {
                   templateObject.singleInvoiceData.set(data);
-                  let cust_result = customerData.filter((cust_data) => {
-                    return cust_data.customername == data.fields.CustomerName;
-                  });
                   $(".fullScreenSpin").css("display", "none");
                   let lineItems = [];
                   let lineItemObj = {};
@@ -3574,7 +3000,7 @@ Template.new_invoice.onRendered(function() {
                     data.fields.TotalAmountInc.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     });
-
+  
                   let totalDiscount = utilityService
                     .modifynegativeCurrencyFormat(data.fields.TotalDiscount)
                     .toLocaleString(undefined, {
@@ -3597,7 +3023,6 @@ Template.new_invoice.onRendered(function() {
                     .toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     });
-
                   let totalPaidAmount =
                     currencySymbol +
                     "" +
@@ -3615,15 +3040,10 @@ Template.new_invoice.onRendered(function() {
                           ].fields.TotalLineAmount.toLocaleString(undefined, {
                             minimumFractionDigits: 2,
                           });
-                        let lineAmountCalc =
-                          data.fields.Lines[i].fields.OriginalLinePrice *
-                          data.fields.Lines[i].fields.UOMOrderQty;
                         let currencyAmountGbp =
                           currencySymbol +
                           "" +
-                          data.fields.Lines[i].fields.TotalLineAmount.toFixed(
-                            2
-                          );
+                          data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
                         let TaxTotalGbp =
                           utilityService.modifynegativeCurrencyFormat(
                             data.fields.Lines[i].fields.LineTaxTotal
@@ -3636,16 +3056,13 @@ Template.new_invoice.onRendered(function() {
                           id: data.fields.Lines[i].fields.ID || "",
                           item: data.fields.Lines[i].fields.ProductName || "",
                           description:
-                            data.fields.Lines[i].fields.ProductDescription ||
-                            "",
-                          quantity:
-                            data.fields.Lines[i].fields.UOMOrderQty || 0,
+                            data.fields.Lines[i].fields.ProductDescription || "",
+                          quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
                           qtyordered:
                             data.fields.Lines[i].fields.UOMOrderQty || 0,
                           qtyshipped:
                             data.fields.Lines[i].fields.UOMQtyShipped || 0,
-                          qtybo:
-                            data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
+                          qtybo: data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
                           unitPrice:
                             utilityService
                               .modifynegativeCurrencyFormat(
@@ -3690,11 +3107,9 @@ Template.new_invoice.onRendered(function() {
                             (
                               data.fields.Lines[i].fields.LineTaxRate * 100
                             ).toFixed(2) || 0,
-                          taxCode:
-                            data.fields.Lines[i].fields.LineTaxCode || "",
-                          //TotalAmt: utilityService.modifynegativeCurrencyFormat(lineAmountCalc) || 0,
-                          curTotalAmt:
-                            currencyAmountGbp || currencySymbol + "0",
+                          taxCode: data.fields.Lines[i].fields.LineTaxCode || "",
+                          //TotalAmt: AmountGbp || 0,
+                          curTotalAmt: currencyAmountGbp || currencySymbol + "0",
                           TaxTotal: TaxTotalGbp || 0,
                           TaxRate: TaxRateGbp || 0,
                           DiscountPercent:
@@ -3772,10 +3187,6 @@ Template.new_invoice.onRendered(function() {
                         curTotalAmt: currencyAmountGbp || currencySymbol + "0",
                         TaxTotal: TaxTotalGbp || 0,
                         TaxRate: TaxRateGbp || 0,
-                        DiscountPercent:
-                          data.fields.Lines.fields.DiscountPercent || 0,
-                        UnitOfMeasure:
-                          data.fields.Lines.fields.UnitOfMeasure || defaultUOM,
                       };
                       lineItems.push(lineItemObj);
                     }
@@ -3785,12 +3196,11 @@ Template.new_invoice.onRendered(function() {
                     lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
                     templateObject.isbackorderredirect.set(true);
                   }
-
                   let isPartialPaid = false;
                   if (data.fields.TotalPaid > 0) {
                     isPartialPaid = true;
                   }
-
+  
                   let invoicerecord = {
                     id: data.fields.ID,
                     lid: lidData,
@@ -3832,17 +3242,17 @@ Template.new_invoice.onRendered(function() {
                     ispaid: data.fields.IsPaid,
                     isPartialPaid: isPartialPaid,
                   };
-
+  
                   $("#edtCustomerName").val(data.fields.CustomerName);
                   $("#sltStatus").val(data.fields.SalesStatus);
                   $("#sltDept").val(data.fields.SaleClassName);
                   $("#sltCurrency").val(data.fields.ForeignExchangeCode);
                   FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
-
+  
                   $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                   $("#sltTerms").val(data.fields.TermsName);
                   templateObject.CleintName.set(data.fields.CustomerName);
-
+  
                   /* START attachment */
                   templateObject.attachmentCount.set(0);
                   if (data.fields.Attachments) {
@@ -3854,21 +3264,15 @@ Template.new_invoice.onRendered(function() {
                     }
                   }
                   /* END  attachment */
-                  var checkISCustLoad = false;
                   setTimeout(function () {
                     if (clientList) {
                       for (var i = 0; i < clientList.length; i++) {
                         if (
                           clientList[i].customername == data.fields.CustomerName
                         ) {
-                          checkISCustLoad = true;
-                          invoicerecord.firstname =
-                            clientList[i].firstname || "";
-                          invoicerecord.lastname = clientList[i].lastname || "";
-                          templateObject.invoicerecord.set(invoicerecord);
-                          $("#edtCustomerEmail").val(
-                            clientList[i].customeremail
-                          );
+                          invoicerecord.firstname = clientList[i].firstname;
+                          invoicerecord.surname = clientList[i].lastname;
+                          $("#edtCustomerEmail").val(clientList[i].customeremail);
                           $("#edtCustomerEmail").attr(
                             "customerid",
                             clientList[i].customerid
@@ -3900,15 +3304,13 @@ Template.new_invoice.onRendered(function() {
                         }
                       }
                     }
-
+  
                     if (data.fields.IsPaid === true) {
                       $("#edtCustomerName").attr("readonly", true);
-
+  
                       $(".btn-primary").attr("disabled", "disabled");
-
                       $("#btnCopyInvoice").attr("disabled", "disabled");
                       $("#edtCustomerName").css("background-color", "#eaecf4");
-
                       $("#btnViewPayment").removeAttr("disabled", "disabled");
                       $(".btnSave").attr("disabled", "disabled");
                       $("#btnBack").removeAttr("disabled", "disabled");
@@ -3919,122 +3321,21 @@ Template.new_invoice.onRendered(function() {
                         //$tblrow.find("td").removeClass("lineProductName");
                         $tblrow.find("td").removeClass("lineTaxRate");
                         $tblrow.find("td").removeClass("lineTaxCode");
-
+  
                         $tblrow.find("td").attr("readonly", true);
                         $tblrow.find("td").attr("disabled", "disabled");
                         $tblrow.find("td").css("background-color", "#eaecf4");
-                        $tblrow
-                          .find("td .table-remove")
-                          .removeClass("btnRemove");
+                        $tblrow.find("td .table-remove").removeClass("btnRemove");
                       });
                     }
-
-                    if (!checkISCustLoad) {
-                      sideBarService
-                        .getCustomersDataByName(useData[d].fields.CustomerName)
-                        .then(function (dataClient) {
-                          for (
-                            var c = 0;
-                            c < dataClient.tcustomervs1.length;
-                            c++
-                          ) {
-                            var customerrecordObj = {
-                              customerid: dataClient.tcustomervs1[c].Id || " ",
-                              firstname:
-                                dataClient.tcustomervs1[c].FirstName || " ",
-                              lastname:
-                                dataClient.tcustomervs1[c].LastName || " ",
-                              customername:
-                                dataClient.tcustomervs1[c].ClientName || " ",
-                              customeremail:
-                                dataClient.tcustomervs1[c].Email || " ",
-                              street: dataClient.tcustomervs1[c].Street || " ",
-                              street2:
-                                dataClient.tcustomervs1[c].Street2 || " ",
-                              street3:
-                                dataClient.tcustomervs1[c].Street3 || " ",
-                              suburb: dataClient.tcustomervs1[c].Suburb || " ",
-                              statecode:
-                                dataClient.tcustomervs1[c].State +
-                                  " " +
-                                  dataClient.tcustomervs1[c].Postcode || " ",
-                              country:
-                                dataClient.tcustomervs1[c].Country || " ",
-                              termsName:
-                                dataClient.tcustomervs1[c].TermsName || "",
-                              taxCode:
-                                dataClient.tcustomervs1[c].TaxCodeName || "E",
-                              clienttypename:
-                                dataClient.tcustomervs1[c].ClientTypeName ||
-                                "Default",
-                              discount:
-                                dataClient.tcustomervs1[c].Discount || 0,
-                            };
-                            clientList.push(customerrecordObj);
-
-                            invoicerecord.firstname =
-                              dataClient.tcustomervs1[c].FirstName || "";
-                            invoicerecord.lastname =
-                              dataClient.tcustomervs1[c].LastName || "";
-                            $("#edtCustomerEmail").val(
-                              dataClient.tcustomervs1[c].Email
-                            );
-                            $("#edtCustomerEmail").attr(
-                              "customerid",
-                              clientList[c].customerid
-                            );
-                            $("#edtCustomerName").attr(
-                              "custid",
-                              dataClient.tcustomervs1[c].Id
-                            );
-                            $("#edtCustomerEmail").attr(
-                              "customerfirstname",
-                              dataClient.tcustomervs1[c].FirstName
-                            );
-                            $("#edtCustomerEmail").attr(
-                              "customerlastname",
-                              dataClient.tcustomervs1[c].LastName
-                            );
-                            $("#customerType").text(
-                              dataClient.tcustomervs1[c].ClientTypeName ||
-                                "Default"
-                            );
-                            $("#customerDiscount").text(
-                              dataClient.tcustomervs1[c].Discount + "%" ||
-                                0 + "%"
-                            );
-                            $("#edtCustomerUseType").val(
-                              dataClient.tcustomervs1[c].ClientTypeName ||
-                                "Default"
-                            );
-                            $("#edtCustomerUseDiscount").val(
-                              dataClient.tcustomervs1[c].Discount || 0
-                            );
-                          }
-
-                          templateObject.clientrecords.set(
-                            clientList.sort(function (a, b) {
-                              if (a.customername == "NA") {
-                                return 1;
-                              } else if (b.customername == "NA") {
-                                return -1;
-                              }
-                              return a.customername.toUpperCase() >
-                                b.customername.toUpperCase()
-                                ? 1
-                                : -1;
-                            })
-                          );
-                        });
-                    }
                   }, 100);
-
+  
                   templateObject.invoicerecord.set(invoicerecord);
-
                   templateObject.selectedCurrency.set(invoicerecord.currency);
                   templateObject.inputSelectedCurrency.set(
                     invoicerecord.currency
                   );
+  
                 })
                 .catch(function (err) {
                   swal({
@@ -4053,540 +3354,210 @@ Template.new_invoice.onRendered(function() {
                   });
                   $(".fullScreenSpin").css("display", "none");
                 });
-            } else {
-              let data = JSON.parse(dataObject[0].data);
-
-              let useData = data.tinvoiceex;
-              let customerData = templateObject.clientrecords.get();
-
-              var added = false;
-              for (let d = 0; d < useData.length; d++) {
-                if (parseInt(useData[d].fields.ID) === currentInvoice) {
-                  added = true;
-                  $(".fullScreenSpin").css("display", "none");
-                  let cust_result = customerData.filter((cust_data) => {
-                    return (
-                      cust_data.customername == useData[d].fields.ClientName
-                    );
-                  });
-
-                  getVS1Data("TAppointment").then(function (dataObject) {
-                    let appointments = JSON.parse(dataObject[0].data);
-                    let allAppointments = appointments.tappointmentex;
-                    let apptId = FlowRouter.current().queryParams.apptId;
-                    let appointmentAttachments = (appointmentAttachments =
-                      allAppointments.find((x) => x.fields.ID === parseInt(apptId)).fields.Attachments);
-                    if (appointmentAttachments.length > 0) {
-                      templateObject.attachmentCount.set(
-                        appointmentAttachments.length
-                      );
-                      templateObject.uploadedFiles.set(appointmentAttachments);
-                    }
-                  });
-                  templateObject.singleInvoiceData.set(useData[d]);
-                  let lineItems = [];
-                  let lineItemObj = {};
-                  let lineItemsTable = [];
-                  let lineItemTableObj = {};
-                  let exchangeCode = useData[d].fields.ForeignExchangeCode;
-                  let currencySymbol = Currency;
-                  let total =
-                    currencySymbol +
-                    "" +
-                    useData[d].fields.TotalAmount.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-                  let totalInc =
-                    currencySymbol +
-                    "" +
-                    useData[d].fields.TotalAmountInc.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-                  let totalDiscount =
-                    currencySymbol +
-                    "" +
-                    useData[d].fields.TotalDiscount.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-
-                  let subTotal =
-                    currencySymbol +
-                    "" +
-                    useData[d].fields.TotalAmount.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-                  let totalTax =
-                    currencySymbol +
-                    "" +
-                    useData[d].fields.TotalTax.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-                  let totalBalance = utilityService
-                    .modifynegativeCurrencyFormat(
-                      useData[d].fields.TotalBalance
-                    )
-                    .toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-
-                  let totalPaidAmount =
-                    currencySymbol +
-                    "" +
-                    useData[d].fields.TotalPaid.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    });
-
-                  if (useData[d].fields.Lines.length) {
-                    for (let i = 0; i < useData[d].fields.Lines.length; i++) {
-                      let AmountGbp =
-                        currencySymbol +
-                        "" +
-                        useData[d].fields.Lines[
-                          i
-                        ].fields.TotalLineAmount.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                        });
-                      let currencyAmountGbp =
-                        currencySymbol +
-                        "" +
-                        useData[d].fields.Lines[
-                          i
-                        ].fields.TotalLineAmount.toFixed(2);
-                      let TaxTotalGbp =
-                        utilityService.modifynegativeCurrencyFormat(
-                          useData[d].fields.Lines[i].fields.LineTaxTotal
-                        );
-                      let TaxRateGbp = (
-                        useData[d].fields.Lines[i].fields.LineTaxRate * 100
-                      ).toFixed(2);
-                      lineItemObj = {
-                        lineID: Random.id(),
-                        id: useData[d].fields.Lines[i].fields.ID || "",
-                        item:
-                          useData[d].fields.Lines[i].fields.ProductName || "",
-                        description:
-                          useData[d].fields.Lines[i].fields
-                            .ProductDescription || "",
-                        quantity:
-                          useData[d].fields.Lines[i].fields.UOMOrderQty || 0,
-                        qtyordered:
-                          useData[d].fields.Lines[i].fields.UOMOrderQty || 0,
-                        qtyshipped:
-                          useData[d].fields.Lines[i].fields.UOMQtyShipped || 0,
-                        qtybo:
-                          useData[d].fields.Lines[i].fields.UOMQtyBackOrder ||
-                          0,
-                        // unitPrice: utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.OriginalLinePrice).toLocaleString(undefined, {
-                        //     minimumFractionDigits: 2
-                        // }) || 0,
-                        unitPrice:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              useData[d].fields.Lines[i].fields
-                                .OriginalLinePrice
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        unitPriceInc:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              useData[d].fields.Lines[i].fields
-                                .OriginalLinePriceInc
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        TotalAmt:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              useData[d].fields.Lines[i].fields.TotalLineAmount
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        TotalAmtInc:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              useData[d].fields.Lines[i].fields
-                                .TotalLineAmountInc
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        lineCost:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              useData[d].fields.Lines[i].fields.LineCost
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        taxRate:
-                          (
-                            useData[d].fields.Lines[i].fields.LineTaxRate * 100
-                          ).toFixed(2) || 0,
-                        taxCode:
-                          useData[d].fields.Lines[i].fields.LineTaxCode || "",
-                        // TotalAmt: AmountGbp || 0,
-                        curTotalAmt: currencyAmountGbp || currencySymbol + "0",
-                        TaxTotal: TaxTotalGbp || 0,
-                        TaxRate: TaxRateGbp || 0,
-                        DiscountPercent:
-                          useData[d].fields.Lines[i].fields.DiscountPercent ||
-                          0,
-                        UnitOfMeasure:
-                          useData[d].fields.Lines[i].fields.UnitOfMeasure ||
-                          defaultUOM,
-                        pqaseriallotdata:
-                          useData[d].fields.Lines[i].fields.PQA || "",
-                      };
-                      var dataListTable = [
-                        useData[d].fields.Lines[i].fields.ProductName || "",
-                        useData[d].fields.Lines[i].fields.ProductDescription ||
-                          "",
-                        "<div contenteditable='true' class='qty'>" +
-                          "" +
-                          useData[d].fields.Lines[i].fields.UOMOrderQty +
-                          "" +
-                          "</div>" || "<div>" + "" + 0 + "" + "</div>",
-                        "<div>" +
-                          "" +
-                          currencySymbol +
-                          "" +
-                          useData[d].fields.Lines[i].fields.LinePrice.toFixed(
-                            2
-                          ) +
-                          "" +
-                          "</div>" || currencySymbol + "" + 0.0,
-                        useData[d].fields.Lines[i].fields.LineTaxCode || "",
-                        AmountGbp || currencySymbol + "" + 0.0,
-                        '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
-                      ];
-                      lineItemsTable.push(dataListTable);
-                      lineItems.push(lineItemObj);
-                    }
+            });
+        };
+        templateObject.getInvoiceData();
+        try {
+          $("#html-2-pdfwrapper1").css("display", "block");
+          async function addAttachment() {
+            let attachment = [];
+            let templateObject = Template.instance();
+  
+            let invoiceId = getso_id;
+            let encodedPdf = await generatePdfForMail(invoiceId);
+            let pdfObject = "";
+            var reader = new FileReader();
+            reader.readAsDataURL(encodedPdf);
+            reader.onloadend = function () {
+              var base64data = reader.result;
+              base64data = base64data.split(",")[1];
+              pdfObject = {
+                filename: "Customer Payment-" + paymentID + ".pdf",
+                content: base64data,
+                encoding: "base64",
+              };
+              attachment.push(pdfObject);
+              let erpInvoiceId = getso_id;
+  
+              let mailFromName = Session.get("vs1companyName");
+              let mailFrom =
+                localStorage.getItem("VS1OrgEmail") ||
+                localStorage.getItem("VS1AdminUserName");
+              let customerEmailName = $("#edtCustomerName").val();
+              let checkEmailData = url.searchParams.get("email");
+              let grandtotal = $("#grandTotal").html();
+              let amountDueEmail = $("#totalBalanceDue").html();
+              let emailDueDate = $("#dtDueDate").val();
+              let mailSubject =
+                "Payment " +
+                paymentID +
+                " from " +
+                mailFromName +
+                " for " +
+                customerEmailName;
+              let mailBody =
+                "Hi " +
+                customerEmailName +
+                ",\n\n Here's payment " +
+                erpInvoiceId +
+                " for  " +
+                grandtotal +
+                "." +
+                "\n\nIf you have any questions, please let us know : " +
+                mailFrom +
+                ".\n\nThanks,\n" +
+                mailFromName;
+  
+              var htmlmailBody =
+                '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
+                "    <tr>" +
+                '        <td align="center" bgcolor="#54c7e2" style="padding: 40px 0 30px 0;">' +
+                '            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" alt="VS1 Cloud" width="250px" style="display: block;" />' +
+                "        </td>" +
+                "    </tr>" +
+                "    <tr>" +
+                '        <td style="padding: 40px 30px 40px 30px;">' +
+                '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+                "                <tr>" +
+                '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 20px 0;">' +
+                "                        Hello there <span>" +
+                customerEmailName +
+                "</span>," +
+                "                    </td>" +
+                "                </tr>" +
+                "                <tr>" +
+                '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+                "                        Please find payment <span>" +
+                paymentID +
+                "</span> attached below." +
+                "                    </td>" +
+                "                </tr>" +
+                "                <tr>" +
+                '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
+                "                        Kind regards," +
+                "                        <br>" +
+                "                        " +
+                mailFromName +
+                "" +
+                "                    </td>" +
+                "                </tr>" +
+                "            </table>" +
+                "        </td>" +
+                "    </tr>" +
+                "    <tr>" +
+                '        <td bgcolor="#00a3d3" style="padding: 30px 30px 30px 30px;">' +
+                '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+                "                <tr>" +
+                '                    <td width="50%" style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">' +
+                "                        If you have any question, please do not hesitate to contact us." +
+                "                    </td>" +
+                '                    <td align="right">' +
+                '                        <a style="border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;" href="mailto:' +
+                mailFrom +
+                '">Contact Us</a>' +
+                "                    </td>" +
+                "                </tr>" +
+                "            </table>" +
+                "        </td>" +
+                "    </tr>" +
+                "</table>";
+  
+              Meteor.call(
+                "sendEmail",
+                {
+                  from: "" + mailFromName + " <" + mailFrom + ">",
+                  to: checkEmailData,
+                  subject: mailSubject,
+                  text: "",
+                  html: htmlmailBody,
+                  attachments: attachment,
+                },
+                function (error, result) {
+                  if (error && error.error === "error") {
+                    FlowRouter.go("/invoicelist?success=true");
+                    $(".fullScreenSpin").css("display", "none");
                   } else {
-                    let AmountGbp = useData[
-                      d
-                    ].fields.Lines.fields.TotalLineAmountInc.toLocaleString(
-                      undefined,
-                      {
-                        minimumFractionDigits: 2,
-                      }
-                    );
-                    let currencyAmountGbp =
-                      currencySymbol +
-                      "" +
-                      useData[d].fields.Lines.fields.TotalLineAmount.toFixed(2);
-                    let TaxTotalGbp =
-                      utilityService.modifynegativeCurrencyFormat(
-                        useData[d].fields.Lines.fields.LineTaxTotal
-                      );
-                    let TaxRateGbp =
-                      currencySymbol +
-                      "" +
-                      useData[d].fields.Lines.fields.LineTaxRate;
-                    lineItemObj = {
-                      lineID: Random.id(),
-                      id: useData[d].fields.Lines.fields.ID || "",
-                      description:
-                        useData[d].fields.Lines.fields.ProductDescription || "",
-                      quantity: useData[d].fields.Lines.fields.UOMOrderQty || 0,
-                      unitPrice:
-                        useData[
-                          d
-                        ].fields.Lines.fields.OriginalLinePrice.toLocaleString(
-                          undefined,
-                          {
-                            minimumFractionDigits: 2,
-                          }
-                        ) || 0,
-                      lineCost:
-                        useData[d].fields.Lines.fields.LineCost.toLocaleString(
-                          undefined,
-                          {
-                            minimumFractionDigits: 2,
-                          }
-                        ) || 0,
-                      taxRate: useData[d].fields.Lines.fields.LineTaxRate || 0,
-                      taxCode: useData[d].fields.Lines.fields.LineTaxCode || "",
-                      TotalAmt: AmountGbp || 0,
-                      curTotalAmt: currencyAmountGbp || currencySymbol + "0",
-                      TaxTotal: TaxTotalGbp || 0,
-                      TaxRate: TaxRateGbp || 0,
-                      DiscountPercent:
-                        useData[d].fields.Lines.fields.DiscountPercent || 0,
-                      UnitOfMeasure:
-                        useData[d].fields.Lines[i].fields.UnitOfMeasure ||
-                        defaultUOM,
-                      pqaseriallotdata:
-                        useData[d].fields.Lines.fields.PQA || "",
-                    };
-                    lineItems.push(lineItemObj);
-                  }
-
-                  let lidData = "Edit Invoice" + " " + useData[d].fields.ID || "";
-                  if (useData[d].fields.IsBackOrder) {
-                    lidData = "Edit Invoice" + " (BO) " + useData[d].fields.ID || "";
-                    templateObject.isbackorderredirect.set(true);
-                  }
-                  let isPartialPaid = false;
-                  if (useData[d].fields.TotalPaid > 0) {
-                    isPartialPaid = true;
-                  }
-                  let invoicerecord = {
-                    id: useData[d].fields.ID,
-                    lid: lidData,
-                    socustomer: useData[d].fields.CustomerName,
-                    salesOrderto: useData[d].fields.InvoiceToDesc,
-                    shipto: useData[d].fields.ShipToDesc,
-                    department: useData[d].fields.SaleClassName,
-                    docnumber: useData[d].fields.DocNumber,
-                    custPONumber: useData[d].fields.CustPONumber,
-                    saledate: useData[d].fields.SaleDate
-                      ? moment(useData[d].fields.SaleDate).format("DD/MM/YYYY")
-                      : "",
-                    duedate: useData[d].fields.DueDate
-                      ? moment(useData[d].fields.DueDate).format("DD/MM/YYYY")
-                      : "",
-                    employeename: useData[d].fields.EmployeeName,
-                    status: useData[d].fields.SalesStatus,
-                    category: useData[d].fields.SalesCategory,
-                    comments: useData[d].fields.Comments,
-                    pickmemo: useData[d].fields.PickMemo,
-                    ponumber: useData[d].fields.CustPONumber,
-                    via: useData[d].fields.Shipping,
-                    connote: useData[d].fields.ConNote,
-                    reference: useData[d].fields.ReferenceNo,
-                    currency: useData[d].fields.ForeignExchangeCode,
-                    branding: useData[d].fields.MedType,
-                    invoiceToDesc: useData[d].fields.InvoiceToDesc,
-                    shipToDesc: useData[d].fields.ShipToDesc,
-                    termsName: useData[d].fields.TermsName,
-                    Total: totalInc,
-                    TotalDiscount: totalDiscount,
-                    LineItems: lineItems,
-                    TotalTax: totalTax,
-                    SubTotal: subTotal,
-                    balanceDue: totalBalance,
-                    saleCustField1: useData[d].fields.SaleCustField1,
-                    saleCustField2: useData[d].fields.SaleCustField2,
-                    totalPaid: totalPaidAmount,
-                    ispaid: useData[d].fields.IsPaid,
-                    isPartialPaid: isPartialPaid,
-                  };
-
-                  $("#edtCustomerName").val(useData[d].fields.CustomerName);
-                  $("#sltTerms").val(useData[d].fields.TermsName);
-                  $("#sltDept").val(useData[d].fields.SaleClassName);
-                  $("#sltCurrency").val(useData[d].fields.ForeignExchangeCode);
-                  FxGlobalFunctions.handleChangedCurrency(useData[d].fields.ForeignExchangeCode, defaultCurrencyCode);
-
-                  $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
-                  $("#sltStatus").val(useData[d].fields.SalesStatus);
-                  templateObject.CleintName.set(useData[d].fields.CustomerName);
-
-                  /* START attachment */
-                  templateObject.attachmentCount.set(0);
-                  if (useData[d].fields.Attachments) {
-                    if (useData[d].fields.Attachments.length) {
-                      templateObject.attachmentCount.set(
-                        useData[d].fields.Attachments.length
-                      );
-                      templateObject.uploadedFiles.set(
-                        useData[d].fields.Attachments
-                      );
-                    }
-                  }
-                  /* END  attachment */
-                  var checkISCustLoad = false;
-                  setTimeout(function () {
-                    if (clientList) {
-                      for (var i = 0; i < clientList.length; i++) {
-                        if (
-                          clientList[i].customername ==
-                          useData[d].fields.CustomerName
-                        ) {
-                          checkISCustLoad = true;
-                          invoicerecord.firstname =
-                            clientList[i].firstname || "";
-                          invoicerecord.lastname = clientList[i].lastname || "";
-                          templateObject.invoicerecord.set(invoicerecord);
-                          $("#edtCustomerEmail").val(
-                            clientList[i].customeremail
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "SUCCESS",
+                      text: "Email Sent To Customer: " + checkEmailData,
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "OK",
+                    }).then((result) => {
+                      if (result.value) {
+                        if (FlowRouter.current().queryParams.trans) {
+                          FlowRouter.go(
+                            "/customerscard?id=" +
+                              FlowRouter.current().queryParams.trans +
+                              "&transTab=active"
                           );
-                          $("#edtCustomerEmail").attr(
-                            "customerid",
-                            clientList[i].customerid
+                        } else {
+                          FlowRouter.go("/invoicelist?success=true");
+                        }
+                      } else if (result.dismiss === "cancel") {
+                        if (FlowRouter.current().queryParams.trans) {
+                          FlowRouter.go(
+                            "/customerscard?id=" +
+                              FlowRouter.current().queryParams.trans +
+                              "&transTab=active"
                           );
-                          $("#edtCustomerName").attr(
-                            "custid",
-                            clientList[i].customerid
+                        } else {
+                          FlowRouter.go("/invoicelist?success=true");
+                        }
+                      } else {
+                        if (FlowRouter.current().queryParams.trans) {
+                          FlowRouter.go(
+                            "/customerscard?id=" +
+                              FlowRouter.current().queryParams.trans +
+                              "&transTab=active"
                           );
-                          $("#edtCustomerEmail").attr(
-                            "customerfirstname",
-                            clientList[i].firstname
-                          );
-                          $("#edtCustomerEmail").attr(
-                            "customerlastname",
-                            clientList[i].lastname
-                          );
-                          $("#customerType").text(
-                            clientList[i].clienttypename || "Default"
-                          );
-                          $("#customerDiscount").text(
-                            clientList[i].discount + "%" || 0 + "%"
-                          );
-                          $("#edtCustomerUseType").val(
-                            clientList[i].clienttypename || "Default"
-                          );
-                          $("#edtCustomerUseDiscount").val(
-                            clientList[i].discount || 0
-                          );
+                        } else {
+                          FlowRouter.go("/invoicelist?success=true");
                         }
                       }
-                    }
-
-                    if (useData[d].fields.IsPaid === true) {
-                      $("#edtCustomerName").attr("readonly", true);
-
-                      $(".btn-primary").removeAttr("disabled", "disabled");
-                      $("#edtCustomerName").css("background-color", "#eaecf4");
-
-                      $("#btnViewPayment").removeAttr("disabled", "disabled");
-                      $(".btnSave").attr("disabled", "disabled");
-                      $("#btnBack").removeAttr("disabled", "disabled");
-                      $(".printConfirm").removeAttr("disabled", "disabled");
-                      $(".tblInvoiceLine tbody tr").each(function () {
-                        var $tblrow = $(this);
-                        $tblrow.find("td").attr("contenteditable", false);
-                        //$tblrow.find("td").removeClass("lineProductName");
-                        $tblrow.find("td").removeClass("lineTaxRate");
-                        $tblrow.find("td").removeClass("lineTaxCode");
-
-                        $tblrow.find("td").attr("readonly", true);
-                        $tblrow.find("td").attr("disabled", "disabled");
-                        $tblrow.find("td").css("background-color", "#eaecf4");
-                        $tblrow
-                          .find("td .table-remove")
-                          .removeClass("btnRemove");
-                      });
-                    }
-
-                    if (!checkISCustLoad) {
-                      sideBarService
-                        .getCustomersDataByName(useData[d].fields.CustomerName)
-                        .then(function (dataClient) {
-                          for (
-                            var c = 0;
-                            c < dataClient.tcustomervs1.length;
-                            c++
-                          ) {
-                            var customerrecordObj = {
-                              customerid: dataClient.tcustomervs1[c].Id || " ",
-                              firstname:
-                                dataClient.tcustomervs1[c].FirstName || " ",
-                              lastname:
-                                dataClient.tcustomervs1[c].LastName || " ",
-                              customername:
-                                dataClient.tcustomervs1[c].ClientName || " ",
-                              customeremail:
-                                dataClient.tcustomervs1[c].Email || " ",
-                              street: dataClient.tcustomervs1[c].Street || " ",
-                              street2:
-                                dataClient.tcustomervs1[c].Street2 || " ",
-                              street3:
-                                dataClient.tcustomervs1[c].Street3 || " ",
-                              suburb: dataClient.tcustomervs1[c].Suburb || " ",
-                              statecode:
-                                dataClient.tcustomervs1[c].State +
-                                  " " +
-                                  dataClient.tcustomervs1[c].Postcode || " ",
-                              country:
-                                dataClient.tcustomervs1[c].Country || " ",
-                              termsName:
-                                dataClient.tcustomervs1[c].TermsName || "",
-                              taxCode:
-                                dataClient.tcustomervs1[c].TaxCodeName || "E",
-                              clienttypename:
-                                dataClient.tcustomervs1[c].ClientTypeName ||
-                                "Default",
-                              discount:
-                                dataClient.tcustomervs1[c].Discount || 0,
-                            };
-                            clientList.push(customerrecordObj);
-
-                            invoicerecord.firstname =
-                              dataClient.tcustomervs1[c].FirstName || "";
-                            invoicerecord.lastname =
-                              dataClient.tcustomervs1[c].LastName || "";
-                            $("#edtCustomerEmail").val(
-                              dataClient.tcustomervs1[c].Email
-                            );
-                            $("#edtCustomerEmail").attr(
-                              "customerid",
-                              clientList[c].customerid
-                            );
-                            $("#edtCustomerName").attr(
-                              "custid",
-                              dataClient.tcustomervs1[c].Id
-                            );
-                            $("#edtCustomerEmail").attr(
-                              "customerfirstname",
-                              dataClient.tcustomervs1[c].FirstName
-                            );
-                            $("#edtCustomerEmail").attr(
-                              "customerlastname",
-                              dataClient.tcustomervs1[c].LastName
-                            );
-                            $("#customerType").text(
-                              dataClient.tcustomervs1[c].ClientTypeName ||
-                                "Default"
-                            );
-                            $("#customerDiscount").text(
-                              dataClient.tcustomervs1[c].Discount + "%" ||
-                                0 + "%"
-                            );
-                            $("#edtCustomerUseType").val(
-                              dataClient.tcustomervs1[c].ClientTypeName ||
-                                "Default"
-                            );
-                            $("#edtCustomerUseDiscount").val(
-                              dataClient.tcustomervs1[c].Discount || 0
-                            );
-                          }
-
-                          templateObject.clientrecords.set(
-                            clientList.sort(function (a, b) {
-                              if (a.customername == "NA") {
-                                return 1;
-                              } else if (b.customername == "NA") {
-                                return -1;
-                              }
-                              return a.customername.toUpperCase() >
-                                b.customername.toUpperCase()
-                                ? 1
-                                : -1;
-                            })
-                          );
-                        });
-                    }
-                  }, 100);
-
-                  templateObject.invoicerecord.set(invoicerecord);
-
-                  templateObject.selectedCurrency.set(invoicerecord.currency);
-                  templateObject.inputSelectedCurrency.set(
-                    invoicerecord.currency
-                  );
+                    });
+                  }
                 }
-              }
-              if (!added) {
+              );
+            };
+          }
+          setTimeout(function () {
+            addAttachment();
+          }, 2500);
+  
+          function generatePdfForMail(invoiceId) {
+            return new Promise((resolve, reject) => {
+              let templateObject = Template.instance();
+              let completeTabRecord;
+              let doc = new jsPDF("p", "pt", "a4");
+              doc.setFontSize(18);
+              var source = document.getElementById("html-2-pdfwrapper1");
+              doc.addHTML(source, function () {
+                resolve(doc.output("blob"));
+              });
+            });
+          }
+        } catch (err) {}
+      }
+    } else if (url.indexOf("?id=") > 0) {
+      getso_id = url.split("?id=");
+      currentInvoice = getso_id[getso_id.length - 1];
+      $(".printID").attr("id", currentInvoice);
+      if (getso_id[1]) {
+        currentInvoice = parseInt(currentInvoice);
+        templateObject.getInvoiceData = function () {
+          getVS1Data("TInvoiceEx")
+            .then(function (dataObject) {
+              if (dataObject.length == 0) {
+                let customerData = templateObject.clientrecords.get();
                 accountService
                   .getOneInvoicedataEx(currentInvoice)
                   .then(function (data) {
                     templateObject.singleInvoiceData.set(data);
+                    let cust_result = customerData.filter((cust_data) => {
+                      return cust_data.customername == data.fields.CustomerName;
+                    });
                     $(".fullScreenSpin").css("display", "none");
                     let lineItems = [];
                     let lineItemObj = {};
@@ -4606,10 +3577,10 @@ Template.new_invoice.onRendered(function() {
                       data.fields.TotalAmountInc.toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                       });
-                    let totalDiscount =
-                      currencySymbol +
-                      "" +
-                      data.fields.TotalDiscount.toLocaleString(undefined, {
+  
+                    let totalDiscount = utilityService
+                      .modifynegativeCurrencyFormat(data.fields.TotalDiscount)
+                      .toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                       });
                     let subTotal =
@@ -4629,7 +3600,7 @@ Template.new_invoice.onRendered(function() {
                       .toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                       });
-
+  
                     let totalPaidAmount =
                       currencySymbol +
                       "" +
@@ -4647,6 +3618,9 @@ Template.new_invoice.onRendered(function() {
                             ].fields.TotalLineAmount.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
                             });
+                          let lineAmountCalc =
+                            data.fields.Lines[i].fields.OriginalLinePrice *
+                            data.fields.Lines[i].fields.UOMOrderQty;
                           let currencyAmountGbp =
                             currencySymbol +
                             "" +
@@ -4675,7 +3649,6 @@ Template.new_invoice.onRendered(function() {
                               data.fields.Lines[i].fields.UOMQtyShipped || 0,
                             qtybo:
                               data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
-
                             unitPrice:
                               utilityService
                                 .modifynegativeCurrencyFormat(
@@ -4687,8 +3660,7 @@ Template.new_invoice.onRendered(function() {
                             unitPriceInc:
                               utilityService
                                 .modifynegativeCurrencyFormat(
-                                  data.fields.Lines[i].fields
-                                    .OriginalLinePriceInc
+                                  data.fields.Lines[i].fields.OriginalLinePriceInc
                                 )
                                 .toLocaleString(undefined, {
                                   minimumFractionDigits: 2,
@@ -4723,7 +3695,7 @@ Template.new_invoice.onRendered(function() {
                               ).toFixed(2) || 0,
                             taxCode:
                               data.fields.Lines[i].fields.LineTaxCode || "",
-                            // TotalAmt: AmountGbp || 0,
+                            //TotalAmt: utilityService.modifynegativeCurrencyFormat(lineAmountCalc) || 0,
                             curTotalAmt:
                               currencyAmountGbp || currencySymbol + "0",
                             TaxTotal: TaxTotalGbp || 0,
@@ -4736,8 +3708,7 @@ Template.new_invoice.onRendered(function() {
                           };
                           var dataListTable = [
                             data.fields.Lines[i].fields.ProductName || "",
-                            data.fields.Lines[i].fields.ProductDescription ||
-                              "",
+                            data.fields.Lines[i].fields.ProductDescription || "",
                             "<div contenteditable='true' class='qty'>" +
                               "" +
                               data.fields.Lines[i].fields.UOMOrderQty +
@@ -4785,12 +3756,9 @@ Template.new_invoice.onRendered(function() {
                           unitPrice:
                             data.fields.Lines[
                               i
-                            ].fields.OriginalLinePrice.toLocaleString(
-                              undefined,
-                              {
-                                minimumFractionDigits: 2,
-                              }
-                            ) || 0,
+                            ].fields.OriginalLinePrice.toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                            }) || 0,
                           lineCost:
                             data.fields.Lines[i].fields.LineCost.toLocaleString(
                               undefined,
@@ -4799,31 +3767,33 @@ Template.new_invoice.onRendered(function() {
                               }
                             ) || 0,
                           taxRate:
-                            (
-                              data.fields.Lines.fields.LineTaxRate * 100
-                            ).toFixed(2) || 0,
+                            (data.fields.Lines.fields.LineTaxRate * 100).toFixed(
+                              2
+                            ) || 0,
                           taxCode: data.fields.Lines.fields.LineTaxCode || "",
                           TotalAmt: AmountGbp || 0,
-                          curTotalAmt:
-                            currencyAmountGbp || currencySymbol + "0",
+                          curTotalAmt: currencyAmountGbp || currencySymbol + "0",
                           TaxTotal: TaxTotalGbp || 0,
                           TaxRate: TaxRateGbp || 0,
+                          DiscountPercent:
+                            data.fields.Lines.fields.DiscountPercent || 0,
+                          UnitOfMeasure:
+                            data.fields.Lines.fields.UnitOfMeasure || defaultUOM,
                         };
                         lineItems.push(lineItemObj);
                       }
                     }
-
                     let lidData = "Edit Invoice" + " " + data.fields.ID || "";
                     if (data.fields.IsBackOrder) {
                       lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
                       templateObject.isbackorderredirect.set(true);
                     }
-
+  
                     let isPartialPaid = false;
                     if (data.fields.TotalPaid > 0) {
                       isPartialPaid = true;
                     }
-
+  
                     let invoicerecord = {
                       id: data.fields.ID,
                       lid: lidData,
@@ -4864,25 +3834,18 @@ Template.new_invoice.onRendered(function() {
                       totalPaid: totalPaidAmount,
                       ispaid: data.fields.IsPaid,
                       isPartialPaid: isPartialPaid,
-                      deleted: data.fields.Deleted,
                     };
-
+  
                     $("#edtCustomerName").val(data.fields.CustomerName);
                     $("#sltStatus").val(data.fields.SalesStatus);
                     $("#sltDept").val(data.fields.SaleClassName);
                     $("#sltCurrency").val(data.fields.ForeignExchangeCode);
                     FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
-
+  
                     $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                     $("#sltTerms").val(data.fields.TermsName);
                     templateObject.CleintName.set(data.fields.CustomerName);
-
-                    // setTimeout(function () {
-                    //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                    //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                    //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                    // }, 2500);
-
+  
                     /* START attachment */
                     templateObject.attachmentCount.set(0);
                     if (data.fields.Attachments) {
@@ -4890,19 +3853,22 @@ Template.new_invoice.onRendered(function() {
                         templateObject.attachmentCount.set(
                           data.fields.Attachments.length
                         );
-                        templateObject.uploadedFiles.set(
-                          data.fields.Attachments
-                        );
+                        templateObject.uploadedFiles.set(data.fields.Attachments);
                       }
                     }
                     /* END  attachment */
+                    var checkISCustLoad = false;
                     setTimeout(function () {
                       if (clientList) {
                         for (var i = 0; i < clientList.length; i++) {
                           if (
-                            clientList[i].customername ==
-                            data.fields.CustomerName
+                            clientList[i].customername == data.fields.CustomerName
                           ) {
+                            checkISCustLoad = true;
+                            invoicerecord.firstname =
+                              clientList[i].firstname || "";
+                            invoicerecord.lastname = clientList[i].lastname || "";
+                            templateObject.invoicerecord.set(invoicerecord);
                             $("#edtCustomerEmail").val(
                               clientList[i].customeremail
                             );
@@ -4937,17 +3903,15 @@ Template.new_invoice.onRendered(function() {
                           }
                         }
                       }
-
+  
                       if (data.fields.IsPaid === true) {
                         $("#edtCustomerName").attr("readonly", true);
-
+  
                         $(".btn-primary").attr("disabled", "disabled");
+  
                         $("#btnCopyInvoice").attr("disabled", "disabled");
-                        $("#edtCustomerName").css(
-                          "background-color",
-                          "#eaecf4"
-                        );
-
+                        $("#edtCustomerName").css("background-color", "#eaecf4");
+  
                         $("#btnViewPayment").removeAttr("disabled", "disabled");
                         $(".btnSave").attr("disabled", "disabled");
                         $("#btnBack").removeAttr("disabled", "disabled");
@@ -4958,7 +3922,7 @@ Template.new_invoice.onRendered(function() {
                           //$tblrow.find("td").removeClass("lineProductName");
                           $tblrow.find("td").removeClass("lineTaxRate");
                           $tblrow.find("td").removeClass("lineTaxCode");
-
+  
                           $tblrow.find("td").attr("readonly", true);
                           $tblrow.find("td").attr("disabled", "disabled");
                           $tblrow.find("td").css("background-color", "#eaecf4");
@@ -4967,44 +3931,113 @@ Template.new_invoice.onRendered(function() {
                             .removeClass("btnRemove");
                         });
                       }
-                      if (data.fields.Deleted === true) {
-                        $("#edtCustomerName").attr("readonly", true);
-                        $(".btnTransaction").attr("disabled", "disabled");
-                        $(".btn-primary").attr("disabled", "disabled");
-                        $("#btnCopyInvoice").attr("disabled", "disabled");
-                        $("#edtCustomerName").css(
-                          "background-color",
-                          "#eaecf4"
-                        );
-
-                        $("#btnViewPayment").removeAttr("disabled", "disabled");
-                        $(".btnSave").attr("disabled", "disabled");
-                        $("#btnBack").removeAttr("disabled", "disabled");
-                        $(".printConfirm").removeAttr("disabled", "disabled");
-                        $(".tblInvoiceLine tbody tr").each(function () {
-                          var $tblrow = $(this);
-                          $tblrow.find("td").attr("contenteditable", false);
-                          //$tblrow.find("td").removeClass("lineProductName");
-                          $tblrow.find("td").removeClass("lineTaxRate");
-                          $tblrow.find("td").removeClass("lineTaxCode");
-
-                          $tblrow.find("td").attr("readonly", true);
-                          $tblrow.find("td").attr("disabled", "disabled");
-                          $tblrow.find("td").css("background-color", "#eaecf4");
-                          $tblrow
-                            .find("td .table-remove")
-                            .removeClass("btnRemove");
-                        });
+  
+                      if (!checkISCustLoad) {
+                        sideBarService
+                          .getCustomersDataByName(useData[d].fields.CustomerName)
+                          .then(function (dataClient) {
+                            for (
+                              var c = 0;
+                              c < dataClient.tcustomervs1.length;
+                              c++
+                            ) {
+                              var customerrecordObj = {
+                                customerid: dataClient.tcustomervs1[c].Id || " ",
+                                firstname:
+                                  dataClient.tcustomervs1[c].FirstName || " ",
+                                lastname:
+                                  dataClient.tcustomervs1[c].LastName || " ",
+                                customername:
+                                  dataClient.tcustomervs1[c].ClientName || " ",
+                                customeremail:
+                                  dataClient.tcustomervs1[c].Email || " ",
+                                street: dataClient.tcustomervs1[c].Street || " ",
+                                street2:
+                                  dataClient.tcustomervs1[c].Street2 || " ",
+                                street3:
+                                  dataClient.tcustomervs1[c].Street3 || " ",
+                                suburb: dataClient.tcustomervs1[c].Suburb || " ",
+                                statecode:
+                                  dataClient.tcustomervs1[c].State +
+                                    " " +
+                                    dataClient.tcustomervs1[c].Postcode || " ",
+                                country:
+                                  dataClient.tcustomervs1[c].Country || " ",
+                                termsName:
+                                  dataClient.tcustomervs1[c].TermsName || "",
+                                taxCode:
+                                  dataClient.tcustomervs1[c].TaxCodeName || "E",
+                                clienttypename:
+                                  dataClient.tcustomervs1[c].ClientTypeName ||
+                                  "Default",
+                                discount:
+                                  dataClient.tcustomervs1[c].Discount || 0,
+                              };
+                              clientList.push(customerrecordObj);
+  
+                              invoicerecord.firstname =
+                                dataClient.tcustomervs1[c].FirstName || "";
+                              invoicerecord.lastname =
+                                dataClient.tcustomervs1[c].LastName || "";
+                              $("#edtCustomerEmail").val(
+                                dataClient.tcustomervs1[c].Email
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerid",
+                                clientList[c].customerid
+                              );
+                              $("#edtCustomerName").attr(
+                                "custid",
+                                dataClient.tcustomervs1[c].Id
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerfirstname",
+                                dataClient.tcustomervs1[c].FirstName
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerlastname",
+                                dataClient.tcustomervs1[c].LastName
+                              );
+                              $("#customerType").text(
+                                dataClient.tcustomervs1[c].ClientTypeName ||
+                                  "Default"
+                              );
+                              $("#customerDiscount").text(
+                                dataClient.tcustomervs1[c].Discount + "%" ||
+                                  0 + "%"
+                              );
+                              $("#edtCustomerUseType").val(
+                                dataClient.tcustomervs1[c].ClientTypeName ||
+                                  "Default"
+                              );
+                              $("#edtCustomerUseDiscount").val(
+                                dataClient.tcustomervs1[c].Discount || 0
+                              );
+                            }
+  
+                            templateObject.clientrecords.set(
+                              clientList.sort(function (a, b) {
+                                if (a.customername == "NA") {
+                                  return 1;
+                                } else if (b.customername == "NA") {
+                                  return -1;
+                                }
+                                return a.customername.toUpperCase() >
+                                  b.customername.toUpperCase()
+                                  ? 1
+                                  : -1;
+                              })
+                            );
+                          });
                       }
                     }, 100);
-
+  
                     templateObject.invoicerecord.set(invoicerecord);
-
+  
                     templateObject.selectedCurrency.set(invoicerecord.currency);
                     templateObject.inputSelectedCurrency.set(
                       invoicerecord.currency
                     );
-
                   })
                   .catch(function (err) {
                     swal({
@@ -5023,180 +4056,1534 @@ Template.new_invoice.onRendered(function() {
                     });
                     $(".fullScreenSpin").css("display", "none");
                   });
-              }
-            }
-          }).catch(function (err) {
-            let customerData = templateObject.clientrecords.get();
-            accountService
-              .getOneInvoicedataEx(currentInvoice)
-              .then(function (data) {
-                templateObject.singleInvoiceData.set(data);
-                let cust_result = customerData.filter((cust_data) => {
-                  return cust_data.customername == data.fields.CustomerName;
-                });
-                $(".fullScreenSpin").css("display", "none");
-                let lineItems = [];
-                let lineItemObj = {};
-                let lineItemsTable = [];
-                let lineItemTableObj = {};
-                let exchangeCode = data.fields.ForeignExchangeCode;
-                let currencySymbol = Currency;
-                let total =
-                  currencySymbol +
-                  "" +
-                  data.fields.TotalAmount.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-                let totalInc =
-                  currencySymbol +
-                  "" +
-                  data.fields.TotalAmountInc.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-                let totalDiscount =
-                  currencySymbol +
-                  "" +
-                  data.fields.TotalDiscount.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-                let subTotal =
-                  currencySymbol +
-                  "" +
-                  data.fields.TotalAmount.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-                let totalTax =
-                  currencySymbol +
-                  "" +
-                  data.fields.TotalTax.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-                let totalBalance = utilityService
-                  .modifynegativeCurrencyFormat(data.fields.TotalBalance)
-                  .toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-
-                let totalPaidAmount =
-                  currencySymbol +
-                  "" +
-                  data.fields.TotalPaid.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                  });
-                if (data.fields.Lines != null) {
-                  if (data.fields.Lines.length) {
-                    for (let i = 0; i < data.fields.Lines.length; i++) {
-                      let AmountGbp =
-                        currencySymbol +
-                        "" +
-                        data.fields.Lines[
-                          i
-                        ].fields.TotalLineAmount.toLocaleString(undefined, {
+              } else {
+                let data = JSON.parse(dataObject[0].data);
+  
+                let useData = data.tinvoiceex;
+                let customerData = templateObject.clientrecords.get();
+  
+                var added = false;
+                for (let d = 0; d < useData.length; d++) {
+                  if (parseInt(useData[d].fields.ID) === currentInvoice) {
+                    added = true;
+                    $(".fullScreenSpin").css("display", "none");
+                    let cust_result = customerData.filter((cust_data) => {
+                      return (
+                        cust_data.customername == useData[d].fields.ClientName
+                      );
+                    });
+  
+                    getVS1Data("TAppointment").then(function (dataObject) {
+                      let appointments = JSON.parse(dataObject[0].data);
+                      let allAppointments = appointments.tappointmentex;
+                      let apptId = FlowRouter.current().queryParams.apptId;
+                      let appointmentAttachments = (appointmentAttachments =
+                        allAppointments.find((x) => x.fields.ID === parseInt(apptId)).fields.Attachments);
+                      if (appointmentAttachments.length > 0) {
+                        templateObject.attachmentCount.set(
+                          appointmentAttachments.length
+                        );
+                        templateObject.uploadedFiles.set(appointmentAttachments);
+                      }
+                    });
+                    templateObject.singleInvoiceData.set(useData[d]);
+                    let lineItems = [];
+                    let lineItemObj = {};
+                    let lineItemsTable = [];
+                    let lineItemTableObj = {};
+                    let exchangeCode = useData[d].fields.ForeignExchangeCode;
+                    let currencySymbol = Currency;
+                    let total =
+                      currencySymbol +
+                      "" +
+                      useData[d].fields.TotalAmount.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+                    let totalInc =
+                      currencySymbol +
+                      "" +
+                      useData[d].fields.TotalAmountInc.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+                    let totalDiscount =
+                      currencySymbol +
+                      "" +
+                      useData[d].fields.TotalDiscount.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+  
+                    let subTotal =
+                      currencySymbol +
+                      "" +
+                      useData[d].fields.TotalAmount.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+                    let totalTax =
+                      currencySymbol +
+                      "" +
+                      useData[d].fields.TotalTax.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+                    let totalBalance = utilityService
+                      .modifynegativeCurrencyFormat(
+                        useData[d].fields.TotalBalance
+                      )
+                      .toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+  
+                    let totalPaidAmount =
+                      currencySymbol +
+                      "" +
+                      useData[d].fields.TotalPaid.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      });
+  
+                    if (useData[d].fields.Lines.length) {
+                      for (let i = 0; i < useData[d].fields.Lines.length; i++) {
+                        let AmountGbp =
+                          currencySymbol +
+                          "" +
+                          useData[d].fields.Lines[
+                            i
+                          ].fields.TotalLineAmount.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                          });
+                        let currencyAmountGbp =
+                          currencySymbol +
+                          "" +
+                          useData[d].fields.Lines[
+                            i
+                          ].fields.TotalLineAmount.toFixed(2);
+                        let TaxTotalGbp =
+                          utilityService.modifynegativeCurrencyFormat(
+                            useData[d].fields.Lines[i].fields.LineTaxTotal
+                          );
+                        let TaxRateGbp = (
+                          useData[d].fields.Lines[i].fields.LineTaxRate * 100
+                        ).toFixed(2);
+                        lineItemObj = {
+                          lineID: Random.id(),
+                          id: useData[d].fields.Lines[i].fields.ID || "",
+                          item:
+                            useData[d].fields.Lines[i].fields.ProductName || "",
+                          description:
+                            useData[d].fields.Lines[i].fields
+                              .ProductDescription || "",
+                          quantity:
+                            useData[d].fields.Lines[i].fields.UOMOrderQty || 0,
+                          qtyordered:
+                            useData[d].fields.Lines[i].fields.UOMOrderQty || 0,
+                          qtyshipped:
+                            useData[d].fields.Lines[i].fields.UOMQtyShipped || 0,
+                          qtybo:
+                            useData[d].fields.Lines[i].fields.UOMQtyBackOrder ||
+                            0,
+                          // unitPrice: utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.OriginalLinePrice).toLocaleString(undefined, {
+                          //     minimumFractionDigits: 2
+                          // }) || 0,
+                          unitPrice:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                useData[d].fields.Lines[i].fields
+                                  .OriginalLinePrice
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          unitPriceInc:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                useData[d].fields.Lines[i].fields
+                                  .OriginalLinePriceInc
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          TotalAmt:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                useData[d].fields.Lines[i].fields.TotalLineAmount
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          TotalAmtInc:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                useData[d].fields.Lines[i].fields
+                                  .TotalLineAmountInc
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          lineCost:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                useData[d].fields.Lines[i].fields.LineCost
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          taxRate:
+                            (
+                              useData[d].fields.Lines[i].fields.LineTaxRate * 100
+                            ).toFixed(2) || 0,
+                          taxCode:
+                            useData[d].fields.Lines[i].fields.LineTaxCode || "",
+                          // TotalAmt: AmountGbp || 0,
+                          curTotalAmt: currencyAmountGbp || currencySymbol + "0",
+                          TaxTotal: TaxTotalGbp || 0,
+                          TaxRate: TaxRateGbp || 0,
+                          DiscountPercent:
+                            useData[d].fields.Lines[i].fields.DiscountPercent ||
+                            0,
+                          UnitOfMeasure:
+                            useData[d].fields.Lines[i].fields.UnitOfMeasure ||
+                            defaultUOM,
+                          pqaseriallotdata:
+                            useData[d].fields.Lines[i].fields.PQA || "",
+                        };
+                        var dataListTable = [
+                          useData[d].fields.Lines[i].fields.ProductName || "",
+                          useData[d].fields.Lines[i].fields.ProductDescription ||
+                            "",
+                          "<div contenteditable='true' class='qty'>" +
+                            "" +
+                            useData[d].fields.Lines[i].fields.UOMOrderQty +
+                            "" +
+                            "</div>" || "<div>" + "" + 0 + "" + "</div>",
+                          "<div>" +
+                            "" +
+                            currencySymbol +
+                            "" +
+                            useData[d].fields.Lines[i].fields.LinePrice.toFixed(
+                              2
+                            ) +
+                            "" +
+                            "</div>" || currencySymbol + "" + 0.0,
+                          useData[d].fields.Lines[i].fields.LineTaxCode || "",
+                          AmountGbp || currencySymbol + "" + 0.0,
+                          '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
+                        ];
+                        lineItemsTable.push(dataListTable);
+                        lineItems.push(lineItemObj);
+                      }
+                    } else {
+                      let AmountGbp = useData[
+                        d
+                      ].fields.Lines.fields.TotalLineAmountInc.toLocaleString(
+                        undefined,
+                        {
                           minimumFractionDigits: 2,
-                        });
+                        }
+                      );
                       let currencyAmountGbp =
                         currencySymbol +
                         "" +
-                        data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
+                        useData[d].fields.Lines.fields.TotalLineAmount.toFixed(2);
                       let TaxTotalGbp =
                         utilityService.modifynegativeCurrencyFormat(
-                          data.fields.Lines[i].fields.LineTaxTotal
+                          useData[d].fields.Lines.fields.LineTaxTotal
                         );
-                      let TaxRateGbp = (
-                        data.fields.Lines[i].fields.LineTaxRate * 100
-                      ).toFixed(2);
+                      let TaxRateGbp =
+                        currencySymbol +
+                        "" +
+                        useData[d].fields.Lines.fields.LineTaxRate;
                       lineItemObj = {
                         lineID: Random.id(),
-                        id: data.fields.Lines[i].fields.ID || "",
-                        item: data.fields.Lines[i].fields.ProductName || "",
+                        id: useData[d].fields.Lines.fields.ID || "",
                         description:
-                          data.fields.Lines[i].fields.ProductDescription || "",
-                        quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
-                        qtyordered:
-                          data.fields.Lines[i].fields.UOMOrderQty || 0,
-                        qtyshipped:
-                          data.fields.Lines[i].fields.UOMQtyShipped || 0,
-                        qtybo: data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
+                          useData[d].fields.Lines.fields.ProductDescription || "",
+                        quantity: useData[d].fields.Lines.fields.UOMOrderQty || 0,
                         unitPrice:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.OriginalLinePrice
-                            )
-                            .toLocaleString(undefined, {
+                          useData[
+                            d
+                          ].fields.Lines.fields.OriginalLinePrice.toLocaleString(
+                            undefined,
+                            {
                               minimumFractionDigits: 2,
-                            }) || 0,
-                        unitPriceInc:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.OriginalLinePriceInc
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        TotalAmt:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.TotalLineAmount
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
-                        TotalAmtInc:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.TotalLineAmountInc
-                            )
-                            .toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                            }) || 0,
+                            }
+                          ) || 0,
                         lineCost:
-                          utilityService
-                            .modifynegativeCurrencyFormat(
-                              data.fields.Lines[i].fields.LineCost
-                            )
-                            .toLocaleString(undefined, {
+                          useData[d].fields.Lines.fields.LineCost.toLocaleString(
+                            undefined,
+                            {
                               minimumFractionDigits: 2,
-                            }) || 0,
-                        taxRate:
-                          (
-                            data.fields.Lines[i].fields.LineTaxRate * 100
-                          ).toFixed(2) || 0,
-                        taxCode: data.fields.Lines[i].fields.LineTaxCode || "",
-                        //TotalAmt: AmountGbp || 0,
+                            }
+                          ) || 0,
+                        taxRate: useData[d].fields.Lines.fields.LineTaxRate || 0,
+                        taxCode: useData[d].fields.Lines.fields.LineTaxCode || "",
+                        TotalAmt: AmountGbp || 0,
                         curTotalAmt: currencyAmountGbp || currencySymbol + "0",
                         TaxTotal: TaxTotalGbp || 0,
                         TaxRate: TaxRateGbp || 0,
                         DiscountPercent:
-                          data.fields.Lines[i].fields.DiscountPercent || 0,
+                          useData[d].fields.Lines.fields.DiscountPercent || 0,
                         UnitOfMeasure:
-                          data.fields.Lines[i].fields.UnitOfMeasure ||
+                          useData[d].fields.Lines[i].fields.UnitOfMeasure ||
                           defaultUOM,
+                        pqaseriallotdata:
+                          useData[d].fields.Lines.fields.PQA || "",
                       };
-                      var dataListTable = [
-                        data.fields.Lines[i].fields.ProductName || "",
-                        data.fields.Lines[i].fields.ProductDescription || "",
-                        "<div contenteditable='true' class='qty'>" +
-                          "" +
-                          data.fields.Lines[i].fields.UOMOrderQty +
-                          "" +
-                          "</div>" || "<div>" + "" + 0 + "" + "</div>",
-                        "<div>" +
-                          "" +
-                          currencySymbol +
-                          "" +
-                          data.fields.Lines[i].fields.LinePrice.toFixed(2) +
-                          "" +
-                          "</div>" || currencySymbol + "" + 0.0,
-                        data.fields.Lines[i].fields.LineTaxCode || "",
-                        AmountGbp || currencySymbol + "" + 0.0,
-                        '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
-                      ];
-                      lineItemsTable.push(dataListTable);
                       lineItems.push(lineItemObj);
                     }
-                  } else {
+  
+                    let lidData = "Edit Invoice" + " " + useData[d].fields.ID || "";
+                    if (useData[d].fields.IsBackOrder) {
+                      lidData = "Edit Invoice" + " (BO) " + useData[d].fields.ID || "";
+                      templateObject.isbackorderredirect.set(true);
+                    }
+                    let isPartialPaid = false;
+                    if (useData[d].fields.TotalPaid > 0) {
+                      isPartialPaid = true;
+                    }
+                    let invoicerecord = {
+                      id: useData[d].fields.ID,
+                      lid: lidData,
+                      socustomer: useData[d].fields.CustomerName,
+                      salesOrderto: useData[d].fields.InvoiceToDesc,
+                      shipto: useData[d].fields.ShipToDesc,
+                      department: useData[d].fields.SaleClassName,
+                      docnumber: useData[d].fields.DocNumber,
+                      custPONumber: useData[d].fields.CustPONumber,
+                      saledate: useData[d].fields.SaleDate
+                        ? moment(useData[d].fields.SaleDate).format("DD/MM/YYYY")
+                        : "",
+                      duedate: useData[d].fields.DueDate
+                        ? moment(useData[d].fields.DueDate).format("DD/MM/YYYY")
+                        : "",
+                      employeename: useData[d].fields.EmployeeName,
+                      status: useData[d].fields.SalesStatus,
+                      category: useData[d].fields.SalesCategory,
+                      comments: useData[d].fields.Comments,
+                      pickmemo: useData[d].fields.PickMemo,
+                      ponumber: useData[d].fields.CustPONumber,
+                      via: useData[d].fields.Shipping,
+                      connote: useData[d].fields.ConNote,
+                      reference: useData[d].fields.ReferenceNo,
+                      currency: useData[d].fields.ForeignExchangeCode,
+                      branding: useData[d].fields.MedType,
+                      invoiceToDesc: useData[d].fields.InvoiceToDesc,
+                      shipToDesc: useData[d].fields.ShipToDesc,
+                      termsName: useData[d].fields.TermsName,
+                      Total: totalInc,
+                      TotalDiscount: totalDiscount,
+                      LineItems: lineItems,
+                      TotalTax: totalTax,
+                      SubTotal: subTotal,
+                      balanceDue: totalBalance,
+                      saleCustField1: useData[d].fields.SaleCustField1,
+                      saleCustField2: useData[d].fields.SaleCustField2,
+                      totalPaid: totalPaidAmount,
+                      ispaid: useData[d].fields.IsPaid,
+                      isPartialPaid: isPartialPaid,
+                    };
+  
+                    $("#edtCustomerName").val(useData[d].fields.CustomerName);
+                    $("#sltTerms").val(useData[d].fields.TermsName);
+                    $("#sltDept").val(useData[d].fields.SaleClassName);
+                    $("#sltCurrency").val(useData[d].fields.ForeignExchangeCode);
+                    FxGlobalFunctions.handleChangedCurrency(useData[d].fields.ForeignExchangeCode, defaultCurrencyCode);
+  
+                    $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
+                    $("#sltStatus").val(useData[d].fields.SalesStatus);
+                    templateObject.CleintName.set(useData[d].fields.CustomerName);
+  
+                    /* START attachment */
+                    templateObject.attachmentCount.set(0);
+                    if (useData[d].fields.Attachments) {
+                      if (useData[d].fields.Attachments.length) {
+                        templateObject.attachmentCount.set(
+                          useData[d].fields.Attachments.length
+                        );
+                        templateObject.uploadedFiles.set(
+                          useData[d].fields.Attachments
+                        );
+                      }
+                    }
+                    /* END  attachment */
+                    var checkISCustLoad = false;
+                    setTimeout(function () {
+                      if (clientList) {
+                        for (var i = 0; i < clientList.length; i++) {
+                          if (
+                            clientList[i].customername ==
+                            useData[d].fields.CustomerName
+                          ) {
+                            checkISCustLoad = true;
+                            invoicerecord.firstname =
+                              clientList[i].firstname || "";
+                            invoicerecord.lastname = clientList[i].lastname || "";
+                            templateObject.invoicerecord.set(invoicerecord);
+                            $("#edtCustomerEmail").val(
+                              clientList[i].customeremail
+                            );
+                            $("#edtCustomerEmail").attr(
+                              "customerid",
+                              clientList[i].customerid
+                            );
+                            $("#edtCustomerName").attr(
+                              "custid",
+                              clientList[i].customerid
+                            );
+                            $("#edtCustomerEmail").attr(
+                              "customerfirstname",
+                              clientList[i].firstname
+                            );
+                            $("#edtCustomerEmail").attr(
+                              "customerlastname",
+                              clientList[i].lastname
+                            );
+                            $("#customerType").text(
+                              clientList[i].clienttypename || "Default"
+                            );
+                            $("#customerDiscount").text(
+                              clientList[i].discount + "%" || 0 + "%"
+                            );
+                            $("#edtCustomerUseType").val(
+                              clientList[i].clienttypename || "Default"
+                            );
+                            $("#edtCustomerUseDiscount").val(
+                              clientList[i].discount || 0
+                            );
+                          }
+                        }
+                      }
+  
+                      if (useData[d].fields.IsPaid === true) {
+                        $("#edtCustomerName").attr("readonly", true);
+  
+                        $(".btn-primary").removeAttr("disabled", "disabled");
+                        $("#edtCustomerName").css("background-color", "#eaecf4");
+  
+                        $("#btnViewPayment").removeAttr("disabled", "disabled");
+                        $(".btnSave").attr("disabled", "disabled");
+                        $("#btnBack").removeAttr("disabled", "disabled");
+                        $(".printConfirm").removeAttr("disabled", "disabled");
+                        $(".tblInvoiceLine tbody tr").each(function () {
+                          var $tblrow = $(this);
+                          $tblrow.find("td").attr("contenteditable", false);
+                          //$tblrow.find("td").removeClass("lineProductName");
+                          $tblrow.find("td").removeClass("lineTaxRate");
+                          $tblrow.find("td").removeClass("lineTaxCode");
+  
+                          $tblrow.find("td").attr("readonly", true);
+                          $tblrow.find("td").attr("disabled", "disabled");
+                          $tblrow.find("td").css("background-color", "#eaecf4");
+                          $tblrow
+                            .find("td .table-remove")
+                            .removeClass("btnRemove");
+                        });
+                      }
+  
+                      if (!checkISCustLoad) {
+                        sideBarService
+                          .getCustomersDataByName(useData[d].fields.CustomerName)
+                          .then(function (dataClient) {
+                            for (
+                              var c = 0;
+                              c < dataClient.tcustomervs1.length;
+                              c++
+                            ) {
+                              var customerrecordObj = {
+                                customerid: dataClient.tcustomervs1[c].Id || " ",
+                                firstname:
+                                  dataClient.tcustomervs1[c].FirstName || " ",
+                                lastname:
+                                  dataClient.tcustomervs1[c].LastName || " ",
+                                customername:
+                                  dataClient.tcustomervs1[c].ClientName || " ",
+                                customeremail:
+                                  dataClient.tcustomervs1[c].Email || " ",
+                                street: dataClient.tcustomervs1[c].Street || " ",
+                                street2:
+                                  dataClient.tcustomervs1[c].Street2 || " ",
+                                street3:
+                                  dataClient.tcustomervs1[c].Street3 || " ",
+                                suburb: dataClient.tcustomervs1[c].Suburb || " ",
+                                statecode:
+                                  dataClient.tcustomervs1[c].State +
+                                    " " +
+                                    dataClient.tcustomervs1[c].Postcode || " ",
+                                country:
+                                  dataClient.tcustomervs1[c].Country || " ",
+                                termsName:
+                                  dataClient.tcustomervs1[c].TermsName || "",
+                                taxCode:
+                                  dataClient.tcustomervs1[c].TaxCodeName || "E",
+                                clienttypename:
+                                  dataClient.tcustomervs1[c].ClientTypeName ||
+                                  "Default",
+                                discount:
+                                  dataClient.tcustomervs1[c].Discount || 0,
+                              };
+                              clientList.push(customerrecordObj);
+  
+                              invoicerecord.firstname =
+                                dataClient.tcustomervs1[c].FirstName || "";
+                              invoicerecord.lastname =
+                                dataClient.tcustomervs1[c].LastName || "";
+                              $("#edtCustomerEmail").val(
+                                dataClient.tcustomervs1[c].Email
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerid",
+                                clientList[c].customerid
+                              );
+                              $("#edtCustomerName").attr(
+                                "custid",
+                                dataClient.tcustomervs1[c].Id
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerfirstname",
+                                dataClient.tcustomervs1[c].FirstName
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerlastname",
+                                dataClient.tcustomervs1[c].LastName
+                              );
+                              $("#customerType").text(
+                                dataClient.tcustomervs1[c].ClientTypeName ||
+                                  "Default"
+                              );
+                              $("#customerDiscount").text(
+                                dataClient.tcustomervs1[c].Discount + "%" ||
+                                  0 + "%"
+                              );
+                              $("#edtCustomerUseType").val(
+                                dataClient.tcustomervs1[c].ClientTypeName ||
+                                  "Default"
+                              );
+                              $("#edtCustomerUseDiscount").val(
+                                dataClient.tcustomervs1[c].Discount || 0
+                              );
+                            }
+  
+                            templateObject.clientrecords.set(
+                              clientList.sort(function (a, b) {
+                                if (a.customername == "NA") {
+                                  return 1;
+                                } else if (b.customername == "NA") {
+                                  return -1;
+                                }
+                                return a.customername.toUpperCase() >
+                                  b.customername.toUpperCase()
+                                  ? 1
+                                  : -1;
+                              })
+                            );
+                          });
+                      }
+                    }, 100);
+  
+                    templateObject.invoicerecord.set(invoicerecord);
+  
+                    templateObject.selectedCurrency.set(invoicerecord.currency);
+                    templateObject.inputSelectedCurrency.set(
+                      invoicerecord.currency
+                    );
+                  }
+                }
+                if (!added) {
+                  accountService
+                    .getOneInvoicedataEx(currentInvoice)
+                    .then(function (data) {
+                      templateObject.singleInvoiceData.set(data);
+                      $(".fullScreenSpin").css("display", "none");
+                      let lineItems = [];
+                      let lineItemObj = {};
+                      let lineItemsTable = [];
+                      let lineItemTableObj = {};
+                      let exchangeCode = data.fields.ForeignExchangeCode;
+                      let currencySymbol = Currency;
+                      let total =
+                        currencySymbol +
+                        "" +
+                        data.fields.TotalAmount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+                      let totalInc =
+                        currencySymbol +
+                        "" +
+                        data.fields.TotalAmountInc.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+                      let totalDiscount =
+                        currencySymbol +
+                        "" +
+                        data.fields.TotalDiscount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+                      let subTotal =
+                        currencySymbol +
+                        "" +
+                        data.fields.TotalAmount.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+                      let totalTax =
+                        currencySymbol +
+                        "" +
+                        data.fields.TotalTax.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+                      let totalBalance = utilityService
+                        .modifynegativeCurrencyFormat(data.fields.TotalBalance)
+                        .toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+  
+                      let totalPaidAmount =
+                        currencySymbol +
+                        "" +
+                        data.fields.TotalPaid.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        });
+                      if (data.fields.Lines != null) {
+                        if (data.fields.Lines.length) {
+                          for (let i = 0; i < data.fields.Lines.length; i++) {
+                            let AmountGbp =
+                              currencySymbol +
+                              "" +
+                              data.fields.Lines[
+                                i
+                              ].fields.TotalLineAmount.toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              });
+                            let currencyAmountGbp =
+                              currencySymbol +
+                              "" +
+                              data.fields.Lines[i].fields.TotalLineAmount.toFixed(
+                                2
+                              );
+                            let TaxTotalGbp =
+                              utilityService.modifynegativeCurrencyFormat(
+                                data.fields.Lines[i].fields.LineTaxTotal
+                              );
+                            let TaxRateGbp = (
+                              data.fields.Lines[i].fields.LineTaxRate * 100
+                            ).toFixed(2);
+                            lineItemObj = {
+                              lineID: Random.id(),
+                              id: data.fields.Lines[i].fields.ID || "",
+                              item: data.fields.Lines[i].fields.ProductName || "",
+                              description:
+                                data.fields.Lines[i].fields.ProductDescription ||
+                                "",
+                              quantity:
+                                data.fields.Lines[i].fields.UOMOrderQty || 0,
+                              qtyordered:
+                                data.fields.Lines[i].fields.UOMOrderQty || 0,
+                              qtyshipped:
+                                data.fields.Lines[i].fields.UOMQtyShipped || 0,
+                              qtybo:
+                                data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
+  
+                              unitPrice:
+                                utilityService
+                                  .modifynegativeCurrencyFormat(
+                                    data.fields.Lines[i].fields.OriginalLinePrice
+                                  )
+                                  .toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                  }) || 0,
+                              unitPriceInc:
+                                utilityService
+                                  .modifynegativeCurrencyFormat(
+                                    data.fields.Lines[i].fields
+                                      .OriginalLinePriceInc
+                                  )
+                                  .toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                  }) || 0,
+                              TotalAmt:
+                                utilityService
+                                  .modifynegativeCurrencyFormat(
+                                    data.fields.Lines[i].fields.TotalLineAmount
+                                  )
+                                  .toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                  }) || 0,
+                              TotalAmtInc:
+                                utilityService
+                                  .modifynegativeCurrencyFormat(
+                                    data.fields.Lines[i].fields.TotalLineAmountInc
+                                  )
+                                  .toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                  }) || 0,
+                              lineCost:
+                                utilityService
+                                  .modifynegativeCurrencyFormat(
+                                    data.fields.Lines[i].fields.LineCost
+                                  )
+                                  .toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                  }) || 0,
+                              taxRate:
+                                (
+                                  data.fields.Lines[i].fields.LineTaxRate * 100
+                                ).toFixed(2) || 0,
+                              taxCode:
+                                data.fields.Lines[i].fields.LineTaxCode || "",
+                              // TotalAmt: AmountGbp || 0,
+                              curTotalAmt:
+                                currencyAmountGbp || currencySymbol + "0",
+                              TaxTotal: TaxTotalGbp || 0,
+                              TaxRate: TaxRateGbp || 0,
+                              DiscountPercent:
+                                data.fields.Lines[i].fields.DiscountPercent || 0,
+                              UnitOfMeasure:
+                                data.fields.Lines[i].fields.UnitOfMeasure ||
+                                defaultUOM,
+                            };
+                            var dataListTable = [
+                              data.fields.Lines[i].fields.ProductName || "",
+                              data.fields.Lines[i].fields.ProductDescription ||
+                                "",
+                              "<div contenteditable='true' class='qty'>" +
+                                "" +
+                                data.fields.Lines[i].fields.UOMOrderQty +
+                                "" +
+                                "</div>" || "<div>" + "" + 0 + "" + "</div>",
+                              "<div>" +
+                                "" +
+                                currencySymbol +
+                                "" +
+                                data.fields.Lines[i].fields.LinePrice.toFixed(2) +
+                                "" +
+                                "</div>" || currencySymbol + "" + 0.0,
+                              data.fields.Lines[i].fields.LineTaxCode || "",
+                              AmountGbp || currencySymbol + "" + 0.0,
+                              '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
+                            ];
+                            lineItemsTable.push(dataListTable);
+                            lineItems.push(lineItemObj);
+                          }
+                        } else {
+                          let AmountGbp =
+                            data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
+                              undefined,
+                              {
+                                minimumFractionDigits: 2,
+                              }
+                            );
+                          let currencyAmountGbp =
+                            currencySymbol +
+                            "" +
+                            data.fields.Lines.fields.TotalLineAmount.toFixed(2);
+                          let TaxTotalGbp =
+                            utilityService.modifynegativeCurrencyFormat(
+                              data.fields.Lines.fields.LineTaxTotal
+                            );
+                          let TaxRateGbp = (
+                            data.fields.Lines.fields.LineTaxRate * 100
+                          ).toFixed(2);
+                          lineItemObj = {
+                            lineID: Random.id(),
+                            id: data.fields.Lines.fields.ID || "",
+                            description:
+                              data.fields.Lines.fields.ProductDescription || "",
+                            quantity: data.fields.Lines.fields.UOMOrderQty || 0,
+                            unitPrice:
+                              data.fields.Lines[
+                                i
+                              ].fields.OriginalLinePrice.toLocaleString(
+                                undefined,
+                                {
+                                  minimumFractionDigits: 2,
+                                }
+                              ) || 0,
+                            lineCost:
+                              data.fields.Lines[i].fields.LineCost.toLocaleString(
+                                undefined,
+                                {
+                                  minimumFractionDigits: 2,
+                                }
+                              ) || 0,
+                            taxRate:
+                              (
+                                data.fields.Lines.fields.LineTaxRate * 100
+                              ).toFixed(2) || 0,
+                            taxCode: data.fields.Lines.fields.LineTaxCode || "",
+                            TotalAmt: AmountGbp || 0,
+                            curTotalAmt:
+                              currencyAmountGbp || currencySymbol + "0",
+                            TaxTotal: TaxTotalGbp || 0,
+                            TaxRate: TaxRateGbp || 0,
+                          };
+                          lineItems.push(lineItemObj);
+                        }
+                      }
+  
+                      let lidData = "Edit Invoice" + " " + data.fields.ID || "";
+                      if (data.fields.IsBackOrder) {
+                        lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                        templateObject.isbackorderredirect.set(true);
+                      }
+  
+                      let isPartialPaid = false;
+                      if (data.fields.TotalPaid > 0) {
+                        isPartialPaid = true;
+                      }
+  
+                      let invoicerecord = {
+                        id: data.fields.ID,
+                        lid: lidData,
+                        socustomer: data.fields.CustomerName,
+                        salesOrderto: data.fields.InvoiceToDesc,
+                        shipto: data.fields.ShipToDesc,
+                        department: data.fields.SaleClassName,
+                        docnumber: data.fields.DocNumber,
+                        custPONumber: data.fields.CustPONumber,
+                        saledate: data.fields.SaleDate
+                          ? moment(data.fields.SaleDate).format("DD/MM/YYYY")
+                          : "",
+                        duedate: data.fields.DueDate
+                          ? moment(data.fields.DueDate).format("DD/MM/YYYY")
+                          : "",
+                        employeename: data.fields.EmployeeName,
+                        status: data.fields.SalesStatus,
+                        category: data.fields.SalesCategory,
+                        comments: data.fields.Comments,
+                        pickmemo: data.fields.PickMemo,
+                        ponumber: data.fields.CustPONumber,
+                        via: data.fields.Shipping,
+                        connote: data.fields.ConNote,
+                        reference: data.fields.ReferenceNo,
+                        currency: data.fields.ForeignExchangeCode,
+                        branding: data.fields.MedType,
+                        invoiceToDesc: data.fields.InvoiceToDesc,
+                        shipToDesc: data.fields.ShipToDesc,
+                        termsName: data.fields.TermsName,
+                        Total: totalInc,
+                        TotalDiscount: totalDiscount,
+                        LineItems: lineItems,
+                        TotalTax: totalTax,
+                        SubTotal: subTotal,
+                        balanceDue: totalBalance,
+                        saleCustField1: data.fields.SaleCustField1,
+                        saleCustField2: data.fields.SaleCustField2,
+                        totalPaid: totalPaidAmount,
+                        ispaid: data.fields.IsPaid,
+                        isPartialPaid: isPartialPaid,
+                        deleted: data.fields.Deleted,
+                      };
+  
+                      $("#edtCustomerName").val(data.fields.CustomerName);
+                      $("#sltStatus").val(data.fields.SalesStatus);
+                      $("#sltDept").val(data.fields.SaleClassName);
+                      $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+                      FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+  
+                      $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                      $("#sltTerms").val(data.fields.TermsName);
+                      templateObject.CleintName.set(data.fields.CustomerName);
+  
+                      // setTimeout(function () {
+                      //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                      //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                      //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                      // }, 2500);
+  
+                      /* START attachment */
+                      templateObject.attachmentCount.set(0);
+                      if (data.fields.Attachments) {
+                        if (data.fields.Attachments.length) {
+                          templateObject.attachmentCount.set(
+                            data.fields.Attachments.length
+                          );
+                          templateObject.uploadedFiles.set(
+                            data.fields.Attachments
+                          );
+                        }
+                      }
+                      /* END  attachment */
+                      setTimeout(function () {
+                        if (clientList) {
+                          for (var i = 0; i < clientList.length; i++) {
+                            if (
+                              clientList[i].customername ==
+                              data.fields.CustomerName
+                            ) {
+                              $("#edtCustomerEmail").val(
+                                clientList[i].customeremail
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerid",
+                                clientList[i].customerid
+                              );
+                              $("#edtCustomerName").attr(
+                                "custid",
+                                clientList[i].customerid
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerfirstname",
+                                clientList[i].firstname
+                              );
+                              $("#edtCustomerEmail").attr(
+                                "customerlastname",
+                                clientList[i].lastname
+                              );
+                              $("#customerType").text(
+                                clientList[i].clienttypename || "Default"
+                              );
+                              $("#customerDiscount").text(
+                                clientList[i].discount + "%" || 0 + "%"
+                              );
+                              $("#edtCustomerUseType").val(
+                                clientList[i].clienttypename || "Default"
+                              );
+                              $("#edtCustomerUseDiscount").val(
+                                clientList[i].discount || 0
+                              );
+                            }
+                          }
+                        }
+  
+                        if (data.fields.IsPaid === true) {
+                          $("#edtCustomerName").attr("readonly", true);
+  
+                          $(".btn-primary").attr("disabled", "disabled");
+                          $("#btnCopyInvoice").attr("disabled", "disabled");
+                          $("#edtCustomerName").css(
+                            "background-color",
+                            "#eaecf4"
+                          );
+  
+                          $("#btnViewPayment").removeAttr("disabled", "disabled");
+                          $(".btnSave").attr("disabled", "disabled");
+                          $("#btnBack").removeAttr("disabled", "disabled");
+                          $(".printConfirm").removeAttr("disabled", "disabled");
+                          $(".tblInvoiceLine tbody tr").each(function () {
+                            var $tblrow = $(this);
+                            $tblrow.find("td").attr("contenteditable", false);
+                            //$tblrow.find("td").removeClass("lineProductName");
+                            $tblrow.find("td").removeClass("lineTaxRate");
+                            $tblrow.find("td").removeClass("lineTaxCode");
+  
+                            $tblrow.find("td").attr("readonly", true);
+                            $tblrow.find("td").attr("disabled", "disabled");
+                            $tblrow.find("td").css("background-color", "#eaecf4");
+                            $tblrow
+                              .find("td .table-remove")
+                              .removeClass("btnRemove");
+                          });
+                        }
+                        if (data.fields.Deleted === true) {
+                          $("#edtCustomerName").attr("readonly", true);
+                          $(".btnTransaction").attr("disabled", "disabled");
+                          $(".btn-primary").attr("disabled", "disabled");
+                          $("#btnCopyInvoice").attr("disabled", "disabled");
+                          $("#edtCustomerName").css(
+                            "background-color",
+                            "#eaecf4"
+                          );
+  
+                          $("#btnViewPayment").removeAttr("disabled", "disabled");
+                          $(".btnSave").attr("disabled", "disabled");
+                          $("#btnBack").removeAttr("disabled", "disabled");
+                          $(".printConfirm").removeAttr("disabled", "disabled");
+                          $(".tblInvoiceLine tbody tr").each(function () {
+                            var $tblrow = $(this);
+                            $tblrow.find("td").attr("contenteditable", false);
+                            //$tblrow.find("td").removeClass("lineProductName");
+                            $tblrow.find("td").removeClass("lineTaxRate");
+                            $tblrow.find("td").removeClass("lineTaxCode");
+  
+                            $tblrow.find("td").attr("readonly", true);
+                            $tblrow.find("td").attr("disabled", "disabled");
+                            $tblrow.find("td").css("background-color", "#eaecf4");
+                            $tblrow
+                              .find("td .table-remove")
+                              .removeClass("btnRemove");
+                          });
+                        }
+                      }, 100);
+  
+                      templateObject.invoicerecord.set(invoicerecord);
+  
+                      templateObject.selectedCurrency.set(invoicerecord.currency);
+                      templateObject.inputSelectedCurrency.set(
+                        invoicerecord.currency
+                      );
+  
+                    })
+                    .catch(function (err) {
+                      swal({
+                        title: "Oooops...",
+                        text: err,
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "Try Again",
+                      }).then((result) => {
+                        if (result.value) {
+                          if (err === checkResponseError) {
+                            window.open("/", "_self");
+                          }
+                        } else if (result.dismiss === "cancel") {
+                        }
+                      });
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                }
+              }
+            }).catch(function (err) {
+              let customerData = templateObject.clientrecords.get();
+              accountService
+                .getOneInvoicedataEx(currentInvoice)
+                .then(function (data) {
+                  templateObject.singleInvoiceData.set(data);
+                  let cust_result = customerData.filter((cust_data) => {
+                    return cust_data.customername == data.fields.CustomerName;
+                  });
+                  $(".fullScreenSpin").css("display", "none");
+                  let lineItems = [];
+                  let lineItemObj = {};
+                  let lineItemsTable = [];
+                  let lineItemTableObj = {};
+                  let exchangeCode = data.fields.ForeignExchangeCode;
+                  let currencySymbol = Currency;
+                  let total =
+                    currencySymbol +
+                    "" +
+                    data.fields.TotalAmount.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                    });
+                  let totalInc =
+                    currencySymbol +
+                    "" +
+                    data.fields.TotalAmountInc.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                    });
+                  let totalDiscount =
+                    currencySymbol +
+                    "" +
+                    data.fields.TotalDiscount.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                    });
+                  let subTotal =
+                    currencySymbol +
+                    "" +
+                    data.fields.TotalAmount.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                    });
+                  let totalTax =
+                    currencySymbol +
+                    "" +
+                    data.fields.TotalTax.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                    });
+                  let totalBalance = utilityService
+                    .modifynegativeCurrencyFormat(data.fields.TotalBalance)
+                    .toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                    });
+  
+                  let totalPaidAmount =
+                    currencySymbol +
+                    "" +
+                    data.fields.TotalPaid.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                    });
+                  if (data.fields.Lines != null) {
+                    if (data.fields.Lines.length) {
+                      for (let i = 0; i < data.fields.Lines.length; i++) {
+                        let AmountGbp =
+                          currencySymbol +
+                          "" +
+                          data.fields.Lines[
+                            i
+                          ].fields.TotalLineAmount.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                          });
+                        let currencyAmountGbp =
+                          currencySymbol +
+                          "" +
+                          data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
+                        let TaxTotalGbp =
+                          utilityService.modifynegativeCurrencyFormat(
+                            data.fields.Lines[i].fields.LineTaxTotal
+                          );
+                        let TaxRateGbp = (
+                          data.fields.Lines[i].fields.LineTaxRate * 100
+                        ).toFixed(2);
+                        lineItemObj = {
+                          lineID: Random.id(),
+                          id: data.fields.Lines[i].fields.ID || "",
+                          item: data.fields.Lines[i].fields.ProductName || "",
+                          description:
+                            data.fields.Lines[i].fields.ProductDescription || "",
+                          quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
+                          qtyordered:
+                            data.fields.Lines[i].fields.UOMOrderQty || 0,
+                          qtyshipped:
+                            data.fields.Lines[i].fields.UOMQtyShipped || 0,
+                          qtybo: data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
+                          unitPrice:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                data.fields.Lines[i].fields.OriginalLinePrice
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          unitPriceInc:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                data.fields.Lines[i].fields.OriginalLinePriceInc
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          TotalAmt:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                data.fields.Lines[i].fields.TotalLineAmount
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          TotalAmtInc:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                data.fields.Lines[i].fields.TotalLineAmountInc
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          lineCost:
+                            utilityService
+                              .modifynegativeCurrencyFormat(
+                                data.fields.Lines[i].fields.LineCost
+                              )
+                              .toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                              }) || 0,
+                          taxRate:
+                            (
+                              data.fields.Lines[i].fields.LineTaxRate * 100
+                            ).toFixed(2) || 0,
+                          taxCode: data.fields.Lines[i].fields.LineTaxCode || "",
+                          //TotalAmt: AmountGbp || 0,
+                          curTotalAmt: currencyAmountGbp || currencySymbol + "0",
+                          TaxTotal: TaxTotalGbp || 0,
+                          TaxRate: TaxRateGbp || 0,
+                          DiscountPercent:
+                            data.fields.Lines[i].fields.DiscountPercent || 0,
+                          UnitOfMeasure:
+                            data.fields.Lines[i].fields.UnitOfMeasure ||
+                            defaultUOM,
+                        };
+                        var dataListTable = [
+                          data.fields.Lines[i].fields.ProductName || "",
+                          data.fields.Lines[i].fields.ProductDescription || "",
+                          "<div contenteditable='true' class='qty'>" +
+                            "" +
+                            data.fields.Lines[i].fields.UOMOrderQty +
+                            "" +
+                            "</div>" || "<div>" + "" + 0 + "" + "</div>",
+                          "<div>" +
+                            "" +
+                            currencySymbol +
+                            "" +
+                            data.fields.Lines[i].fields.LinePrice.toFixed(2) +
+                            "" +
+                            "</div>" || currencySymbol + "" + 0.0,
+                          data.fields.Lines[i].fields.LineTaxCode || "",
+                          AmountGbp || currencySymbol + "" + 0.0,
+                          '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
+                        ];
+                        lineItemsTable.push(dataListTable);
+                        lineItems.push(lineItemObj);
+                      }
+                    } else {
+                      let AmountGbp =
+                        data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
+                          undefined,
+                          {
+                            minimumFractionDigits: 2,
+                          }
+                        );
+                      let currencyAmountGbp =
+                        currencySymbol +
+                        "" +
+                        data.fields.Lines.fields.TotalLineAmount.toFixed(2);
+                      let TaxTotalGbp =
+                        utilityService.modifynegativeCurrencyFormat(
+                          data.fields.Lines.fields.LineTaxTotal
+                        );
+                      let TaxRateGbp = (
+                        data.fields.Lines.fields.LineTaxRate * 100
+                      ).toFixed(2);
+                      lineItemObj = {
+                        lineID: Random.id(),
+                        id: data.fields.Lines.fields.ID || "",
+                        description:
+                          data.fields.Lines.fields.ProductDescription || "",
+                        quantity: data.fields.Lines.fields.UOMOrderQty || 0,
+                        unitPrice:
+                          data.fields.Lines[
+                            i
+                          ].fields.OriginalLinePrice.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                          }) || 0,
+                        lineCost:
+                          data.fields.Lines[i].fields.LineCost.toLocaleString(
+                            undefined,
+                            {
+                              minimumFractionDigits: 2,
+                            }
+                          ) || 0,
+                        taxRate:
+                          (data.fields.Lines.fields.LineTaxRate * 100).toFixed(
+                            2
+                          ) || 0,
+                        taxCode: data.fields.Lines.fields.LineTaxCode || "",
+                        TotalAmt: AmountGbp || 0,
+                        curTotalAmt: currencyAmountGbp || currencySymbol + "0",
+                        TaxTotal: TaxTotalGbp || 0,
+                        TaxRate: TaxRateGbp || 0,
+                      };
+                      lineItems.push(lineItemObj);
+                    }
+                  }
+                  let lidData = "Edit Invoice" + " " + data.fields.ID || "";
+                  if (data.fields.IsBackOrder) {
+                    lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
+                    templateObject.isbackorderredirect.set(true);
+                  }
+                  let isPartialPaid = false;
+                  if (data.fields.TotalPaid > 0) {
+                    isPartialPaid = true;
+                  }
+  
+                  let invoicerecord = {
+                    id: data.fields.ID,
+                    lid: lidData,
+                    salesOrderto: data.fields.InvoiceToDesc,
+                    shipto: data.fields.ShipToDesc,
+                    department: data.fields.SaleClassName,
+                    docnumber: data.fields.DocNumber,
+                    custPONumber: data.fields.CustPONumber,
+                    saledate: data.fields.SaleDate
+                      ? moment(data.fields.SaleDate).format("DD/MM/YYYY")
+                      : "",
+                    duedate: data.fields.DueDate
+                      ? moment(data.fields.DueDate).format("DD/MM/YYYY")
+                      : "",
+                    employeename: data.fields.EmployeeName,
+                    status: data.fields.SalesStatus,
+                    category: data.fields.SalesCategory,
+                    comments: data.fields.Comments,
+                    pickmemo: data.fields.PickMemo,
+                    ponumber: data.fields.CustPONumber,
+                    via: data.fields.Shipping,
+                    connote: data.fields.ConNote,
+                    reference: data.fields.ReferenceNo,
+                    currency: data.fields.ForeignExchangeCode,
+                    branding: data.fields.MedType,
+                    invoiceToDesc: data.fields.InvoiceToDesc,
+                    shipToDesc: data.fields.ShipToDesc,
+                    termsName: data.fields.TermsName,
+                    Total: totalInc,
+                    TotalDiscount: totalDiscount,
+                    LineItems: lineItems,
+                    TotalTax: totalTax,
+                    SubTotal: subTotal,
+                    balanceDue: totalBalance,
+                    saleCustField1: data.fields.SaleCustField1,
+                    saleCustField2: data.fields.SaleCustField2,
+                    totalPaid: totalPaidAmount,
+                    ispaid: data.fields.IsPaid,
+                    isPartialPaid: isPartialPaid,
+                  };
+  
+                  $("#edtCustomerName").val(data.fields.CustomerName);
+                  $("#sltStatus").val(data.fields.SalesStatus);
+                  $("#sltDept").val(data.fields.SaleClassName);
+                  $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+                  FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+  
+                  $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                  $("#sltTerms").val(data.fields.TermsName);
+                  templateObject.CleintName.set(data.fields.CustomerName);
+  
+                  /* START attachment */
+                  templateObject.attachmentCount.set(0);
+                  if (data.fields.Attachments) {
+                    if (data.fields.Attachments.length) {
+                      templateObject.attachmentCount.set(
+                        data.fields.Attachments.length
+                      );
+                      templateObject.uploadedFiles.set(data.fields.Attachments);
+                    }
+                  }
+                  /* END  attachment */
+                  var checkISCustLoad = false;
+                  setTimeout(function () {
+                    if (clientList) {
+                      for (var i = 0; i < clientList.length; i++) {
+                        if (
+                          clientList[i].customername == data.fields.CustomerName
+                        ) {
+                          checkISCustLoad = true;
+                          invoicerecord.firstname = clientList[i].firstname || "";
+                          invoicerecord.lastname = clientList[i].lastname || "";
+                          templateObject.invoicerecord.set(invoicerecord);
+                          $("#edtCustomerEmail").val(clientList[i].customeremail);
+                          $("#edtCustomerEmail").attr(
+                            "customerid",
+                            clientList[i].customerid
+                          );
+                          $("#edtCustomerName").attr(
+                            "custid",
+                            clientList[i].customerid
+                          );
+                          $("#edtCustomerEmail").attr(
+                            "customerfirstname",
+                            clientList[i].firstname
+                          );
+                          $("#edtCustomerEmail").attr(
+                            "customerlastname",
+                            clientList[i].lastname
+                          );
+                          $("#customerType").text(
+                            clientList[i].clienttypename || "Default"
+                          );
+                          $("#customerDiscount").text(
+                            clientList[i].discount + "%" || 0 + "%"
+                          );
+                          $("#edtCustomerUseType").val(
+                            clientList[i].clienttypename || "Default"
+                          );
+                          $("#edtCustomerUseDiscount").val(
+                            clientList[i].discount || 0
+                          );
+                        }
+                      }
+                    }
+  
+                    if (data.fields.IsPaid === true) {
+                      $("#edtCustomerName").attr("readonly", true);
+  
+                      $(".btn-primary").attr("disabled", "disabled");
+  
+                      $("#btnCopyInvoice").attr("disabled", "disabled");
+                      $("#edtCustomerName").css("background-color", "#eaecf4");
+  
+                      $("#btnViewPayment").removeAttr("disabled", "disabled");
+                      $(".btnSave").attr("disabled", "disabled");
+                      $("#btnBack").removeAttr("disabled", "disabled");
+                      $(".printConfirm").removeAttr("disabled", "disabled");
+                      $(".tblInvoiceLine tbody tr").each(function () {
+                        var $tblrow = $(this);
+                        $tblrow.find("td").attr("contenteditable", false);
+                        //$tblrow.find("td").removeClass("lineProductName");
+                        $tblrow.find("td").removeClass("lineTaxRate");
+                        $tblrow.find("td").removeClass("lineTaxCode");
+  
+                        $tblrow.find("td").attr("readonly", true);
+                        $tblrow.find("td").attr("disabled", "disabled");
+                        $tblrow.find("td").css("background-color", "#eaecf4");
+                        $tblrow.find("td .table-remove").removeClass("btnRemove");
+                      });
+                    }
+  
+                    if (!checkISCustLoad) {
+                      sideBarService
+                        .getCustomersDataByName(useData[d].fields.CustomerName)
+                        .then(function (dataClient) {
+                          for (
+                            var c = 0;
+                            c < dataClient.tcustomervs1.length;
+                            c++
+                          ) {
+                            var customerrecordObj = {
+                              customerid: dataClient.tcustomervs1[c].Id || " ",
+                              firstname:
+                                dataClient.tcustomervs1[c].FirstName || " ",
+                              lastname:
+                                dataClient.tcustomervs1[c].LastName || " ",
+                              customername:
+                                dataClient.tcustomervs1[c].ClientName || " ",
+                              customeremail:
+                                dataClient.tcustomervs1[c].Email || " ",
+                              street: dataClient.tcustomervs1[c].Street || " ",
+                              street2: dataClient.tcustomervs1[c].Street2 || " ",
+                              street3: dataClient.tcustomervs1[c].Street3 || " ",
+                              suburb: dataClient.tcustomervs1[c].Suburb || " ",
+                              statecode:
+                                dataClient.tcustomervs1[c].State +
+                                  " " +
+                                  dataClient.tcustomervs1[c].Postcode || " ",
+                              country: dataClient.tcustomervs1[c].Country || " ",
+                              termsName:
+                                dataClient.tcustomervs1[c].TermsName || "",
+                              taxCode:
+                                dataClient.tcustomervs1[c].TaxCodeName || "E",
+                              clienttypename:
+                                dataClient.tcustomervs1[c].ClientTypeName ||
+                                "Default",
+                              discount: dataClient.tcustomervs1[c].Discount || 0,
+                            };
+                            clientList.push(customerrecordObj);
+  
+                            invoicerecord.firstname =
+                              dataClient.tcustomervs1[c].FirstName || "";
+                            invoicerecord.lastname =
+                              dataClient.tcustomervs1[c].LastName || "";
+                            $("#edtCustomerEmail").val(
+                              dataClient.tcustomervs1[c].Email
+                            );
+                            $("#edtCustomerEmail").attr(
+                              "customerid",
+                              clientList[c].customerid
+                            );
+                            $("#edtCustomerName").attr(
+                              "custid",
+                              dataClient.tcustomervs1[c].Id
+                            );
+                            $("#edtCustomerEmail").attr(
+                              "customerfirstname",
+                              dataClient.tcustomervs1[c].FirstName
+                            );
+                            $("#edtCustomerEmail").attr(
+                              "customerlastname",
+                              dataClient.tcustomervs1[c].LastName
+                            );
+                            $("#customerType").text(
+                              dataClient.tcustomervs1[c].ClientTypeName ||
+                                "Default"
+                            );
+                            $("#customerDiscount").text(
+                              dataClient.tcustomervs1[c].Discount + "%" || 0 + "%"
+                            );
+                            $("#edtCustomerUseType").val(
+                              dataClient.tcustomervs1[c].ClientTypeName ||
+                                "Default"
+                            );
+                            $("#edtCustomerUseDiscount").val(
+                              dataClient.tcustomervs1[c].Discount || 0
+                            );
+                          }
+  
+                          templateObject.clientrecords.set(
+                            clientList.sort(function (a, b) {
+                              if (a.customername == "NA") {
+                                return 1;
+                              } else if (b.customername == "NA") {
+                                return -1;
+                              }
+                              return a.customername.toUpperCase() >
+                                b.customername.toUpperCase()
+                                ? 1
+                                : -1;
+                            })
+                          );
+                        });
+                    }
+                  }, 100);
+                  templateObject.invoicerecord.set(invoicerecord);
+  
+                  templateObject.selectedCurrency.set(invoicerecord.currency);
+                  templateObject.inputSelectedCurrency.set(
+                    invoicerecord.currency
+                  );
+  
+                })
+                .catch(function (err) {
+                  swal({
+                    title: "Oooops...",
+                    text: err,
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonText: "Try Again",
+                  }).then((result) => {
+                    if (result.value) {
+                      if (err === checkResponseError) {
+                        window.open("/", "_self");
+                      }
+                    } else if (result.dismiss === "cancel") {
+                    }
+                  });
+                  $(".fullScreenSpin").css("display", "none");
+                });
+            });
+        };
+        templateObject.getInvoiceData();
+      }
+    } else if (url.indexOf("?copyinvid=") > 0) {
+      getso_id = url.split("?copyinvid=");
+      currentInvoice = getso_id[getso_id.length - 1];
+      if (getso_id[1]) {
+        currentInvoice = parseInt(currentInvoice);
+        $(".printID").attr("id", currentInvoice);
+        templateObject.getInvoiceData = function () {
+          let customerData = templateObject.clientrecords.get();
+          accountService
+            .getOneInvoicedataEx(currentInvoice)
+            .then(function (data) {
+              templateObject.singleInvoiceData.set(data);
+              let cust_result = customerData.filter((cust_data) => {
+                return cust_data.customername == useData[d].fields.ClientName;
+              });
+              $(".fullScreenSpin").css("display", "none");
+              let lineItems = [];
+              let lineItemObj = {};
+              let lineItemsTable = [];
+              let lineItemTableObj = {};
+              let exchangeCode = data.fields.ForeignExchangeCode;
+              let currencySymbol = Currency;
+              let total =
+                currencySymbol +
+                "" +
+                data.fields.TotalAmount.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalInc =
+                currencySymbol +
+                "" +
+                data.fields.TotalAmountInc.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalDiscount =
+                currencySymbol +
+                "" +
+                data.fields.TotalDiscount.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let subTotal =
+                currencySymbol +
+                "" +
+                data.fields.TotalAmount.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalTax =
+                currencySymbol +
+                "" +
+                data.fields.TotalTax.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalBalance =
+                currencySymbol +
+                "" +
+                data.fields.TotalBalance.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalPaidAmount =
+                currencySymbol +
+                "" +
+                data.fields.TotalPaid.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              if (data.fields.Lines != null) {
+                if (data.fields.Lines.length) {
+                  for (let i = 0; i < data.fields.Lines.length; i++) {
                     let AmountGbp =
-                      data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
+                      currencySymbol +
+                      "" +
+                      data.fields.Lines[i].fields.TotalLineAmount.toLocaleString(
                         undefined,
                         {
                           minimumFractionDigits: 2,
@@ -5205,382 +5592,486 @@ Template.new_invoice.onRendered(function() {
                     let currencyAmountGbp =
                       currencySymbol +
                       "" +
-                      data.fields.Lines.fields.TotalLineAmount.toFixed(2);
-                    let TaxTotalGbp =
-                      utilityService.modifynegativeCurrencyFormat(
-                        data.fields.Lines.fields.LineTaxTotal
-                      );
+                      data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
+                    let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(
+                      data.fields.Lines[i].fields.LineTaxTotal
+                    );
                     let TaxRateGbp = (
-                      data.fields.Lines.fields.LineTaxRate * 100
+                      data.fields.Lines[i].fields.LineTaxRate * 100
                     ).toFixed(2);
                     lineItemObj = {
                       lineID: Random.id(),
-                      id: data.fields.Lines.fields.ID || "",
+                      id: data.fields.Lines[i].fields.ID || "",
+                      item: data.fields.Lines[i].fields.ProductName || "",
                       description:
-                        data.fields.Lines.fields.ProductDescription || "",
-                      quantity: data.fields.Lines.fields.UOMOrderQty || 0,
+                        data.fields.Lines[i].fields.ProductDescription || "",
+                      quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
+                      qtyordered: data.fields.Lines[i].fields.UOMOrderQty || 0,
+                      qtyshipped: data.fields.Lines[i].fields.UOMQtyShipped || 0,
+                      qtybo: data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
                       unitPrice:
-                        data.fields.Lines[
-                          i
-                        ].fields.OriginalLinePrice.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                        }) || 0,
-                      lineCost:
-                        data.fields.Lines[i].fields.LineCost.toLocaleString(
-                          undefined,
-                          {
+                        currencySymbol +
+                          "" +
+                          data.fields.Lines[
+                            i
+                          ].fields.OriginalLinePrice.toLocaleString(undefined, {
                             minimumFractionDigits: 2,
-                          }
-                        ) || 0,
+                          }) || 0,
+                      lineCost:
+                        currencySymbol +
+                          "" +
+                          data.fields.Lines[i].fields.LineCost.toLocaleString(
+                            undefined,
+                            {
+                              minimumFractionDigits: 2,
+                            }
+                          ) || 0,
                       taxRate:
-                        (data.fields.Lines.fields.LineTaxRate * 100).toFixed(
+                        (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(
                           2
                         ) || 0,
-                      taxCode: data.fields.Lines.fields.LineTaxCode || "",
+                      taxCode: data.fields.Lines[i].fields.LineTaxCode || "",
                       TotalAmt: AmountGbp || 0,
                       curTotalAmt: currencyAmountGbp || currencySymbol + "0",
                       TaxTotal: TaxTotalGbp || 0,
                       TaxRate: TaxRateGbp || 0,
+                      DiscountPercent:
+                        data.fields.Lines[i].fields.DiscountPercent || 0,
+                      UnitOfMeasure:
+                        data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
                     };
+                    var dataListTable = [
+                      data.fields.Lines[i].fields.ProductName || "",
+                      data.fields.Lines[i].fields.ProductDescription || "",
+                      "<div contenteditable='true' class='qty'>" +
+                        "" +
+                        data.fields.Lines[i].fields.UOMOrderQty +
+                        "" +
+                        "</div>" || "<div>" + "" + 0 + "" + "</div>",
+                      "<div>" +
+                        "" +
+                        currencySymbol +
+                        "" +
+                        data.fields.Lines[i].fields.LinePrice.toFixed(2) +
+                        "" +
+                        "</div>" || currencySymbol + "" + 0.0,
+                      data.fields.Lines[i].fields.LineTaxCode || "",
+                      AmountGbp || currencySymbol + "" + 0.0,
+                      '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
+                    ];
+                    lineItemsTable.push(dataListTable);
                     lineItems.push(lineItemObj);
                   }
-                }
-                let lidData = "Edit Invoice" + " " + data.fields.ID || "";
-                if (data.fields.IsBackOrder) {
-                  lidData = "Edit Invoice" + " (BO) " + data.fields.ID || "";
-                  templateObject.isbackorderredirect.set(true);
-                }
-                let isPartialPaid = false;
-                if (data.fields.TotalPaid > 0) {
-                  isPartialPaid = true;
-                }
-
-                let invoicerecord = {
-                  id: data.fields.ID,
-                  lid: lidData,
-                  salesOrderto: data.fields.InvoiceToDesc,
-                  shipto: data.fields.ShipToDesc,
-                  department: data.fields.SaleClassName,
-                  docnumber: data.fields.DocNumber,
-                  custPONumber: data.fields.CustPONumber,
-                  saledate: data.fields.SaleDate
-                    ? moment(data.fields.SaleDate).format("DD/MM/YYYY")
-                    : "",
-                  duedate: data.fields.DueDate
-                    ? moment(data.fields.DueDate).format("DD/MM/YYYY")
-                    : "",
-                  employeename: data.fields.EmployeeName,
-                  status: data.fields.SalesStatus,
-                  category: data.fields.SalesCategory,
-                  comments: data.fields.Comments,
-                  pickmemo: data.fields.PickMemo,
-                  ponumber: data.fields.CustPONumber,
-                  via: data.fields.Shipping,
-                  connote: data.fields.ConNote,
-                  reference: data.fields.ReferenceNo,
-                  currency: data.fields.ForeignExchangeCode,
-                  branding: data.fields.MedType,
-                  invoiceToDesc: data.fields.InvoiceToDesc,
-                  shipToDesc: data.fields.ShipToDesc,
-                  termsName: data.fields.TermsName,
-                  Total: totalInc,
-                  TotalDiscount: totalDiscount,
-                  LineItems: lineItems,
-                  TotalTax: totalTax,
-                  SubTotal: subTotal,
-                  balanceDue: totalBalance,
-                  saleCustField1: data.fields.SaleCustField1,
-                  saleCustField2: data.fields.SaleCustField2,
-                  totalPaid: totalPaidAmount,
-                  ispaid: data.fields.IsPaid,
-                  isPartialPaid: isPartialPaid,
-                };
-
-                $("#edtCustomerName").val(data.fields.CustomerName);
-                $("#sltStatus").val(data.fields.SalesStatus);
-                $("#sltDept").val(data.fields.SaleClassName);
-                $("#sltCurrency").val(data.fields.ForeignExchangeCode);
-                FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
-
-                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
-                $("#sltTerms").val(data.fields.TermsName);
-                templateObject.CleintName.set(data.fields.CustomerName);
-
-                /* START attachment */
-                templateObject.attachmentCount.set(0);
-                if (data.fields.Attachments) {
-                  if (data.fields.Attachments.length) {
-                    templateObject.attachmentCount.set(
-                      data.fields.Attachments.length
+                } else {
+                  let AmountGbp =
+                    data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
+                      undefined,
+                      {
+                        minimumFractionDigits: 2,
+                      }
                     );
-                    templateObject.uploadedFiles.set(data.fields.Attachments);
+                  let currencyAmountGbp =
+                    currencySymbol +
+                    "" +
+                    data.fields.Lines.fields.TotalLineAmount.toFixed(2);
+                  let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(
+                    data.fields.Lines.fields.LineTaxTotal
+                  );
+                  let TaxRateGbp = (
+                    data.fields.Lines.fields.LineTaxRate * 100
+                  ).toFixed(2);
+                  lineItemObj = {
+                    lineID: Random.id(),
+                    id: data.fields.Lines.fields.ID || "",
+                    description:
+                      data.fields.Lines.fields.ProductDescription || "",
+                    quantity: data.fields.Lines.fields.UOMOrderQty || 0,
+                    unitPrice:
+                      data.fields.Lines[
+                        i
+                      ].fields.OriginalLinePrice.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      }) || 0,
+                    lineCost:
+                      data.fields.Lines[i].fields.LineCost.toLocaleString(
+                        undefined,
+                        {
+                          minimumFractionDigits: 2,
+                        }
+                      ) || 0,
+                    taxRate:
+                      (data.fields.Lines.fields.LineTaxRate * 100).toFixed(2) ||
+                      0,
+                    taxCode: data.fields.Lines.fields.LineTaxCode || "",
+                    TotalAmt: AmountGbp || 0,
+                    curTotalAmt: currencyAmountGbp || currencySymbol + "0",
+                    TaxTotal: TaxTotalGbp || 0,
+                    TaxRate: TaxRateGbp || 0,
+                  };
+                  lineItems.push(lineItemObj);
+                }
+              }
+              let invoicerecord = {
+                id: data.fields.ID,
+                lid: "New Invoice",
+                socustomer: data.fields.CustomerName,
+                salesOrderto: data.fields.InvoiceToDesc,
+                shipto: data.fields.ShipToDesc,
+                department: data.fields.SaleClassName,
+                docnumber: data.fields.DocNumber,
+                custPONumber: data.fields.CustPONumber,
+                saledate: data.fields.SaleDate
+                  ? moment(data.fields.SaleDate).format("DD/MM/YYYY")
+                  : "",
+                duedate: data.fields.DueDate
+                  ? moment(data.fields.DueDate).format("DD/MM/YYYY")
+                  : "",
+                employeename: data.fields.EmployeeName,
+                status: data.fields.SalesStatus,
+                category: data.fields.SalesCategory,
+                comments: data.fields.Comments,
+                pickmemo: data.fields.PickMemo,
+                ponumber: data.fields.CustPONumber,
+                via: data.fields.Shipping,
+                connote: data.fields.ConNote,
+                reference: data.fields.ReferenceNo,
+                currency: data.fields.ForeignExchangeCode,
+                branding: data.fields.MedType,
+                invoiceToDesc: data.fields.InvoiceToDesc,
+                shipToDesc: data.fields.ShipToDesc,
+                termsName: data.fields.TermsName,
+                Total: totalInc,
+                TotalDiscount: totalDiscount,
+                LineItems: lineItems,
+                TotalTax: totalTax,
+                SubTotal: subTotal,
+                balanceDue: totalBalance,
+                saleCustField1: data.fields.SaleCustField1,
+                saleCustField2: data.fields.SaleCustField2,
+                totalPaid: totalPaidAmount,
+                ispaid: false,
+                isPartialPaid: false,
+              };
+  
+              $("#edtCustomerName").val(data.fields.CustomerName);
+              $("#sltStatus").val(data.fields.SalesStatus);
+              $("#sltDept").val(data.fields.SaleClassName);
+              $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+              FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+  
+              $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+              $("#sltTerms").val(data.fields.TermsName);
+              templateObject.CleintName.set(data.fields.CustomerName);
+  
+              templateObject.attachmentCount.set(0);
+              if (data.fields.Attachments) {
+                if (data.fields.Attachments.length) {
+                  templateObject.attachmentCount.set(
+                    data.fields.Attachments.length
+                  );
+                  templateObject.uploadedFiles.set(data.fields.Attachments);
+                }
+              }
+              var checkISCustLoad = false;
+              setTimeout(function () {
+                if (clientList) {
+                  for (var i = 0; i < clientList.length; i++) {
+                    if (clientList[i].customername == data.fields.CustomerName) {
+                      checkISCustLoad = true;
+                      invoicerecord.firstname = clientList[i].firstname || "";
+                      invoicerecord.lastname = clientList[i].lastname || "";
+                      templateObject.invoicerecord.set(invoicerecord);
+                      $("#edtCustomerEmail").val(clientList[i].customeremail);
+                      $("#edtCustomerEmail").attr(
+                        "customerid",
+                        clientList[i].customerid
+                      );
+                      $("#edtCustomerName").attr(
+                        "custid",
+                        clientList[i].customerid
+                      );
+                      $("#edtCustomerEmail").attr(
+                        "customerfirstname",
+                        clientList[i].firstname
+                      );
+                      $("#edtCustomerEmail").attr(
+                        "customerlastname",
+                        clientList[i].lastname
+                      );
+                      $("#customerType").text(
+                        clientList[i].clienttypename || "Default"
+                      );
+                      $("#customerDiscount").text(
+                        clientList[i].discount + "%" || 0 + "%"
+                      );
+                      $("#edtCustomerUseType").val(
+                        clientList[i].clienttypename || "Default"
+                      );
+                      $("#edtCustomerUseDiscount").val(
+                        clientList[i].discount || 0
+                      );
+                    }
                   }
                 }
-                /* END  attachment */
-                var checkISCustLoad = false;
-                setTimeout(function () {
-                  if (clientList) {
-                    for (var i = 0; i < clientList.length; i++) {
-                      if (
-                        clientList[i].customername == data.fields.CustomerName
-                      ) {
-                        checkISCustLoad = true;
-                        invoicerecord.firstname = clientList[i].firstname || "";
-                        invoicerecord.lastname = clientList[i].lastname || "";
-                        templateObject.invoicerecord.set(invoicerecord);
-                        $("#edtCustomerEmail").val(clientList[i].customeremail);
+  
+                if (!checkISCustLoad) {
+                  sideBarService
+                    .getCustomersDataByName(useData[d].fields.CustomerName)
+                    .then(function (dataClient) {
+                      for (var c = 0; c < dataClient.tcustomervs1.length; c++) {
+                        var customerrecordObj = {
+                          customerid: dataClient.tcustomervs1[c].Id || " ",
+                          firstname: dataClient.tcustomervs1[c].FirstName || " ",
+                          lastname: dataClient.tcustomervs1[c].LastName || " ",
+                          customername:
+                            dataClient.tcustomervs1[c].ClientName || " ",
+                          customeremail: dataClient.tcustomervs1[c].Email || " ",
+                          street: dataClient.tcustomervs1[c].Street || " ",
+                          street2: dataClient.tcustomervs1[c].Street2 || " ",
+                          street3: dataClient.tcustomervs1[c].Street3 || " ",
+                          suburb: dataClient.tcustomervs1[c].Suburb || " ",
+                          statecode:
+                            dataClient.tcustomervs1[c].State +
+                              " " +
+                              dataClient.tcustomervs1[c].Postcode || " ",
+                          country: dataClient.tcustomervs1[c].Country || " ",
+                          termsName: dataClient.tcustomervs1[c].TermsName || "",
+                          taxCode: dataClient.tcustomervs1[c].TaxCodeName || "E",
+                          clienttypename:
+                            dataClient.tcustomervs1[c].ClientTypeName ||
+                            "Default",
+                          discount: dataClient.tcustomervs1[c].Discount || 0,
+                        };
+                        clientList.push(customerrecordObj);
+  
+                        invoicerecord.firstname =
+                          dataClient.tcustomervs1[c].FirstName || "";
+                        invoicerecord.lastname =
+                          dataClient.tcustomervs1[c].LastName || "";
+                        $("#edtCustomerEmail").val(
+                          dataClient.tcustomervs1[c].Email
+                        );
                         $("#edtCustomerEmail").attr(
                           "customerid",
-                          clientList[i].customerid
+                          clientList[c].customerid
                         );
                         $("#edtCustomerName").attr(
                           "custid",
-                          clientList[i].customerid
+                          dataClient.tcustomervs1[c].Id
                         );
                         $("#edtCustomerEmail").attr(
                           "customerfirstname",
-                          clientList[i].firstname
+                          dataClient.tcustomervs1[c].FirstName
                         );
                         $("#edtCustomerEmail").attr(
                           "customerlastname",
-                          clientList[i].lastname
+                          dataClient.tcustomervs1[c].LastName
                         );
                         $("#customerType").text(
-                          clientList[i].clienttypename || "Default"
+                          dataClient.tcustomervs1[c].ClientTypeName || "Default"
                         );
                         $("#customerDiscount").text(
-                          clientList[i].discount + "%" || 0 + "%"
+                          dataClient.tcustomervs1[c].Discount + "%" || 0 + "%"
                         );
                         $("#edtCustomerUseType").val(
-                          clientList[i].clienttypename || "Default"
+                          dataClient.tcustomervs1[c].ClientTypeName || "Default"
                         );
                         $("#edtCustomerUseDiscount").val(
-                          clientList[i].discount || 0
+                          dataClient.tcustomervs1[c].Discount || 0
                         );
                       }
-                    }
-                  }
-
-                  if (data.fields.IsPaid === true) {
-                    $("#edtCustomerName").attr("readonly", true);
-
-                    $(".btn-primary").attr("disabled", "disabled");
-
-                    $("#btnCopyInvoice").attr("disabled", "disabled");
-                    $("#edtCustomerName").css("background-color", "#eaecf4");
-
-                    $("#btnViewPayment").removeAttr("disabled", "disabled");
-                    $(".btnSave").attr("disabled", "disabled");
-                    $("#btnBack").removeAttr("disabled", "disabled");
-                    $(".printConfirm").removeAttr("disabled", "disabled");
-                    $(".tblInvoiceLine tbody tr").each(function () {
-                      var $tblrow = $(this);
-                      $tblrow.find("td").attr("contenteditable", false);
-                      //$tblrow.find("td").removeClass("lineProductName");
-                      $tblrow.find("td").removeClass("lineTaxRate");
-                      $tblrow.find("td").removeClass("lineTaxCode");
-
-                      $tblrow.find("td").attr("readonly", true);
-                      $tblrow.find("td").attr("disabled", "disabled");
-                      $tblrow.find("td").css("background-color", "#eaecf4");
-                      $tblrow.find("td .table-remove").removeClass("btnRemove");
+  
+                      templateObject.clientrecords.set(
+                        clientList.sort(function (a, b) {
+                          if (a.customername == "NA") {
+                            return 1;
+                          } else if (b.customername == "NA") {
+                            return -1;
+                          }
+                          return a.customername.toUpperCase() >
+                            b.customername.toUpperCase()
+                            ? 1
+                            : -1;
+                        })
+                      );
                     });
+                }
+              }, 100);
+  
+              templateObject.invoicerecord.set(invoicerecord);
+              templateObject.selectedCurrency.set(invoicerecord.currency);
+              templateObject.inputSelectedCurrency.set(invoicerecord.currency);
+  
+            })
+            .catch(function (err) {
+              swal({
+                title: "Oooops...",
+                text: err,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Try Again",
+              }).then((result) => {
+                if (result.value) {
+                  if (err === checkResponseError) {
+                    window.open("/", "_self");
                   }
-
-                  if (!checkISCustLoad) {
-                    sideBarService
-                      .getCustomersDataByName(useData[d].fields.CustomerName)
-                      .then(function (dataClient) {
-                        for (
-                          var c = 0;
-                          c < dataClient.tcustomervs1.length;
-                          c++
-                        ) {
-                          var customerrecordObj = {
-                            customerid: dataClient.tcustomervs1[c].Id || " ",
-                            firstname:
-                              dataClient.tcustomervs1[c].FirstName || " ",
-                            lastname:
-                              dataClient.tcustomervs1[c].LastName || " ",
-                            customername:
-                              dataClient.tcustomervs1[c].ClientName || " ",
-                            customeremail:
-                              dataClient.tcustomervs1[c].Email || " ",
-                            street: dataClient.tcustomervs1[c].Street || " ",
-                            street2: dataClient.tcustomervs1[c].Street2 || " ",
-                            street3: dataClient.tcustomervs1[c].Street3 || " ",
-                            suburb: dataClient.tcustomervs1[c].Suburb || " ",
-                            statecode:
-                              dataClient.tcustomervs1[c].State +
-                                " " +
-                                dataClient.tcustomervs1[c].Postcode || " ",
-                            country: dataClient.tcustomervs1[c].Country || " ",
-                            termsName:
-                              dataClient.tcustomervs1[c].TermsName || "",
-                            taxCode:
-                              dataClient.tcustomervs1[c].TaxCodeName || "E",
-                            clienttypename:
-                              dataClient.tcustomervs1[c].ClientTypeName ||
-                              "Default",
-                            discount: dataClient.tcustomervs1[c].Discount || 0,
-                          };
-                          clientList.push(customerrecordObj);
-
-                          invoicerecord.firstname =
-                            dataClient.tcustomervs1[c].FirstName || "";
-                          invoicerecord.lastname =
-                            dataClient.tcustomervs1[c].LastName || "";
-                          $("#edtCustomerEmail").val(
-                            dataClient.tcustomervs1[c].Email
-                          );
-                          $("#edtCustomerEmail").attr(
-                            "customerid",
-                            clientList[c].customerid
-                          );
-                          $("#edtCustomerName").attr(
-                            "custid",
-                            dataClient.tcustomervs1[c].Id
-                          );
-                          $("#edtCustomerEmail").attr(
-                            "customerfirstname",
-                            dataClient.tcustomervs1[c].FirstName
-                          );
-                          $("#edtCustomerEmail").attr(
-                            "customerlastname",
-                            dataClient.tcustomervs1[c].LastName
-                          );
-                          $("#customerType").text(
-                            dataClient.tcustomervs1[c].ClientTypeName ||
-                              "Default"
-                          );
-                          $("#customerDiscount").text(
-                            dataClient.tcustomervs1[c].Discount + "%" || 0 + "%"
-                          );
-                          $("#edtCustomerUseType").val(
-                            dataClient.tcustomervs1[c].ClientTypeName ||
-                              "Default"
-                          );
-                          $("#edtCustomerUseDiscount").val(
-                            dataClient.tcustomervs1[c].Discount || 0
-                          );
-                        }
-
-                        templateObject.clientrecords.set(
-                          clientList.sort(function (a, b) {
-                            if (a.customername == "NA") {
-                              return 1;
-                            } else if (b.customername == "NA") {
-                              return -1;
-                            }
-                            return a.customername.toUpperCase() >
-                              b.customername.toUpperCase()
-                              ? 1
-                              : -1;
-                          })
-                        );
-                      });
-                  }
-                }, 100);
-                templateObject.invoicerecord.set(invoicerecord);
-
-                templateObject.selectedCurrency.set(invoicerecord.currency);
-                templateObject.inputSelectedCurrency.set(
-                  invoicerecord.currency
-                );
-
-              })
-              .catch(function (err) {
-                swal({
-                  title: "Oooops...",
-                  text: err,
-                  type: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "Try Again",
-                }).then((result) => {
-                  if (result.value) {
-                    if (err === checkResponseError) {
-                      window.open("/", "_self");
-                    }
-                  } else if (result.dismiss === "cancel") {
-                  }
+                } else if (result.dismiss === "cancel") {
+                }
+              });
+              $(".fullScreenSpin").css("display", "none");
+            });
+        };
+  
+        templateObject.getInvoiceData();
+      }
+    } else if (url.indexOf("?copysoid=") > 0) {
+      getso_id = url.split("?copysoid=");
+      currentInvoice = getso_id[getso_id.length - 1];
+      if (getso_id[1]) {
+        currentInvoice = parseInt(currentInvoice);
+        $(".printID").attr("id", currentInvoice);
+        templateObject.getInvoiceData = function () {
+          accountService
+            .getOneSalesOrderdataEx(currentInvoice)
+            .then(function (data) {
+              templateObject.singleInvoiceData.set(data);
+              $(".fullScreenSpin").css("display", "none");
+              let lineItems = [];
+              let lineItemObj = {};
+              let lineItemsTable = [];
+              let lineItemTableObj = {};
+              let exchangeCode = data.fields.ForeignExchangeCode;
+              let currencySymbol = Currency;
+              let total =
+                currencySymbol +
+                "" +
+                data.fields.TotalAmount.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
                 });
-                $(".fullScreenSpin").css("display", "none");
-              });
-          });
-      };
-      templateObject.getInvoiceData();
-    }
-  } else if (url.indexOf("?copyinvid=") > 0) {
-    getso_id = url.split("?copyinvid=");
-    currentInvoice = getso_id[getso_id.length - 1];
-    if (getso_id[1]) {
-      currentInvoice = parseInt(currentInvoice);
-      $(".printID").attr("id", currentInvoice);
-      templateObject.getInvoiceData = function () {
-        let customerData = templateObject.clientrecords.get();
-        accountService
-          .getOneInvoicedataEx(currentInvoice)
-          .then(function (data) {
-            templateObject.singleInvoiceData.set(data);
-            let cust_result = customerData.filter((cust_data) => {
-              return cust_data.customername == useData[d].fields.ClientName;
-            });
-            $(".fullScreenSpin").css("display", "none");
-            let lineItems = [];
-            let lineItemObj = {};
-            let lineItemsTable = [];
-            let lineItemTableObj = {};
-            let exchangeCode = data.fields.ForeignExchangeCode;
-            let currencySymbol = Currency;
-            let total =
-              currencySymbol +
-              "" +
-              data.fields.TotalAmount.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalInc =
-              currencySymbol +
-              "" +
-              data.fields.TotalAmountInc.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalDiscount =
-              currencySymbol +
-              "" +
-              data.fields.TotalDiscount.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let subTotal =
-              currencySymbol +
-              "" +
-              data.fields.TotalAmount.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalTax =
-              currencySymbol +
-              "" +
-              data.fields.TotalTax.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalBalance =
-              currencySymbol +
-              "" +
-              data.fields.TotalBalance.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalPaidAmount =
-              currencySymbol +
-              "" +
-              data.fields.TotalPaid.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            if (data.fields.Lines != null) {
-              if (data.fields.Lines.length) {
-                for (let i = 0; i < data.fields.Lines.length; i++) {
+              let totalInc =
+                currencySymbol +
+                "" +
+                data.fields.TotalAmountInc.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalDiscount =
+                currencySymbol +
+                "" +
+                data.fields.TotalDiscount.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let subTotal =
+                currencySymbol +
+                "" +
+                data.fields.TotalAmount.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalTax =
+                currencySymbol +
+                "" +
+                data.fields.TotalTax.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalBalance =
+                currencySymbol +
+                "" +
+                data.fields.TotalBalance.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              let totalPaidAmount =
+                currencySymbol +
+                "" +
+                data.fields.TotalPaid.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                });
+              if (data.fields.Lines != null) {
+                if (data.fields.Lines.length) {
+                  for (let i = 0; i < data.fields.Lines.length; i++) {
+                    let AmountGbp =
+                      currencySymbol +
+                      "" +
+                      data.fields.Lines[i].fields.TotalLineAmount.toLocaleString(
+                        undefined,
+                        {
+                          minimumFractionDigits: 2,
+                        }
+                      );
+                    let currencyAmountGbp =
+                      currencySymbol +
+                      "" +
+                      data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
+                    let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(
+                      data.fields.Lines[i].fields.LineTaxTotal
+                    );
+                    let TaxRateGbp = (
+                      data.fields.Lines[i].fields.LineTaxRate * 100
+                    ).toFixed(2);
+                    lineItemObj = {
+                      lineID: Random.id(),
+                      id: data.fields.Lines[i].fields.ID || "",
+                      item: data.fields.Lines[i].fields.ProductName || "",
+                      description:
+                        data.fields.Lines[i].fields.ProductDescription || "",
+                      quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
+                      qtyordered: data.fields.Lines[i].fields.UOMOrderQty || 0,
+                      qtyshipped: data.fields.Lines[i].fields.UOMQtyShipped || 0,
+                      qtybo: data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
+                      unitPrice:
+                        currencySymbol +
+                          "" +
+                          data.fields.Lines[
+                            i
+                          ].fields.OriginalLinePrice.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                          }) || 0,
+                      lineCost:
+                        currencySymbol +
+                          "" +
+                          data.fields.Lines[i].fields.LineCost.toLocaleString(
+                            undefined,
+                            {
+                              minimumFractionDigits: 2,
+                            }
+                          ) || 0,
+                      taxRate:
+                        (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(
+                          2
+                        ) || 0,
+                      taxCode: data.fields.Lines[i].fields.LineTaxCode || "",
+                      TotalAmt: AmountGbp || 0,
+                      curTotalAmt: currencyAmountGbp || currencySymbol + "0",
+                      TaxTotal: TaxTotalGbp || 0,
+                      TaxRate: TaxRateGbp || 0,
+                      DiscountPercent:
+                        data.fields.Lines[i].fields.DiscountPercent || 0,
+                      UnitOfMeasure:
+                        data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
+                    };
+                    var dataListTable = [
+                      data.fields.Lines[i].fields.ProductName || "",
+                      data.fields.Lines[i].fields.ProductDescription || "",
+                      "<div contenteditable='true' class='qty'>" +
+                        "" +
+                        data.fields.Lines[i].fields.UOMOrderQty +
+                        "" +
+                        "</div>" || "<div>" + "" + 0 + "" + "</div>",
+                      "<div>" +
+                        "" +
+                        currencySymbol +
+                        "" +
+                        data.fields.Lines[i].fields.LinePrice.toFixed(2) +
+                        "" +
+                        "</div>" || currencySymbol + "" + 0.0,
+                      data.fields.Lines[i].fields.LineTaxCode || "",
+                      AmountGbp || currencySymbol + "" + 0.0,
+                      '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
+                    ];
+                    lineItemsTable.push(dataListTable);
+                    lineItems.push(lineItemObj);
+                  }
+                } else {
                   let AmountGbp =
-                    currencySymbol +
-                    "" +
-                    data.fields.Lines[i].fields.TotalLineAmount.toLocaleString(
+                    data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
                       undefined,
                       {
                         minimumFractionDigits: 2,
@@ -5589,833 +6080,348 @@ Template.new_invoice.onRendered(function() {
                   let currencyAmountGbp =
                     currencySymbol +
                     "" +
-                    data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
-                  let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(
-                    data.fields.Lines[i].fields.LineTaxTotal
+                    data.fields.Lines.fields.TotalLineAmount.toFixed(2);
+                  let TaxTotalGbp = cutilityService.modifynegativeCurrencyFormat(
+                    data.fields.Lines.fields.LineTaxTotal
                   );
                   let TaxRateGbp = (
-                    data.fields.Lines[i].fields.LineTaxRate * 100
+                    data.fields.Lines.fields.LineTaxRate * 100
                   ).toFixed(2);
                   lineItemObj = {
                     lineID: Random.id(),
-                    id: data.fields.Lines[i].fields.ID || "",
-                    item: data.fields.Lines[i].fields.ProductName || "",
+                    id: data.fields.Lines.fields.ID || "",
                     description:
-                      data.fields.Lines[i].fields.ProductDescription || "",
-                    quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
-                    qtyordered: data.fields.Lines[i].fields.UOMOrderQty || 0,
-                    qtyshipped: data.fields.Lines[i].fields.UOMQtyShipped || 0,
-                    qtybo: data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
+                      data.fields.Lines.fields.ProductDescription || "",
+                    quantity: data.fields.Lines.fields.UOMOrderQty || 0,
                     unitPrice:
-                      currencySymbol +
-                        "" +
-                        data.fields.Lines[
-                          i
-                        ].fields.OriginalLinePrice.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                        }) || 0,
+                      data.fields.Lines[
+                        i
+                      ].fields.OriginalLinePrice.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      }) || 0,
                     lineCost:
-                      currencySymbol +
-                        "" +
-                        data.fields.Lines[i].fields.LineCost.toLocaleString(
-                          undefined,
-                          {
-                            minimumFractionDigits: 2,
-                          }
-                        ) || 0,
-                    taxRate:
-                      (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(
-                        2
+                      data.fields.Lines[i].fields.LineCost.toLocaleString(
+                        undefined,
+                        {
+                          minimumFractionDigits: 2,
+                        }
                       ) || 0,
-                    taxCode: data.fields.Lines[i].fields.LineTaxCode || "",
+                    taxRate:
+                      (data.fields.Lines.fields.LineTaxRate * 100).toFixed(2) ||
+                      0,
+                    taxCode: data.fields.Lines.fields.LineTaxCode || "",
                     TotalAmt: AmountGbp || 0,
                     curTotalAmt: currencyAmountGbp || currencySymbol + "0",
                     TaxTotal: TaxTotalGbp || 0,
                     TaxRate: TaxRateGbp || 0,
-                    DiscountPercent:
-                      data.fields.Lines[i].fields.DiscountPercent || 0,
-                    UnitOfMeasure:
-                      data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
                   };
-                  var dataListTable = [
-                    data.fields.Lines[i].fields.ProductName || "",
-                    data.fields.Lines[i].fields.ProductDescription || "",
-                    "<div contenteditable='true' class='qty'>" +
-                      "" +
-                      data.fields.Lines[i].fields.UOMOrderQty +
-                      "" +
-                      "</div>" || "<div>" + "" + 0 + "" + "</div>",
-                    "<div>" +
-                      "" +
-                      currencySymbol +
-                      "" +
-                      data.fields.Lines[i].fields.LinePrice.toFixed(2) +
-                      "" +
-                      "</div>" || currencySymbol + "" + 0.0,
-                    data.fields.Lines[i].fields.LineTaxCode || "",
-                    AmountGbp || currencySymbol + "" + 0.0,
-                    '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
-                  ];
-                  lineItemsTable.push(dataListTable);
                   lineItems.push(lineItemObj);
                 }
-              } else {
-                let AmountGbp =
-                  data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
-                    undefined,
-                    {
-                      minimumFractionDigits: 2,
-                    }
+              }
+              let invoicerecord = {
+                id: data.fields.ID,
+                lid: "New Invoice",
+                socustomer: data.fields.CustomerName,
+                salesOrderto: data.fields.InvoiceToDesc,
+                shipto: data.fields.ShipToDesc,
+                department: data.fields.SaleClassName,
+                docnumber: data.fields.DocNumber,
+                custPONumber: data.fields.CustPONumber,
+                saledate: data.fields.SaleDate
+                  ? moment(data.fields.SaleDate).format("DD/MM/YYYY")
+                  : "",
+                duedate: data.fields.DueDate
+                  ? moment(data.fields.DueDate).format("DD/MM/YYYY")
+                  : "",
+                employeename: data.fields.EmployeeName,
+                status: data.fields.SalesStatus,
+                category: data.fields.SalesCategory,
+                comments: data.fields.Comments,
+                pickmemo: data.fields.PickMemo,
+                ponumber: data.fields.CustPONumber,
+                via: data.fields.Shipping,
+                connote: data.fields.ConNote,
+                reference: data.fields.ReferenceNo,
+                currency: data.fields.ForeignExchangeCode,
+                branding: data.fields.MedType,
+                invoiceToDesc: data.fields.InvoiceToDesc,
+                shipToDesc: data.fields.ShipToDesc,
+                termsName: data.fields.TermsName,
+                Total: totalInc,
+                TotalDiscount: totalDiscount,
+                LineItems: lineItems,
+                TotalTax: totalTax,
+                SubTotal: subTotal,
+                balanceDue: totalBalance,
+                saleCustField1: data.fields.SaleCustField1,
+                saleCustField2: data.fields.SaleCustField2,
+                totalPaid: totalPaidAmount,
+                ispaid: false,
+                isPartialPaid: false,
+              };
+  
+              $("#edtCustomerName").val(data.fields.CustomerName);
+              $("#sltStatus").val(data.fields.SalesStatus);
+              $("#sltDept").val(data.fields.SaleClassName);
+              $("#sltCurrency").val(data.fields.ForeignExchangeCode);
+              FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
+  
+              $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+              $("#sltTerms").val(data.fields.TermsName);
+              templateObject.CleintName.set(data.fields.CustomerName);
+  
+              /* START attachment */
+              templateObject.attachmentCount.set(0);
+              if (data.fields.Attachments) {
+                if (data.fields.Attachments.length) {
+                  templateObject.attachmentCount.set(
+                    data.fields.Attachments.length
                   );
-                let currencyAmountGbp =
-                  currencySymbol +
-                  "" +
-                  data.fields.Lines.fields.TotalLineAmount.toFixed(2);
-                let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(
-                  data.fields.Lines.fields.LineTaxTotal
-                );
-                let TaxRateGbp = (
-                  data.fields.Lines.fields.LineTaxRate * 100
-                ).toFixed(2);
-                lineItemObj = {
-                  lineID: Random.id(),
-                  id: data.fields.Lines.fields.ID || "",
-                  description:
-                    data.fields.Lines.fields.ProductDescription || "",
-                  quantity: data.fields.Lines.fields.UOMOrderQty || 0,
-                  unitPrice:
-                    data.fields.Lines[
-                      i
-                    ].fields.OriginalLinePrice.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    }) || 0,
-                  lineCost:
-                    data.fields.Lines[i].fields.LineCost.toLocaleString(
-                      undefined,
-                      {
-                        minimumFractionDigits: 2,
-                      }
-                    ) || 0,
-                  taxRate:
-                    (data.fields.Lines.fields.LineTaxRate * 100).toFixed(2) ||
-                    0,
-                  taxCode: data.fields.Lines.fields.LineTaxCode || "",
-                  TotalAmt: AmountGbp || 0,
-                  curTotalAmt: currencyAmountGbp || currencySymbol + "0",
-                  TaxTotal: TaxTotalGbp || 0,
-                  TaxRate: TaxRateGbp || 0,
-                };
-                lineItems.push(lineItemObj);
-              }
-            }
-            let invoicerecord = {
-              id: data.fields.ID,
-              lid: "New Invoice",
-              socustomer: data.fields.CustomerName,
-              salesOrderto: data.fields.InvoiceToDesc,
-              shipto: data.fields.ShipToDesc,
-              department: data.fields.SaleClassName,
-              docnumber: data.fields.DocNumber,
-              custPONumber: data.fields.CustPONumber,
-              saledate: data.fields.SaleDate
-                ? moment(data.fields.SaleDate).format("DD/MM/YYYY")
-                : "",
-              duedate: data.fields.DueDate
-                ? moment(data.fields.DueDate).format("DD/MM/YYYY")
-                : "",
-              employeename: data.fields.EmployeeName,
-              status: data.fields.SalesStatus,
-              category: data.fields.SalesCategory,
-              comments: data.fields.Comments,
-              pickmemo: data.fields.PickMemo,
-              ponumber: data.fields.CustPONumber,
-              via: data.fields.Shipping,
-              connote: data.fields.ConNote,
-              reference: data.fields.ReferenceNo,
-              currency: data.fields.ForeignExchangeCode,
-              branding: data.fields.MedType,
-              invoiceToDesc: data.fields.InvoiceToDesc,
-              shipToDesc: data.fields.ShipToDesc,
-              termsName: data.fields.TermsName,
-              Total: totalInc,
-              TotalDiscount: totalDiscount,
-              LineItems: lineItems,
-              TotalTax: totalTax,
-              SubTotal: subTotal,
-              balanceDue: totalBalance,
-              saleCustField1: data.fields.SaleCustField1,
-              saleCustField2: data.fields.SaleCustField2,
-              totalPaid: totalPaidAmount,
-              ispaid: false,
-              isPartialPaid: false,
-            };
-
-            $("#edtCustomerName").val(data.fields.CustomerName);
-            $("#sltStatus").val(data.fields.SalesStatus);
-            $("#sltDept").val(data.fields.SaleClassName);
-            $("#sltCurrency").val(data.fields.ForeignExchangeCode);
-            FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
-
-            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
-            $("#sltTerms").val(data.fields.TermsName);
-            templateObject.CleintName.set(data.fields.CustomerName);
-
-            templateObject.attachmentCount.set(0);
-            if (data.fields.Attachments) {
-              if (data.fields.Attachments.length) {
-                templateObject.attachmentCount.set(
-                  data.fields.Attachments.length
-                );
-                templateObject.uploadedFiles.set(data.fields.Attachments);
-              }
-            }
-            var checkISCustLoad = false;
-            setTimeout(function () {
-              if (clientList) {
-                for (var i = 0; i < clientList.length; i++) {
-                  if (clientList[i].customername == data.fields.CustomerName) {
-                    checkISCustLoad = true;
-                    invoicerecord.firstname = clientList[i].firstname || "";
-                    invoicerecord.lastname = clientList[i].lastname || "";
-                    templateObject.invoicerecord.set(invoicerecord);
-                    $("#edtCustomerEmail").val(clientList[i].customeremail);
-                    $("#edtCustomerEmail").attr(
-                      "customerid",
-                      clientList[i].customerid
-                    );
-                    $("#edtCustomerName").attr(
-                      "custid",
-                      clientList[i].customerid
-                    );
-                    $("#edtCustomerEmail").attr(
-                      "customerfirstname",
-                      clientList[i].firstname
-                    );
-                    $("#edtCustomerEmail").attr(
-                      "customerlastname",
-                      clientList[i].lastname
-                    );
-                    $("#customerType").text(
-                      clientList[i].clienttypename || "Default"
-                    );
-                    $("#customerDiscount").text(
-                      clientList[i].discount + "%" || 0 + "%"
-                    );
-                    $("#edtCustomerUseType").val(
-                      clientList[i].clienttypename || "Default"
-                    );
-                    $("#edtCustomerUseDiscount").val(
-                      clientList[i].discount || 0
-                    );
-                  }
+                  templateObject.uploadedFiles.set(data.fields.Attachments);
                 }
               }
-
-              if (!checkISCustLoad) {
-                sideBarService
-                  .getCustomersDataByName(useData[d].fields.CustomerName)
-                  .then(function (dataClient) {
-                    for (var c = 0; c < dataClient.tcustomervs1.length; c++) {
-                      var customerrecordObj = {
-                        customerid: dataClient.tcustomervs1[c].Id || " ",
-                        firstname: dataClient.tcustomervs1[c].FirstName || " ",
-                        lastname: dataClient.tcustomervs1[c].LastName || " ",
-                        customername:
-                          dataClient.tcustomervs1[c].ClientName || " ",
-                        customeremail: dataClient.tcustomervs1[c].Email || " ",
-                        street: dataClient.tcustomervs1[c].Street || " ",
-                        street2: dataClient.tcustomervs1[c].Street2 || " ",
-                        street3: dataClient.tcustomervs1[c].Street3 || " ",
-                        suburb: dataClient.tcustomervs1[c].Suburb || " ",
-                        statecode:
-                          dataClient.tcustomervs1[c].State +
-                            " " +
-                            dataClient.tcustomervs1[c].Postcode || " ",
-                        country: dataClient.tcustomervs1[c].Country || " ",
-                        termsName: dataClient.tcustomervs1[c].TermsName || "",
-                        taxCode: dataClient.tcustomervs1[c].TaxCodeName || "E",
-                        clienttypename:
-                          dataClient.tcustomervs1[c].ClientTypeName ||
-                          "Default",
-                        discount: dataClient.tcustomervs1[c].Discount || 0,
-                      };
-                      clientList.push(customerrecordObj);
-
-                      invoicerecord.firstname =
-                        dataClient.tcustomervs1[c].FirstName || "";
-                      invoicerecord.lastname =
-                        dataClient.tcustomervs1[c].LastName || "";
-                      $("#edtCustomerEmail").val(
-                        dataClient.tcustomervs1[c].Email
-                      );
+              /* END  attachment */
+              var checkISCustLoad = false;
+              setTimeout(function () {
+                if (clientList) {
+                  for (var i = 0; i < clientList.length; i++) {
+                    if (clientList[i].customername == data.fields.CustomerName) {
+                      checkISCustLoad = true;
+                      invoicerecord.firstname = clientList[i].firstname || "";
+                      invoicerecord.lastname = clientList[i].lastname || "";
+                      templateObject.invoicerecord.set(invoicerecord);
+                      $("#edtCustomerEmail").val(clientList[i].customeremail);
                       $("#edtCustomerEmail").attr(
                         "customerid",
-                        clientList[c].customerid
+                        clientList[i].customerid
                       );
                       $("#edtCustomerName").attr(
                         "custid",
-                        dataClient.tcustomervs1[c].Id
+                        clientList[i].customerid
                       );
                       $("#edtCustomerEmail").attr(
                         "customerfirstname",
-                        dataClient.tcustomervs1[c].FirstName
+                        clientList[i].firstname
                       );
                       $("#edtCustomerEmail").attr(
                         "customerlastname",
-                        dataClient.tcustomervs1[c].LastName
+                        clientList[i].lastname
                       );
                       $("#customerType").text(
-                        dataClient.tcustomervs1[c].ClientTypeName || "Default"
+                        clientList[i].clienttypename || "Default"
                       );
                       $("#customerDiscount").text(
-                        dataClient.tcustomervs1[c].Discount + "%" || 0 + "%"
+                        clientList[i].discount + "%" || 0 + "%"
                       );
                       $("#edtCustomerUseType").val(
-                        dataClient.tcustomervs1[c].ClientTypeName || "Default"
+                        clientList[i].clienttypename || "Default"
                       );
                       $("#edtCustomerUseDiscount").val(
-                        dataClient.tcustomervs1[c].Discount || 0
+                        clientList[i].discount || 0
                       );
                     }
-
-                    templateObject.clientrecords.set(
-                      clientList.sort(function (a, b) {
-                        if (a.customername == "NA") {
-                          return 1;
-                        } else if (b.customername == "NA") {
-                          return -1;
-                        }
-                        return a.customername.toUpperCase() >
-                          b.customername.toUpperCase()
-                          ? 1
-                          : -1;
-                      })
-                    );
-                  });
-              }
-            }, 100);
-
-            templateObject.invoicerecord.set(invoicerecord);
-            templateObject.selectedCurrency.set(invoicerecord.currency);
-            templateObject.inputSelectedCurrency.set(invoicerecord.currency);
-
-          })
-          .catch(function (err) {
-            swal({
-              title: "Oooops...",
-              text: err,
-              type: "error",
-              showCancelButton: false,
-              confirmButtonText: "Try Again",
-            }).then((result) => {
-              if (result.value) {
-                if (err === checkResponseError) {
-                  window.open("/", "_self");
+                  }
                 }
-              } else if (result.dismiss === "cancel") {
-              }
-            });
-            $(".fullScreenSpin").css("display", "none");
-          });
-      };
-
-      templateObject.getInvoiceData();
-    }
-  } else if (url.indexOf("?copysoid=") > 0) {
-    getso_id = url.split("?copysoid=");
-    currentInvoice = getso_id[getso_id.length - 1];
-    if (getso_id[1]) {
-      currentInvoice = parseInt(currentInvoice);
-      $(".printID").attr("id", currentInvoice);
-      templateObject.getInvoiceData = function () {
-        accountService
-          .getOneSalesOrderdataEx(currentInvoice)
-          .then(function (data) {
-            templateObject.singleInvoiceData.set(data);
-            $(".fullScreenSpin").css("display", "none");
-            let lineItems = [];
-            let lineItemObj = {};
-            let lineItemsTable = [];
-            let lineItemTableObj = {};
-            let exchangeCode = data.fields.ForeignExchangeCode;
-            let currencySymbol = Currency;
-            let total =
-              currencySymbol +
-              "" +
-              data.fields.TotalAmount.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalInc =
-              currencySymbol +
-              "" +
-              data.fields.TotalAmountInc.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalDiscount =
-              currencySymbol +
-              "" +
-              data.fields.TotalDiscount.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let subTotal =
-              currencySymbol +
-              "" +
-              data.fields.TotalAmount.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalTax =
-              currencySymbol +
-              "" +
-              data.fields.TotalTax.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalBalance =
-              currencySymbol +
-              "" +
-              data.fields.TotalBalance.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            let totalPaidAmount =
-              currencySymbol +
-              "" +
-              data.fields.TotalPaid.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
-            if (data.fields.Lines != null) {
-              if (data.fields.Lines.length) {
-                for (let i = 0; i < data.fields.Lines.length; i++) {
-                  let AmountGbp =
-                    currencySymbol +
-                    "" +
-                    data.fields.Lines[i].fields.TotalLineAmount.toLocaleString(
-                      undefined,
-                      {
-                        minimumFractionDigits: 2,
+  
+                if (!checkISCustLoad) {
+                  sideBarService
+                    .getCustomersDataByName(useData[d].fields.CustomerName)
+                    .then(function (dataClient) {
+                      for (var c = 0; c < dataClient.tcustomervs1.length; c++) {
+                        var customerrecordObj = {
+                          customerid: dataClient.tcustomervs1[c].Id || " ",
+                          firstname: dataClient.tcustomervs1[c].FirstName || " ",
+                          lastname: dataClient.tcustomervs1[c].LastName || " ",
+                          customername:
+                            dataClient.tcustomervs1[c].ClientName || " ",
+                          customeremail: dataClient.tcustomervs1[c].Email || " ",
+                          street: dataClient.tcustomervs1[c].Street || " ",
+                          street2: dataClient.tcustomervs1[c].Street2 || " ",
+                          street3: dataClient.tcustomervs1[c].Street3 || " ",
+                          suburb: dataClient.tcustomervs1[c].Suburb || " ",
+                          statecode:
+                            dataClient.tcustomervs1[c].State +
+                              " " +
+                              dataClient.tcustomervs1[c].Postcode || " ",
+                          country: dataClient.tcustomervs1[c].Country || " ",
+                          termsName: dataClient.tcustomervs1[c].TermsName || "",
+                          taxCode: dataClient.tcustomervs1[c].TaxCodeName || "E",
+                          clienttypename:
+                            dataClient.tcustomervs1[c].ClientTypeName ||
+                            "Default",
+                          discount: dataClient.tcustomervs1[c].Discount || 0,
+                        };
+                        clientList.push(customerrecordObj);
+  
+                        invoicerecord.firstname =
+                          dataClient.tcustomervs1[c].FirstName || "";
+                        invoicerecord.lastname =
+                          dataClient.tcustomervs1[c].LastName || "";
+                        $("#edtCustomerEmail").val(
+                          dataClient.tcustomervs1[c].Email
+                        );
+                        $("#edtCustomerEmail").attr(
+                          "customerid",
+                          clientList[c].customerid
+                        );
+                        $("#edtCustomerName").attr(
+                          "custid",
+                          dataClient.tcustomervs1[c].Id
+                        );
+                        $("#edtCustomerEmail").attr(
+                          "customerfirstname",
+                          dataClient.tcustomervs1[c].FirstName
+                        );
+                        $("#edtCustomerEmail").attr(
+                          "customerlastname",
+                          dataClient.tcustomervs1[c].LastName
+                        );
+                        $("#customerType").text(
+                          dataClient.tcustomervs1[c].ClientTypeName || "Default"
+                        );
+                        $("#customerDiscount").text(
+                          dataClient.tcustomervs1[c].Discount + "%" || 0 + "%"
+                        );
+                        $("#edtCustomerUseType").val(
+                          dataClient.tcustomervs1[c].ClientTypeName || "Default"
+                        );
+                        $("#edtCustomerUseDiscount").val(
+                          dataClient.tcustomervs1[c].Discount || 0
+                        );
                       }
-                    );
-                  let currencyAmountGbp =
-                    currencySymbol +
-                    "" +
-                    data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
-                  let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(
-                    data.fields.Lines[i].fields.LineTaxTotal
-                  );
-                  let TaxRateGbp = (
-                    data.fields.Lines[i].fields.LineTaxRate * 100
-                  ).toFixed(2);
-                  lineItemObj = {
-                    lineID: Random.id(),
-                    id: data.fields.Lines[i].fields.ID || "",
-                    item: data.fields.Lines[i].fields.ProductName || "",
-                    description:
-                      data.fields.Lines[i].fields.ProductDescription || "",
-                    quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
-                    qtyordered: data.fields.Lines[i].fields.UOMOrderQty || 0,
-                    qtyshipped: data.fields.Lines[i].fields.UOMQtyShipped || 0,
-                    qtybo: data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
-                    unitPrice:
-                      currencySymbol +
-                        "" +
-                        data.fields.Lines[
-                          i
-                        ].fields.OriginalLinePrice.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                        }) || 0,
-                    lineCost:
-                      currencySymbol +
-                        "" +
-                        data.fields.Lines[i].fields.LineCost.toLocaleString(
-                          undefined,
-                          {
-                            minimumFractionDigits: 2,
+  
+                      templateObject.clientrecords.set(
+                        clientList.sort(function (a, b) {
+                          if (a.customername == "NA") {
+                            return 1;
+                          } else if (b.customername == "NA") {
+                            return -1;
                           }
-                        ) || 0,
-                    taxRate:
-                      (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(
-                        2
-                      ) || 0,
-                    taxCode: data.fields.Lines[i].fields.LineTaxCode || "",
-                    TotalAmt: AmountGbp || 0,
-                    curTotalAmt: currencyAmountGbp || currencySymbol + "0",
-                    TaxTotal: TaxTotalGbp || 0,
-                    TaxRate: TaxRateGbp || 0,
-                    DiscountPercent:
-                      data.fields.Lines[i].fields.DiscountPercent || 0,
-                    UnitOfMeasure:
-                      data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
-                  };
-                  var dataListTable = [
-                    data.fields.Lines[i].fields.ProductName || "",
-                    data.fields.Lines[i].fields.ProductDescription || "",
-                    "<div contenteditable='true' class='qty'>" +
-                      "" +
-                      data.fields.Lines[i].fields.UOMOrderQty +
-                      "" +
-                      "</div>" || "<div>" + "" + 0 + "" + "</div>",
-                    "<div>" +
-                      "" +
-                      currencySymbol +
-                      "" +
-                      data.fields.Lines[i].fields.LinePrice.toFixed(2) +
-                      "" +
-                      "</div>" || currencySymbol + "" + 0.0,
-                    data.fields.Lines[i].fields.LineTaxCode || "",
-                    AmountGbp || currencySymbol + "" + 0.0,
-                    '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
-                  ];
-                  lineItemsTable.push(dataListTable);
-                  lineItems.push(lineItemObj);
+                          return a.customername.toUpperCase() >
+                            b.customername.toUpperCase()
+                            ? 1
+                            : -1;
+                        })
+                      );
+                    });
                 }
-              } else {
-                let AmountGbp =
-                  data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
-                    undefined,
-                    {
-                      minimumFractionDigits: 2,
-                    }
-                  );
-                let currencyAmountGbp =
-                  currencySymbol +
-                  "" +
-                  data.fields.Lines.fields.TotalLineAmount.toFixed(2);
-                let TaxTotalGbp = cutilityService.modifynegativeCurrencyFormat(
-                  data.fields.Lines.fields.LineTaxTotal
-                );
-                let TaxRateGbp = (
-                  data.fields.Lines.fields.LineTaxRate * 100
-                ).toFixed(2);
-                lineItemObj = {
-                  lineID: Random.id(),
-                  id: data.fields.Lines.fields.ID || "",
-                  description:
-                    data.fields.Lines.fields.ProductDescription || "",
-                  quantity: data.fields.Lines.fields.UOMOrderQty || 0,
-                  unitPrice:
-                    data.fields.Lines[
-                      i
-                    ].fields.OriginalLinePrice.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    }) || 0,
-                  lineCost:
-                    data.fields.Lines[i].fields.LineCost.toLocaleString(
-                      undefined,
-                      {
-                        minimumFractionDigits: 2,
-                      }
-                    ) || 0,
-                  taxRate:
-                    (data.fields.Lines.fields.LineTaxRate * 100).toFixed(2) ||
-                    0,
-                  taxCode: data.fields.Lines.fields.LineTaxCode || "",
-                  TotalAmt: AmountGbp || 0,
-                  curTotalAmt: currencyAmountGbp || currencySymbol + "0",
-                  TaxTotal: TaxTotalGbp || 0,
-                  TaxRate: TaxRateGbp || 0,
-                };
-                lineItems.push(lineItemObj);
-              }
-            }
-            let invoicerecord = {
-              id: data.fields.ID,
-              lid: "New Invoice",
-              socustomer: data.fields.CustomerName,
-              salesOrderto: data.fields.InvoiceToDesc,
-              shipto: data.fields.ShipToDesc,
-              department: data.fields.SaleClassName,
-              docnumber: data.fields.DocNumber,
-              custPONumber: data.fields.CustPONumber,
-              saledate: data.fields.SaleDate
-                ? moment(data.fields.SaleDate).format("DD/MM/YYYY")
-                : "",
-              duedate: data.fields.DueDate
-                ? moment(data.fields.DueDate).format("DD/MM/YYYY")
-                : "",
-              employeename: data.fields.EmployeeName,
-              status: data.fields.SalesStatus,
-              category: data.fields.SalesCategory,
-              comments: data.fields.Comments,
-              pickmemo: data.fields.PickMemo,
-              ponumber: data.fields.CustPONumber,
-              via: data.fields.Shipping,
-              connote: data.fields.ConNote,
-              reference: data.fields.ReferenceNo,
-              currency: data.fields.ForeignExchangeCode,
-              branding: data.fields.MedType,
-              invoiceToDesc: data.fields.InvoiceToDesc,
-              shipToDesc: data.fields.ShipToDesc,
-              termsName: data.fields.TermsName,
-              Total: totalInc,
-              TotalDiscount: totalDiscount,
-              LineItems: lineItems,
-              TotalTax: totalTax,
-              SubTotal: subTotal,
-              balanceDue: totalBalance,
-              saleCustField1: data.fields.SaleCustField1,
-              saleCustField2: data.fields.SaleCustField2,
-              totalPaid: totalPaidAmount,
-              ispaid: false,
-              isPartialPaid: false,
-            };
-
-            $("#edtCustomerName").val(data.fields.CustomerName);
-            $("#sltStatus").val(data.fields.SalesStatus);
-            $("#sltDept").val(data.fields.SaleClassName);
-            $("#sltCurrency").val(data.fields.ForeignExchangeCode);
-            FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
-
-            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
-            $("#sltTerms").val(data.fields.TermsName);
-            templateObject.CleintName.set(data.fields.CustomerName);
-
-            /* START attachment */
-            templateObject.attachmentCount.set(0);
-            if (data.fields.Attachments) {
-              if (data.fields.Attachments.length) {
-                templateObject.attachmentCount.set(
-                  data.fields.Attachments.length
-                );
-                templateObject.uploadedFiles.set(data.fields.Attachments);
-              }
-            }
-            /* END  attachment */
-            var checkISCustLoad = false;
-            setTimeout(function () {
-              if (clientList) {
-                for (var i = 0; i < clientList.length; i++) {
-                  if (clientList[i].customername == data.fields.CustomerName) {
-                    checkISCustLoad = true;
-                    invoicerecord.firstname = clientList[i].firstname || "";
-                    invoicerecord.lastname = clientList[i].lastname || "";
-                    templateObject.invoicerecord.set(invoicerecord);
-                    $("#edtCustomerEmail").val(clientList[i].customeremail);
-                    $("#edtCustomerEmail").attr(
-                      "customerid",
-                      clientList[i].customerid
-                    );
-                    $("#edtCustomerName").attr(
-                      "custid",
-                      clientList[i].customerid
-                    );
-                    $("#edtCustomerEmail").attr(
-                      "customerfirstname",
-                      clientList[i].firstname
-                    );
-                    $("#edtCustomerEmail").attr(
-                      "customerlastname",
-                      clientList[i].lastname
-                    );
-                    $("#customerType").text(
-                      clientList[i].clienttypename || "Default"
-                    );
-                    $("#customerDiscount").text(
-                      clientList[i].discount + "%" || 0 + "%"
-                    );
-                    $("#edtCustomerUseType").val(
-                      clientList[i].clienttypename || "Default"
-                    );
-                    $("#edtCustomerUseDiscount").val(
-                      clientList[i].discount || 0
-                    );
+              }, 100);
+  
+              templateObject.invoicerecord.set(invoicerecord);
+              templateObject.selectedCurrency.set(invoicerecord.currency);
+              templateObject.inputSelectedCurrency.set(invoicerecord.currency);
+  
+            })
+            .catch(function (err) {
+              swal({
+                title: "Oooops...",
+                text: err,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Try Again",
+              }).then((result) => {
+                if (result.value) {
+                  if (err === checkResponseError) {
+                    window.open("/", "_self");
                   }
+                } else if (result.dismiss === "cancel") {
                 }
-              }
-
-              if (!checkISCustLoad) {
-                sideBarService
-                  .getCustomersDataByName(useData[d].fields.CustomerName)
-                  .then(function (dataClient) {
-                    for (var c = 0; c < dataClient.tcustomervs1.length; c++) {
-                      var customerrecordObj = {
-                        customerid: dataClient.tcustomervs1[c].Id || " ",
-                        firstname: dataClient.tcustomervs1[c].FirstName || " ",
-                        lastname: dataClient.tcustomervs1[c].LastName || " ",
-                        customername:
-                          dataClient.tcustomervs1[c].ClientName || " ",
-                        customeremail: dataClient.tcustomervs1[c].Email || " ",
-                        street: dataClient.tcustomervs1[c].Street || " ",
-                        street2: dataClient.tcustomervs1[c].Street2 || " ",
-                        street3: dataClient.tcustomervs1[c].Street3 || " ",
-                        suburb: dataClient.tcustomervs1[c].Suburb || " ",
-                        statecode:
-                          dataClient.tcustomervs1[c].State +
-                            " " +
-                            dataClient.tcustomervs1[c].Postcode || " ",
-                        country: dataClient.tcustomervs1[c].Country || " ",
-                        termsName: dataClient.tcustomervs1[c].TermsName || "",
-                        taxCode: dataClient.tcustomervs1[c].TaxCodeName || "E",
-                        clienttypename:
-                          dataClient.tcustomervs1[c].ClientTypeName ||
-                          "Default",
-                        discount: dataClient.tcustomervs1[c].Discount || 0,
-                      };
-                      clientList.push(customerrecordObj);
-
-                      invoicerecord.firstname =
-                        dataClient.tcustomervs1[c].FirstName || "";
-                      invoicerecord.lastname =
-                        dataClient.tcustomervs1[c].LastName || "";
-                      $("#edtCustomerEmail").val(
-                        dataClient.tcustomervs1[c].Email
-                      );
-                      $("#edtCustomerEmail").attr(
-                        "customerid",
-                        clientList[c].customerid
-                      );
-                      $("#edtCustomerName").attr(
-                        "custid",
-                        dataClient.tcustomervs1[c].Id
-                      );
-                      $("#edtCustomerEmail").attr(
-                        "customerfirstname",
-                        dataClient.tcustomervs1[c].FirstName
-                      );
-                      $("#edtCustomerEmail").attr(
-                        "customerlastname",
-                        dataClient.tcustomervs1[c].LastName
-                      );
-                      $("#customerType").text(
-                        dataClient.tcustomervs1[c].ClientTypeName || "Default"
-                      );
-                      $("#customerDiscount").text(
-                        dataClient.tcustomervs1[c].Discount + "%" || 0 + "%"
-                      );
-                      $("#edtCustomerUseType").val(
-                        dataClient.tcustomervs1[c].ClientTypeName || "Default"
-                      );
-                      $("#edtCustomerUseDiscount").val(
-                        dataClient.tcustomervs1[c].Discount || 0
-                      );
-                    }
-
-                    templateObject.clientrecords.set(
-                      clientList.sort(function (a, b) {
-                        if (a.customername == "NA") {
-                          return 1;
-                        } else if (b.customername == "NA") {
-                          return -1;
-                        }
-                        return a.customername.toUpperCase() >
-                          b.customername.toUpperCase()
-                          ? 1
-                          : -1;
-                      })
-                    );
-                  });
-              }
-            }, 100);
-
-            templateObject.invoicerecord.set(invoicerecord);
-            templateObject.selectedCurrency.set(invoicerecord.currency);
-            templateObject.inputSelectedCurrency.set(invoicerecord.currency);
-
-          })
-          .catch(function (err) {
-            swal({
-              title: "Oooops...",
-              text: err,
-              type: "error",
-              showCancelButton: false,
-              confirmButtonText: "Try Again",
-            }).then((result) => {
-              if (result.value) {
-                if (err === checkResponseError) {
-                  window.open("/", "_self");
-                }
-              } else if (result.dismiss === "cancel") {
-              }
+              });
+              $(".fullScreenSpin").css("display", "none");
             });
-            $(".fullScreenSpin").css("display", "none");
-          });
-      };
-      templateObject.getInvoiceData();
-    }
-  } else {
-    $(".fullScreenSpin").css("display", "none");
-    let lineItems = [];
-    let lineItemsTable = [];
-    let lineItemObj = {};
-    lineItemObj = {
-      lineID: Random.id(),
-      item: "",
-      description: "",
-      quantity: "",
-      qtyordered: "",
-      qtyshipped: "",
-      qtybo: "",
-      unitPrice: 0,
-      unitPriceInc: 0,
-      TotalAmt: 0,
-      TotalAmtInc: 0,
-      taxRate: "",
-      taxCode: "",
-      curTotalAmt: 0,
-      TaxTotal: 0,
-      TaxRate: 0,
-      UnitOfMeasure: defaultUOM || "",
-    };
-    const dataListTable = [
-      " " || "",
-      " " || "",
-      0 || 0,
-      0.0 || 0.0,
-      " " || "",
-      0.0 || 0.0,
-      '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
-    ];
-    lineItemsTable.push(dataListTable);
-    lineItems.push(lineItemObj);
-    const currentDate = new Date();
-    const begunDate = moment(currentDate).format("DD/MM/YYYY");
-    let invoicerecord = {
-      id: "",
-      lid: "New Invoice",
-      socustomer: "",
-      salesOrderto: "",
-      shipto: "",
-      department: defaultDept || "",
-      docnumber: "",
-      custPONumber: "",
-      saledate: begunDate,
-      duedate: "",
-      employeename: "",
-      status: "",
-      category: "",
-      comments: "",
-      pickmemo: "",
-      ponumber: "",
-      via: "",
-      connote: "",
-      reference: "",
-      currency: "",
-      branding: "",
-      invoiceToDesc: "",
-      shipToDesc: "",
-      termsName: templateObject.defaultsaleterm.get() || "",
-      Total: Currency + "" + 0.0,
-      TotalDiscount: Currency + "" + 0.0,
-      LineItems: lineItems,
-      TotalTax: Currency + "" + 0.0,
-      SubTotal: Currency + "" + 0.0,
-      balanceDue: Currency + "" + 0.0,
-      saleCustField1: "",
-      saleCustField2: "",
-      totalPaid: Currency + "" + 0.0,
-      ispaid: false,
-      isPartialPaid: false,
-    };
-    if (FlowRouter.current().queryParams.customerid) {
-      getCustomerData(FlowRouter.current().queryParams.customerid);
+        };
+        templateObject.getInvoiceData();
+      }
     } else {
-      $("#edtCustomerName").val("");
+      $(".fullScreenSpin").css("display", "none");
+      let lineItems = [];
+      let lineItemsTable = [];
+      let lineItemObj = {};
+      lineItemObj = {
+        lineID: Random.id(),
+        item: "",
+        description: "",
+        quantity: "",
+        qtyordered: "",
+        qtyshipped: "",
+        qtybo: "",
+        unitPrice: 0,
+        unitPriceInc: 0,
+        TotalAmt: 0,
+        TotalAmtInc: 0,
+        taxRate: "",
+        taxCode: "",
+        curTotalAmt: 0,
+        TaxTotal: 0,
+        TaxRate: 0,
+        UnitOfMeasure: defaultUOM || "",
+      };
+      const dataListTable = [
+        " " || "",
+        " " || "",
+        0 || 0,
+        0.0 || 0.0,
+        " " || "",
+        0.0 || 0.0,
+        '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>',
+      ];
+      lineItemsTable.push(dataListTable);
+      lineItems.push(lineItemObj);
+      const currentDate = new Date();
+      const begunDate = moment(currentDate).format("DD/MM/YYYY");
+      let invoicerecord = {
+        id: "",
+        lid: "New Invoice",
+        socustomer: "",
+        salesOrderto: "",
+        shipto: "",
+        department: defaultDept || "",
+        docnumber: "",
+        custPONumber: "",
+        saledate: begunDate,
+        duedate: "",
+        employeename: "",
+        status: "",
+        category: "",
+        comments: "",
+        pickmemo: "",
+        ponumber: "",
+        via: "",
+        connote: "",
+        reference: "",
+        currency: "",
+        branding: "",
+        invoiceToDesc: "",
+        shipToDesc: "",
+        termsName: templateObject.defaultsaleterm.get() || "",
+        Total: Currency + "" + 0.0,
+        TotalDiscount: Currency + "" + 0.0,
+        LineItems: lineItems,
+        TotalTax: Currency + "" + 0.0,
+        SubTotal: Currency + "" + 0.0,
+        balanceDue: Currency + "" + 0.0,
+        saleCustField1: "",
+        saleCustField2: "",
+        totalPaid: Currency + "" + 0.0,
+        ispaid: false,
+        isPartialPaid: false,
+      };
+      if (FlowRouter.current().queryParams.customerid) {
+        getCustomerData(FlowRouter.current().queryParams.customerid);
+      } else {
+        $("#edtCustomerName").val("");
+      }
+      setTimeout(function () {
+        $("#sltDept").val(defaultDept);
+        $("#sltTerms").val(invoicerecord.termsName);
+        templateObject.getLastInvoiceData();
+      }, 200);
+  
+      templateObject.invoicerecord.set(invoicerecord);
     }
-    setTimeout(function () {
-      $("#sltDept").val(defaultDept);
-      $("#sltTerms").val(invoicerecord.termsName);
-      templateObject.getLastInvoiceData();
-    }, 200);
-
-    templateObject.invoicerecord.set(invoicerecord);
   }
+
+  templateObject.getInvoiceData();
 
   function showInvoice1(template_title, number) {
     var array_data = [];
@@ -7391,66 +7397,69 @@ Template.new_invoice.onRendered(function() {
     $(".due").text(dueDate);
   }
 
-  $(document).ready(function () {
-    $("#edtCustomerName").editableSelect();
-    //$('#sltCurrency').editableSelect();
-    $("#sltTerms").editableSelect();
-    $("#sltDept").editableSelect();
-    $("#sltStatus").editableSelect();
+  // DUPLICATE CODE
+  // $(document).ready(function () {
+  //   $("#edtCustomerName").editableSelect();
+  //   //$('#sltCurrency').editableSelect();
+  //   $("#sltTerms").editableSelect();
+  //   $("#sltDept").editableSelect();
+  //   $("#sltStatus").editableSelect();
 
-    $("#addRow").on("click", function () {
-      var getTableFields = [$("#tblInvoiceLine tbody tr .lineProductName")];
-      var checkEmptyFields;
+  //   $("#addRow").on("click", function () {
+  //     var getTableFields = [$("#tblInvoiceLine tbody tr .lineProductName")];
+  //     var checkEmptyFields;
 
-      for (var i = 0; i < getTableFields.length; i++) {
-        checkEmptyFields = getTableFields[i].filter(function (i, element) {
-          return $.trim($(this).val()) === "";
-        });
-      }
-      if (!checkEmptyFields.length) {
-        var rowData = $("#tblInvoiceLine tbody>tr:last").clone(true);
-        let tokenid = Random.id();
-        $(".lineProductName", rowData).val("");
-        $(".lineProductDesc", rowData).text("");
-        $(".lineQty", rowData).val("");
-        $(".lineOrdered", rowData).val("");
-        $(".lineBackOrder", rowData).val("");
-        $(".lineUnitPrice", rowData).val("");
-        $(".lineAmt", rowData).text("");
-        $(".lineTaxCode", rowData).val("");
-        $(".lineTaxAmount", rowData).text("");
-        $(".lineDiscount", rowData).val("");
-        // $(".lineProductName", rowData).attr("prodid", '');
+  //     for (var i = 0; i < getTableFields.length; i++) {
+  //       checkEmptyFields = getTableFields[i].filter(function (i, element) {
+  //         return $.trim($(this).val()) === "";
+  //       });
+  //     }
+  //     if (!checkEmptyFields.length) {
+  //       // var rowData = $("#tblInvoiceLine tbody>tr:last").clone(true);
+  //       var rowData = $("#tblInvoiceLine tbody > tr.template").clone(true);
+  //       rowData.removeClass('template'); // we remove the .template class
+  //       let tokenid = Random.id();
+  //       $(".lineProductName", rowData).val("");
+  //       $(".lineProductDesc", rowData).text("");
+  //       $(".lineQty", rowData).val("");
+  //       $(".lineOrdered", rowData).val("");
+  //       $(".lineBackOrder", rowData).val("");
+  //       $(".lineUnitPrice", rowData).val("");
+  //       $(".lineAmt", rowData).text("");
+  //       $(".lineTaxCode", rowData).val("");
+  //       $(".lineTaxAmount", rowData).text("");
+  //       $(".lineDiscount", rowData).val("");
+  //       // $(".lineProductName", rowData).attr("prodid", '');
 
-        rowData.attr("id", tokenid);
-        $("#tblInvoiceLine tbody").append(rowData);
+  //       rowData.attr("id", tokenid);
+  //       $("#tblInvoiceLine tbody").append(rowData);
 
-        if ($("#printID").attr("id") != "") {
-          var rowData1 = $(".invoice_print tbody>tr:last").clone(true);
-          $("#lineProductName", rowData1).text("");
-          $("#lineProductDesc", rowData1).text("");
-          $("#lineQty", rowData1).text("");
-          $("#lineOrdered", rowData1).text("");
-          $("#lineUnitPrice", rowData1).text("");
+  //       if ($("#printID").attr("id") != "") {
+  //         var rowData1 = $(".invoice_print tbody>tr:last").clone(true);
+  //         $("#lineProductName", rowData1).text("");
+  //         $("#lineProductDesc", rowData1).text("");
+  //         $("#lineQty", rowData1).text("");
+  //         $("#lineOrdered", rowData1).text("");
+  //         $("#lineUnitPrice", rowData1).text("");
 
-          $("#lineTaxAmount", rowData1).text("");
-          $("#lineAmt", rowData1).text("");
-          rowData1.attr("id", tokenid);
-          $(".invoice_print tbody").append(rowData1);
-        }
-        setTimeout(function () {
-          $("#" + tokenid + " .lineProductName").trigger("click");
-        }, 200);
-      } else {
-        $("#tblInvoiceLine tbody tr").each(function (index) {
-          var $tblrow = $(this);
-          if ($tblrow.find(".lineProductName").val() == "") {
-            $tblrow.find(".colProductName").addClass("boldtablealertsborder");
-          }
-        });
-      }
-    });
-  });
+  //         $("#lineTaxAmount", rowData1).text("");
+  //         $("#lineAmt", rowData1).text("");
+  //         rowData1.attr("id", tokenid);
+  //         $(".invoice_print tbody").append(rowData1);
+  //       }
+  //       setTimeout(function () {
+  //         $("#" + tokenid + " .lineProductName").trigger("click");
+  //       }, 200);
+  //     } else {
+  //       $("#tblInvoiceLine tbody tr").each(function (index) {
+  //         var $tblrow = $(this);
+  //         if ($tblrow.find(".lineProductName").val() == "") {
+  //           $tblrow.find(".colProductName").addClass("boldtablealertsborder");
+  //         }
+  //       });
+  //     }
+  //   });
+  // });
 
   /* On Click TaxCode List */
   $(document).on("click", "#tblTaxRate tbody tr", function (e) {
@@ -8298,7 +8307,9 @@ Template.new_invoice.onRendered(function() {
         });
       }
       if (!checkEmptyFields.length) {
-        var rowData = $("#tblInvoiceLine tbody>tr:last").clone(true);
+        var rowData = $("#tblInvoiceLine tbody > tr:last").clone(true);
+        // var rowData = $("#tblInvoiceLine tbody > tr.template").clone(true);
+        // rowData.removeClass('template'); // we remove the .template class
         let tokenid = Random.id();
         $(".lineProductName", rowData).val("");
         $(".lineProductDesc", rowData).text("");
@@ -12959,6 +12970,45 @@ Template.new_invoice.onRendered(function () {
   // };
 
   //tempObj.getAllCustomFieldDisplaySettings();
+
+
+
+  /**
+   * TODO: migration needed
+   * This function will load from remote or local indexdb the necessary data to load for this invoice
+   */
+  templateObject.loadInvoiceLines = async () => {
+    
+  }
+
+  /**
+   * TODO: migration needed
+   * This will only add one new line
+   * and will handle all the logics
+   * * Without syncing to remote and local indexdb
+   */
+  templateObject.addInvoiceLine = async () => {
+
+  }
+
+  /**
+   * TODO: migration needed
+   * This will delete one single line
+   * * Without syncing to remote and local indexdb
+   */
+  templateObject.deleteInvoiceLine = async () => {
+
+  }
+
+  /**
+   * TODO: migration needed
+   * This will update one line only
+   * * Without syncing to remote and local indexdb
+   */
+  templateObject.updateInvoiceLine  = async () => {
+
+  }
+
 });
 
 Template.new_invoice.helpers({
@@ -17213,10 +17263,10 @@ Template.new_invoice.events({
   //     localStorage.setItem('custfield3',custfield3);
   //     $('#myModal4').modal('toggle');
   // },
-  "click .btnSave":  (event, templateObject) => {
+  "click .btnSave": async (event, templateObject) => {
     playSaveAudio();
+    await saveCurrencyHistory(new Date($('#dtSODate'))); // Who placed this inside the setimout ??
     setTimeout(function(){
-    saveCurrencyHistory();
     // let templateObject = Template.instance();
     let stripe_id = templateObject.accountID.get();
     let stripe_fee_method = templateObject.stripe_fee_method.get();
@@ -17473,8 +17523,9 @@ Template.new_invoice.events({
             fields: {
               ID: currentInvoice,
               CustomerName: customer,
-              //ForeignExchangeCode: currencyCode
-              // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+              ForeignExchangeCode: currencyCode,
+              ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+              
               Lines: splashLineArray,
               InvoiceToDesc: billingAddress,
               SaleDate: saleDate,
@@ -17498,8 +17549,8 @@ Template.new_invoice.events({
             type: "TInvoiceEx",
             fields: {
               CustomerName: customer,
-              //ForeignExchangeCode: currencyCode
-              // ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+              ForeignExchangeCode: currencyCode,
+              ForeignExchangeRate: parseFloat(ForeignExchangeRate),
               Lines: splashLineArray,
               InvoiceToDesc: billingAddress,
               SaleDate: saleDate,
@@ -20292,29 +20343,30 @@ Template.new_invoice.events({
     }
   },
 
-  'change .exchange-rate-js': (e, ui) => {
-
-
-      setTimeout(() => {
-          const toConvert = document.querySelectorAll('.convert-to-foreign:not(.hiddenColumn)');
-          const rate = $("#exchange_rate").val();
-
-          toConvert.forEach((element) => {
-              const mainClass = element.classList[0];
-              const mainValueElement = document.querySelector(`#tblInvoiceLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
-
-              let value = mainValueElement.childElementCount > 0 ?
-                  $(mainValueElement).find('input').val() :
-                  mainValueElement.innerText;
-              value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
-              $(element).text(value);
-
-          })
-      }, 500);
-
+  'change .exchange-rate-js, change input.colUnitPrice': (e, ui) => {
+    calculateAllTableForeign();
   }
 });
 
 Template.registerHelper("equals", function (a, b) {
   return a === b;
 });
+
+const calculateAllTableForeign = () => {
+    setTimeout(() => {
+      const toConvert = document.querySelectorAll('.convert-to-foreign:not(.hiddenColumn)');
+      const rate = $("#exchange_rate").val();
+
+      toConvert.forEach((element) => {
+          const mainClass = element.classList[0];
+          const mainValueElement = document.querySelector(`#tblInvoiceLine tbody td.${mainClass}:not(.convert-to-foreign):not(.hiddenColumn)`);
+
+          let value = mainValueElement.childElementCount > 0 ?
+              $(mainValueElement).find('input').val() :
+              mainValueElement.innerText;
+          value = convertToForeignAmount(value, rate, getCurrentCurrencySymbol());
+          $(element).text(value);
+
+      })
+    }, 500);
+}

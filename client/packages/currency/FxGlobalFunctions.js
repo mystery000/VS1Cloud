@@ -52,8 +52,12 @@ export default class FxGlobalFunctions {
       }
     });
 
-    data = data.response.tcurrency;
-    return data.find(currency => currency.Code == defaultCurrencyCode);
+    let currencies = data.response.tcurrency;
+    if(currencies[0].fields) {
+      currencies = currencies.map(c => c.fields);
+    }
+
+    return currencies.find(currency => currency.Code == defaultCurrencyCode);
   }
 
   /**
