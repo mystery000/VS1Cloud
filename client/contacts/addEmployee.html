@@ -1466,7 +1466,6 @@
                                                                                         <label>TFN Exemption</label>
                                                                                         <!-- <input type="search" class="form-control" id="edtTfnExemption" name="edtTfnExemption"> -->
                                                                                         <select type="search" class="form-control customEditableSelect" id="edtTfnExemption" name="edtTfnExemption" style="cursor: pointer;">
-                                                                                            <option value=""></option>
                                                                                             <option value="0">No TFN Quoted</option>
                                                                                             <option value="1">TFN Pending</option>
                                                                                             <option value="2">TFN Exempt - Under 18</option>
@@ -1509,14 +1508,14 @@
                                                                     <div class="col-12 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Pay Period</label>
-                                                                            <input type="search" class="form-control paste-selected-pay-period-js" name="edtPayPeriod" id="edtPayPeriod" />
+                                                                            <input type="search" class="form-control paste-selected-pay-period-js" name="edtPayPeriod" id="edtPayPeriod" value="{{employeePaySetting.Payperiod}}"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>First Pay Date</label>
                                                                             <div class="input-group date">
-                                                                                <input type="text" class="form-control" name="edtFirstPayDate" id="edtFirstPayDate" />
+                                                                                <input type="text" class="form-control" name="edtFirstPayDate" id="edtFirstPayDate" value="{{employeePaySetting.StartingDate}}" />
                                                                             </div>
                                                                         </div>
                                                                     </div>

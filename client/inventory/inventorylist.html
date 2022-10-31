@@ -703,22 +703,20 @@
                     <thead>
                         <tr class="dnd-moved">
                             {{#each displayfield in displayfields}}
-                                {{#if displayfield.display}}
-                                    <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
-                                        {{displayfield.custfieldlabel}}
-                                        {{#if equals displayfield.class 'CostPrice'}} <i class="fas fa-random"></i>
+                                <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}}" style="width:{{displayfield.width}}px">
+                                    {{displayfield.custfieldlabel}}
+                                    {{#if equals displayfield.class 'CostPrice'}} <i class="fas fa-random"></i>
+                                    {{else}}
+                                        {{#if equals displayfield.class 'CostPriceInc'}} <i class="fas fa-random fa-trans"></i>
                                         {{else}}
-                                            {{#if equals displayfield.class 'CostPriceInc'}} <i class="fas fa-random fa-trans"></i>
+                                            {{#if equals displayfield.class 'SalePrice'}} <i class="fas fa-random"></i>
                                             {{else}}
-                                                {{#if equals displayfield.class 'SalePrice'}} <i class="fas fa-random"></i>
-                                                {{else}}
-                                                    {{#if equals displayfield.class 'SalePriceInc'}} <i class="fas fa-random fa-trans"></i>
-                                                    {{/if}}
+                                                {{#if equals displayfield.class 'SalePriceInc'}} <i class="fas fa-random fa-trans"></i>
                                                 {{/if}}
                                             {{/if}}
                                         {{/if}}
-                                    </th>
-                                {{/if}}
+                                    {{/if}}
+                                </th>
                             {{/each}}
 
                             <!-- <th class="th colProductID hiddenColumn" style="width:3%;">#ID</th>

@@ -14,6 +14,7 @@ Template.customerlist.onCreated(function(){
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.selectedFile = new ReactiveVar();
+    templateObject.setupFinished = new ReactiveVar();
 });
 
 Template.customerlist.onRendered(function() {
@@ -43,6 +44,15 @@ Template.customerlist.onRendered(function() {
         }
 
     });
+    templateObject.fetchSetupWizard = async function () {
+        let setupFinished = await checkSetupFinished();
+        if (setupFinished == true || setupFinished == "true") {
+            templateObject.setupFinished.set(false)
+        } else {
+            templateObject.setupFinished.set(true)
+        }
+    }
+    templateObject.fetchSetupWizard();
 
 });
 
@@ -607,14 +617,8 @@ Template.customerlist.helpers({
         return localStorage.getItem('mySession') || '';
     },
     showSetupFinishedAlert: () => {
-        let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
-        if (setupFinished == true || setupFinished == "true") {
-            return false;
-        } else {
-            return true;
-        }
-    },
-    
+        return Template.instance().setupFinished.get();
+    },    
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
         return setupUrl[1];   

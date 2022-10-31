@@ -1401,17 +1401,17 @@ Template.non_transactional_list.events({
     const tableHandler = new TableHandler();
     let range = $(event.target).val()||0;
     let colClassName = $(event.target).attr("valueclass");
-    await $('.' + colClassName).css('width', range);
+    await $('.col' + colClassName).css('width', range);
     $('.dataTable').resizable();
   },
   'click .chkDatatable': function(event) {
       let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
       if ($(event.target).is(':checked')) {
-        $('.'+columnDataValue).addClass('showColumn');
-        $('.'+columnDataValue).removeClass('hiddenColumn');
+        $('.col'+columnDataValue).addClass('showColumn');
+        $('.col'+columnDataValue).removeClass('hiddenColumn');
       } else {
-        $('.'+columnDataValue).addClass('hiddenColumn');
-        $('.'+columnDataValue).removeClass('showColumn');
+        $('.col'+columnDataValue).addClass('hiddenColumn');
+        $('.col'+columnDataValue).removeClass('showColumn');
       }
   },
   "blur .divcolumn": async function (event) {
