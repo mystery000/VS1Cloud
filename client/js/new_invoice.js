@@ -20372,7 +20372,7 @@ Template.registerHelper("equals", function (a, b) {
   return a === b;
 });
 
-const calculateAllTableForeign = () => {
+export const calculateAllTableForeign = () => {
     setTimeout(() => {
       const toConvert = document.querySelectorAll('.convert-to-foreign:not(.hiddenColumn)');
       const rate = $("#exchange_rate").val();
