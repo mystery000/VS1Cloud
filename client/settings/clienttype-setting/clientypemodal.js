@@ -21,10 +21,10 @@ Template.clienttypemodal.onRendered(function () {
 });
 
 Template.clienttypemodal.events({
-    'click .btnCloseAddNewDept': function () {
+    'click .btnCloseAddNewClientType': function () {
         playCancelAudio();
         setTimeout(function(){
-        $('#newTaxRate').css('display', 'none');    
+        $('#newClientType').css('display', 'none');
         }, delayTimeAfterSound);
     },
     'click .btnSaveClientType': function () {
@@ -36,7 +36,7 @@ Template.clienttypemodal.events({
         //let headerDept = $('#sltDepartment').val();
         let custType = $('#edtClientTypeName').val() || '';
         let typeDesc = $('#txaDescription').val() || '';
-        let id = $('#typeID').val() || '';
+        let id = $('#edtClientTypeID').val() || '';
         if (custType === '') {
             swal('Client Type name cannot be blank!', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');
@@ -75,7 +75,7 @@ Template.clienttypemodal.events({
                 sideBarService.getClientTypeData().then(function (dataReload) {
                     addVS1Data('TClientType', JSON.stringify(dataReload)).then(function (datareturn) {
                         if(url.includes("/productview")) {
-                            $('#sltCustomerType').val(custType); 
+                            $('#sltCustomerType').val(custType);
                             $('#myModalClientType').modal('toggle');
                             $('.fullScreenSpin').css('display', 'none');
                             return false;
@@ -83,7 +83,7 @@ Template.clienttypemodal.events({
                         Meteor._reload.reload();
                     }).catch(function (err) {
                          if(url.includes("/productview")) {
-                            $('#sltCustomerType').val(custType); 
+                            $('#sltCustomerType').val(custType);
                             $('#myModalClientType').modal('toggle');
                             $('.fullScreenSpin').css('display', 'none');
                             return false;
@@ -92,7 +92,7 @@ Template.clienttypemodal.events({
                     });
                 }).catch(function (err) {
                      if(url.includes("/productview")) {
-                            $('#sltCustomerType').val(custType); 
+                            $('#sltCustomerType').val(custType);
                             $('#myModalClientType').modal('toggle');
                             $('.fullScreenSpin').css('display', 'none');
                             return false;
