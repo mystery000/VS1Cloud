@@ -243,7 +243,7 @@ Template.allCardsLists.events({
     "click .editCardBtn": async function (e) {
         playSaveAudio();
         e.preventDefault();
-        setTimeout(function(){
+        setTimeout(async function(){
         let templateObject = Template.instance();
         $(".card-visibility").removeClass('hideelement');
         if( $('.editCardBtn').find('i').hasClass('fa-cog') ){

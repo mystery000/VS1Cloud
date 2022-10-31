@@ -9389,7 +9389,7 @@ Template.paymentcard.events({
     },
     'click .printConfirm': async function (event) {
     playPrintAudio();
-    setTimeout(function(){
+    setTimeout(async function(){
         var printTemplate = [];
         LoadingOverlay.show();
         var customer_payment = $('input[name="Customer Payments"]:checked').val();

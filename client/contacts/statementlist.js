@@ -2166,7 +2166,7 @@ Template.statementlist.events({
     },
     'click #emailbtn': async function () {
         playEmailAudio();
-        setTimeout(function(){
+        setTimeout(async function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#printstatmentdesign').css('display', 'block');
         let templateObject = Template.instance();
@@ -2322,7 +2322,7 @@ Template.statementlist.events({
     },
     'click .printConfirm ': async function (event) {
         playPrintAudio();
-        setTimeout(function(){
+        setTimeout(async function(){
         $('.fullScreenSpin').css('display', 'block');
         let attachment = [] ;
         let templateObject = Template.instance();
