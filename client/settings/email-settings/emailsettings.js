@@ -464,9 +464,9 @@ Template.emailsettings.onRendered(function () {
                                     if (n.id == '1' && empData[i].fields.BeginFromOption === "S") formIds.push(empData[i].fields.FormID);
                                     const startDate = empData[i].fields.StartDate.split(' ')[0];
                                     const startTime = empData[i].fields.StartDate.split(' ')[1];
-        
-                                    
-            
+
+
+
                                     //TODO: Getting BasedOnType from localstorage
                                     let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
                                     let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
@@ -535,7 +535,7 @@ Template.emailsettings.onRendered(function () {
                                     else {
                                         employeeScheduledRecord = [...employeeScheduledRecord.filter(schedule => schedule.formID != n.id), empDataCurr];
                                     }
-                                    
+
                                 }
                             }
                             empDataCurr = {
@@ -568,7 +568,7 @@ Template.emailsettings.onRendered(function () {
                     })
                 }
                 await getFormData();
-    
+
                 // Initialize Grouped Reports Modal
                 const groupedReportData = employeeScheduledRecord.filter(schedule => schedule.formID == '1');
                 if (groupedReportData.length === 1) {
@@ -577,10 +577,10 @@ Template.emailsettings.onRendered(function () {
                         $("#groupedReports-" + formIds[i] + ' .star').prop('checked', true);
                     }
                 }
-    
+
                 $('.fullScreenSpin').css('display', 'none');
                 templateObject.employeescheduledrecord.set(employeeScheduledRecord);
-    
+
                 if (templateObject.employeescheduledrecord.get()) {
                     setTimeout(function () {
                         $('#tblAutomatedEmails').DataTable({
@@ -632,7 +632,7 @@ Template.emailsettings.onRendered(function () {
                                     MakeNegative();
                                 }, 100);
                             },
-    
+
                         }).on('page', function () {
                             setTimeout(function () {
                                 MakeNegative();
@@ -640,13 +640,13 @@ Template.emailsettings.onRendered(function () {
                             let draftRecord = templateObject.employeescheduledrecord.get();
                             templateObject.employeescheduledrecord.set(draftRecord);
                         }).on('column-reorder', function () {
-    
+
                         }).on('length.dt', function (e, settings, len) {
                             setTimeout(function () {
                                 MakeNegative();
                             }, 100);
                         });
-    
+
                         // $('#currencyLists').DataTable().column( 0 ).visible( true );
                         // $('.fullScreenSpin').css('display', 'none');
                     }, 500);
@@ -701,7 +701,7 @@ Template.emailsettings.onRendered(function () {
                                     MakeNegative();
                                 }, 100);
                             },
-    
+
                         }).on('page', function () {
                             setTimeout(function () {
                                 MakeNegative();
@@ -709,13 +709,13 @@ Template.emailsettings.onRendered(function () {
                             let draftRecord = templateObject.employeescheduledrecord.get();
                             templateObject.employeescheduledrecord.set(draftRecord);
                         }).on('column-reorder', function () {
-    
+
                         }).on('length.dt', function (e, settings, len) {
                             setTimeout(function () {
                                 MakeNegative();
                             }, 100);
                         });
-    
+
                         // $('#currencyLists').DataTable().column( 0 ).visible( true );
                         // $('.fullScreenSpin').css('display', 'none');
                     }, 500);
@@ -744,7 +744,7 @@ Template.emailsettings.onRendered(function () {
                                         if (n.id == '1' && empData[i].fields.BeginFromOption === "S") formIds.push(empData[i].fields.FormID);
                                         const startDate = empData[i].fields.StartDate.split(' ')[0];
                                         const startTime = empData[i].fields.StartDate.split(' ')[1];
-                
+
 
 
                                         //TODO: Getting BasedOnType from localstorage
@@ -792,7 +792,7 @@ Template.emailsettings.onRendered(function () {
                                         await getBasedOnTypeTextFromIndexDB();
                                         // if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
                                         if (basedOnTypeText != '') basedOnTypeText = basedOnTypeText.slice(0, -2);
-                
+
                                         empDataCurr = {
                                             employeeid: recipientIds.join('; ') || '',
                                             every: empData[i].fields.Every || '',
@@ -840,7 +840,7 @@ Template.emailsettings.onRendered(function () {
                                     basedOnType: '',
                                     basedOnTypeText: '',
                                 }
-                
+
                                 let found = employeeScheduledRecord.some(checkdata => checkdata.formID == n.id);
                                 if (!found) {
                                     employeeScheduledRecord.push(empDataCurr);
@@ -860,10 +860,10 @@ Template.emailsettings.onRendered(function () {
                             $("#groupedReports-" + formIds[i] + ' .star').prop('checked', true);
                         }
                     }
-        
+
                     $('.fullScreenSpin').css('display', 'none');
                     templateObject.employeescheduledrecord.set(employeeScheduledRecord);
-        
+
                     if (templateObject.employeescheduledrecord.get()) {
                         setTimeout(function () {
                             $('#tblAutomatedEmails').DataTable({
@@ -915,7 +915,7 @@ Template.emailsettings.onRendered(function () {
                                         MakeNegative();
                                     }, 100);
                                 },
-        
+
                             }).on('page', function () {
                                 setTimeout(function () {
                                     MakeNegative();
@@ -923,13 +923,13 @@ Template.emailsettings.onRendered(function () {
                                 let draftRecord = templateObject.employeescheduledrecord.get();
                                 templateObject.employeescheduledrecord.set(draftRecord);
                             }).on('column-reorder', function () {
-        
+
                             }).on('length.dt', function (e, settings, len) {
                                 setTimeout(function () {
                                     MakeNegative();
                                 }, 100);
                             });
-        
+
                             // $('#currencyLists').DataTable().column( 0 ).visible( true );
                             // $('.fullScreenSpin').css('display', 'none');
                         }, 500);
@@ -984,7 +984,7 @@ Template.emailsettings.onRendered(function () {
                                         MakeNegative();
                                     }, 100);
                                 },
-        
+
                             }).on('page', function () {
                                 setTimeout(function () {
                                     MakeNegative();
@@ -992,13 +992,13 @@ Template.emailsettings.onRendered(function () {
                                 let draftRecord = templateObject.employeescheduledrecord.get();
                                 templateObject.employeescheduledrecord.set(draftRecord);
                             }).on('column-reorder', function () {
-        
+
                             }).on('length.dt', function (e, settings, len) {
                                 setTimeout(function () {
                                     MakeNegative();
                                 }, 100);
                             });
-        
+
                             // $('#currencyLists').DataTable().column( 0 ).visible( true );
                             // $('.fullScreenSpin').css('display', 'none');
                         }, 500);
@@ -1016,7 +1016,7 @@ Template.emailsettings.onRendered(function () {
                         } else if (result.dismiss === 'cancel') { }
                     });
                     $('.fullScreenSpin').css('display', 'none');
-        
+
                 });
             }
         }).catch(function(err) {
@@ -1043,7 +1043,7 @@ Template.emailsettings.onRendered(function () {
                                     if (n.id == '1' && empData[i].fields.BeginFromOption === "S") formIds.push(empData[i].fields.FormID);
                                     const startDate = empData[i].fields.StartDate.split(' ')[0];
                                     const startTime = empData[i].fields.StartDate.split(' ')[1];
-            
+
                                     //TODO: Getting BasedOnType from localstorage
                                     let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
                                     let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
@@ -1090,7 +1090,7 @@ Template.emailsettings.onRendered(function () {
                                     await getBasedOnTypeTextFromIndexDB();
                                     if (basedOnTypeText != '') basedOnTypeText = basedOnTypeText.slice(0, -2);
                                     // if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
-            
+
                                     empDataCurr = {
                                         employeeid: recipientIds.join('; ') || '',
                                         every: empData[i].fields.Every || '',
@@ -1138,7 +1138,7 @@ Template.emailsettings.onRendered(function () {
                                 basedOnType: '',
                                 basedOnTypeText: '',
                             }
-            
+
                             let found = employeeScheduledRecord.some(checkdata => checkdata.formID == n.id);
                             if (!found) {
                                 employeeScheduledRecord.push(empDataCurr);
@@ -1157,10 +1157,10 @@ Template.emailsettings.onRendered(function () {
                         $("#groupedReports-" + formIds[i] + ' .star').prop('checked', true);
                     }
                 }
-    
+
                 $('.fullScreenSpin').css('display', 'none');
                 templateObject.employeescheduledrecord.set(employeeScheduledRecord);
-    
+
                 if (templateObject.employeescheduledrecord.get()) {
                     setTimeout(function () {
                         $('#tblAutomatedEmails').DataTable({
@@ -1212,7 +1212,7 @@ Template.emailsettings.onRendered(function () {
                                     MakeNegative();
                                 }, 100);
                             },
-    
+
                         }).on('page', function () {
                             setTimeout(function () {
                                 MakeNegative();
@@ -1220,13 +1220,13 @@ Template.emailsettings.onRendered(function () {
                             let draftRecord = templateObject.employeescheduledrecord.get();
                             templateObject.employeescheduledrecord.set(draftRecord);
                         }).on('column-reorder', function () {
-    
+
                         }).on('length.dt', function (e, settings, len) {
                             setTimeout(function () {
                                 MakeNegative();
                             }, 100);
                         });
-    
+
                         // $('#currencyLists').DataTable().column( 0 ).visible( true );
                         // $('.fullScreenSpin').css('display', 'none');
                     }, 500);
@@ -1281,7 +1281,7 @@ Template.emailsettings.onRendered(function () {
                                     MakeNegative();
                                 }, 100);
                             },
-    
+
                         }).on('page', function () {
                             setTimeout(function () {
                                 MakeNegative();
@@ -1289,13 +1289,13 @@ Template.emailsettings.onRendered(function () {
                             let draftRecord = templateObject.employeescheduledrecord.get();
                             templateObject.employeescheduledrecord.set(draftRecord);
                         }).on('column-reorder', function () {
-    
+
                         }).on('length.dt', function (e, settings, len) {
                             setTimeout(function () {
                                 MakeNegative();
                             }, 100);
                         });
-    
+
                         // $('#currencyLists').DataTable().column( 0 ).visible( true );
                         // $('.fullScreenSpin').css('display', 'none');
                     }, 500);
@@ -1313,7 +1313,7 @@ Template.emailsettings.onRendered(function () {
                     } else if (result.dismiss === 'cancel') { }
                 });
                 $('.fullScreenSpin').css('display', 'none');
-    
+
             });
         })
     }
@@ -1356,7 +1356,7 @@ Template.emailsettings.onRendered(function () {
                         let temp = dataObject.tcorrespondence.filter(item=>{
                             return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
                         })
-        
+
                         // for(let i = 0; i< temp.length; i++) {
                         //     for (let j = i+1; j< temp.length; j++ ) {
                         //         if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
@@ -1364,7 +1364,7 @@ Template.emailsettings.onRendered(function () {
                         //         }
                         //     }
                         // }
-                        
+
                         temp.map(item=>{
                             if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.MessageTo == '') {
                                 tempArray.push(item.fields)
@@ -1381,7 +1381,7 @@ Template.emailsettings.onRendered(function () {
                     let temp = dataObject.tcorrespondence.filter(item=>{
                         return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
                     })
-    
+
                     // for(let i = 0; i< temp.length; i++) {
                     //     for (let j = i+1; j< temp.length; j++ ) {
                     //         if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
@@ -1389,7 +1389,7 @@ Template.emailsettings.onRendered(function () {
                     //         }
                     //     }
                     // }
-                    
+
                     temp.map(item=>{
                         if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.MessageTo == '') {
                             tempArray.push(item.fields)
@@ -1474,7 +1474,7 @@ Template.emailsettings.onRendered(function () {
                     setTimeout(function(){
                         addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){})
                     }, 300)
-                } 
+                }
             })
 
             const oldSettings = templateObject.originScheduleData.get();
@@ -1887,14 +1887,14 @@ Template.emailsettings.onRendered(function () {
                                 objDetail.fields.EmployeeEmail = recipients[index];
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
                                 objDetail.fields.attachments = [];
-                                
+
                                 //TODO: Set basedon type here
                                 localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
                                     ...objDetail.fields,
                                     BasedOnType: basedOnType,
                                     connectionInfo: connectionDetails
                                 }));
-                                
+
 
                                 objDetail.fields.Offset = new Date().getTimezoneOffset();
                                 const nextDueDate = await new Promise((resolve, reject) => {
@@ -1924,7 +1924,7 @@ Template.emailsettings.onRendered(function () {
                                             temp.push (objectDetail)
                                         }
                                         addVS1Data('TBasedOnType', JSON.stringify(temp)).then(function(){
-                                            
+
                                         })
                                     })
                                     // ldb.set(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
@@ -2035,7 +2035,7 @@ Template.emailsettings.onRendered(function () {
                             })
                         });
                         //TODO: Set basedon type here
-                        
+
                         localStorage.removeItem(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`);
                         // ldb.delete(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`, function(){})
                         getVS1Data('TBasedOnType').then(function(dataObject){
@@ -2055,7 +2055,6 @@ Template.emailsettings.onRendered(function () {
                 await Promise.all(promise1);
                 resolve({ success: true, message: '' });
             } catch (error) {
-                console.log('error', error)
                 resolve({ success: false, message: 'Something went wrong. Please try again later.' });
                 if (typeof error !== 'string') error = error.message;
 
@@ -2415,7 +2414,7 @@ Template.emailsettings.events({
                 // const startTime = $('#edtOneTimeOnlyTime').val();
                 const startTime = '05:00';
                 const startDate = $('#edtOneTimeOnlyDate').val();
-    
+
                 $('#edtOneTimeOnlyTimeError').css('display', 'none');
                 $('#edtOneTimeOnlyDateError').css('display', 'none');
                 setTimeout(function () {
@@ -2771,7 +2770,7 @@ Template.emailsettings.events({
         }).catch(function(err){
             $('.fullScreenSpin').css('display', 'none');
             $("#historyUpcomingModal").modal('toggle');
-        }) 
+        })
         // items = tempArray.filter((item) => {
         //     return item.fields.FormID.toString() === _id
         // });
@@ -2968,9 +2967,9 @@ Template.emailsettings.events({
                     });
                     $('.fullScreenSpin').css('display', 'none');
                 } else {
-                   
+
                     sideBarService.getCorrespondences().then(dObject =>{
-    
+
                         let temp = {
                             Active: true,
                             EmployeeId: Session.get('mySessionEmployeeLoggedID'),
@@ -2987,10 +2986,10 @@ Template.emailsettings.events({
                             type: 'TCorrespondence',
                             fields: temp
                         }
-        
+
                         // let array = [];
                         // array.push(objDetails)
-                       
+
                         sideBarService.saveCorrespondence(objDetails).then(data=>{
                             sideBarService.getCorrespondences().then(function(dataUpdate){
                                 addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function() {
@@ -3005,7 +3004,7 @@ Template.emailsettings.events({
                                         if (result.value) {
                                             $('#addLetterTemplateModal').modal('toggle')
                                             templateObject.getCorrespondence();
-                                            
+
                                         } else if (result.dismiss === 'cancel') { }
                                     });
                                 }).catch(function(err) {
@@ -3029,7 +3028,7 @@ Template.emailsettings.events({
                     })
                 }
             } else {
-    
+
                 sideBarService.getCorrespondences().then(dObject =>{
                     let temp = {
                         Active: true,
@@ -3047,10 +3046,10 @@ Template.emailsettings.events({
                         type: 'TCorrespondence',
                         fields: temp
                     }
-        
+
                     let array = [];
                         array.push(objDetails)
-        
+
                     sideBarService.saveCorrespondence(objDetails).then(data=>{
                         sideBarService.getCorrespondences().then(function(dataUpdate){
                             addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function() {
@@ -3065,7 +3064,7 @@ Template.emailsettings.events({
                                     if (result.value) {
                                         $('#addLetterTemplateModal').modal('toggle')
                                         templateObject.getCorrespondence();
-                                        
+
                                     } else if (result.dismiss === 'cancel') { }
                                 });
                             }).catch(function(err) {
@@ -3137,7 +3136,7 @@ Template.emailsettings.events({
                         });
                     })
                 }
-            } 
+            }
         }
     },
 
@@ -3182,14 +3181,14 @@ Template.emailsettings.events({
                 $(".btnRefreshContactOverview").removeClass('btnSearchAlert');
                 if (data.terpcombinedcontactsvs1.length > 0) {
                   $("#tblcontactoverview > tbody").empty();
-    
+
                     for (let i = 0; i < data.terpcombinedcontactsvs1.length; i++) {
-    
+
                             isprospect = data.terpcombinedcontactsvs1[i].isprospect;
                             iscustomer = data.terpcombinedcontactsvs1[i].iscustomer;
                             isEmployee = data.terpcombinedcontactsvs1[i].isEmployee;
                             issupplier = data.terpcombinedcontactsvs1[i].issupplier;
-    
+
                             if((isprospect == true) && (iscustomer == true) && (isEmployee == true) && (issupplier == true)){
                                 clienttype = "Customer / Employee / Supplier";
                             }else if((isprospect == true) && (iscustomer ==true) && (issupplier ==true)){
@@ -3197,7 +3196,7 @@ Template.emailsettings.events({
                             }else if((iscustomer ==true) && (issupplier ==true)){
                                 clienttype = "Customer / Supplier";
                             }else if((iscustomer ==true)){
-    
+
                                 if (data.terpcombinedcontactsvs1[i].name.toLowerCase().indexOf("^") >= 0){
                                     clienttype = "Job";
                                 }else{
@@ -3213,7 +3212,7 @@ Template.emailsettings.events({
                             }else{
                                 clienttype = " ";
                             }
-    
+
                                 let arBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].ARBalance)|| 0.00;
                                 let creditBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].CreditBalance) || 0.00;
                                 let balance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].Balance)|| 0.00;
@@ -3222,7 +3221,7 @@ Template.emailsettings.events({
                                 if (isNaN(data.terpcombinedcontactsvs1[i].ARBalance)) {
                                     arBalance = Currency + "0.00";
                                 }
-    
+
                                 if (isNaN(data.terpcombinedcontactsvs1[i].CreditBalance)) {
                                     creditBalance = Currency + "0.00";
                                 }
@@ -3232,12 +3231,12 @@ Template.emailsettings.events({
                                 if (isNaN(data.terpcombinedcontactsvs1[i].CreditLimit)) {
                                     creditLimit = Currency + "0.00";
                                 }
-    
+
                                 if (isNaN(data.terpcombinedcontactsvs1[i].SalesOrderBalance)) {
                                     salesOrderBalance = Currency + "0.00";
                                 }
-    
-    
+
+
                                 var dataList = [
                                   data.terpcombinedcontactsvs1[i].ID || "",
                                   data.terpcombinedcontactsvs1[i].name || "",
@@ -3258,8 +3257,8 @@ Template.emailsettings.events({
                                   data.terpcombinedcontactsvs1[i].postcode|| "",
                                   "",
                                 ];
-    
-    
+
+
                                 if (data.terpcombinedcontactsvs1[i].name.replace(/\s/g, "") !== "") {
                                   splashArrayContactOverviewSearch.push(dataList);
                                 }
@@ -3272,7 +3271,7 @@ Template.emailsettings.events({
                     $('#tblcontactoverview_wrapper .dataTables_info').html('Showing 1 to ' + data.terpcombinedcontactsvs1.length + ' of ' + data.terpcombinedcontactsvs1.length + ' entries');
                     let reset_data = templateObject.reset_data.get();
                     let customFieldCount = reset_data.length;
-    
+
                     for (let r = 0; r < customFieldCount; r++) {
                       if(reset_data[r].active == true){
                         $('#tblcontactoverview_wrapper .'+reset_data[r].class).removeClass('hiddenColumn');
@@ -3282,7 +3281,7 @@ Template.emailsettings.events({
                     };
                     $('.fullScreenSpin').css('display', 'none');
                 } else {
-    
+
                     $('.fullScreenSpin').css('display', 'none');
                     $('#contactListModal').modal('toggle');
                     swal({
@@ -3294,14 +3293,14 @@ Template.emailsettings.events({
                         cancelButtonText: 'No'
                     }).then((result) => {
                         if (result.value) {
-    
+
                         } else if (result.dismiss === 'cancel') {
                             $('#contactListModal').modal('toggle');
                         }
                     });
-    
+
                 }
-    
+
             }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
             });
@@ -3312,7 +3311,7 @@ Template.emailsettings.events({
               } else {
                 let dataOld = JSON.parse(dataObjectold[0].data);
                 let dataNew = templateObject.transactiondatatablerecords.get()||'';
-    
+
                 var datatable = $('#tblcontactoverview').DataTable();
                 datatable.clear();
                 datatable.rows.add(dataNew);
@@ -3322,10 +3321,10 @@ Template.emailsettings.events({
                 }else{
                   $('#tblcontactoverview_wrapper .dataTables_info').html('Showing 1 to ' + '25' + ' of ' + dataOld.Params.Count + ' entries');
                 }
-    
+
                 let reset_data = templateObject.reset_data.get();
                 let customFieldCount = reset_data.length;
-    
+
                 for (let r = 0; r < customFieldCount; r++) {
                   if(reset_data[r].active == true){
                     $('#tblcontactoverview_wrapper .'+reset_data[r].class).removeClass('hiddenColumn');
@@ -3333,11 +3332,11 @@ Template.emailsettings.events({
                     $('#tblcontactoverview_wrapper .'+reset_data[r].class).addClass('hiddenColumn');
                   };
                 };
-    
-    
+
+
               }
             }).catch(function (err) {
-    
+
             });
         }
       },
