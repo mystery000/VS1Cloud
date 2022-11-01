@@ -1854,7 +1854,7 @@ Template.emailsettings.onRendered(function () {
                                 objDetail.fields.FrequencyType = 'O';
                             } else {
                                 objDetail.fields.FrequencyType = '';
-                                objDetail.fields.Active = false;
+                                // objDetail.fields.Active = false;
                             }
 
                             if (formID == '1') {
@@ -1945,11 +1945,14 @@ Template.emailsettings.onRendered(function () {
                                     await taxRateService.saveScheduleSettings(objDetail).then(dataReturn=>{
                                         taxRateService.getScheduleSettings().then(dataUpdate => {
                                             addVS1Data('TReportSchedules', JSON.stringify(dataUpdate)).then(()=>{})
-                                        })
+                                        }).catch(function(error){})
+                                    }).catch(function(err){
                                     });
                                 } catch (e) {
                                 }
-                                objDetail.fields.attachments = [];
+                                if(transIDs.includes(formID) == false) {
+                                    objDetail.fields.attachments = documents;
+                                }
 
                                 objDetail.fields.Offset = new Date().getTimezoneOffset();
 
