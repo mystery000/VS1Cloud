@@ -16083,6 +16083,7 @@ Template.new_invoice.events({
     }
   },
   "click .printConfirm": async function (event) {
+    let templateObject = Template.instance();
   playPrintAudio();
     var printTemplate = [];
     $(".fullScreenSpin").css("display", "inline-block");
@@ -16575,7 +16576,6 @@ Template.new_invoice.events({
           })
           .catch(function (err) {});
       });
-
     if ($(".edtCustomerEmail").val() != "") {
       $(".pdfCustomerName").html($("#edtCustomerName").val());
       $(".pdfCustomerAddress").html(
@@ -16654,6 +16654,7 @@ Template.new_invoice.events({
 
     function generatePdfForMail(invoiceId) {
       $("#html-Invoice-pdfwrapper").css("display", "block");
+      
       let stripe_id = templateObject.accountID.get() || "";
       let file = "Invoice-" + invoiceId + ".pdf";
       return new Promise((resolve, reject) => {
@@ -16662,7 +16663,7 @@ Template.new_invoice.events({
         } else {
           $(".linkText").attr("href", "#");
         }
-        let templateObject = Template.instance();
+        
         let completeTabRecord;
         let doc = new jsPDF("p", "pt", "a4");
         var source = document.getElementById("html-2-pdfwrapper");
@@ -16689,7 +16690,6 @@ Template.new_invoice.events({
       });
     }
     let attachment = [];
-    let templateObject = Template.instance();
 
     let invoiceId = FlowRouter.current().queryParams.id
       ? parseInt(FlowRouter.current().queryParams.id)

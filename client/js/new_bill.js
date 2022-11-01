@@ -4373,7 +4373,6 @@ Template.billcard.onRendered(() => {
                 }
 
             }
-
             var opt = {
                 margin: 0,
                 filename: file,

@@ -375,6 +375,11 @@ overflow-y: auto;
     overflow-x: scroll !important;
 }
 
+.divDisplaySettings > .modal-dialog > .modal-content > .modal-body {
+    max-height: 500px !important;
+    overflow-x: scroll !important;
+}
+
 .btn-sm.btn-danger {
     padding: 0.5px 5px !important;
     margin-top: 6px !important;

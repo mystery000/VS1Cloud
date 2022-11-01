@@ -125,7 +125,7 @@ Template.accessleveldup.onRendered(function(){
             templateObject.erpAccessLevelRecord.set(lineItemsForm);
 
         }
-        
+
         templateObject.fetchAdditionalSettings();
         setTimeout(function () {
             getTableData('All');
@@ -275,7 +275,7 @@ Template.accessleveldup.onRendered(function(){
                 }
             }
         }
-    }    
+    }
 
     if (!localStorage.getItem('VS1TERPFormList')) {
 
@@ -1119,7 +1119,6 @@ Template.accessleveldup.onRendered(function(){
                 let isPayrollTimeSheet = false;
                 if(splashArray.length > 0){
                     $.grep(splashArray, function(n) {
-
                       if((n.skingroup === "Accounts") && (n.description === "Accounts")){
                           formClassHidden = 'hiddenRow';
                       }else if((n.skingroup === "Appointments") && (n.description === "Appointments")){
@@ -1383,7 +1382,7 @@ Template.accessleveldup.onRendered(function(){
                                     }
 
 
-                                }  
+                                }
 
                                 groups[groupName].sort(function(a, b){
                                     if (a.description == 'NA') {
@@ -4475,24 +4474,6 @@ Template.accessleveldup.events({
     'click .btnSelectAllEmployee':function(event){
          $('#sltEmployeeName').val('All');
          $('#employeeListPOPModal').modal('toggle');
-    },
-    'click .btnAddVS1User':function(event){
-        swal({
-            title: 'Is this an existing Employee?',
-            text: '',
-            type: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No'
-        }).then((result) => {
-            if (result.value) {
-                swal("Please select the employee from the list below.", "", "info");
-                $('#employeeListModal').modal('toggle');
-
-            } else if (result.dismiss === 'cancel') {
-                FlowRouter.go('/employeescard?addvs1user=true');
-            }
-        })
     },
     'click .essentialsdiv .chkSettings': function (event) {
 

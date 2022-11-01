@@ -4546,8 +4546,9 @@ templateObject.getLastPOData = async function() {
                                     Meteor.call('sendNormalEmail', temp);
                                 }
                             } else {
-                                if (temp.FormID == 69)
+                                if (temp.FormID == 69) {
                                     Meteor.call('sendNormalEmail', temp);
+                                }
                             }
                         }
                     });
@@ -4668,10 +4669,62 @@ templateObject.getLastPOData = async function() {
             }
         };
 
-        html2pdf().set(opt).from(source).save().then(function(dataObject) {
-            $('#html-2-pdfwrapper').css('display', 'none');
-            $('.fullScreenSpin').css('display', 'none');
-        });
+        html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data=>{
+            let attachment = [];
+            let templateObject = Template.instance();
+
+            let purchaseOrderId = FlowRouter.current().queryParams.id? parseInt(FlowRouter.current().queryParams.id) : 0;
+            let pdfObject = "";
+
+            let base64data = data.split(',')[1];
+            pdfObject = {
+                filename: 'Purchase Order-' + purchaseOrderId + '.pdf',
+                content: base64data,
+                encoding: 'base64'
+            };
+            attachment.push(pdfObject);
+
+            let values = [];
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                let employeeId = storage.split('_')[2];
+                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                return storage.includes('BasedOnType_');
+            });
+            let j = basedOnTypeStorages.length;
+            if (j > 0) {
+                while (j--) {
+                    values.push(localStorage.getItem(basedOnTypeStorages[j]));
+                }
+            }
+            values.forEach(value => {
+                let reportData = JSON.parse(value);
+                let temp = {... reportData};
+
+                temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                temp.attachments = attachment;
+                if (temp.BasedOnType.includes("P")) {
+                    if (temp.FormID == 1) {
+                        let formIds = temp.FormIDs.split(',');
+                        if (formIds.includes("69")) {
+                            temp.FormID = 69;
+                            Meteor.call('sendNormalEmail', temp);
+                        }
+                    } else {
+                        if (temp.FormID == 69) {
+                            Meteor.call('sendNormalEmail', temp);
+                        }
+                    }
+                }
+            });
+            html2pdf().set(opt).from(source).save().then(function(dataObject) {
+                $('#html-2-pdfwrapper').css('display', 'none');
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        })
+
+      
 
     };
 
