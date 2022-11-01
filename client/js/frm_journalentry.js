@@ -2856,41 +2856,51 @@ Template.journalentrycard.events({
         playDeleteAudio();
         setTimeout(async function(){
         var currentDate = new Date();
-        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var objDetails = '';
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            var journalData = await purchaseService.getOneJournalEnrtyData(currentInvoice);
-            var transactionDate = journalData.fields.TransactionDate;
-            var fromDate = transactionDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingJournals = await sideBarService.getTJournalEntryListData(
-                fromDate, 
-                toDate, 
-                false, 
-                initialReportLoad, 
-                0
-            );
-            var journalList = followingJournals.tjournalentrylist;
-            for (var i=0; i < journalList.length; i++) {
-                var objDetails = {
-                    type: "TJournalEntry",
-                    fields: {
-                        ID: journalList[i].GJID,
-                        Deleted: true
+        swal({
+            title: 'Delete Journal Entry',
+            text: "Do you wish to delete this transaction and all others associated with it moving forward?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then(async (result) => {
+            if (result.value) {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                var url = FlowRouter.current().path;
+                var getso_id = url.split('?id=');
+                var currentInvoice = getso_id[getso_id.length - 1];
+                var objDetails = '';
+                if (getso_id[1]) {
+                    currentInvoice = parseInt(currentInvoice);
+                    var journalData = await purchaseService.getOneJournalEnrtyData(currentInvoice);
+                    var transactionDate = journalData.fields.TransactionDate;
+                    var fromDate = transactionDate.substring(0, 10);
+                    var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+                    var followingJournals = await sideBarService.getTJournalEntryListData(
+                        fromDate, 
+                        toDate, 
+                        false, 
+                        initialReportLoad, 
+                        0
+                    );
+                    var journalList = followingJournals.tjournalentrylist;
+                    for (var i=0; i < journalList.length; i++) {
+                        var objDetails = {
+                            type: "TJournalEntry",
+                            fields: {
+                                ID: journalList[i].GJID,
+                                Deleted: true
+                            }
+                        };
+                        var result = await purchaseService.saveJournalEnrtry(objDetails);
                     }
-                };
-                var result = await purchaseService.saveJournalEnrtry(objDetails);
+                }
+                FlowRouter.go('/journalentrylist?success=true');
+                $('.modal-backdrop').css('display', 'none');
+                $('#deleteLineModal').modal('toggle');
             }
-        }
-        FlowRouter.go('/journalentrylist?success=true');
-        $('.modal-backdrop').css('display', 'none');
-        $('#deleteLineModal').modal('toggle');
+        });
     }, delayTimeAfterSound);
     },
     'click .btnDeleteJournal': function(event) {

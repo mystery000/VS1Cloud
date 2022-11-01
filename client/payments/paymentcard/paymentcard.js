@@ -9696,18 +9696,18 @@ Template.paymentcard.events({
         var currentDate = new Date();
         let templateObject = Template.instance();
         let paymentService = new PaymentsService();
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var objDetails = '';
         swal({
             title: 'Delete Payment',
-            text: "Are you sure you want to Delete this Payment and following payments?",
+            text: "Do you wish to delete this transaction and all others associated with it moving forward?",
             type: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes'
         }).then(async (result) => {
             if (result.value) {
+                var url = FlowRouter.current().path;
+                var getso_id = url.split('?id=');
+                var currentInvoice = getso_id[getso_id.length - 1];
+                var objDetails = '';
                 $('.fullScreenSpin').css('display','inline-block');
                 if (getso_id[1]) {
                     currentInvoice = parseInt(currentInvoice);
@@ -9734,10 +9734,10 @@ Template.paymentcard.events({
                         var result = await paymentService.deleteDepositData(objDetails);
                     }
                 }
+                $('.modal-backdrop').css('display', 'none');
+                FlowRouter.go('/paymentoverview?success=true');
             }    
         });
-        $('.modal-backdrop').css('display', 'none');
-        FlowRouter.go('/paymentoverview?success=true');
     }, delayTimeAfterSound);
     },
     'click .btnDeletePayment': async function (event) {

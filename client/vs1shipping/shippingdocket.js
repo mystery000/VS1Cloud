@@ -2114,8 +2114,8 @@ Template.shippingdocket.events({
         let salesService = new SalesBoardService();
         swal({
             title: 'Delete Shipping Docket',
-            text: "Are you sure you want to Delete Shipping Docket and following shipping dockets?",
-            type: 'info',
+            text: "Do you wish to delete this transaction and all others associated with it moving forward?",
+            type: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes'
         }).then(async (result) => {
@@ -2150,10 +2150,10 @@ Template.shippingdocket.events({
                         var result = await stockTransferService.saveShippingDocket(objDetails);   
                     }
                 }
+                FlowRouter.go('/vs1shipping?success=true');
+                $('.modal-backdrop').css('display', 'none');
             }
         });
-        FlowRouter.go('/vs1shipping?success=true');
-        $('.modal-backdrop').css('display', 'none');
     }, delayTimeAfterSound);
     },
     'click .btnDeleteInvoice': function(event) {

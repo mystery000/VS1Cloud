@@ -2156,33 +2156,43 @@ Template.stockadjustmentcard.events({
         var currentDate = new Date();
         let templateObject = Template.instance();
         let stockTransferService = new StockTransferService();
-        var url = FlowRouter.current().path;
-        var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        var objDetails = '';
-        if (getso_id[1]) {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            currentInvoice = parseInt(currentInvoice);
-            var stockData = await stockTransferService.getOneStockAdjustData(currentInvoice);
-            var adjustmentDate = stockData.fields.AdjustmentDate;
-            var fromDate = adjustmentDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingStocks = await sideBarService.getAllStockAdjustEntry("All", stockData.fields.Recno);//initialDataLoad
-            var stockList = followingStocks.tstockadjustentry;
-            for (var i=0; i < stockList.length; i++) {
-                var objDetails = {
-                    type: "TStockadjustentry",
-                    fields: {
-                        ID: stockList[i].fields.ID,
-                        Deleted: true
+        swal({
+            title: 'Delete Stock Adjustment',
+            text: "Do you wish to delete this transaction and all others associated with it moving forward?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then(async (result) => {
+            if (result.value) {
+                var url = FlowRouter.current().path;
+                var getso_id = url.split('?id=');
+                var currentInvoice = getso_id[getso_id.length - 1];
+                var objDetails = '';
+                if (getso_id[1]) {
+                    $('.fullScreenSpin').css('display', 'inline-block');
+                    currentInvoice = parseInt(currentInvoice);
+                    var stockData = await stockTransferService.getOneStockAdjustData(currentInvoice);
+                    var adjustmentDate = stockData.fields.AdjustmentDate;
+                    var fromDate = adjustmentDate.substring(0, 10);
+                    var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+                    var followingStocks = await sideBarService.getAllStockAdjustEntry("All", stockData.fields.Recno);//initialDataLoad
+                    var stockList = followingStocks.tstockadjustentry;
+                    for (var i=0; i < stockList.length; i++) {
+                        var objDetails = {
+                            type: "TStockadjustentry",
+                            fields: {
+                                ID: stockList[i].fields.ID,
+                                Deleted: true
+                            }
+                        };
+                        var result = await stockTransferService.saveStockAdjustment(objDetails);
                     }
-                };
-                var result = await stockTransferService.saveStockAdjustment(objDetails);
+                }
+                FlowRouter.go('/stockadjustmentoverview?success=true');
+                $('.modal-backdrop').css('display', 'none');
+                $('#deleteLineModal').modal('toggle');
             }
-        }
-        FlowRouter.go('/stockadjustmentoverview?success=true');
-        $('.modal-backdrop').css('display', 'none');
-        $('#deleteLineModal').modal('toggle');
+        });
     }, delayTimeAfterSound);
     },
     'click .btnDeleteStock': function (event) {

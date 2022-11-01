@@ -7274,48 +7274,58 @@ Template.billcard.events({
         var currentDate = new Date();
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
-        var url = FlowRouter.current().path;
-        var getso_id = url.split("?id=");
-        var currentInvoice = getso_id[getso_id.length - 1];
-        let billTotal = $('#grandTotal').text();
-        var objDetails = "";
-        if (getso_id[1]) {
-            $(".fullScreenSpin").css("display", "inline-block");
-            currentInvoice = parseInt(currentInvoice);
-            var billData = await purchaseService.getOneBilldataEx(currentInvoice);
-            var orderDate = billData.fields.OrderDate;
-            var fromDate = orderDate.substring(0, 10);
-            var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-            var followingBills = await sideBarService.getAllBillListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
-            );
-            var billList = followingBills.tbilllist;
-            for (var i=0; i < billList.length; i++) {
-                var objDetails = {
-                    type: "TBillEx",
-                    fields: {
-                        ID: billList[i].PurchaseOrderID,
-                        Deleted: true,
-                        // OrderStatus: "Deleted",
-                        SupplierName: $('#edtSupplierName').val()||'',
-                        BillTotal: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0,
-                        TotalAmountInc: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
+        swal({
+            title: 'Delete Bill',
+            text: "Do you wish to delete this transaction and all others associated with it moving forward?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+          }).then(async (result) => {
+            if (result.value) {
+                var url = FlowRouter.current().path;
+                var getso_id = url.split("?id=");
+                var currentInvoice = getso_id[getso_id.length - 1];
+                let billTotal = $('#grandTotal').text();
+                var objDetails = "";
+                if (getso_id[1]) {
+                    $(".fullScreenSpin").css("display", "inline-block");
+                    currentInvoice = parseInt(currentInvoice);
+                    var billData = await purchaseService.getOneBilldataEx(currentInvoice);
+                    var orderDate = billData.fields.OrderDate;
+                    var fromDate = orderDate.substring(0, 10);
+                    var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+                    var followingBills = await sideBarService.getAllBillListData(
+                        fromDate,
+                        toDate,
+                        false,
+                        initialReportLoad,
+                        0
+                    );
+                    var billList = followingBills.tbilllist;
+                    for (var i=0; i < billList.length; i++) {
+                        var objDetails = {
+                            type: "TBillEx",
+                            fields: {
+                                ID: billList[i].PurchaseOrderID,
+                                Deleted: true,
+                                // OrderStatus: "Deleted",
+                                SupplierName: $('#edtSupplierName').val()||'',
+                                BillTotal: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0,
+                                TotalAmountInc: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
+                            }
+                        };
+                        var result = await purchaseService.saveBillEx(objDetails);
                     }
+                }
+                if(FlowRouter.current().queryParams.trans){
+                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                }else{
+                    FlowRouter.go('/billlist?success=true');
                 };
-                var result = await purchaseService.saveBillEx(objDetails);
+                $('.modal-backdrop').css('display','none');
+                $("#deleteLineModal").modal("toggle");
             }
-        }
-        if(FlowRouter.current().queryParams.trans){
-            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
-        }else{
-            FlowRouter.go('/billlist?success=true');
-        };
-        $('.modal-backdrop').css('display','none');
-        $("#deleteLineModal").modal("toggle");
+        });
     }, delayTimeAfterSound);
     },
     'click .btnDeleteBill': function(event) {

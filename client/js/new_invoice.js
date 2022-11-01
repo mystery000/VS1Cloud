@@ -16898,54 +16898,64 @@ Template.new_invoice.events({
     var currentDate = new Date();
     let templateObject = Template.instance();
     let salesService = new SalesBoardService();
-    var url = FlowRouter.current().path;
-    var getso_id = url.split("?id=");
-    var currentInvoice = getso_id[getso_id.length - 1];
-    var objDetails = "";
-    if (getso_id[1]) {
-      $(".fullScreenSpin").css("display", "inline-block");
-      currentInvoice = parseInt(currentInvoice);
-      var invData = await salesService.getOneInvoicedataEx(currentInvoice);
-      var saleDate = invData.fields.SaleDate;
-      var fromDate = saleDate.substring(0, 10);
-      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
-      var followingInvoices = await sideBarService.getAllTInvoiceListData(
-          fromDate,
-          toDate,
-          false,
-          initialReportLoad,
-          0
-        );
-      var invList = followingInvoices.tinvoicelist;
-      for (var i=0; i < invList.length; i++) {
-        var objDetails = {
-          type: "TInvoiceEx",
-          fields: {
-            ID: invList[i].SaleID,
-            Deleted: true,
-          },
-        };
-        var result = await salesService.saveInvoiceEx(objDetails);
-        // salesService
-        // .saveInvoiceEx(objDetails)
-        // .then(function (objDetails) {
-        // }).catch(function (err) {
-        // }).then((result) => {
-        // });
+    swal({
+      title: 'Delete Invoice',
+      text: "Do you wish to delete this transaction and all others associated with it moving forward?",
+      type: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes'
+    }).then(async (result) => {
+      if (result.value) {
+        var url = FlowRouter.current().path;
+        var getso_id = url.split("?id=");
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = "";
+        if (getso_id[1]) {
+          $(".fullScreenSpin").css("display", "inline-block");
+          currentInvoice = parseInt(currentInvoice);
+          var invData = await salesService.getOneInvoicedataEx(currentInvoice);
+          var saleDate = invData.fields.SaleDate;
+          var fromDate = saleDate.substring(0, 10);
+          var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+          var followingInvoices = await sideBarService.getAllTInvoiceListData(
+              fromDate,
+              toDate,
+              false,
+              initialReportLoad,
+              0
+            );
+          var invList = followingInvoices.tinvoicelist;
+          for (var i=0; i < invList.length; i++) {
+            var objDetails = {
+              type: "TInvoiceEx",
+              fields: {
+                ID: invList[i].SaleID,
+                Deleted: true,
+              },
+            };
+            var result = await salesService.saveInvoiceEx(objDetails);
+            // salesService
+            // .saveInvoiceEx(objDetails)
+            // .then(function (objDetails) {
+            // }).catch(function (err) {
+            // }).then((result) => {
+            // });
+          }
+        }
+        if (FlowRouter.current().queryParams.trans) {
+          FlowRouter.go(
+            "/customerscard?id=" +
+              FlowRouter.current().queryParams.trans +
+              "&transTab=active"
+          );
+        } else {
+          FlowRouter.go("/invoicelist?success=true");
+        }
+        $('.modal-backdrop').css('display','none');
+        $("#deleteLineModal").modal("toggle");
+        // Meteor._reload.reload();
       }
-    }
-    if (FlowRouter.current().queryParams.trans) {
-      FlowRouter.go(
-        "/customerscard?id=" +
-          FlowRouter.current().queryParams.trans +
-          "&transTab=active"
-      );
-    } else {
-      FlowRouter.go("/invoicelist?success=true");
-    }
-    $('.modal-backdrop').css('display','none');
-    $("#deleteLineModal").modal("toggle");
-    // Meteor._reload.reload();
+    });
   }, delayTimeAfterSound);
   },
   "click .btnDeleteInvoice": function (event) {

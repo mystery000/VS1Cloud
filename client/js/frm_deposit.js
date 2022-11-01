@@ -2818,7 +2818,7 @@ Template.depositcard.events({
         let purchaseService = new PurchaseBoardService();
         swal({
             title: 'Delete Deposit',
-            text: "Are you sure you want to delete Deposit and following deposits?",
+            text: "Do you wish to delete this transaction and all others associated with it moving forward?",
             type: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes'
@@ -2854,10 +2854,10 @@ Template.depositcard.events({
                         var result = await purchaseService.saveBankDeposit(objDetails);
                     }
                 }
+                FlowRouter.go('/depositlist?success=true');
+                $('.modal-backdrop').css('display','none');
             }
         });
-        FlowRouter.go('/depositlist?success=true');
-        $('.modal-backdrop').css('display','none');
     }, delayTimeAfterSound);
     },
     'click .btnDelete': function(event){
