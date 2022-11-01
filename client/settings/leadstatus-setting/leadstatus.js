@@ -6,7 +6,7 @@ import {UtilityService} from "../../utility-service";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
-
+Template.leadstatussettings.inheritsHooksFrom('non_transactional_list');
 Template.leadstatussettings.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -366,7 +366,7 @@ Template.leadstatussettings.onRendered(function () {
         $('#deleteLineModal').modal('toggle');
     });
 
-    $('#leadStatusList tbody').on('click', 'tr .colStatusName, tr .colDescription, tr .colQuantity', function(event) {
+    $('#tblLeadStatusList tbody').on('click', 'tr', function(event) {
         $('#add-leadstatus-title').text('Edit Lead Status');
         let targetID = $(event.target).closest('tr').attr('id');
         let description = $(event.target).closest('tr').find('.colDescription').text();
@@ -551,8 +551,13 @@ Template.leadstatussettings.events({
     },
     'click #exportbtn': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
-        jQuery('#leadStatusList_wrapper .dt-buttons .btntabletocsv').click();
+        jQuery('#tblLeadStatusList_wrapper .dt-buttons .btntabletocsv').click();
         $('.fullScreenSpin').css('display', 'none');
+    },
+    "click .printConfirm": function (event) {
+      $(".fullScreenSpin").css("display", "inline-block");
+      jQuery("#tblLeadStatusList_wrapper .dt-buttons .btntabletopdf").click();
+      $(".fullScreenSpin").css("display", "none");
     },
     'click .btnRefresh': function () {
         sideBarService.getAllLeadStatus().then(function (dataReload) {
@@ -567,8 +572,11 @@ Template.leadstatussettings.events({
     },
     'click .btnAddLeadStatus': function () {
         $('#add-leadstatus-title').text('Add New Lead Status');
-        $('#edtLeadStatusName').val("");
-        $('#statusDescription').val("");
+        $('#statusID').val('');
+        $('#edtLeadStatusName').val('');
+        $('#statusDescription').val('');
+        $('#statusQuantity').val('');
+        $('#myModalLeadStatus').modal('show');
     },
     'click .btnDeleteLeadStatus': function () {
         playDeleteAudio();

@@ -674,3 +674,34 @@ playSaveAudio = function () {
   audioElement.setAttribute('src', 'sounds/Save.mp3');
   audioElement.play();
 }
+checkSetupFinished = function () {
+  let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
+  if( setupFinished === null || setupFinished ===  "" ){
+    let ERPIPAddress = localStorage.getItem('EIPAddress');
+    let ERPUsername = localStorage.getItem('EUserName');
+    let ERPPassword = localStorage.getItem('EPassword');
+    let ERPDatabase = localStorage.getItem('EDatabase');
+    let ERPPort = localStorage.getItem('EPort');
+    const apiUrl = `${URLRequest}${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID,IsSetUpWizard`;
+    const _headers = {
+        database: ERPDatabase,
+        username: ERPUsername,
+        password: ERPPassword
+    };
+    Meteor.http.call("GET", apiUrl, { headers: _headers }, (error, result) => {
+        if (error) {
+          // handle error here
+        } else {
+          if(result.data != undefined) {
+            if( result.data.tcompanyinfo.length > 0 ){
+              let data = result.data.tcompanyinfo[0];
+              localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+              return data.IsSetUpWizard;
+            }
+          }        
+        }
+    });
+  }else{
+    return setupFinished;
+  }
+}

@@ -339,6 +339,7 @@
     {{#if isGreenTrack}}
         <script>
             async function logOutFunc() {
+                $('.fullScreenSpin').css('display', 'inline-block');
                 let values = [];
                 // let basedOnTypeStorages = Object.keys(localStorage);
              
@@ -355,8 +356,8 @@
                                     reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                                     if (reportData.BasedOnType && reportData.BasedOnType.includes("EU")) {
                                         async function sendEmail() {
-                                            return new Promise((resolve, reject)=>{
-                                                Meteor.call('sendNormalEmail', reportData, (error, result)=>{
+                                            return new Promise(async (resolve, reject)=>{
+                                                await Meteor.call('sendNormalEmail', reportData, (error, result)=>{
                                                     resolve();
                                                 });
                                             })
@@ -376,6 +377,7 @@
                     })
                 }
                 await getLogoutEmails();
+                $('.fullScreenSpin').css('display', 'none')
                 FlowRouter.go('/vs1greentracklogin');
                 CloudUser.update({
                     _id: Session.get('mycloudLogonID')
@@ -390,10 +392,9 @@
     {{else}}
         <script>
             async function logOutFunc() {
+                $('.fullScreenSpin').css('display', 'inline-block')
                 let values = [];
                 // let basedOnTypeStorages = Object.keys(localStorage);
-
-
 
                 const getLogoutEmails = async() => {
                     return new Promise (async(resolve, reject)=>{
@@ -428,7 +429,7 @@
                     })
                     }
                 await getLogoutEmails();
-
+                $('.fullScreenSpin').css('display', 'none')
                 FlowRouter.go('/');
                 CloudUser.update({
                     _id: Session.get('mycloudLogonID')

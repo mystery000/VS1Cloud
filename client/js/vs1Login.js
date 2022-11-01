@@ -2363,6 +2363,7 @@ Template.vs1login.onRendered(function () {
                                       //TODO: Email scheduling for reports when login
                                       let values = [];
                                     //   let basedOnTypeStorages = Object.keys(localStorage);
+
                                       const getLogonEmails = async() => {
                                         return new Promise ((resolve, reject)=>{
 

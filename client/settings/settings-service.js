@@ -703,4 +703,37 @@ export class TaxRateService extends BaseService {
         return this.getList(this.ERPObjects.TERPPreference, options);
     }
 
+    // getEmailHistory(limitcount, limitfrom, deleteFilter) {
+    //     let options= {
+    //         ListType: "Detail"
+    //     }
+    //     if (limitcount == "All") {
+    //         options = {
+    //           ListType: "Detail",
+    //           Search: "Active = true",
+    //         };
+    //       } else {
+    //         options = {
+    //           ListType: "Detail",
+    //           Search: "Active = true",
+    //           LimitCount: parseInt(limitcount),
+    //           LimitFrom: parseInt(limitfrom),
+    //         };
+    //       }
+    //     return this.getList(this.ERPObjects.TEmailHistory, options)
+    // }
+
+    getEmailHistoryByTransName(name) {
+        let options={
+            ListType: "Detail",
+            Select: "[Subject]='"+name+"'",
+            search: "Active = true",
+        }
+        return this.getList(this.ERPObjects.TEmailHistory, options)
+    }
+
+    saveEmailHistory (data) {
+        return this.POST(this.ERPObjects.TEmailHistory, data)
+    }
+
 }

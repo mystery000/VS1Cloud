@@ -1,15 +1,15 @@
 /**
  * This is for essential email settings.
- * 
+ *
  * EmailSettingDB Schema
  *  type
-    frequency 
+    frequency
         monthly: day, month, starttime, startdate
         weekly: day, weeks, starttime, startdate
         daily: day, duaration,starttime, startdate
         oneTime: starttime, startdate,
         event: logon||logout
-    send 
+    send
     recepients: [email...];
  */
 
@@ -28,7 +28,6 @@ Meteor.methods({
     createEmailSetting: function (type, frequency, send, recepients) {
         return EmailSetting.upsert({ type: type }, { type, frequency, send, recepients }, false, (error, data) => {
             if (error) {
-                console.log(error);
                 throw new Meteor.Error('document-not-create', 'Not created a new document. Please try again.');
             } else {
                 return data;
@@ -47,7 +46,6 @@ Meteor.methods({
         if (!documentPref) {
             throw new Meteor.Error('document-not-found', 'No documents found matching this query.');
         } else {
-            console.log(document);
         }
         return documentPref;
     },

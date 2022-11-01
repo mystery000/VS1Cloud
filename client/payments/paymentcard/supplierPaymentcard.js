@@ -7490,6 +7490,8 @@ Template.supplierpaymentcard.onRendered(() => {
     $("#sltPaymentMethod").val(getPaymentMethodVal);
   }
 
+  tableResize();
+
   exportSalesToPdf1 = function () {
     document.getElementById("html-2-pdfwrapper").style.display="block";
     var source = document.getElementById("html-2-pdfwrapper");
