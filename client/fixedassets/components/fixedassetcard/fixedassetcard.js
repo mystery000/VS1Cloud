@@ -9,8 +9,13 @@ Template.fixedassetcard.onRendered(function () {
   $('#edtAssetType').editableSelect();
   $('#edtBoughtFrom').editableSelect();
   $('#edtDepartment').editableSelect();
+  $('#edtDepreciationType').editableSelect();
+  $('#edtCostAssetAccount').editableSelect();
+  $('#editBankAccount').editableSelect();
+  $('#edtDepreciationAssetAccount').editableSelect();
+  $('#edtDepreciationExpenseAccount').editableSelect();
 
-  $("#date-input,#edtDateofPurchase,#edtDescriptionStartDate,#edtNextTimeDate,#edtLastTimeDate").datepicker({
+  $("#date-input,#edtDateofPurchase, #edtDateRegisterRenewal, #edtDateRenewal, #edtDescriptionStartDate, #edtNextTimeDate, #edtLastTimeDate").datepicker({
     showOn: 'button',
     buttonText: 'Show Date',
     buttonImageOnly: true,
