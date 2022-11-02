@@ -258,7 +258,7 @@
                                <th>Earning Type</th>
                                {{#if earningDays}}
                                 {{#each day in earningDays}}
-                                    <th>{{ day.date }}</th>
+                                    <th date-index="{{ day.dayIndex }}">{{ day.date }}</th>
                                 {{/each}}
                                {{/if}}
                                <th style="width: 20px;"></th>
@@ -289,7 +289,7 @@
                                </td>
                                 {{#if earningDays}}
                                     {{#each day in earningDays}}
-                                        <td><input class="hours form-control" date="{{day.index}}" type="text" value="{{ day.defaultValue }}"></td>
+                                        <td date-index="{{ day.dayIndex }}"><input class="hours form-control" date-index="{{ day.dayIndex }}" type="text" value="{{ day.defaultValue }}"></td>
                                     {{/each}}
                                 {{/if}}
                               
@@ -297,7 +297,7 @@
                             </tr>
 
                             {{#if timeSheetDetails}}
-                                {{#each t in timeSheetDetails.dailyHours}}
+                                {{#each t in timeSheetDetails.earningLines}}
                                 <tr>
                                     <td style="width: 250px; display: flex;">
                                     <!-- <select style="width: auto;" class="es-input form-control">
@@ -312,7 +312,7 @@
                                     </td>
                                     {{#if earningDays}}
                                         {{#each day in earningDays}}
-                                            <td><input class="hours form-control" date="{{day.index}}" type="text" value="{{indexMatchedHours day t.dailyHours}}"></td>
+                                            <td date-index="{{ day.dayIndex }}"><input  class="hours form-control" date-index="{{ day.dayIndex }}" type="text" value="{{indexMatchedHours day t.dailyHours}}"></td>
                                         {{/each}}
                                     {{/if}}
                                 
@@ -333,6 +333,18 @@
                                <td></td>
                             </tr> -->
                          </tbody>
+                         <tfoot>
+                            <tr class="total">
+                                <th>Total</th>
+                                 {{#if earningDays}}
+                                     {{#each day in earningDays}}
+                                         <th class="daily-total" date-index="{{ day.dayIndex }}">0</th>
+                                     {{/each}}
+                                 {{/if}}
+                               
+                                <th></th>
+                             </tr>
+                         </tfoot>
                           
 
                       </table>
@@ -436,6 +448,7 @@
                                   
       
                                 </tbody>
+                              
                             </table>
                         </div>
                     </div>
