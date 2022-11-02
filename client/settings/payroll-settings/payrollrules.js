@@ -5654,8 +5654,8 @@ Template.payrollrules.onRendered(function() {
             //rateType: rateType,
             //rateType: rateType.Description,
             hourlyMultiplier: hourlyMultiplier,
-            rule: rateType == "Weekend" ? `${rateType.Description} : (${weekEndDay})` : `${rateType.Description}`,
-            day: rateType == "Weekend" ? weekEndDay: null
+            rule: rateType.Description == "Weekend" ? `${rateType.Description} (${weekEndDay.toLowerCase()})` : `${rateType.Description}`,
+            day: rateType.Description == "Weekend" ? weekEndDay: null
 
         });
         object.setRateType(rateType);
@@ -5951,27 +5951,27 @@ Template.payrollrules.onRendered(function() {
         $('#selectDeleteLineID').val(targetID);
         $('#deleteAllowanceLineModal').modal('toggle');
     });
-    $(document).on('change', '#overtimeRateType', function(e) {
-        let evalue = $('#overtimeRateType').val();
+    // $(document).on('change', '#overtimeRateType', function(e) {
+    //     let evalue = $('#overtimeRateType').val();
 
-        switch(evalue) {
-            case 'Time & Half':
-                $('.graterThenDiv').css('display', 'block');
-                $('.weekendDiv').css('display', 'none');
-            break;
-            case 'Double Time':
-                $('.graterThenDiv').css('display', 'block');
-                $('.weekendDiv').css('display', 'none');
-            break;
-            case 'Weekend':
-                $('.weekendDiv').css('display', 'block');
-                $('.graterThenDiv').css('display', 'none');
-            break;
-            default:
-                $('.graterThenDiv').css('display', 'block');
-                $('.weekendDiv').css('display', 'none');
-        }
-    });
+    //     switch(evalue) {
+    //         case 'Time & Half':
+    //             $('.graterThenDiv').css('display', 'block');
+    //             $('.weekendDiv').css('display', 'none');
+    //         break;
+    //         case 'Double Time':
+    //             $('.graterThenDiv').css('display', 'block');
+    //             $('.weekendDiv').css('display', 'none');
+    //         break;
+    //         case 'Weekend':
+    //             $('.weekendDiv').css('display', 'block');
+    //             $('.graterThenDiv').css('display', 'none');
+    //         break;
+    //         default:
+    //             $('.graterThenDiv').css('display', 'block');
+    //             $('.weekendDiv').css('display', 'none');
+    //     }
+    // });
 
 
     $(document).on('click', '.colDeleteCalenders', function(event) {
@@ -22294,6 +22294,7 @@ Template.payrollrules.events({
 
         $('.paste-rate').val(rateName);
         $('.paste-rate').attr('rate-type-id', $(tr).attr('rate-type-id'));
+        $('.paste-rate').trigger('change');
 
         $('#select-rate-type-modal').modal('hide');
         $(".paste-rate").removeClass('paste-rate');
@@ -22305,6 +22306,29 @@ Template.payrollrules.events({
     //  }
     //  "show.bs.modal #select-ratetype-modal": (e, ui) => {
     // },
+    'change #overtimeRateType': (e, ui) => {
+        console.log('changed', e);
+        let evalue = $(e.currentTarget).val();
+
+        switch(evalue) {
+            case 'Time & Half':
+                $('.graterThenDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+            break;
+            case 'Double Time':
+                $('.graterThenDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+            break;
+            case 'Weekend':
+                $('.weekendDiv').css('display', 'block');
+                $('.graterThenDiv').css('display', 'none');
+            break;
+            default:
+                $('.graterThenDiv').css('display', 'block');
+                $('.weekendDiv').css('display', 'none');
+        }
+    }
+
 
 });
 
